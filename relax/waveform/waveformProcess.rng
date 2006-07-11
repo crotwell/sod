@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <start>
         <ref name="seismogramProcess"/>
     </start>
@@ -14,16 +13,14 @@
         <choice>
             <xsd:annotation>
                 <summary>All of the items that process seismograms</summary>
-                <description>At this point in the waveform arm, data has been retrieved. Therefore,
-                    these items all work on the received data. Some of them like rMean and rTrend
-                    perform manipulations on the data. Others like saveSeismogramToFile and
-                    seismogramImageProcess write out information based on the data. Some like
-                    fullDataCoverage and phaseSignalToNoise subset the items based on the
-                    data&apos;s properties. If several items are used, the data from each step
-                    feeds into the next. So if a seismogramImageProcessor follows a phaseCut the
-                    image drawn will be of the data after the cut. If you don&apos;t want a
-                    processor&apos;s work to effect later steps use the forkProcess to isolate
-                    it.</description>
+                <description>At this point in the waveform arm, data has been retrieved. Therefore, these items all work
+                    on the received data. Some of them like rMean and rTrend perform manipulations on the data. Others
+                    like saveSeismogramToFile and seismogramImageProcess write out information based on the data. Some
+                    like fullDataCoverage and phaseSignalToNoise subset the items based on the data&apos;s
+                    properties. If several items are used, the data from each step feeds into the next. So if a
+                    seismogramImageProcessor follows a phaseCut the image drawn will be of the data after the cut. If
+                    you don&apos;t want a processor&apos;s work to effect later steps use the forkProcess to
+                    isolate it.</description>
                 <include/>
                 <velocity>#waveformArmPage()</velocity>
             </xsd:annotation>
@@ -56,6 +53,9 @@
             <ref name="embeddedEventChannelProcessor"/>
             <ref name="transferResponse"/>
             <ref name="collapseOverlaps"/>
+            <ref name="div"/>
+            <ref name="mul"/>
+            <ref name="invertFlippedChannels"/>
             <ref name="saveSeismogramToFile"/>
         </choice>
     </define>
@@ -63,11 +63,10 @@
         <element name="seismogramAND">
             <xsd:annotation>
                 <summary>Matches all included seismogram processors</summary>
-                <description>The output is the logical AND of the outputs of all included seismogram
-                    processors. This means that it will evaluate to true only if all of the included
-                    processors evaluate to true. The subsetters after the first false outputted are
-                    not evaluated. The seismic data passed down the chain is the data passed in.
-                    Seismogram results of the contained processors are ignored.</description>
+                <description>The output is the logical AND of the outputs of all included seismogram processors. This
+                    means that it will evaluate to true only if all of the included processors evaluate to true. The
+                    subsetters after the first false outputted are not evaluated. The seismic data passed down the chain
+                    is the data passed in. Seismogram results of the contained processors are ignored.</description>
                 <example>
                     <seismogramAND>
                         <noDataGaps/>
@@ -84,11 +83,10 @@
         <element name="seismogramOR">
             <xsd:annotation>
                 <summary>Matches at least one of the included seismogram processors</summary>
-                <description>The output is the logical OR of the outputs of all included seismogram
-                    processors. This means that it will evaluate to true as long as one of the
-                    included seismogram processors evaluate to true. The processors after the first
-                    true outputted are not evaluated. The seismic data passed down the chain is the
-                    data passed in. Seismogram results of the contained processors are ignored.</description>
+                <description>The output is the logical OR of the outputs of all included seismogram processors. This
+                    means that it will evaluate to true as long as one of the included seismogram processors evaluate to
+                    true. The processors after the first true outputted are not evaluated. The seismic data passed down
+                    the chain is the data passed in. Seismogram results of the contained processors are ignored.</description>
                 <example>
                     <seismogramOR>
                         <noDataGaps/>
@@ -105,10 +103,10 @@
         <element name="seismogramNOT">
             <xsd:annotation>
                 <summary>Matches the negated output of the included seismogram processor</summary>
-                <description>The output is the logical NOT of the output of the included seismogram
-                    processor. This means that it will evaluate to true if the included processor
-                    evaluates to false, and vice versa. The seismic data passed down the chain is
-                    the data passed in. Seismogram results of the contained processors are ignored.</description>
+                <description>The output is the logical NOT of the output of the included seismogram processor. This
+                    means that it will evaluate to true if the included processor evaluates to false, and vice versa.
+                    The seismic data passed down the chain is the data passed in. Seismogram results of the contained
+                    processors are ignored.</description>
                 <example>
                     <seismogramNOT>
                         <someDataCoverage/>
@@ -122,8 +120,7 @@
         <element name="phaseCut">
             <xsd:annotation>
                 <summary>Cuts seismograms relative to predicted phase arrival times</summary>
-                <description>Cuts seismograms relative to offsets from phase arrival time predicted
-                    by TauP for the model.</description>
+                <description>Cuts seismograms relative to offsets from phase arrival time predicted by TauP for the model.</description>
                 <example>
                     <phaseCut>
                         <model>prem</model>
@@ -147,8 +144,8 @@
         <element name="requestCut">
             <xsd:annotation>
                 <summary>Cuts seismograms to the requested window</summary>
-                <description>If the seismogram server is returning extra data around the request,
-                    this trims it to the time generated by the request generator</description>
+                <description>If the seismogram server is returning extra data around the request, this trims it to the
+                    time generated by the request generator</description>
             </xsd:annotation>
             <empty/>
         </element>
@@ -157,7 +154,8 @@
         <element name="merge">
             <xsd:annotation>
                 <summary>Joins multiple seismograms into a single seismogram if they're contiguous</summary>
-                <description>If the seismogram server is returning multiple continuous seismograms for a request, this will join them into a single seismogram</description>
+                <description>If the seismogram server is returning multiple continuous seismograms for a request, this
+                    will join them into a single seismogram</description>
             </xsd:annotation>
             <empty/>
         </element>
@@ -166,9 +164,8 @@
         <element name="filter">
             <xsd:annotation>
                 <summary>Apply a Butterworth filter</summary>
-                <description>Applies a Butterworth filter to the seismograms. The filterType can be
-                    CAUSAL or NONCAUSAL or TWOPASS, with the last two being
-                equivalent.</description>
+                <description>Applies a Butterworth filter to the seismograms. The filterType can be CAUSAL or NONCAUSAL
+                    or TWOPASS, with the last two being equivalent.</description>
             </xsd:annotation>
             <element name="lowFreqCorner">
                 <xsd:annotation>
@@ -239,10 +236,9 @@
         <element name="taper">
             <xsd:annotation>
                 <summary>Apply a taper</summary>
-                <description>Applies a taper to the seismograms. The type can be one of HANNING,
-                    HAMMING or COSINE, with HANNING the default. The width is given as a fraction of
-                    the seismogram length, and so should be 0.5 as otherwise the begin and end taper
-                    will overlap each other. 0.05 is the default.</description>
+                <description>Applies a taper to the seismograms. The type can be one of HANNING, HAMMING or COSINE, with
+                    HANNING the default. The width is given as a fraction of the seismogram length, and so should be 0.5
+                    as otherwise the begin and end taper will overlap each other. 0.05 is the default.</description>
                 <example>
                     <taper>
                         <width>.05</width>
@@ -270,10 +266,9 @@
         <element name="responseGain">
             <xsd:annotation>
                 <summary>Response Gain Correction</summary>
-                <description>Applies a overall sensitivity from the response to the seismograms.
-                    This will convert int or short seismograms into floats to avoid rounding errors
-                    that could result in the output seismograms being all zeros. There is no
-                    configuration.</description>
+                <description>Applies a overall sensitivity from the response to the seismograms. This will convert int
+                    or short seismograms into floats to avoid rounding errors that could result in the output
+                    seismograms being all zeros. There is no configuration.</description>
             </xsd:annotation>
             <empty/>
         </element>
@@ -282,16 +277,13 @@
         <element name="sacWriter">
             <xsd:annotation>
                 <summary>Writes sac files from seismograms</summary>
-                <description>The seismograms are written to sac files in the location indicated by location. 
-                If multiple seismograms are found for a channel seismograms past the first will be written 
-                out with a number appended to their file name.  ie the second seismogram will be filename.1 
-                and the third will be filename.2.
-                
-                The phaseTimeHeader element will cause the travel time of the given phase to be placed in the
-                sac header corresponding to the tHeader element. tHeader can be 0-9 as well as a. In the case
-                of 0-9, the ray parameter is inserted into the corresponding userX header as rad/sec.
-                
-                See the TauP user manual, http://www.seis.sc.edu/TauP, for the phase naming convention.</description>
+                <description>The seismograms are written to sac files in the location indicated by location. If multiple
+                    seismograms are found for a channel seismograms past the first will be written out with a number
+                    appended to their file name. ie the second seismogram will be filename.1 and the third will be
+                    filename.2. The phaseTimeHeader element will cause the travel time of the given phase to be placed
+                    in the sac header corresponding to the tHeader element. tHeader can be 0-9 as well as a. In the case
+                    of 0-9, the ray parameter is inserted into the corresponding userX header as rad/sec. See the TauP
+                    user manual, http://www.seis.sc.edu/TauP, for the phase naming convention.</description>
                 <example>
                     <sacWriter>
                         <workingDir>seismograms</workingDir>
@@ -312,9 +304,9 @@
             <ref name="seisWriterBase"/>
             <zeroOrMore>
                 <element name="phaseTimeHeader">
-                <xsd:annotation>
-                    <summary>Inserts estimated arrival times using TauP</summary>
-                </xsd:annotation>
+                    <xsd:annotation>
+                        <summary>Inserts estimated arrival times using TauP</summary>
+                    </xsd:annotation>
                     <ref name="phaseTimeContents"/>
                 </element>
             </zeroOrMore>
@@ -324,13 +316,15 @@
         <element name="mseedWriter">
             <xsd:annotation>
                 <summary>Writes mseed files from seismograms</summary>
-                <description>The seismograms are written to mseed files in the location indicated by location. 
-                    If multiple seismograms are found for a channel seismograms past the first will be written out with a number appended to their file name.  ie the second seismogram will be filename.1 and the third will be filename.2</description>
+                <description>The seismograms are written to mseed files in the location indicated by location. If
+                    multiple seismograms are found for a channel seismograms past the first will be written out with a
+                    number appended to their file name. ie the second seismogram will be filename.1 and the third will
+                    be filename.2</description>
                 <example>
                     <mseedWriter>
                         <workingDir>seismograms</workingDir>
                         <location>${channel.code}/${event.filizedTime}/${network.code}.${station.code}.${site.code}.mseed</location>
-                        </mseedWriter>
+                    </mseedWriter>
                 </example>
             </xsd:annotation>
             <ref name="seisWriterBase"/>
@@ -351,8 +345,8 @@
         <element name="workingDir">
             <xsd:annotation>
                 <summary>The base directory for seismogram output</summary>
-                <description>The value generated by location is appened to the value in workingDir to make the 
-                location to write seismogram files.  This defaults to 'seismograms'.</description>
+                <description>The value generated by location is appened to the value in workingDir to make the location
+                    to write seismogram files. This defaults to 'seismograms'.</description>
             </xsd:annotation>
             <data type="string"/>
         </element>
@@ -362,8 +356,8 @@
             <xsd:annotation>
                 <summary>The name of this writer for reference by other processors</summary>
                 <description>This only matters to other processors that wish to access the files written by this writer.
-                Things like legacyExecute and sacExecute use the name to find which seismogram writer's seismograms to pass to their command.  
-                If there is only one sacWriter or mseedWriter, you can just leave this alone.</description>
+                    Things like legacyExecute and sacExecute use the name to find which seismogram writer's seismograms
+                    to pass to their command. If there is only one sacWriter or mseedWriter, you can just leave this alone.</description>
             </xsd:annotation>
             <data type="string"/>
         </element>
@@ -372,20 +366,21 @@
         <element name="location">
             <xsd:annotation>
                 <summary>Generates file locations for seismograms</summary>
-                <description>This is a
-                    <a href="../../templates.html">Velocity template</a> to
-                    determine the file name for the seismograms.  The template contains a list of <a href="../../templateTypes.html#seismogram">seismogram</a> named seismograms containing all the retrieved seismograms,
-                    a list of <a href="../../templateTypes.html#request">request</a> named originalRequests that are the requests generated by your request generator,
-                    another list of <a href="../../templateTypes.html#request">request</a> named availableRequests that are the requests the server said were available for retrieval, 
-                    <a href="../../templateTypes.html#event">event</a>,
-                    <a href="../../templateTypes.html#channel">channel</a>, 
-                                       <a href="../../templateTypes.html#site">site</a>, <a href="../../templateTypes.html#station">station</a>
-                    and <a href="../../templateTypes.html#net">net</a> variables.
-                    If no template element is given, it defaults to "Event_${event.getTime('yyyy_MM_dd_HH_mm_ss')}/${channel.codes}.mseed".
-                   The value generated with location is appended to the value in workingDir to make the full location.
-                    </description>
+                <description>This is a <a href="../../templates.html">Velocity template</a> to determine the file name
+                    for the seismograms. The template contains a list of <a
+                    href="../../templateTypes.html#seismogram">seismogram</a> named seismograms containing all the
+                    retrieved seismograms, a list of <a href="../../templateTypes.html#request">request</a> named
+                    originalRequests that are the requests generated by your request generator, another list of <a
+                    href="../../templateTypes.html#request">request</a> named availableRequests that are the requests
+                    the server said were available for retrieval, <a href="../../templateTypes.html#event">event</a>, <a
+                    href="../../templateTypes.html#channel">channel</a>, <a
+                    href="../../templateTypes.html#site">site</a>, <a
+                    href="../../templateTypes.html#station">station</a> and <a
+                    href="../../templateTypes.html#net">net</a> variables. If no template element is given, it defaults
+                    to "Event_${event.getTime('yyyy_MM_dd_HH_mm_ss')}/${channel.codes}.mseed". The value generated with
+                    location is appended to the value in workingDir to make the full location. </description>
                 <example>
-                        <location>${channel.code}/${event.getTime("yyyy_DDD_HH_mm_ss")}/${network.code}.${station.code}.${site.code}.mseed</location>
+                    <location>${channel.code}/${event.getTime("yyyy_DDD_HH_mm_ss")}/${network.code}.${station.code}.${site.code}.mseed</location>
                 </example>
             </xsd:annotation>
             <data type="string"/>
@@ -393,38 +388,38 @@
     </define>
     <define name="phaseTimeContents">
         <optional>
-        <element name="model">
-            <ref name="model"/>
-        </element>
+            <element name="model">
+                <ref name="model"/>
+            </element>
         </optional>
         <element name="phaseName">
             <ref name="phaseName"/>
         </element>
         <element name="tHeader">
-        <choice>
-            <value>a</value>
-            <value>0</value>
-            <value>1</value>
-            <value>2</value>
-            <value>3</value>
-            <value>4</value>
-            <value>5</value>
-            <value>6</value>
-            <value>7</value>
-            <value>8</value>
-            <value>9</value>
-        </choice>
+            <choice>
+                <value>a</value>
+                <value>0</value>
+                <value>1</value>
+                <value>2</value>
+                <value>3</value>
+                <value>4</value>
+                <value>5</value>
+                <value>6</value>
+                <value>7</value>
+                <value>8</value>
+                <value>9</value>
+            </choice>
         </element>
     </define>
     <define name="saveSeismogramToFile">
         <element name="saveSeismogramToFile">
             <xsd:annotation>
-                <summary>Deprecated!  Use sacWriter or mseedWriter instead!</summary>
-                <description>As of sod-2.2 this processor is deprecated.  Unless you specifically want DSML files, use sacWriter or mseedWriter instead.  When sod-2.3 is released, this processor will no longer be allowed.
-                
-                 The seismograms are written to data files in the given directory. Also
-                    writes out a dsml file for use in GEE and other fissures tools that support
-                    datasets. If fileType isn't set, seismograms will be saved as mseed.  Always returns true unless there is an error.</description>
+                <summary>Deprecated! Use sacWriter or mseedWriter instead!</summary>
+                <description>As of sod-2.2 this processor is deprecated. Unless you specifically want DSML files, use
+                    sacWriter or mseedWriter instead. When sod-2.3 is released, this processor will no longer be
+                    allowed. The seismograms are written to data files in the given directory. Also writes out a dsml
+                    file for use in GEE and other fissures tools that support datasets. If fileType isn't set,
+                    seismograms will be saved as mseed. Always returns true unless there is an error.</description>
                 <example>
                     <saveSeismogramToFile>
                         <fileType>sac</fileType>
@@ -486,8 +481,8 @@
         <element name="recordSectionDisplayGenerator">
             <xsd:annotation>
                 <summary>Generates the recordsection display for each event</summary>
-                <description>Reads the dsml file created by the saveSeismogramToFile processor and
-                    generates the recordsection image file</description>
+                <description>Reads the dsml file created by the saveSeismogramToFile processor and generates the
+                    recordsection image file</description>
                 <example>
                     <recordSectionDisplayGenerator>
                         <id>RecordSection_</id>
@@ -520,9 +515,8 @@
             <optional>
                 <element name="idealNumberOfSeismograms">
                     <xsd:annotation>
-                        <description>specifies the ideal number of seismograms to include in this
-                            record section. If possible, this many evenly spaced seismograms will be
-                            included</description>
+                        <description>specifies the ideal number of seismograms to include in this record section. If
+                            possible, this many evenly spaced seismograms will be included</description>
                     </xsd:annotation>
                     <data type="integer"/>
                 </element>
@@ -530,9 +524,8 @@
             <optional>
                 <element name="maxNumberOfSeismograms">
                     <xsd:annotation>
-                        <description>specifies the maximum number of seismograms to include in this
-                            record section. If the spacing of the ideal number is less than
-                            satisfactory, this many seismograms may be included</description>
+                        <description>specifies the maximum number of seismograms to include in this record section. If
+                            the spacing of the ideal number is less than satisfactory, this many seismograms may be included</description>
                     </xsd:annotation>
                     <data type="integer"/>
                 </element>
@@ -545,8 +538,7 @@
             <optional>
                 <element name="percentSeisHeight">
                     <xsd:annotation>
-                        <description>Height of the seismogram as a percentage of recordsection
-                            height</description>
+                        <description>Height of the seismogram as a percentage of recordsection height</description>
                     </xsd:annotation>
                     <data type="double"/>
                 </element>
@@ -606,30 +598,31 @@
         <element name="printlineSeismogramProcess">
             <xsd:annotation>
                 <summary>Prints a line to std out for each seismogram processed</summary>
-                <description>This simply prints a line to standard out or a file for each seismogram to be
-                    processed. It can be used as a simple status monitor.  Both filename and template are 
-                    <a href="../../templates.html">Velocity templates</a>.  
-                    They contain a list of <a href="../../templateTypes.html#seismogram">seismogram</a> named seismograms containing all the retrieved seismograms,
-                    a list of <a href="../../templateTypes.html#request">request</a> named originalRequests that are the requests generated by your request generator,
-                    another list of <a href="../../templateTypes.html#request">request</a> named availableRequests that are the requests the server said were available for retrieval, 
-                    <a href="../../templateTypes.html#site">site</a>, <a href="../../templateTypes.html#station">station</a>,
-                    <a href="../../templateTypes.html#net">net</a> and 
-                    <a href="../../templateTypes.html#event">event</a> variables.
-                    If no template element is given, it defaults to "Got $seismograms.size() seismograms for $channel.codes for eq on $event.time".
-                    If no filename is given, the output goes to standard out.</description>
+                <description>This simply prints a line to standard out or a file for each seismogram to be processed. It
+                    can be used as a simple status monitor. Both filename and template are <a
+                        href="../../templates.html">Velocity templates</a>. They contain a list of <a
+                    href="../../templateTypes.html#seismogram">seismogram</a> named seismograms containing all the
+                    retrieved seismograms, a list of <a href="../../templateTypes.html#request">request</a> named
+                    originalRequests that are the requests generated by your request generator, another list of <a
+                    href="../../templateTypes.html#request">request</a> named availableRequests that are the requests
+                    the server said were available for retrieval, <a href="../../templateTypes.html#site">site</a>, <a
+                    href="../../templateTypes.html#station">station</a>, <a href="../../templateTypes.html#net">net</a>
+                    and <a href="../../templateTypes.html#event">event</a> variables. If no template element is given,
+                    it defaults to "Got $seismograms.size() seismograms for $channel.codes for eq on $event.time". If no
+                    filename is given, the output goes to standard out.</description>
                 <include/>
             </xsd:annotation>
             <interleave>
-            <optional>
-                <element name="template">
-                    <text/>
-                </element>
-            </optional>
-            <optional>
-                <element name="filename">
-                    <text/>
-                </element>
-            </optional>
+                <optional>
+                    <element name="template">
+                        <text/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
             </interleave>
         </element>
     </define>
@@ -651,11 +644,10 @@
         <element name="forkProcess">
             <xsd:annotation>
                 <summary>Forks the processing of seismograms</summary>
-                <description>This forks the processing of the seismograms so that more than one
-                    sequence of processing steps can be applied to the data independently. If
-                    another processor follows the fork it gets the seismograms as they went into the
-                    fork, but only executes if the items in the fork passed. If you want to execute
-                    the items past the fork no matter what, enclose it in an alwaysSuccess tag.</description>
+                <description>This forks the processing of the seismograms so that more than one sequence of processing
+                    steps can be applied to the data independently. If another processor follows the fork it gets the
+                    seismograms as they went into the fork, but only executes if the items in the fork passed. If you
+                    want to execute the items past the fork no matter what, enclose it in an alwaysSuccess tag.</description>
                 <example>
                     <forkProcess>
                         <rTrend/>
@@ -677,8 +669,8 @@
         <element name="alwaysSuccess">
             <xsd:annotation>
                 <summary>Executes a subprocessor, but always returns true</summary>
-                <description>This executes the enclosed processor, but always returns a success
-                    regardless of whether the enclosed processor succeeded or failed.</description>
+                <description>This executes the enclosed processor, but always returns a success regardless of whether
+                    the enclosed processor succeeded or failed.</description>
                 <example>
                     <alwaysSuccess>
                         <printlineSeismogramProcess/>
@@ -692,10 +684,10 @@
         <element name="phaseSignalToNoise">
             <xsd:annotation>
                 <summary>Accepts or rejects seismograms based on their signal to noise ratio</summary>
-                <description>This calculates the signal to noise ratio in the time window described
-                    by the offsets around the given phases and passes if the ratio is less than the
-                    given ratio. See the documentation for the TauP Toolkit, http://www.seis.sc.edu/TauP for the phase naming
-                    convention. SOD uses the TauP Toolkit internally.</description>
+                <description>This calculates the signal to noise ratio in the time window described by the offsets
+                    around the given phases and passes if the ratio is less than the given ratio. See the documentation
+                    for the TauP Toolkit, http://www.seis.sc.edu/TauP for the phase naming convention. SOD uses the TauP
+                    Toolkit internally.</description>
                 <example>
                     <phaseSignalToNoise>
                         <phaseName>ttp</phaseName>
@@ -761,9 +753,9 @@
         <element name="legacyExecute">
             <xsd:annotation>
                 <summary>Executes an external program.</summary>
-                <description>The legacyExecute processor is capable of running existing command line
-                    programs. It does this by passing the filename of the seismograms saved by a
-                    earlier sacWriter or mseedWriter processor to a program started with Runtime.exec(). </description>
+                <description>The legacyExecute processor is capable of running existing command line programs. It does
+                    this by passing the filename of the seismograms saved by a earlier sacWriter or mseedWriter
+                    processor to a program started with Runtime.exec(). </description>
                 <example>
                     <legacyExecute>
                         <command>echo</command>
@@ -773,8 +765,9 @@
             <optional>
                 <element name="writerName">
                     <xsd:annotation>
-                    <summary>The name of the writer that wrote the seismograms</summary>
-                        <description>sacWriter and mseedWriter have a name element.  The files passed to the command here are the ones written by the sacWriter or mseedWriter with this name.  Defaults to no name</description>
+                        <summary>The name of the writer that wrote the seismograms</summary>
+                        <description>sacWriter and mseedWriter have a name element. The files passed to the command here
+                            are the ones written by the sacWriter or mseedWriter with this name. Defaults to no name</description>
                     </xsd:annotation>
                     <data type="string"/>
                 </element>
@@ -793,11 +786,10 @@
         <element name="noDataGaps">
             <xsd:annotation>
                 <summary>Only allows seismograms with gapless data through</summary>
-                <description>This processor checks the data returned from the dataCenter for gaps
-                    larger than the sample period of the instrument. If from the begin time of the
-                    earliest piece to the end time of the latest piece there are no gaps in time
-                    larger than the sample period, this process passes the data onto the next item
-                    in the line.</description>
+                <description>This processor checks the data returned from the dataCenter for gaps larger than the sample
+                    period of the instrument. If from the begin time of the earliest piece to the end time of the latest
+                    piece there are no gaps in time larger than the sample period, this process passes the data onto the
+                    next item in the line.</description>
             </xsd:annotation>
             <empty/>
         </element>
@@ -806,10 +798,9 @@
         <element name="someDataCoverage">
             <xsd:annotation>
                 <summary>Only allows seismograms with data overlapping the original request through</summary>
-                <description>This processor checks the data returned from the dataCenter against the
-                    request generated by the request generator. If at least one piece of data exists
-                    during the time specified by the request generator, this processor passes the
-                    data onto the next step.</description>
+                <description>This processor checks the data returned from the dataCenter against the request generated
+                    by the request generator. If at least one piece of data exists during the time specified by the
+                    request generator, this processor passes the data onto the next step.</description>
             </xsd:annotation>
             <empty/>
         </element>
@@ -817,15 +808,12 @@
     <define name="fullDataCoverage">
         <element name="fullDataCoverage">
             <xsd:annotation>
-                <summary>Only allows seismograms with data covering the entire original request
-                    through</summary>
-                <description>This processor checks the data returned from the dataCenter for
-                    complete coverage of the original request. If from the begin time of the
-                    earliest piece is before the start of the request, and the end time of the
-                    latest piece is past the end of the request, the data passes. This does not
-                    guarantee that there are no gaps in the middle of the request though. To ensure
-                    that, combine this processor with a noDataGaps processor in a
-                seismogramAND.</description>
+                <summary>Only allows seismograms with data covering the entire original request through</summary>
+                <description>This processor checks the data returned from the dataCenter for complete coverage of the
+                    original request. If from the begin time of the earliest piece is before the start of the request,
+                    and the end time of the latest piece is past the end of the request, the data passes. This does not
+                    guarantee that there are no gaps in the middle of the request though. To ensure that, combine this
+                    processor with a noDataGaps processor in a seismogramAND.</description>
             </xsd:annotation>
             <empty/>
         </element>
@@ -834,8 +822,8 @@
         <element name="integrate">
             <xsd:annotation>
                 <summary>Integrates the seismograms, changing velocity to displacement for example.</summary>
-                <description>This processor integrates each seismogram, using a integration constant
-                    of zero. This can be used to change velocity to displacement. </description>
+                <description>This processor integrates each seismogram, using a integration constant of zero. This can
+                    be used to change velocity to displacement. </description>
             </xsd:annotation>
             <empty/>
         </element>
@@ -844,8 +832,8 @@
         <element name="differentiate">
             <xsd:annotation>
                 <summary>Takes the derivitive of the seismograms, changing displacement to velocity for example.</summary>
-                <description>This processor takes the derivitive with respect to time of each seismogram.
-                    This can be used to change displacement to velocity. </description>
+                <description>This processor takes the derivitive with respect to time of each seismogram. This can be
+                    used to change displacement to velocity. </description>
             </xsd:annotation>
             <empty/>
         </element>
@@ -862,15 +850,14 @@
         <element name="transferResponse">
             <xsd:annotation>
                 <summary>Applies an instrumentation correction as in the transfer command in SAC</summary>
-                <description>This calculates and applies the polezero response from the sensor
-                    (stage 1) in the response along with the overall gain. Great care should be
-                    taken with this processor as the transfer is a spectral division, and is hence
-                    inherently unstable. This basically means that if you allow the frequency limits
-                    to be too large, specified in lowCut, lowPass, highPass and highCut, you will be
-                    dividing one very small number by another very small number, which due to
-                    rounding errors may generate very large amplitudes at long periods which are not
-                    real. Also, you should almost always apply an rmean and taper before applying
-                    transferResponse. See the sac manual for more discussion of transfer. </description>
+                <description>This calculates and applies the polezero response from the sensor (stage 1) in the response
+                    along with the overall gain. Great care should be taken with this processor as the transfer is a
+                    spectral division, and is hence inherently unstable. This basically means that if you allow the
+                    frequency limits to be too large, specified in lowCut, lowPass, highPass and highCut, you will be
+                    dividing one very small number by another very small number, which due to rounding errors may
+                    generate very large amplitudes at long periods which are not real. Also, you should almost always
+                    apply an rmean and taper before applying transferResponse. See the sac manual for more discussion of
+                    transfer. </description>
                 <example>
                     <transferResponse>
                         <lowCut>0.005</lowCut>
@@ -906,11 +893,30 @@
         <element name="collapseOverlaps">
             <xsd:annotation>
                 <summary>Collapses overlapping seismograms.</summary>
-                <description>This checks for overlapping seismograms. If one seismogram is completely contained in another seismogram, it is removed. If two seismograms overlap partially, then the longer of the two is kept in its entirety and the short is cut to no longer overlap
-This processor should ideally not be needed, as the server should refrain from returning overlapping data. See http://www.iris.edu/jira/browse/DHI-6 for the status of this in the Pond server.
-                </description>
+                <description>This checks for overlapping seismograms. If one seismogram is completely contained in
+                    another seismogram, it is removed. If two seismograms overlap partially, then the longer of the two
+                    is kept in its entirety and the short is cut to no longer overlap This processor should ideally not
+                    be needed, as the server should refrain from returning overlapping data. See
+                    http://www.iris.edu/jira/browse/DHI-6 for the status of this in the Pond server. </description>
             </xsd:annotation>
             <empty/>
+        </element>
+    </define>
+    <define name="div">
+        <element name="div">
+            <data type="float"/>
+        </element>
+    </define>
+    <define name="mul">
+        <element name="mul">
+            <data type="float"/>
+        </element>
+    </define>
+    <define name="invertFlippedChannels">
+        <element name="invertFlippedChannels">
+            <oneOrMore>
+                <ref name="seismogramProcess"/>
+            </oneOrMore>
         </element>
     </define>
 </grammar>

@@ -115,20 +115,10 @@
             <empty/>
         </element>
     </define>
-    <define name="siteLogical">
-        <choice>
-            <ref name="code4"/>
-            <ref name="depthRange4"/>
-            <ref name="effectiveTimeOverlap4"/>
-            <ref name="area4"/>
-            <ref name="AND3"/>
-            <ref name="OR7"/>
-            <ref name="NOT7"/>
-            <ref name="PASS7"/>
-            <ref name="externalSiteSubsetter2"/>
-            <ref name="station4"/>
-            <ref name="network8"/>
-        </choice>
+    <define name="sensorSerial">
+        <element name="sensorSerial">
+            <data type="string"/>
+        </element>
     </define>
     <define name="siteLogical2">
         <choice>
@@ -145,9 +135,24 @@
             <ref name="network3"/>
         </choice>
     </define>
-    <define name="depthRange2">
-        <element name="stationDepthRange">
-            <ref name="range4"/>
+    <define name="siteLogical">
+        <choice>
+            <ref name="code4"/>
+            <ref name="depthRange4"/>
+            <ref name="effectiveTimeOverlap4"/>
+            <ref name="area4"/>
+            <ref name="AND3"/>
+            <ref name="OR7"/>
+            <ref name="NOT7"/>
+            <ref name="PASS7"/>
+            <ref name="externalSiteSubsetter2"/>
+            <ref name="station4"/>
+            <ref name="network8"/>
+        </choice>
+    </define>
+    <define name="dasStyle">
+        <element name="dasStyle">
+            <data type="integer"/>
         </element>
     </define>
     <define name="depthRange5">
@@ -217,6 +222,11 @@
             </optional>
         </element>
     </define>
+    <define name="depthRange2">
+        <element name="stationDepthRange">
+            <ref name="range4"/>
+        </element>
+    </define>
     <define name="depthRange">
         <element name="stationDepthRange">
             <ref name="range"/>
@@ -230,6 +240,11 @@
     <define name="hasSensitivity">
         <element name="hasSensitivity">
             <empty/>
+        </element>
+    </define>
+    <define name="sensorManufacturer">
+        <element name="sensorManufacturer">
+            <data type="string"/>
         </element>
     </define>
     <define name="stationPointBackAzimuth4">
@@ -338,6 +353,11 @@
     <define name="bandCode">
         <element name="bandCode">
             <ref name="singleLetterOrNumber"/>
+        </element>
+    </define>
+    <define name="clockId">
+        <element name="clockId">
+            <data type="integer"/>
         </element>
     </define>
     <define name="gainCode">
@@ -797,6 +817,11 @@
             <ref name="lon3"/>
         </element>
     </define>
+    <define name="sensorNominalHighFreq">
+        <element name="sensorNominalHighFreq">
+            <data type="float"/>
+        </element>
+    </define>
     <define name="sampling">
         <element name="sampling">
             <optional>
@@ -812,6 +837,26 @@
             <element name="interval">
                 <ref name="time13"/>
             </element>
+        </element>
+    </define>
+    <define name="sensorId">
+        <element name="sensorId">
+            <data type="integer"/>
+        </element>
+    </define>
+    <define name="clockType">
+        <element name="clockType">
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="clockManufacturer">
+        <element name="clockManufacturer">
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="dasSerial">
+        <element name="dasSerial">
+            <data type="string"/>
         </element>
     </define>
     <define name="orientationRange">
@@ -905,6 +950,11 @@
             <data type="string"/>
         </element>
     </define>
+    <define name="sensorNominalLowFreq">
+        <element name="sensorNominalLowFreq">
+            <data type="float"/>
+        </element>
+    </define>
     <define name="hasNegativeSensitivity">
         <element name="hasNegativeSensitivity">
             <empty/>
@@ -939,6 +989,11 @@
                     </choice>
                 </element>
             </element>
+        </element>
+    </define>
+    <define name="clockModel">
+        <element name="clockModel">
+            <data type="string"/>
         </element>
     </define>
     <define name="responseWriter">
@@ -1133,13 +1188,23 @@
             </element>
         </element>
     </define>
-    <define name="effectiveTimeOverlap4">
-        <element name="siteEffectiveTimeOverlap">
+    <define name="effectiveTimeOverlap2">
+        <element name="stationEffectiveTimeOverlap">
             <element name="startTime">
-                <ref name="time7"/>
+                <ref name="time15"/>
             </element>
             <element name="endTime">
-                <ref name="time7"/>
+                <ref name="time15"/>
+            </element>
+        </element>
+    </define>
+    <define name="effectiveTimeOverlap">
+        <element name="stationEffectiveTimeOverlap">
+            <element name="startTime">
+                <ref name="time3"/>
+            </element>
+            <element name="endTime">
+                <ref name="time3"/>
             </element>
         </element>
     </define>
@@ -1173,23 +1238,13 @@
             </element>
         </element>
     </define>
-    <define name="effectiveTimeOverlap">
-        <element name="stationEffectiveTimeOverlap">
+    <define name="effectiveTimeOverlap4">
+        <element name="siteEffectiveTimeOverlap">
             <element name="startTime">
-                <ref name="time3"/>
+                <ref name="time7"/>
             </element>
             <element name="endTime">
-                <ref name="time3"/>
-            </element>
-        </element>
-    </define>
-    <define name="effectiveTimeOverlap2">
-        <element name="stationEffectiveTimeOverlap">
-            <element name="startTime">
-                <ref name="time15"/>
-            </element>
-            <element name="endTime">
-                <ref name="time15"/>
+                <ref name="time7"/>
             </element>
         </element>
     </define>
@@ -1217,6 +1272,11 @@
                     <ref name="xml15"/>
                 </choice>
             </oneOrMore>
+        </element>
+    </define>
+    <define name="clockSerial">
+        <element name="clockSerial">
+            <data type="string"/>
         </element>
     </define>
     <define name="channel">
@@ -1255,54 +1315,22 @@
             <ref name="hasResponse"/>
             <ref name="hasSensitivity"/>
             <ref name="repairSensitivity"/>
-            <element name="clockId">
-                <data type="integer"/>
-            </element>
-            <element name="clockManufacturer">
-                <data type="string"/>
-            </element>
-            <element name="clockModel">
-                <data type="string"/>
-            </element>
-            <element name="clockSerial">
-                <data type="string"/>
-            </element>
-            <element name="clockType">
-                <data type="string"/>
-            </element>
-            <element name="dasId">
-                <data type="integer"/>
-            </element>
-            <element name="dasManufacturer">
-                <data type="string"/>
-            </element>
-            <element name="dasModel">
-                <data type="string"/>
-            </element>
-            <element name="dasSerial">
-                <data type="string"/>
-            </element>
-            <element name="dasStyle">
-                <data type="integer"/>
-            </element>
-            <element name="sensorId">
-                <data type="integer"/>
-            </element>
-            <element name="sensorManufacturer">
-                <data type="string"/>
-            </element>
-            <element name="sensorModel">
-                <data type="string"/>
-            </element>
-            <element name="sensorSerial">
-                <data type="string"/>
-            </element>
-            <element name="sensorNominalHighFreq">
-                <data type="float"/>
-            </element>
-            <element name="sensorNominalLowFreq">
-                <data type="float"/>
-            </element>
+            <ref name="clockId"/>
+            <ref name="clockManufacturer"/>
+            <ref name="clockModel"/>
+            <ref name="clockSerial"/>
+            <ref name="clockType"/>
+            <ref name="dasId"/>
+            <ref name="dasManufacturer"/>
+            <ref name="dasModel"/>
+            <ref name="dasSerial"/>
+            <ref name="dasStyle"/>
+            <ref name="sensorId"/>
+            <ref name="sensorManufacturer"/>
+            <ref name="sensorModel"/>
+            <ref name="sensorSerial"/>
+            <ref name="sensorNominalHighFreq"/>
+            <ref name="sensorNominalLowFreq"/>
             <ref name="hasNegativeSensitivity"/>
             <ref name="isFlipped"/>
         </choice>
@@ -1540,6 +1568,11 @@
             <empty/>
         </element>
     </define>
+    <define name="dasModel">
+        <element name="dasModel">
+            <data type="string"/>
+        </element>
+    </define>
     <define name="orientationCode">
         <element name="orientationCode">
             <ref name="singleLetterOrNumber"/>
@@ -1573,6 +1606,13 @@
             </zeroOrMore>
         </element>
     </define>
+    <define name="PASS4">
+        <element name="passStation">
+            <zeroOrMore>
+                <ref name="station2"/>
+            </zeroOrMore>
+        </element>
+    </define>
     <define name="PASS2">
         <element name="passStation">
             <zeroOrMore>
@@ -1603,13 +1643,6 @@
             </zeroOrMore>
         </element>
     </define>
-    <define name="PASS4">
-        <element name="passStation">
-            <zeroOrMore>
-                <ref name="station2"/>
-            </zeroOrMore>
-        </element>
-    </define>
     <define name="stationPointAzimuth">
         <element name="stationPointAzimuth">
             <ref name="range"/>
@@ -1617,11 +1650,11 @@
             <ref name="lon"/>
         </element>
     </define>
-    <define name="stationPointAzimuth2">
+    <define name="stationPointAzimuth4">
         <element name="stationPointAzimuth">
-            <ref name="range4"/>
-            <ref name="lat4"/>
-            <ref name="lon4"/>
+            <ref name="range2"/>
+            <ref name="lat2"/>
+            <ref name="lon2"/>
         </element>
     </define>
     <define name="stationPointAzimuth3">
@@ -1631,11 +1664,16 @@
             <ref name="lon3"/>
         </element>
     </define>
-    <define name="stationPointAzimuth4">
+    <define name="stationPointAzimuth2">
         <element name="stationPointAzimuth">
-            <ref name="range2"/>
-            <ref name="lat2"/>
-            <ref name="lon2"/>
+            <ref name="range4"/>
+            <ref name="lat4"/>
+            <ref name="lon4"/>
+        </element>
+    </define>
+    <define name="sensorModel">
+        <element name="sensorModel">
+            <data type="string"/>
         </element>
     </define>
     <define name="channelLogical">
@@ -1665,6 +1703,22 @@
             <ref name="hasResponse"/>
             <ref name="hasSensitivity"/>
             <ref name="repairSensitivity"/>
+            <ref name="clockId"/>
+            <ref name="clockManufacturer"/>
+            <ref name="clockModel"/>
+            <ref name="clockSerial"/>
+            <ref name="clockType"/>
+            <ref name="dasId"/>
+            <ref name="dasManufacturer"/>
+            <ref name="dasModel"/>
+            <ref name="dasSerial"/>
+            <ref name="dasStyle"/>
+            <ref name="sensorId"/>
+            <ref name="sensorManufacturer"/>
+            <ref name="sensorModel"/>
+            <ref name="sensorSerial"/>
+            <ref name="sensorNominalHighFreq"/>
+            <ref name="sensorNominalLowFreq"/>
             <ref name="hasNegativeSensitivity"/>
             <ref name="isFlipped"/>
         </choice>
@@ -1712,6 +1766,11 @@
             <element name="max">
                 <data type="float"/>
             </element>
+        </element>
+    </define>
+    <define name="dasManufacturer">
+        <element name="dasManufacturer">
+            <data type="string"/>
         </element>
     </define>
     <define name="hasResponse">
@@ -1805,6 +1864,35 @@
             </element>
         </optional>
     </define>
+    <define name="range2">
+        <element name="unit">
+            <choice>
+                <value>KILOMETER</value>
+                <value>METER</value>
+                <value>CENTIMETER</value>
+                <value>NANOMETER</value>
+                <value>MICROMETER</value>
+                <value>MICRON</value>
+                <value>MILLIMETER</value>
+                <value>PICOMETER</value>
+                <value>INCH</value>
+                <value>FOOT</value>
+                <value>MILE</value>
+                <value>DEGREE</value>
+                <value>RADIAN</value>
+            </choice>
+        </element>
+        <optional>
+            <element name="min">
+                <data type="double"/>
+            </element>
+        </optional>
+        <optional>
+            <element name="max">
+                <data type="double"/>
+            </element>
+        </optional>
+    </define>
     <define name="range4">
         <element name="unit">
             <choice>
@@ -1835,35 +1923,6 @@
         </optional>
     </define>
     <define name="range3">
-        <element name="unit">
-            <choice>
-                <value>KILOMETER</value>
-                <value>METER</value>
-                <value>CENTIMETER</value>
-                <value>NANOMETER</value>
-                <value>MICROMETER</value>
-                <value>MICRON</value>
-                <value>MILLIMETER</value>
-                <value>PICOMETER</value>
-                <value>INCH</value>
-                <value>FOOT</value>
-                <value>MILE</value>
-                <value>DEGREE</value>
-                <value>RADIAN</value>
-            </choice>
-        </element>
-        <optional>
-            <element name="min">
-                <data type="double"/>
-            </element>
-        </optional>
-        <optional>
-            <element name="max">
-                <data type="double"/>
-            </element>
-        </optional>
-    </define>
-    <define name="range2">
         <element name="unit">
             <choice>
                 <value>KILOMETER</value>
@@ -2004,6 +2063,20 @@
             </oneOrMore>
         </element>
     </define>
+    <define name="xml">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
     <define name="xml4">
         <element>
             <anyName/>
@@ -2018,7 +2091,7 @@
             </oneOrMore>
         </element>
     </define>
-    <define name="xml8">
+    <define name="xml2">
         <element>
             <anyName/>
             <oneOrMore>
@@ -2027,7 +2100,7 @@
                         <anyName/>
                     </attribute>
                     <text/>
-                    <ref name="xml8"/>
+                    <ref name="xml2"/>
                 </choice>
             </oneOrMore>
         </element>
@@ -2046,7 +2119,7 @@
             </oneOrMore>
         </element>
     </define>
-    <define name="xml2">
+    <define name="xml8">
         <element>
             <anyName/>
             <oneOrMore>
@@ -2055,7 +2128,7 @@
                         <anyName/>
                     </attribute>
                     <text/>
-                    <ref name="xml2"/>
+                    <ref name="xml8"/>
                 </choice>
             </oneOrMore>
         </element>
@@ -2084,20 +2157,6 @@
                     </attribute>
                     <text/>
                     <ref name="xml9"/>
-                </choice>
-            </oneOrMore>
-        </element>
-    </define>
-    <define name="xml">
-        <element>
-            <anyName/>
-            <oneOrMore>
-                <choice>
-                    <attribute>
-                        <anyName/>
-                    </attribute>
-                    <text/>
-                    <ref name="xml"/>
                 </choice>
             </oneOrMore>
         </element>
@@ -3229,7 +3288,17 @@
             </element>
         </element>
     </define>
+    <define name="dasId">
+        <element name="dasId">
+            <data type="integer"/>
+        </element>
+    </define>
     <define name="lat4">
+        <element name="latitude">
+            <data type="float"/>
+        </element>
+    </define>
+    <define name="lat2">
         <element name="latitude">
             <data type="float"/>
         </element>
@@ -3240,11 +3309,6 @@
         </element>
     </define>
     <define name="lat">
-        <element name="latitude">
-            <data type="float"/>
-        </element>
-    </define>
-    <define name="lat2">
         <element name="latitude">
             <data type="float"/>
         </element>
