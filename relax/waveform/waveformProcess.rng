@@ -65,8 +65,10 @@
                 <summary>Matches all included seismogram processors</summary>
                 <description>The output is the logical AND of the outputs of all included seismogram processors. This
                     means that it will evaluate to true only if all of the included processors evaluate to true. The
-                    subsetters after the first false outputted are not evaluated. The seismic data passed down the chain
-                    is the data passed in. Seismogram results of the contained processors are ignored.</description>
+                    subsetters after the first false outputted are not evaluated. The result of each processor in the AND
+                    is passed to the next processor in the AND, and the result of the last evaluated processor in the AND
+                    is passed to the next processor outside of the AND. To isolate the processing inside the AND, wrap
+                    it inside of a forkProcess.</description>
                 <example>
                     <seismogramAND>
                         <noDataGaps/>
@@ -85,8 +87,10 @@
                 <summary>Matches at least one of the included seismogram processors</summary>
                 <description>The output is the logical OR of the outputs of all included seismogram processors. This
                     means that it will evaluate to true as long as one of the included seismogram processors evaluate to
-                    true. The processors after the first true outputted are not evaluated. The seismic data passed down
-                    the chain is the data passed in. Seismogram results of the contained processors are ignored.</description>
+                    true. The processors after the first true outputted are not evaluated. The result of each processor in the OR
+                    is passed to the next processor in the OR, and the result of the last evaluated processor in the OR
+                    is passed to the next processor outside of the OR. To isolate the processing inside the OR, wrap
+                    it inside of a forkProcess.</description>
                 <example>
                     <seismogramOR>
                         <noDataGaps/>
@@ -105,8 +109,10 @@
                 <summary>Matches the negated output of the included seismogram processor</summary>
                 <description>The output is the logical NOT of the output of the included seismogram processor. This
                     means that it will evaluate to true if the included processor evaluates to false, and vice versa.
-                    The seismic data passed down the chain is the data passed in. Seismogram results of the contained
-                    processors are ignored.</description>
+                    The seismic data passed down the chain is the data passed in. The result of each processor in the NOT
+                    is passed to the next processor in the NOT, and the result of the last evaluated processor in the NOT
+                    is passed to the next processor outside of the NOT. To isolate the processing inside the NOT, wrap
+                    it inside of a forkProcess.</description>
                 <example>
                     <seismogramNOT>
                         <someDataCoverage/>
