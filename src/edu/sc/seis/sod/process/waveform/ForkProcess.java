@@ -5,9 +5,9 @@
  */
 package edu.sc.seis.sod.process.waveform;
 
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
-import org.apache.log4j.Logger;
+import java.util.List;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -25,7 +25,6 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
 public class ForkProcess implements WaveformProcess {
 
     public ForkProcess(Element config) throws ConfigurationException {
-        this.config = config;
         NodeList children = config.getChildNodes();
         Node node;
         for(int i = 0; i < children.getLength(); i++) {
@@ -49,16 +48,29 @@ public class ForkProcess implements WaveformProcess {
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) throws Exception {
-        LocalSeismogramImpl[] out = copySeismograms(seismograms);
+        return new WaveformResult(copySeismograms(seismograms),
+                                  doAND(event,
+                                        channel,
+                                        original,
+                                        available,
+                                        seismograms,
+                                        cookieJar).getReason());
+    }
+
+    protected WaveformResult doAND(EventAccessOperations event,
+                                   Channel channel,
+                                   RequestFilter[] original,
+                                   RequestFilter[] available,
+                                   LocalSeismogramImpl[] seismograms,
+                                   CookieJar cookieJar) throws Exception {
         // pass originals to the contained processors
-        WaveformProcess processor;
-        LinkedList reasons = new LinkedList();
+        List reasons = new ArrayList(localSeisProcessList.size());
         Iterator it = localSeisProcessList.iterator();
         WaveformResult result = new WaveformResult(seismograms,
                                                    new StringTreeLeaf(this,
                                                                       true));
         while(it.hasNext() && result.isSuccess()) {
-            processor = (WaveformProcess)it.next();
+            WaveformProcess processor = (WaveformProcess)it.next();
             synchronized(processor) {
                 result = processor.process(event,
                                            channel,
@@ -67,9 +79,12 @@ public class ForkProcess implements WaveformProcess {
                                            result.getSeismograms(),
                                            cookieJar);
             }
-            reasons.addLast(result.getReason());
+            reasons.add(result.getReason());
         } // end of while (it.hasNext())
-        return new WaveformResult(out,
+        if(reasons.size() < localSeisProcessList.size()) {
+            reasons.add(new StringTreeLeaf("ShortCircuit", result.isSuccess()));
+        }
+        return new WaveformResult(result.getSeismograms(),
                                   new StringTreeBranch(this,
                                                        result.isSuccess(),
                                                        (StringTree[])reasons.toArray(new StringTree[0])));
@@ -84,9 +99,20 @@ public class ForkProcess implements WaveformProcess {
         return out;
     }
 
-    protected LinkedList localSeisProcessList = new LinkedList();
+    public String toString() {
+        String s = getName() + "(";
+        Iterator it = localSeisProcessList.iterator();
+        while(it.hasNext()) {
+            s += it.next().toString() + ",";
+        }
+        s = s.substring(0, s.length() - 1);
+        s += ")";
+        return s;
+    }
 
-    Element config;
+    public String getName() {
+        return "ForkProcess";
+    }
 
-    private static final Logger logger = Logger.getLogger(ForkProcess.class);
+    protected List localSeisProcessList = new ArrayList();
 }

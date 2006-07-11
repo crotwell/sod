@@ -31,12 +31,11 @@ public class SeismogramNOT extends ForkProcess {
                                          CookieJar cookieJar
                                         ) throws Exception {
         WaveformResult result;
-        WaveformProcess processor;
         Iterator it = localSeisProcessList.iterator();
-        processor = (WaveformProcess)it.next();
+        WaveformProcess processor = (WaveformProcess)it.next();
         synchronized (processor) {
             result = processor.process(event, channel, original,
-                                       available, copySeismograms(seismograms), cookieJar);
+                                       available, seismograms, cookieJar);
         }
         return new WaveformResult( result.getSeismograms(), new StringTreeBranch(this, ! result.isSuccess(), result.getReason()));
     }
