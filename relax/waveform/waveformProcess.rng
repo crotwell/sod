@@ -904,16 +904,33 @@
     </define>
     <define name="div">
         <element name="div">
+            <xsd:annotation>
+                <summary>Divides each point in the seismogram by the given value</summary>
+            </xsd:annotation>
+            
             <data type="float"/>
         </element>
     </define>
     <define name="mul">
         <element name="mul">
+            <xsd:annotation>
+                <summary>Multiplies each point in the seismogram by the given value</summary>
+            </xsd:annotation>
             <data type="float"/>
         </element>
     </define>
     <define name="invertFlippedChannels">
         <element name="invertFlippedChannels">
+            <xsd:annotation>
+                <summary>If a seismogram's actual orientation is flipped from the orientation of its code, the seismogram is inverted</summary>
+                <description>This processor first checks the orientation in the seismogram's channel against its orientation code.  If
+                the code implies an orientation reversed from the actual orientation, the seismogram's values are inverted.  For example
+                if the seismogram's channel code is BHZ but its orientation is actually downwards, the inversion will be applied.  
+                The codes and orientation will disagree if the channel was installed incorrectly and then later discovered.  This
+                seems to be the case in roughly 1/10 of existing channels.  Since the inversion changes the orientation stored in the channel
+                any further processors that want to use the results of this processor must be contained inside of it.  To just check
+                for disagreement between the code and orientation, use the isFlipped channel subsetter.</description>
+            </xsd:annotation>
             <oneOrMore>
                 <ref name="seismogramProcess"/>
             </oneOrMore>

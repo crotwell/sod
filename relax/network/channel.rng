@@ -664,11 +664,17 @@
     </define>
     <define name="isFlipped">
         <element name="isFlipped">
+            <xsd:annotation>
+                <summary>Passes channels whose orientation code are inverted with regards to their orientation.</summary>
+            </xsd:annotation>
             <empty/>
         </element>
     </define>
     <define name="hasNegativeSensitivity">
         <element name="hasNegativeSensitivity">
+            <xsd:annotation>
+                <summary>Passes channels with a sensitivity less than 0</summary>
+            </xsd:annotation>
             <empty/>
         </element>
     </define>
