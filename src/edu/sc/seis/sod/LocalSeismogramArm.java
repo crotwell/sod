@@ -253,7 +253,7 @@ public class LocalSeismogramArm implements Subsetter {
                                 logger.info("request id: " + id);
                                 String status = dataCenter.request_status(id);
                                 int i = 0;
-                                while(status.equals(RETRIEVING_DATA)) {
+                                while(status.equals(RETRIEVING_DATA) && i < 60) {
                                     logger.info("Waiting for data to be returned from the archive.  We've been waiting for "
                                             + i++ + " minutes");
                                     try {
@@ -263,6 +263,14 @@ public class LocalSeismogramArm implements Subsetter {
                                 }
                                 if(status.equals(DATA_RETRIEVED)) {
                                     localSeismograms = dataCenter.retrieve_queue(id);
+                                } else if(status.equals(RETRIEVING_DATA)) {
+                                    ecp.update(Status.get(Stage.DATA_RETRIEVAL,
+                                                          Standing.CORBA_FAILURE));
+                                    failLogger.info("Looks like the archive lost request ID "
+                                            + id
+                                            + ".  No data was returned after "
+                                            + i + " minutes. " + ecp);
+                                    return;
                                 }
                             } catch(FissuresException ex) {
                                 handle(ecp, Stage.DATA_RETRIEVAL, ex);
