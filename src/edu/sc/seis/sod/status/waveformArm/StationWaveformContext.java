@@ -6,6 +6,7 @@
 
 package edu.sc.seis.sod.status.waveformArm;
 
+import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.Start;
 import java.sql.SQLException;
@@ -76,6 +77,8 @@ public class StationWaveformContext  extends WaveformArmContext {
                 }
                 return out;
             } catch (SQLException e) {
+                throw new RuntimeException("can't get for key="+key, e);
+            } catch(NetworkNotFound e) {
                 throw new RuntimeException("can't get for key="+key, e);
             }
         } else {
