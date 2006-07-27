@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
@@ -310,20 +311,14 @@ public class WaveformArm implements Arm {
         }
     }
 
-    public EventVectorPair getEventVectorPair(EventChannelPair ecp) {
+    public EventVectorPair getEventVectorPair(EventChannelPair ecp) throws NetworkNotFound {
         try {
             Channel[] chans;
-            try {
                 ChannelDbObject[] chanDb = networkArm.getAllChannelsFromSite(ecp.getChannelDbId());
                 chans = new Channel[chanDb.length];
                 for(int i = 0; i < chanDb.length; i++) {
                     chans[i] = chanDb[i].getChannel();
                 }
-            } catch(Exception e) {
-                // this should never happen, as the ecp was already created
-                throw new RuntimeException("Can't get other channels in motion vector: "
-                        + ecp);
-            }
             ChannelGroup[] groups = channelGrouper.group(chans, new ArrayList());
             ChannelGroup pairGroup = null;
             for(int i = 0; i < groups.length; i++) {
@@ -403,6 +398,10 @@ public class WaveformArm implements Arm {
                                                     pairId,
                                                    e);
                         continue;
+                    } catch(NetworkNotFound e) {
+                        handleExceptionGettingRetry("EventChannelStatus get unable to find network", pairId, 
+                                                   e);
+                        continue;
                     }
                 } catch(SQLException e) {
                     handleExceptionGettingRetry("Trouble matching up a pair with its waveform group",
@@ -469,6 +468,10 @@ public class WaveformArm implements Arm {
                                                           + pairIds[i]
                                                           + " right after it gave it to me",
                                                   e);
+                } catch(NetworkNotFound e) {
+                    GlobalExceptionHandler.handle("EventChannelStatus get unable to find network"
+                                                                              + pairIds[i],
+                                                                      e);
                 }
             }
             if(workUnit != null) {
