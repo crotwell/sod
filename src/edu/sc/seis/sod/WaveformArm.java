@@ -314,14 +314,15 @@ public class WaveformArm implements Arm {
         try {
             Channel[] chans;
             try {
-            ChannelDbObject[] chanDb = networkArm.getAllChannelsFromSite(ecp.getChannelDbId());
-            chans = new Channel[chanDb.length];
-            for(int i = 0; i < chanDb.length; i++) {
-                chans[i] = chanDb[i].getChannel();
-            }
-            } catch (Exception e) {
+                ChannelDbObject[] chanDb = networkArm.getAllChannelsFromSite(ecp.getChannelDbId());
+                chans = new Channel[chanDb.length];
+                for(int i = 0; i < chanDb.length; i++) {
+                    chans[i] = chanDb[i].getChannel();
+                }
+            } catch(Exception e) {
                 // this should never happen, as the ecp was already created
-                throw new RuntimeException("Can't get other channels in motion vector: "+ecp);
+                throw new RuntimeException("Can't get other channels in motion vector: "
+                        + ecp);
             }
             ChannelGroup[] groups = channelGrouper.group(chans, new ArrayList());
             ChannelGroup pairGroup = null;
@@ -352,53 +353,73 @@ public class WaveformArm implements Arm {
             GlobalExceptionHandler.handle(e);
         } catch(NotFound e) {
             GlobalExceptionHandler.handle(e);
-        } 
+        }
         return null;
     }
 
-    private WaveformWorkUnit getNextRetry() throws SQLException {
-        int pairId;
+    private Integer getNextRetryId() throws SQLException {
         if(retries.hasNext()) {
-            pairId = retries.next();
+            return new Integer(retries.next());
         } else if(corbaFailures.hasNext()) {
-            pairId = corbaFailures.next();
+            return new Integer(corbaFailures.next());
         } else {
             return null;
         }
-        if(motionVectorArm != null) {
-            try {
-                EventChannelPair ecp;
-                try {
-                    synchronized(evChanStatus) {
-                        ecp = evChanStatus.get(pairId, this);
-                    }
-                } catch(NotFound e) {
-                    throw new RuntimeException("EventChannelStatus table unable to find pair "
-                                                       + pairId
-                                                       + " right after it gave it to me",
-                                               e);
-                }
-                try {
-                    EventVectorPair ecgp = getEventVectorPair(ecp);
-                    if(ecgp == null) {
-                        return null;
-                    }
-                    int[] pairs;
-                    synchronized(evChanStatus) {
-                        pairs = evChanStatus.getPairs(ecgp);
-                    }
-                    return new RetryMotionVectorWaveformWorkUnit(pairs);
-                } catch(NotFound e) {
-                    throw new RuntimeException("EventChannelStatus table unable to find pair right after it gave it to me",
-                                               e);
-                }
-            } catch(SQLException e) {
-                throw new RuntimeException("Trouble matching up a pair with its waveform group",
-                                           e);
+    }
+
+    private WaveformWorkUnit getNextRetry() throws SQLException {
+        while(true) {
+            // keep going until we either get a retry without errors or there
+            // are no more, ie return null
+            Integer nextPairId = getNextRetryId();
+            if(nextPairId == null) {
+                return null;
             }
-        } else {
-            return new RetryWaveformWorkUnit(pairId);
+            int pairId = nextPairId.intValue();
+            if(motionVectorArm != null) {
+                try {
+                    EventChannelPair ecp;
+                    try {
+                        synchronized(evChanStatus) {
+                            ecp = evChanStatus.get(pairId, this);
+                        }
+                    } catch(NotFound e) {
+                        handleExceptionGettingRetry("EventChannelStatus get unable to find pair right after it gave it to me", pairId, 
+                                                   e);
+                        continue;
+                    }
+                    try {
+                        EventVectorPair ecgp = getEventVectorPair(ecp);
+                        if(ecgp == null) {
+                            return null;
+                        }
+                        int[] pairs;
+                        synchronized(evChanStatus) {
+                            pairs = evChanStatus.getPairs(ecgp);
+                        }
+                        return new RetryMotionVectorWaveformWorkUnit(pairs);
+                    } catch(NotFound e) {
+                        handleExceptionGettingRetry("EventChannelStatus getPairs unable to find vector pairs",
+                                                    pairId,
+                                                   e);
+                        continue;
+                    }
+                } catch(SQLException e) {
+                    handleExceptionGettingRetry("Trouble matching up a pair with its waveform group",
+                                                pairId,
+                                               e);
+                    continue;
+                }
+            } else {
+                return new RetryWaveformWorkUnit(pairId);
+            }
         }
+    }
+    
+    private void handleExceptionGettingRetry(String msg, int pairId, Throwable t) throws SQLException {
+        GlobalExceptionHandler.handle(msg+" pairId="+pairId, t);
+        evChanStatus.setStatus(pairId, Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                                  Standing.SYSTEM_FAILURE));
     }
 
     private void addSuspendedPairsToQueue(int[] pairIds) throws SQLException {
