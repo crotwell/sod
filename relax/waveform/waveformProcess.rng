@@ -9,6 +9,7 @@
     <include href="../base/include/taup.rng"/>
     <include href="../base/include/seismogramImage.rng"/>
     <include href="../base/include/seismogramDisplay.rng"/>
+    <include href="../base/include/samplingRange.rng"/>
     <define name="seismogramProcess">
         <choice>
             <xsd:annotation>
@@ -57,6 +58,8 @@
             <ref name="mul"/>
             <ref name="invertFlippedChannels"/>
             <ref name="saveSeismogramToFile"/>
+            <ref name="seismogramSampling"/>
+            <ref name="decimate"/>
         </choice>
     </define>
     <define name="seismogramAND">
@@ -904,6 +907,38 @@
                     is kept in its entirety and the short is cut to no longer overlap This processor should ideally not
                     be needed, as the server should refrain from returning overlapping data. See
                     http://www.iris.edu/jira/browse/DHI-6 for the status of this in the Pond server. </description>
+            </xsd:annotation>
+            <empty/>
+        </element>
+    </define>
+    <define name="seismogramSampling">
+        <element name="seismogramSampling">
+            <xsd:annotation>
+                <summary>Matches if the sampling rate of the seismogram is within the range</summary>
+                <description>Matches if the sampling rate of the seismogram is within the range. Both
+                    the min and max are optional, although at least one must be given to have any
+                    effect</description>
+                <example>
+                    <sampling>
+                        <min>1</min>
+                        <max>40</max>
+                        <interval>
+                            <unit>SECOND</unit>
+                            <value>1</value>
+                        </interval>
+                    </sampling>
+                </example>
+            </xsd:annotation>
+            <ref name="samplingRange"/>
+        </element>
+    </define>
+    <define name="decimate">
+        <element name="decimate">
+            <xsd:annotation>
+                <summary>Decimates seismograms.</summary>
+                <description>This decimates seismograms by the given factor. Any needed low pass filtering should be done before applying this
+                    to avoid aliasing.
+                </description>
             </xsd:annotation>
             <empty/>
         </element>

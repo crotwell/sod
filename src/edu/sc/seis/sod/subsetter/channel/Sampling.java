@@ -35,7 +35,10 @@ public class Sampling extends RangeSubsetter implements ChannelSubsetter {
     }
 
     public boolean accept(Channel channel, ProxyNetworkAccess network) throws Exception {
-        SamplingImpl channelSampling = (SamplingImpl)channel.sampling_info;
+        return accept((SamplingImpl)channel.sampling_info);
+    }
+    
+    public boolean accept(SamplingImpl channelSampling) {
         double chanSampling = channelSampling.getFrequency()
                 .getValue(UnitImpl.HERTZ);
         return accept(chanSampling);

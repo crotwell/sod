@@ -6,6 +6,7 @@
     </start>
     <include href="../base/include/timeRange.rng"/>
     <include href="../base/include/quantity.rng"/>
+    <include href="../base/include/samplingRange.rng"/>
     <define name="channel">
         <choice>
             <xsd:annotation>
@@ -251,19 +252,7 @@
                     </sampling>
                 </example>
             </xsd:annotation>
-            <optional>
-                <element name="min">
-                    <data type="integer"/>
-                </element>
-            </optional>
-            <optional>
-                <element name="max">
-                    <data type="integer"/>
-                </element>
-            </optional>
-            <element name="interval">
-                <ref name="time"/>
-            </element>
+            <ref name="samplingRange"/>
         </element>
     </define>
     <define name="effectiveTimeOverlap">
