@@ -93,7 +93,7 @@ public class NetworkArm implements Arm {
     }
 
     public NetworkDbObject getNetworkDbObject(NetworkId network_id)
-            throws Exception {
+            throws SQLException, NetworkNotFound, NotFound {
         NetworkDbObject[] tmpNetDbs = getSuccessfulNetworks();
         for(int i = 0; i < tmpNetDbs.length; i++) {
             if(NetworkIdUtil.areEqual(tmpNetDbs[i].getNetworkAccess()
@@ -633,11 +633,15 @@ public class NetworkArm implements Arm {
     // channels
     // from the site for the vector arm
     /**
+     * @throws NotFound 
+     * @throws SQLException 
+     * @throws NetworkNotFound 
+     * @throws  
      * @returns all channels that are in the same site as the channel with the
      *          given database id
      */
-    public ChannelDbObject[] getAllChannelsFromSite(int chanId)
-            throws Exception {
+    public ChannelDbObject[] getAllChannelsFromSite(int chanId) throws NetworkNotFound, SQLException, NotFound
+             {
         SiteDbObject site = (SiteDbObject)channelToSiteMap.get(new Integer(chanId));
         return getSuccessfulChannels(getNetworkDbObject(getChannel(chanId).get_id().network_id),
                                      site);
