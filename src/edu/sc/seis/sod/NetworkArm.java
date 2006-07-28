@@ -590,10 +590,10 @@ public class NetworkArm implements Arm {
                                 }
                             }
                             Integer dbidInt = new Integer(dbid);
-                            channelMap.put(dbidInt, chan);
-                            channelToSiteMap.put(dbidInt, siteDbObject);
                             ChannelDbObject channelDbObject = new ChannelDbObject(dbid,
                                                                                   chan);
+                            channelMap.put(dbidInt, channelDbObject);
+                            channelToSiteMap.put(dbidInt, siteDbObject);
                             successes.add(channelDbObject);
                             change(chan, Status.get(Stage.NETWORK_SUBSETTER,
                                                     Standing.SUCCESS));
@@ -623,8 +623,14 @@ public class NetworkArm implements Arm {
     // isn't much of a stretch to cache them by dbid, and this allows
     // JDBCEventChannelStatus to quickly pull them out instead of going to the
     // Net database
-    public Channel getChannel(int chanId) {
-        return (Channel)channelMap.get(new Integer(chanId));
+    public Channel getChannel(int chanId) throws NotFound, SQLException {
+        ChannelDbObject chan = (ChannelDbObject)channelMap.get(new Integer(chanId));
+        if (chan != null) {
+            return chan.getChannel();
+        }
+        chan = netTable.getChannel(chanId);
+        channelMap.put(new Integer(chanId), chan);
+        return chan.getChannel();
     }
 
     private Map channelMap = Collections.synchronizedMap(new HashMap());
@@ -642,8 +648,17 @@ public class NetworkArm implements Arm {
      */
     public ChannelDbObject[] getAllChannelsFromSite(int chanId) throws NetworkNotFound, SQLException, NotFound
              {
+        Channel chan = getChannel(chanId);
+        if (chan == null) {
+            throw new NotFound("Channel for id="+chanId+" cannot be found.");
+        }
         SiteDbObject site = (SiteDbObject)channelToSiteMap.get(new Integer(chanId));
-        return getSuccessfulChannels(getNetworkDbObject(getChannel(chanId).get_id().network_id),
+        if (site == null) {
+            int siteDbId = netTable.getSiteDb().getDBId(chan.my_site.get_id(), chan.my_site.my_station);
+            site = new SiteDbObject(siteDbId, chan.my_site);
+            channelToSiteMap.put(new Integer(chanId), site);
+        }
+        return getSuccessfulChannels(getNetworkDbObject(chan.get_id().network_id),
                                      site);
     }
 
