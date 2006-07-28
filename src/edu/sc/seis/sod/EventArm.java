@@ -135,10 +135,15 @@ public class EventArm implements Arm {
         return lastEvent;
     }
 
+    private int MIN_WAIT_EVENTS = 10;
     private void waitForProcessing() throws Exception {
         if(waitForWaveformProcessing) {
+            int numEvents= eventStatus.getAll(Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                                         Standing.IN_PROG)).length;
+            if (numEvents < MIN_WAIT_EVENTS) {
+                return;
+            }
             setStatus("Waiting until there are less than 10 events waiting to be processed.");
-            int numEvents;
             while(true) {
                 synchronized(eventStatus) {
                     numEvents = eventStatus.getAll(Status.get(Stage.EVENT_CHANNEL_POPULATION,
@@ -151,6 +156,7 @@ public class EventArm implements Arm {
                     Thread.sleep(5000);
                 } catch(InterruptedException e) {}
             }
+            
         }
     }
 
