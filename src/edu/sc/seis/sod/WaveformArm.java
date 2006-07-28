@@ -386,7 +386,8 @@ public class WaveformArm implements Arm {
                     try {
                         EventVectorPair ecgp = getEventVectorPair(ecp);
                         if(ecgp == null) {
-                            return null;
+                            handleExceptionGettingRetry("Unable to get EventVectorPair for EventChannelPair, skipping it", pairId, new RuntimeException());
+                            continue;
                         }
                         int[] pairs;
                         synchronized(evChanStatus) {
