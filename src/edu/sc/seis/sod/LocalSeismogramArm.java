@@ -266,6 +266,7 @@ public class LocalSeismogramArm implements Subsetter {
                                 } else if(status.equals(RETRIEVING_DATA)) {
                                     ecp.update(Status.get(Stage.DATA_RETRIEVAL,
                                                           Standing.CORBA_FAILURE));
+                                    dataCenter.cancel_request(id);
                                     failLogger.info("Looks like the archive lost request ID "
                                             + id
                                             + ".  No data was returned after "
