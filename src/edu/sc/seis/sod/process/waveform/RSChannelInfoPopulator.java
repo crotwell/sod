@@ -48,7 +48,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
     public RSChannelInfoPopulator(Element config, Connection conn)
             throws Exception {
         initConfig(config);
-        saveSeisToFile = getSaveSeismogramToFile();
+        saveSeisToFile = getSaveSeismogramToFile(saveSeisId);
         recordSectionChannel = new JDBCRecordSectionChannel(conn);
         eventAccess = new JDBCEventAccess(recordSectionChannel.getConnection());
         channel = new JDBCChannel();
@@ -120,12 +120,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
     }
 
     public SaveSeismogramToFile getSaveSeismogramToFile() throws Exception {
-        return getSaveSeismogramToFile(saveSeisId);
-    }
-
-    public SaveSeismogramToFile getFirstSaveSeismogramToFile() throws Exception {
-        return extractSaveSeis("(//saveSeismogramToFile)[1]",
-                               "No SaveSeismogramToFile found");
+        return saveSeisToFile;
     }
 
     public static SaveSeismogramToFile getSaveSeismogramToFile(String saveId)
