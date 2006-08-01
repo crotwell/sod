@@ -93,13 +93,14 @@ public class WaveformArm implements Arm {
                 } catch(InterruptedException e) {}
             }
             waitForInitialEvent();
+            int sleepTime = 5;
+            TimeInterval logInterval = new TimeInterval(10, UnitImpl.MINUTE);
+            logger.debug("will populateEventChannelDb, then sleep "+sleepTime+" sec between each try to process successful events, log interval is "+logInterval);
+            lastEventStartLogTime = ClockUtil.now();
             do {
-                populateEventChannelDb();
-                try {
-                    logger.debug("after populateEventChannelDb, sleeping 5 sec");
-                    Thread.sleep(5000);
-                } catch(InterruptedException e) {}
+                int numEvents = populateEventChannelDb();
                 retryIfNeededAndAvailable();
+                sleepALittle(numEvents, sleepTime, logInterval);
             } while(eventArm.isActive());
             logger.info("Main waveform arm done.  Retrying failures.");
             MicroSecondDate runFinishTime = ClockUtil.now();
@@ -124,6 +125,19 @@ public class WaveformArm implements Arm {
                 + "honey; I need hands outstretched to take it.");
     }
 
+    private void sleepALittle(int numEvents, int sleepTime, TimeInterval logInterval) {
+        if (numEvents != 0) {
+            // found events so reset logInterval
+            lastEventStartLogTime = ClockUtil.now();
+        } else if (ClockUtil.now().subtract(lastEventStartLogTime).greaterThan(logInterval)) {
+            logger.debug("no successful events found in last "+logInterval);
+            lastEventStartLogTime = ClockUtil.now();
+        }
+        try {
+            Thread.sleep(sleepTime * 1000);
+        } catch(InterruptedException e) {}
+    }
+    
     public LocalSeismogramArm getLocalSeismogramArm() {
         return localSeismogramArm;
     }
@@ -143,8 +157,10 @@ public class WaveformArm implements Arm {
     // fills the eventchannel db with all available events and starts
     // WaveformWorkerUnits on all inserted event channel pairs
     // If there are no waiting events, this just returns
-    private void populateEventChannelDb() throws Exception {
+    private int populateEventChannelDb() throws Exception {
+        int numEvents = 0;
         for(EventDbObject ev = popAndGet(); ev != null; ev = popAndGet()) {
+            numEvents++;
             EventEffectiveTimeOverlap overlap = new EventEffectiveTimeOverlap(ev.getEvent());
             NetworkDbObject[] networks = networkArm.getSuccessfulNetworks();
             for(int i = 0; i < networks.length; i++) {
@@ -158,6 +174,7 @@ public class WaveformArm implements Arm {
                             Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                        Standing.SUCCESS));
         }
+        return numEvents;
     }
 
     private void startNetwork(EventDbObject ev,
@@ -612,7 +629,9 @@ public class WaveformArm implements Arm {
             }
         }
     }
-
+    
+    private MicroSecondDate lastEventStartLogTime;
+    
     private interface WaveformWorkUnit extends Runnable {}
 
     private class LocalSeismogramWaveformWorkUnit implements WaveformWorkUnit {
