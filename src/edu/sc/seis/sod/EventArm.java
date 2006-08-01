@@ -101,7 +101,6 @@ public class EventArm implements Arm {
             while(it.hasNext()) {
                 EventSource source = (EventSource)it.next();
                 if(source.hasNext()) {
-                    logger.debug(source + " has more events");
                     TimeInterval wait = source.getWaitBeforeNext();
                     long waitMillis = (long)wait.convertTo(UnitImpl.MILLISECOND)
                             .get_value();
