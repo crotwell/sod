@@ -1,8 +1,6 @@
 package edu.sc.seis.sod.subsetter.channel;
 
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.model.SamplingImpl;
 import edu.iris.Fissures.model.TimeInterval;
@@ -16,27 +14,26 @@ public class Sampling extends RangeSubsetter implements ChannelSubsetter {
 
     public Sampling(Element config) throws ConfigurationException {
         super(config);
-        TimeInterval interval = 
-            SodUtil.loadTimeInterval(SodUtil.getElement(config, "timeInterval"));
-        minSampling = new SamplingImpl((int)getMinValue(),
-                                       interval);
-        min = minSampling.getFrequency().getValue(UnitImpl.HERTZ);
-        maxSampling = new SamplingImpl((int)getMaxValue(),
-                                       interval);
-        max = maxSampling.getFrequency().getValue(UnitImpl.HERTZ);
+        TimeInterval interval = SodUtil.loadTimeInterval(SodUtil.getElement(config,
+                                                                            "timeInterval"));
+        min = getHertz((int)getMinValue(), interval);
+        max = getHertz((int)getMaxValue(), interval);
     }
 
-    public boolean accept(Channel channel, ProxyNetworkAccess network) throws Exception {
+    public boolean accept(Channel channel, ProxyNetworkAccess network)
+            throws Exception {
         return accept((SamplingImpl)channel.sampling_info);
     }
-    
+
     public boolean accept(SamplingImpl channelSampling) {
-        double chanSampling = channelSampling.getFrequency()
-                .getValue(UnitImpl.HERTZ);
-        return accept(chanSampling);
+        return accept(getHertz(channelSampling));
     }
 
-    private SamplingImpl maxSampling;
+    double getHertz(int val, TimeInterval interval) {
+        return getHertz(new SamplingImpl((int)getMinValue(), interval));
+    }
 
-    private SamplingImpl minSampling;
-}//Sampling
+    double getHertz(SamplingImpl sampling) {
+        return sampling.getFrequency().getValue(UnitImpl.HERTZ);
+    }
+}
