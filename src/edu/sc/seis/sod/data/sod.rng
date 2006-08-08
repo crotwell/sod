@@ -47158,28 +47158,26 @@
                     <data type="integer"/>
                 </element>
             </optional>
-            <element name="interval">
-                <element name="timeInterval">
-                    <interleave>
-                        <element name="unit">
-                            <choice>
-                                <value>HOUR</value>
-                                <value>NANOSECOND</value>
-                                <value>MICROSECOND</value>
-                                <value>MILLISECOND</value>
-                                <value>SECOND</value>
-                                <value>MINUTE</value>
-                                <value>DAY</value>
-                                <value>WEEK</value>
-                                <value>FORTNIGHT</value>
-                                <value>GREGORIAN_YEAR</value>
-                            </choice>
-                        </element>
-                        <element name="value">
-                            <data type="float"/>
-                        </element>
-                    </interleave>
-                </element>
+            <element name="timeInterval">
+                <interleave>
+                    <element name="unit">
+                        <choice>
+                            <value>HOUR</value>
+                            <value>NANOSECOND</value>
+                            <value>MICROSECOND</value>
+                            <value>MILLISECOND</value>
+                            <value>SECOND</value>
+                            <value>MINUTE</value>
+                            <value>DAY</value>
+                            <value>WEEK</value>
+                            <value>FORTNIGHT</value>
+                            <value>GREGORIAN_YEAR</value>
+                        </choice>
+                    </element>
+                    <element name="value">
+                        <data type="float"/>
+                    </element>
+                </interleave>
             </element>
         </element>
     </define>
@@ -47195,28 +47193,26 @@
                     <data type="integer"/>
                 </element>
             </optional>
-            <element name="interval">
-                <element name="timeInterval">
-                    <interleave>
-                        <element name="unit">
-                            <choice>
-                                <value>HOUR</value>
-                                <value>NANOSECOND</value>
-                                <value>MICROSECOND</value>
-                                <value>MILLISECOND</value>
-                                <value>SECOND</value>
-                                <value>MINUTE</value>
-                                <value>DAY</value>
-                                <value>WEEK</value>
-                                <value>FORTNIGHT</value>
-                                <value>GREGORIAN_YEAR</value>
-                            </choice>
-                        </element>
-                        <element name="value">
-                            <data type="float"/>
-                        </element>
-                    </interleave>
-                </element>
+            <element name="timeInterval">
+                <interleave>
+                    <element name="unit">
+                        <choice>
+                            <value>HOUR</value>
+                            <value>NANOSECOND</value>
+                            <value>MICROSECOND</value>
+                            <value>MILLISECOND</value>
+                            <value>SECOND</value>
+                            <value>MINUTE</value>
+                            <value>DAY</value>
+                            <value>WEEK</value>
+                            <value>FORTNIGHT</value>
+                            <value>GREGORIAN_YEAR</value>
+                        </choice>
+                    </element>
+                    <element name="value">
+                        <data type="float"/>
+                    </element>
+                </interleave>
             </element>
         </element>
     </define>
@@ -47232,28 +47228,26 @@
                     <data type="integer"/>
                 </element>
             </optional>
-            <element name="interval">
-                <element name="timeInterval">
-                    <interleave>
-                        <element name="unit">
-                            <choice>
-                                <value>HOUR</value>
-                                <value>NANOSECOND</value>
-                                <value>MICROSECOND</value>
-                                <value>MILLISECOND</value>
-                                <value>SECOND</value>
-                                <value>MINUTE</value>
-                                <value>DAY</value>
-                                <value>WEEK</value>
-                                <value>FORTNIGHT</value>
-                                <value>GREGORIAN_YEAR</value>
-                            </choice>
-                        </element>
-                        <element name="value">
-                            <data type="float"/>
-                        </element>
-                    </interleave>
-                </element>
+            <element name="timeInterval">
+                <interleave>
+                    <element name="unit">
+                        <choice>
+                            <value>HOUR</value>
+                            <value>NANOSECOND</value>
+                            <value>MICROSECOND</value>
+                            <value>MILLISECOND</value>
+                            <value>SECOND</value>
+                            <value>MINUTE</value>
+                            <value>DAY</value>
+                            <value>WEEK</value>
+                            <value>FORTNIGHT</value>
+                            <value>GREGORIAN_YEAR</value>
+                        </choice>
+                    </element>
+                    <element name="value">
+                        <data type="float"/>
+                    </element>
+                </interleave>
             </element>
         </element>
     </define>
@@ -47269,28 +47263,26 @@
                     <data type="integer"/>
                 </element>
             </optional>
-            <element name="interval">
-                <element name="timeInterval">
-                    <interleave>
-                        <element name="unit">
-                            <choice>
-                                <value>HOUR</value>
-                                <value>NANOSECOND</value>
-                                <value>MICROSECOND</value>
-                                <value>MILLISECOND</value>
-                                <value>SECOND</value>
-                                <value>MINUTE</value>
-                                <value>DAY</value>
-                                <value>WEEK</value>
-                                <value>FORTNIGHT</value>
-                                <value>GREGORIAN_YEAR</value>
-                            </choice>
-                        </element>
-                        <element name="value">
-                            <data type="float"/>
-                        </element>
-                    </interleave>
-                </element>
+            <element name="timeInterval">
+                <interleave>
+                    <element name="unit">
+                        <choice>
+                            <value>HOUR</value>
+                            <value>NANOSECOND</value>
+                            <value>MICROSECOND</value>
+                            <value>MILLISECOND</value>
+                            <value>SECOND</value>
+                            <value>MINUTE</value>
+                            <value>DAY</value>
+                            <value>WEEK</value>
+                            <value>FORTNIGHT</value>
+                            <value>GREGORIAN_YEAR</value>
+                        </choice>
+                    </element>
+                    <element name="value">
+                        <data type="float"/>
+                    </element>
+                </interleave>
             </element>
         </element>
     </define>
@@ -47306,28 +47298,26 @@
                     <data type="integer"/>
                 </element>
             </optional>
-            <element name="interval">
-                <element name="timeInterval">
-                    <interleave>
-                        <element name="unit">
-                            <choice>
-                                <value>HOUR</value>
-                                <value>NANOSECOND</value>
-                                <value>MICROSECOND</value>
-                                <value>MILLISECOND</value>
-                                <value>SECOND</value>
-                                <value>MINUTE</value>
-                                <value>DAY</value>
-                                <value>WEEK</value>
-                                <value>FORTNIGHT</value>
-                                <value>GREGORIAN_YEAR</value>
-                            </choice>
-                        </element>
-                        <element name="value">
-                            <data type="float"/>
-                        </element>
-                    </interleave>
-                </element>
+            <element name="timeInterval">
+                <interleave>
+                    <element name="unit">
+                        <choice>
+                            <value>HOUR</value>
+                            <value>NANOSECOND</value>
+                            <value>MICROSECOND</value>
+                            <value>MILLISECOND</value>
+                            <value>SECOND</value>
+                            <value>MINUTE</value>
+                            <value>DAY</value>
+                            <value>WEEK</value>
+                            <value>FORTNIGHT</value>
+                            <value>GREGORIAN_YEAR</value>
+                        </choice>
+                    </element>
+                    <element name="value">
+                        <data type="float"/>
+                    </element>
+                </interleave>
             </element>
         </element>
     </define>
@@ -47343,28 +47333,26 @@
                     <data type="integer"/>
                 </element>
             </optional>
-            <element name="interval">
-                <element name="timeInterval">
-                    <interleave>
-                        <element name="unit">
-                            <choice>
-                                <value>HOUR</value>
-                                <value>NANOSECOND</value>
-                                <value>MICROSECOND</value>
-                                <value>MILLISECOND</value>
-                                <value>SECOND</value>
-                                <value>MINUTE</value>
-                                <value>DAY</value>
-                                <value>WEEK</value>
-                                <value>FORTNIGHT</value>
-                                <value>GREGORIAN_YEAR</value>
-                            </choice>
-                        </element>
-                        <element name="value">
-                            <data type="float"/>
-                        </element>
-                    </interleave>
-                </element>
+            <element name="timeInterval">
+                <interleave>
+                    <element name="unit">
+                        <choice>
+                            <value>HOUR</value>
+                            <value>NANOSECOND</value>
+                            <value>MICROSECOND</value>
+                            <value>MILLISECOND</value>
+                            <value>SECOND</value>
+                            <value>MINUTE</value>
+                            <value>DAY</value>
+                            <value>WEEK</value>
+                            <value>FORTNIGHT</value>
+                            <value>GREGORIAN_YEAR</value>
+                        </choice>
+                    </element>
+                    <element name="value">
+                        <data type="float"/>
+                    </element>
+                </interleave>
             </element>
         </element>
     </define>
@@ -47380,28 +47368,26 @@
                     <data type="integer"/>
                 </element>
             </optional>
-            <element name="interval">
-                <element name="timeInterval">
-                    <interleave>
-                        <element name="unit">
-                            <choice>
-                                <value>HOUR</value>
-                                <value>NANOSECOND</value>
-                                <value>MICROSECOND</value>
-                                <value>MILLISECOND</value>
-                                <value>SECOND</value>
-                                <value>MINUTE</value>
-                                <value>DAY</value>
-                                <value>WEEK</value>
-                                <value>FORTNIGHT</value>
-                                <value>GREGORIAN_YEAR</value>
-                            </choice>
-                        </element>
-                        <element name="value">
-                            <data type="float"/>
-                        </element>
-                    </interleave>
-                </element>
+            <element name="timeInterval">
+                <interleave>
+                    <element name="unit">
+                        <choice>
+                            <value>HOUR</value>
+                            <value>NANOSECOND</value>
+                            <value>MICROSECOND</value>
+                            <value>MILLISECOND</value>
+                            <value>SECOND</value>
+                            <value>MINUTE</value>
+                            <value>DAY</value>
+                            <value>WEEK</value>
+                            <value>FORTNIGHT</value>
+                            <value>GREGORIAN_YEAR</value>
+                        </choice>
+                    </element>
+                    <element name="value">
+                        <data type="float"/>
+                    </element>
+                </interleave>
             </element>
         </element>
     </define>
@@ -47417,28 +47403,26 @@
                     <data type="integer"/>
                 </element>
             </optional>
-            <element name="interval">
-                <element name="timeInterval">
-                    <interleave>
-                        <element name="unit">
-                            <choice>
-                                <value>HOUR</value>
-                                <value>NANOSECOND</value>
-                                <value>MICROSECOND</value>
-                                <value>MILLISECOND</value>
-                                <value>SECOND</value>
-                                <value>MINUTE</value>
-                                <value>DAY</value>
-                                <value>WEEK</value>
-                                <value>FORTNIGHT</value>
-                                <value>GREGORIAN_YEAR</value>
-                            </choice>
-                        </element>
-                        <element name="value">
-                            <data type="float"/>
-                        </element>
-                    </interleave>
-                </element>
+            <element name="timeInterval">
+                <interleave>
+                    <element name="unit">
+                        <choice>
+                            <value>HOUR</value>
+                            <value>NANOSECOND</value>
+                            <value>MICROSECOND</value>
+                            <value>MILLISECOND</value>
+                            <value>SECOND</value>
+                            <value>MINUTE</value>
+                            <value>DAY</value>
+                            <value>WEEK</value>
+                            <value>FORTNIGHT</value>
+                            <value>GREGORIAN_YEAR</value>
+                        </choice>
+                    </element>
+                    <element name="value">
+                        <data type="float"/>
+                    </element>
+                </interleave>
             </element>
         </element>
     </define>
@@ -47454,28 +47438,26 @@
                     <data type="integer"/>
                 </element>
             </optional>
-            <element name="interval">
-                <element name="timeInterval">
-                    <interleave>
-                        <element name="unit">
-                            <choice>
-                                <value>HOUR</value>
-                                <value>NANOSECOND</value>
-                                <value>MICROSECOND</value>
-                                <value>MILLISECOND</value>
-                                <value>SECOND</value>
-                                <value>MINUTE</value>
-                                <value>DAY</value>
-                                <value>WEEK</value>
-                                <value>FORTNIGHT</value>
-                                <value>GREGORIAN_YEAR</value>
-                            </choice>
-                        </element>
-                        <element name="value">
-                            <data type="float"/>
-                        </element>
-                    </interleave>
-                </element>
+            <element name="timeInterval">
+                <interleave>
+                    <element name="unit">
+                        <choice>
+                            <value>HOUR</value>
+                            <value>NANOSECOND</value>
+                            <value>MICROSECOND</value>
+                            <value>MILLISECOND</value>
+                            <value>SECOND</value>
+                            <value>MINUTE</value>
+                            <value>DAY</value>
+                            <value>WEEK</value>
+                            <value>FORTNIGHT</value>
+                            <value>GREGORIAN_YEAR</value>
+                        </choice>
+                    </element>
+                    <element name="value">
+                        <data type="float"/>
+                    </element>
+                </interleave>
             </element>
         </element>
     </define>
@@ -47491,28 +47473,26 @@
                     <data type="integer"/>
                 </element>
             </optional>
-            <element name="interval">
-                <element name="timeInterval">
-                    <interleave>
-                        <element name="unit">
-                            <choice>
-                                <value>HOUR</value>
-                                <value>NANOSECOND</value>
-                                <value>MICROSECOND</value>
-                                <value>MILLISECOND</value>
-                                <value>SECOND</value>
-                                <value>MINUTE</value>
-                                <value>DAY</value>
-                                <value>WEEK</value>
-                                <value>FORTNIGHT</value>
-                                <value>GREGORIAN_YEAR</value>
-                            </choice>
-                        </element>
-                        <element name="value">
-                            <data type="float"/>
-                        </element>
-                    </interleave>
-                </element>
+            <element name="timeInterval">
+                <interleave>
+                    <element name="unit">
+                        <choice>
+                            <value>HOUR</value>
+                            <value>NANOSECOND</value>
+                            <value>MICROSECOND</value>
+                            <value>MILLISECOND</value>
+                            <value>SECOND</value>
+                            <value>MINUTE</value>
+                            <value>DAY</value>
+                            <value>WEEK</value>
+                            <value>FORTNIGHT</value>
+                            <value>GREGORIAN_YEAR</value>
+                        </choice>
+                    </element>
+                    <element name="value">
+                        <data type="float"/>
+                    </element>
+                </interleave>
             </element>
         </element>
     </define>
@@ -47528,28 +47508,26 @@
                     <data type="integer"/>
                 </element>
             </optional>
-            <element name="interval">
-                <element name="timeInterval">
-                    <interleave>
-                        <element name="unit">
-                            <choice>
-                                <value>HOUR</value>
-                                <value>NANOSECOND</value>
-                                <value>MICROSECOND</value>
-                                <value>MILLISECOND</value>
-                                <value>SECOND</value>
-                                <value>MINUTE</value>
-                                <value>DAY</value>
-                                <value>WEEK</value>
-                                <value>FORTNIGHT</value>
-                                <value>GREGORIAN_YEAR</value>
-                            </choice>
-                        </element>
-                        <element name="value">
-                            <data type="float"/>
-                        </element>
-                    </interleave>
-                </element>
+            <element name="timeInterval">
+                <interleave>
+                    <element name="unit">
+                        <choice>
+                            <value>HOUR</value>
+                            <value>NANOSECOND</value>
+                            <value>MICROSECOND</value>
+                            <value>MILLISECOND</value>
+                            <value>SECOND</value>
+                            <value>MINUTE</value>
+                            <value>DAY</value>
+                            <value>WEEK</value>
+                            <value>FORTNIGHT</value>
+                            <value>GREGORIAN_YEAR</value>
+                        </choice>
+                    </element>
+                    <element name="value">
+                        <data type="float"/>
+                    </element>
+                </interleave>
             </element>
         </element>
     </define>
@@ -47565,28 +47543,26 @@
                     <data type="integer"/>
                 </element>
             </optional>
-            <element name="interval">
-                <element name="timeInterval">
-                    <interleave>
-                        <element name="unit">
-                            <choice>
-                                <value>HOUR</value>
-                                <value>NANOSECOND</value>
-                                <value>MICROSECOND</value>
-                                <value>MILLISECOND</value>
-                                <value>SECOND</value>
-                                <value>MINUTE</value>
-                                <value>DAY</value>
-                                <value>WEEK</value>
-                                <value>FORTNIGHT</value>
-                                <value>GREGORIAN_YEAR</value>
-                            </choice>
-                        </element>
-                        <element name="value">
-                            <data type="float"/>
-                        </element>
-                    </interleave>
-                </element>
+            <element name="timeInterval">
+                <interleave>
+                    <element name="unit">
+                        <choice>
+                            <value>HOUR</value>
+                            <value>NANOSECOND</value>
+                            <value>MICROSECOND</value>
+                            <value>MILLISECOND</value>
+                            <value>SECOND</value>
+                            <value>MINUTE</value>
+                            <value>DAY</value>
+                            <value>WEEK</value>
+                            <value>FORTNIGHT</value>
+                            <value>GREGORIAN_YEAR</value>
+                        </choice>
+                    </element>
+                    <element name="value">
+                        <data type="float"/>
+                    </element>
+                </interleave>
             </element>
         </element>
     </define>
@@ -47602,28 +47578,26 @@
                     <data type="integer"/>
                 </element>
             </optional>
-            <element name="interval">
-                <element name="timeInterval">
-                    <interleave>
-                        <element name="unit">
-                            <choice>
-                                <value>HOUR</value>
-                                <value>NANOSECOND</value>
-                                <value>MICROSECOND</value>
-                                <value>MILLISECOND</value>
-                                <value>SECOND</value>
-                                <value>MINUTE</value>
-                                <value>DAY</value>
-                                <value>WEEK</value>
-                                <value>FORTNIGHT</value>
-                                <value>GREGORIAN_YEAR</value>
-                            </choice>
-                        </element>
-                        <element name="value">
-                            <data type="float"/>
-                        </element>
-                    </interleave>
-                </element>
+            <element name="timeInterval">
+                <interleave>
+                    <element name="unit">
+                        <choice>
+                            <value>HOUR</value>
+                            <value>NANOSECOND</value>
+                            <value>MICROSECOND</value>
+                            <value>MILLISECOND</value>
+                            <value>SECOND</value>
+                            <value>MINUTE</value>
+                            <value>DAY</value>
+                            <value>WEEK</value>
+                            <value>FORTNIGHT</value>
+                            <value>GREGORIAN_YEAR</value>
+                        </choice>
+                    </element>
+                    <element name="value">
+                        <data type="float"/>
+                    </element>
+                </interleave>
             </element>
         </element>
     </define>
@@ -47639,28 +47613,26 @@
                     <data type="integer"/>
                 </element>
             </optional>
-            <element name="interval">
-                <element name="timeInterval">
-                    <interleave>
-                        <element name="unit">
-                            <choice>
-                                <value>HOUR</value>
-                                <value>NANOSECOND</value>
-                                <value>MICROSECOND</value>
-                                <value>MILLISECOND</value>
-                                <value>SECOND</value>
-                                <value>MINUTE</value>
-                                <value>DAY</value>
-                                <value>WEEK</value>
-                                <value>FORTNIGHT</value>
-                                <value>GREGORIAN_YEAR</value>
-                            </choice>
-                        </element>
-                        <element name="value">
-                            <data type="float"/>
-                        </element>
-                    </interleave>
-                </element>
+            <element name="timeInterval">
+                <interleave>
+                    <element name="unit">
+                        <choice>
+                            <value>HOUR</value>
+                            <value>NANOSECOND</value>
+                            <value>MICROSECOND</value>
+                            <value>MILLISECOND</value>
+                            <value>SECOND</value>
+                            <value>MINUTE</value>
+                            <value>DAY</value>
+                            <value>WEEK</value>
+                            <value>FORTNIGHT</value>
+                            <value>GREGORIAN_YEAR</value>
+                        </choice>
+                    </element>
+                    <element name="value">
+                        <data type="float"/>
+                    </element>
+                </interleave>
             </element>
         </element>
     </define>
@@ -47676,28 +47648,26 @@
                     <data type="integer"/>
                 </element>
             </optional>
-            <element name="interval">
-                <element name="timeInterval">
-                    <interleave>
-                        <element name="unit">
-                            <choice>
-                                <value>HOUR</value>
-                                <value>NANOSECOND</value>
-                                <value>MICROSECOND</value>
-                                <value>MILLISECOND</value>
-                                <value>SECOND</value>
-                                <value>MINUTE</value>
-                                <value>DAY</value>
-                                <value>WEEK</value>
-                                <value>FORTNIGHT</value>
-                                <value>GREGORIAN_YEAR</value>
-                            </choice>
-                        </element>
-                        <element name="value">
-                            <data type="float"/>
-                        </element>
-                    </interleave>
-                </element>
+            <element name="timeInterval">
+                <interleave>
+                    <element name="unit">
+                        <choice>
+                            <value>HOUR</value>
+                            <value>NANOSECOND</value>
+                            <value>MICROSECOND</value>
+                            <value>MILLISECOND</value>
+                            <value>SECOND</value>
+                            <value>MINUTE</value>
+                            <value>DAY</value>
+                            <value>WEEK</value>
+                            <value>FORTNIGHT</value>
+                            <value>GREGORIAN_YEAR</value>
+                        </choice>
+                    </element>
+                    <element name="value">
+                        <data type="float"/>
+                    </element>
+                </interleave>
             </element>
         </element>
     </define>
@@ -47713,28 +47683,26 @@
                     <data type="integer"/>
                 </element>
             </optional>
-            <element name="interval">
-                <element name="timeInterval">
-                    <interleave>
-                        <element name="unit">
-                            <choice>
-                                <value>HOUR</value>
-                                <value>NANOSECOND</value>
-                                <value>MICROSECOND</value>
-                                <value>MILLISECOND</value>
-                                <value>SECOND</value>
-                                <value>MINUTE</value>
-                                <value>DAY</value>
-                                <value>WEEK</value>
-                                <value>FORTNIGHT</value>
-                                <value>GREGORIAN_YEAR</value>
-                            </choice>
-                        </element>
-                        <element name="value">
-                            <data type="float"/>
-                        </element>
-                    </interleave>
-                </element>
+            <element name="timeInterval">
+                <interleave>
+                    <element name="unit">
+                        <choice>
+                            <value>HOUR</value>
+                            <value>NANOSECOND</value>
+                            <value>MICROSECOND</value>
+                            <value>MILLISECOND</value>
+                            <value>SECOND</value>
+                            <value>MINUTE</value>
+                            <value>DAY</value>
+                            <value>WEEK</value>
+                            <value>FORTNIGHT</value>
+                            <value>GREGORIAN_YEAR</value>
+                        </choice>
+                    </element>
+                    <element name="value">
+                        <data type="float"/>
+                    </element>
+                </interleave>
             </element>
         </element>
     </define>
@@ -47750,28 +47718,26 @@
                     <data type="integer"/>
                 </element>
             </optional>
-            <element name="interval">
-                <element name="timeInterval">
-                    <interleave>
-                        <element name="unit">
-                            <choice>
-                                <value>HOUR</value>
-                                <value>NANOSECOND</value>
-                                <value>MICROSECOND</value>
-                                <value>MILLISECOND</value>
-                                <value>SECOND</value>
-                                <value>MINUTE</value>
-                                <value>DAY</value>
-                                <value>WEEK</value>
-                                <value>FORTNIGHT</value>
-                                <value>GREGORIAN_YEAR</value>
-                            </choice>
-                        </element>
-                        <element name="value">
-                            <data type="float"/>
-                        </element>
-                    </interleave>
-                </element>
+            <element name="timeInterval">
+                <interleave>
+                    <element name="unit">
+                        <choice>
+                            <value>HOUR</value>
+                            <value>NANOSECOND</value>
+                            <value>MICROSECOND</value>
+                            <value>MILLISECOND</value>
+                            <value>SECOND</value>
+                            <value>MINUTE</value>
+                            <value>DAY</value>
+                            <value>WEEK</value>
+                            <value>FORTNIGHT</value>
+                            <value>GREGORIAN_YEAR</value>
+                        </choice>
+                    </element>
+                    <element name="value">
+                        <data type="float"/>
+                    </element>
+                </interleave>
             </element>
         </element>
     </define>
@@ -47787,28 +47753,26 @@
                     <data type="integer"/>
                 </element>
             </optional>
-            <element name="interval">
-                <element name="timeInterval">
-                    <interleave>
-                        <element name="unit">
-                            <choice>
-                                <value>HOUR</value>
-                                <value>NANOSECOND</value>
-                                <value>MICROSECOND</value>
-                                <value>MILLISECOND</value>
-                                <value>SECOND</value>
-                                <value>MINUTE</value>
-                                <value>DAY</value>
-                                <value>WEEK</value>
-                                <value>FORTNIGHT</value>
-                                <value>GREGORIAN_YEAR</value>
-                            </choice>
-                        </element>
-                        <element name="value">
-                            <data type="float"/>
-                        </element>
-                    </interleave>
-                </element>
+            <element name="timeInterval">
+                <interleave>
+                    <element name="unit">
+                        <choice>
+                            <value>HOUR</value>
+                            <value>NANOSECOND</value>
+                            <value>MICROSECOND</value>
+                            <value>MILLISECOND</value>
+                            <value>SECOND</value>
+                            <value>MINUTE</value>
+                            <value>DAY</value>
+                            <value>WEEK</value>
+                            <value>FORTNIGHT</value>
+                            <value>GREGORIAN_YEAR</value>
+                        </choice>
+                    </element>
+                    <element name="value">
+                        <data type="float"/>
+                    </element>
+                </interleave>
             </element>
         </element>
     </define>
@@ -47824,28 +47788,26 @@
                     <data type="integer"/>
                 </element>
             </optional>
-            <element name="interval">
-                <element name="timeInterval">
-                    <interleave>
-                        <element name="unit">
-                            <choice>
-                                <value>HOUR</value>
-                                <value>NANOSECOND</value>
-                                <value>MICROSECOND</value>
-                                <value>MILLISECOND</value>
-                                <value>SECOND</value>
-                                <value>MINUTE</value>
-                                <value>DAY</value>
-                                <value>WEEK</value>
-                                <value>FORTNIGHT</value>
-                                <value>GREGORIAN_YEAR</value>
-                            </choice>
-                        </element>
-                        <element name="value">
-                            <data type="float"/>
-                        </element>
-                    </interleave>
-                </element>
+            <element name="timeInterval">
+                <interleave>
+                    <element name="unit">
+                        <choice>
+                            <value>HOUR</value>
+                            <value>NANOSECOND</value>
+                            <value>MICROSECOND</value>
+                            <value>MILLISECOND</value>
+                            <value>SECOND</value>
+                            <value>MINUTE</value>
+                            <value>DAY</value>
+                            <value>WEEK</value>
+                            <value>FORTNIGHT</value>
+                            <value>GREGORIAN_YEAR</value>
+                        </choice>
+                    </element>
+                    <element name="value">
+                        <data type="float"/>
+                    </element>
+                </interleave>
             </element>
         </element>
     </define>
@@ -47861,28 +47823,26 @@
                     <data type="integer"/>
                 </element>
             </optional>
-            <element name="interval">
-                <element name="timeInterval">
-                    <interleave>
-                        <element name="unit">
-                            <choice>
-                                <value>HOUR</value>
-                                <value>NANOSECOND</value>
-                                <value>MICROSECOND</value>
-                                <value>MILLISECOND</value>
-                                <value>SECOND</value>
-                                <value>MINUTE</value>
-                                <value>DAY</value>
-                                <value>WEEK</value>
-                                <value>FORTNIGHT</value>
-                                <value>GREGORIAN_YEAR</value>
-                            </choice>
-                        </element>
-                        <element name="value">
-                            <data type="float"/>
-                        </element>
-                    </interleave>
-                </element>
+            <element name="timeInterval">
+                <interleave>
+                    <element name="unit">
+                        <choice>
+                            <value>HOUR</value>
+                            <value>NANOSECOND</value>
+                            <value>MICROSECOND</value>
+                            <value>MILLISECOND</value>
+                            <value>SECOND</value>
+                            <value>MINUTE</value>
+                            <value>DAY</value>
+                            <value>WEEK</value>
+                            <value>FORTNIGHT</value>
+                            <value>GREGORIAN_YEAR</value>
+                        </choice>
+                    </element>
+                    <element name="value">
+                        <data type="float"/>
+                    </element>
+                </interleave>
             </element>
         </element>
     </define>
@@ -56109,28 +56069,26 @@
                         <data type="integer"/>
                     </element>
                 </optional>
-                <element name="interval">
-                    <element name="timeInterval">
-                        <interleave>
-                            <element name="unit">
-                                <choice>
-                                    <value>HOUR</value>
-                                    <value>NANOSECOND</value>
-                                    <value>MICROSECOND</value>
-                                    <value>MILLISECOND</value>
-                                    <value>SECOND</value>
-                                    <value>MINUTE</value>
-                                    <value>DAY</value>
-                                    <value>WEEK</value>
-                                    <value>FORTNIGHT</value>
-                                    <value>GREGORIAN_YEAR</value>
-                                </choice>
-                            </element>
-                            <element name="value">
-                                <data type="float"/>
-                            </element>
-                        </interleave>
-                    </element>
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                                <value>GREGORIAN_YEAR</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
                 </element>
             </element>
             <element name="decimate">
@@ -56638,28 +56596,26 @@
                         <data type="integer"/>
                     </element>
                 </optional>
-                <element name="interval">
-                    <element name="timeInterval">
-                        <interleave>
-                            <element name="unit">
-                                <choice>
-                                    <value>HOUR</value>
-                                    <value>NANOSECOND</value>
-                                    <value>MICROSECOND</value>
-                                    <value>MILLISECOND</value>
-                                    <value>SECOND</value>
-                                    <value>MINUTE</value>
-                                    <value>DAY</value>
-                                    <value>WEEK</value>
-                                    <value>FORTNIGHT</value>
-                                    <value>GREGORIAN_YEAR</value>
-                                </choice>
-                            </element>
-                            <element name="value">
-                                <data type="float"/>
-                            </element>
-                        </interleave>
-                    </element>
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                                <value>GREGORIAN_YEAR</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
                 </element>
             </element>
             <element name="decimate">
@@ -57167,28 +57123,26 @@
                         <data type="integer"/>
                     </element>
                 </optional>
-                <element name="interval">
-                    <element name="timeInterval">
-                        <interleave>
-                            <element name="unit">
-                                <choice>
-                                    <value>HOUR</value>
-                                    <value>NANOSECOND</value>
-                                    <value>MICROSECOND</value>
-                                    <value>MILLISECOND</value>
-                                    <value>SECOND</value>
-                                    <value>MINUTE</value>
-                                    <value>DAY</value>
-                                    <value>WEEK</value>
-                                    <value>FORTNIGHT</value>
-                                    <value>GREGORIAN_YEAR</value>
-                                </choice>
-                            </element>
-                            <element name="value">
-                                <data type="float"/>
-                            </element>
-                        </interleave>
-                    </element>
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                                <value>GREGORIAN_YEAR</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
                 </element>
             </element>
             <element name="decimate">
@@ -57696,28 +57650,26 @@
                         <data type="integer"/>
                     </element>
                 </optional>
-                <element name="interval">
-                    <element name="timeInterval">
-                        <interleave>
-                            <element name="unit">
-                                <choice>
-                                    <value>HOUR</value>
-                                    <value>NANOSECOND</value>
-                                    <value>MICROSECOND</value>
-                                    <value>MILLISECOND</value>
-                                    <value>SECOND</value>
-                                    <value>MINUTE</value>
-                                    <value>DAY</value>
-                                    <value>WEEK</value>
-                                    <value>FORTNIGHT</value>
-                                    <value>GREGORIAN_YEAR</value>
-                                </choice>
-                            </element>
-                            <element name="value">
-                                <data type="float"/>
-                            </element>
-                        </interleave>
-                    </element>
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                                <value>GREGORIAN_YEAR</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
                 </element>
             </element>
             <element name="decimate">

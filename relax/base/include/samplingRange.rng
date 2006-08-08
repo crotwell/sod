@@ -15,8 +15,6 @@
         <data type="integer"/>
       </element>
     </optional>
-    <element name="interval">
-      <externalRef href="../externalRef/timeInterval.rng"/>
-    </element>
+    <externalRef href="../externalRef/timeInterval.rng"/>
   </define>
 </grammar>

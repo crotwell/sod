@@ -245,10 +245,10 @@
                     <sampling>
                         <min>1</min>
                         <max>40</max>
-                        <interval>
+                        <timeInterval>
                             <unit>SECOND</unit>
                             <value>1</value>
-                        </interval>
+                        </timeInterval>
                     </sampling>
                 </example>
             </xsd:annotation>
