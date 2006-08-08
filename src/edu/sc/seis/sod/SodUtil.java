@@ -104,6 +104,8 @@ public class SodUtil {
                 return loadUnitRange(config);
             } else if(tagName.equals("TimeRange")) {
                 return loadTimeRange(config);
+            } else if(tagName.equals("TimeInterval")) {
+                return loadTimeInterval(config);
             } else if(tagName.equals("GlobalArea")) {
                 return new GlobalAreaImpl();
             } else if(tagName.equals("BoxArea")) {

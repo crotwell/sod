@@ -922,10 +922,10 @@
                     <seismogramSampling>
                         <min>1</min>
                         <max>40</max>
-                        <timeInterval>
+                        <interval>
                             <unit>SECOND</unit>
                             <value>1</value>
-                        </timeInterval>
+                        </interval>
                     </seismogramSampling>
                 </example>
             </xsd:annotation>
