@@ -21,7 +21,7 @@ public class Sampling extends RangeSubsetter implements ChannelSubsetter {
             Node node = children.item(i);
             if(node instanceof Element) {
                 String tagName = ((Element)node).getTagName();
-                if(tagName.equals("interval")) {
+                if(tagName.equals("timeInterval")) {
                     interval = (Interval)SodUtil.load((Element)node, "");
                 }
             }
