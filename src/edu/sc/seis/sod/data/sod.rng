@@ -56134,7 +56134,7 @@
                 </element>
             </element>
             <element name="decimate">
-                <empty/>
+                <data type="integer"/>
             </element>
         </choice>
     </define>
@@ -56663,7 +56663,7 @@
                 </element>
             </element>
             <element name="decimate">
-                <empty/>
+                <data type="integer"/>
             </element>
         </choice>
     </define>
@@ -57192,7 +57192,7 @@
                 </element>
             </element>
             <element name="decimate">
-                <empty/>
+                <data type="integer"/>
             </element>
         </choice>
     </define>
@@ -57721,7 +57721,7 @@
                 </element>
             </element>
             <element name="decimate">
-                <empty/>
+                <data type="integer"/>
             </element>
         </choice>
     </define>

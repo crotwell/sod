@@ -919,14 +919,14 @@
                     the min and max are optional, although at least one must be given to have any
                     effect</description>
                 <example>
-                    <sampling>
+                    <seismogramSampling>
                         <min>1</min>
                         <max>40</max>
                         <interval>
                             <unit>SECOND</unit>
                             <value>1</value>
                         </interval>
-                    </sampling>
+                    </seismogramSampling>
                 </example>
             </xsd:annotation>
             <ref name="samplingRange"/>
@@ -940,7 +940,7 @@
                     to avoid aliasing.
                 </description>
             </xsd:annotation>
-            <empty/>
+            <data type="integer"/>
         </element>
     </define>
     <define name="div">

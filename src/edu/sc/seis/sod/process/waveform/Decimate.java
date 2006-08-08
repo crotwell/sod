@@ -12,7 +12,7 @@ import edu.sc.seis.sod.SodUtil;
 public class Decimate implements WaveformProcess {
     
     public Decimate(Element config) {
-        decimate = new edu.sc.seis.fissuresUtil.bag.Decimate(Integer.parseInt(SodUtil.getNestedText(SodUtil.getElement(config, "factor"))));
+        decimate = new edu.sc.seis.fissuresUtil.bag.Decimate(Integer.parseInt(SodUtil.getNestedText(config)));
     }
 
     public WaveformResult process(EventAccessOperations event,
