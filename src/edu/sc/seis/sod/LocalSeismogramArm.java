@@ -233,7 +233,7 @@ public class LocalSeismogramArm implements Subsetter {
                         + " from " + infilters[i].start_time.date_time + " to "
                         + infilters[i].end_time.date_time);
             } // end of for (int i=0; i<outFilters.length; i++)
-            logger.debug("Using infilters, fix this when DMC fixes server");
+            // Using infilters as asking for extra should not hurt
             MicroSecondDate before = new MicroSecondDate();
             LocalSeismogram[] localSeismograms = new LocalSeismogram[0];
             if(outfilters.length != 0) {
@@ -280,14 +280,6 @@ public class LocalSeismogramArm implements Subsetter {
                         } else {
                             try {
                                 localSeismograms = dataCenter.retrieve_seismograms(infilters);
-                                for(int j = 0; j < localSeismograms.length; j++) {
-                                    if(UnitImpl.createUnitImpl(localSeismograms[j].y_unit)
-                                            .equals(COUNT_SQR)) {
-                                        logger.debug("NOAMP get seis units="
-                                                + localSeismograms[j].y_unit);
-                                        localSeismograms[j].y_unit = UnitImpl.COUNT;
-                                    }
-                                }
                             } catch(FissuresException e) {
                                 handle(ecp, Stage.DATA_RETRIEVAL, e);
                                 return;
@@ -405,7 +397,12 @@ public class LocalSeismogramArm implements Subsetter {
         } else {
             ecp.update(t, Status.get(stage, Standing.SYSTEM_FAILURE));
         }
-        failLogger.warn(ecp, t);
+        if (t instanceof FissuresException) {
+            FissuresException f = (FissuresException)t;
+            failLogger.warn(f.the_error.error_code+" "+f.the_error.error_description+" "+ecp, t);
+        } else {
+            failLogger.warn(ecp, t);
+        }
     }
 
     private EventChannelSubsetter eventChannel = new PassEventChannel();
@@ -425,12 +422,6 @@ public class LocalSeismogramArm implements Subsetter {
     public static final String DATA_RETRIEVED = "Finished";
 
     public static final String RETRIEVING_DATA = "Processing";
-
-    private static final UnitImpl COUNT_SQR = new UnitImpl(UnitBase.COUNT,
-                                                           10,
-                                                           "Dumb COUNT Squared",
-                                                           1,
-                                                           2);
 
     private static final Logger logger = Logger.getLogger(LocalSeismogramArm.class);
 

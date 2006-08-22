@@ -292,7 +292,7 @@ public class MotionVectorArm implements Subsetter {
                     .getChannels().length][0];
             LocalSeismogramImpl[][] tempLocalSeismograms = new LocalSeismogramImpl[ecp.getChannelGroup()
                     .getChannels().length][0];
-            logger.debug("Using infilters, fix this when DMC fixes server");
+            //Using infilters as asking for more than is there probably doesn't hurt
             try {
                 localSeismograms = getData(ecp, infilters, dataCenter);
                 MicroSecondDate after = new MicroSecondDate();
@@ -308,13 +308,6 @@ public class MotionVectorArm implements Subsetter {
             for(int i = 0; i < localSeismograms.length; i++) {
                 List tempForCast = new ArrayList();
                 for(int j = 0; j < localSeismograms[i].length; j++) {
-                    if(UnitImpl.createUnitImpl(localSeismograms[i][j].y_unit)
-                            .equals(COUNT_SQR)) {
-                        logger.debug("NOAMP get seis units="
-                                + localSeismograms[i][j].y_unit
-                                + " changed to COUNT internally");
-                        localSeismograms[i][j].y_unit = UnitImpl.COUNT;
-                    }
                     if(localSeismograms[i][j] == null) {
                         ecp.update(Status.get(Stage.DATA_RETRIEVAL,
                                               Standing.REJECT));
@@ -612,7 +605,12 @@ public class MotionVectorArm implements Subsetter {
         } else {
             ecp.update(t, Status.get(stage, Standing.SYSTEM_FAILURE));
         }
-        failLogger.warn(ecp, t);
+        if (t instanceof FissuresException) {
+            FissuresException f = (FissuresException)t;
+            failLogger.warn(f.the_error.error_code+" "+f.the_error.error_description+" "+ecp, t);
+        } else {
+            failLogger.warn(ecp, t);
+        }
     }
 
     private EventVectorSubsetter eventChannelGroup = new PassEventChannel();
@@ -631,9 +629,4 @@ public class MotionVectorArm implements Subsetter {
 
     private static final org.apache.log4j.Logger failLogger = org.apache.log4j.Logger.getLogger("Fail.WaveformVector");
 
-    private static final UnitImpl COUNT_SQR = new UnitImpl(UnitBase.COUNT,
-                                                           10,
-                                                           "Dumb COUNT Squared",
-                                                           1,
-                                                           2);
 }
