@@ -45,7 +45,7 @@ public class SeismogramTitler {
                     formatters.add(new GenericTemplate() {
 
                         public String getResult() {
-                            return child.getTextContent();
+                            return child.getNodeValue();
                         }
                     });
                 }
