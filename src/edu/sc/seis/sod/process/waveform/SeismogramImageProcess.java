@@ -10,7 +10,6 @@ import java.io.File;
 import javax.swing.SwingUtilities;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import edu.iris.Fissures.AuditInfo;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
@@ -32,6 +31,7 @@ import edu.sc.seis.fissuresUtil.display.DisplayUtils;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.display.PhasePhilter;
 import edu.sc.seis.fissuresUtil.display.SeismogramDisplay;
+import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.display.configuration.SeismogramDisplayConfiguration;
 import edu.sc.seis.fissuresUtil.display.drawable.Flag;
 import edu.sc.seis.fissuresUtil.display.registrar.BasicTimeConfig;
@@ -53,31 +53,40 @@ public class SeismogramImageProcess implements WaveformProcess {
     }
 
     public SeismogramImageProcess(Element el) throws Exception {
-        NodeList nl = el.getChildNodes();
-        for(int i = 0; i < nl.getLength(); i++) {
-            Node n = nl.item(i);
-            if(n.getNodeName().equals("phaseWindow")) {
-                phaseWindow = new PhaseWindow((Element)n);
-            } else if(n.getNodeName().equals("modelName")) {
-                modelName = SodUtil.getNestedText((Element)n);
-                tauP = TauPUtil.getTauPUtil(modelName);
-            } else if(n.getNodeName().equals("dimension")) {
-                dims = SodUtil.loadDimensions((Element)n);
-            } else if(n.getNodeName().equals("showOnlyFirstArrivals")) {
-                showOnlyFirst = true;
-            } else if(n.getNodeName().equals("phaseNameMappings")) {
-                renamer = new PhasePhilter.PhaseRenamer(n);
-            } else if(n.getNodeName().equals("phaseFlags")) {
-                Element subEl = (Element)n;
-                NodeList flagEls = subEl.getElementsByTagName("phase");
-                phaseFlagNames = new String[flagEls.getLength()];
-                for(int j = 0; j < flagEls.getLength(); j++) {
-                    phaseFlagNames[j] = SodUtil.nodeValueOfXPath((Element)flagEls.item(j),
-                                                                 "text()");
-                }
-            } else if(n.getNodeName().equals("displayConfig")) {
-                sdc = SeismogramDisplayConfiguration.create((Element)n);
+        if(DOMHelper.hasElement(el, "phaseWindow")) {
+            phaseWindow = new PhaseWindow(SodUtil.getElement(el, "phaseWindow"));
+        }
+        if(DOMHelper.hasElement(el, "modelName")) {
+            modelName = SodUtil.getNestedText(SodUtil.getElement(el,
+                                                                 "modelName"));
+            tauP = TauPUtil.getTauPUtil(modelName);
+        }
+        if(DOMHelper.hasElement(el, "dimension")) {
+            dims = SodUtil.loadDimensions(SodUtil.getElement(el, "dimension"));
+        }
+        if(DOMHelper.hasElement(el, "showOnlyFirstArrivals")) {
+            showOnlyFirst = true;
+        }
+        if(DOMHelper.hasElement(el, "phaseNameMappings")) {
+            renamer = new PhasePhilter.PhaseRenamer(SodUtil.getElement(el,
+                                                                       "phaseNameMappings"));
+        }
+        if(DOMHelper.hasElement(el, "phaseFlags")) {
+            Element subEl = SodUtil.getElement(el, "phaseFlags");
+            NodeList flagEls = subEl.getElementsByTagName("phase");
+            phaseFlagNames = new String[flagEls.getLength()];
+            for(int j = 0; j < flagEls.getLength(); j++) {
+                phaseFlagNames[j] = SodUtil.nodeValueOfXPath((Element)flagEls.item(j),
+                                                             "text()");
             }
+        }
+        if(DOMHelper.hasElement(el, "displayConfig")) {
+            sdc = SeismogramDisplayConfiguration.create(SodUtil.getElement(el,
+                                                                           "displayConfig"));
+        }
+        if(DOMHelper.hasElement(el, "titler")) {
+            titler = new SeismogramTitler(new SeismogramDisplayConfiguration[] {sdc});
+            titler.configure(SodUtil.getElement(el, "titler"));
         }
         locator = new SeismogramImageOutputLocator(el);
     }
@@ -182,6 +191,9 @@ public class SeismogramImageProcess implements WaveformProcess {
                                   boolean relTime,
                                   CookieJar cookieJar) throws Exception {
         logger.debug("process() called");
+        if(titler != null) {
+            titler.title(event, channel);
+        }
         SeismogramDisplay bsd = sdc.createDisplay();
         bsd.setTimeConfig(new BasicTimeConfig());
         MemoryDataSetSeismogram memDSS = createSeis(seismograms, original);
@@ -204,8 +216,8 @@ public class SeismogramImageProcess implements WaveformProcess {
         return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
     }
 
-    public static void setTimeWindow(TimeConfig tc,
-                                     DataSetSeismogram dss) throws Exception {
+    public static void setTimeWindow(TimeConfig tc, DataSetSeismogram dss)
+            throws Exception {
         setTimeWindow(tc, null, dss);
     }
 
@@ -244,8 +256,9 @@ public class SeismogramImageProcess implements WaveformProcess {
             this.bsd = bsd;
             this.fileType = fileType;
             this.picFileName = picFileName;
-            if ( ! (fileType.equals(PDF) || fileType.equals(PNG))) {
-                throw new IllegalArgumentException("Unknown fileType:"+fileType);
+            if(!(fileType.equals(PDF) || fileType.equals(PNG))) {
+                throw new IllegalArgumentException("Unknown fileType:"
+                        + fileType);
             }
         }
 
@@ -258,7 +271,7 @@ public class SeismogramImageProcess implements WaveformProcess {
                     bsd.outputToPNG(new File(picFileName), dims);
                 } else {
                     // should never happen
-                    throw new RuntimeException("Unknown fileType:"+fileType);
+                    throw new RuntimeException("Unknown fileType:" + fileType);
                 }
             } catch(Throwable e) {
                 GlobalExceptionHandler.handle("unable to save seismogram image to "
@@ -271,6 +284,8 @@ public class SeismogramImageProcess implements WaveformProcess {
     private SeismogramDisplayConfiguration sdc = new SeismogramDisplayConfiguration();
 
     protected SeismogramImageOutputLocator locator;
+
+    protected SeismogramTitler titler;
 
     private TauPUtil tauP = TauPUtil.getTauPUtil();
 

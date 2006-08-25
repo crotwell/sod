@@ -2,6 +2,8 @@ package edu.sc.seis.sod.process.waveform.vector;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.SwingUtilities;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -17,6 +19,7 @@ import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.display.BasicSeismogramDisplay;
 import edu.sc.seis.fissuresUtil.display.ComponentSortedSeismogramDisplay;
+import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.display.configuration.SeismogramDisplayConfiguration;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.xml.DataSet;
@@ -25,7 +28,9 @@ import edu.sc.seis.fissuresUtil.xml.MemoryDataSet;
 import edu.sc.seis.fissuresUtil.xml.MemoryDataSetSeismogram;
 import edu.sc.seis.sod.ChannelGroup;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.process.waveform.SeismogramImageProcess;
+import edu.sc.seis.sod.process.waveform.SeismogramTitler;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
 /**
@@ -49,6 +54,12 @@ public class VectorImageProcess extends SeismogramImageProcess implements
                 ndc = SeismogramDisplayConfiguration.create((Element)n);
             }
         }
+        if(DOMHelper.hasElement(el, "titler")) {
+            titler = new SeismogramTitler(new SeismogramDisplayConfiguration[] {vdc,
+                                                                                edc,
+                                                                                ndc});
+            titler.configure(SodUtil.getElement(el, "titler"));
+        }
     }
 
     public WaveformVectorResult process(EventAccessOperations event,
@@ -58,33 +69,16 @@ public class VectorImageProcess extends SeismogramImageProcess implements
                                         LocalSeismogramImpl[][] seismograms,
                                         CookieJar cookieJar) throws Exception {
         Channel chan = channelGroup.getChannels()[0];
-        MemoryDataSetSeismogram[] seis = new MemoryDataSetSeismogram[seismograms.length];
-        DataSet dataset = new MemoryDataSet("temp",
-                                            "Temp Dataset for image creation",
-                                            "temp",
-                                            new AuditInfo[0]);
-        dataset.addParameter(DataSet.EVENT, event, new AuditInfo[0]);
-        Origin o = EventUtil.extractOrigin(event);
-        Arrival[] arrivals = getArrivals(chan, o, phaseFlagNames);
-        final ComponentSortedSeismogramDisplay sd = new ComponentSortedSeismogramDisplay(false);
-        BasicSeismogramDisplay vert = (BasicSeismogramDisplay)vdc.createDisplay();
-        sd.setTimeConfig(vert.getTimeConfig());
-        sd.setZ(vert);
-        sd.setNorth((BasicSeismogramDisplay)ndc.createDisplay());
-        sd.setEast((BasicSeismogramDisplay)edc.createDisplay());
-        for(int i = 0; i < seis.length; i++) {
-            seis[i] = createSeis(seismograms[i], original[i]);
-            dataset.addDataSetSeismogram(seis[i], new AuditInfo[0]);
-            sd.add(new DataSetSeismogram[] {seis[i]});
-            addFlags(arrivals, o, sd.get(seis[i]), seis[i]);
-            dataset.addParameter(DataSet.CHANNEL
-                                         + ChannelIdUtil.toString(channelGroup.getChannels()[i].get_id()),
-                                 channelGroup.getChannels()[i],
-                                 new AuditInfo[0]);
+        if(titler != null) {
+            titler.title(event, chan);
         }
-        if(seis.length > 0) {
-            setTimeWindow(sd.getTimeConfig(), phaseWindow, seis[0]);
-        }
+        final ComponentSortedSeismogramDisplay sd = getConfiguredDisplay();
+        DataSetSeismogram[] seis = createDataSetSeismograms(event,
+                                                            channelGroup,
+                                                            original,
+                                                            available,
+                                                            seismograms);
+        populateDisplay(sd, event, chan, seis);
         final String picFileName = locator.getLocation(event, chan);
         final String fileType = locator.getFileType();
         SwingUtilities.invokeAndWait(new Runnable() {
@@ -99,7 +93,8 @@ public class VectorImageProcess extends SeismogramImageProcess implements
                         sd.outputToPNG(new File(picFileName), dims);
                     } else {
                         // should never happen
-                        throw new RuntimeException("Unknown fileType:"+fileType);
+                        throw new RuntimeException("Unknown fileType:"
+                                + fileType);
                     }
                 } catch(IOException e) {
                     GlobalExceptionHandler.handle("Unable to write to "
@@ -109,6 +104,63 @@ public class VectorImageProcess extends SeismogramImageProcess implements
         });
         return new WaveformVectorResult(seismograms, new StringTreeLeaf(this,
                                                                         true));
+    }
+
+    public ComponentSortedSeismogramDisplay getConfiguredDisplay() {
+        ComponentSortedSeismogramDisplay sd = new ComponentSortedSeismogramDisplay(false);
+        BasicSeismogramDisplay vert = (BasicSeismogramDisplay)vdc.createDisplay();
+        sd.setTimeConfig(vert.getTimeConfig());
+        sd.setZ(vert);
+        sd.setNorth((BasicSeismogramDisplay)ndc.createDisplay());
+        sd.setEast((BasicSeismogramDisplay)edc.createDisplay());
+        return sd;
+    }
+
+    private DataSetSeismogram[] createDataSetSeismograms(EventAccessOperations event,
+                                                         ChannelGroup channelGroup,
+                                                         RequestFilter[][] original,
+                                                         RequestFilter[][] available,
+                                                         LocalSeismogramImpl[][] seismograms)
+            throws Exception {
+        MemoryDataSetSeismogram[] seis = new MemoryDataSetSeismogram[seismograms.length];
+        DataSet dataset = new MemoryDataSet("temp",
+                                            "Temp Dataset for image creation",
+                                            "temp",
+                                            new AuditInfo[0]);
+        dataset.addParameter(DataSet.EVENT, event, new AuditInfo[0]);
+        for(int i = 0; i < seis.length; i++) {
+            seis[i] = createSeis(seismograms[i], original[i]);
+            dataset.addDataSetSeismogram(seis[i], new AuditInfo[0]);
+            dataset.addParameter(DataSet.CHANNEL
+                                         + ChannelIdUtil.toString(channelGroup.getChannels()[i].get_id()),
+                                 channelGroup.getChannels()[i],
+                                 new AuditInfo[0]);
+        }
+        List seisList = new ArrayList();
+        String[] dssNames = dataset.getDataSetSeismogramNames();
+        for(int i = 0; i < dssNames.length; i++) {
+            seisList.add(dataset.getDataSetSeismogram(dssNames[i]));
+        }
+        return (DataSetSeismogram[])seisList.toArray(new DataSetSeismogram[0]);
+    }
+
+    public void populateDisplay(ComponentSortedSeismogramDisplay sd,
+                                EventAccessOperations event,
+                                Channel chan,
+                                DataSetSeismogram[] seis) throws Exception {
+        Origin o = EventUtil.extractOrigin(event);
+        Arrival[] arrivals = getArrivals(chan, o, phaseFlagNames);
+        for(int i = 0; i < seis.length; i++) {
+            sd.add(new DataSetSeismogram[] {seis[i]});
+            addFlags(arrivals, o, sd.get(seis[i]), seis[i]);
+        }
+        if(seis.length > 0) {
+            setTimeWindow(sd.getTimeConfig(), phaseWindow, seis[0]);
+        }
+    }
+
+    public SeismogramTitler getTitler() {
+        return titler;
     }
 
     private SeismogramDisplayConfiguration edc = new SeismogramDisplayConfiguration();

@@ -93,14 +93,14 @@ public class StationFormatter extends Template implements StationTemplate {
             return new StationTemplate() {
 
                 public String getResult(Station sta) {
-                    return Float.toString(sta.my_location.longitude);
+                    return EventFormatter.format(sta.my_location.longitude);
                 }
             };
         } else if(tag.equals("lat")) {
             return new StationTemplate() {
 
                 public String getResult(Station sta) {
-                    return Float.toString(sta.my_location.latitude);
+                    return EventFormatter.format(sta.my_location.latitude);
                 }
             };
         } else if(tag.equals("depth")) {

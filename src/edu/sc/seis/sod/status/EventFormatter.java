@@ -196,11 +196,11 @@ public class EventFormatter extends Template implements EventTemplate {
         }
     }
 
-    private String format(double d) {
+    public static String format(double d) {
         return defaultDecimalFormat.format(d);
     }
 
-    private DecimalFormat defaultDecimalFormat = new DecimalFormat("#.#");
+    private static DecimalFormat defaultDecimalFormat = new DecimalFormat("#.#");
 
     private class MagnitudeTemplate implements EventTemplate {
 
