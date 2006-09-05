@@ -43,6 +43,7 @@ import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.status.TemplateFileLoader;
 import edu.sc.seis.sod.subsetter.LatitudeRange;
 import edu.sc.seis.sod.subsetter.LongitudeRange;
+import edu.sc.seis.sod.subsetter.requestGenerator.RandomTimeInterval;
 
 public class SodUtil {
 
@@ -298,7 +299,6 @@ public class SodUtil {
             if(DOMHelper.hasElement(element, "month")) {
                 cal.set(Calendar.MONTH,
                         Integer.parseInt(DOMHelper.extractText(element, "month")) - 1);
-               
                 if(DOMHelper.hasElement(element, "day")) {
                     cal.set(Calendar.DAY_OF_MONTH,
                             Integer.parseInt(DOMHelper.extractText(element,
@@ -310,7 +310,7 @@ public class SodUtil {
                     cal.set(Calendar.DAY_OF_MONTH, 1);
                 }
             } else if(endOfDay) {
-                cal.set(Calendar.DAY_OF_YEAR, 
+                cal.set(Calendar.DAY_OF_YEAR,
                         cal.getActualMaximum(Calendar.DAY_OF_YEAR));
             } else {
                 cal.set(Calendar.DAY_OF_YEAR, 1);
@@ -336,10 +336,19 @@ public class SodUtil {
     public static TimeInterval loadTimeInterval(Element config)
             throws ConfigurationException {
         try {
-            double value = Double.parseDouble(DOMHelper.extractText(config,
-                                                                    "value"));
             UnitImpl unit = loadUnit(XMLUtil.getElement(config, "unit"));
-            return new TimeInterval(value, unit);
+            if(DOMHelper.hasElement(config, "randomValue")) {
+                Element rvConf = DOMHelper.getElement(config, "randomValue");
+                double min = Double.parseDouble(DOMHelper.extractText(rvConf,
+                                                                      "min"));
+                double max = Double.parseDouble(DOMHelper.extractText(rvConf,
+                                                                      "max"));
+                return new RandomTimeInterval(min, max, unit);
+            } else {
+                double value = Double.parseDouble(DOMHelper.extractText(config,
+                                                                        "value"));
+                return new TimeInterval(value, unit);
+            }
         } catch(Exception e) {
             throw new ConfigurationException("Can't load TimeInterval from "
                     + config.getTagName(), e);
