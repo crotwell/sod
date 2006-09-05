@@ -12,9 +12,7 @@ public class RandomTimeInterval extends TimeInterval {
     }
 
     public double getValue() {
-        double randomValue = Math.random() * (max - min) + min;
-        System.out.println("random value returned: " + randomValue);
-        return randomValue;
+        return Math.random() * (max - min) + min;
     }
 
     private double min, max;
