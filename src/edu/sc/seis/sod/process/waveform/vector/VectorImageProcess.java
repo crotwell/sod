@@ -1,6 +1,8 @@
 package edu.sc.seis.sod.process.waveform.vector;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +21,11 @@ import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.display.BasicSeismogramDisplay;
 import edu.sc.seis.fissuresUtil.display.ComponentSortedSeismogramDisplay;
+import edu.sc.seis.fissuresUtil.display.configuration.AmpConfigConfiguration;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.display.configuration.SeismogramDisplayConfiguration;
+import edu.sc.seis.fissuresUtil.display.registrar.AmpConfig;
+import edu.sc.seis.fissuresUtil.display.registrar.IndividualizedAmpConfig;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.xml.DataSet;
 import edu.sc.seis.fissuresUtil.xml.DataSetSeismogram;
@@ -52,6 +57,8 @@ public class VectorImageProcess extends SeismogramImageProcess implements
                 edc = SeismogramDisplayConfiguration.create((Element)n);
             } else if(n.getNodeName().equals("northDisplayConfig")) {
                 ndc = SeismogramDisplayConfiguration.create((Element)n);
+            } else if(n.getNodeName().equals("globalizedAmpConfig")) {
+                globalACConf = AmpConfigConfiguration.create((Element)n);
             }
         }
         if(DOMHelper.hasElement(el, "titler")) {
@@ -78,7 +85,7 @@ public class VectorImageProcess extends SeismogramImageProcess implements
                                                             original,
                                                             available,
                                                             seismograms);
-        populateDisplay(sd, event, chan, seis);
+        populateDisplay(sd, event, channelGroup.getChannels(), seis);
         final String picFileName = locator.getLocation(event, chan);
         final String fileType = locator.getFileType();
         SwingUtilities.invokeAndWait(new Runnable() {
@@ -87,8 +94,10 @@ public class VectorImageProcess extends SeismogramImageProcess implements
                 logger.debug("writing " + picFileName);
                 try {
                     if(fileType.equals(PDF)) {
-                        sd.setPdfSeismogramsPerPage(3);
-                        sd.outputToPDF(new File(picFileName));
+                        sd.setPdfSeismogramsPerPage(1);
+                        sd.outputToPDF(new BufferedOutputStream(new FileOutputStream(picFileName)),
+                                       true,
+                                       false);
                     } else if(fileType.equals(PNG)) {
                         sd.outputToPNG(new File(picFileName), dims);
                     } else {
@@ -146,12 +155,20 @@ public class VectorImageProcess extends SeismogramImageProcess implements
 
     public void populateDisplay(ComponentSortedSeismogramDisplay sd,
                                 EventAccessOperations event,
-                                Channel chan,
+                                Channel[] chans,
                                 DataSetSeismogram[] seis) throws Exception {
         Origin o = EventUtil.extractOrigin(event);
-        Arrival[] arrivals = getArrivals(chan, o, phaseFlagNames);
+        Arrival[] arrivals = getArrivals(chans[0], o, phaseFlagNames);
+        AmpConfig globalAC = null;
+        if(globalACConf != null) {
+            globalAC = new IndividualizedAmpConfig(globalACConf.createAmpConfig(),
+                                                   seis);
+        }
         for(int i = 0; i < seis.length; i++) {
             sd.add(new DataSetSeismogram[] {seis[i]});
+            if(globalAC != null) {
+                sd.get(seis[i]).setAmpConfig(globalAC);
+            }
             addFlags(arrivals, o, sd.get(seis[i]), seis[i]);
         }
         if(seis.length > 0) {
@@ -162,6 +179,8 @@ public class VectorImageProcess extends SeismogramImageProcess implements
     public SeismogramTitler getTitler() {
         return titler;
     }
+
+    private AmpConfigConfiguration globalACConf;
 
     private SeismogramDisplayConfiguration edc = new SeismogramDisplayConfiguration();
 
