@@ -22,7 +22,6 @@ import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.display.BasicSeismogramDisplay;
 import edu.sc.seis.fissuresUtil.display.ComponentSortedSeismogramDisplay;
 import edu.sc.seis.fissuresUtil.display.configuration.AmpConfigConfiguration;
-import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.display.configuration.SeismogramDisplayConfiguration;
 import edu.sc.seis.fissuresUtil.display.registrar.AmpConfig;
 import edu.sc.seis.fissuresUtil.display.registrar.IndividualizedAmpConfig;
@@ -33,9 +32,7 @@ import edu.sc.seis.fissuresUtil.xml.MemoryDataSet;
 import edu.sc.seis.fissuresUtil.xml.MemoryDataSetSeismogram;
 import edu.sc.seis.sod.ChannelGroup;
 import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.process.waveform.SeismogramImageProcess;
-import edu.sc.seis.sod.process.waveform.SeismogramTitler;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
 /**
@@ -61,12 +58,9 @@ public class VectorImageProcess extends SeismogramImageProcess implements
                 globalACConf = AmpConfigConfiguration.create((Element)n);
             }
         }
-        if(DOMHelper.hasElement(el, "titler")) {
-            titler = new SeismogramTitler(new SeismogramDisplayConfiguration[] {vdc,
-                                                                                edc,
-                                                                                ndc});
-            titler.configure(SodUtil.getElement(el, "titler"));
-        }
+        configureTitlers(el, new SeismogramDisplayConfiguration[] {vdc,
+                                                                   edc,
+                                                                   ndc});
     }
 
     public WaveformVectorResult process(EventAccessOperations event,
@@ -76,9 +70,7 @@ public class VectorImageProcess extends SeismogramImageProcess implements
                                         LocalSeismogramImpl[][] seismograms,
                                         CookieJar cookieJar) throws Exception {
         Channel chan = channelGroup.getChannels()[0];
-        if(titler != null) {
-            titler.title(event, chan);
-        }
+        updateTitlers(event, chan);
         final ComponentSortedSeismogramDisplay sd = getConfiguredDisplay();
         DataSetSeismogram[] seis = createDataSetSeismograms(event,
                                                             channelGroup,
@@ -174,10 +166,6 @@ public class VectorImageProcess extends SeismogramImageProcess implements
         if(seis.length > 0) {
             setTimeWindow(sd.getTimeConfig(), phaseWindow, seis[0]);
         }
-    }
-
-    public SeismogramTitler getTitler() {
-        return titler;
     }
 
     private AmpConfigConfiguration globalACConf;

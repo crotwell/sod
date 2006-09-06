@@ -7,6 +7,8 @@ package edu.sc.seis.sod.process.waveform;
 
 import java.awt.Dimension;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.SwingUtilities;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
@@ -41,6 +43,7 @@ import edu.sc.seis.fissuresUtil.xml.DataSet;
 import edu.sc.seis.fissuresUtil.xml.DataSetSeismogram;
 import edu.sc.seis.fissuresUtil.xml.MemoryDataSet;
 import edu.sc.seis.fissuresUtil.xml.MemoryDataSetSeismogram;
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.StringTreeLeaf;
@@ -84,11 +87,23 @@ public class SeismogramImageProcess implements WaveformProcess {
             sdc = SeismogramDisplayConfiguration.create(SodUtil.getElement(el,
                                                                            "displayConfig"));
         }
-        if(DOMHelper.hasElement(el, "titler")) {
-            titler = new SeismogramTitler(new SeismogramDisplayConfiguration[] {sdc});
-            titler.configure(SodUtil.getElement(el, "titler"));
-        }
+        configureTitlers(el, new SeismogramDisplayConfiguration[] {sdc});
         locator = new SeismogramImageOutputLocator(el);
+    }
+
+    protected void configureTitlers(Element el,
+                                    SeismogramDisplayConfiguration[] sdcs)
+            throws ConfigurationException {
+        List titlerList = new ArrayList();
+        if(DOMHelper.hasElement(el, "titler")) {
+            NodeList titlerConfigs = DOMHelper.getElements(el, "titler");
+            for(int i = 0; i < titlerConfigs.getLength(); i++) {
+                SeismogramTitler titler = new SeismogramTitler(sdcs);
+                titler.configure((Element)titlerConfigs.item(i));
+                titlerList.add(titler);
+            }
+        }
+        titlers = (SeismogramTitler[])titlerList.toArray(new SeismogramTitler[0]);
     }
 
     public WaveformResult process(EventAccessOperations event,
@@ -191,9 +206,7 @@ public class SeismogramImageProcess implements WaveformProcess {
                                   boolean relTime,
                                   CookieJar cookieJar) throws Exception {
         logger.debug("process() called");
-        if(titler != null) {
-            titler.title(event, channel);
-        }
+        updateTitlers(event, channel);
         SeismogramDisplay bsd = sdc.createDisplay();
         bsd.setTimeConfig(new BasicTimeConfig());
         MemoryDataSetSeismogram memDSS = createSeis(seismograms, original);
@@ -242,6 +255,12 @@ public class SeismogramImageProcess implements WaveformProcess {
         tc.shaleTime(shiftNScale[0], shiftNScale[1]);
     }
 
+    public void updateTitlers(EventAccessOperations event, Channel channel) {
+        for(int i = 0; i < titlers.length; i++) {
+            titlers[i].title(event, channel);
+        }
+    }
+
     protected class ImageWriter implements Runnable {
 
         private final SeismogramDisplay bsd;
@@ -285,7 +304,7 @@ public class SeismogramImageProcess implements WaveformProcess {
 
     protected SeismogramImageOutputLocator locator;
 
-    protected SeismogramTitler titler;
+    protected SeismogramTitler[] titlers;
 
     private TauPUtil tauP = TauPUtil.getTauPUtil();
 
