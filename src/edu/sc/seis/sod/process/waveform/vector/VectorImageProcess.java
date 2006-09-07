@@ -24,7 +24,6 @@ import edu.sc.seis.fissuresUtil.display.ComponentSortedSeismogramDisplay;
 import edu.sc.seis.fissuresUtil.display.configuration.AmpConfigConfiguration;
 import edu.sc.seis.fissuresUtil.display.configuration.SeismogramDisplayConfiguration;
 import edu.sc.seis.fissuresUtil.display.registrar.AmpConfig;
-import edu.sc.seis.fissuresUtil.display.registrar.IndividualizedAmpConfig;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.xml.DataSet;
 import edu.sc.seis.fissuresUtil.xml.DataSetSeismogram;
@@ -153,8 +152,8 @@ public class VectorImageProcess extends SeismogramImageProcess implements
         Arrival[] arrivals = getArrivals(chans[0], o, phaseFlagNames);
         AmpConfig globalAC = null;
         if(globalACConf != null) {
-            globalAC = new IndividualizedAmpConfig(globalACConf.createAmpConfig(),
-                                                   seis);
+            globalAC = globalACConf.createAmpConfig();
+            globalAC.add(seis);
         }
         for(int i = 0; i < seis.length; i++) {
             sd.add(new DataSetSeismogram[] {seis[i]});
