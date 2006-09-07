@@ -50,9 +50,6 @@ import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
 public class SaveSeismogramToFile implements WaveformProcess {
 
-    public static final String SVN_PARAM = PhaseSignalToNoise.PHASE_STON_PREFIX
-            + "ttp";
-
     public SaveSeismogramToFile(Element config) throws ConfigurationException {
         System.err.println();
         System.err.println("As of SOD 2.2 saveSeismogramToFile is deprecated!");
@@ -342,6 +339,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
                 // anything to the aux data from the cookiejar
             }
         }
+        urlDSS.setYUnit(seismograms[0].y_unit);
         lastDataSet.remove(urlDSS);
         lastDataSet.addDataSetSeismogram(urlDSS, new AuditInfo[] {});
         if(!existingFilesForSeis) {// First insertion of dss into dataset, so
@@ -530,8 +528,8 @@ public class SaveSeismogramToFile implements WaveformProcess {
     public static long getBytesWritten() {
         return bytesWritten;
     }
-    
-    public static void addBytesWritten(long bytes){
+
+    public static void addBytesWritten(long bytes) {
         bytesWritten += bytes;
     }
 
@@ -571,6 +569,9 @@ public class SaveSeismogramToFile implements WaveformProcess {
     public static final String DEFAULT_TEMPLATE = "Event_$event.getTime('yyyy_DDD_HH_mm_ss')";
 
     public static final String DEFAULT_DATA_DIRECTORY = "seismograms";
+
+    public static final String SVN_PARAM = PhaseSignalToNoise.PHASE_STON_PREFIX
+            + "ttp";
 
     private SimpleVelocitizer velocitizer = new SimpleVelocitizer();
 
