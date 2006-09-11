@@ -153,7 +153,7 @@ public class EventDCQuerier {
 
     private Quantity maxDepth = new QuantityImpl(90000.0, UnitImpl.KILOMETER);
 
-    private String[] searchTypes = {"%"};
+    private String[] searchTypes = {};
 
     private String serverName, serverDNS;
 
