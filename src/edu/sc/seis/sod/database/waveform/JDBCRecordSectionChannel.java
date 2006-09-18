@@ -35,6 +35,7 @@ public class JDBCRecordSectionChannel extends SodJDBC {
                 + " where  recSecId=? AND eq_dbid=? ";
         String getInternalIdStmt = "SELECT internalId from " + tableName
                 + " where  recSecId=? AND eq_dbid=? ";
+        String whichRecSecsStmt = "SELECT DISTINCT recsecid FROM " + tableName + " WHERE eq_dbid = ?";
         if(!DBUtil.tableExists(tableName, conn)) {
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(createStmt);
@@ -43,6 +44,7 @@ public class JDBCRecordSectionChannel extends SodJDBC {
         getChannels = conn.prepareStatement(getChannelsStmt);
         channelExists = conn.prepareStatement(channelExistsStmt);
         recSecExists = conn.prepareStatement(recSecExistsStmt);
+        whichRecSecs = conn.prepareStatement(whichRecSecsStmt);
         getInternalId = conn.prepareStatement(getInternalIdStmt);
     }
 
@@ -162,12 +164,23 @@ public class JDBCRecordSectionChannel extends SodJDBC {
         return recSecExists.executeQuery().next();
     }
 
+    public String[] whichReqSecs(int eventDbId)
+            throws SQLException {
+        whichRecSecs.setInt(1, eventDbId);
+        ResultSet rs = whichRecSecs.executeQuery();
+        List results = new ArrayList(3);
+        while(rs.next()){
+            results.add(rs.getString("recsecid"));
+        }
+        return (String[])results.toArray(new String[results.size()]); 
+    }
+
     public Connection getConnection() {
         return conn;
     }
 
     PreparedStatement insert, getPixelInfo, getChannels, channelExists,
-            recSecExists, getInternalId;
+            recSecExists, getInternalId, whichRecSecs;
 
     Connection conn;
 
