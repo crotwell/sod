@@ -217,8 +217,15 @@ public class VelocityStation extends Station {
     }
 
     public int hashCode() {
-        return StationIdUtil.toString(get_id()).hashCode();
+        if(!hashCalc){
+            hash =   StationIdUtil.toString(get_id()).hashCode();
+            hashCalc = true;
+        }
+        return hash;
     }
+    
+    private boolean hashCalc = false;
+    private int hash = 0;
 
     private VelocityNetwork velocityNet = null;
 
