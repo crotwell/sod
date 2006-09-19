@@ -39,6 +39,8 @@ public class JDBCRecordSectionChannel extends SodJDBC {
         if(!DBUtil.tableExists(tableName, conn)) {
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(createStmt);
+            stmt.executeUpdate("CREATE INDEX rec_eq_index ON " + tableName + " (eq_dbid)");
+            stmt.executeUpdate("CREATE INDEX rec_best_eq ON " + tableName + " (recsecid, eq_dbid, best)");
         }
         insert = conn.prepareStatement(insertStmt);
         getChannels = conn.prepareStatement(getChannelsStmt);
