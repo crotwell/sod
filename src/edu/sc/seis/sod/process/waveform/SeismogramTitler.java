@@ -1,7 +1,6 @@
 package edu.sc.seis.sod.process.waveform;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -20,8 +19,8 @@ import edu.sc.seis.sod.status.StationFormatter;
 
 public class SeismogramTitler {
 
-    public SeismogramTitler(SeismogramDisplayConfiguration[] sdc) {
-        this.sdc = sdc;
+    public SeismogramTitler(BorderConfiguration titleBorder) {
+        this.titleBorder = titleBorder;
     }
 
     public void configure(Element el) throws ConfigurationException {
@@ -55,18 +54,11 @@ public class SeismogramTitler {
 
     public void title(EventAccessOperations event, Channel channel) {
         System.out.println("titler.title called");
-        List borderList = new ArrayList();
-        for(int i = 0; i < sdc.length; i++) {
-            borderList.addAll(Arrays.asList(sdc[i].getBorders()));
-        }
-        BorderConfiguration[] borders = (BorderConfiguration[])borderList.toArray(new BorderConfiguration[0]);
-        for(int i = 0; i < borders.length; i++) {
-            BorderTitleConfiguration[] titles = borders[i].getTitles();
-            for(int j = 0; j < titles.length; j++) {
-                if(titles[j].getId().equals(titleId)) {
-                    System.out.println("titler found title id: " + titleId);
-                    titles[j].setText(getResults(event, channel));
-                }
+        BorderTitleConfiguration[] titles = titleBorder.getTitles();
+        for(int j = 0; j < titles.length; j++) {
+            if(titles[j].getId().equals(titleId)) {
+                System.out.println("titler found title id: " + titleId);
+                titles[j].setText(getResults(event, channel));
             }
         }
     }
@@ -89,9 +81,17 @@ public class SeismogramTitler {
         return buf.toString();
     }
 
-    private SeismogramDisplayConfiguration[] sdc;
+    public static BorderConfiguration[] extractBorderConfigs(SeismogramDisplayConfiguration[] sdcs) {
+        List borderConfigs = new ArrayList();
+        for(int i = 0; i < sdcs.length; i++) {
+            borderConfigs.add(sdcs[i].getBorders());
+        }
+        return (BorderConfiguration[])borderConfigs.toArray(new BorderConfiguration[0]);
+    }
 
     private String titleId;
+
+    private BorderConfiguration titleBorder;
 
     private List formatters = new ArrayList();
 }

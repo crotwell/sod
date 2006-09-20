@@ -1,12 +1,7 @@
 package edu.sc.seis.sod.process.waveform.vector;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.SwingUtilities;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -24,7 +19,6 @@ import edu.sc.seis.fissuresUtil.display.ComponentSortedSeismogramDisplay;
 import edu.sc.seis.fissuresUtil.display.configuration.AmpConfigConfiguration;
 import edu.sc.seis.fissuresUtil.display.configuration.SeismogramDisplayConfiguration;
 import edu.sc.seis.fissuresUtil.display.registrar.AmpConfig;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.xml.DataSet;
 import edu.sc.seis.fissuresUtil.xml.DataSetSeismogram;
 import edu.sc.seis.fissuresUtil.xml.MemoryDataSet;
@@ -57,9 +51,6 @@ public class VectorImageProcess extends SeismogramImageProcess implements
                 globalACConf = AmpConfigConfiguration.create((Element)n);
             }
         }
-        configureTitlers(el, new SeismogramDisplayConfiguration[] {vdc,
-                                                                   edc,
-                                                                   ndc});
     }
 
     public WaveformVectorResult process(EventAccessOperations event,
@@ -70,38 +61,16 @@ public class VectorImageProcess extends SeismogramImageProcess implements
                                         CookieJar cookieJar) throws Exception {
         Channel chan = channelGroup.getChannels()[0];
         updateTitlers(event, chan);
-        final ComponentSortedSeismogramDisplay sd = getConfiguredDisplay();
+        ComponentSortedSeismogramDisplay sd = getConfiguredDisplay();
         DataSetSeismogram[] seis = createDataSetSeismograms(event,
                                                             channelGroup,
                                                             original,
                                                             available,
                                                             seismograms);
         populateDisplay(sd, event, channelGroup.getChannels(), seis);
-        final String picFileName = locator.getLocation(event, chan);
-        final String fileType = locator.getFileType();
-        SwingUtilities.invokeAndWait(new Runnable() {
-
-            public void run() {
-                logger.debug("writing " + picFileName);
-                try {
-                    if(fileType.equals(PDF)) {
-                        sd.setPdfSeismogramsPerPage(1);
-                        sd.outputToPDF(new BufferedOutputStream(new FileOutputStream(picFileName)),
-                                       true,
-                                       false);
-                    } else if(fileType.equals(PNG)) {
-                        sd.outputToPNG(new File(picFileName), dims);
-                    } else {
-                        // should never happen
-                        throw new RuntimeException("Unknown fileType:"
-                                + fileType);
-                    }
-                } catch(IOException e) {
-                    GlobalExceptionHandler.handle("Unable to write to "
-                            + picFileName, e);
-                }
-            }
-        });
+        String picFileName = locator.getLocation(event, chan);
+        String fileType = locator.getFileType();
+        writeImage(sd, fileType, picFileName);
         return new WaveformVectorResult(seismograms, new StringTreeLeaf(this,
                                                                         true));
     }

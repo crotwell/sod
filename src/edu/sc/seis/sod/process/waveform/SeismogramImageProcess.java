@@ -8,6 +8,7 @@ package edu.sc.seis.sod.process.waveform;
 import java.awt.Dimension;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javax.swing.SwingUtilities;
 import org.apache.log4j.Logger;
@@ -33,6 +34,8 @@ import edu.sc.seis.fissuresUtil.display.DisplayUtils;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.display.PhasePhilter;
 import edu.sc.seis.fissuresUtil.display.SeismogramDisplay;
+import edu.sc.seis.fissuresUtil.display.borders.TitleBorder;
+import edu.sc.seis.fissuresUtil.display.configuration.BorderConfiguration;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.display.configuration.SeismogramDisplayConfiguration;
 import edu.sc.seis.fissuresUtil.display.drawable.Flag;
@@ -87,23 +90,24 @@ public class SeismogramImageProcess implements WaveformProcess {
             sdc = SeismogramDisplayConfiguration.create(SodUtil.getElement(el,
                                                                            "displayConfig"));
         }
-        configureTitlers(el, new SeismogramDisplayConfiguration[] {sdc});
+        if(DOMHelper.hasElement(el, "titleBorder")) {
+            titleBorder = new BorderConfiguration();
+            titleBorder.configure(DOMHelper.getElement(el, "titleBorder"));
+            configureTitlers(el, titleBorder);
+        }
         locator = new SeismogramImageOutputLocator(el);
     }
 
-    protected void configureTitlers(Element el,
-                                    SeismogramDisplayConfiguration[] sdcs)
+    protected void configureTitlers(Element el, BorderConfiguration titleBorder)
             throws ConfigurationException {
-        List titlerList = new ArrayList();
         if(DOMHelper.hasElement(el, "titler")) {
             NodeList titlerConfigs = DOMHelper.getElements(el, "titler");
             for(int i = 0; i < titlerConfigs.getLength(); i++) {
-                SeismogramTitler titler = new SeismogramTitler(sdcs);
+                SeismogramTitler titler = new SeismogramTitler(titleBorder);
                 titler.configure((Element)titlerConfigs.item(i));
-                titlerList.add(titler);
+                titlers.add(titler);
             }
         }
-        titlers = (SeismogramTitler[])titlerList.toArray(new SeismogramTitler[0]);
     }
 
     public WaveformResult process(EventAccessOperations event,
@@ -256,9 +260,22 @@ public class SeismogramImageProcess implements WaveformProcess {
     }
 
     public void updateTitlers(EventAccessOperations event, Channel channel) {
-        for(int i = 0; i < titlers.length; i++) {
-            titlers[i].title(event, channel);
+        Iterator it = titlers.iterator();
+        while(it.hasNext()) {
+            ((SeismogramTitler)it.next()).title(event, channel);
         }
+    }
+
+    public BorderConfiguration getTitleBorder() {
+        return titleBorder;
+    }
+
+    protected void writeImage(SeismogramDisplay disp,
+                              String fileType,
+                              String picFileName) throws Exception {
+        SwingUtilities.invokeAndWait(new ImageWriter(disp,
+                                                     fileType,
+                                                     picFileName));
     }
 
     protected class ImageWriter implements Runnable {
@@ -285,7 +302,12 @@ public class SeismogramImageProcess implements WaveformProcess {
             logger.debug("writing " + picFileName);
             try {
                 if(fileType.equals(PDF)) {
-                    ((BasicSeismogramDisplay)bsd).outputToPDF(new File(picFileName));
+                    if(titleBorder != null) {
+                        ((BasicSeismogramDisplay)bsd).outputToPDF(new File(picFileName),
+                                                                  (TitleBorder)titleBorder.createBorder(bsd));
+                    } else {
+                        ((BasicSeismogramDisplay)bsd).outputToPDF(new File(picFileName));
+                    }
                 } else if(fileType.equals(PNG)) {
                     bsd.outputToPNG(new File(picFileName), dims);
                 } else {
@@ -304,7 +326,9 @@ public class SeismogramImageProcess implements WaveformProcess {
 
     protected SeismogramImageOutputLocator locator;
 
-    protected SeismogramTitler[] titlers;
+    protected BorderConfiguration titleBorder;
+
+    protected List titlers = new ArrayList();
 
     private TauPUtil tauP = TauPUtil.getTauPUtil();
 
