@@ -5,7 +5,6 @@
  */
 package edu.sc.seis.sod.status;
 
-import java.io.File;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -114,6 +113,14 @@ public class FissuresFormatter {
         return loc.latitude;
     }
 
+    public static String getLatitudeString(Location loc) {
+        StringBuffer buf = new StringBuffer();
+        buf.append(distFormat.format(Math.abs(loc.latitude)));
+        buf.append(' ');
+        buf.append((loc.latitude >= 0 ? 'N' : 'S'));
+        return buf.toString();
+    }
+
     public static float getLongitude(Station station) {
         return getLongitude(station.my_location);
     }
@@ -124,6 +131,14 @@ public class FissuresFormatter {
 
     public static float getLongitude(Location loc) {
         return loc.longitude;
+    }
+
+    public static String getLongitudeString(Location loc) {
+        StringBuffer buf = new StringBuffer();
+        buf.append(distFormat.format(Math.abs(loc.longitude)));
+        buf.append(' ');
+        buf.append((loc.longitude >= 0 ? 'E' : 'W'));
+        return buf.toString();
     }
 
     public static boolean isNull(Object obj) {
