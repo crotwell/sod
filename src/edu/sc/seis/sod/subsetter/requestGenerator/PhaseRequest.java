@@ -26,9 +26,27 @@ public class PhaseRequest implements RequestGenerator {
         beginPhase = DOMHelper.extractText(config, "beginPhase");
         endPhase = DOMHelper.extractText(config, "endPhase");
         Element beginEl = DOMHelper.extractElement(config, "beginOffset");
-        beginOffset = SodUtil.loadTimeInterval(beginEl);
+        if(DOMHelper.hasElement(beginEl, "ratio")) {
+            beginOffsetRatio = DOMHelper.extractDouble(beginEl, "ratio", 1.0);
+            beginOffsetRatioMinimum = SodUtil.loadTimeInterval(DOMHelper.getElement(beginEl,
+                                                                                    "minimum"));
+            if(DOMHelper.hasElement(beginEl, "negative")) {
+                negateBeginOffsetRatio = true;
+            }
+        } else {
+            beginOffset = SodUtil.loadTimeInterval(beginEl);
+        }
         Element endEl = DOMHelper.extractElement(config, "endOffset");
-        endOffset = SodUtil.loadTimeInterval(endEl);
+        if(DOMHelper.hasElement(endEl, "ratio")) {
+            endOffsetRatio = DOMHelper.extractDouble(endEl, "ratio", 1.0);
+            endOffsetRatioMinimum = SodUtil.loadTimeInterval(DOMHelper.getElement(endEl,
+                                                                                  "minimum"));
+            if(DOMHelper.hasElement(endEl, "negative")) {
+                negateEndOffsetRatio = true;
+            }
+        } else {
+            endOffset = SodUtil.loadTimeInterval(endEl);
+        }
         String model = DOMHelper.extractText(config, "model", "prem");
         try {
             util = TauPUtil.getTauPUtil(model);
@@ -69,12 +87,30 @@ public class PhaseRequest implements RequestGenerator {
             return null;
         }
         MicroSecondDate originDate = new MicroSecondDate(origin.origin_time);
-        TimeInterval bInterval = beginOffset.add(new TimeInterval(begin,
-                                                                  UnitImpl.SECOND));
-        TimeInterval eInterval = endOffset.add(new TimeInterval(end,
-                                                                UnitImpl.SECOND));
+        TimeInterval bInterval = new TimeInterval(begin, UnitImpl.SECOND);
+        TimeInterval eInterval = new TimeInterval(end, UnitImpl.SECOND);
         MicroSecondDate bDate = originDate.add(bInterval);
         MicroSecondDate eDate = originDate.add(eInterval);
+        if(beginOffset != null) {
+            bInterval = beginOffset;
+        } else {
+            bInterval = getTimeIntervalFromRatio(bDate,
+                                                 eDate,
+                                                 beginOffsetRatio,
+                                                 beginOffsetRatioMinimum,
+                                                 negateBeginOffsetRatio);
+        }
+        if(endOffset != null) {
+            eInterval = endOffset;
+        } else {
+            eInterval = getTimeIntervalFromRatio(bDate,
+                                                 eDate,
+                                                 endOffsetRatio,
+                                                 endOffsetRatioMinimum,
+                                                 negateEndOffsetRatio);
+        }
+        bDate = bDate.add(bInterval);
+        eDate = eDate.add(eInterval);
         prevRequestFilter = new RequestFilter(channel.get_id(),
                                               bDate.getFissuresTime(),
                                               eDate.getFissuresTime());
@@ -103,9 +139,38 @@ public class PhaseRequest implements RequestGenerator {
         return Math.rint(1000 * arrivals[0].getTime()) / 1000;
     }
 
+    public static TimeInterval getTimeIntervalFromRatio(MicroSecondDate startPhaseTime,
+                                                        MicroSecondDate endPhaseTime,
+                                                        double ratio,
+                                                        TimeInterval minimumTime,
+                                                        boolean negate) {
+        TimeInterval interval = new TimeInterval(endPhaseTime.difference(startPhaseTime)
+                .multiplyBy(ratio));
+        if(interval.lessThan(minimumTime)) {
+            return negateIfTrue(minimumTime, negate);
+        }
+        return negateIfTrue(interval, negate);
+    }
+
+    public static TimeInterval negateIfTrue(TimeInterval interval,
+                                            boolean negate) {
+        if(negate) {
+            double value = interval.getValue();
+            return new TimeInterval(-value, interval.getUnit());
+        }
+        return interval;
+    }
+
     private String beginPhase, endPhase;
 
     private TimeInterval beginOffset, endOffset;
+
+    private double beginOffsetRatio, endOffsetRatio;
+
+    private TimeInterval beginOffsetRatioMinimum, endOffsetRatioMinimum;
+
+    private boolean negateBeginOffsetRatio = false,
+            negateEndOffsetRatio = false;
 
     private TauPUtil util;
 
