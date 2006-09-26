@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar xmlns="http://relaxng.org/ns/structure/1.0"
-  datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
-  <start combine="choice">
-    <notAllowed/>
-  </start>
-  <define name="samplingRange">
-    <optional>
-      <element name="min">
-        <data type="integer"/>
-      </element>
-    </optional>
-    <optional>
-      <element name="max">
-        <data type="integer"/>
-      </element>
-    </optional>
-    <externalRef href="../externalRef/timeInterval.rng"/>
-  </define>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <include href="time.rng"/>
+    <start combine="choice">
+        <notAllowed/>
+    </start>
+    <define name="samplingRange">
+        <optional>
+            <element name="min">
+                <data type="integer"/>
+            </element>
+        </optional>
+        <optional>
+            <element name="max">
+                <data type="integer"/>
+            </element>
+        </optional>
+        <element name="interval">
+            <ref name="time"/>
+        </element>
+    </define>
 </grammar>

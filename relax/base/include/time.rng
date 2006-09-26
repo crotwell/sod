@@ -3,7 +3,7 @@
     <start combine="choice">
         <notAllowed/>
     </start>
-    <define name="time">
+    <define name="time" combine="choice">
         <choice>
             <data type="string">
                 <xsd:annotation>

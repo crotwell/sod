@@ -15,7 +15,7 @@ public class Sampling extends RangeSubsetter implements ChannelSubsetter {
     public Sampling(Element config) throws ConfigurationException {
         super(config);
         TimeInterval interval = SodUtil.loadTimeInterval(SodUtil.getElement(config,
-                                                                            "timeInterval"));
+                                                                            "interval"));
         min = getHertz((int)getMinValue(), interval);
         max = getHertz((int)getMaxValue(), interval);
     }
