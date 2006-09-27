@@ -57,14 +57,7 @@ public class MicroSecondTimeRangeFormatter extends Template implements
         StringBuffer buf = new StringBuffer();
         Iterator it = templates.iterator();
         while(it.hasNext()) {
-            Object curObj = it.next();
-            System.out.println(curObj);
-            System.out.println(curObj instanceof MicroSecondTimeRangeTemplate);
-            System.out.println(curObj instanceof MicroSecondTimeRangeFormatter);
-            MicroSecondTimeRangeTemplate cur = (MicroSecondTimeRangeTemplate)curObj;
-            // MicroSecondTimeRangeTemplate cur =
-            // (MicroSecondTimeRangeTemplate)it.next();
-            buf.append(cur.getResult(timeRange));
+            buf.append(((MicroSecondTimeRangeTemplate)it.next()).getResult(timeRange));
         }
         if(filizeResults) {
             return FissuresFormatter.filize(buf.toString());
