@@ -59,11 +59,9 @@ public class SeismogramTitler {
     public void title(EventAccessOperations event,
                       Channel channel,
                       MicroSecondTimeRange timeRange) {
-        System.out.println("titler.title called");
         BorderTitleConfiguration[] titles = titleBorder.getTitles();
         for(int j = 0; j < titles.length; j++) {
             if(titles[j].getId().equals(titleId)) {
-                System.out.println("titler found title id: " + titleId);
                 titles[j].setText(getResults(event, channel, timeRange));
             }
         }
@@ -87,7 +85,6 @@ public class SeismogramTitler {
                 buf.append(((GenericTemplate)o).getResult());
             }
         }
-        System.out.println("titler results: " + buf.toString());
         return buf.toString();
     }
 
