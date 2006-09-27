@@ -210,9 +210,56 @@ public class SeismogramImageProcess implements WaveformProcess {
                                   boolean relTime,
                                   CookieJar cookieJar) throws Exception {
         logger.debug("process() called");
-        updateTitlers(event, channel);
+        MemoryDataSetSeismogram memDSS = createDataSetSeismogram(event,
+                                                                 channel,
+                                                                 original,
+                                                                 seismograms);
+        SeismogramDisplay bsd = createPopulatedDisplay(event,
+                                                       channel,
+                                                       new DataSetSeismogram[] {memDSS},
+                                                       phases);
+        String picFileName = locator.getLocation(event, channel, fileType);
+        writeImage(bsd, locator.getFileType(), picFileName);
+        return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
+    }
+
+    public SeismogramDisplay createPopulatedDisplay(EventAccessOperations event,
+                                                    Channel channel,
+                                                    DataSetSeismogram[] seis,
+                                                    String[] phases)
+            throws Exception {
+        MicroSecondTimeRange timeWindow = null;
+        if(seis.length > 0) {
+            timeWindow = getTimeWindow(phaseWindow, seis[0]);
+            updateTitlers(event, channel, timeWindow);
+        }
         SeismogramDisplay bsd = sdc.createDisplay();
-        bsd.setTimeConfig(new BasicTimeConfig());
+        TimeConfig tc = new BasicTimeConfig();
+        bsd.setTimeConfig(tc);
+        populateDisplay(bsd, event, channel, seis, phases);
+        if(seis.length > 0) {
+            setTimeWindow(tc, timeWindow, tc.getTime(seis[0]));
+        }
+        return bsd;
+    }
+
+    private void populateDisplay(SeismogramDisplay sd,
+                                 EventAccessOperations event,
+                                 Channel channel,
+                                 DataSetSeismogram[] seis,
+                                 String[] phases) throws TauModelException {
+        Origin o = EventUtil.extractOrigin(event);
+        addFlags(getArrivals(channel, o, phases), o, sd, seis[0]);
+        if(seis.length > 0) {
+            sd.add(seis);
+        }
+    }
+
+    private MemoryDataSetSeismogram createDataSetSeismogram(EventAccessOperations event,
+                                                            Channel channel,
+                                                            RequestFilter[] original,
+                                                            LocalSeismogramImpl[] seismograms)
+            throws Exception {
         MemoryDataSetSeismogram memDSS = createSeis(seismograms, original);
         DataSet dataset = new MemoryDataSet("temp", "Temp Dataset for "
                 + memDSS.getName(), "temp", new AuditInfo[0]);
@@ -222,15 +269,7 @@ public class SeismogramImageProcess implements WaveformProcess {
                                      + ChannelIdUtil.toString(channel.get_id()),
                              channel,
                              new AuditInfo[0]);
-        Origin o = EventUtil.extractOrigin(event);
-        addFlags(getArrivals(channel, o, phases), o, bsd, memDSS);
-        String picFileName = locator.getLocation(event, channel, fileType);
-        if(seismograms.length > 0) {
-            bsd.add(new DataSetSeismogram[] {memDSS});
-            setTimeWindow(bsd.getTimeConfig(), phaseWindow, memDSS);
-        }
-        SwingUtilities.invokeAndWait(new ImageWriter(bsd, fileType, picFileName));
-        return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
+        return memDSS;
     }
 
     public static void setTimeWindow(TimeConfig tc, DataSetSeismogram dss)
@@ -241,14 +280,7 @@ public class SeismogramImageProcess implements WaveformProcess {
     public static void setTimeWindow(TimeConfig tc,
                                      PhaseWindow pw,
                                      DataSetSeismogram dss) throws Exception {
-        RequestFilter rf;
-        if(pw != null) {
-            PhaseRequest pr = pw.getPhaseRequest();
-            rf = pr.generateRequest(dss.getEvent(), dss.getChannel());
-        } else {
-            rf = dss.getRequestFilter();
-        }
-        setTimeWindow(tc, new MicroSecondTimeRange(rf), tc.getTime(dss));
+        setTimeWindow(tc, getTimeWindow(pw, dss), tc.getTime(dss));
     }
 
     public static void setTimeWindow(TimeConfig tc,
@@ -259,10 +291,25 @@ public class SeismogramImageProcess implements WaveformProcess {
         tc.shaleTime(shiftNScale[0], shiftNScale[1]);
     }
 
-    public void updateTitlers(EventAccessOperations event, Channel channel) {
+    public static MicroSecondTimeRange getTimeWindow(PhaseWindow pw,
+                                                     DataSetSeismogram dss)
+            throws Exception {
+        RequestFilter rf;
+        if(pw != null) {
+            PhaseRequest pr = pw.getPhaseRequest();
+            rf = pr.generateRequest(dss.getEvent(), dss.getChannel());
+        } else {
+            rf = dss.getRequestFilter();
+        }
+        return new MicroSecondTimeRange(rf);
+    }
+
+    public void updateTitlers(EventAccessOperations event,
+                              Channel channel,
+                              MicroSecondTimeRange timeRange) {
         Iterator it = titlers.iterator();
         while(it.hasNext()) {
-            ((SeismogramTitler)it.next()).title(event, channel);
+            ((SeismogramTitler)it.next()).title(event, channel, timeRange);
         }
     }
 

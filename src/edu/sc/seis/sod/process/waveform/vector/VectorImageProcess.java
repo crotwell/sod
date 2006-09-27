@@ -16,9 +16,11 @@ import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.display.BasicSeismogramDisplay;
 import edu.sc.seis.fissuresUtil.display.ComponentSortedSeismogramDisplay;
+import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.display.configuration.AmpConfigConfiguration;
 import edu.sc.seis.fissuresUtil.display.configuration.SeismogramDisplayConfiguration;
 import edu.sc.seis.fissuresUtil.display.registrar.AmpConfig;
+import edu.sc.seis.fissuresUtil.display.registrar.TimeConfig;
 import edu.sc.seis.fissuresUtil.xml.DataSet;
 import edu.sc.seis.fissuresUtil.xml.DataSetSeismogram;
 import edu.sc.seis.fissuresUtil.xml.MemoryDataSet;
@@ -59,30 +61,19 @@ public class VectorImageProcess extends SeismogramImageProcess implements
                                         RequestFilter[][] available,
                                         LocalSeismogramImpl[][] seismograms,
                                         CookieJar cookieJar) throws Exception {
-        Channel chan = channelGroup.getChannels()[0];
-        updateTitlers(event, chan);
-        ComponentSortedSeismogramDisplay sd = getConfiguredDisplay();
         DataSetSeismogram[] seis = createDataSetSeismograms(event,
                                                             channelGroup,
                                                             original,
                                                             available,
                                                             seismograms);
-        populateDisplay(sd, event, channelGroup.getChannels(), seis);
-        String picFileName = locator.getLocation(event, chan);
-        String fileType = locator.getFileType();
-        writeImage(sd, fileType, picFileName);
+        ComponentSortedSeismogramDisplay sd = createPopulatedDisplay(event,
+                                                                     channelGroup.getChannels(),
+                                                                     seis);
+        String picFileName = locator.getLocation(event,
+                                                 channelGroup.getChannels()[0]);
+        writeImage(sd, locator.getFileType(), picFileName);
         return new WaveformVectorResult(seismograms, new StringTreeLeaf(this,
                                                                         true));
-    }
-
-    public ComponentSortedSeismogramDisplay getConfiguredDisplay() {
-        ComponentSortedSeismogramDisplay sd = new ComponentSortedSeismogramDisplay(false);
-        BasicSeismogramDisplay vert = (BasicSeismogramDisplay)vdc.createDisplay();
-        sd.setTimeConfig(vert.getTimeConfig());
-        sd.setZ(vert);
-        sd.setNorth((BasicSeismogramDisplay)ndc.createDisplay());
-        sd.setEast((BasicSeismogramDisplay)edc.createDisplay());
-        return sd;
     }
 
     private DataSetSeismogram[] createDataSetSeismograms(EventAccessOperations event,
@@ -113,10 +104,33 @@ public class VectorImageProcess extends SeismogramImageProcess implements
         return (DataSetSeismogram[])seisList.toArray(new DataSetSeismogram[0]);
     }
 
-    public void populateDisplay(ComponentSortedSeismogramDisplay sd,
-                                EventAccessOperations event,
-                                Channel[] chans,
-                                DataSetSeismogram[] seis) throws Exception {
+    public ComponentSortedSeismogramDisplay createPopulatedDisplay(EventAccessOperations event,
+                                                                   Channel[] chans,
+                                                                   DataSetSeismogram[] seis)
+            throws Exception {
+        MicroSecondTimeRange timeWindow = null;
+        if(seis.length > 0) {
+            timeWindow = getTimeWindow(phaseWindow, seis[0]);
+            updateTitlers(event, chans[0], timeWindow);
+        }
+        ComponentSortedSeismogramDisplay sd = new ComponentSortedSeismogramDisplay(false);
+        BasicSeismogramDisplay vert = (BasicSeismogramDisplay)vdc.createDisplay();
+        TimeConfig tc = vert.getTimeConfig();
+        sd.setTimeConfig(tc);
+        sd.setZ(vert);
+        sd.setNorth((BasicSeismogramDisplay)ndc.createDisplay());
+        sd.setEast((BasicSeismogramDisplay)edc.createDisplay());
+        populateDisplay(sd, event, chans, seis);
+        if(timeWindow != null) {
+            setTimeWindow(tc, timeWindow, tc.getTime(seis[0]));
+        }
+        return sd;
+    }
+
+    private void populateDisplay(ComponentSortedSeismogramDisplay sd,
+                                 EventAccessOperations event,
+                                 Channel[] chans,
+                                 DataSetSeismogram[] seis) throws Exception {
         Origin o = EventUtil.extractOrigin(event);
         Arrival[] arrivals = getArrivals(chans[0], o, phaseFlagNames);
         AmpConfig globalAC = null;
@@ -130,9 +144,6 @@ public class VectorImageProcess extends SeismogramImageProcess implements
                 sd.get(seis[i]).setAmpConfig(globalAC);
             }
             addFlags(arrivals, o, sd.get(seis[i]), seis[i]);
-        }
-        if(seis.length > 0) {
-            setTimeWindow(sd.getTimeConfig(), phaseWindow, seis[0]);
         }
     }
 

@@ -7,6 +7,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.display.configuration.BorderConfiguration;
 import edu.sc.seis.fissuresUtil.display.configuration.BorderTitleConfiguration;
 import edu.sc.seis.fissuresUtil.display.configuration.SeismogramDisplayConfiguration;
@@ -15,6 +16,7 @@ import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.ChannelFormatter;
 import edu.sc.seis.sod.status.EventFormatter;
 import edu.sc.seis.sod.status.GenericTemplate;
+import edu.sc.seis.sod.status.MicroSecondTimeRangeFormatter;
 import edu.sc.seis.sod.status.StationFormatter;
 
 public class SeismogramTitler {
@@ -40,6 +42,8 @@ public class SeismogramTitler {
                     formatters.add(new ChannelFormatter((Element)child));
                 } else if(child.getNodeName().equals("event")) {
                     formatters.add(new EventFormatter((Element)child));
+                } else if(child.getNodeName().equals("timeWindow")) {
+                    formatters.add(new MicroSecondTimeRangeFormatter((Element)child));
                 } else {
                     formatters.add(new GenericTemplate() {
 
@@ -52,18 +56,22 @@ public class SeismogramTitler {
         }
     }
 
-    public void title(EventAccessOperations event, Channel channel) {
+    public void title(EventAccessOperations event,
+                      Channel channel,
+                      MicroSecondTimeRange timeRange) {
         System.out.println("titler.title called");
         BorderTitleConfiguration[] titles = titleBorder.getTitles();
         for(int j = 0; j < titles.length; j++) {
             if(titles[j].getId().equals(titleId)) {
                 System.out.println("titler found title id: " + titleId);
-                titles[j].setText(getResults(event, channel));
+                titles[j].setText(getResults(event, channel, timeRange));
             }
         }
     }
 
-    private String getResults(EventAccessOperations event, Channel channel) {
+    private String getResults(EventAccessOperations event,
+                              Channel channel,
+                              MicroSecondTimeRange timeRange) {
         StringBuffer buf = new StringBuffer();
         for(int i = 0; i < formatters.size(); i++) {
             Object o = formatters.get(i);
@@ -73,6 +81,8 @@ public class SeismogramTitler {
                 buf.append(((ChannelFormatter)o).getResult(channel));
             } else if(o instanceof EventFormatter) {
                 buf.append(((EventFormatter)o).getResult(event));
+            } else if(o instanceof MicroSecondTimeRangeFormatter) {
+                buf.append(((MicroSecondTimeRangeFormatter)o).getResult(timeRange));
             } else {
                 buf.append(((GenericTemplate)o).getResult());
             }
