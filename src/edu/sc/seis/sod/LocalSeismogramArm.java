@@ -152,10 +152,15 @@ public class LocalSeismogramArm implements Subsetter {
                 }
             }
             RequestFilter[] outfilters = null;
-            logger.debug("Trying available_data for "
-                    + ChannelIdUtil.toString(infilters[0].channel_id)
-                    + " from " + infilters[0].start_time.date_time + " to "
-                    + infilters[0].end_time.date_time);
+            if(infilters.length > 0) {
+                logger.debug("Trying available_data for "
+                        + ChannelIdUtil.toString(infilters[0].channel_id)
+                        + " from " + infilters[0].start_time.date_time + " to "
+                        + infilters[0].end_time.date_time);
+            } else {
+                logger.debug("Empty request generated for "
+                        + ChannelIdUtil.toString(ecp.getChannel().get_id()));
+            }
             int retries = 0;
             int MAX_RETRY = 5;
             while(retries < MAX_RETRY) {
@@ -196,7 +201,7 @@ public class LocalSeismogramArm implements Subsetter {
                         + " to " + outfilters[0].end_time.date_time);
             } else {
                 logger.debug("No available_data for "
-                        + ChannelIdUtil.toString(infilters[0].channel_id));
+                        + ChannelIdUtil.toString(ecp.getChannel().get_id()));
             }
             processAvailableDataSubsetter(ecp,
                                           dataCenter,
@@ -397,9 +402,10 @@ public class LocalSeismogramArm implements Subsetter {
         } else {
             ecp.update(t, Status.get(stage, Standing.SYSTEM_FAILURE));
         }
-        if (t instanceof FissuresException) {
+        if(t instanceof FissuresException) {
             FissuresException f = (FissuresException)t;
-            failLogger.warn(f.the_error.error_code+" "+f.the_error.error_description+" "+ecp, t);
+            failLogger.warn(f.the_error.error_code + " "
+                    + f.the_error.error_description + " " + ecp, t);
         } else {
             failLogger.warn(ecp, t);
         }
