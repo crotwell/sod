@@ -10,7 +10,9 @@ import java.util.List;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.DBUtil;
 import edu.sc.seis.fissuresUtil.database.NotFound;
+import edu.sc.seis.fissuresUtil.database.network.JDBCStation;
 import edu.sc.seis.sod.database.SodJDBC;
+import edu.sc.seis.sod.velocity.network.VelocityStation;
 
 public class JDBCRecordSectionChannel extends SodJDBC {
 
@@ -29,21 +31,29 @@ public class JDBCRecordSectionChannel extends SodJDBC {
                 + " (recSecId,eq_dbid,channelid,topLeftX,topLeftY,bottomRightX,bottomRightY,best,internalId) VALUES (?, ?, ?, ?, ?, ?,?,?,?)";
         String getChannelsStmt = " SELECT channelid FROM " + tableName
                 + " WHERE recSecId=? and eq_dbid=? and best=?";
+        String getStationsStmt = " SELECT sta_id FROM "
+                + tableName
+                + " JOIN channel ON (channelid = chan_id) JOIN site ON (channel.site_id = site.site_id)"
+                + " WHERE recSecId=? and eq_dbid=? and best=?";
         String channelExistsStmt = "SELECT count(channelid) from " + tableName
                 + " where  recSecId=? AND eq_dbid=? AND channelid=?";
         String recSecExistsStmt = "SELECT TOP 1 recSecId from " + tableName
                 + " where  recSecId=? AND eq_dbid=? ";
         String getInternalIdStmt = "SELECT internalId from " + tableName
                 + " where  recSecId=? AND eq_dbid=? ";
-        String whichRecSecsStmt = "SELECT DISTINCT recsecid FROM " + tableName + " WHERE eq_dbid = ?";
+        String whichRecSecsStmt = "SELECT DISTINCT recsecid FROM " + tableName
+                + " WHERE eq_dbid = ?";
         if(!DBUtil.tableExists(tableName, conn)) {
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(createStmt);
-            stmt.executeUpdate("CREATE INDEX rec_eq_index ON " + tableName + " (eq_dbid)");
-            stmt.executeUpdate("CREATE INDEX rec_best_eq ON " + tableName + " (recsecid, eq_dbid, best)");
+            stmt.executeUpdate("CREATE INDEX rec_eq_index ON " + tableName
+                    + " (eq_dbid)");
+            stmt.executeUpdate("CREATE INDEX rec_best_eq ON " + tableName
+                    + " (recsecid, eq_dbid, best)");
         }
         insert = conn.prepareStatement(insertStmt);
         getChannels = conn.prepareStatement(getChannelsStmt);
+        getStations = conn.prepareStatement(getStationsStmt);
         channelExists = conn.prepareStatement(channelExistsStmt);
         recSecExists = conn.prepareStatement(recSecExistsStmt);
         whichRecSecs = conn.prepareStatement(whichRecSecsStmt);
@@ -71,30 +81,30 @@ public class JDBCRecordSectionChannel extends SodJDBC {
     public double[] getPixelInfo(String recSecId, int eq_dbid, int channelId)
             throws SQLException {
         throw new UnsupportedOperationException("Pixel information isn't being inserted at the moment because JD's implementation is ridiculously memory intensive");
-        //        if(getPixelInfo == null) {
-        //            String getPixelInfoStmt = "select
+        // if(getPixelInfo == null) {
+        // String getPixelInfoStmt = "select
         // topLeftX,topLeftY,bottomRightX,bottomRightY from "
-        //                    + tableName
-        //                    + " WHERE"
-        //                    + " recSecId=? AND eq_dbid=? AND channelid=?";
-        //            getPixelInfo = conn.prepareStatement(getPixelInfoStmt);
-        //        }
-        //        getPixelInfo.setString(1, recSecId);
-        //        getPixelInfo.setInt(2, eq_dbid);
-        //        getPixelInfo.setInt(3, channelId);
-        //        double[] pixelInfo = {-1, -1, -1, -1};
-        //        ResultSet rs = getPixelInfo.executeQuery();
-        //        if(rs.next()) {
-        //            double topLeftX = rs.getInt(1);
-        //            double topLeftY = rs.getInt(2);
-        //            double bottomRightX = rs.getInt(3);
-        //            double bottomRightY = rs.getInt(4);
-        //            pixelInfo[0] = topLeftX;
-        //            pixelInfo[1] = topLeftY;
-        //            pixelInfo[2] = bottomRightX;
-        //            pixelInfo[3] = bottomRightY;
-        //        }
-        //        return pixelInfo;
+        // + tableName
+        // + " WHERE"
+        // + " recSecId=? AND eq_dbid=? AND channelid=?";
+        // getPixelInfo = conn.prepareStatement(getPixelInfoStmt);
+        // }
+        // getPixelInfo.setString(1, recSecId);
+        // getPixelInfo.setInt(2, eq_dbid);
+        // getPixelInfo.setInt(3, channelId);
+        // double[] pixelInfo = {-1, -1, -1, -1};
+        // ResultSet rs = getPixelInfo.executeQuery();
+        // if(rs.next()) {
+        // double topLeftX = rs.getInt(1);
+        // double topLeftY = rs.getInt(2);
+        // double bottomRightX = rs.getInt(3);
+        // double bottomRightY = rs.getInt(4);
+        // pixelInfo[0] = topLeftX;
+        // pixelInfo[1] = topLeftY;
+        // pixelInfo[2] = bottomRightX;
+        // pixelInfo[3] = bottomRightY;
+        // }
+        // return pixelInfo;
     }
 
     public int[] getChannels(String recSecId, int eq_dbid, int best)
@@ -112,6 +122,20 @@ public class JDBCRecordSectionChannel extends SodJDBC {
             channels[i] = ((Integer)results.get(i)).intValue();
         }
         return channels;
+    }
+
+    public List getStations(String recSecId, int eq_dbid, int best, JDBCStation sta)
+            throws SQLException, NotFound {
+        getStations.setString(1, recSecId);
+        getStations.setInt(2, eq_dbid);
+        getStations.setInt(3, best);
+        List results = new ArrayList();
+        ResultSet rs = getStations.executeQuery();
+        while(rs.next()) {
+            int sta_dbId = rs.getInt("sta_id");
+            results.add(new VelocityStation(sta.get(sta_dbId), sta_dbId));
+        }
+        return results;
     }
 
     public boolean channelExists(String recSecId, int eq_dbid, int channelid)
@@ -166,22 +190,21 @@ public class JDBCRecordSectionChannel extends SodJDBC {
         return recSecExists.executeQuery().next();
     }
 
-    public String[] whichReqSecs(int eventDbId)
-            throws SQLException {
+    public String[] whichReqSecs(int eventDbId) throws SQLException {
         whichRecSecs.setInt(1, eventDbId);
         ResultSet rs = whichRecSecs.executeQuery();
         List results = new ArrayList(3);
-        while(rs.next()){
+        while(rs.next()) {
             results.add(rs.getString("recsecid"));
         }
-        return (String[])results.toArray(new String[results.size()]); 
+        return (String[])results.toArray(new String[results.size()]);
     }
 
     public Connection getConnection() {
         return conn;
     }
 
-    PreparedStatement insert, getPixelInfo, getChannels, channelExists,
+    PreparedStatement insert, getPixelInfo, getChannels, getStations, channelExists,
             recSecExists, getInternalId, whichRecSecs;
 
     Connection conn;
