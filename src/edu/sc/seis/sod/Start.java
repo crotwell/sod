@@ -21,7 +21,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
-import edu.sc.seis.fissuresUtil.cache.BulletproofVestFactory;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.exceptionHandler.Extractor;
@@ -142,45 +141,26 @@ public class Start {
 
     protected void initDocument(String[] args) throws Exception {
         // get some defaults
-        loadProps((Start.class).getClassLoader()
-                .getResourceAsStream(DEFAULT_PROPS));
-        for(int i = 0; i < args.length - 1; i++) {
-            if(args[i].equals("-props") || args[i].equals("-p")) {
-                // override with values in local directory,
-                // but still load defaults with original name
-                loadProps(new FileInputStream(args[i + 1]));
-                System.out.println("loaded file props from " + args[i + 1]);
-            }
-        }
-        for(int i = 0; i < args.length - 1; i++) {
-            if(args[i].equals("-NameServiceIOR")) {
-                InputStream iorInput = null;
-                try {
-                    iorInput = new FileInputStream(args[i + 1]);
-                    loadProps(iorInput);
-                    System.out.println("loaded IOR from " + args[i + 1]);
-                } finally {
-                    if(iorInput != null) {
-                        iorInput.close();
-                    }
-                }
-            }
+        Initializer.loadProps((Start.class).getClassLoader()
+                .getResourceAsStream(DEFAULT_PROPS), props);
+        try {
+            Initializer.loadProperties(args, props);
+        } catch(IOException io) {
+            System.err.println("Unable to load props file: " + io.getMessage());
+            System.err.println("Quitting until the error is corrected");
+            System.exit(1);
         }
         PropertyConfigurator.configure(props);
         logger.info("logging configured");
         // Error html dir and output should be set up now, so remove the
         // Std out reporter
         GlobalExceptionHandler.remove(sysOutReporter);
-        // now override the properties with the properties specified
-        // in the configuration file.
+        // now override the properties with any values in the recipe
         loadRunProps(getConfig());
         ConnMgr.installDbProperties(props, args);
-        // Must happen after the run props have been loaded
-        IndexTemplate.setConfigFileLoc();
-        // here the orb must be initialized ..
-        // configure commonAccess
+        IndexTemplate.setConfigFileLoc();// Must happen after load runProps
         CommonAccess.getCommonAccess().setProps(props);
-        CommonAccess.getCommonAccess().initORB(args, props);
+        CommonAccess.getCommonAccess().initORB(args);
     }
 
     public static void loadRunProps(Element doc) throws ConfigurationException {
@@ -504,7 +484,7 @@ public class Start {
                         exit("Can't have both -e and -n.  Choose one or the other");
                     }
                     netOnly = true;
-                } 
+                }
             }
             Start start = new Start(confFilename, args);
             logger.info("Start start()");
@@ -522,10 +502,6 @@ public class Start {
     private static void exit(String reason) {
         System.err.println(reason);
         System.exit(1);
-    }
-
-    public static void loadProps(InputStream propStream) {
-        Initializer.loadProps(propStream, props);
     }
 
     public static void add(Properties newProps) {
