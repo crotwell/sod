@@ -15,7 +15,6 @@
             <ref name="eventVectorAND"/>
             <ref name="eventVectorOR"/>
             <ref name="eventVectorNOT"/>
-            <ref name="PASS"/>
             <ref name="external"/>
         </choice>
     </define>
@@ -89,17 +88,6 @@
                     included subsetter must evaluate to false for this subsetter to evaluate to true, and vice versa.</description>
             </xsd:annotation>
             <ref name="eventVector"/>
-        </element>
-    </define>
-    <define name="PASS">
-        <element name="passEventChannel">
-            <xsd:annotation>
-                <summary>Accepts any channel group</summary>
-                <description>This is a simple subsetter that always returns true, which is particularly useful for testing.</description>
-            </xsd:annotation>
-            <zeroOrMore>
-                <ref name="eventVector"/>
-            </zeroOrMore>
         </element>
     </define>
     <define name="external">

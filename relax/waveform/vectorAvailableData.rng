@@ -16,7 +16,6 @@
             <ref name="vectorAvailableDataAND"/>
             <ref name="vectorAvailableDataOR"/>
             <ref name="vectorAvailableDataNOT"/>
-            <ref name="PASS"/>
             <ref name="external"/>
             <externalRef href="availableData.rng"/>
         </choice>
@@ -121,21 +120,6 @@
                 </example>
             </xsd:annotation>
             <ref name="vectorAvailableData"/>
-        </element>
-    </define>
-    <define name="PASS">
-        <element name="passVectorAvailableData">
-            <xsd:annotation>
-                <summary>Accepts any available vector data</summary>
-                <description>This is a simple subsetter that always returns true, which is
-                    particularly useful for testing.</description>
-                <example>
-                    <passVectorAvailableData/>
-                </example>
-            </xsd:annotation>
-            <zeroOrMore>
-                <ref name="vectorAvailableData"/>
-            </zeroOrMore>
         </element>
     </define>
     <define name="external">

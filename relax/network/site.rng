@@ -22,7 +22,6 @@
             <ref name="AND"/>
             <ref name="OR"/>
             <ref name="NOT"/>
-            <ref name="PASS"/>
             <ref name="externalSiteSubsetter"/>
         </choice>
     </define>
@@ -35,7 +34,6 @@
             <ref name="AND"/>
             <ref name="OR"/>
             <ref name="NOT"/>
-            <ref name="PASS"/>
             <ref name="externalSiteSubsetter"/>
             <externalRef href="station.rng"/>
             <externalRef href="network.rng"/>
@@ -167,20 +165,6 @@
                 </xsd:documentation>
             </xsd:annotation>
             <ref name="site"/>
-        </element>
-    </define>
-    <define name="PASS">
-        <element name="passSite">
-            <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary>Accepts any site</summary>
-                    <description>This is a simple subsetter that always returns true for any Site,
-                        which is useful for testing purposes.</description>
-                </xsd:documentation>
-            </xsd:annotation>
-            <zeroOrMore>
-                <ref name="site"/>
-            </zeroOrMore>
         </element>
     </define>
     <define name="externalSiteSubsetter">

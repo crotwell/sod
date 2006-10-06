@@ -29,7 +29,6 @@
             <ref name="AND"/>
             <ref name="OR"/>
             <ref name="NOT"/>
-            <ref name="PASS"/>
             <ref name="externalStationSubsetter"/>
             <ref name="belongsToVirtual"/>
         </choice>
@@ -49,7 +48,6 @@
             <ref name="AND"/>
             <ref name="OR"/>
             <ref name="NOT"/>
-            <ref name="PASS"/>
             <ref name="externalStationSubsetter"/>
             <externalRef href="network.rng"/>
         </choice>
@@ -260,21 +258,6 @@
                     Station subsetter evaluates to true, and vice versa.</description>
             </xsd:annotation>
             <ref name="station"/>
-        </element>
-    </define>
-    <define name="PASS">
-        <element name="passStation">
-            <xsd:annotation>
-                <summary>Accepts any station</summary>
-                <description>This is a simple subsetter that always returns true for any Station,
-                    which is useful for testing purposes.</description>
-                <example>
-                    <passStation/>
-                </example>
-            </xsd:annotation>
-            <zeroOrMore>
-                <ref name="station"/>
-            </zeroOrMore>
         </element>
     </define>
     <define name="externalStationSubsetter">

@@ -35,7 +35,6 @@
             <ref name="AND"/>
             <ref name="OR"/>
             <ref name="NOT"/>
-            <ref name="PASS"/>
             <ref name="externalOriginSubsetter"/>
             <ref name="youngerThan"/>
             <ref name="printline"/>
@@ -307,23 +306,6 @@
                     <ref name="length"/>
                 </element>
             </optional>
-        </element>
-    </define>
-    <define name="PASS">
-        <element name="passOrigin">
-            <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary>Accepts any origin</summary>
-                    <description>This is a simple subsetter that always returns true for any origin,
-                        which is useful for testing purposes.</description>
-                    <example>
-                        <passOrigin/>
-                    </example>
-                </xsd:documentation>
-            </xsd:annotation>
-            <zeroOrMore>
-                <ref name="origin"/>
-            </zeroOrMore>
         </element>
     </define>
     <define name="externalOriginSubsetter">

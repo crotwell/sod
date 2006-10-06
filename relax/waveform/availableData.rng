@@ -25,7 +25,6 @@
             <ref name="availableDataAND"/>
             <ref name="availableDataOR"/>
             <ref name="availableDataNOT"/>
-            <ref name="PASS"/>
             <ref name="externalAvailable"/>
             <ref name="printlineAvailableDataProcess"/>
         </choice>
@@ -145,21 +144,6 @@
                     with the other availableData subsetters.</description>
             </xsd:annotation>
             <ref name="time"/>
-        </element>
-    </define>
-    <define name="PASS">
-        <element name="passAvailableData">
-            <xsd:annotation>
-                <summary>Accepts any available data</summary>
-                <description>This is a simple subsetter that always returns true for any available
-                    data, which is useful for testing purposes.</description>
-                <example>
-                    <passAvailableData/>
-                </example>
-            </xsd:annotation>
-            <zeroOrMore>
-                <ref name="availableData"/>
-            </zeroOrMore>
         </element>
     </define>
     <define name="externalAvailable">

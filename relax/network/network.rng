@@ -21,7 +21,6 @@
             <ref name="AND"/>
             <ref name="OR"/>
             <ref name="NOT"/>
-            <ref name="PASS"/>
             <ref name="externalNetworkSubsetter"/>
             <ref name="temporaryNetwork"/>
         </choice>
@@ -155,20 +154,6 @@
                 </xsd:documentation>
             </xsd:annotation>
             <ref name="network"/>
-        </element>
-    </define>
-    <define name="PASS">
-        <element name="passNetwork">
-            <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary>Accepts any network</summary>
-                    <description>This is a simple subsetter that always returns true for any
-                        network, which is useful for testing purposes.</description>
-                </xsd:documentation>
-            </xsd:annotation>
-            <zeroOrMore>
-                <ref name="network"/>
-            </zeroOrMore>
         </element>
     </define>
     <define name="externalNetworkSubsetter">

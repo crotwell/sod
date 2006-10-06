@@ -25,10 +25,6 @@
             <ref name="midPoint"/>
             <ref name="phaseExists"/>
             <ref name="external"/>
-            <!--
-<ref name="phaseInteraction"/>
--->
-            <ref name="PASS"/>
         </choice>
     </define>
     <define name="distanceRange">
@@ -226,93 +222,6 @@
                     the given area. Areas can be any valid area, including BoxArea, and GlobalArea.</description>
             </xsd:annotation>
             <externalRef href="../base/externalRef/area.rng"/>
-        </element>
-    </define>
-    <!--
-Temporarily remove phaseInteraction from the processors as it is both
-complicated and broken at present. It needs both recoding and a good
-test suite
-<define name="phaseTurnInteraction">
-<choice>
-<value>TOPSIDE REFLECTION</value>
-<value>BOTTOMSIDE REFLECTION</value>
-<value>TURNPOINT</value>
-<value>UPGOING S TO P CONVERSION</value>
-<value>UPGOING P TO S CONVERSION</value>
-<value>DOWNGOING S TO P CONVERSION</value>
-<value>DOWNGOING P TO S CONVERSION</value>
-<value>PATH</value>
-</choice>
-</define>
-<define name="phaseInteraction">
-<element name="phaseInteraction">
-<optional>
-<element name="modelName">
-<data type="string"/>
-</element>
-</optional>
-<element name="phaseName">
-<data type="string"/>
-</element>
-<element name="interactionStyle">
-<ref name="phaseTurnInteraction"/>
-</element>
-<optional>
-<element name="interactionNumber">
-<data type="positiveInteger"/>
-</element>
-</optional>
-<choice>
-<ref name="phaseInteractionRelative"/>
-<ref name="phaseInteractionAbsolute"/>
-</choice>
-</element>
-</define>
-<define name="phaseInteractionRelative">
-<element name="relative">
-<element name="reference">
-<choice>
-<value>EVENT</value>
-<value>STATION</value>
-</choice>
-</element>
-<ref name="phaseInteractionBase"/>
-</element>
-</define>
-<define name="phaseInteractionAbsolute">
-<element name="absolute">
-<ref name="phaseInteractionBase"/>
-</element>
-</define>
-<define name="phaseInteractionBase">
-<zeroOrMore>
-<externalRef href="../base/externalRef/area.rng"/>
-</zeroOrMore>
-<zeroOrMore>
-<element name="depthRange">
-<ref name="range"/>
-</element>
-</zeroOrMore>
-<zeroOrMore>
-<element name="distanceRange">
-<ref name="range"/>
-</element>
-</zeroOrMore>
-</define>
--->
-    <define name="PASS">
-        <element name="passEventStation">
-            <xsd:annotation>
-                <summary>Accepts any event-station pair</summary>
-                <description>This is a simple subsetter that always returns true for any
-                    event-station pair, which is useful for testing purposes.</description>
-                <example>
-                    <passEventStation/>
-                </example>
-            </xsd:annotation>
-            <zeroOrMore>
-                <ref name="eventStation"/>
-            </zeroOrMore>
         </element>
     </define>
     <define name="external">

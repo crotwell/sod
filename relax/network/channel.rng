@@ -27,7 +27,6 @@
             <ref name="AND"/>
             <ref name="OR"/>
             <ref name="NOT"/>
-            <ref name="PASS"/>
             <ref name="externalChannelSubsetter"/>
             <ref name="printline"/>
             <ref name="responseWriter"/>
@@ -71,7 +70,6 @@
             <ref name="AND"/>
             <ref name="OR"/>
             <ref name="NOT"/>
-            <ref name="PASS"/>
             <ref name="externalChannelSubsetter"/>
             <externalRef href="site.rng"/>
             <externalRef href="station.rng"/>
@@ -339,18 +337,6 @@
                     </xsd:annotation>
                 </data>
             </element>
-        </element>
-    </define>
-    <define name="PASS">
-        <element name="passChannel">
-            <xsd:annotation>
-                <summary>Accepts any channel</summary>
-                <description>This is a simple subsetter that always returns true for any channel, which is useful for
-                    testing purposes.</description>
-            </xsd:annotation>
-            <zeroOrMore>
-                <ref name="channel"/>
-            </zeroOrMore>
         </element>
     </define>
     <define name="externalChannelSubsetter">

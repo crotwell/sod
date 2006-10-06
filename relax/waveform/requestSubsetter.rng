@@ -17,7 +17,6 @@
             <ref name="requestPrint"/>
             <ref name="breqFastRequest"/>
             <ref name="netDCRequest"/>
-            <ref name="PASS"/>
             <ref name="external"/>
         </choice>
     </define>
@@ -374,20 +373,6 @@
                         </xsd:annotation>
                     </data>
                 </element></optional>
-        </element>
-    </define>
-    <define name="PASS">
-        <element name="passRequest">
-            <xsd:annotation>
-                <summary> Always returns true. </summary>
-                <description> Simple subsetter that always returns true, useful for testing. </description>
-                <example>
-                    <passRequest/>
-                </example>
-            </xsd:annotation>
-            <zeroOrMore>
-                <ref name="request"/>
-            </zeroOrMore>
         </element>
     </define>
     <define name="external">

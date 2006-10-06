@@ -16,7 +16,6 @@
             <ref name="vectorRequestAND"/>
             <ref name="vectorRequestOR"/>
             <ref name="vectorRequestNOT"/>
-            <ref name="PASS"/>
             <ref name="external"/>
             <externalRef href="requestSubsetter.rng"/>
         </choice>
@@ -94,18 +93,6 @@
                     true, and vice versa.</description>
             </xsd:annotation>
             <ref name="vectorRequest"/>
-        </element>
-    </define>
-    <define name="PASS">
-        <element name="passVectorRequest">
-            <xsd:annotation>
-                <summary>Accepts any request</summary>
-                <description>Simple subsetter that always returns true, which is particularly useful
-                    for testing.</description>
-            </xsd:annotation>
-            <zeroOrMore>
-                <ref name="vectorRequest"/>
-            </zeroOrMore>
         </element>
     </define>
     <define name="external">
