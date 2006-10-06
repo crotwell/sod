@@ -122,14 +122,13 @@
     </define>
     <define name="siteLogical2">
         <choice>
-            <ref name="code6"/>
+            <ref name="code5"/>
             <ref name="depthRange6"/>
             <ref name="effectiveTimeOverlap7"/>
             <ref name="area6"/>
             <ref name="AND7"/>
             <ref name="OR3"/>
             <ref name="NOT3"/>
-            <ref name="PASS3"/>
             <ref name="externalSiteSubsetter"/>
             <ref name="station2"/>
             <ref name="network3"/>
@@ -137,14 +136,13 @@
     </define>
     <define name="siteLogical">
         <choice>
-            <ref name="code4"/>
+            <ref name="code3"/>
             <ref name="depthRange4"/>
             <ref name="effectiveTimeOverlap4"/>
             <ref name="area4"/>
             <ref name="AND3"/>
             <ref name="OR7"/>
             <ref name="NOT7"/>
-            <ref name="PASS7"/>
             <ref name="externalSiteSubsetter2"/>
             <ref name="station4"/>
             <ref name="network8"/>
@@ -326,27 +324,25 @@
     </define>
     <define name="site">
         <choice>
-            <ref name="code4"/>
+            <ref name="code3"/>
             <ref name="depthRange4"/>
             <ref name="effectiveTimeOverlap4"/>
             <ref name="area4"/>
             <ref name="AND3"/>
             <ref name="OR7"/>
             <ref name="NOT7"/>
-            <ref name="PASS7"/>
             <ref name="externalSiteSubsetter2"/>
         </choice>
     </define>
     <define name="site2">
         <choice>
-            <ref name="code6"/>
+            <ref name="code5"/>
             <ref name="depthRange6"/>
             <ref name="effectiveTimeOverlap7"/>
             <ref name="area6"/>
             <ref name="AND7"/>
             <ref name="OR3"/>
             <ref name="NOT3"/>
-            <ref name="PASS3"/>
             <ref name="externalSiteSubsetter"/>
         </choice>
     </define>
@@ -397,11 +393,6 @@
             <element name="networkNOT">
                 <ref name="network5"/>
             </element>
-            <element name="passNetwork">
-                <zeroOrMore>
-                    <ref name="network5"/>
-                </zeroOrMore>
-            </element>
             <element name="externalNetworkSubsetter">
                 <element name="classname">
                     <data type="string"/>
@@ -449,11 +440,6 @@
             </element>
             <element name="networkNOT">
                 <ref name="network6"/>
-            </element>
-            <element name="passNetwork">
-                <zeroOrMore>
-                    <ref name="network6"/>
-                </zeroOrMore>
             </element>
             <element name="externalNetworkSubsetter">
                 <element name="classname">
@@ -503,11 +489,6 @@
             <element name="networkNOT">
                 <ref name="network8"/>
             </element>
-            <element name="passNetwork">
-                <zeroOrMore>
-                    <ref name="network8"/>
-                </zeroOrMore>
-            </element>
             <element name="externalNetworkSubsetter">
                 <element name="classname">
                     <data type="string"/>
@@ -555,11 +536,6 @@
             </element>
             <element name="networkNOT">
                 <ref name="network4"/>
-            </element>
-            <element name="passNetwork">
-                <zeroOrMore>
-                    <ref name="network4"/>
-                </zeroOrMore>
             </element>
             <element name="externalNetworkSubsetter">
                 <element name="classname">
@@ -609,11 +585,6 @@
             <element name="networkNOT">
                 <ref name="network7"/>
             </element>
-            <element name="passNetwork">
-                <zeroOrMore>
-                    <ref name="network7"/>
-                </zeroOrMore>
-            </element>
             <element name="externalNetworkSubsetter">
                 <element name="classname">
                     <data type="string"/>
@@ -661,11 +632,6 @@
             </element>
             <element name="networkNOT">
                 <ref name="network2"/>
-            </element>
-            <element name="passNetwork">
-                <zeroOrMore>
-                    <ref name="network2"/>
-                </zeroOrMore>
             </element>
             <element name="externalNetworkSubsetter">
                 <element name="classname">
@@ -715,11 +681,6 @@
             <element name="networkNOT">
                 <ref name="network"/>
             </element>
-            <element name="passNetwork">
-                <zeroOrMore>
-                    <ref name="network"/>
-                </zeroOrMore>
-            </element>
             <element name="externalNetworkSubsetter">
                 <element name="classname">
                     <data type="string"/>
@@ -767,11 +728,6 @@
             </element>
             <element name="networkNOT">
                 <ref name="network3"/>
-            </element>
-            <element name="passNetwork">
-                <zeroOrMore>
-                    <ref name="network3"/>
-                </zeroOrMore>
             </element>
             <element name="externalNetworkSubsetter">
                 <element name="classname">
@@ -921,12 +877,12 @@
         </element>
     </define>
     <define name="code6">
-        <element name="siteCode">
+        <element name="stationCode">
             <data type="string"/>
         </element>
     </define>
     <define name="code4">
-        <element name="siteCode">
+        <element name="stationCode">
             <data type="string"/>
         </element>
     </define>
@@ -941,12 +897,12 @@
         </element>
     </define>
     <define name="code5">
-        <element name="stationCode">
+        <element name="siteCode">
             <data type="string"/>
         </element>
     </define>
     <define name="code3">
-        <element name="stationCode">
+        <element name="siteCode">
             <data type="string"/>
         </element>
     </define>
@@ -1012,49 +968,47 @@
     </define>
     <define name="stationLogical4">
         <choice>
-            <ref name="code3"/>
-            <ref name="regExp3"/>
-            <ref name="name3"/>
+            <ref name="code2"/>
+            <ref name="regExp2"/>
+            <ref name="name2"/>
             <ref name="operator3"/>
             <ref name="depthRange3"/>
             <ref name="effectiveTimeOverlap3"/>
             <ref name="area3"/>
             <ref name="stationPointDistance3"/>
-            <ref name="stationPointAzimuth4"/>
+            <ref name="stationPointAzimuth3"/>
             <ref name="stationPointBackAzimuth4"/>
             <ref name="AND5"/>
             <ref name="OR6"/>
             <ref name="NOT6"/>
-            <ref name="PASS6"/>
             <ref name="externalStationSubsetter4"/>
             <ref name="network7"/>
         </choice>
     </define>
     <define name="stationLogical3">
         <choice>
-            <ref name="code5"/>
-            <ref name="regExp4"/>
-            <ref name="name4"/>
+            <ref name="code4"/>
+            <ref name="regExp3"/>
+            <ref name="name3"/>
             <ref name="operator4"/>
             <ref name="depthRange5"/>
             <ref name="effectiveTimeOverlap5"/>
             <ref name="area5"/>
             <ref name="stationPointDistance4"/>
-            <ref name="stationPointAzimuth3"/>
+            <ref name="stationPointAzimuth4"/>
             <ref name="stationPointBackAzimuth3"/>
             <ref name="AND4"/>
             <ref name="OR5"/>
             <ref name="NOT5"/>
-            <ref name="PASS5"/>
             <ref name="externalStationSubsetter3"/>
             <ref name="network6"/>
         </choice>
     </define>
     <define name="stationLogical2">
         <choice>
-            <ref name="code2"/>
-            <ref name="regExp2"/>
-            <ref name="name2"/>
+            <ref name="code6"/>
+            <ref name="regExp4"/>
+            <ref name="name4"/>
             <ref name="operator2"/>
             <ref name="depthRange2"/>
             <ref name="effectiveTimeOverlap2"/>
@@ -1065,7 +1019,6 @@
             <ref name="AND2"/>
             <ref name="OR4"/>
             <ref name="NOT4"/>
-            <ref name="PASS4"/>
             <ref name="externalStationSubsetter2"/>
             <ref name="network4"/>
         </choice>
@@ -1085,7 +1038,6 @@
             <ref name="AND"/>
             <ref name="OR2"/>
             <ref name="NOT2"/>
-            <ref name="PASS2"/>
             <ref name="externalStationSubsetter"/>
             <ref name="network2"/>
         </choice>
@@ -1105,7 +1057,6 @@
             <ref name="AND"/>
             <ref name="OR2"/>
             <ref name="NOT2"/>
-            <ref name="PASS2"/>
             <ref name="externalStationSubsetter"/>
             <element name="belongsToVirtual">
                 <text/>
@@ -1114,20 +1065,19 @@
     </define>
     <define name="station4">
         <choice>
-            <ref name="code3"/>
-            <ref name="regExp3"/>
-            <ref name="name3"/>
+            <ref name="code2"/>
+            <ref name="regExp2"/>
+            <ref name="name2"/>
             <ref name="operator3"/>
             <ref name="depthRange3"/>
             <ref name="effectiveTimeOverlap3"/>
             <ref name="area3"/>
             <ref name="stationPointDistance3"/>
-            <ref name="stationPointAzimuth4"/>
+            <ref name="stationPointAzimuth3"/>
             <ref name="stationPointBackAzimuth4"/>
             <ref name="AND5"/>
             <ref name="OR6"/>
             <ref name="NOT6"/>
-            <ref name="PASS6"/>
             <ref name="externalStationSubsetter4"/>
             <element name="belongsToVirtual">
                 <text/>
@@ -1136,9 +1086,9 @@
     </define>
     <define name="station2">
         <choice>
-            <ref name="code2"/>
-            <ref name="regExp2"/>
-            <ref name="name2"/>
+            <ref name="code6"/>
+            <ref name="regExp4"/>
+            <ref name="name4"/>
             <ref name="operator2"/>
             <ref name="depthRange2"/>
             <ref name="effectiveTimeOverlap2"/>
@@ -1149,7 +1099,6 @@
             <ref name="AND2"/>
             <ref name="OR4"/>
             <ref name="NOT4"/>
-            <ref name="PASS4"/>
             <ref name="externalStationSubsetter2"/>
             <element name="belongsToVirtual">
                 <text/>
@@ -1158,20 +1107,19 @@
     </define>
     <define name="station3">
         <choice>
-            <ref name="code5"/>
-            <ref name="regExp4"/>
-            <ref name="name4"/>
+            <ref name="code4"/>
+            <ref name="regExp3"/>
+            <ref name="name3"/>
             <ref name="operator4"/>
             <ref name="depthRange5"/>
             <ref name="effectiveTimeOverlap5"/>
             <ref name="area5"/>
             <ref name="stationPointDistance4"/>
-            <ref name="stationPointAzimuth3"/>
+            <ref name="stationPointAzimuth4"/>
             <ref name="stationPointBackAzimuth3"/>
             <ref name="AND4"/>
             <ref name="OR5"/>
             <ref name="NOT5"/>
-            <ref name="PASS5"/>
             <ref name="externalStationSubsetter3"/>
             <element name="belongsToVirtual">
                 <text/>
@@ -1294,7 +1242,6 @@
             <ref name="AND6"/>
             <ref name="OR"/>
             <ref name="NOT"/>
-            <ref name="PASS"/>
             <ref name="externalChannelSubsetter"/>
             <ref name="printline"/>
             <ref name="responseWriter"/>
@@ -1578,48 +1525,6 @@
             <ref name="singleLetterOrNumber"/>
         </element>
     </define>
-    <define name="PASS6">
-        <element name="passStation">
-            <zeroOrMore>
-                <ref name="station4"/>
-            </zeroOrMore>
-        </element>
-    </define>
-    <define name="PASS7">
-        <element name="passSite">
-            <zeroOrMore>
-                <ref name="site"/>
-            </zeroOrMore>
-        </element>
-    </define>
-    <define name="PASS">
-        <element name="passChannel">
-            <zeroOrMore>
-                <ref name="channel"/>
-            </zeroOrMore>
-        </element>
-    </define>
-    <define name="PASS5">
-        <element name="passStation">
-            <zeroOrMore>
-                <ref name="station3"/>
-            </zeroOrMore>
-        </element>
-    </define>
-    <define name="PASS4">
-        <element name="passStation">
-            <zeroOrMore>
-                <ref name="station2"/>
-            </zeroOrMore>
-        </element>
-    </define>
-    <define name="PASS2">
-        <element name="passStation">
-            <zeroOrMore>
-                <ref name="station"/>
-            </zeroOrMore>
-        </element>
-    </define>
     <define name="printline">
         <element name="printlineChannelProcess">
             <interleave>
@@ -1636,13 +1541,6 @@
             </interleave>
         </element>
     </define>
-    <define name="PASS3">
-        <element name="passSite">
-            <zeroOrMore>
-                <ref name="site2"/>
-            </zeroOrMore>
-        </element>
-    </define>
     <define name="stationPointAzimuth">
         <element name="stationPointAzimuth">
             <ref name="range"/>
@@ -1651,13 +1549,6 @@
         </element>
     </define>
     <define name="stationPointAzimuth4">
-        <element name="stationPointAzimuth">
-            <ref name="range2"/>
-            <ref name="lat2"/>
-            <ref name="lon2"/>
-        </element>
-    </define>
-    <define name="stationPointAzimuth3">
         <element name="stationPointAzimuth">
             <ref name="range3"/>
             <ref name="lat3"/>
@@ -1669,6 +1560,13 @@
             <ref name="range4"/>
             <ref name="lat4"/>
             <ref name="lon4"/>
+        </element>
+    </define>
+    <define name="stationPointAzimuth3">
+        <element name="stationPointAzimuth">
+            <ref name="range2"/>
+            <ref name="lat2"/>
+            <ref name="lon2"/>
         </element>
     </define>
     <define name="sensorModel">
@@ -1690,7 +1588,6 @@
             <ref name="AND6"/>
             <ref name="OR"/>
             <ref name="NOT"/>
-            <ref name="PASS"/>
             <ref name="externalChannelSubsetter"/>
             <ref name="site2"/>
             <ref name="station"/>
