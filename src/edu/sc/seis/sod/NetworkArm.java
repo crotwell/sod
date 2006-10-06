@@ -360,6 +360,7 @@ public class NetworkArm implements Arm {
         private void finishArm() {
             if(lastPusher && pusherFinished) {
                 armFinished = true;
+                logger.debug("Network arm finished.");
                 synchronized(OutputScheduler.getDefault()) {
                     OutputScheduler.getDefault().notify();
                 }
