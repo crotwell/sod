@@ -30,7 +30,7 @@ public class NetworkFinder extends AbstractSource {
             netDC = new VestingNetworkDC(getDNS(),
                                          getName(),
                                          getFissuresNamingService(),
-                                         BulletproofVestFactory.getDefaultNumRetry());
+                                         -1);
         }
         return netDC;
     }
