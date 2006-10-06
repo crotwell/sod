@@ -13,7 +13,7 @@ import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
  * @version
  */
 
-public class  PassChannel implements ChannelSubsetter{
+public class PassChannel implements ChannelSubsetter{
 
     public boolean accept(Channel channel, ProxyNetworkAccess network) { return true; }
 

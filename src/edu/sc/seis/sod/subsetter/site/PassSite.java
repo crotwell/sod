@@ -13,7 +13,7 @@ import edu.iris.Fissures.IfNetwork.Site;
  * @version
  */
 
-public class  PassSite implements SiteSubsetter{
+public class PassSite implements SiteSubsetter{
 
     public boolean accept(Site site, NetworkAccess network) { return true;}
 
