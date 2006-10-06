@@ -114,15 +114,16 @@ public class WaveformArm implements Arm {
                     Thread.sleep(10000);
                 } catch(InterruptedException e) {}
             }
+            logger.info("Lo!  I am weary of my wisdom, like the bee that hath gathered too much\n"
+                        + "honey; I need hands outstretched to take it.");
         } catch(Throwable e) {
-            GlobalExceptionHandler.handle("Problem running waveform arm", e);
+            GlobalExceptionHandler.handle("Problem running waveform arm, SOD is exiting abnormally. "+
+                                          "Please email this to the sod development team at sod@seis.sc.edu", e);
         }
         finished = true;
         synchronized(OutputScheduler.getDefault()) {
             OutputScheduler.getDefault().notify();
         }
-        logger.info("Lo!  I am weary of my wisdom, like the bee that hath gathered too much\n"
-                + "honey; I need hands outstretched to take it.");
     }
 
     private void sleepALittle(int numEvents, int sleepTime, TimeInterval logInterval) {
