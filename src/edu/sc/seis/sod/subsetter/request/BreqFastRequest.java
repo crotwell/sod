@@ -40,7 +40,7 @@ public class BreqFastRequest implements Request {
         VelocityFileElementParser parser = new VelocityFileElementParser(config,
                                                                          getDefaultWorkingDir(),
                                                                          getDefaultFileTemplate());
-        labelTemplate = parser.getLocation();
+        labelTemplate = getConfig("label");
         fullTemplate = parser.getTemplate();
         regions = ParseRegions.getInstance();
         format.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -82,7 +82,8 @@ public class BreqFastRequest implements Request {
             if(!fileExists) {// first time to this event, insert headers
                 insertEventHeader(event,
                                   out,
-                                  velocitizer.evaluate(labelTemplate, ctx));
+                                  velocitizer.evaluate(labelTemplate,
+                                                       ctx));
             } // end of if ( ! fileExists)
             for(int i = 0; i < request.length; i++) {
                 insertRequest(channel, request, out, i);
@@ -171,7 +172,7 @@ public class BreqFastRequest implements Request {
                     + o.magnitudes[j].type + "~" + nl);
         } // end of for (int j=0; j<o.magnitude.length; j++)
         insert(out, "quality");
-        out.write(".LABEL " + label + nl);
+        out.write(".LABEL "+label+nl);
         out.write(".END" + nl);
         out.write(nl);
     }
