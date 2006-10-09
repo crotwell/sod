@@ -1,8 +1,3 @@
-/**
- * TimerWrapper.java
- * 
- * @author Charles Groves
- */
 package edu.sc.seis.sod.status;
 
 import java.util.Collections;
@@ -16,7 +11,7 @@ import edu.sc.seis.sod.Arm;
 
 public class OutputScheduler extends Thread {
 
-    protected OutputScheduler() {}
+    private OutputScheduler() {}
     
     public void registerArm(Arm arm) {
         synchronized(arms) {
@@ -64,11 +59,11 @@ public class OutputScheduler extends Thread {
         }
     }
 
-    private void runAll(Set runnables) {
+    private void runAll(Set toRun) {
         Runnable[] currentRunnables = new Runnable[0];
-        synchronized(runnables) {
-            currentRunnables = (Runnable[])runnables.toArray(currentRunnables);
-            runnables.clear();
+        synchronized(toRun) {
+            currentRunnables = (Runnable[])toRun.toArray(currentRunnables);
+            toRun.clear();
         }
         for(int i = 0; i < currentRunnables.length; i++) {
             try {
