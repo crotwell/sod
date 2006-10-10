@@ -60,7 +60,6 @@ public class JDBCEventChannelStatus extends SodJDBC {
         ofEvent = conn.prepareStatement("SELECT * FROM eventchannelstatus WHERE eventid = ?");
         ofPair = conn.prepareStatement("SELECT * FROM eventchannelstatus WHERE pairid = ?");
         ofStatus = conn.prepareStatement("SELECT COUNT(*) FROM eventchannelstatus WHERE status = ?");
-        eventsOfStatus = conn.prepareStatement("SELECT COUNT(*) FROM eventchannelstatus WHERE status = ? AND eventid = ?");
         String chanJoin = "channelid = chan_id AND "
                 + "channel.site_id = site.site_id AND "
                 + "site.sta_id = station.sta_id";
@@ -249,6 +248,25 @@ public class JDBCEventChannelStatus extends SodJDBC {
         ofStationStatus.setShort(2, Status.get(Stage.PROCESSOR,
                                                Standing.SUCCESS).getAsShort());
         return extractECPs(ofStationStatus.executeQuery());
+    }
+
+    public List getSuccessfulForStationForTime(int stationId,
+                                                       MicroSecondTimeRange timeRange)
+            throws SQLException, NotFound {
+        ofStationStatusInTime.setShort(1, Status.get(Stage.PROCESSOR,
+                                                     Standing.SUCCESS)
+                .getAsShort());
+        ofStationStatusInTime.setTimestamp(2, timeRange.getBeginTime()
+                .getTimestamp());
+        ofStationStatusInTime.setTimestamp(3, timeRange.getEndTime()
+                .getTimestamp());
+        ofStationStatusInTime.setInt(4, stationId);
+        List events = new ArrayList();
+        ResultSet rs = ofStationStatusInTime.executeQuery();
+        while(rs.next()) {
+            events.add(eventTable.getEvent(rs.getInt("eventid")));
+        }
+        return events;
     }
 
     public CacheEvent[] getSuccessfulForChannelForTime(int channelId,
@@ -450,10 +468,9 @@ public class JDBCEventChannelStatus extends SodJDBC {
     }
 
     private PreparedStatement insert, setStatus, ofEventAndPair, all, ofEvent,
-            ofPair, ofStatus, eventsOfStatus, stationsNotOfStatus,
-            stationsOfStatus, channelsForPair, dbIdForEventAndChan, ofStation,
-            ofStationStatus, stations, ofStationStatusInTime,
-            ofChannelStatusInTime;
+            ofPair, ofStatus, stationsNotOfStatus, stationsOfStatus,
+            channelsForPair, dbIdForEventAndChan, ofStation, ofStationStatus,
+            stations, ofStationStatusInTime, ofChannelStatusInTime;
 
     private JDBCSequence seq;
 
