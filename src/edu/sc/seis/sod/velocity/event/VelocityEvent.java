@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.TimeZone;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -199,6 +200,14 @@ public class VelocityEvent extends ProxyEventAccessOperations {
     private static ParseRegions pr = ParseRegions.getInstance();
 
     private DecimalFormat df = new DecimalFormat("0.0");
+
+    public static VelocityEvent[] wrap(List evs) {
+        VelocityEvent[] velEvs = new VelocityEvent[evs.size()];
+        for(int i = 0; i < velEvs.length; i++) {
+            velEvs[i] = wrap((EventAccessOperations)evs.get(i));
+        }
+        return velEvs;
+    }
 
     public static VelocityEvent[] wrap(EventAccessOperations[] evs) {
         VelocityEvent[] velEvs = new VelocityEvent[evs.length];
