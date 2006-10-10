@@ -63,15 +63,6 @@ public class WaveformArm implements Arm {
         corbaFailures = new JDBCRetryQueue("corbaFailure");
         corbaFailures.setMinRetryWait(new TimeInterval(2, UnitImpl.HOUR));
         corbaFailures.setMaxRetries(10);
-        for(int i = 0; i < Status.ALL.length; i++) {
-            for(int j = 0; j < Status.ALL[i].length; j++) {
-                int numOfStatus = evChanStatus.getNumOfStatus(Status.ALL[i][j]);
-                if(numOfStatus > 0) {
-                    logger.info("Status: " + Status.ALL[i][j] + " found "
-                            + numOfStatus);
-                }
-            }
-        }
         processConfig(config);
         this.networkArm = networkArm;
         this.eventArm = eventArm;
