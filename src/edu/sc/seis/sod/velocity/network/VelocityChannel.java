@@ -5,6 +5,7 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.sc.seis.fissuresUtil.database.network.DBChannel;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
 /**
@@ -14,6 +15,10 @@ public class VelocityChannel extends Channel {
 
     public VelocityChannel(Channel chan) {
         this(chan, -1);
+    }
+
+    public VelocityChannel(DBChannel chan) {
+        this(chan, chan.getDbId());
     }
 
     public VelocityChannel(Channel chan, int dbid) {
