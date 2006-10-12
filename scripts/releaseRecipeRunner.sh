@@ -36,6 +36,7 @@ export SOD_HOME=`pwd`/${DIR}
 echo $SOD_HOME
 export PATH=${SOD_HOME}/bin:$PATH
 
+run breqfast "-f ${SOD_HOME}/recipes/breqfast.xml"
 run demo -demo
 runrecipe waveform
 runrecipe network
