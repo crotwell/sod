@@ -19,6 +19,7 @@ import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
+import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
@@ -40,7 +41,9 @@ public class BreqFastRequest implements Request {
         VelocityFileElementParser parser = new VelocityFileElementParser(config,
                                                                          getDefaultWorkingDir(),
                                                                          getDefaultFileTemplate());
-        labelTemplate = getConfig("label");
+        labelTemplate = DOMHelper.extractText(config,
+                                              "label",
+                                              "${event.getTime('yyyy.DDD.HH.mm.ss.SSSS')}");
         fullTemplate = parser.getTemplate();
         regions = ParseRegions.getInstance();
         format.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -82,8 +85,7 @@ public class BreqFastRequest implements Request {
             if(!fileExists) {// first time to this event, insert headers
                 insertEventHeader(event,
                                   out,
-                                  velocitizer.evaluate(labelTemplate,
-                                                       ctx));
+                                  velocitizer.evaluate(labelTemplate, ctx));
             } // end of if ( ! fileExists)
             for(int i = 0; i < request.length; i++) {
                 insertRequest(channel, request, out, i);
@@ -172,7 +174,7 @@ public class BreqFastRequest implements Request {
                     + o.magnitudes[j].type + "~" + nl);
         } // end of for (int j=0; j<o.magnitude.length; j++)
         insert(out, "quality");
-        out.write(".LABEL "+label+nl);
+        out.write(".LABEL " + label + nl);
         out.write(".END" + nl);
         out.write(nl);
     }
