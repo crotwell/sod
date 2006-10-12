@@ -133,6 +133,7 @@ public class LocalSeismogramArm implements Subsetter {
             if(firstRequest) {
                 firstRequest = false;
                 logger.info("No seismogram data center has been set, so no data is being requested.  If you're only generating BreqFast requests, this is fine.  Otherwise, it's probably an error.");
+                ecp.update(Status.get(Stage.PROCESSOR, Standing.SUCCESS));
             }
             return;
         }
