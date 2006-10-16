@@ -350,10 +350,10 @@ public class SeismogramImageProcess implements WaveformProcess {
             try {
                 if(fileType.equals(PDF)) {
                     if(titleBorder != null) {
-                        ((BasicSeismogramDisplay)bsd).outputToPDF(new File(picFileName),
-                                                                  (TitleBorder)titleBorder.createBorder(bsd));
+                        bsd.outputToPDF(new File(picFileName),
+                                        (TitleBorder)titleBorder.createBorder(bsd));
                     } else {
-                        ((BasicSeismogramDisplay)bsd).outputToPDF(new File(picFileName));
+                        bsd.outputToPDF(new File(picFileName));
                     }
                 } else if(fileType.equals(PNG)) {
                     bsd.outputToPNG(new File(picFileName), dims);
