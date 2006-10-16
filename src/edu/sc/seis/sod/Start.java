@@ -441,7 +441,7 @@ public class Start {
         for(int i = 0; i < args.length; i++) {
             if(args[i].equals("-conf") || args[i].equals("-f")) {
                 return args[i + 1];
-            } else if(args[i].equals("-demo")) {
+            } else if(args[i].equals("-demo") || args[i].equals("--demo")) {
                 return SimpleGUIEditor.TUTORIAL_LOC;
             }
         }
