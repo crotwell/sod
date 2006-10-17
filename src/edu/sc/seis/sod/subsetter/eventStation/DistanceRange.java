@@ -32,8 +32,6 @@ public class DistanceRange extends DistanceRangeSubsetter implements
                                                          station.my_location.longitude);
         QuantityImpl dist = new QuantityImpl(actualDistance, UnitImpl.DEGREE);
         if(dist.greaterThanEqual(getMin()) && dist.lessThanEqual(getMax())) {
-            logger.debug("Distance ok " + dist + " from " + getMin() + " "
-                    + getMax());
             return new StringTreeLeaf(this, true, "DistanceRange("+getMin()+", "+getMax()+")");
         } else {
             return new StringTreeLeaf(this, false,"DistanceRange("+getMin()+", "+getMax()+")"+ dist.toString());
