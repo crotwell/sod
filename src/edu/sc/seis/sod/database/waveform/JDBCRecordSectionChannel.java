@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.DBUtil;
@@ -31,12 +32,12 @@ public class JDBCRecordSectionChannel extends SodJDBC {
                 + " (recSecId,eq_dbid,channelid,topLeftX,topLeftY,bottomRightX,bottomRightY,best,internalId) VALUES (?, ?, ?, ?, ?, ?,?,?,?)";
         String getChannelsStmt = " SELECT channelid FROM " + tableName
                 + " WHERE recSecId=? and eq_dbid=? and best=?";
+        String getAllChannelsStmt = " SELECT channelid FROM " + tableName
+        + " WHERE recSecId=? and eq_dbid=?";
         String getStationsStmt = " SELECT sta_id FROM "
                 + tableName
                 + " JOIN channel ON (channelid = chan_id) JOIN site ON (channel.site_id = site.site_id)"
                 + " WHERE recSecId=? and eq_dbid=? and best=?";
-        String channelExistsStmt = "SELECT count(channelid) from " + tableName
-                + " where  recSecId=? AND eq_dbid=? AND channelid=?";
         String recSecExistsStmt = "SELECT TOP 1 recSecId from " + tableName
                 + " where  recSecId=? AND eq_dbid=? ";
         String getInternalIdStmt = "SELECT internalId from " + tableName
@@ -53,8 +54,8 @@ public class JDBCRecordSectionChannel extends SodJDBC {
         }
         insert = conn.prepareStatement(insertStmt);
         getChannels = conn.prepareStatement(getChannelsStmt);
+        getAllChannels = conn.prepareStatement(getAllChannelsStmt);
         getStations = conn.prepareStatement(getStationsStmt);
-        channelExists = conn.prepareStatement(channelExistsStmt);
         recSecExists = conn.prepareStatement(recSecExistsStmt);
         whichRecSecs = conn.prepareStatement(whichRecSecsStmt);
         getInternalId = conn.prepareStatement(getInternalIdStmt);
@@ -137,19 +138,24 @@ public class JDBCRecordSectionChannel extends SodJDBC {
         }
         return results;
     }
-
-    public boolean channelExists(String recSecId, int eq_dbid, int channelid)
-            throws SQLException {
-        channelExists.setString(1, recSecId);
-        channelExists.setInt(2, eq_dbid);
-        channelExists.setInt(3, channelid);
-        ResultSet rs = channelExists.executeQuery();
+    
+    public int[] getAllChannelDbIds(String recSecId, int eq_dbid) throws SQLException {
+        int index = 1;
+        getAllChannels.setString(index++, recSecId);
+        getAllChannels.setInt(index++, eq_dbid);
+        ResultSet rs = getAllChannels.executeQuery();
+        ArrayList out = new ArrayList();
         while(rs.next()) {
-            if(rs.getInt(1) != 0) {
-                return true;
-            }
+            out.add(new Integer(rs.getInt(1)));
         }
-        return false;
+        Iterator it = out.iterator();
+        int[] intOut = new int[out.size()];
+        int i=0;
+        while(it.hasNext()) {
+            intOut[i] = ((Integer)it.next()).intValue();
+            i++;
+        }
+        return intOut;
     }
 
     /*
@@ -204,7 +210,7 @@ public class JDBCRecordSectionChannel extends SodJDBC {
         return conn;
     }
 
-    PreparedStatement insert, getPixelInfo, getChannels, getStations, channelExists,
+    PreparedStatement insert, getPixelInfo, getChannels, getAllChannels, getStations,
             recSecExists, getInternalId, whichRecSecs;
 
     Connection conn;

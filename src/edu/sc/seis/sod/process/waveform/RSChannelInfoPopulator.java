@@ -177,14 +177,27 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         // temp.delete();
         // HashMap pixelMap = rsDisplay.getPixelMap();
         int[] channelIds = getChannelDBIds(dss);
+        int[] existingChanIds = recordSectionChannel.getAllChannelDbIds(id, eq_dbid);
         for(int j = 0; j < channelIds.length; j++) {
-            if(!recordSectionChannel.channelExists(id, eq_dbid, channelIds[j])) {
+            boolean found = false;
+            for(int i = 0; i < existingChanIds.length; i++) {
+                if (channelIds[j] == existingChanIds[i]) {
+                    found = true;
+                    break;
+                }
+            }
+            if(!found) {
                 recordSectionChannel.insert(id,
                                             eq_dbid,
                                             channelIds[j],
                                             new double[] {0, 0, 0, 0},// (double[])pixelMap.get(dss[j].getRequestFilter().channel_id),
                                             0,
                                             internalId);
+                // this might be paranoid, but not sure if a channel can be in the DSS array twice and don't want to insert twice
+                int[] tmp = new int[existingChanIds.length+1];
+                System.arraycopy(existingChanIds, 0, tmp, 0, existingChanIds.length);
+                tmp[tmp.length-1] = channelIds[j];
+                existingChanIds = tmp;
             }
         }
         DataSetSeismogram[] bestSeismos = dss;
