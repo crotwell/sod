@@ -571,7 +571,6 @@ public class NetworkArm implements Arm {
                             Iterator it = chanSubsetters.iterator();
                             while(it.hasNext()) {
                                 ChannelSubsetter cur = (ChannelSubsetter)it.next();
-                                logger.debug(chan + " trying " + cur);
                                 if(!cur.accept(chan, networkAccess)) {
                                     change(chan,
                                            Status.get(Stage.NETWORK_SUBSETTER,
