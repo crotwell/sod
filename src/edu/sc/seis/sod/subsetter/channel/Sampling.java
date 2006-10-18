@@ -13,7 +13,7 @@ import edu.sc.seis.sod.subsetter.RangeSubsetter;
 public class Sampling extends RangeSubsetter implements ChannelSubsetter {
 
     public Sampling(Element config) throws ConfigurationException {
-        super(config);
+        super(config, 0, Integer.MAX_VALUE);
         TimeInterval interval = SodUtil.loadTimeInterval(SodUtil.getElement(config,
                                                                             "interval"));
         min = getHertz((int)getMinValue(), interval);
@@ -30,7 +30,7 @@ public class Sampling extends RangeSubsetter implements ChannelSubsetter {
     }
 
     double getHertz(int val, TimeInterval interval) {
-        return getHertz(new SamplingImpl((int)getMinValue(), interval));
+        return getHertz(new SamplingImpl(val, interval));
     }
 
     double getHertz(SamplingImpl sampling) {

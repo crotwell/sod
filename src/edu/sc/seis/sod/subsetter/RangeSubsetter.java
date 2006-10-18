@@ -9,6 +9,12 @@ public class RangeSubsetter {
     public RangeSubsetter() {}
 
     public RangeSubsetter(Element config) {
+        this(config, -1f * (Double.MAX_VALUE - 1), Double.MAX_VALUE);
+    }
+
+    public RangeSubsetter(Element config, double defaultMin, double defaultMax) {
+        min = defaultMin;
+        max = defaultMax;
         NodeList children = config.getChildNodes();
         for(int i = 0; i < children.getLength(); i++) {
             if(children.item(i) instanceof Element) {
@@ -56,7 +62,5 @@ public class RangeSubsetter {
         return max;
     }
 
-    protected double min = -1f * (Double.MAX_VALUE - 1);
-
-    protected double max = Double.MAX_VALUE;
+    protected double min, max;
 }
