@@ -4,9 +4,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -43,29 +44,34 @@ public class AreaSubsetter {
                 }
             }
         } else {
-            File simpleLocation = new File(fileLocation);
-            InputStream fileInput;
             try {
-                fileInput = new FileInputStream(simpleLocation);
+                locationArray = AreaUtil.loadPolygon(makeRelativeOrRecipeDirReader(fileLocation));
             } catch(FileNotFoundException e) {
-                File inConfigDir = new File(new File(Start.getConfigFileName()).getParentFile(),
-                                            fileLocation);
-                try {
-                    fileInput = new FileInputStream(inConfigDir);
-                } catch(FileNotFoundException e2) {
-                    throw new UserConfigurationException("Unable to find '"
-                            + simpleLocation + "' or '" + inConfigDir
-                            + "' to load as a polygon.");
-                }
-            }
-            try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(fileInput));
-                locationArray = AreaUtil.loadPolygon(reader);
-            } catch(FileNotFoundException e) {} catch(IOException e) {
+                throw new UserConfigurationException(e.getMessage() + " as a polygon file.");
+            } catch(IOException e) {
                 throw new ConfigurationException("Problem reading from file "
                         + fileLocation, e);
             }
         }
+    }
+
+    public static BufferedReader makeRelativeOrRecipeDirReader(String fileLocation) throws FileNotFoundException {
+        File simpleLocation = new File(fileLocation);
+        Reader fileInput;
+        try {
+            fileInput = new FileReader(simpleLocation);
+        } catch(FileNotFoundException e) {
+            File inConfigDir = new File(new File(Start.getConfigFileName()).getParentFile(),
+                                        fileLocation);
+            try {
+                fileInput = new FileReader(inConfigDir);
+            } catch(FileNotFoundException e2) {
+                throw new FileNotFoundException("Unable to find '"
+                        + simpleLocation + "' or '" + inConfigDir
+                        + "'");
+            }
+        }
+        return new BufferedReader(fileInput);
     }
 
     public boolean accept(Location loc) {

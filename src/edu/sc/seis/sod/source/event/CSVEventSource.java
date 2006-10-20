@@ -2,7 +2,6 @@ package edu.sc.seis.sod.source.event;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +25,7 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.UserConfigurationException;
+import edu.sc.seis.sod.subsetter.AreaSubsetter;
 
 /**
  * @author oliverpa
@@ -39,8 +39,7 @@ public class CSVEventSource extends SimpleEventSource {
         try {
             events = getEventsFromCSVFile(csvFilename);
         } catch(FileNotFoundException e) {
-            throw new UserConfigurationException("CSV event file '" + csvFilename
-                    + "' not found.");
+            throw new UserConfigurationException(e.getMessage() + " as a event CSV file.");
         } catch(IOException e) {
             throw new ConfigurationException("Unable to read " + csvFilename, e);
         }
@@ -52,7 +51,7 @@ public class CSVEventSource extends SimpleEventSource {
 
     public static CacheEvent[] getEventsFromCSVFile(String filename)
             throws IOException, FileNotFoundException, ConfigurationException {
-        BufferedReader reader = new BufferedReader(new FileReader(filename));
+        BufferedReader reader = AreaSubsetter.makeRelativeOrRecipeDirReader(filename);
         // let's get the fields
         List fields = new ArrayList();
         String line = reader.readLine();
