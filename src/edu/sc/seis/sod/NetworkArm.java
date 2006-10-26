@@ -102,7 +102,7 @@ public class NetworkArm implements Arm {
                 return tmpNetDbs[i];
             }
         }
-        throw new IllegalArgumentException("No network for id: "
+        throw new NetworkNotFound("No network for id: "
                 + NetworkIdUtil.toString(network_id));
     }
 
