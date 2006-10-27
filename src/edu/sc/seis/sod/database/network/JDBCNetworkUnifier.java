@@ -9,11 +9,13 @@ package edu.sc.seis.sod.database.network;
 import java.sql.Connection;
 import java.sql.SQLException;
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.iris.Fissures.IfNetwork.Site;
 import edu.iris.Fissures.IfNetwork.Station;
+import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
 import edu.sc.seis.fissuresUtil.cache.VestingNetworkDC;
@@ -74,7 +76,21 @@ public class JDBCNetworkUnifier {
         NetworkId id = netDb.get(netDbId).get_id();
         ProxyNetworkAccess na;
         synchronized(ndc) {
-            na = (ProxyNetworkAccess)ndc.a_finder().retrieve_by_id(id);
+        	   try {
+        		   na = (ProxyNetworkAccess)ndc.a_finder().retrieve_by_id(id);
+        	   } catch(NetworkNotFound e) {
+        		   // didn't get by id, try by code
+        		   logger.debug("Caught exception with retrieve_by_id  for "+NetworkIdUtil.toString(id)+", trying by code",e);
+        		   if (NetworkIdUtil.isTemporary(id)) {
+        			   // need dates for temp nets, so shamefully give up?
+        			   throw e;
+        		   }
+        		   NetworkAccess[] netArray = ndc.a_finder().retrieve_by_code(id.network_code);
+        		   if (netArray.length != 1) {
+        			   throw new NetworkNotFound("Cant retrieve_by_code for "+NetworkIdUtil.toString(id)+" received "+netArray.length+" nets.");
+        		   }
+        		   na = (ProxyNetworkAccess)netArray[0];
+        	   }
         }
         return new NetworkDbObject(netDbId, na);
     }
@@ -116,4 +132,7 @@ public class JDBCNetworkUnifier {
     private JDBCSite siteDb;
 
     private JDBCStation stationDb;
+    
+    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger
+			.getLogger(JDBCNetworkUnifier.class);
 }
