@@ -234,8 +234,6 @@ public class NetworkArm implements Arm {
         synchronized(netDC) {
             String[] constrainingCodes = getConstrainingNetworkCodes(attrSubsetter);
             if(constrainingCodes.length > 0) {
-                logger.debug("before calling netDC.a_finder().retrieve_by_code "
-                        + constrainingCodes.length + " times");
                 NetworkFinder netFinder = netDC.a_finder();
                 List constrainedNets = new ArrayList();
                 for(int i = 0; i < constrainingCodes.length; i++) {
@@ -246,7 +244,6 @@ public class NetworkArm implements Arm {
                 }
                 allNets = (NetworkAccess[])constrainedNets.toArray(new NetworkAccess[0]);
             } else {
-                logger.debug("before netDC.a_finder().retrieve_all()");
                 allNets = netDC.a_finder().retrieve_all();
             }
         }
@@ -360,7 +357,7 @@ public class NetworkArm implements Arm {
         private void finishArm() {
             if(lastPusher && pusherFinished) {
                 armFinished = true;
-                logger.debug("Network arm finished.");
+                logger.info("Network arm finished.");
                 synchronized(OutputScheduler.getDefault()) {
                     OutputScheduler.getDefault().notify();
                 }
@@ -393,10 +390,8 @@ public class NetworkArm implements Arm {
                     + networkDbObject.getNetworkAccess().get_attributes().name);
             ArrayList arrayList = new ArrayList();
             try {
-                logger.debug("before NetworkAccess().retrieve_stations()");
                 Station[] stations = networkDbObject.getNetworkAccess()
                         .retrieve_stations();
-                logger.debug("after NetworkAccess().retrieve_stations()");
                 for(int subCounter = 0; subCounter < stations.length; subCounter++) {
                     if(staEffectiveSubsetter.accept(stations[subCounter],
                                                     networkDbObject.getNetworkAccess())) {
@@ -470,13 +465,7 @@ public class NetworkArm implements Arm {
             NetworkAccess networkAccess = networkDbObject.getNetworkAccess();
             Station station = stationDbObject.getStation();
             try {
-                logger.debug("before networkAccess.retrieve_for_station("
-                        + station.get_id().network_id.network_code + "."
-                        + station.get_id().station_code);
                 Channel[] channels = networkAccess.retrieve_for_station(station.get_id());
-                logger.debug("after networkAccess.retrieve_for_station("
-                        + station.get_id().network_id.network_code + "."
-                        + station.get_id().station_code);
                 for(int i = 0; i < channels.length; i++) {
                     if(siteEffectiveSubsetter.accept(channels[i].my_site,
                                                      networkAccess)) {
@@ -510,7 +499,6 @@ public class NetworkArm implements Arm {
             SiteDbObject[] rtnValues = new SiteDbObject[successes.size()];
             rtnValues = (SiteDbObject[])successes.toArray(rtnValues);
             stationDbObject.siteDbObjects = rtnValues;
-            logger.debug("GOT " + rtnValues.length + " SITES");
             statusChanged("Waiting for a request");
             return rtnValues;
         }
@@ -554,7 +542,6 @@ public class NetworkArm implements Arm {
             Site site = siteDbObject.getSite();
             try {
                 Channel[] channels = networkAccess.retrieve_for_station(site.my_station.get_id());
-                logger.debug("Got " + channels.length + " from server");
                 JDBCChannel chanDb = netTable.getChannelDb();
                 Status inProg = Status.get(Stage.NETWORK_SUBSETTER,
                                            Standing.IN_PROG);
@@ -565,7 +552,6 @@ public class NetworkArm implements Arm {
                     }
                     change(chan, inProg);
                     if(chanEffectiveSubsetter.accept(chan, networkAccess)) {
-                        logger.debug("Passed effective");
                         boolean accepted = true;
                         synchronized(chanSubsetters) {
                             Iterator it = chanSubsetters.iterator();
@@ -613,7 +599,6 @@ public class NetworkArm implements Arm {
             ChannelDbObject[] values = new ChannelDbObject[successes.size()];
             values = (ChannelDbObject[])successes.toArray(values);
             siteDbObject.channelDbObjects = values;
-            logger.debug("got " + values.length + " channels");
             statusChanged("Waiting for a request");
             return values;
         }
