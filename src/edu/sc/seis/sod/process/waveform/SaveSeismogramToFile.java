@@ -51,11 +51,14 @@ import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 public class SaveSeismogramToFile implements WaveformProcess {
 
     public SaveSeismogramToFile(Element config) throws ConfigurationException {
-        System.err.println();
-        System.err.println("As of SOD 2.2 saveSeismogramToFile is deprecated!");
-        System.err.println("Replace it with sacWriter or mseedWriter in your recipes!");
-        System.err.println("Abandon all hope and so on and so forth!");
-        System.err.println();
+        if(printDeprecationWarning) {
+            System.err.println();
+            System.err.println("As of SOD 2.2 saveSeismogramToFile is deprecated!");
+            System.err.println("Replace it with sacWriter or mseedWriter in your recipes!");
+            System.err.println("Abandon all hope and so on and so forth!");
+            System.err.println();
+            printDeprecationWarning = false;
+        }
         String fileTypeStr = DOMHelper.extractText(config,
                                                    "fileType",
                                                    SeismogramFileTypes.MSEED.getValue());
@@ -571,6 +574,8 @@ public class SaveSeismogramToFile implements WaveformProcess {
 
     public static final String SVN_PARAM = PhaseSignalToNoise.PHASE_STON_PREFIX
             + "ttp";
+
+    private static boolean printDeprecationWarning = true;
 
     private SimpleVelocitizer velocitizer = new SimpleVelocitizer();
 
