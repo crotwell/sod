@@ -36,6 +36,9 @@ public class JDBCEventStatus extends SodJDBC{
         getNextStmt = prepare("SELECT TOP 1 eventid FROM eventstatus WHERE eventcondition = " +
                                   Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                              Standing.IN_PROG).getAsShort());
+        getNumWaiting = prepare("SELECT count(*) as num_waiting FROM eventstatus WHERE eventcondition = " +
+                              Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                         Standing.IN_PROG).getAsShort());
         getAllOfEventArmStatus = prepare(" SELECT * FROM eventstatus WHERE eventcondition = ? " );
         getAll = prepare("SELECT eventid, eventcondition FROM eventstatus");
         getByTimeAndDepthRanges = prepare("SELECT DISTINCT eventid, time_stamp, quantity_value "
@@ -176,11 +179,17 @@ public class JDBCEventStatus extends SodJDBC{
         return -1;
     }
 
+    public int getNumWaiting() throws SQLException{
+        ResultSet rs = getNumWaiting.executeQuery();
+        rs.next();
+         return rs.getInt("num_waiting");
+    }
+
     private JDBCEventAccess eventAccessTable;
 
     private PreparedStatement getStatus, putEvent, updateStatus,
         getAllOfEventArmStatus, getAllOfWaveformArmStatus,
-        getWaveformStatus, getAllOrderByDate, getNextStmt, getAll,
+        getWaveformStatus, getAllOrderByDate, getNextStmt, getNumWaiting, getAll,
         getByTimeAndDepthRanges;
 
     private Connection conn;

@@ -86,7 +86,10 @@ public class WaveformArm implements Arm {
             waitForInitialEvent();
             int sleepTime = 5;
             TimeInterval logInterval = new TimeInterval(10, UnitImpl.MINUTE);
-            logger.debug("will populateEventChannelDb, then sleep "+sleepTime+" sec between each try to process successful events, log interval is "+logInterval);
+            logger.debug("will populateEventChannelDb, then sleep "
+                    + sleepTime
+                    + " sec between each try to process successful events, log interval is "
+                    + logInterval);
             lastEventStartLogTime = ClockUtil.now();
             do {
                 int numEvents = populateEventChannelDb();
@@ -106,10 +109,11 @@ public class WaveformArm implements Arm {
                 } catch(InterruptedException e) {}
             }
             logger.info("Lo!  I am weary of my wisdom, like the bee that hath gathered too much\n"
-                        + "honey; I need hands outstretched to take it.");
+                    + "honey; I need hands outstretched to take it.");
         } catch(Throwable e) {
-            GlobalExceptionHandler.handle("Problem running waveform arm, SOD is exiting abnormally. "+
-                                          "Please email this to the sod development team at sod@seis.sc.edu", e);
+            GlobalExceptionHandler.handle("Problem running waveform arm, SOD is exiting abnormally. "
+                                                  + "Please email this to the sod development team at sod@seis.sc.edu",
+                                          e);
         }
         finished = true;
         synchronized(OutputScheduler.getDefault()) {
@@ -117,19 +121,23 @@ public class WaveformArm implements Arm {
         }
     }
 
-    private void sleepALittle(int numEvents, int sleepTime, TimeInterval logInterval) {
-        if (numEvents != 0) {
+    private void sleepALittle(int numEvents,
+                              int sleepTime,
+                              TimeInterval logInterval) {
+        if(numEvents != 0) {
             // found events so reset logInterval
             lastEventStartLogTime = ClockUtil.now();
-        } else if (ClockUtil.now().subtract(lastEventStartLogTime).greaterThan(logInterval)) {
-            logger.debug("no successful events found in last "+logInterval);
+        } else if(ClockUtil.now()
+                .subtract(lastEventStartLogTime)
+                .greaterThan(logInterval)) {
+            logger.debug("no successful events found in last " + logInterval);
             lastEventStartLogTime = ClockUtil.now();
         }
         try {
             Thread.sleep(sleepTime * 1000);
         } catch(InterruptedException e) {}
     }
-    
+
     public LocalSeismogramArm getLocalSeismogramArm() {
         return localSeismogramArm;
     }
@@ -165,6 +173,15 @@ public class WaveformArm implements Arm {
             eventArm.change(ev.getEvent(),
                             Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                        Standing.SUCCESS));
+            int numWaiting = eventStatus.getNumWaiting();
+            if(numWaiting < EventArm.MIN_WAIT_EVENTS) {
+                logger.debug("There are less than "
+                        + EventArm.MIN_WAIT_EVENTS
+                        + " waiting events.  Telling the eventArm to start up again");
+                synchronized(Start.getEventArm()) {
+                    Start.getEventArm().notify();
+                }
+            } 
         }
         return numEvents;
     }
@@ -320,14 +337,15 @@ public class WaveformArm implements Arm {
         }
     }
 
-    public EventVectorPair getEventVectorPair(EventChannelPair ecp) throws NetworkNotFound {
+    public EventVectorPair getEventVectorPair(EventChannelPair ecp)
+            throws NetworkNotFound {
         try {
             Channel[] chans;
-                ChannelDbObject[] chanDb = networkArm.getAllChannelsFromSite(ecp.getChannelDbId());
-                chans = new Channel[chanDb.length];
-                for(int i = 0; i < chanDb.length; i++) {
-                    chans[i] = chanDb[i].getChannel();
-                }
+            ChannelDbObject[] chanDb = networkArm.getAllChannelsFromSite(ecp.getChannelDbId());
+            chans = new Channel[chanDb.length];
+            for(int i = 0; i < chanDb.length; i++) {
+                chans[i] = chanDb[i].getChannel();
+            }
             ChannelGroup[] groups = channelGrouper.group(chans, new ArrayList());
             ChannelGroup pairGroup = null;
             for(int i = 0; i < groups.length; i++) {
@@ -388,14 +406,17 @@ public class WaveformArm implements Arm {
                             ecp = evChanStatus.get(pairId, this);
                         }
                     } catch(NotFound e) {
-                        handleExceptionGettingRetry("EventChannelStatus get unable to find pair right after it gave it to me", pairId, 
-                                                   e);
+                        handleExceptionGettingRetry("EventChannelStatus get unable to find pair right after it gave it to me",
+                                                    pairId,
+                                                    e);
                         continue;
                     }
                     try {
                         EventVectorPair ecgp = getEventVectorPair(ecp);
                         if(ecgp == null) {
-                            handleExceptionGettingRetry("Unable to get EventVectorPair for EventChannelPair, skipping it", pairId, new RuntimeException());
+                            handleExceptionGettingRetry("Unable to get EventVectorPair for EventChannelPair, skipping it",
+                                                        pairId,
+                                                        new RuntimeException());
                             continue;
                         }
                         int[] pairs;
@@ -406,17 +427,18 @@ public class WaveformArm implements Arm {
                     } catch(NotFound e) {
                         handleExceptionGettingRetry("EventChannelStatus getPairs unable to find vector pairs",
                                                     pairId,
-                                                   e);
+                                                    e);
                         continue;
                     } catch(NetworkNotFound e) {
-                        handleExceptionGettingRetry("EventChannelStatus get unable to find network", pairId, 
-                                                   e);
+                        handleExceptionGettingRetry("EventChannelStatus get unable to find network",
+                                                    pairId,
+                                                    e);
                         continue;
                     }
                 } catch(SQLException e) {
                     handleExceptionGettingRetry("Trouble matching up a pair with its waveform group",
                                                 pairId,
-                                               e);
+                                                e);
                     continue;
                 }
             } else {
@@ -424,11 +446,13 @@ public class WaveformArm implements Arm {
             }
         }
     }
-    
-    private void handleExceptionGettingRetry(String msg, int pairId, Throwable t) throws SQLException {
-        GlobalExceptionHandler.handle(msg+" pairId="+pairId, t);
-        evChanStatus.setStatus(pairId, Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                                                  Standing.SYSTEM_FAILURE));
+
+    private void handleExceptionGettingRetry(String msg, int pairId, Throwable t)
+            throws SQLException {
+        GlobalExceptionHandler.handle(msg + " pairId=" + pairId, t);
+        evChanStatus.setStatus(pairId,
+                               Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                          Standing.SYSTEM_FAILURE));
     }
 
     private void addSuspendedPairsToQueue(int[] pairIds) throws SQLException {
@@ -480,8 +504,8 @@ public class WaveformArm implements Arm {
                                                   e);
                 } catch(NetworkNotFound e) {
                     GlobalExceptionHandler.handle("EventChannelStatus get unable to find network"
-                                                                              + pairIds[i],
-                                                                      e);
+                                                          + pairIds[i],
+                                                  e);
                 }
             }
             if(workUnit != null) {
@@ -621,9 +645,9 @@ public class WaveformArm implements Arm {
             }
         }
     }
-    
+
     private MicroSecondDate lastEventStartLogTime;
-    
+
     private interface WaveformWorkUnit extends Runnable {}
 
     private class LocalSeismogramWaveformWorkUnit implements WaveformWorkUnit {
