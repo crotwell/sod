@@ -674,8 +674,6 @@ public class WaveformArm implements Arm {
                     return;
                 }
                 if(accepted.isSuccess()) {
-                    ecp.update(Status.get(Stage.EVENT_CHANNEL_SUBSETTER,
-                                          Standing.IN_PROG));
                     localSeismogramArm.processLocalSeismogramArm(ecp);
                 } else {
                     ecp.update(Status.get(Stage.EVENT_STATION_SUBSETTER,
@@ -776,8 +774,6 @@ public class WaveformArm implements Arm {
                     return;
                 }
                 if(accepted.isSuccess()) {
-                    ecp.update(Status.get(Stage.EVENT_CHANNEL_SUBSETTER,
-                                          Standing.IN_PROG));
                     motionVectorArm.processMotionVectorArm(ecp);
                 } else {
                     ecp.update(Status.get(Stage.EVENT_STATION_SUBSETTER,

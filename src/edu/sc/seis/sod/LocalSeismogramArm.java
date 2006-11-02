@@ -89,7 +89,6 @@ public class LocalSeismogramArm implements Subsetter {
             }
         }
         if(passed.isSuccess()) {
-            ecp.update(Status.get(Stage.REQUEST_SUBSETTER, Standing.IN_PROG));
             processRequestGeneratorSubsetter(ecp);
         } else {
             ecp.update(Status.get(Stage.EVENT_CHANNEL_SUBSETTER,
@@ -138,8 +137,6 @@ public class LocalSeismogramArm implements Subsetter {
             return;
         }
         if(passed) {
-            ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
-                                  Standing.IN_PROG));
             ProxySeismogramDC dataCenter;
             synchronized(dcLocator) {
                 try {
@@ -232,7 +229,6 @@ public class LocalSeismogramArm implements Subsetter {
             }
         }
         if(passed.isSuccess()) {
-            ecp.update(Status.get(Stage.DATA_RETRIEVAL, Standing.IN_PROG));
             for(int i = 0; i < infilters.length; i++) {
                 logger.debug("Getting seismograms "
                         + ChannelIdUtil.toString(infilters[i].channel_id)

@@ -119,7 +119,6 @@ public class MotionVectorArm implements Subsetter {
             }
         }
         if(passed.isSuccess()) {
-            ecp.update(Status.get(Stage.REQUEST_SUBSETTER, Standing.IN_PROG));
             processRequestGeneratorSubsetter(ecp);
         } else {
             ecp.update(Status.get(Stage.EVENT_CHANNEL_SUBSETTER,
@@ -181,8 +180,6 @@ public class MotionVectorArm implements Subsetter {
             return;
         }
         if(passed) {
-            ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
-                                  Standing.IN_PROG));
             ProxySeismogramDC dataCenter;
             synchronized(dcLocator) {
                 try {
@@ -278,7 +275,6 @@ public class MotionVectorArm implements Subsetter {
             }
         }
         if(result.isSuccess()) {
-            ecp.update(Status.get(Stage.DATA_RETRIEVAL, Standing.IN_PROG));
             for(int i = 0; i < infilters.length; i++) {
                 for(int j = 0; j < infilters[i].length; j++) {
                     logger.debug("Getting seismograms "
