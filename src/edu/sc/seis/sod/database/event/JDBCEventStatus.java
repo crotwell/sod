@@ -21,51 +21,49 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JDBCEventStatus extends SodJDBC{
-    public JDBCEventStatus() throws SQLException{
+public class JDBCEventStatus extends SodJDBC {
+
+    public JDBCEventStatus() throws SQLException {
         conn = ConnMgr.createConnection();
         eventAccessTable = new JDBCEventAccess(conn);
-        if(!DBUtil.tableExists("eventstatus", conn)){
+        if(!DBUtil.tableExists("eventstatus", conn)) {
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(ConnMgr.getSQL("eventstatus.create"));
         }
         getStatus = prepare("SELECT eventcondition FROM eventstatus WHERE eventid = ?");
-        putEvent = prepare("INSERT into eventstatus (eventcondition, eventid) " +
-                               "VALUES (?, ?)");
+        putEvent = prepare("INSERT into eventstatus (eventcondition, eventid) "
+                + "VALUES (?, ?)");
         updateStatus = prepare("UPDATE eventstatus SET eventcondition = ? WHERE eventid = ?");
-        getNextStmt = prepare("SELECT TOP 1 eventid FROM eventstatus WHERE eventcondition = " +
-                                  Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                                             Standing.IN_PROG).getAsShort());
-        getNumWaiting = prepare("SELECT count(*) as num_waiting FROM eventstatus WHERE eventcondition = " +
-                              Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                                         Standing.IN_PROG).getAsShort());
-        getAllOfEventArmStatus = prepare(" SELECT * FROM eventstatus WHERE eventcondition = ? " );
+        getNextStmt = prepare("SELECT TOP 1 eventid FROM eventstatus WHERE eventcondition = "
+                + Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.IN_PROG)
+                        .getAsShort());
+        getNumWaiting = prepare("SELECT count(*) as num_waiting FROM eventstatus WHERE eventcondition = "
+                + Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.IN_PROG)
+                        .getAsShort());
+        getAllOfEventArmStatus = prepare(" SELECT * FROM eventstatus WHERE eventcondition = ? ");
         getAll = prepare("SELECT eventid, eventcondition FROM eventstatus");
-        getByTimeAndDepthRanges = prepare("SELECT DISTINCT eventid, time_stamp, quantity_value "
-                                              + "from origin,time, quantity, eventstatus "
-                                              + "where origin_time_id = time_id "
-                                              + "and time_stamp > ? "
-                                              + "and time_stamp < ? "
-                                              + "and quantity_id = "
-                                              + "(select loc_depth_id from location where origin_location_id = loc_id)"
-                                              + "and quantity_value > ? "
-                                              + "and quantity_value < ? "
-                                              + "and eventid = origin_event_id");
+        getByTimeAndDepthRanges = prepare("SELECT DISTINCT origin_event_id AS eventid, time_stamp, quantity_value FROM origin "
+                + "JOIN time ON (origin_time_id = time_id) "
+                + "JOIN location ON (origin_location_id = loc_id) "
+                + "JOIN quantity ON (loc_depth_id = quantity_id) "
+                + "WHERE time_stamp > ? "
+                + "AND time_stamp < ? "
+                + "AND quantity_value > ? " + "AND quantity_value < ?");
     }
 
     public void restartCompletedEvents() throws SQLException {
         CacheEvent[] events = getAll(Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                                 Standing.SUCCESS));
-        for (int i = 0; i < events.length; i++) {
+        for(int i = 0; i < events.length; i++) {
             setStatus(events[i], Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                             Standing.IN_PROG));
         }
     }
 
-    public int getDbId(CacheEvent event) throws SQLException{
+    public int getDbId(CacheEvent event) throws SQLException {
         try {
             return eventAccessTable.getDBId(event);
-        } catch (NotFound e) {
+        } catch(NotFound e) {
             return -1;
         }
     }
@@ -79,7 +77,7 @@ public class JDBCEventStatus extends SodJDBC{
                                                       MicroSecondDate maxTime,
                                                       double minDepthKM,
                                                       double maxDepthKM)
-        throws SQLException{
+            throws SQLException {
         getByTimeAndDepthRanges.setTimestamp(1, minTime.getTimestamp());
         getByTimeAndDepthRanges.setTimestamp(2, maxTime.getTimestamp());
         getByTimeAndDepthRanges.setDouble(3, minDepthKM);
@@ -88,13 +86,13 @@ public class JDBCEventStatus extends SodJDBC{
     }
 
     private CacheEvent[] extractEvents(PreparedStatement eventStatement)
-        throws SQLException{
+            throws SQLException {
         ResultSet rs = eventStatement.executeQuery();
         List evs = new ArrayList();
-        while(rs.next()){
+        while(rs.next()) {
             try {
                 evs.add(eventAccessTable.getEvent(rs.getInt("eventid")));
-            } catch (NotFound e) {
+            } catch(NotFound e) {
                 throw new RuntimeException("this shouldn't happen, the id's in this table are foreign keys from the eventaccess table",
                                            e);
             }
@@ -102,28 +100,28 @@ public class JDBCEventStatus extends SodJDBC{
         return (CacheEvent[])evs.toArray(new CacheEvent[evs.size()]);
     }
 
-
     public StatefulEvent[] getAll() throws SQLException {
         return get(getAll);
     }
 
-    public PreparedStatement prepare(String query) throws SQLException{
+    public PreparedStatement prepare(String query) throws SQLException {
         return conn.prepareStatement(query);
     }
 
-    public StatefulEvent[] get(PreparedStatement prep) throws SQLException{
+    public StatefulEvent[] get(PreparedStatement prep) throws SQLException {
         ResultSet rs = prep.executeQuery();
         List evs = new ArrayList();
-        while(rs.next()){
+        while(rs.next()) {
             try {
                 CacheEvent ev = eventAccessTable.getEvent(rs.getInt("eventid"));
                 Status stat = Status.getFromShort(rs.getShort("eventcondition"));
                 try {
                     evs.add(new StatefulEvent(ev, stat));
-                } catch (NoPreferredOrigin e) {
-                    GlobalExceptionHandler.handle("impossible, the cache event must have a preferred origin", e);
+                } catch(NoPreferredOrigin e) {
+                    GlobalExceptionHandler.handle("impossible, the cache event must have a preferred origin",
+                                                  e);
                 }
-            } catch (NotFound e) {
+            } catch(NotFound e) {
                 GlobalExceptionHandler.handle("this shouldn't happen, the id's in this table are foreign keys from the eventaccess table",
                                               e);
             }
@@ -131,7 +129,7 @@ public class JDBCEventStatus extends SodJDBC{
         return (StatefulEvent[])evs.toArray(new StatefulEvent[evs.size()]);
     }
 
-    public Status getStatus(int dbId) throws SQLException, NotFound{
+    public Status getStatus(int dbId) throws SQLException, NotFound {
         getStatus.setInt(1, dbId);
         ResultSet rs = getStatus.executeQuery();
         if(rs.next()) {
@@ -141,56 +139,60 @@ public class JDBCEventStatus extends SodJDBC{
         throw new NotFound("There is no status for that id");
     }
 
-    public CacheEvent getEvent(int dbId) throws NotFound, SQLException{
+    public CacheEvent getEvent(int dbId) throws NotFound, SQLException {
         return eventAccessTable.getEvent(dbId);
     }
 
-    public int setStatus(EventAccessOperations ev,  Status status)
-        throws SQLException {
+    public int setStatus(EventAccessOperations ev, Status status)
+            throws SQLException {
         int id = eventAccessTable.put(ev, null, null, null);
         setStatus(id, status);
         return id;
     }
 
-    public void setStatus(int eventId, Status status) throws SQLException{
-        if(tableContains(eventId)){
+    public void setStatus(int eventId, Status status) throws SQLException {
+        if(tableContains(eventId)) {
             insert(updateStatus, eventId, status);
-        }else{
+        } else {
             insert(putEvent, eventId, status);
         }
     }
 
-    public boolean tableContains(int dbId) throws SQLException{
-        try{
+    public boolean tableContains(int dbId) throws SQLException {
+        try {
             getStatus(dbId);
-        }catch(NotFound e){ return false; }
+        } catch(NotFound e) {
+            return false;
+        }
         return true;
     }
 
-    private void insert(PreparedStatement stmt, int id, Status eventArmStatus) throws SQLException{
+    private void insert(PreparedStatement stmt, int id, Status eventArmStatus)
+            throws SQLException {
         stmt.setShort(1, eventArmStatus.getAsShort());
         stmt.setInt(2, id);
         stmt.executeUpdate();
     }
 
-    public int getNext() throws SQLException{
+    public int getNext() throws SQLException {
         ResultSet rs = getNextStmt.executeQuery();
-        if(rs.next()) return rs.getInt("eventid");
+        if(rs.next())
+            return rs.getInt("eventid");
         return -1;
     }
 
-    public int getNumWaiting() throws SQLException{
+    public int getNumWaiting() throws SQLException {
         ResultSet rs = getNumWaiting.executeQuery();
         rs.next();
-         return rs.getInt("num_waiting");
+        return rs.getInt("num_waiting");
     }
 
     private JDBCEventAccess eventAccessTable;
 
     private PreparedStatement getStatus, putEvent, updateStatus,
-        getAllOfEventArmStatus, getAllOfWaveformArmStatus,
-        getWaveformStatus, getAllOrderByDate, getNextStmt, getNumWaiting, getAll,
-        getByTimeAndDepthRanges;
+            getAllOfEventArmStatus, getAllOfWaveformArmStatus,
+            getWaveformStatus, getAllOrderByDate, getNextStmt, getNumWaiting,
+            getAll, getByTimeAndDepthRanges;
 
     private Connection conn;
 }
