@@ -8,13 +8,17 @@ public class StringTreeLeaf extends StringTree {
         this(actor, status, reason, null);
     }
 
-    public StringTreeLeaf(Object actor, boolean status, String reason,
-            Throwable t) {
+    public StringTreeLeaf(Object actor,
+                          boolean status,
+                          String reason,
+                          Throwable t) {
         this(ExceptionReporterUtils.getClassName(actor), status, reason, t);
     }
 
-    public StringTreeLeaf(String actorName, boolean status, String reason,
-            Throwable t) {
+    public StringTreeLeaf(String actorName,
+                          boolean status,
+                          String reason,
+                          Throwable t) {
         super(actorName, status);
         this.reason = reason;
         this.t = t;
@@ -27,8 +31,11 @@ public class StringTreeLeaf extends StringTree {
     public StringTreeLeaf(String name, boolean boo) {
         this(name, boo, "");
     }
-    public String toString() {
-        return super.toString() + ":" + reason + (t != null ? ":" + t : "");
+
+    public String toString(int indentationLevel) {
+        return super.toString(indentationLevel)
+                + (reason != null ? ":" + reason : "")
+                + (t != null ? ":" + t : "");
     }
 
     protected String reason;

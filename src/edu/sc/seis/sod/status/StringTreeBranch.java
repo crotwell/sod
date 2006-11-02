@@ -19,19 +19,16 @@ public class StringTreeBranch extends StringTree {
         this.branches = branches;
     }
 
-    public String toString() {
-        String s = super.toString() + " (";
-        for(int i = 0; i < branches.length; i++) {
-            if(branches[i] != null) {
-                s += branches[i].toString();
-            } else {
-                s += "null";
-            }
-            if(i != branches.length - 1) {
-                s += ", ";
-            }
+    public String toString(int indentationLevel) {
+        String s = "";
+        if(indentationLevel == 0) {
+            s += '\n';
         }
-        return s += ")";
+        s += super.toString(indentationLevel);
+        for(int i = 0; i < branches.length; i++) {
+            s += "\n" + branches[i].toString(indentationLevel + 1);
+        }
+        return s;
     }
 
     protected StringTree[] branches;

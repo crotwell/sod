@@ -8,11 +8,27 @@ public abstract class StringTree {
     }
 
     public String toString() {
-        return actorName + ":" + (status ? OK : FAIL);
+        return toString(0);
+    }
+
+    public String toString(int indentationLevel) {
+        return getIndent(indentationLevel) + actorName + ":"
+                + (status ? OK : FAIL);
     }
 
     public boolean isSuccess() {
         return status;
+    }
+
+    protected String getIndent(int indentationLevel) {
+        StringBuffer buff = new StringBuffer(indentationLevel * 2 + 1);
+        for(int i = 0; i < (indentationLevel - 1)*2; i++){
+            buff.append(' ');
+        }
+        if(indentationLevel > 0){
+        buff.append("|--");
+        }
+        return buff.toString();
     }
 
     protected String actorName;
