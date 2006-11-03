@@ -173,7 +173,10 @@ public class WaveformArm implements Arm {
             eventArm.change(ev.getEvent(),
                             Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                        Standing.SUCCESS));
-            int numWaiting = eventStatus.getNumWaiting();
+            int numWaiting;
+            synchronized(eventStatus) {
+                numWaiting = eventStatus.getNumWaiting();
+            }
             if(numWaiting < EventArm.MIN_WAIT_EVENTS) {
                 logger.debug("There are less than "
                         + EventArm.MIN_WAIT_EVENTS
@@ -181,7 +184,7 @@ public class WaveformArm implements Arm {
                 synchronized(Start.getEventArm()) {
                     Start.getEventArm().notify();
                 }
-            } 
+            }
         }
         return numEvents;
     }
