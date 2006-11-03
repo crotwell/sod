@@ -137,7 +137,11 @@ public class EventArm implements Arm {
     static int MIN_WAIT_EVENTS = 10;
     
     private void waitForProcessing() throws Exception {
-        if(waitForWaveformProcessing) {
+        int numWaiting;
+        synchronized(eventStatus) {
+            numWaiting = eventStatus.getNumWaiting();
+        }
+        if(waitForWaveformProcessing  &&  numWaiting > MIN_WAIT_EVENTS) {
             synchronized(this) {
                 setStatus("eventArm waiting until there are less than "+MIN_WAIT_EVENTS+" events waiting to be processed.");
                 wait();
