@@ -58,7 +58,9 @@ public class JDBCRetryQueue extends JDBCTable {
 
     private int fillInWillHaveParams(PreparedStatement ps, int startPos)
             throws SQLException {
-        ps.setTimestamp(startPos++, beingRetried);
+        // use timestamp to indicate this ECP is in progress
+        // this is a bad idea, probably should have added a column
+        ps.setTimestamp(startPos++, beingRetried); 
         if(ClockUtil.now().before(lastRetry)) {
             ps.setInt(startPos++, maxRetries);
         } else {
