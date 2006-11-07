@@ -4,6 +4,8 @@ import org.w3c.dom.Element;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 
 /**
  * @author oliverpa
@@ -16,9 +18,9 @@ public class ClockSerial extends ClockSubsetter {
         acceptedSerial = SodUtil.getNestedText(config);
     }
 
-    public boolean accept(Channel channel, ProxyNetworkAccess network)
+    public StringTree accept(Channel channel, ProxyNetworkAccess network)
             throws Exception {
-        return acceptSerialNumber(channel, network, acceptedSerial);
+        return new StringTreeLeaf(this, acceptSerialNumber(channel, network, acceptedSerial));
     }
 
     private String acceptedSerial;

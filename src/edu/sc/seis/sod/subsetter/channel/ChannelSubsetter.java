@@ -2,6 +2,7 @@ package edu.sc.seis.sod.subsetter.channel;
 
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
+import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.Subsetter;
 
 /**
@@ -15,6 +16,6 @@ import edu.sc.seis.sod.subsetter.Subsetter;
  */
 public interface ChannelSubsetter extends Subsetter {
 
-    public boolean accept(Channel channel, ProxyNetworkAccess network)
+    public StringTree accept(Channel channel, ProxyNetworkAccess network)
             throws Exception;
 }// ChannelSubsetter

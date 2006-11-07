@@ -9,22 +9,21 @@ import edu.sc.seis.fissuresUtil.bag.ResponseGain;
 import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
 import edu.sc.seis.fissuresUtil.cache.InstrumentationLoader;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
+import edu.sc.seis.sod.status.Fail;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 
 public class HasSensitivity implements ChannelSubsetter {
 
-    public boolean accept(Channel channel, ProxyNetworkAccess network) {
+    public StringTree accept(Channel channel, ProxyNetworkAccess network) {
         try {
             Sensitivity sens = network.retrieve_sensitivity(channel.get_id(),
                                                             channel.get_id().begin_time);
-            return InstrumentationLoader.isValid(sens);
+            return new StringTreeLeaf(this, InstrumentationLoader.isValid(sens));
         } catch(ChannelNotFound e) {
-            logger.info("No sensitivity for "
-                    + ChannelIdUtil.toString(channel.get_id()));
-            return false;
+            return new Fail(this, "No instrumentation");
         } catch (InstrumentationInvalid e) {
-            logger.info("Invalid instrumentation for "
-                    + ChannelIdUtil.toString(channel.get_id()));
-            return false;
+            return new Fail(this, "Invalid instrumentation");
         }
     }
 

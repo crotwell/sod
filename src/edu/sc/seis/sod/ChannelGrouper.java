@@ -166,7 +166,7 @@ public class ChannelGrouper {
                                                 ProxyNetworkAccess network = Start.getNetworkArm()
                                                         .getNetwork(channels[count].get_id().network_id);
                                                 if(!channelSubsetter.accept(channels[count],
-                                                                            network)) {
+                                                                            network).isSuccess()) {
                                                     accept = false;
                                                 }
                                             }

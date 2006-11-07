@@ -8,6 +8,8 @@ import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.RangeSubsetter;
 
 public class Sampling extends RangeSubsetter implements ChannelSubsetter {
@@ -20,9 +22,9 @@ public class Sampling extends RangeSubsetter implements ChannelSubsetter {
         max = getHertz((int)getMaxValue(), interval);
     }
 
-    public boolean accept(Channel channel, ProxyNetworkAccess network)
+    public StringTree accept(Channel channel, ProxyNetworkAccess network)
             throws Exception {
-        return accept((SamplingImpl)channel.sampling_info);
+        return new StringTreeLeaf(this, accept((SamplingImpl)channel.sampling_info));
     }
 
     public boolean accept(SamplingImpl channelSampling) {

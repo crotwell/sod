@@ -11,36 +11,36 @@ import edu.sc.seis.fissuresUtil.bag.ResponseGain;
 import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
 import edu.sc.seis.fissuresUtil.cache.InstrumentationLoader;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
+import edu.sc.seis.sod.status.Fail;
+import edu.sc.seis.sod.status.Pass;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 
 public class RepairSensitivity implements ChannelSubsetter {
 
-    public boolean accept(Channel channel, ProxyNetworkAccess network)
+    public StringTree accept(Channel channel, ProxyNetworkAccess network)
             throws Exception {
         Instrumentation instrumentation;
         try {
             instrumentation = network.retrieve_instrumentation(channel.get_id(),
                                                                channel.get_id().begin_time);
         } catch(ChannelNotFound e) {
-            logger.info("No instrumentation for "
-                    + ChannelIdUtil.toString(channel.get_id()));
-            return false;
+            return new Fail(this, "No instrumentation");
         } catch (InstrumentationInvalid e) {
-            logger.info("Invalid instrumentation for "
-                    + ChannelIdUtil.toString(channel.get_id()));
-            return false;
+            return new Fail(this, "Invalid instrumentation");
         }
         if(InstrumentationLoader.isValid(instrumentation)) {
-            return true;
+            return new Pass(this);
         }
         Response resp = instrumentation.the_response;
         Stage[] stages = resp.stages;
         if(stages.length == 0) {
             logger.debug("No stages in the response of "
                     + ChannelIdUtil.toString(channel.get_id()));
-            return false;
+            return new StringTreeLeaf(this, false);
         }
         InstrumentationLoader.repairResponse(instrumentation.the_response);
-        return InstrumentationLoader.isValid(instrumentation.the_response);
+        return new StringTreeLeaf(this, InstrumentationLoader.isValid(instrumentation.the_response));
     }
 
     private Logger logger = Logger.getLogger(RepairSensitivity.class);

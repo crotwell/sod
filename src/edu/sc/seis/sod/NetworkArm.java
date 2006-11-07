@@ -44,6 +44,7 @@ import edu.sc.seis.sod.database.StationDbObject;
 import edu.sc.seis.sod.database.network.JDBCNetworkUnifier;
 import edu.sc.seis.sod.source.event.EventSource;
 import edu.sc.seis.sod.status.OutputScheduler;
+import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.networkArm.NetworkMonitor;
 import edu.sc.seis.sod.subsetter.channel.ChannelEffectiveTimeOverlap;
 import edu.sc.seis.sod.subsetter.channel.ChannelSubsetter;
@@ -556,17 +557,19 @@ public class NetworkArm implements Arm {
                         continue;
                     }
                     change(chan, inProg);
-                    if(chanEffectiveSubsetter.accept(chan, networkAccess)) {
+                    StringTree effectiveTimeResult = chanEffectiveSubsetter.accept(chan, networkAccess);
+                    if(effectiveTimeResult.isSuccess()) {
                         boolean accepted = true;
                         synchronized(chanSubsetters) {
                             Iterator it = chanSubsetters.iterator();
                             while(it.hasNext()) {
                                 ChannelSubsetter cur = (ChannelSubsetter)it.next();
-                                if(!cur.accept(chan, networkAccess)) {
+                                StringTree result = cur.accept(chan, networkAccess);
+                                if(!result.isSuccess()) {
                                     change(chan,
                                            Status.get(Stage.NETWORK_SUBSETTER,
                                                       Standing.REJECT));
-                                    failLogger.info(ChannelIdUtil.toString(chan.get_id())+" was rejected");
+                                    failLogger.info("Rejected: "+result);
                                     accepted = false;
                                     break;
                                 }
@@ -593,8 +596,7 @@ public class NetworkArm implements Arm {
                     } else {
                         change(chan, Status.get(Stage.NETWORK_SUBSETTER,
                                                 Standing.REJECT));
-                        failLogger.info(ChannelIdUtil.toString(chan.get_id())
-                                + " was rejected based on its effective time not matching the range of requested events");
+                        failLogger.info("Reject based on effective time not matching the range of requested events: "+effectiveTimeResult);
                     }
                 }
             } catch(Throwable e) {

@@ -10,11 +10,16 @@ import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.FilterType;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.sac.FissuresToSac;
 import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.status.Fail;
+import edu.sc.seis.sod.status.Pass;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.VelocityFileElementParser;
 import edu.sc.seis.sod.velocity.PrintlineVelocitizer;
 
@@ -31,32 +36,28 @@ public class SacPoleZeroWriter implements ChannelSubsetter {
         velocitizer = new PrintlineVelocitizer(new String[] {template});
     }
 
-    public boolean accept(Channel chan, ProxyNetworkAccess network)
+    public StringTree accept(Channel chan, ProxyNetworkAccess network)
             throws Exception {
         try {
             ChannelId channel_id = chan.get_id();
             Instrumentation inst = network.retrieve_instrumentation(channel_id,
                                                                     channel_id.begin_time);
             if(inst.the_response.stages[0].filters[0].discriminator().value() != FilterType._POLEZERO) {
-            		return false;
+            		return new Fail(this);
             }
             String response = FissuresToSac.getPoleZero(inst.the_response)
                     .toString();
             velocitizer.evaluate(template, response, chan);
-        } catch(InvalidResponse ex) {
-            GlobalExceptionHandler.handle("Channel has invalid response: "
-                    + ChannelIdUtil.toString(chan.get_id()), ex);
-            return false;
-        } catch(ChannelNotFound ex) {
-            GlobalExceptionHandler.handle("Channel not found: "
-                    + ChannelIdUtil.toString(chan.get_id()), ex);
-            return false;
+        } catch(ChannelNotFound e) {
+            return new Fail(this, "No instrumentation");
+        } catch (InstrumentationInvalid e) {
+            return new Fail(this, "Invalid instrumentation");
         } catch(FileNotFoundException fe) {
             GlobalExceptionHandler.handle("Error while response file for "
                     + ChannelIdUtil.toString(chan.get_id()), fe);
-            return false;
+            return new Fail(this);
         }
-        return true;
+        return new Pass(this);
     }
 
     private String template;

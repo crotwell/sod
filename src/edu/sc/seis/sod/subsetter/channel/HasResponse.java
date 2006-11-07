@@ -6,22 +6,22 @@ import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
+import edu.sc.seis.sod.status.Fail;
+import edu.sc.seis.sod.status.Pass;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 
 public class HasResponse implements ChannelSubsetter {
 
-    public boolean accept(Channel channel, ProxyNetworkAccess network) {
+    public StringTree accept(Channel channel, ProxyNetworkAccess network) {
         try {
             network.retrieve_instrumentation(channel.get_id(),
                                              channel.get_id().begin_time);
-            return true;
+            return new Pass(this);
         } catch(ChannelNotFound e) {
-            logger.info("No instrumentation for "
-                    + ChannelIdUtil.toString(channel.get_id()));
-            return false;
+            return new Fail(this, "No instrumentation");
         } catch (InstrumentationInvalid e) {
-            logger.info("Invalid instrumentation for "
-                    + ChannelIdUtil.toString(channel.get_id()));
-            return false;
+            return new Fail(this, "Invalid instrumentation");
         }
     }
 

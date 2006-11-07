@@ -5,6 +5,8 @@ import org.w3c.dom.Element;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeBranch;
 
 public final class ChannelAND extends  ChannelLogicalSubsetter
     implements ChannelSubsetter {
@@ -13,12 +15,16 @@ public final class ChannelAND extends  ChannelLogicalSubsetter
         super(config);
     }
 
-    public boolean accept(Channel e, ProxyNetworkAccess network) throws Exception{
+    public StringTree accept(Channel e, ProxyNetworkAccess network) throws Exception{
+        StringTree[] result = new StringTree[subsetters.size()];
         Iterator it = subsetters.iterator();
+        int i=0;
         while(it.hasNext()) {
             ChannelSubsetter filter = (ChannelSubsetter)it.next();
-            if ( !filter.accept(e, network)) { return false; }
+            result[i] = filter.accept(e, network);
+            if ( !result[i].isSuccess()) { return new StringTreeBranch(this, false, result); }
+            i++;
         }
-        return true;
+        return new StringTreeBranch(this, true, result);
     }
 }// ChannelAND

@@ -6,6 +6,8 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.velocity.PrintlineVelocitizer;
 
 /**
@@ -19,10 +21,10 @@ public class PrintlineChannelProcess implements ChannelSubsetter {
         velocitizer = new PrintlineVelocitizer(new String[]{filename, template});
     }
 
-    public boolean accept(Channel channel, ProxyNetworkAccess network)
+    public StringTree accept(Channel channel, ProxyNetworkAccess network)
             throws IOException {
         velocitizer.evaluate(filename, template, channel);
-        return true;
+        return new StringTreeLeaf(this, true);
     }
 
     public static final String DEFAULT_TEMPLATE = "Channel: $channel";

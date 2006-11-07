@@ -11,6 +11,7 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.channel.ChannelSubsetter;
 
@@ -40,9 +41,8 @@ public class EmbeddedChannel implements EventChannelSubsetter {
                              CookieJar cookieJar) throws Exception {
         ProxyNetworkAccess network = Start.getNetworkArm()
                 .getNetwork(channel.get_id().network_id);
-        return new StringTreeLeaf(this,
-                                  channelSubsetter.accept(channel, network),
-                                  channelSubsetter.toString());
+        StringTree result = channelSubsetter.accept(channel, network);
+        return new StringTreeBranch(this, result.isSuccess(), result);
     }
 
     ChannelSubsetter channelSubsetter;

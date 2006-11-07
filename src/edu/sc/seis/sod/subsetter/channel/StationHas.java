@@ -6,6 +6,9 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.status.Fail;
+import edu.sc.seis.sod.status.Pass;
+import edu.sc.seis.sod.status.StringTree;
 
 /**
  * @author crotwell Created on Jun 3, 2005
@@ -17,7 +20,7 @@ public class StationHas extends ChannelLogicalSubsetter implements
         super(config);
     }
 
-    public boolean accept(Channel channel, ProxyNetworkAccess network)
+    public StringTree accept(Channel channel, ProxyNetworkAccess network)
             throws Exception {
         Iterator it = subsetters.iterator();
         Channel[] allChans = network.retrieve_for_station(channel.my_site.my_station.get_id());
@@ -25,10 +28,10 @@ public class StationHas extends ChannelLogicalSubsetter implements
             if(!atLeastOneChannelPasses((ChannelSubsetter)it.next(),
                                         allChans,
                                         network)) {
-                return false;
+                return new Fail(this);
             }
         }
-        return true;
+        return new Pass(this);
     }
 
     private static boolean atLeastOneChannelPasses(ChannelSubsetter filter,
@@ -36,7 +39,7 @@ public class StationHas extends ChannelLogicalSubsetter implements
                                                    ProxyNetworkAccess net)
             throws Exception {
         for(int i = 0; i < chans.length; i++) {
-            if(filter.accept(chans[i], net)) {
+            if(filter.accept(chans[i], net).isSuccess()) {
                 return true;
             }
         }

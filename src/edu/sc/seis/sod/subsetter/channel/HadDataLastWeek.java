@@ -9,6 +9,8 @@ import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.dataCenter.FixedDataCenter;
 
 /**
@@ -20,7 +22,7 @@ public class HadDataLastWeek implements ChannelSubsetter {
         fixDC = new FixedDataCenter(DOMHelper.getElement(el, "fixedDataCenter"));
     }
 
-    public boolean accept(Channel channel, ProxyNetworkAccess network)
+    public StringTree accept(Channel channel, ProxyNetworkAccess network)
             throws Exception {
         // Make 7 requests for a day as the BUD likes it that way
         RequestFilter[] reqs = new RequestFilter[7];
@@ -34,11 +36,11 @@ public class HadDataLastWeek implements ChannelSubsetter {
         }
         if(fixDC.getDataCenter().available_data(reqs).length > 0) {
             logger.debug(ChannelIdUtil.toStringNoDates(channel) + " had data");
-            return true;
+            return new StringTreeLeaf(this, true);
         }
         logger.debug(ChannelIdUtil.toStringNoDates(channel)
                 + " didn't have data");
-        return false;
+        return new StringTreeLeaf(this, false);
     }
 
     private TimeInterval makeDayInterval(int days) {

@@ -4,6 +4,8 @@ import org.w3c.dom.Element;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 
 /**
  * @author oliverpa
@@ -16,8 +18,8 @@ public class DasId extends DasSubsetter {
         id = Integer.parseInt(SodUtil.getNestedText(config));
     }
 
-    public boolean accept(Channel channel, ProxyNetworkAccess network) {
-        return acceptId(channel, network, id);
+    public StringTree accept(Channel channel, ProxyNetworkAccess network) {
+        return new StringTreeLeaf(this, acceptId(channel, network, id));
     }
 
     private int id;

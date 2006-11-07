@@ -6,6 +6,8 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.sc.seis.TauP.SphericalCoords;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 
 public class OrientationRange implements ChannelSubsetter {
 
@@ -15,13 +17,13 @@ public class OrientationRange implements ChannelSubsetter {
         offset = Float.parseFloat(DOMHelper.extractText(config, "maxOffset"));
     }
 
-    public boolean accept(Channel e, ProxyNetworkAccess network) throws Exception {
+    public StringTree accept(Channel e, ProxyNetworkAccess network) throws Exception {
         Orientation ori = e.an_orientation;
         double actualDistance = SphericalCoords.distance(ori.dip,
                                                          ori.azimuth,
                                                          dip,
                                                          azimuth);
-        return actualDistance <= offset;
+        return new StringTreeLeaf(this, actualDistance <= offset);
     }
 
     private float azimuth;

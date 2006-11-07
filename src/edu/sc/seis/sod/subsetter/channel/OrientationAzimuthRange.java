@@ -3,6 +3,8 @@ package edu.sc.seis.sod.subsetter.channel;
 import org.w3c.dom.Element;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.RangeSubsetter;
 
 public class OrientationAzimuthRange extends RangeSubsetter implements
@@ -14,7 +16,7 @@ public class OrientationAzimuthRange extends RangeSubsetter implements
         if(max > 180) max = max - 360;
     }
 
-    public boolean accept(Channel e, ProxyNetworkAccess network) throws Exception {
-        return accept(e.an_orientation.azimuth);
+    public StringTree accept(Channel e, ProxyNetworkAccess network) throws Exception {
+        return new StringTreeLeaf(this, accept(e.an_orientation.azimuth));
     }
 }// OrientationAzimuthRange
