@@ -1,10 +1,13 @@
 package edu.sc.seis.sod.subsetter.channel;
 
 import java.io.FileNotFoundException;
+
 import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
+import edu.iris.Fissures.IfNetwork.FilterType;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
@@ -34,6 +37,9 @@ public class SacPoleZeroWriter implements ChannelSubsetter {
             ChannelId channel_id = chan.get_id();
             Instrumentation inst = network.retrieve_instrumentation(channel_id,
                                                                     channel_id.begin_time);
+            if(inst.the_response.stages[0].filters[0].discriminator().value() != FilterType._POLEZERO) {
+            		return false;
+            }
             String response = FissuresToSac.getPoleZero(inst.the_response)
                     .toString();
             velocitizer.evaluate(template, response, chan);
