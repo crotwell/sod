@@ -276,11 +276,13 @@ public class NetworkArm implements Arm {
                     } else {
                         change(allNets[i], Status.get(Stage.NETWORK_SUBSETTER,
                                                       Standing.REJECT));
+                        failLogger.info(NetworkIdUtil.toString(allNets[i].get_attributes()
+                                .get_id())+" was rejected.");
                     }
                 } else {
                     change(allNets[i], Status.get(Stage.NETWORK_SUBSETTER,
                                                   Standing.REJECT));
-                    logger.info(NetworkIdUtil.toString(allNets[i].get_attributes()
+                    failLogger.info(NetworkIdUtil.toString(allNets[i].get_attributes()
                             .get_id())
                             + " was rejected because it wasn't active during the time range of requested events");
                 }
@@ -411,12 +413,13 @@ public class NetworkArm implements Arm {
                             change(stations[subCounter],
                                    Status.get(Stage.NETWORK_SUBSETTER,
                                               Standing.REJECT));
+                            failLogger.info(StationIdUtil.toString(stations[subCounter].get_id())+" was rejected");
                         }
                     } else {
                         change(stations[subCounter],
                                Status.get(Stage.NETWORK_SUBSETTER,
                                           Standing.REJECT));
-                        logger.info(StationIdUtil.toString(stations[subCounter].get_id())
+                        failLogger.info(StationIdUtil.toString(stations[subCounter].get_id())
                                 + " was rejected based on its effective time not matching the range of requested events");
                     }
                 }
@@ -488,7 +491,7 @@ public class NetworkArm implements Arm {
                         }
                     } else {
                         failSite(failures, channels[i]);
-                        logger.info(SiteIdUtil.toString(channels[i].my_site.get_id())
+                        failLogger.info(SiteIdUtil.toString(channels[i].my_site.get_id())
                                 + " was rejected based on its effective time not matching the range of requested events");
                     }
                 }
@@ -507,6 +510,8 @@ public class NetworkArm implements Arm {
     private void failSite(List failures, Channel channel) {
         change(channel.my_site, Status.get(Stage.NETWORK_SUBSETTER,
                                            Standing.REJECT));
+        failLogger.info(SiteIdUtil.toString(channel.my_site.get_id())+" was rejected");
+        
         failures.add(channel.my_site);
         // fail all channels in a failed site, just for
         // status
@@ -561,6 +566,7 @@ public class NetworkArm implements Arm {
                                     change(chan,
                                            Status.get(Stage.NETWORK_SUBSETTER,
                                                       Standing.REJECT));
+                                    failLogger.info(ChannelIdUtil.toString(chan.get_id())+" was rejected");
                                     accepted = false;
                                     break;
                                 }
@@ -587,7 +593,7 @@ public class NetworkArm implements Arm {
                     } else {
                         change(chan, Status.get(Stage.NETWORK_SUBSETTER,
                                                 Standing.REJECT));
-                        logger.info(ChannelIdUtil.toString(chan.get_id())
+                        failLogger.info(ChannelIdUtil.toString(chan.get_id())
                                 + " was rejected based on its effective time not matching the range of requested events");
                     }
                 }
@@ -786,6 +792,8 @@ public class NetworkArm implements Arm {
     private List statusMonitors = new ArrayList();
 
     private static Logger logger = Logger.getLogger(NetworkArm.class);
+
+    private static final org.apache.log4j.Logger failLogger = org.apache.log4j.Logger.getLogger("Fail.NetworkArm");
 
     private boolean armFinished = false;
 }// NetworkArm
