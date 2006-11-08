@@ -53,9 +53,9 @@ public class SacPoleZeroWriter implements ChannelSubsetter {
         } catch (InstrumentationInvalid e) {
             return new Fail(this, "Invalid instrumentation");
         } catch(FileNotFoundException fe) {
-            GlobalExceptionHandler.handle("Error while response file for "
+            GlobalExceptionHandler.handle("Error while writing response file for "
                     + ChannelIdUtil.toString(chan.get_id()), fe);
-            return new Fail(this);
+            return new Fail(this, "Error while writing response file", fe);
         }
         return new Pass(this);
     }
