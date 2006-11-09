@@ -1,31 +1,26 @@
 package edu.sc.seis.sod.subsetter.channel;
 
-import java.util.Iterator;
 import org.w3c.dom.Element;
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.status.StringTree;
-import edu.sc.seis.sod.status.StringTreeBranch;
 
-public final class ChannelOR extends  ChannelLogicalSubsetter
-    implements ChannelSubsetter {
+public  class ChannelOR extends ChannelLogicalSubsetter implements
+        ChannelSubsetter {
 
-    public ChannelOR (Element config) throws ConfigurationException {
+    public ChannelOR(Element config) throws ConfigurationException {
         super(config);
     }
 
-    public StringTree accept(Channel e, ProxyNetworkAccess network) throws Exception{
-        StringTree[] result = new StringTree[subsetters.size()];
-        Iterator it = subsetters.iterator();
-        int i=0;
-        while(it.hasNext()) {
-            ChannelSubsetter filter = (ChannelSubsetter)it.next();
-            result[i] = filter.accept(e, network);
-            if ( result[i].isSuccess()) { return new StringTreeBranch(this, true, result); }
-            i++;
-        }
-        return new StringTreeBranch(this, false, result);
+    public boolean shouldContinue(StringTree result) {
+        return !result.isSuccess();
     }
 
+    public boolean isSuccess(StringTree[] reasons) {
+        for(int i = 0; i < reasons.length; i++) {
+            if(reasons[i].isSuccess()){
+                return true;
+            }
+        }
+        return false;
+    }
 }// ChannelOR

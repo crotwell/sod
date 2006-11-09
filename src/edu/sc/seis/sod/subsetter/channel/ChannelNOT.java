@@ -26,4 +26,12 @@ public final class ChannelNOT extends  ChannelLogicalSubsetter
         return new StringTreeLeaf(this, true);
     }
 
+    public boolean isSuccess(StringTree[] reasons) {
+        return !reasons[0].isSuccess();
+    }
+
+    public boolean shouldContinue(StringTree result) {
+        return false;
+    }
+
 }// ChannelNOT
