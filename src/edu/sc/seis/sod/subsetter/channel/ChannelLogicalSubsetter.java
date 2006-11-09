@@ -9,22 +9,15 @@ import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
-import edu.sc.seis.sod.status.StringTreeLeaf;
-import edu.sc.seis.sod.subsetter.LogicalLoaderSubsetter;
-import edu.sc.seis.sod.subsetter.SubsetterLoader;
 
 /**
  * @author groves Created on Aug 30, 2004
  */
-public abstract class ChannelLogicalSubsetter extends LogicalLoaderSubsetter {
+public abstract class ChannelLogicalSubsetter extends CompositeChannelSubsetter {
 
     public ChannelLogicalSubsetter(Element config)
             throws ConfigurationException {
         super(config);
-    }
-
-    public SubsetterLoader getLoader() {
-        return new ChannelSubsetterLoader();
     }
 
     public StringTree accept(Channel e, ProxyNetworkAccess network)
