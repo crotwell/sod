@@ -72,24 +72,25 @@ public class Start {
      * Creates a new <code>Start</code> instance set to use the XML config
      * file in confFilename
      */
-    public Start(String confFilename, String[] args) throws Exception {
-        configFileName = confFilename;
+    public Start(Args args) throws Exception {
+        this.args = args;
+        configFileName = args.getRecipe();
         ClassLoader cl = getClass().getClassLoader();
         try {
-            setConfig(createDoc(createInputSource(cl, confFilename),
-                                confFilename).getDocumentElement());
+            setConfig(createDoc(createInputSource(cl, configFileName),
+                                configFileName).getDocumentElement());
         } catch(IOException io) {
-            informUserOfBadFileAndExit(confFilename);
+            informUserOfBadFileAndExit(configFileName);
         } catch(Exception e) {
             GlobalExceptionHandler.handle("Trouble creating xml document", e);
         }
         try {
             Validator validator = new Validator(Validator.SOD_SCHEMA_LOC);
-            if(!validator.validate(createInputSource(cl, confFilename))) {
+            if(!validator.validate(createInputSource(cl, configFileName))) {
                 logger.info("Invalid strategy file!");
                 allHopeAbandon(validator.getErrorMessage());
             }
-            if(onlyValidate) {
+            if(args.onlyValidate()) {
                 System.exit(0);
             }
         } catch(Exception e) {
@@ -97,14 +98,8 @@ public class Start {
                                           e);
             exit("Problem configuring schema validator: " + e.getMessage());
         }
-        initDocument(args);
+        initDocument();
     }
-
-    private static boolean onlyValidate = false;
-
-    private static boolean waitOnError = true;
-
-    private static boolean replaceDBConfig = false;
 
     private static void informUserOfBadFileAndExit(String confFilename) {
         File configFile = new File(confFilename);
@@ -116,15 +111,6 @@ public class Start {
             System.err.println("SOD could find no such file.  Make sure the file exists");
         }
         System.exit(0);
-    }
-
-    public Start(Document document) throws Exception {
-        this(document, new String[0]);
-    }
-
-    public Start(Document document, String[] args) throws Exception {
-        setConfig(document.getDocumentElement());
-        initDocument(args);
     }
 
     public static MicroSecondDate getStartTime() {
@@ -139,16 +125,19 @@ public class Start {
         return configFileName;
     }
 
-    protected void initDocument(String[] args) throws Exception {
+    protected void initDocument() throws Exception {
         // get some defaults
         Initializer.loadProps((Start.class).getClassLoader()
                 .getResourceAsStream(DEFAULT_PROPS), props);
-        try {
-            Initializer.loadProperties(args, props);
-        } catch(IOException io) {
-            System.err.println("Unable to load props file: " + io.getMessage());
-            System.err.println("Quitting until the error is corrected");
-            System.exit(1);
+        if(args.hasProps()) {
+            try {
+                Initializer.loadProps(args.getProps(), props);
+            } catch(IOException io) {
+                System.err.println("Unable to load props file: "
+                        + io.getMessage());
+                System.err.println("Quitting until the error is corrected");
+                System.exit(1);
+            }
         }
         PropertyConfigurator.configure(props);
         logger.info("logging configured");
@@ -157,10 +146,10 @@ public class Start {
         GlobalExceptionHandler.remove(sysOutReporter);
         // now override the properties with any values in the recipe
         loadRunProps(getConfig());
-        ConnMgr.installDbProperties(props, args);
+        ConnMgr.installDbProperties(props, args.getInitialArgs());
         IndexTemplate.setConfigFileLoc();// Must happen after load runProps
         CommonAccess.getCommonAccess().setProps(props);
-        CommonAccess.getCommonAccess().initORB(args);
+        CommonAccess.getCommonAccess().initORB(args.getInitialArgs());
     }
 
     public static void loadRunProps(Element doc) throws ConfigurationException {
@@ -280,7 +269,7 @@ public class Start {
         }
     }
 
-    public static void allHopeAbandon(String message) {
+    public void allHopeAbandon(String message) {
         System.err.println();
         System.err.println("******************************************************************");
         System.err.println();
@@ -289,7 +278,7 @@ public class Start {
         System.err.println("     All hope abandon, ye who enter in!");
         System.err.println();
         System.err.println("******************************************************************");
-        if(waitOnError) {
+        if(args.waitOnError()) {
             System.err.println();
             for(int i = 10; i >= 0; i--) {
                 try {
@@ -318,15 +307,15 @@ public class Start {
             if(armNodes.item(i) instanceof Element) {
                 Element el = (Element)armNodes.item(i);
                 if(el.getTagName().equals("eventArm")
-                        && (eventOnly || !netOnly)) {
+                        && args.doEventArm()) {
                     event = new EventArm(el);
                     sched.registerArm(event);
                 } else if(el.getTagName().equals("networkArm")
-                        && (netOnly || !eventOnly)) {
+                        && args.doNetArm()) {
                     network = new NetworkArm(el);
                     sched.registerArm(network);
-                } else if(el.getTagName().startsWith("waveform") && !eventOnly
-                        && !netOnly) {
+                } else if(el.getTagName().startsWith("waveform")
+                        && args.doWaveformArm()) {
                     int poolSize = runProps.getNumWaveformWorkerThreads();
                     waveform = new WaveformArm(el, event, network, poolSize);
                     sched.registerArm(waveform);
@@ -422,7 +411,7 @@ public class Start {
     private void checkConfig(InputSource is) {
         try {
             String configString = JDBCConfig.extractConfigString(is);
-            JDBCConfig dbConfig = new JDBCConfig(configString, replaceDBConfig);
+            JDBCConfig dbConfig = new JDBCConfig(configString, args.replaceDBConfig());
             if(!dbConfig.isSameConfig(configString)) {
                 allHopeAbandon("Your config file has changed since your last run.  "
                         + "It may not be advisable to continue this SOD run.");
@@ -432,6 +421,8 @@ public class Start {
                                           e);
         }
     }
+    
+    private Args args;
 
     public static Element getConfig() {
         return config;
@@ -439,7 +430,7 @@ public class Start {
 
     public static String getConfFileName(String[] args) {
         for(int i = 0; i < args.length; i++) {
-            if(args[i].equals("-conf") || args[i].equals("-f")) {
+            if(args[i].equals("-f")) {
                 return args[i + 1];
             } else if(args[i].equals("-demo") || args[i].equals("--demo")) {
                 return SimpleGUIEditor.TUTORIAL_LOC;
@@ -460,33 +451,7 @@ public class Start {
             // logging
             // later we will use PropertyConfigurator to really configure log4j
             BasicConfigurator.configure();
-            String confFilename = getConfFileName(args);
-            if(confFilename == null) {
-                exit("No configuration file given.  Supply a configuration file "
-                        + "using -f <configFile>, or to just see sod run use "
-                        + "-demo.   quiting until that day....");
-            }
-            for(int i = 0; i < args.length; i++) {
-                if(args[i].equals("-v")) {
-                    onlyValidate = true;
-                    waitOnError = false;
-                } else if(args[i].equals("-i")) {
-                    waitOnError = false;
-                } else if(args[i].equals("--new-config")) {
-                    replaceDBConfig = true;
-                } else if(args[i].equals("-e")) {
-                    if(netOnly) {
-                        exit("Can't have both -e and -n.  Choose one or the other");
-                    }
-                    eventOnly = true;
-                } else if(args[i].equals("-n")) {
-                    if(eventOnly) {
-                        exit("Can't have both -e and -n.  Choose one or the other");
-                    }
-                    netOnly = true;
-                }
-            }
-            Start start = new Start(confFilename, args);
+            Start start = new Start(new Args(args));
             logger.info("Start start()");
             start.start();
         } catch(UserConfigurationException e) {
@@ -533,8 +498,6 @@ public class Start {
     public static final String DBURL_KEY = "fissuresUtil.database.url";
 
     public static boolean RUN_ARMS = true;
-
-    private static boolean eventOnly = false, netOnly = false;
 
     protected static int[] suspendedPairs = new int[0];
 

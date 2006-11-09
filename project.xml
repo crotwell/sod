@@ -11,9 +11,8 @@
     </organization>
     <inceptionYear>2002</inceptionYear>
     <package>edu.sc.seis.sod</package>
-    <description>SOD automates the most tedious data selection, downloading and routine processing
-        tasks, shortening the time between idea and science. Please also check out the user site at
-        http://www.seis.sc.edu/sod. </description>
+    <description>SOD automates the most tedious data selection, downloading and routine processing tasks, shortening the
+        time between idea and science. Please also check out the user site at http://www.seis.sc.edu/sod. </description>
     <shortDescription>Standing Order for Data.</shortDescription>
     <url>http://www.seis.sc.edu/software/${pom.artifactId}</url>
     <siteAddress>roo.seis.sc.edu</siteAddress>
@@ -58,11 +57,11 @@
         </developer>
     </developers>
     <dependencies>
-    <dependency>
-      <artifactId>seisFile</artifactId>
-      <groupId>seisFile</groupId>
-      <version>1.0.1</version>
-    </dependency>
+        <dependency>
+            <artifactId>seisFile</artifactId>
+            <groupId>seisFile</groupId>
+            <version>1.0.1</version>
+        </dependency>
         <dependency>
             <id>itext</id>
             <version>1.4.4</version>
@@ -287,6 +286,10 @@
             <id>activation</id>
             <version>1.0.2</version>
         </dependency>
+        <dependency>
+            <id>JSAP</id>
+            <version>2.1</version>
+        </dependency>
     </dependencies>
     <build>
         <nagEmailAddress>jaster@seis.sc.edu</nagEmailAddress>
@@ -321,13 +324,13 @@
                 </includes>
             </resource>
             <resource>
-	    <directory>src/edu/sc/seis/sod/database/waveform</directory>
-	    <targetPath>edu/sc/seis/sod/database/waveform</targetPath>
-	    <includes>
-		<include>*.vm</include>
-	    </includes>
-	</resource>
-<resource>
+                <directory>src/edu/sc/seis/sod/database/waveform</directory>
+                <targetPath>edu/sc/seis/sod/database/waveform</targetPath>
+                <includes>
+                    <include>*.vm</include>
+                </includes>
+            </resource>
+            <resource>
                 <directory>src/edu/sc/seis/sod/database/props</directory>
                 <targetPath>edu/sc/seis/sod/database/props</targetPath>
                 <includes>
@@ -356,7 +359,7 @@
         </resources>
     </build>
     <reports>
-       <report>maven-javadoc-plugin</report>
-       <report>maven-license-plugin</report>
+        <report>maven-javadoc-plugin</report>
+        <report>maven-license-plugin</report>
     </reports>
 </project>
