@@ -68,10 +68,10 @@
                 <summary>Matches all included seismogram processors</summary>
                 <description>The output is the logical AND of the outputs of all included seismogram processors. This
                     means that it will evaluate to true only if all of the included processors evaluate to true. The
-                    subsetters after the first false outputted are not evaluated. The result of each processor in the AND
-                    is passed to the next processor in the AND, and the result of the last evaluated processor in the AND
-                    is passed to the next processor outside of the AND. To isolate the processing inside the AND, wrap
-                    it inside of a forkProcess.</description>
+                    subsetters after the first false outputted are not evaluated. The result of each processor in the
+                    AND is passed to the next processor in the AND, and the result of the last evaluated processor in
+                    the AND is passed to the next processor outside of the AND. To isolate the processing inside the
+                    AND, wrap it inside of a forkProcess.</description>
                 <example>
                     <seismogramAND>
                         <noDataGaps/>
@@ -90,10 +90,10 @@
                 <summary>Matches at least one of the included seismogram processors</summary>
                 <description>The output is the logical OR of the outputs of all included seismogram processors. This
                     means that it will evaluate to true as long as one of the included seismogram processors evaluate to
-                    true. The processors after the first true outputted are not evaluated. The result of each processor in the OR
-                    is passed to the next processor in the OR, and the result of the last evaluated processor in the OR
-                    is passed to the next processor outside of the OR. To isolate the processing inside the OR, wrap
-                    it inside of a forkProcess.</description>
+                    true. The processors after the first true outputted are not evaluated. The result of each processor
+                    in the OR is passed to the next processor in the OR, and the result of the last evaluated processor
+                    in the OR is passed to the next processor outside of the OR. To isolate the processing inside the
+                    OR, wrap it inside of a forkProcess.</description>
                 <example>
                     <seismogramOR>
                         <noDataGaps/>
@@ -112,10 +112,10 @@
                 <summary>Matches the negated output of the included seismogram processor</summary>
                 <description>The output is the logical NOT of the output of the included seismogram processor. This
                     means that it will evaluate to true if the included processor evaluates to false, and vice versa.
-                    The seismic data passed down the chain is the data passed in. The result of each processor in the NOT
-                    is passed to the next processor in the NOT, and the result of the last evaluated processor in the NOT
-                    is passed to the next processor outside of the NOT. To isolate the processing inside the NOT, wrap
-                    it inside of a forkProcess.</description>
+                    The seismic data passed down the chain is the data passed in. The result of each processor in the
+                    NOT is passed to the next processor in the NOT, and the result of the last evaluated processor in
+                    the NOT is passed to the next processor outside of the NOT. To isolate the processing inside the
+                    NOT, wrap it inside of a forkProcess.</description>
                 <example>
                     <seismogramNOT>
                         <someDataCoverage/>
@@ -555,11 +555,9 @@
             <optional>
                 <ref name="recordSectionSize"/>
             </optional>
-            <optional>
-                <element name="displayConfig">
-                    <ref name="recordSectionDisplayContents"/>
-                </element>
-            </optional>
+            <element name="displayConfig">
+                <ref name="recordSectionDisplayContents"/>
+            </element>
         </element>
     </define>
     <define name="recordSectionSize">
@@ -915,9 +913,8 @@
         <element name="seismogramSampling">
             <xsd:annotation>
                 <summary>Matches if the sampling rate of the seismogram is within the range</summary>
-                <description>Matches if the sampling rate of the seismogram is within the range. Both
-                    the min and max are optional, although at least one must be given to have any
-                    effect</description>
+                <description>Matches if the sampling rate of the seismogram is within the range. Both the min and max
+                    are optional, although at least one must be given to have any effect</description>
                 <example>
                     <seismogramSampling>
                         <min>1</min>
@@ -936,9 +933,8 @@
         <element name="decimate">
             <xsd:annotation>
                 <summary>Decimates seismograms.</summary>
-                <description>This decimates seismograms by the given factor. Any needed low pass filtering should be done before applying this
-                    to avoid aliasing.
-                </description>
+                <description>This decimates seismograms by the given factor. Any needed low pass filtering should be
+                    done before applying this to avoid aliasing. </description>
             </xsd:annotation>
             <data type="integer"/>
         </element>
@@ -948,7 +944,6 @@
             <xsd:annotation>
                 <summary>Divides each point in the seismogram by the given value</summary>
             </xsd:annotation>
-            
             <data type="float"/>
         </element>
     </define>
@@ -963,14 +958,17 @@
     <define name="invertFlippedChannels">
         <element name="invertFlippedChannels">
             <xsd:annotation>
-                <summary>If a seismogram's actual orientation is flipped from the orientation of its code, the seismogram is inverted</summary>
-                <description>This processor first checks the orientation in the seismogram's channel against its orientation code.  If
-                the code implies an orientation reversed from the actual orientation, the seismogram's values are inverted.  For example
-                if the seismogram's channel code is BHZ but its orientation is actually downwards, the inversion will be applied.  
-                The codes and orientation will disagree if the channel was installed incorrectly and then later discovered.  This
-                seems to be the case in roughly 1/10 of existing channels.  Since the inversion changes the orientation stored in the channel
-                any further processors that want to use the results of this processor must be contained inside of it.  To just check
-                for disagreement between the code and orientation, use the isFlipped channel subsetter.</description>
+                <summary>If a seismogram's actual orientation is flipped from the orientation of its code, the
+                    seismogram is inverted</summary>
+                <description>This processor first checks the orientation in the seismogram's channel against its
+                    orientation code. If the code implies an orientation reversed from the actual orientation, the
+                    seismogram's values are inverted. For example if the seismogram's channel code is BHZ but its
+                    orientation is actually downwards, the inversion will be applied. The codes and orientation will
+                    disagree if the channel was installed incorrectly and then later discovered. This seems to be the
+                    case in roughly 1/10 of existing channels. Since the inversion changes the orientation stored in the
+                    channel any further processors that want to use the results of this processor must be contained
+                    inside of it. To just check for disagreement between the code and orientation, use the isFlipped
+                    channel subsetter.</description>
             </xsd:annotation>
             <oneOrMore>
                 <ref name="seismogramProcess"/>
