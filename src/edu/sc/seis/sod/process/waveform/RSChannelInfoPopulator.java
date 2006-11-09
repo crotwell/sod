@@ -160,6 +160,16 @@ public class RSChannelInfoPopulator implements WaveformProcess {
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) throws Exception {
+        updateTable(event, chan, original, available, seismograms, cookieJar);
+        return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
+    }
+
+    public boolean updateTable(EventAccessOperations event,
+                               Channel chan,
+                               RequestFilter[] original,
+                               RequestFilter[] available,
+                               LocalSeismogramImpl[] seismograms,
+                               CookieJar cookieJar) throws Exception {
         acceptableChannels.add(ChannelIdUtil.toString(chan.get_id()));
         int eq_dbid = eventAccess.getDBId(event);
         DataSetSeismogram[] dss = extractSeismograms(event);
@@ -170,45 +180,28 @@ public class RSChannelInfoPopulator implements WaveformProcess {
             }
         }
         dss = (DataSetSeismogram[])acceptableSeis.toArray(new DataSetSeismogram[0]);
-        // RecordSectionDisplay rsDisplay = getConfiguredRSDisplay();
-        // rsDisplay.add(wrap(dss));
-        // File temp = File.createTempFile("tempRecSec", "png");
-        // rsDisplay.outputToPNG(temp);
-        // temp.delete();
-        // HashMap pixelMap = rsDisplay.getPixelMap();
-        int[] channelIds = getChannelDBIds(dss);
-        int[] existingChanIds = recordSectionChannel.getAllChannelDbIds(id, eq_dbid);
-        for(int j = 0; j < channelIds.length; j++) {
-            boolean found = false;
-            for(int i = 0; i < existingChanIds.length; i++) {
-                if (channelIds[j] == existingChanIds[i]) {
-                    found = true;
-                    break;
-                }
-            }
-            if(!found) {
-                recordSectionChannel.insert(id,
-                                            eq_dbid,
-                                            channelIds[j],
-                                            new double[] {0, 0, 0, 0},// (double[])pixelMap.get(dss[j].getRequestFilter().channel_id),
-                                            0,
-                                            internalId);
-                // this might be paranoid, but not sure if a channel can be in the DSS array twice and don't want to insert twice
-                int[] tmp = new int[existingChanIds.length+1];
-                System.arraycopy(existingChanIds, 0, tmp, 0, existingChanIds.length);
-                tmp[tmp.length-1] = channelIds[j];
-                existingChanIds = tmp;
-            }
+        if(recordSectionChannel.contains(id,
+                                         eq_dbid,
+                                         cookieJar.getEventChannelPair()
+                                                 .getChannelDbId(),
+                                         internalId)) {
+            return false;
         }
+        recordSectionChannel.insert(id,
+                                    eq_dbid,
+                                    cookieJar.getEventChannelPair()
+                                            .getChannelDbId(),
+                                    new double[] {0, 0, 0, 0},
+                                    0,
+                                    internalId);
         DataSetSeismogram[] bestSeismos = dss;
         if(spacer != null) {
             bestSeismos = spacer.spaceOut(dss);
         }
-        recordSectionChannel.updateChannels(id,
-                                            eq_dbid,
-                                            getChannelDBIds(bestSeismos),
-                                            internalId);
-        return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
+        return recordSectionChannel.updateChannels(id,
+                                                   eq_dbid,
+                                                   getChannelDBIds(bestSeismos),
+                                                   internalId);
     }
 
     public int[] getChannelDBIds(DataSetSeismogram[] dss) throws SQLException,

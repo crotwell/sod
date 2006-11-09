@@ -6,8 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.DBUtil;
 import edu.sc.seis.fissuresUtil.database.NotFound;
@@ -30,10 +32,12 @@ public class JDBCRecordSectionChannel extends SodJDBC {
         String insertStmt = "INSERT INTO "
                 + tableName
                 + " (recSecId,eq_dbid,channelid,topLeftX,topLeftY,bottomRightX,bottomRightY,best,internalId) VALUES (?, ?, ?, ?, ?, ?,?,?,?)";
+        String containsStmt = "SELECT channelid FROM " + tableName
+                + " WHERE recSecId = ? AND eq_dbid = ? and channelid = ? and internalid = ?";
         String getChannelsStmt = " SELECT channelid FROM " + tableName
                 + " WHERE recSecId=? and eq_dbid=? and best=?";
         String getAllChannelsStmt = " SELECT channelid FROM " + tableName
-        + " WHERE recSecId=? and eq_dbid=?";
+                + " WHERE recSecId=? and eq_dbid=?";
         String getStationsStmt = " SELECT sta_id FROM "
                 + tableName
                 + " JOIN channel ON (channelid = chan_id) JOIN site ON (channel.site_id = site.site_id)"
@@ -53,6 +57,7 @@ public class JDBCRecordSectionChannel extends SodJDBC {
                     + " (recsecid, eq_dbid, best)");
         }
         insert = conn.prepareStatement(insertStmt);
+        contains = conn.prepareStatement(containsStmt);
         getChannels = conn.prepareStatement(getChannelsStmt);
         getAllChannels = conn.prepareStatement(getAllChannelsStmt);
         getStations = conn.prepareStatement(getStationsStmt);
@@ -79,33 +84,16 @@ public class JDBCRecordSectionChannel extends SodJDBC {
         insert.executeUpdate();
     }
 
-    public double[] getPixelInfo(String recSecId, int eq_dbid, int channelId)
-            throws SQLException {
-        throw new UnsupportedOperationException("Pixel information isn't being inserted at the moment because JD's implementation is ridiculously memory intensive");
-        // if(getPixelInfo == null) {
-        // String getPixelInfoStmt = "select
-        // topLeftX,topLeftY,bottomRightX,bottomRightY from "
-        // + tableName
-        // + " WHERE"
-        // + " recSecId=? AND eq_dbid=? AND channelid=?";
-        // getPixelInfo = conn.prepareStatement(getPixelInfoStmt);
-        // }
-        // getPixelInfo.setString(1, recSecId);
-        // getPixelInfo.setInt(2, eq_dbid);
-        // getPixelInfo.setInt(3, channelId);
-        // double[] pixelInfo = {-1, -1, -1, -1};
-        // ResultSet rs = getPixelInfo.executeQuery();
-        // if(rs.next()) {
-        // double topLeftX = rs.getInt(1);
-        // double topLeftY = rs.getInt(2);
-        // double bottomRightX = rs.getInt(3);
-        // double bottomRightY = rs.getInt(4);
-        // pixelInfo[0] = topLeftX;
-        // pixelInfo[1] = topLeftY;
-        // pixelInfo[2] = bottomRightX;
-        // pixelInfo[3] = bottomRightY;
-        // }
-        // return pixelInfo;
+    public boolean contains(String recSecId,
+                            int eq_dbid,
+                            int channelid,
+                            int internalId) throws SQLException {
+        contains.setString(1, recSecId);
+        contains.setInt(2, eq_dbid);
+        contains.setInt(3, channelid);
+        contains.setInt(4, internalId);
+        ResultSet rs = contains.executeQuery();
+        return rs.next();
     }
 
     public int[] getChannels(String recSecId, int eq_dbid, int best)
@@ -125,8 +113,10 @@ public class JDBCRecordSectionChannel extends SodJDBC {
         return channels;
     }
 
-    public List getStations(String recSecId, int eq_dbid, int best, JDBCStation sta)
-            throws SQLException, NotFound {
+    public List getStations(String recSecId,
+                            int eq_dbid,
+                            int best,
+                            JDBCStation sta) throws SQLException, NotFound {
         getStations.setString(1, recSecId);
         getStations.setInt(2, eq_dbid);
         getStations.setInt(3, best);
@@ -138,8 +128,9 @@ public class JDBCRecordSectionChannel extends SodJDBC {
         }
         return results;
     }
-    
-    public int[] getAllChannelDbIds(String recSecId, int eq_dbid) throws SQLException {
+
+    public int[] getAllChannelDbIds(String recSecId, int eq_dbid)
+            throws SQLException {
         int index = 1;
         getAllChannels.setString(index++, recSecId);
         getAllChannels.setInt(index++, eq_dbid);
@@ -150,7 +141,7 @@ public class JDBCRecordSectionChannel extends SodJDBC {
         }
         Iterator it = out.iterator();
         int[] intOut = new int[out.size()];
-        int i=0;
+        int i = 0;
         while(it.hasNext()) {
             intOut[i] = ((Integer)it.next()).intValue();
             i++;
@@ -162,31 +153,49 @@ public class JDBCRecordSectionChannel extends SodJDBC {
      * Set the value in best column to 1 for channels that go into the best
      * recordsection and 0 for other channels
      */
-    public void updateChannels(String recSecId,
+    public boolean updateChannels(String recSecId,
                                int eq_dbid,
-                               int[] channelIds,
+                               int[] newChannelIds,
                                int internalId) throws SQLException {
-        String updateChannelStmt = "UPDATE " + tableName
-                + " set best=0 where internalId = " + internalId
-                + " AND recSecId='" + recSecId + "' AND eq_dbid=" + eq_dbid
-                + " AND channelid NOT IN (";
-        String updateBestChannelStmt = "UPDATE " + tableName
-                + " set best=1 where internalId = " + internalId
-                + " AND recSecId='" + recSecId + "' AND eq_dbid=" + eq_dbid
-                + " AND channelid IN (";
-        StringBuffer sb = new StringBuffer();
-        for(int i = 0; i < channelIds.length; i++) {
-            sb.append(channelIds[i] + ",");
-            if(i == channelIds.length - 1) {
-                sb.deleteCharAt(sb.length() - 1);
-            }
+        Set oldChannels = makeIntegerSet(getChannels(recSecId, eq_dbid, 1));
+        Set added = makeIntegerSet(newChannelIds);
+        added.removeAll(oldChannels);
+        Set removed = oldChannels;
+        oldChannels.removeAll(makeIntegerSet(newChannelIds));
+        if(added.size() > 0) {
+            updateChannelStatus(1, internalId, recSecId, eq_dbid, added);
         }
-        String channelsString = sb.toString();
-        updateChannelStmt += channelsString + ")";
-        updateBestChannelStmt += channelsString + ")";
+        if(removed.size() > 0) {
+            updateChannelStatus(0, internalId, recSecId, eq_dbid, removed);
+        }
+        return added.size() > 0 || removed.size() > 0;
+    }
+
+    private void updateChannelStatus(int best,
+                                     int internalId,
+                                     String recSecId,
+                                     int eq_dbid,
+                                     Set channelIds) throws SQLException {
+        StringBuffer sb = new StringBuffer();
+        Iterator it = channelIds.iterator();
+        while(it.hasNext()) {
+            sb.append(it.next() + ",");
+        }
+        sb.deleteCharAt(sb.length() - 1);
+        String updateChannelStmt = "UPDATE " + tableName + " set best = "
+                + best + " where internalId = " + internalId
+                + " AND recSecId='" + recSecId + "' AND eq_dbid=" + eq_dbid
+                + " AND channelid IN (" + sb.toString() + ")";
         Statement st = conn.createStatement();
         st.executeUpdate(updateChannelStmt);
-        st.executeUpdate(updateBestChannelStmt);
+    }
+
+    private Set makeIntegerSet(int[] newChannelIds) {
+        Set newChannels = new HashSet(newChannelIds.length);
+        for(int i = 0; i < newChannelIds.length; i++) {
+            newChannels.add(new Integer(newChannelIds[i]));
+        }
+        return newChannels;
     }
 
     public boolean recSecExists(int eventDbId, String recSecId)
@@ -210,8 +219,9 @@ public class JDBCRecordSectionChannel extends SodJDBC {
         return conn;
     }
 
-    PreparedStatement insert, getPixelInfo, getChannels, getAllChannels, getStations,
-            recSecExists, getInternalId, whichRecSecs;
+    PreparedStatement insert, contains, getPixelInfo, getChannels,
+            getAllChannels, getStations, recSecExists, getInternalId,
+            whichRecSecs;
 
     Connection conn;
 

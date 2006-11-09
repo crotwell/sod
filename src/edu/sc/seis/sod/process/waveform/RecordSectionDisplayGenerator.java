@@ -47,7 +47,9 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) throws Exception {
-        super.process(event, chan, original, available, seismograms, cookieJar);
+        if(!updateTable(event, chan, original, available, seismograms, cookieJar)){
+            return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
+        }
         acceptableChannels.add(ChannelIdUtil.toString(chan.get_id()));
         try {
             DataSetSeismogram[] dss = extractSeismograms(event);
@@ -66,8 +68,6 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
             dss = (DataSetSeismogram[])acceptableSeis.toArray(new DataSetSeismogram[0]);
             outputBestRecordSection(event, dss);
         } catch(IOException e) {
-            logger.debug("Problem opening dsml file in RecordSectionDisplayGenerator",
-                         e);
             throw new IOException("Problem opening dsml file in RecordSectionDisplayGenerator"
                     + e);
         }
