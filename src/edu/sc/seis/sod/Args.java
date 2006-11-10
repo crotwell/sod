@@ -9,9 +9,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import com.martiansoftware.jsap.FlaggedOption;
+import com.martiansoftware.jsap.IDMap;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
+import com.martiansoftware.jsap.Parameter;
 import com.martiansoftware.jsap.ParseException;
 import com.martiansoftware.jsap.StringParser;
 import com.martiansoftware.jsap.Switch;
@@ -43,65 +45,87 @@ public class Args {
                 toParse.add(args[i]);
             }
         }
-        JSAP jsap = new JSAP();
-        jsap.registerParameter(new Switch("help",
-                                          'h',
-                                          "help",
-                                          "Print out this message"));
-        jsap.registerParameter(new Switch("event-arm",
-                                          'e',
-                                          "event-arm",
-                                          "Only run the event arm"));
-        jsap.registerParameter(new Switch("network-arm",
-                                          'n',
-                                          "network-arm",
-                                          "Only run the network arm"));
-        jsap.registerParameter(new Switch("validate",
-                                          'v',
-                                          "validate",
-                                          "Validate the recipe and exit"));
-        jsap.registerParameter(new Switch("invalid",
-                                          'i',
-                                          "invalid",
-                                          "The recipe is known to be invalid so skip the 10 second wait"));
-        jsap.registerParameter(new Switch("replace-recipe",
-                                          'r',
-                                          "replace-recipe",
-                                          "Replace the recipe in the db with the one specified for this run"));
-        jsap.registerParameter(new FlaggedOption("props",
-                                                 new FileParser(),
-                                                 null,
-                                                 false,
-                                                 'p',
-                                                 "props",
-                                                 "A properties file to configure SOD"));
-        jsap.registerParameter(new FlaggedOption("recipe",
-                                                 JSAP.STRING_PARSER,
-                                                 null,
-                                                 true,
-                                                 'f',
-                                                 "recipe",
-                                                 "The recipe to run with"));
+        add(new Switch("help", 'h', "help", "Print out this message"));
+        add(new Switch("event-arm", 'e', "event-arm", "Only run the event arm"));
+        add(new Switch("network-arm",
+                       'n',
+                       "network-arm",
+                       "Only run the network arm"));
+        add(new Switch("validate",
+                       'v',
+                       "validate",
+                       "Validate the recipe and exit"));
+        add(new Switch("invalid",
+                       'i',
+                       "invalid",
+                       "The recipe is known to be invalid so skip the 10 second wait"));
+        add(new Switch("replace-recipe",
+                       'r',
+                       "replace-recipe",
+                       "Replace the recipe in the db with the one specified for this run"));
+        add(new FlaggedOption("props",
+                              new FileParser(),
+                              null,
+                              false,
+                              'p',
+                              "props",
+                              "A properties file to configure SOD"));
+        add(new FlaggedOption("recipe",
+                              JSAP.STRING_PARSER,
+                              null,
+                              true,
+                              'f',
+                              "recipe",
+                              "The recipe to run with"));
+        StringBuilder builder = new StringBuilder("Usage: sod [-");
+        Iterator it = parameters.iterator();
+        while(it.hasNext()){
+           Parameter p = (Parameter)it.next();
+           if(p instanceof Switch){
+               builder.append(((Switch)p).getShortFlagCharacter());
+           }
+        }   
+        builder.append("] ");
+        it = parameters.iterator();
+        while(it.hasNext()){
+            Parameter p = (Parameter)it.next();
+            if(p instanceof FlaggedOption){
+                FlaggedOption fo = (FlaggedOption)p;
+                if(!fo.required()){
+                    builder.append('[');
+                }
+                builder.append("-" + ((FlaggedOption)p).getShortFlagCharacter() + " <" + p.getID() + ">");
+                if(!fo.required()){
+                    builder.append(']');
+                }
+                builder.append(' ');
+            }
+         }   
+        jsap.setUsage(builder.toString());
         result = jsap.parse(args);
+        if(result.getBoolean("help")) {
+            System.out.println(jsap.getUsage());
+            System.out.println(jsap.getHelp());
+            System.exit(0);
+        }
         if(result.userSpecified("event-arm")
                 && result.userSpecified("network-arm")) {
             result.addException("General",
                                 new RuntimeException("Only one of -e and -n may be specified"));
         }
         if(!result.success()) {
-            System.out.println("Usage: sod " + jsap.getUsage());
-            Iterator it = result.getErrorMessageIterator();
+            System.out.println(jsap.getUsage());
+            it = result.getErrorMessageIterator();
             while(it.hasNext()) {
                 System.err.println(it.next());
             }
             System.exit(1);
         }
-        if(result.getBoolean("help")) {
-            System.out.println("Usage: sod " + jsap.getUsage());
-            System.out.println(jsap.getHelp());
+    }
 
-            System.exit(0);
-        }
+    private void add(Parameter p) throws JSAPException {
+        jsap.registerParameter(p);
+        parameters.add(p);
     }
 
     public boolean hasProps() {
@@ -152,6 +176,10 @@ public class Args {
     }
 
     private JSAPResult result;
+
+    private JSAP jsap = new JSAP();
+
+    private List parameters = new ArrayList();
 
     private String[] args;
 
