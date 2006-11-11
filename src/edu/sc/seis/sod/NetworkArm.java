@@ -252,13 +252,14 @@ public class NetworkArm implements Arm {
                 + " network access objects from the network DC finder");
         NetworkPusher lastPusher = null;
         for(int i = 0; i < allNets.length; i++) {
-            try{
+            try {
                 VirtualNetworkHelper.narrow(allNets[i]);
-                //Ignore any virtual nets returned here
-                logger.debug("ignoring virtual network " + allNets[i].get_attributes().get_code());
+                // Ignore any virtual nets returned here
+                logger.debug("ignoring virtual network "
+                        + allNets[i].get_attributes().get_code());
                 continue;
-            }catch(BAD_PARAM bp){
-                //Must be a concrete, continue
+            } catch(BAD_PARAM bp) {
+                // Must be a concrete, continue
             }
             try {
                 if(netEffectiveSubsetter.accept(allNets[i].get_attributes())) {
@@ -278,7 +279,8 @@ public class NetworkArm implements Arm {
                         change(allNets[i], Status.get(Stage.NETWORK_SUBSETTER,
                                                       Standing.REJECT));
                         failLogger.info(NetworkIdUtil.toString(allNets[i].get_attributes()
-                                .get_id())+" was rejected.");
+                                .get_id())
+                                + " was rejected.");
                     }
                 } else {
                     change(allNets[i], Status.get(Stage.NETWORK_SUBSETTER,
@@ -414,7 +416,8 @@ public class NetworkArm implements Arm {
                             change(stations[subCounter],
                                    Status.get(Stage.NETWORK_SUBSETTER,
                                               Standing.REJECT));
-                            failLogger.info(StationIdUtil.toString(stations[subCounter].get_id())+" was rejected");
+                            failLogger.info(StationIdUtil.toString(stations[subCounter].get_id())
+                                    + " was rejected");
                         }
                     } else {
                         change(stations[subCounter],
@@ -511,8 +514,8 @@ public class NetworkArm implements Arm {
     private void failSite(List failures, Channel channel) {
         change(channel.my_site, Status.get(Stage.NETWORK_SUBSETTER,
                                            Standing.REJECT));
-        failLogger.info(SiteIdUtil.toString(channel.my_site.get_id())+" was rejected");
-        
+        failLogger.info(SiteIdUtil.toString(channel.my_site.get_id())
+                + " was rejected");
         failures.add(channel.my_site);
         // fail all channels in a failed site, just for
         // status
@@ -557,14 +560,16 @@ public class NetworkArm implements Arm {
                         continue;
                     }
                     change(chan, inProg);
-                    StringTree effectiveTimeResult = chanEffectiveSubsetter.accept(chan, networkAccess);
+                    StringTree effectiveTimeResult = chanEffectiveSubsetter.accept(chan,
+                                                                                   networkAccess);
                     if(effectiveTimeResult.isSuccess()) {
                         boolean accepted = true;
                         synchronized(chanSubsetters) {
                             Iterator it = chanSubsetters.iterator();
                             while(it.hasNext()) {
                                 ChannelSubsetter cur = (ChannelSubsetter)it.next();
-                                StringTree result = cur.accept(chan, networkAccess);
+                                StringTree result = cur.accept(chan,
+                                                               networkAccess);
                                 if(!result.isSuccess()) {
                                     change(chan,
                                            Status.get(Stage.NETWORK_SUBSETTER,
@@ -596,7 +601,9 @@ public class NetworkArm implements Arm {
                     } else {
                         change(chan, Status.get(Stage.NETWORK_SUBSETTER,
                                                 Standing.REJECT));
-                        failLogger.info("Reject based on effective time not matching the range of requested events: "+effectiveTimeResult);
+                        failLogger.info("Reject based on effective time not matching the range of requested events: "
+                                + ChannelIdUtil.toString(chan.get_id())
+                                + effectiveTimeResult);
                     }
                 }
             } catch(Throwable e) {
@@ -618,7 +625,7 @@ public class NetworkArm implements Arm {
     // Net database
     public Channel getChannel(int chanId) throws NotFound, SQLException {
         ChannelDbObject chan = (ChannelDbObject)channelMap.get(new Integer(chanId));
-        if (chan != null) {
+        if(chan != null) {
             return chan.getChannel();
         }
         chan = netTable.getChannel(chanId);
@@ -632,22 +639,23 @@ public class NetworkArm implements Arm {
     // channels
     // from the site for the vector arm
     /**
-     * @throws NotFound 
-     * @throws SQLException 
-     * @throws NetworkNotFound 
-     * @throws  
+     * @throws NotFound
+     * @throws SQLException
+     * @throws NetworkNotFound
+     * @throws
      * @returns all channels that are in the same site as the channel with the
      *          given database id
      */
-    public ChannelDbObject[] getAllChannelsFromSite(int chanId) throws NetworkNotFound, SQLException, NotFound
-             {
+    public ChannelDbObject[] getAllChannelsFromSite(int chanId)
+            throws NetworkNotFound, SQLException, NotFound {
         Channel chan = getChannel(chanId);
-        if (chan == null) {
-            throw new NotFound("Channel for id="+chanId+" cannot be found.");
+        if(chan == null) {
+            throw new NotFound("Channel for id=" + chanId + " cannot be found.");
         }
         SiteDbObject site = (SiteDbObject)channelToSiteMap.get(new Integer(chanId));
-        if (site == null) {
-            int siteDbId = netTable.getSiteDb().getDBId(chan.my_site.get_id(), chan.my_site.my_station);
+        if(site == null) {
+            int siteDbId = netTable.getSiteDb()
+                    .getDBId(chan.my_site.get_id(), chan.my_site.my_station);
             site = new SiteDbObject(siteDbId, chan.my_site);
             channelToSiteMap.put(new Integer(chanId), site);
         }
