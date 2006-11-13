@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import com.martiansoftware.jsap.FlaggedOption;
-import com.martiansoftware.jsap.IDMap;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
@@ -76,8 +75,8 @@ public class Args {
                               true,
                               'f',
                               "recipe",
-                              "The recipe to run with"));
-        StringBuilder builder = new StringBuilder("Usage: sod [-");
+                              "The recipe to run"));
+        StringBuffer builder = new StringBuffer("Usage: sod [-");
         Iterator it = parameters.iterator();
         while(it.hasNext()){
            Parameter p = (Parameter)it.next();
