@@ -26,6 +26,9 @@ public class StringTreeBranch extends StringTree {
         }
         s += super.toString(indentationLevel);
         for(int i = 0; i < branches.length; i++) {
+            if(branches[i] instanceof ShortCircuit){
+                break;
+            }
             s += "\n" + branches[i].toString(indentationLevel + 1);
         }
         return s;

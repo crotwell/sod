@@ -1,6 +1,5 @@
 package edu.sc.seis.sod.subsetter.eventChannel;
 
-import java.util.Iterator;
 import org.w3c.dom.Element;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
@@ -9,7 +8,6 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.ShortCircuit;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
-import edu.sc.seis.sod.subsetter.availableData.AvailableDataSubsetter;
 
 public final class EventChannelOR extends EventChannelLogicalSubsetter
         implements EventChannelSubsetter {

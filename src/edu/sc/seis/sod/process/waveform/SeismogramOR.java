@@ -46,9 +46,6 @@ public class SeismogramOR extends ForkProcess {
             }
             reasons.add(result.getReason());
         } // end of while (it.hasNext())
-        if(reasons.size() < localSeisProcessList.size()) {
-            reasons.add(new StringTreeLeaf("ShortCircuit", result.isSuccess()));
-        }
         return new WaveformResult(result.getSeismograms(),
                                   new StringTreeBranch(this,
                                                        result.isSuccess(),

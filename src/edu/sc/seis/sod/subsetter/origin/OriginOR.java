@@ -1,5 +1,7 @@
 package edu.sc.seis.sod.subsetter.origin;
 
+import java.util.Iterator;
+import org.w3c.dom.Element;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
@@ -7,8 +9,6 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.status.ShortCircuit;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
-import java.util.Iterator;
-import org.w3c.dom.Element;
 
 /**
  * OriginOR.java Created: Thu Mar 14 14:02:33 2002
