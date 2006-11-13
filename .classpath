@@ -11,5 +11,6 @@
 	<classpathentry exported="true" kind="var" path="MAVEN_REPO/velocity-tools/jars/velocity-tools-generic-1.1-rc1.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/msv/jars/msv-20030807.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/jing/jars/jing-20030619.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/JSAP/jars/JSAP-2.1.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
