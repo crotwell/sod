@@ -168,10 +168,10 @@ public class SodUtil {
     }
 
     /**
-     * loads the class named in the element "classname" in config with config as
-     * a costructor argument. If the loaded class doesnt implement
-     * mustImplement, a configuration exception is thrown
-     */
+	 * loads the class named in the element "classname" in config with config as
+	 * a costructor argument. If the loaded class doesnt implement
+	 * mustImplement, a configuration exception is thrown
+	 */
     public static synchronized Object loadExternal(String tagName,
                                                    String[] armNames,
                                                    Element config)
@@ -256,9 +256,9 @@ public class SodUtil {
     }
 
     /*
-     * If endOfDay is true, and the hours, minutes and seconds are unspecified
-     * by this time element, those fields are set to the end of the day
-     */
+	 * If endOfDay is true, and the hours, minutes and seconds are unspecified
+	 * by this time element, those fields are set to the end of the day
+	 */
     public static Time loadTime(Element el, boolean endOfDay)
             throws ConfigurationException {
         NodeList kids = el.getChildNodes();
@@ -367,6 +367,16 @@ public class SodUtil {
                     + config.getTagName(), e);
         } // end of try-catch
     }
+    
+    public static int loadInt(Element config, String elementName,
+			int defaultValue) {
+		Element child = XMLUtil.getElement(config, elementName);
+		if (child != null) {
+			return Integer.parseInt(XMLUtil.getText(child));
+		} else {
+			return defaultValue;
+		}
+	}
 
     public static void copyFile(String src, String dest)
             throws FileNotFoundException {
@@ -487,8 +497,8 @@ public class SodUtil {
     }
 
     /**
-     * returns the element with the given name
-     */
+	 * returns the element with the given name
+	 */
     public static Element getElement(Element config, String elementName) {
         NodeList children = config.getChildNodes();
         for(int counter = 0; counter < children.getLength(); counter++) {
@@ -513,8 +523,8 @@ public class SodUtil {
     }
 
     /**
-     * returns the first text child within the node.
-     */
+	 * returns the first text child within the node.
+	 */
     public static String getText(Element config) {
         NodeList children = config.getChildNodes();
         for(int i = 0; i < children.getLength(); i++) {
