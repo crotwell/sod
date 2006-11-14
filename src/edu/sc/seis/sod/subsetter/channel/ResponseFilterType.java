@@ -12,11 +12,12 @@ public class ResponseFilterType extends AbstractResponseFilterSubsetter {
 
 	public ResponseFilterType(Element config) {
 		super(config);
-		if (SodUtil.getElement(config, "poleZero") != null) {
+        String typeStr = SodUtil.loadString(config, "type");
+		if ( typeStr.equalsIgnoreCase("poleZero")) {
 			type = FilterType.POLEZERO;
-		} else if (SodUtil.getElement(config, "coefficient") != null) {
+		} else if (typeStr.equalsIgnoreCase("coefficient")) {
 			type = FilterType.COEFFICIENT;
-		} else if (SodUtil.getElement(config, "list") != null) {
+		} else if (typeStr.equalsIgnoreCase("list")) {
 			type = FilterType.LIST;
 		}
 	}

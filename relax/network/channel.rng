@@ -36,6 +36,7 @@
             <ref name="hasResponse"/>
             <ref name="hasSensitivity"/>
             <ref name="repairSensitivity"/>
+            <ref name="responseFilterType"/>
             <ref name="clockId"/>
             <ref name="clockManufacturer"/>
             <ref name="clockModel"/>
@@ -361,6 +362,44 @@
             <externalRef href="../waveform/fixedDataCenter.rng"/>
         </element>
     </define>
+    <define name="responseFilterType">
+        <element name="responseFilterType">
+            <xsd:annotation>
+                <summary>Matches the type of the filter in a stage</summary>
+            </xsd:annotation>
+            <optional>
+                <element name="stage">
+                    <xsd:annotation>
+                        <summary>The number of the stage</summary>
+                        <description>The number, starting with 1, of the stage of interest.
+                            This defaults to 1.</description>
+                    </xsd:annotation>
+                    <data type="int"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="filter">
+                    <xsd:annotation>
+                        <summary>The number of the filter within the stage</summary>
+                        <description>The number, starting with 1, of the filter of interest within the given stage.
+                            This defaults to 1.</description>
+                    </xsd:annotation>
+                    <data type="int"/>
+                </element>
+            </optional>
+            <element name="type">
+                <xsd:annotation>
+                    <summary>The type of filter to match.</summary>
+                    <description>The type of filter to match.</description>
+                </xsd:annotation>
+                <choice>
+                    <value>poleZero</value>
+                    <value>coefficient</value>
+                    <value>list</value>
+                </choice>
+            </element>
+        </element>
+    </define>
     <define name="responseWriter">
         <element name="responseWriter">
             <xsd:annotation>
@@ -382,11 +421,11 @@
                         <xsd:annotation>
                             <summary>Configures which files to write responses in</summary>
                             <description>Each response is put in a separate file using this <a
-                                    href="../../templates.html">Velocity template</a> to determine the file name. The
+                                href="../../templates.html">Velocity template</a> to determine the file name. The
                                 template contains <a href="../../templateTypes.html#channel">channel</a>
                                 <a href="../../templateTypes.html#site">site</a>, <a
-                                href="../../templateTypes.html#station">station</a> and <a
-                                href="../../templateTypes.html#net">net</a> variables. If no location element is given,
+                                    href="../../templateTypes.html#station">station</a> and <a
+                                        href="../../templateTypes.html#net">net</a> variables. If no location element is given,
                                 it defaults to "${channel.codes}.${channel.getStart('yyyy_DDD_HH_mm_ss')}.resp.resp".
                                 Since every response should be in a different file, the template should produce unique
                                 values for all successful channels in the run.</description>

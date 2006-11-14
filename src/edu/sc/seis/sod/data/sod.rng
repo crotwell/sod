@@ -55164,43 +55164,41 @@
                         </element>
                     </element>
                 </optional>
-                <optional>
-                    <element name="displayConfig">
-                        <ref name="defineAndReference4"/>
-                        <element name="type">
-                            <value>recordSection</value>
-                        </element>
-                        <optional>
-                            <element name="swapAxes">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <ref name="dontDrawNamed4"/>
-                        </optional>
-                        <optional>
-                            <ref name="flagColors4"/>
-                        </optional>
-                        <optional>
-                            <ref name="traceColors4"/>
-                        </optional>
-                        <optional>
-                            <ref name="borderBackground4"/>
-                        </optional>
-                        <optional>
-                            <ref name="borderColor4"/>
-                        </optional>
-                        <zeroOrMore>
-                            <ref name="border4"/>
-                        </zeroOrMore>
-                        <optional>
-                            <ref name="timeConfig4"/>
-                        </optional>
-                        <optional>
-                            <ref name="ampConfig4"/>
-                        </optional>
+                <element name="displayConfig">
+                    <ref name="defineAndReference4"/>
+                    <element name="type">
+                        <value>recordSection</value>
                     </element>
-                </optional>
+                    <optional>
+                        <element name="swapAxes">
+                            <empty/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <ref name="dontDrawNamed4"/>
+                    </optional>
+                    <optional>
+                        <ref name="flagColors4"/>
+                    </optional>
+                    <optional>
+                        <ref name="traceColors4"/>
+                    </optional>
+                    <optional>
+                        <ref name="borderBackground4"/>
+                    </optional>
+                    <optional>
+                        <ref name="borderColor4"/>
+                    </optional>
+                    <zeroOrMore>
+                        <ref name="border4"/>
+                    </zeroOrMore>
+                    <optional>
+                        <ref name="timeConfig4"/>
+                    </optional>
+                    <optional>
+                        <ref name="ampConfig4"/>
+                    </optional>
+                </element>
             </element>
             <element name="responseGain">
                 <empty/>
@@ -55673,43 +55671,41 @@
                         </element>
                     </element>
                 </optional>
-                <optional>
-                    <element name="displayConfig">
-                        <ref name="defineAndReference"/>
-                        <element name="type">
-                            <value>recordSection</value>
-                        </element>
-                        <optional>
-                            <element name="swapAxes">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <ref name="dontDrawNamed"/>
-                        </optional>
-                        <optional>
-                            <ref name="flagColors"/>
-                        </optional>
-                        <optional>
-                            <ref name="traceColors"/>
-                        </optional>
-                        <optional>
-                            <ref name="borderBackground"/>
-                        </optional>
-                        <optional>
-                            <ref name="borderColor"/>
-                        </optional>
-                        <zeroOrMore>
-                            <ref name="border"/>
-                        </zeroOrMore>
-                        <optional>
-                            <ref name="timeConfig"/>
-                        </optional>
-                        <optional>
-                            <ref name="ampConfig"/>
-                        </optional>
+                <element name="displayConfig">
+                    <ref name="defineAndReference"/>
+                    <element name="type">
+                        <value>recordSection</value>
                     </element>
-                </optional>
+                    <optional>
+                        <element name="swapAxes">
+                            <empty/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <ref name="dontDrawNamed"/>
+                    </optional>
+                    <optional>
+                        <ref name="flagColors"/>
+                    </optional>
+                    <optional>
+                        <ref name="traceColors"/>
+                    </optional>
+                    <optional>
+                        <ref name="borderBackground"/>
+                    </optional>
+                    <optional>
+                        <ref name="borderColor"/>
+                    </optional>
+                    <zeroOrMore>
+                        <ref name="border"/>
+                    </zeroOrMore>
+                    <optional>
+                        <ref name="timeConfig"/>
+                    </optional>
+                    <optional>
+                        <ref name="ampConfig"/>
+                    </optional>
+                </element>
             </element>
             <element name="responseGain">
                 <empty/>
@@ -56182,43 +56178,41 @@
                         </element>
                     </element>
                 </optional>
-                <optional>
-                    <element name="displayConfig">
-                        <ref name="defineAndReference3"/>
-                        <element name="type">
-                            <value>recordSection</value>
-                        </element>
-                        <optional>
-                            <element name="swapAxes">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <ref name="dontDrawNamed3"/>
-                        </optional>
-                        <optional>
-                            <ref name="flagColors3"/>
-                        </optional>
-                        <optional>
-                            <ref name="traceColors3"/>
-                        </optional>
-                        <optional>
-                            <ref name="borderBackground3"/>
-                        </optional>
-                        <optional>
-                            <ref name="borderColor3"/>
-                        </optional>
-                        <zeroOrMore>
-                            <ref name="border3"/>
-                        </zeroOrMore>
-                        <optional>
-                            <ref name="timeConfig3"/>
-                        </optional>
-                        <optional>
-                            <ref name="ampConfig3"/>
-                        </optional>
+                <element name="displayConfig">
+                    <ref name="defineAndReference3"/>
+                    <element name="type">
+                        <value>recordSection</value>
                     </element>
-                </optional>
+                    <optional>
+                        <element name="swapAxes">
+                            <empty/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <ref name="dontDrawNamed3"/>
+                    </optional>
+                    <optional>
+                        <ref name="flagColors3"/>
+                    </optional>
+                    <optional>
+                        <ref name="traceColors3"/>
+                    </optional>
+                    <optional>
+                        <ref name="borderBackground3"/>
+                    </optional>
+                    <optional>
+                        <ref name="borderColor3"/>
+                    </optional>
+                    <zeroOrMore>
+                        <ref name="border3"/>
+                    </zeroOrMore>
+                    <optional>
+                        <ref name="timeConfig3"/>
+                    </optional>
+                    <optional>
+                        <ref name="ampConfig3"/>
+                    </optional>
+                </element>
             </element>
             <element name="responseGain">
                 <empty/>
@@ -56691,43 +56685,41 @@
                         </element>
                     </element>
                 </optional>
-                <optional>
-                    <element name="displayConfig">
-                        <ref name="defineAndReference2"/>
-                        <element name="type">
-                            <value>recordSection</value>
-                        </element>
-                        <optional>
-                            <element name="swapAxes">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <ref name="dontDrawNamed2"/>
-                        </optional>
-                        <optional>
-                            <ref name="flagColors2"/>
-                        </optional>
-                        <optional>
-                            <ref name="traceColors2"/>
-                        </optional>
-                        <optional>
-                            <ref name="borderBackground2"/>
-                        </optional>
-                        <optional>
-                            <ref name="borderColor2"/>
-                        </optional>
-                        <zeroOrMore>
-                            <ref name="border2"/>
-                        </zeroOrMore>
-                        <optional>
-                            <ref name="timeConfig2"/>
-                        </optional>
-                        <optional>
-                            <ref name="ampConfig2"/>
-                        </optional>
+                <element name="displayConfig">
+                    <ref name="defineAndReference2"/>
+                    <element name="type">
+                        <value>recordSection</value>
                     </element>
-                </optional>
+                    <optional>
+                        <element name="swapAxes">
+                            <empty/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <ref name="dontDrawNamed2"/>
+                    </optional>
+                    <optional>
+                        <ref name="flagColors2"/>
+                    </optional>
+                    <optional>
+                        <ref name="traceColors2"/>
+                    </optional>
+                    <optional>
+                        <ref name="borderBackground2"/>
+                    </optional>
+                    <optional>
+                        <ref name="borderColor2"/>
+                    </optional>
+                    <zeroOrMore>
+                        <ref name="border2"/>
+                    </zeroOrMore>
+                    <optional>
+                        <ref name="timeConfig2"/>
+                    </optional>
+                    <optional>
+                        <ref name="ampConfig2"/>
+                    </optional>
+                </element>
             </element>
             <element name="responseGain">
                 <empty/>
@@ -62273,6 +62265,25 @@
             <ref name="hasResponse10"/>
             <ref name="hasSensitivity10"/>
             <ref name="repairSensitivity9"/>
+            <element name="responseFilterType">
+                <optional>
+                    <element name="stage">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filter">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <element name="type">
+                    <choice>
+                        <value>poleZero</value>
+                        <value>coefficient</value>
+                        <value>list</value>
+                    </choice>
+                </element>
+            </element>
             <ref name="clockId9"/>
             <ref name="clockManufacturer9"/>
             <ref name="clockModel9"/>
@@ -62328,6 +62339,25 @@
             <ref name="hasResponse18"/>
             <ref name="hasSensitivity18"/>
             <ref name="repairSensitivity18"/>
+            <element name="responseFilterType">
+                <optional>
+                    <element name="stage">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filter">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <element name="type">
+                    <choice>
+                        <value>poleZero</value>
+                        <value>coefficient</value>
+                        <value>list</value>
+                    </choice>
+                </element>
+            </element>
             <ref name="clockId18"/>
             <ref name="clockManufacturer18"/>
             <ref name="clockModel18"/>
@@ -62383,6 +62413,25 @@
             <ref name="hasResponse2"/>
             <ref name="hasSensitivity2"/>
             <ref name="repairSensitivity2"/>
+            <element name="responseFilterType">
+                <optional>
+                    <element name="stage">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filter">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <element name="type">
+                    <choice>
+                        <value>poleZero</value>
+                        <value>coefficient</value>
+                        <value>list</value>
+                    </choice>
+                </element>
+            </element>
             <ref name="clockId2"/>
             <ref name="clockManufacturer2"/>
             <ref name="clockModel2"/>
@@ -62438,6 +62487,25 @@
             <ref name="hasResponse4"/>
             <ref name="hasSensitivity4"/>
             <ref name="repairSensitivity3"/>
+            <element name="responseFilterType">
+                <optional>
+                    <element name="stage">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filter">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <element name="type">
+                    <choice>
+                        <value>poleZero</value>
+                        <value>coefficient</value>
+                        <value>list</value>
+                    </choice>
+                </element>
+            </element>
             <ref name="clockId3"/>
             <ref name="clockManufacturer3"/>
             <ref name="clockModel3"/>
@@ -62493,6 +62561,25 @@
             <ref name="hasResponse13"/>
             <ref name="hasSensitivity13"/>
             <ref name="repairSensitivity13"/>
+            <element name="responseFilterType">
+                <optional>
+                    <element name="stage">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filter">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <element name="type">
+                    <choice>
+                        <value>poleZero</value>
+                        <value>coefficient</value>
+                        <value>list</value>
+                    </choice>
+                </element>
+            </element>
             <ref name="clockId13"/>
             <ref name="clockManufacturer13"/>
             <ref name="clockModel13"/>
@@ -62548,6 +62635,25 @@
             <ref name="hasResponse3"/>
             <ref name="hasSensitivity3"/>
             <ref name="repairSensitivity11"/>
+            <element name="responseFilterType">
+                <optional>
+                    <element name="stage">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filter">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <element name="type">
+                    <choice>
+                        <value>poleZero</value>
+                        <value>coefficient</value>
+                        <value>list</value>
+                    </choice>
+                </element>
+            </element>
             <ref name="clockId11"/>
             <ref name="clockManufacturer11"/>
             <ref name="clockModel11"/>
@@ -62603,6 +62709,25 @@
             <ref name="hasResponse14"/>
             <ref name="hasSensitivity14"/>
             <ref name="repairSensitivity14"/>
+            <element name="responseFilterType">
+                <optional>
+                    <element name="stage">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filter">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <element name="type">
+                    <choice>
+                        <value>poleZero</value>
+                        <value>coefficient</value>
+                        <value>list</value>
+                    </choice>
+                </element>
+            </element>
             <ref name="clockId14"/>
             <ref name="clockManufacturer14"/>
             <ref name="clockModel14"/>
@@ -62658,6 +62783,25 @@
             <ref name="hasResponse"/>
             <ref name="hasSensitivity"/>
             <ref name="repairSensitivity"/>
+            <element name="responseFilterType">
+                <optional>
+                    <element name="stage">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filter">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <element name="type">
+                    <choice>
+                        <value>poleZero</value>
+                        <value>coefficient</value>
+                        <value>list</value>
+                    </choice>
+                </element>
+            </element>
             <ref name="clockId"/>
             <ref name="clockManufacturer"/>
             <ref name="clockModel"/>
@@ -62713,6 +62857,25 @@
             <ref name="hasResponse16"/>
             <ref name="hasSensitivity16"/>
             <ref name="repairSensitivity16"/>
+            <element name="responseFilterType">
+                <optional>
+                    <element name="stage">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filter">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <element name="type">
+                    <choice>
+                        <value>poleZero</value>
+                        <value>coefficient</value>
+                        <value>list</value>
+                    </choice>
+                </element>
+            </element>
             <ref name="clockId16"/>
             <ref name="clockManufacturer16"/>
             <ref name="clockModel16"/>
@@ -62768,6 +62931,25 @@
             <ref name="hasResponse5"/>
             <ref name="hasSensitivity5"/>
             <ref name="repairSensitivity4"/>
+            <element name="responseFilterType">
+                <optional>
+                    <element name="stage">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filter">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <element name="type">
+                    <choice>
+                        <value>poleZero</value>
+                        <value>coefficient</value>
+                        <value>list</value>
+                    </choice>
+                </element>
+            </element>
             <ref name="clockId4"/>
             <ref name="clockManufacturer4"/>
             <ref name="clockModel4"/>
@@ -62823,6 +63005,25 @@
             <ref name="hasResponse15"/>
             <ref name="hasSensitivity15"/>
             <ref name="repairSensitivity15"/>
+            <element name="responseFilterType">
+                <optional>
+                    <element name="stage">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filter">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <element name="type">
+                    <choice>
+                        <value>poleZero</value>
+                        <value>coefficient</value>
+                        <value>list</value>
+                    </choice>
+                </element>
+            </element>
             <ref name="clockId15"/>
             <ref name="clockManufacturer15"/>
             <ref name="clockModel15"/>
@@ -62878,6 +63079,25 @@
             <ref name="hasResponse8"/>
             <ref name="hasSensitivity8"/>
             <ref name="repairSensitivity7"/>
+            <element name="responseFilterType">
+                <optional>
+                    <element name="stage">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filter">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <element name="type">
+                    <choice>
+                        <value>poleZero</value>
+                        <value>coefficient</value>
+                        <value>list</value>
+                    </choice>
+                </element>
+            </element>
             <ref name="clockId7"/>
             <ref name="clockManufacturer7"/>
             <ref name="clockModel7"/>
@@ -62933,6 +63153,25 @@
             <ref name="hasResponse9"/>
             <ref name="hasSensitivity9"/>
             <ref name="repairSensitivity8"/>
+            <element name="responseFilterType">
+                <optional>
+                    <element name="stage">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filter">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <element name="type">
+                    <choice>
+                        <value>poleZero</value>
+                        <value>coefficient</value>
+                        <value>list</value>
+                    </choice>
+                </element>
+            </element>
             <ref name="clockId8"/>
             <ref name="clockManufacturer8"/>
             <ref name="clockModel8"/>
@@ -62988,6 +63227,25 @@
             <ref name="hasResponse19"/>
             <ref name="hasSensitivity19"/>
             <ref name="repairSensitivity19"/>
+            <element name="responseFilterType">
+                <optional>
+                    <element name="stage">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filter">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <element name="type">
+                    <choice>
+                        <value>poleZero</value>
+                        <value>coefficient</value>
+                        <value>list</value>
+                    </choice>
+                </element>
+            </element>
             <ref name="clockId19"/>
             <ref name="clockManufacturer19"/>
             <ref name="clockModel19"/>
@@ -63043,6 +63301,25 @@
             <ref name="hasResponse12"/>
             <ref name="hasSensitivity12"/>
             <ref name="repairSensitivity12"/>
+            <element name="responseFilterType">
+                <optional>
+                    <element name="stage">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filter">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <element name="type">
+                    <choice>
+                        <value>poleZero</value>
+                        <value>coefficient</value>
+                        <value>list</value>
+                    </choice>
+                </element>
+            </element>
             <ref name="clockId12"/>
             <ref name="clockManufacturer12"/>
             <ref name="clockModel12"/>
@@ -63098,6 +63375,25 @@
             <ref name="hasResponse6"/>
             <ref name="hasSensitivity6"/>
             <ref name="repairSensitivity5"/>
+            <element name="responseFilterType">
+                <optional>
+                    <element name="stage">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filter">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <element name="type">
+                    <choice>
+                        <value>poleZero</value>
+                        <value>coefficient</value>
+                        <value>list</value>
+                    </choice>
+                </element>
+            </element>
             <ref name="clockId5"/>
             <ref name="clockManufacturer5"/>
             <ref name="clockModel5"/>
@@ -63153,6 +63449,25 @@
             <ref name="hasResponse11"/>
             <ref name="hasSensitivity11"/>
             <ref name="repairSensitivity10"/>
+            <element name="responseFilterType">
+                <optional>
+                    <element name="stage">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filter">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <element name="type">
+                    <choice>
+                        <value>poleZero</value>
+                        <value>coefficient</value>
+                        <value>list</value>
+                    </choice>
+                </element>
+            </element>
             <ref name="clockId10"/>
             <ref name="clockManufacturer10"/>
             <ref name="clockModel10"/>
@@ -63208,6 +63523,25 @@
             <ref name="hasResponse17"/>
             <ref name="hasSensitivity17"/>
             <ref name="repairSensitivity17"/>
+            <element name="responseFilterType">
+                <optional>
+                    <element name="stage">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filter">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <element name="type">
+                    <choice>
+                        <value>poleZero</value>
+                        <value>coefficient</value>
+                        <value>list</value>
+                    </choice>
+                </element>
+            </element>
             <ref name="clockId17"/>
             <ref name="clockManufacturer17"/>
             <ref name="clockModel17"/>
@@ -63263,6 +63597,25 @@
             <ref name="hasResponse20"/>
             <ref name="hasSensitivity20"/>
             <ref name="repairSensitivity20"/>
+            <element name="responseFilterType">
+                <optional>
+                    <element name="stage">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filter">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <element name="type">
+                    <choice>
+                        <value>poleZero</value>
+                        <value>coefficient</value>
+                        <value>list</value>
+                    </choice>
+                </element>
+            </element>
             <ref name="clockId20"/>
             <ref name="clockManufacturer20"/>
             <ref name="clockModel20"/>
@@ -63318,6 +63671,25 @@
             <ref name="hasResponse7"/>
             <ref name="hasSensitivity7"/>
             <ref name="repairSensitivity6"/>
+            <element name="responseFilterType">
+                <optional>
+                    <element name="stage">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filter">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <element name="type">
+                    <choice>
+                        <value>poleZero</value>
+                        <value>coefficient</value>
+                        <value>list</value>
+                    </choice>
+                </element>
+            </element>
             <ref name="clockId6"/>
             <ref name="clockManufacturer6"/>
             <ref name="clockModel6"/>
