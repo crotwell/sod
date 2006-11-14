@@ -1,10 +1,9 @@
 package edu.sc.seis.sod.subsetter.channel;
 
 import org.w3c.dom.Element;
-
 import edu.iris.Fissures.IfNetwork.Filter;
 import edu.iris.Fissures.IfNetwork.Stage;
-import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.StringTree;
 
@@ -13,7 +12,7 @@ public abstract class AbstractResponseFilterSubsetter extends
 
 	public AbstractResponseFilterSubsetter(Element config) {
 		super(config);
-		filterNum = SodUtil.loadInt(config, "filter", 0);
+		filterNum = DOMHelper.extractInt(config, "filter", 0);
 	}
 
 	protected StringTree accept(Stage stage) {
@@ -25,5 +24,5 @@ public abstract class AbstractResponseFilterSubsetter extends
 
 	protected abstract StringTree accept(Filter filter);
 
-	int filterNum = 0;
+	private int filterNum = 0;
 }

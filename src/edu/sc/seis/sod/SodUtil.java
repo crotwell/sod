@@ -369,23 +369,14 @@ public class SodUtil {
     }
     
     public static int loadInt(Element config, String elementName,
-            int defaultValue) {
-        Element child = XMLUtil.getElement(config, elementName);
-        if (child != null) {
-            return Integer.parseInt(XMLUtil.getText(child));
-        } else {
-            return defaultValue;
-        }
-    }
-    
-    public static String loadString(Element config, String elementName) {
-        Element child = XMLUtil.getElement(config, elementName);
-        if (child != null) {
-            return XMLUtil.getText(child);
-        } else {
-            return null;
-        }
-    }
+			int defaultValue) {
+		Element child = XMLUtil.getElement(config, elementName);
+		if (child != null) {
+			return Integer.parseInt(XMLUtil.getText(child));
+		} else {
+			return defaultValue;
+		}
+	}
 
     public static void copyFile(String src, String dest)
             throws FileNotFoundException {

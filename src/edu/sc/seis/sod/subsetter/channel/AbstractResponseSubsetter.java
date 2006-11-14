@@ -1,7 +1,5 @@
 package edu.sc.seis.sod.subsetter.channel;
 
-import org.w3c.dom.Element;
-
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
@@ -13,9 +11,6 @@ import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.StringTree;
 
 public abstract class AbstractResponseSubsetter implements ChannelSubsetter {
-
-	public AbstractResponseSubsetter(Element config) {
-	}
 
 	public StringTree accept(Channel channel, ProxyNetworkAccess network)
 			throws Exception {
