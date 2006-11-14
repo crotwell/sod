@@ -1,30 +1,44 @@
 package edu.sc.seis.sod.subsetter.channel;
 
+import org.w3c.dom.Element;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
+import edu.iris.Fissures.IfNetwork.FilterType;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
+import edu.iris.Fissures.IfNetwork.Stage;
 import edu.iris.Fissures.IfNetwork.TransferType;
 import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
+import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
+import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
-public class StageTransferType  implements ChannelSubsetter {
+public class StageTransferType extends AbstractStageSubsetter implements
+        ChannelSubsetter {
 
-    public StringTree accept(Channel channel, ProxyNetworkAccess network) {
+    public StageTransferType(Element config) {
+        super(config);
+        String typeStr = DOMHelper.extractText(config, "type");
+        if(typeStr.equalsIgnoreCase("laplace")) {
+            type = TransferType.LAPLACE;
+        } else if(typeStr.equalsIgnoreCase("analog")) {
+            type = TransferType.ANALOG;
+        } else if(typeStr.equalsIgnoreCase("composite")) {
+            type = TransferType.COMPOSITE;
+        } else if(typeStr.equalsIgnoreCase("digital")) {
+            type = TransferType.DIGITAL;
+        }
+    }
+
+    protected StringTree accept(Stage stage) {
         try {
-            Instrumentation inst = network.retrieve_instrumentation(channel.get_id(),
-                                                            channel.get_id().begin_time);
-            return new StringTreeLeaf(this, type.equals(inst.the_response.stages[stageNum-1].type));
-        } catch(ChannelNotFound e) {
-            return new Fail(this, "No instrumentation");
-        } catch (InstrumentationInvalid e) {
+            return new StringTreeLeaf(this, type.equals(stage.type));
+        } catch(InstrumentationInvalid e) {
             return new Fail(this, "Invalid instrumentation");
         }
     }
 
     TransferType type;
-    
-    int stageNum;
 }
