@@ -7,6 +7,7 @@
     <include href="../base/include/timeRange.rng"/>
     <include href="../base/include/quantity.rng"/>
     <include href="../base/include/samplingRange.rng"/>
+    <include href="../base/include/units.rng"/>
     <define name="channel">
         <choice>
             <xsd:annotation>
@@ -37,6 +38,9 @@
             <ref name="hasSensitivity"/>
             <ref name="repairSensitivity"/>
             <ref name="responseFilterType"/>
+            <ref name="stageTransferType"/>
+            <ref name="stageInputUnit"/>
+            <ref name="stageOutputUnit"/>
             <ref name="clockId"/>
             <ref name="clockManufacturer"/>
             <ref name="clockModel"/>
@@ -360,6 +364,70 @@
                 <summary>Checks if a data center has data for a channel for the past week</summary>
             </xsd:annotation>
             <externalRef href="../waveform/fixedDataCenter.rng"/>
+        </element>
+    </define>
+    <define name="stageTransferType">
+        <element name="stageTransferType">
+            <xsd:annotation>
+                <summary>Matches the input units of a stage</summary>
+            </xsd:annotation>
+            <optional>
+                <element name="stage">
+                    <xsd:annotation>
+                        <summary>The number of the stage</summary>
+                        <description>The number, starting with 1, of the stage of interest.
+                            This defaults to 1.</description>
+                    </xsd:annotation>
+                    <data type="int"/>
+                </element>
+            </optional>
+            <element name="type">
+                <xsd:annotation>
+                    <summary>The type of stage to match.</summary>
+                    <description>The type of stage to match.</description>
+                </xsd:annotation>
+                <choice>
+                    <value>laplace</value>
+                    <value>analog</value>
+                    <value>composite</value>
+                    <value>digital</value>
+                </choice>
+            </element>
+        </element>
+    </define>
+    <define name="stageInputUnit">
+        <element name="stageInputUnit">
+            <xsd:annotation>
+                <summary>Matches the input units of a stage</summary>
+            </xsd:annotation>
+            <optional>
+                <element name="stage">
+                    <xsd:annotation>
+                        <summary>The number of the stage</summary>
+                        <description>The number, starting with 1, of the stage of interest.
+                            This defaults to 1.</description>
+                    </xsd:annotation>
+                    <data type="int"/>
+                </element>
+            </optional>
+            <ref name="unit"/>
+        </element>
+    </define><define name="stageOutputUnit">
+        <element name="stageOutputUnit">
+            <xsd:annotation>
+                <summary>Matches the output units of a stage</summary>
+            </xsd:annotation>
+            <optional>
+                <element name="stage">
+                    <xsd:annotation>
+                        <summary>The number of the stage</summary>
+                        <description>The number, starting with 1, of the stage of interest.
+                            This defaults to 1.</description>
+                    </xsd:annotation>
+                    <data type="int"/>
+                </element>
+            </optional>
+            <ref name="unit"/>
         </element>
     </define>
     <define name="responseFilterType">
