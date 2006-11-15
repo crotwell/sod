@@ -62,6 +62,10 @@ public class Args {
                        'r',
                        "replace-recipe",
                        "Replace the recipe in the db with the one specified for this run"));
+        Switch version = new Switch("version");
+        version.setLongFlag("version");
+        version.setHelp("Print SOD's version and exit");
+        add(version);
         add(new FlaggedOption("props",
                               new FileParser(),
                               null,
@@ -102,6 +106,10 @@ public class Args {
          }   
         jsap.setUsage(builder.toString());
         result = jsap.parse(args);
+        if(result.getBoolean("version")) {
+            System.out.println("SOD " + Version.getVersion());
+            System.exit(0);
+        }
         if(result.getBoolean("help")) {
             System.out.println(jsap.getUsage());
             System.out.println(jsap.getHelp());

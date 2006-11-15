@@ -138,8 +138,8 @@ public class EventDCQuerier {
         }
         return cached;
     }
-    
-    public String toString(){
+
+    public String toString() {
         return "EventDCQuerier(" + serverDNS + "/" + serverName + ")";
     }
 

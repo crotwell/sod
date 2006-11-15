@@ -22,19 +22,13 @@ public class BackwardsEventFinder extends EventFinder {
         return ! currentQuery.getEndTime().equals(queryBegin);
     }
 
-    protected CacheEvent[] loadMoreResults() {
-        CacheEvent[] results = super.loadMoreResults();
+    public CacheEvent[] next() {
+        CacheEvent[] results = super.next();
         CacheEvent[] out = new CacheEvent[results.length];
         for(int i = 0; i < out.length; i++) {
             out[i] = results[results.length-i-1];
         }
         return out;
-    }
-    
-    protected void swap(CacheEvent[] results, int a) {
-        CacheEvent tmp = results[a];
-        results[a] = results[results.length-1-a];
-        results[results.length-1-a] = tmp;
     }
     
     protected boolean caughtUpWithRealtime() {

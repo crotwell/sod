@@ -9,6 +9,7 @@ import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodElement;
+import edu.sc.seis.sod.UserReportRetryStrategy;
 import edu.sc.seis.sod.subsetter.AbstractSource;
 import org.w3c.dom.Element;
 
@@ -29,7 +30,9 @@ public class FixedDataCenter extends AbstractSource implements SodElement,
         objectName = getName();
         dataCenter = BulletproofVestFactory.vestSeismogramDC(dns,
                                                              objectName,
-                                                             fissuresNamingService);
+                                                             fissuresNamingService,
+                                                             BulletproofVestFactory.getDefaultNumRetry(),
+                                                             new UserReportRetryStrategy());
     }
 
     public ProxySeismogramDC getSeismogramDC(EventAccessOperations event,
