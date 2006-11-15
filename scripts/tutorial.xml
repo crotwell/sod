@@ -20,10 +20,10 @@
     </eventArm>
     <networkArm>
         <networkFinder>
-            <name>IRIS_NetworkDC</name>
-            <dns>edu/iris/dmc</dns>
+            <name>Dodgy</name>
+            <dns>edu/sc/seis/mock</dns>
         </networkFinder>
-        <networkCode>II</networkCode>
+        <networkCode>XX</networkCode>
         <siteOR>
             <siteCode/>
             <siteCode>00</siteCode>

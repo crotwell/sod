@@ -139,5 +139,13 @@ public abstract class ServerEditor {
         }
 
         private ServerNameDNS server;
+
+        public String getServerType() {
+            return server.getServerType();
+        }
+
+        public void reset() {
+            server.reset();
+        }
     }
 }
