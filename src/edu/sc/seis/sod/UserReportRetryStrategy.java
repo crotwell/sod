@@ -29,9 +29,9 @@ public class UserReportRetryStrategy extends ClassicRetryStrategy {
                         + fullName
                         + " "
                         + server.getServerType()
-                        + " in the name service.  Check "
+                        + " in the name service.  Check\n"
                         + wilyURL
-                        + " for that server to make sure you've put the correct location in your ingredient for that server.  If you're sure it's correct, just wait.  SOD will continue trying to find it until it's readded to the name server.");
+                        + "\n for that server to make sure you've put the correct location in your ingredient for that server.  If you're sure it's correct, just wait.  SOD will continue trying to find it until it's readded to the name server.");
             } else {
                 logger.warn("The "
                         + fullName
