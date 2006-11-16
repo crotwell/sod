@@ -8,14 +8,15 @@ import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
+import edu.sc.seis.fissuresUtil.cache.RetryStrategy;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.UserReportRetryStrategy;
 import edu.sc.seis.sod.database.JDBCQueryTime;
 import edu.sc.seis.sod.subsetter.AbstractSource;
 import edu.sc.seis.sod.subsetter.origin.OriginTimeRange;
@@ -54,6 +55,17 @@ public class EventFinder extends AbstractSource implements EventSource {
     }
 
     public CacheEvent[] next() {
+        int retryCount = 0;
+        while(true) {
+            try {
+                return loadMoreResults();
+            } catch(SystemException se) {
+                retryStrat.shouldRetry(se, querier.getEventDC(), retryCount, -1);
+            }
+        }
+    }
+
+    protected CacheEvent[] loadMoreResults() {
         MicroSecondTimeRange queryTime = getQueryTime();
         CacheEvent[] results = querier.query(queryTime);
         updateQueryEdge(queryTime);
@@ -62,14 +74,6 @@ public class EventFinder extends AbstractSource implements EventSource {
 
     protected void updateQueryEdge(MicroSecondTimeRange queryTime) {
         setQueryEdge(queryTime.getEndTime());
-    }
-
-    public static long sleepForCount(int count) {
-        if(count > 2) {
-            // cap sleep at 15 minutes
-            return 900000;
-        }
-        return (long)(Math.pow(10, count)) * 1000;
     }
 
     public TimeInterval getWaitBeforeNext() {
@@ -174,4 +178,6 @@ public class EventFinder extends AbstractSource implements EventSource {
     private JDBCQueryTime queryTimes;
 
     protected TimeInterval increment, lag, refreshInterval;
+
+    private RetryStrategy retryStrat = new UserReportRetryStrategy();
 }// EventFinder

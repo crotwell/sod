@@ -16,12 +16,9 @@ import edu.iris.Fissures.IfEvent.EventSeqIterHolder;
 import edu.iris.Fissures.model.GlobalAreaImpl;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
-import edu.sc.seis.fissuresUtil.cache.BulletproofVestFactory;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.cache.EventLoader;
 import edu.sc.seis.fissuresUtil.cache.ProxyEventDC;
 import edu.sc.seis.fissuresUtil.cache.VestingEventDC;
-import edu.sc.seis.fissuresUtil.cache.WorkerThreadPool;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
 import edu.sc.seis.sod.CommonAccess;
@@ -135,9 +132,8 @@ public class EventDCQuerier {
                 cached[counter] = (CacheEvent)uncached[counter];
             } else {
                 cached[counter] = new CacheEvent(uncached[counter]);
-                // preload cache
-                EventLoader backLoader = new EventLoader(cached[counter]);
-                WorkerThreadPool.getDefaultPool().invokeLater(backLoader);
+                cached[counter].get_attributes();
+                cached[counter].get_origins();
             }
         }
         return cached;
