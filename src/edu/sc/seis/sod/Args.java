@@ -82,28 +82,29 @@ public class Args {
                               "The recipe to run"));
         StringBuffer builder = new StringBuffer("Usage: sod [-");
         Iterator it = parameters.iterator();
-        while(it.hasNext()){
-           Parameter p = (Parameter)it.next();
-           if(p instanceof Switch){
-               builder.append(((Switch)p).getShortFlagCharacter());
-           }
-        }   
+        while(it.hasNext()) {
+            Parameter p = (Parameter)it.next();
+            if(p instanceof Switch && ((Switch)p).getShortFlagCharacter() != null) {
+                builder.append(((Switch)p).getShortFlagCharacter());
+            }
+        }
         builder.append("] ");
         it = parameters.iterator();
-        while(it.hasNext()){
+        while(it.hasNext()) {
             Parameter p = (Parameter)it.next();
-            if(p instanceof FlaggedOption){
+            if(p instanceof FlaggedOption) {
                 FlaggedOption fo = (FlaggedOption)p;
-                if(!fo.required()){
+                if(!fo.required()) {
                     builder.append('[');
                 }
-                builder.append("-" + ((FlaggedOption)p).getShortFlagCharacter() + " <" + p.getID() + ">");
-                if(!fo.required()){
+                builder.append("-" + ((FlaggedOption)p).getShortFlagCharacter()
+                        + " <" + p.getID() + ">");
+                if(!fo.required()) {
                     builder.append(']');
                 }
                 builder.append(' ');
             }
-         }   
+        }
         jsap.setUsage(builder.toString());
         result = jsap.parse(args);
         if(result.getBoolean("version")) {
