@@ -20,12 +20,14 @@ import edu.sc.seis.fissuresUtil.cache.BulletproofVestFactory;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.EventLoader;
 import edu.sc.seis.fissuresUtil.cache.ProxyEventDC;
+import edu.sc.seis.fissuresUtil.cache.VestingEventDC;
 import edu.sc.seis.fissuresUtil.cache.WorkerThreadPool;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.UserReportRetryStrategy;
 import edu.sc.seis.sod.subsetter.DepthRange;
 import edu.sc.seis.sod.subsetter.origin.Catalog;
 import edu.sc.seis.sod.subsetter.origin.Contributor;
@@ -76,9 +78,11 @@ public class EventDCQuerier {
         if(eventDC == null) {
             CommonAccess common = CommonAccess.getCommonAccess();
             FissuresNamingService fissName = common.getFissuresNamingService();
-            eventDC = BulletproofVestFactory.vestEventDC(serverDNS,
-                                                         serverName,
-                                                         fissName);
+            eventDC = new VestingEventDC(serverName,
+                                         serverDNS,
+                                         fissName,
+                                         -1,
+                                         new UserReportRetryStrategy());
         }
         return eventDC;
     }
