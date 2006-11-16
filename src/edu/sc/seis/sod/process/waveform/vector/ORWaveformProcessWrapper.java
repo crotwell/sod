@@ -16,6 +16,7 @@ import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.process.waveform.ForkProcess;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.process.waveform.WaveformResult;
+import edu.sc.seis.sod.status.ShortCircuit;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
 import org.w3c.dom.Element;
@@ -59,7 +60,8 @@ public class ORWaveformProcessWrapper implements WaveformProcessWrapper {
         }
         boolean b = false;
         StringTree[] reason = new StringTree[channelGroup.getChannels().length];
-        for(int i = 0; b == false && i < channelGroup.getChannels().length; i++) {
+        int i;
+        for(i = 0; b == false && i < channelGroup.getChannels().length; i++) {
             Channel chan = channelGroup.getChannels()[i];
             CookieJar chansCookies = channelGroup.getEventChannelPair(chan)
                     .getCookieJar();
@@ -72,6 +74,9 @@ public class ORWaveformProcessWrapper implements WaveformProcessWrapper {
             out[i] = result.getSeismograms();
             b |= result.isSuccess();
             reason[i] = result.getReason();
+        }
+        for(int j = i; j < channelGroup.getChannels().length; j++) {
+            reason[j] = new ShortCircuit(this);
         }
         if(b) { return new WaveformVectorResult(out,
                                                 new StringTreeBranch(this,

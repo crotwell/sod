@@ -16,6 +16,7 @@ import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.process.waveform.ForkProcess;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.process.waveform.WaveformResult;
+import edu.sc.seis.sod.status.ShortCircuit;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
 import org.w3c.dom.Element;
@@ -55,7 +56,8 @@ public class ANDWaveformProcessWrapper implements WaveformProcessWrapper {
         LocalSeismogramImpl[][] out = new LocalSeismogramImpl[seismograms.length][];
         boolean b = true;
         StringTree[] reason = new StringTree[channelGroup.getChannels().length];
-        for(int i = 0; b && i < channelGroup.getChannels().length; i++) {
+        int i;
+        for(i = 0; b && i < channelGroup.getChannels().length; i++) {
             LocalSeismogramImpl[] copies = ForkProcess.copySeismograms(seismograms[i]);
             Channel chan = channelGroup.getChannels()[i];
             CookieJar chansCookies = channelGroup.getEventChannelPair(chan)
@@ -69,6 +71,9 @@ public class ANDWaveformProcessWrapper implements WaveformProcessWrapper {
             out[i] = result.getSeismograms();
             reason[i] = result.getReason();
             b &= result.isSuccess();
+        }
+        for(int j=i+1; j<channelGroup.getChannels().length; j++) {
+            reason[j] = new ShortCircuit(this);
         }
         if(!b) { return new WaveformVectorResult(seismograms,
                                                  new StringTreeBranch(this,
