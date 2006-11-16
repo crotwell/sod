@@ -24,14 +24,16 @@ public class VelocityFileElementParser {
      * location starts with File.separator
      */
     public VelocityFileElementParser(String workingDir, String location) {
-        this.workingDir = workingDir;
-        this.location = location;
-        if(workingDir.endsWith(File.separator)) {
-            if(location.startsWith(File.separator)) {
+        this.workingDir = workingDir.trim();
+        this.location = location.trim();
+        // Explicitly check for / slash since \ is separator under windows, but
+        // / can be used just as well
+        if(workingDir.endsWith(File.separator) || workingDir.endsWith("/")) {
+            if(location.startsWith(File.separator) || location.startsWith("/")) {
                 this.location = location.substring(1);
             }
         } else if(workingDir.length() > 0
-                && !location.startsWith(File.separator)) {
+                && !(location.startsWith(File.separator) || location.startsWith("/"))) {
             this.workingDir += File.separator;
         }
     }
