@@ -346,13 +346,22 @@ public class MotionVectorArm implements Subsetter {
         while(it.hasNext() && result.isSuccess()) {
             processor = (WaveformVectorProcess)it.next();
             try {
-                synchronized(processor) {
-                    result = processor.process(ecp.getEvent(),
-                                               ecp.getChannelGroup(),
-                                               infilters,
-                                               outfilters,
-                                               result.getSeismograms(),
-                                               ecp.getCookieJar());
+            	if (processor instanceof Threadable && ((Threadable)processor).isThreadSafe()) {
+        			result = processor.process(ecp.getEvent(),
+        					ecp.getChannelGroup(),
+        					infilters,
+        					outfilters,
+        					result.getSeismograms(),
+        					ecp.getCookieJar());
+            	} else {
+            		synchronized(processor) {
+            			result = processor.process(ecp.getEvent(),
+            					ecp.getChannelGroup(),
+            					infilters,
+            					outfilters,
+            					result.getSeismograms(),
+            					ecp.getCookieJar());
+            		}
                 }
                 if(!result.isSuccess()) {
                     logger.info("Processor reject: " + result.getReason());

@@ -367,13 +367,22 @@ public class LocalSeismogramArm implements Subsetter {
         while(it.hasNext() && result.isSuccess()) {
             processor = (WaveformProcess)it.next();
             try {
-                synchronized(processor) {
+            	if (processor instanceof Threadable && ((Threadable)processor).isThreadSafe()) {
                     result = processor.process(ecp.getEvent(),
-                                               ecp.getChannel(),
-                                               infilters,
-                                               outfilters,
-                                               result.getSeismograms(),
-                                               ecp.getCookieJar());
+                            ecp.getChannel(),
+                            infilters,
+                            outfilters,
+                            result.getSeismograms(),
+                            ecp.getCookieJar());
+            	} else {
+            		synchronized(processor) {
+            			result = processor.process(ecp.getEvent(),
+            					ecp.getChannel(),
+            					infilters,
+            					outfilters,
+            					result.getSeismograms(),
+            					ecp.getCookieJar());
+            		}
                 }
             } catch(Throwable e) {
                 handle(ecp, Stage.PROCESSOR, e);
