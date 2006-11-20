@@ -291,7 +291,5 @@ public class ChannelGrouper {
 
     private static String defaultConfigFileLoc = "jar:edu/sc/seis/sod/data/grouper.xml";
 
-    private static final int MARGIN = 2;
-
     private static final String grouperSchemaLoc = "edu/sc/seis/sod/data/grouper.rng";
 }
