@@ -14,6 +14,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.IfNetwork.NetworkDCOperations;
 import edu.iris.Fissures.IfNetwork.NetworkFinder;
 import edu.iris.Fissures.IfNetwork.NetworkId;
@@ -95,12 +96,14 @@ public class NetworkArm implements Arm {
 
     public NetworkDbObject getNetworkDbObject(NetworkId network_id)
             throws SQLException, NetworkNotFound, NotFound {
-        NetworkDbObject[] tmpNetDbs = getSuccessfulNetworks();
-        for(int i = 0; i < tmpNetDbs.length; i++) {
-            if(NetworkIdUtil.areEqual(tmpNetDbs[i].getNetworkAccess()
-                    .get_attributes()
-                    .get_id(), network_id)) {
-                return tmpNetDbs[i];
+        NetworkDbObject[] netDbs = getSuccessfulNetworks();
+        MicroSecondDate beginTime = new MicroSecondDate(network_id.begin_time);
+        String netCode = network_id.network_code;
+        for(int i = 0; i < netDbs.length; i++) {
+            NetworkAttr attr = netDbs[i].getNetworkAccess().get_attributes();
+            if(netCode.equals(attr.get_code())
+                    && new MicroSecondTimeRange(attr.effective_time).contains(beginTime)) {
+                return netDbs[i];
             }
         }
         throw new NetworkNotFound("No network for id: "
@@ -574,7 +577,9 @@ public class NetworkArm implements Arm {
                                     change(chan,
                                            Status.get(Stage.NETWORK_SUBSETTER,
                                                       Standing.REJECT));
-                                    failLogger.info("Rejected " + ChannelIdUtil.toString(chan.get_id()) + ": "+result);
+                                    failLogger.info("Rejected "
+                                            + ChannelIdUtil.toString(chan.get_id())
+                                            + ": " + result);
                                     accepted = false;
                                     break;
                                 }
