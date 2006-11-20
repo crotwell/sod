@@ -1,9 +1,8 @@
 /**
  * SeismogramNOT.java
- *
+ * 
  * @author Philip Crotwell
  */
-
 package edu.sc.seis.sod.process.waveform;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
@@ -18,26 +17,30 @@ import org.w3c.dom.Element;
 
 public class SeismogramNOT extends ForkProcess {
 
-
-    public SeismogramNOT (Element config) throws ConfigurationException {
+    public SeismogramNOT(Element config) throws ConfigurationException {
         super(config);
     }
 
     public WaveformResult process(EventAccessOperations event,
-                                         Channel channel,
-                                         RequestFilter[] original,
-                                         RequestFilter[] available,
-                                         LocalSeismogramImpl[] seismograms,
-                                         CookieJar cookieJar
-                                        ) throws Exception {
+                                  Channel channel,
+                                  RequestFilter[] original,
+                                  RequestFilter[] available,
+                                  LocalSeismogramImpl[] seismograms,
+                                  CookieJar cookieJar) throws Exception {
         WaveformResult result;
         Iterator it = localSeisProcessList.iterator();
         WaveformProcess processor = (WaveformProcess)it.next();
-        synchronized (processor) {
-            result = processor.process(event, channel, original,
-                                       available, seismograms, cookieJar);
+        synchronized(processor) {
+            result = processor.process(event,
+                                       channel,
+                                       original,
+                                       available,
+                                       seismograms,
+                                       cookieJar);
         }
-        return new WaveformResult( result.getSeismograms(), new StringTreeBranch(this, ! result.isSuccess(), result.getReason()));
+        return new WaveformResult(result.getSeismograms(),
+                                  new StringTreeBranch(this,
+                                                       !result.isSuccess(),
+                                                       result.getReason()));
     }
 }
-

@@ -5,8 +5,8 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.Threadable;
 import edu.sc.seis.sod.status.StringTreeLeaf;
-import org.w3c.dom.Element;
 
 /**
  * Removes the trend from the seismogram by subtracting the best least squares
@@ -16,19 +16,15 @@ import org.w3c.dom.Element;
  * Created: Wed Nov  6 17:58:10 2002
  *
  * @author <a href="mailto:www@seis.sc.edu">Philip Crotwell</a>
- * @version $Id: RTrend.java 10413 2004-09-09 18:40:30Z groves $
+ * @version $Id: RTrend.java 18512 2006-11-20 22:35:04Z groves $
  */
 
-public class RTrend implements WaveformProcess {
+public class RTrend implements WaveformProcess, Threadable {
 
-    public RTrend (Element config) {
-        this.config = config;
-        rtrend = new edu.sc.seis.fissuresUtil.bag.RTrend();
+    public boolean isThreadSafe() {
+        return true;
     }
 
-    /**
-     * Removes the mean from the seismograms.
-     */
     public WaveformResult process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,
@@ -41,8 +37,6 @@ public class RTrend implements WaveformProcess {
         return new WaveformResult(out, new StringTreeLeaf(this, true));
     }
 
-    Element config;
-
-    edu.sc.seis.fissuresUtil.bag.RTrend rtrend;
+    edu.sc.seis.fissuresUtil.bag.RTrend rtrend = new edu.sc.seis.fissuresUtil.bag.RTrend();
 
 }// ResponseGainProcessor

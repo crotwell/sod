@@ -1,11 +1,13 @@
 /**
  * Filter.java
- *
+ * 
  * @author Created by Omnicore CodeGuide
  */
-
 package edu.sc.seis.sod.process.waveform;
 
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
@@ -18,14 +20,12 @@ import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.Threadable;
 import edu.sc.seis.sod.status.StringTreeLeaf;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
-public class Filter implements WaveformProcess {
+public class Filter implements WaveformProcess, Threadable {
 
-    public Filter (Element config) throws ConfigurationException {
+    public Filter(Element config) throws ConfigurationException {
         this.config = config;
         NodeList childNodes = config.getChildNodes();
         for(int counter = 0; counter < childNodes.getLength(); counter++) {
@@ -36,10 +36,10 @@ public class Filter implements WaveformProcess {
                     lowFreqCorner = SodUtil.loadQuantity(element);
                 } else if(element.getTagName().equals("highFreqCorner")) {
                     highFreqCorner = SodUtil.loadQuantity(element);
-                } else if (element.getTagName().equals("numPoles")) {
+                } else if(element.getTagName().equals("numPoles")) {
                     numPoles = Integer.parseInt(XMLUtil.getText(element));
-                } else if (element.getTagName().equals("filterType")) {
-                    if (XMLUtil.getText(element).equals("CAUSAL")) {
+                } else if(element.getTagName().equals("filterType")) {
+                    if(XMLUtil.getText(element).equals("CAUSAL")) {
                         filterType = ButterworthFilter.CAUSAL;
                     } else {
                         filterType = ButterworthFilter.NONCAUSAL;
@@ -47,27 +47,33 @@ public class Filter implements WaveformProcess {
                 }
             }
         }
-        if (lowFreqCorner.get_unit().isConvertableTo(UnitImpl.SECOND)) {
+        if(lowFreqCorner.get_unit().isConvertableTo(UnitImpl.SECOND)) {
             lowFreqCorner = lowFreqCorner.inverse();
         }
-        if (highFreqCorner.get_unit().isConvertableTo(UnitImpl.SECOND)) {
+        if(highFreqCorner.get_unit().isConvertableTo(UnitImpl.SECOND)) {
             highFreqCorner = highFreqCorner.inverse();
         }
         filter = new ButterworthFilter(new SeisGramText(),
-                                       lowFreqCorner.convertTo(UnitImpl.HERTZ).getValue(),
-                                       highFreqCorner.convertTo(UnitImpl.HERTZ).getValue(),
+                                       lowFreqCorner.convertTo(UnitImpl.HERTZ)
+                                               .getValue(),
+                                       highFreqCorner.convertTo(UnitImpl.HERTZ)
+                                               .getValue(),
                                        numPoles,
                                        filterType);
     }
 
+    public boolean isThreadSafe() {
+        return true;
+    }
+
     public WaveformResult process(EventAccessOperations event,
-                                         Channel channel,
-                                         RequestFilter[] original,
-                                         RequestFilter[] available,
-                                         LocalSeismogramImpl[] seismograms, CookieJar cookieJar)
-        throws Exception {
+                                  Channel channel,
+                                  RequestFilter[] original,
+                                  RequestFilter[] available,
+                                  LocalSeismogramImpl[] seismograms,
+                                  CookieJar cookieJar) throws Exception {
         LocalSeismogramImpl[] out = new LocalSeismogramImpl[seismograms.length];
-        for (int i=0; i<seismograms.length; i++) {
+        for(int i = 0; i < seismograms.length; i++) {
             out[i] = filter.apply(seismograms[i]);
         } // end of for (int i=0; i<seismograms.length; i++)
         return new WaveformResult(out, new StringTreeLeaf(this, true));

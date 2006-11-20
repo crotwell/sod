@@ -8,21 +8,21 @@ import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.bag.Calculus;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
-
+import edu.sc.seis.sod.Threadable;
 
 /**
- * @author crotwell
- * Created on Mar 18, 2005
+ * @author crotwell Created on Mar 18, 2005
  */
-public class Integrate implements WaveformProcess {
-    
-    public Integrate (Element config) throws ConfigurationException {
+public class Integrate implements WaveformProcess, Threadable {
+
+    public Integrate(Element config) throws ConfigurationException {
         this.config = config;
     }
-    
-    /**
-     *
-     */
+
+    public boolean isThreadSafe() {
+        return true;
+    }
+
     public WaveformResult process(EventAccessOperations event,
                                   Channel channel,
                                   RequestFilter[] original,
@@ -34,6 +34,6 @@ public class Integrate implements WaveformProcess {
         }
         return new WaveformResult(true, seismograms, this);
     }
-    
+
     Element config;
 }

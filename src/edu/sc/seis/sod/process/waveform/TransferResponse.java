@@ -19,6 +19,7 @@ import edu.sc.seis.fissuresUtil.sac.SacPoleZero;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.Threadable;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
 
@@ -26,11 +27,8 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
  * @author crotwell
  * Created on Aug 1, 2005
  */
-public class TransferResponse implements WaveformProcess {
+public class TransferResponse implements WaveformProcess, Threadable {
 
-    /**
-     *
-     */
     public TransferResponse(Element config) throws ConfigurationException {
         lowCut = DOMHelper.extractFloat(config, "lowCut", DEFAULT_LOW_CUT);
         lowPass = DOMHelper.extractFloat(config, "lowPass", DEFAULT_LOW_PASS);
@@ -38,9 +36,6 @@ public class TransferResponse implements WaveformProcess {
         highCut = DOMHelper.extractFloat(config, "highCut", DEFAULT_HIGH_CUT);
     }
 
-    /**
-     *
-     */
     public WaveformResult process(EventAccessOperations event,
                                   Channel channel,
                                   RequestFilter[] original,
@@ -78,6 +73,10 @@ public class TransferResponse implements WaveformProcess {
             }
         }
         return new WaveformResult(true, seismograms, this);
+    }
+
+    public boolean isThreadSafe() {
+        return true;
     }
     
     float lowCut, lowPass, highPass, highCut;

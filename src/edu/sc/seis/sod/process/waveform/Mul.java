@@ -8,11 +8,16 @@ import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.bag.Arithmatic;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.Threadable;
 
-public class Mul implements WaveformProcess {
+public class Mul implements WaveformProcess, Threadable {
 
     public Mul(Element el) {
         val = Float.parseFloat(SodUtil.getText(el));
+    }
+
+    public boolean isThreadSafe() {
+        return true;
     }
 
     public WaveformResult process(EventAccessOperations event,

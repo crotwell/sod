@@ -7,12 +7,17 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.Threadable;
 
 
-public class Decimate implements WaveformProcess {
+public class Decimate implements WaveformProcess, Threadable {
     
     public Decimate(Element config) {
         decimate = new edu.sc.seis.fissuresUtil.bag.Decimate(Integer.parseInt(SodUtil.getNestedText(config)));
+    }
+
+    public boolean isThreadSafe() {
+        return true;
     }
 
     public WaveformResult process(EventAccessOperations event,

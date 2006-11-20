@@ -18,11 +18,12 @@ import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.Threadable;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
-public class ForkProcess implements WaveformProcess {
+public class ForkProcess implements WaveformProcess, Threadable {
 
     public ForkProcess(Element config) throws ConfigurationException {
         NodeList children = config.getChildNodes();
@@ -34,6 +35,10 @@ public class ForkProcess implements WaveformProcess {
                 localSeisProcessList.add(sodElement);
             } // end of if (node instanceof Element)
         } // end of for (int i=0; i<children.getSize(); i++)
+    }
+
+    public boolean isThreadSafe() {
+        return true;
     }
 
     /**
@@ -71,13 +76,23 @@ public class ForkProcess implements WaveformProcess {
                                                                       true));
         while(it.hasNext() && result.isSuccess()) {
             WaveformProcess processor = (WaveformProcess)it.next();
-            synchronized(processor) {
+            if(processor instanceof Threadable
+                    && ((Threadable)processor).isThreadSafe()) {
                 result = processor.process(event,
                                            channel,
                                            original,
                                            available,
                                            result.getSeismograms(),
                                            cookieJar);
+            } else {
+                synchronized(processor) {
+                    result = processor.process(event,
+                                               channel,
+                                               original,
+                                               available,
+                                               result.getSeismograms(),
+                                               cookieJar);
+                }
             }
             reasons.add(result.getReason());
         } // end of while (it.hasNext())
@@ -98,7 +113,7 @@ public class ForkProcess implements WaveformProcess {
 
     public String toString() {
         String name = getClass().getName();
-        String s = name.substring(name.lastIndexOf(".")+1) + "(";
+        String s = name.substring(name.lastIndexOf(".") + 1) + "(";
         Iterator it = localSeisProcessList.iterator();
         while(it.hasNext()) {
             s += it.next().toString() + ",";

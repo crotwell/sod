@@ -5,9 +5,14 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.Threadable;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
-public class RequestCut implements WaveformProcess {
+public class RequestCut implements WaveformProcess, Threadable {
+
+    public boolean isThreadSafe() {
+        return true;
+    }
 
     public WaveformResult process(EventAccessOperations event,
                                   Channel channel,

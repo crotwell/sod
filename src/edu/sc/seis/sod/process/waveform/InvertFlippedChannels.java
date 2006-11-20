@@ -31,10 +31,10 @@ public class InvertFlippedChannels extends ForkProcess {
             fixedChan = corrected.getChannel();
         }
         return new WaveformResult(seismograms, doAND(event,
-                                                   fixedChan,
-                                                   original,
-                                                   available,
-                                                   fixedSeis,
-                                                   cookieJar).getReason());
+                                                     fixedChan,
+                                                     original,
+                                                     available,
+                                                     fixedSeis,
+                                                     cookieJar).getReason());
     }
 }

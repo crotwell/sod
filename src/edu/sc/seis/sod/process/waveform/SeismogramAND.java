@@ -25,7 +25,11 @@ public class SeismogramAND extends ForkProcess {
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) throws Exception {
-        return doAND(event, channel, original, available, seismograms, cookieJar);
+        return doAND(event,
+                     channel,
+                     original,
+                     available,
+                     seismograms,
+                     cookieJar);
     }
-
 }

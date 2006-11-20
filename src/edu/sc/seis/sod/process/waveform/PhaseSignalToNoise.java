@@ -7,6 +7,9 @@
 package edu.sc.seis.sod.process.waveform;
 
 
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import edu.iris.Fissures.FissuresException;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
@@ -22,10 +25,8 @@ import edu.sc.seis.fissuresUtil.bag.TauPUtil;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.Threadable;
 import edu.sc.seis.sod.status.StringTreeLeaf;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /** Calculates triggers, via LongShortSignalToNoise, and checks to see if a
  * trigger exists within +- the time interval for the given phase name. Uses the
@@ -34,7 +35,7 @@ import org.w3c.dom.NodeList;
  * The first trigger within the time window of the phase, if there is one, is
  * added to the cookieJar with key "sod_phaseStoN_"+phaseName for use by later
  * subsetters or later velocity output. */
-public class PhaseSignalToNoise  implements WaveformProcess {
+public class PhaseSignalToNoise  implements WaveformProcess, Threadable {
 
     
     public PhaseSignalToNoise(Element config) throws ConfigurationException, TauModelException{
@@ -72,7 +73,10 @@ public class PhaseSignalToNoise  implements WaveformProcess {
                                         longOffsetEnd,
                                         taupUtil);
     }
-
+    
+    public boolean isThreadSafe(){
+        return true;
+    }
 
     public WaveformResult process(EventAccessOperations event,
                                          Channel channel,

@@ -6,16 +6,17 @@
 
 package edu.sc.seis.sod.process.waveform;
 
+import org.w3c.dom.Element;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.Threadable;
 import edu.sc.seis.sod.status.StringTreeLeaf;
-import org.w3c.dom.Element;
 
-public class Taper implements WaveformProcess {
+public class Taper implements WaveformProcess, Threadable {
     public Taper (Element config) {
         int type = edu.sc.seis.fissuresUtil.bag.Taper.HANNING;
         Element typeElement = SodUtil.getElement(config, "type");
@@ -36,6 +37,10 @@ public class Taper implements WaveformProcess {
         } else {
             taper = new edu.sc.seis.fissuresUtil.bag.Taper(type);
         }
+    }
+
+    public boolean isThreadSafe() {
+        return true;
     }
 
     public WaveformResult process(EventAccessOperations event,

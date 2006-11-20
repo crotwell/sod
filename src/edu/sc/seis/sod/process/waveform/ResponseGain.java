@@ -14,6 +14,7 @@ import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.Threadable;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
 /**
@@ -22,9 +23,13 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
  * deconvolution, merely a constant multiplier. Created: Wed Nov 6 17:58:10 2002
  * 
  * @author <a href="mailto:www@seis.sc.edu">Philip Crotwell </a>
- * @version $Id: ResponseGain.java 16403 2006-03-07 15:27:28Z crotwell $
+ * @version $Id: ResponseGain.java 18512 2006-11-20 22:35:04Z groves $
  */
-public class ResponseGain implements WaveformProcess {
+public class ResponseGain implements WaveformProcess, Threadable {
+
+    public boolean isThreadSafe() {
+        return true;
+    }
 
     public WaveformResult process(EventAccessOperations event,
                                   Channel channel,
@@ -33,9 +38,9 @@ public class ResponseGain implements WaveformProcess {
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) throws Exception {
         LocalSeismogramImpl[] out = new LocalSeismogramImpl[seismograms.length];
-        ProxyNetworkAccess na = Start.getNetworkArm()
-                .getNetwork(channel.get_id().network_id);
         if(seismograms.length > 0) {
+            ProxyNetworkAccess na = Start.getNetworkArm()
+                    .getNetwork(channel.get_id().network_id);
             try {
                 ChannelId chanId = channel.get_id();
                 Time seisTime = seismograms[0].begin_time;
@@ -55,12 +60,12 @@ public class ResponseGain implements WaveformProcess {
                                                              false,
                                                              "No instrumentation found for time "
                                                                      + seismograms[0].begin_time.date_time));
-            } catch (InstrumentationInvalid e) {
+            } catch(InstrumentationInvalid e) {
                 return new WaveformResult(out,
                                           new StringTreeLeaf(this,
                                                              false,
                                                              "Invalid instrumentation for "
-                        + ChannelIdUtil.toString(channel.get_id())));
+                                                                     + ChannelIdUtil.toString(channel.get_id())));
             }
         }
         return new WaveformResult(true, seismograms, this);

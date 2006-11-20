@@ -15,9 +15,9 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.Threadable;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
-import edu.sc.seis.sod.status.StringTreeLeaf;
 
 public class SeismogramOR extends ForkProcess {
 
@@ -36,13 +36,23 @@ public class SeismogramOR extends ForkProcess {
         WaveformResult result = new WaveformResult(false, seismograms, this);
         while(it.hasNext() && !result.isSuccess()) {
             WaveformProcess processor = (WaveformProcess)it.next();
-            synchronized(processor) {
+            if(processor instanceof Threadable
+                    && ((Threadable)processor).isThreadSafe()) {
                 result = processor.process(event,
                                            channel,
                                            original,
                                            available,
                                            result.getSeismograms(),
                                            cookieJar);
+            } else {
+                synchronized(processor) {
+                    result = processor.process(event,
+                                               channel,
+                                               original,
+                                               available,
+                                               result.getSeismograms(),
+                                               cookieJar);
+                }
             }
             reasons.add(result.getReason());
         } // end of while (it.hasNext())

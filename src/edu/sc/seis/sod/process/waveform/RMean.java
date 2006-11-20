@@ -5,6 +5,7 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.Threadable;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
 /**
@@ -14,9 +15,13 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
  * Created: Wed Nov 6 17:58:10 2002
  * 
  * @author <a href="mailto:www@seis.sc.edu">Philip Crotwell</a>
- * @version $Id: RMean.java 13876 2005-06-15 16:35:25Z groves $
+ * @version $Id: RMean.java 18512 2006-11-20 22:35:04Z groves $
  */
-public class RMean implements WaveformProcess {
+public class RMean implements WaveformProcess, Threadable {
+
+    public boolean isThreadSafe() {
+        return true;
+    }
 
     /**
      * Removes the mean from the seismograms.
