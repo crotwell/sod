@@ -65253,6 +65253,9 @@
             <ref name="sensorNominalLowFreq9"/>
             <ref name="hasNegativeSensitivity9"/>
             <ref name="isFlipped9"/>
+            <element name="isGroupable">
+                <empty/>
+            </element>
         </choice>
     </define>
     <define name="channel17">
@@ -65358,6 +65361,9 @@
             <ref name="sensorNominalLowFreq18"/>
             <ref name="hasNegativeSensitivity18"/>
             <ref name="isFlipped18"/>
+            <element name="isGroupable">
+                <empty/>
+            </element>
         </choice>
     </define>
     <define name="channel20">
@@ -65463,6 +65469,9 @@
             <ref name="sensorNominalLowFreq2"/>
             <ref name="hasNegativeSensitivity2"/>
             <ref name="isFlipped2"/>
+            <element name="isGroupable">
+                <empty/>
+            </element>
         </choice>
     </define>
     <define name="channel3">
@@ -65568,6 +65577,9 @@
             <ref name="sensorNominalLowFreq3"/>
             <ref name="hasNegativeSensitivity3"/>
             <ref name="isFlipped3"/>
+            <element name="isGroupable">
+                <empty/>
+            </element>
         </choice>
     </define>
     <define name="channel12">
@@ -65673,6 +65685,9 @@
             <ref name="sensorNominalLowFreq13"/>
             <ref name="hasNegativeSensitivity13"/>
             <ref name="isFlipped13"/>
+            <element name="isGroupable">
+                <empty/>
+            </element>
         </choice>
     </define>
     <define name="channel2">
@@ -65778,6 +65793,9 @@
             <ref name="sensorNominalLowFreq11"/>
             <ref name="hasNegativeSensitivity11"/>
             <ref name="isFlipped11"/>
+            <element name="isGroupable">
+                <empty/>
+            </element>
         </choice>
     </define>
     <define name="channel13">
@@ -65883,6 +65901,9 @@
             <ref name="sensorNominalLowFreq14"/>
             <ref name="hasNegativeSensitivity14"/>
             <ref name="isFlipped14"/>
+            <element name="isGroupable">
+                <empty/>
+            </element>
         </choice>
     </define>
     <define name="channel">
@@ -65988,6 +66009,9 @@
             <ref name="sensorNominalLowFreq"/>
             <ref name="hasNegativeSensitivity"/>
             <ref name="isFlipped"/>
+            <element name="isGroupable">
+                <empty/>
+            </element>
         </choice>
     </define>
     <define name="channel15">
@@ -66093,6 +66117,9 @@
             <ref name="sensorNominalLowFreq16"/>
             <ref name="hasNegativeSensitivity16"/>
             <ref name="isFlipped16"/>
+            <element name="isGroupable">
+                <empty/>
+            </element>
         </choice>
     </define>
     <define name="channel4">
@@ -66198,6 +66225,9 @@
             <ref name="sensorNominalLowFreq4"/>
             <ref name="hasNegativeSensitivity4"/>
             <ref name="isFlipped4"/>
+            <element name="isGroupable">
+                <empty/>
+            </element>
         </choice>
     </define>
     <define name="channel14">
@@ -66303,6 +66333,9 @@
             <ref name="sensorNominalLowFreq15"/>
             <ref name="hasNegativeSensitivity15"/>
             <ref name="isFlipped15"/>
+            <element name="isGroupable">
+                <empty/>
+            </element>
         </choice>
     </define>
     <define name="channel7">
@@ -66408,6 +66441,9 @@
             <ref name="sensorNominalLowFreq7"/>
             <ref name="hasNegativeSensitivity7"/>
             <ref name="isFlipped8"/>
+            <element name="isGroupable">
+                <empty/>
+            </element>
         </choice>
     </define>
     <define name="channel8">
@@ -66513,6 +66549,9 @@
             <ref name="sensorNominalLowFreq8"/>
             <ref name="hasNegativeSensitivity8"/>
             <ref name="isFlipped7"/>
+            <element name="isGroupable">
+                <empty/>
+            </element>
         </choice>
     </define>
     <define name="channel18">
@@ -66618,6 +66657,9 @@
             <ref name="sensorNominalLowFreq19"/>
             <ref name="hasNegativeSensitivity19"/>
             <ref name="isFlipped19"/>
+            <element name="isGroupable">
+                <empty/>
+            </element>
         </choice>
     </define>
     <define name="channel11">
@@ -66723,6 +66765,9 @@
             <ref name="sensorNominalLowFreq12"/>
             <ref name="hasNegativeSensitivity12"/>
             <ref name="isFlipped12"/>
+            <element name="isGroupable">
+                <empty/>
+            </element>
         </choice>
     </define>
     <define name="channel5">
@@ -66828,6 +66873,9 @@
             <ref name="sensorNominalLowFreq5"/>
             <ref name="hasNegativeSensitivity5"/>
             <ref name="isFlipped5"/>
+            <element name="isGroupable">
+                <empty/>
+            </element>
         </choice>
     </define>
     <define name="channel10">
@@ -66933,6 +66981,9 @@
             <ref name="sensorNominalLowFreq10"/>
             <ref name="hasNegativeSensitivity10"/>
             <ref name="isFlipped10"/>
+            <element name="isGroupable">
+                <empty/>
+            </element>
         </choice>
     </define>
     <define name="channel16">
@@ -67038,6 +67089,9 @@
             <ref name="sensorNominalLowFreq17"/>
             <ref name="hasNegativeSensitivity17"/>
             <ref name="isFlipped17"/>
+            <element name="isGroupable">
+                <empty/>
+            </element>
         </choice>
     </define>
     <define name="channel19">
@@ -67143,6 +67197,9 @@
             <ref name="sensorNominalLowFreq20"/>
             <ref name="hasNegativeSensitivity20"/>
             <ref name="isFlipped20"/>
+            <element name="isGroupable">
+                <empty/>
+            </element>
         </choice>
     </define>
     <define name="channel6">
@@ -67248,6 +67305,9 @@
             <ref name="sensorNominalLowFreq6"/>
             <ref name="hasNegativeSensitivity6"/>
             <ref name="isFlipped6"/>
+            <element name="isGroupable">
+                <empty/>
+            </element>
         </choice>
     </define>
     <define name="siteLogical18">

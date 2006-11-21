@@ -59,6 +59,7 @@
             <ref name="sensorNominalLowFreq"/>
             <ref name="hasNegativeSensitivity"/>
             <ref name="isFlipped"/>
+            <ref name="isGroupable"/>
         </choice>
     </define>
     <define name="channelLogical">
@@ -753,6 +754,14 @@
         <element name="hasNegativeSensitivity">
             <xsd:annotation>
                 <summary>Passes channels with a sensitivity less than 0</summary>
+            </xsd:annotation>
+            <empty/>
+        </element>
+    </define>
+    <define name="isGroupable">
+        <element name="isGroupable">
+            <xsd:annotation>
+                <summary>Passes channels that can be grouped with other channels at the site to make 3 components of motion.</summary>
             </xsd:annotation>
             <empty/>
         </element>
