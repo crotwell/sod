@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.print.attribute.standard.Finishings;
 import org.apache.log4j.Logger;
 import org.omg.CORBA.BAD_PARAM;
 import org.w3c.dom.Element;
@@ -239,7 +240,7 @@ public class NetworkArm implements Arm {
             String[] constrainingCodes = getConstrainingNetworkCodes(attrSubsetter);
             if(constrainingCodes.length > 0) {
                 NetworkFinder netFinder = netDC.a_finder();
-                List constrainedNets = new ArrayList();
+                List constrainedNets = new ArrayList(constrainingCodes.length);
                 for(int i = 0; i < constrainingCodes.length; i++) {
                     NetworkAccess[] found = netFinder.retrieve_by_code(constrainingCodes[i]);
                     for(int j = 0; j < found.length; j++) {
@@ -300,6 +301,10 @@ public class NetworkArm implements Arm {
         }
         if(lastPusher != null) {
             lastPusher.setLastPusher();
+        }
+        if(allNets.length == 0) {
+            logger.warn("Found no networks.  Make sure the network codes you entered are valid");
+            finish();
         }
         // Set the time of the last check to now
         queryTimeTable.setQuery(finder.getName(),
@@ -364,11 +369,7 @@ public class NetworkArm implements Arm {
 
         private void finishArm() {
             if(lastPusher && pusherFinished) {
-                armFinished = true;
-                logger.info("Network arm finished.");
-                synchronized(OutputScheduler.getDefault()) {
-                    OutputScheduler.getDefault().notify();
-                }
+                finish();
             }
         }
 
@@ -380,6 +381,14 @@ public class NetworkArm implements Arm {
         private boolean lastPusher = false, pusherFinished = false;
 
         private NetworkDbObject netDb;
+    }
+
+    private void finish() {
+        armFinished = true;
+        logger.info("Network arm finished.");
+        synchronized(OutputScheduler.getDefault()) {
+            OutputScheduler.getDefault().notify();
+        }
     }
 
     /**
