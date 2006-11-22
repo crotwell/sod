@@ -254,7 +254,7 @@
         </dependency>
         <dependency>
     <id>sod</id>
-    <version>2.2.1beta</version>
+    <version>2.2.1beta1</version>
 </dependency>
 </dependencies>
     <build>
