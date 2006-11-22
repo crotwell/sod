@@ -952,6 +952,136 @@
             <data type="string"/>
         </element>
     </define>
+    <define name="unit">
+        <choice>
+            <element name="unit">
+                <choice>
+                    <value>KILOMETER</value>
+                    <value>METER</value>
+                    <value>CENTIMETER</value>
+                    <value>NANOMETER</value>
+                    <value>MICROMETER</value>
+                    <value>MICRON</value>
+                    <value>MILLIMETER</value>
+                    <value>PICOMETER</value>
+                    <value>INCH</value>
+                    <value>FOOT</value>
+                    <value>MILE</value>
+                    <value>HERTZ</value>
+                    <value>NANOSECOND</value>
+                    <value>MICROSECOND</value>
+                    <value>MILLISECOND</value>
+                    <value>SECOND</value>
+                    <value>MINUTE</value>
+                    <value>HOUR</value>
+                    <value>DAY</value>
+                    <value>WEEK</value>
+                    <value>FORTNIGHT</value>
+                    <value>AMPERE</value>
+                    <value>COULOMB</value>
+                    <value>VOLT</value>
+                    <value>DEGREE</value>
+                    <value>RADIAN</value>
+                    <value>COUNT</value>
+                    <value>RADIAN_PER_SECOND</value>
+                    <value>SQUARE_METER</value>
+                    <value>SQUARE_CENTIMETER</value>
+                    <value>CUBIC_METER</value>
+                    <value>CUBIC_CENTIMETER</value>
+                    <value>LITER</value>
+                    <value>GRAM</value>
+                    <value>KILOGRAM</value>
+                    <value>DENSITY</value>
+                    <value>GRAM_PER_CUBIC_CENTIMETER</value>
+                    <value>KILOGRAM_PER_CUBIC_METER</value>
+                    <value>VELOCITY</value>
+                    <value>METER_PER_SECOND</value>
+                    <value>CENTIMETER_PER_SECOND</value>
+                    <value>KILOMETER_PER_SECOND</value>
+                    <value>MILLIMETER_PER_SECOND</value>
+                    <value>MICROMETER_PER_SECOND</value>
+                    <value>MICRON_PER_SECOND</value>
+                    <value>NANOMETER_PER_SECOND</value>
+                    <value>ACCELERATION</value>
+                    <value>METER_PER_SECOND_PER_SECOND</value>
+                    <value>CENTIMETER_PER_SECOND_PER_SECOND</value>
+                    <value>KILOMETER_PER_SECOND_PER_SECOND</value>
+                    <value>MILLIMETER_PER_SECOND_PER_SECOND</value>
+                    <value>MICROMETER_PER_SECOND_PER_SECOND</value>
+                    <value>MICRON_PER_SECOND_PER_SECOND</value>
+                    <value>NANOMETER_PER_SECOND_PER_SECOND</value>
+                    <value>FORCE</value>
+                    <value>NEWTON</value>
+                    <value>JOULE</value>
+                    <value>DYNE</value>
+                    <value>ENERGY</value>
+                </choice>
+            </element>
+            <element name="unit">
+                <choice>
+                    <value>KILOMETER</value>
+                    <value>METER</value>
+                    <value>CENTIMETER</value>
+                    <value>NANOMETER</value>
+                    <value>MICROMETER</value>
+                    <value>MICRON</value>
+                    <value>MILLIMETER</value>
+                    <value>PICOMETER</value>
+                    <value>INCH</value>
+                    <value>FOOT</value>
+                    <value>MILE</value>
+                    <value>HERTZ</value>
+                    <value>NANOSECOND</value>
+                    <value>MICROSECOND</value>
+                    <value>MILLISECOND</value>
+                    <value>SECOND</value>
+                    <value>MINUTE</value>
+                    <value>HOUR</value>
+                    <value>DAY</value>
+                    <value>WEEK</value>
+                    <value>FORTNIGHT</value>
+                    <value>AMPERE</value>
+                    <value>COULOMB</value>
+                    <value>VOLT</value>
+                    <value>DEGREE</value>
+                    <value>RADIAN</value>
+                    <value>COUNT</value>
+                    <value>RADIAN_PER_SECOND</value>
+                    <value>SQUARE_METER</value>
+                    <value>SQUARE_CENTIMETER</value>
+                    <value>CUBIC_METER</value>
+                    <value>CUBIC_CENTIMETER</value>
+                    <value>LITER</value>
+                    <value>GRAM</value>
+                    <value>KILOGRAM</value>
+                    <value>DENSITY</value>
+                    <value>GRAM_PER_CUBIC_CENTIMETER</value>
+                    <value>KILOGRAM_PER_CUBIC_METER</value>
+                    <value>VELOCITY</value>
+                    <value>METER_PER_SECOND</value>
+                    <value>CENTIMETER_PER_SECOND</value>
+                    <value>KILOMETER_PER_SECOND</value>
+                    <value>MILLIMETER_PER_SECOND</value>
+                    <value>MICROMETER_PER_SECOND</value>
+                    <value>MICRON_PER_SECOND</value>
+                    <value>NANOMETER_PER_SECOND</value>
+                    <value>ACCELERATION</value>
+                    <value>METER_PER_SECOND_PER_SECOND</value>
+                    <value>CENTIMETER_PER_SECOND_PER_SECOND</value>
+                    <value>KILOMETER_PER_SECOND_PER_SECOND</value>
+                    <value>MILLIMETER_PER_SECOND_PER_SECOND</value>
+                    <value>MICROMETER_PER_SECOND_PER_SECOND</value>
+                    <value>MICRON_PER_SECOND_PER_SECOND</value>
+                    <value>NANOMETER_PER_SECOND_PER_SECOND</value>
+                    <value>FORCE</value>
+                    <value>NEWTON</value>
+                    <value>JOULE</value>
+                    <value>DYNE</value>
+                    <value>ENERGY</value>
+                </choice>
+            </element>
+        </choice>
+    </define>
     <define name="responseWriter">
         <element name="responseWriter">
             <optional>
@@ -1262,6 +1392,56 @@
             <ref name="hasResponse"/>
             <ref name="hasSensitivity"/>
             <ref name="repairSensitivity"/>
+            <element name="responseFilterType">
+                <optional>
+                    <element name="stage">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filter">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <element name="type">
+                    <choice>
+                        <value>poleZero</value>
+                        <value>coefficient</value>
+                        <value>list</value>
+                    </choice>
+                </element>
+            </element>
+            <element name="stageTransferType">
+                <optional>
+                    <element name="stage">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <element name="type">
+                    <choice>
+                        <value>laplace</value>
+                        <value>analog</value>
+                        <value>composite</value>
+                        <value>digital</value>
+                    </choice>
+                </element>
+            </element>
+            <element name="stageInputUnit">
+                <optional>
+                    <element name="stage">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <ref name="unit"/>
+            </element>
+            <element name="stageOutputUnit">
+                <optional>
+                    <element name="stage">
+                        <data type="int"/>
+                    </element>
+                </optional>
+                <ref name="unit"/>
+            </element>
             <ref name="clockId"/>
             <ref name="clockManufacturer"/>
             <ref name="clockModel"/>
@@ -1280,6 +1460,9 @@
             <ref name="sensorNominalLowFreq"/>
             <ref name="hasNegativeSensitivity"/>
             <ref name="isFlipped"/>
+            <element name="isGroupable">
+                <empty/>
+            </element>
         </choice>
     </define>
     <define name="area2">
@@ -3135,20 +3318,36 @@
                 </optional>
             </group>
             <interleave>
-                <element name="unit">
-                    <choice>
-                        <value>HOUR</value>
-                        <value>NANOSECOND</value>
-                        <value>MICROSECOND</value>
-                        <value>MILLISECOND</value>
-                        <value>SECOND</value>
-                        <value>MINUTE</value>
-                        <value>DAY</value>
-                        <value>WEEK</value>
-                        <value>FORTNIGHT</value>
-                        <value>GREGORIAN_YEAR</value>
-                    </choice>
-                </element>
+                <choice>
+                    <element name="unit">
+                        <choice>
+                            <value>HOUR</value>
+                            <value>NANOSECOND</value>
+                            <value>MICROSECOND</value>
+                            <value>MILLISECOND</value>
+                            <value>SECOND</value>
+                            <value>MINUTE</value>
+                            <value>DAY</value>
+                            <value>WEEK</value>
+                            <value>FORTNIGHT</value>
+                            <value>GREGORIAN_YEAR</value>
+                        </choice>
+                    </element>
+                    <element name="unit">
+                        <choice>
+                            <value>HOUR</value>
+                            <value>NANOSECOND</value>
+                            <value>MICROSECOND</value>
+                            <value>MILLISECOND</value>
+                            <value>SECOND</value>
+                            <value>MINUTE</value>
+                            <value>DAY</value>
+                            <value>WEEK</value>
+                            <value>FORTNIGHT</value>
+                            <value>GREGORIAN_YEAR</value>
+                        </choice>
+                    </element>
+                </choice>
                 <element name="value">
                     <data type="float"/>
                 </element>
