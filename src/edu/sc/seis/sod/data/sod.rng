@@ -65188,12 +65188,12 @@
             <element name="responseFilterType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="filter">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -65207,7 +65207,7 @@
             <element name="stageTransferType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -65222,7 +65222,7 @@
             <element name="stageInputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit9"/>
@@ -65230,7 +65230,7 @@
             <element name="stageOutputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit9"/>
@@ -65296,12 +65296,12 @@
             <element name="responseFilterType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="filter">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -65315,7 +65315,7 @@
             <element name="stageTransferType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -65330,7 +65330,7 @@
             <element name="stageInputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit18"/>
@@ -65338,7 +65338,7 @@
             <element name="stageOutputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit18"/>
@@ -65404,12 +65404,12 @@
             <element name="responseFilterType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="filter">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -65423,7 +65423,7 @@
             <element name="stageTransferType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -65438,7 +65438,7 @@
             <element name="stageInputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit2"/>
@@ -65446,7 +65446,7 @@
             <element name="stageOutputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit2"/>
@@ -65512,12 +65512,12 @@
             <element name="responseFilterType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="filter">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -65531,7 +65531,7 @@
             <element name="stageTransferType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -65546,7 +65546,7 @@
             <element name="stageInputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit3"/>
@@ -65554,7 +65554,7 @@
             <element name="stageOutputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit3"/>
@@ -65620,12 +65620,12 @@
             <element name="responseFilterType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="filter">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -65639,7 +65639,7 @@
             <element name="stageTransferType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -65654,7 +65654,7 @@
             <element name="stageInputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit13"/>
@@ -65662,7 +65662,7 @@
             <element name="stageOutputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit13"/>
@@ -65728,12 +65728,12 @@
             <element name="responseFilterType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="filter">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -65747,7 +65747,7 @@
             <element name="stageTransferType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -65762,7 +65762,7 @@
             <element name="stageInputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit11"/>
@@ -65770,7 +65770,7 @@
             <element name="stageOutputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit11"/>
@@ -65836,12 +65836,12 @@
             <element name="responseFilterType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="filter">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -65855,7 +65855,7 @@
             <element name="stageTransferType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -65870,7 +65870,7 @@
             <element name="stageInputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit14"/>
@@ -65878,7 +65878,7 @@
             <element name="stageOutputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit14"/>
@@ -65944,12 +65944,12 @@
             <element name="responseFilterType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="filter">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -65963,7 +65963,7 @@
             <element name="stageTransferType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -65978,7 +65978,7 @@
             <element name="stageInputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit"/>
@@ -65986,7 +65986,7 @@
             <element name="stageOutputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit"/>
@@ -66052,12 +66052,12 @@
             <element name="responseFilterType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="filter">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -66071,7 +66071,7 @@
             <element name="stageTransferType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -66086,7 +66086,7 @@
             <element name="stageInputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit16"/>
@@ -66094,7 +66094,7 @@
             <element name="stageOutputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit16"/>
@@ -66160,12 +66160,12 @@
             <element name="responseFilterType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="filter">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -66179,7 +66179,7 @@
             <element name="stageTransferType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -66194,7 +66194,7 @@
             <element name="stageInputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit4"/>
@@ -66202,7 +66202,7 @@
             <element name="stageOutputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit4"/>
@@ -66268,12 +66268,12 @@
             <element name="responseFilterType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="filter">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -66287,7 +66287,7 @@
             <element name="stageTransferType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -66302,7 +66302,7 @@
             <element name="stageInputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit15"/>
@@ -66310,7 +66310,7 @@
             <element name="stageOutputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit15"/>
@@ -66376,12 +66376,12 @@
             <element name="responseFilterType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="filter">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -66395,7 +66395,7 @@
             <element name="stageTransferType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -66410,7 +66410,7 @@
             <element name="stageInputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit7"/>
@@ -66418,7 +66418,7 @@
             <element name="stageOutputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit7"/>
@@ -66484,12 +66484,12 @@
             <element name="responseFilterType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="filter">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -66503,7 +66503,7 @@
             <element name="stageTransferType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -66518,7 +66518,7 @@
             <element name="stageInputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit8"/>
@@ -66526,7 +66526,7 @@
             <element name="stageOutputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit8"/>
@@ -66592,12 +66592,12 @@
             <element name="responseFilterType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="filter">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -66611,7 +66611,7 @@
             <element name="stageTransferType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -66626,7 +66626,7 @@
             <element name="stageInputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit19"/>
@@ -66634,7 +66634,7 @@
             <element name="stageOutputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit19"/>
@@ -66700,12 +66700,12 @@
             <element name="responseFilterType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="filter">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -66719,7 +66719,7 @@
             <element name="stageTransferType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -66734,7 +66734,7 @@
             <element name="stageInputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit12"/>
@@ -66742,7 +66742,7 @@
             <element name="stageOutputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit12"/>
@@ -66808,12 +66808,12 @@
             <element name="responseFilterType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="filter">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -66827,7 +66827,7 @@
             <element name="stageTransferType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -66842,7 +66842,7 @@
             <element name="stageInputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit5"/>
@@ -66850,7 +66850,7 @@
             <element name="stageOutputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit5"/>
@@ -66916,12 +66916,12 @@
             <element name="responseFilterType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="filter">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -66935,7 +66935,7 @@
             <element name="stageTransferType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -66950,7 +66950,7 @@
             <element name="stageInputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit10"/>
@@ -66958,7 +66958,7 @@
             <element name="stageOutputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit10"/>
@@ -67024,12 +67024,12 @@
             <element name="responseFilterType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="filter">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -67043,7 +67043,7 @@
             <element name="stageTransferType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -67058,7 +67058,7 @@
             <element name="stageInputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit17"/>
@@ -67066,7 +67066,7 @@
             <element name="stageOutputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit17"/>
@@ -67132,12 +67132,12 @@
             <element name="responseFilterType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="filter">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -67151,7 +67151,7 @@
             <element name="stageTransferType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -67166,7 +67166,7 @@
             <element name="stageInputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit20"/>
@@ -67174,7 +67174,7 @@
             <element name="stageOutputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit20"/>
@@ -67240,12 +67240,12 @@
             <element name="responseFilterType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="filter">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -67259,7 +67259,7 @@
             <element name="stageTransferType">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <element name="type">
@@ -67274,7 +67274,7 @@
             <element name="stageInputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit6"/>
@@ -67282,7 +67282,7 @@
             <element name="stageOutputUnit">
                 <optional>
                     <element name="stage">
-                        <data type="int"/>
+                        <data type="integer"/>
                     </element>
                 </optional>
                 <ref name="unit6"/>

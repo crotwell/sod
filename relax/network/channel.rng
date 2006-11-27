@@ -378,7 +378,7 @@
                         <summary>The number of the stage</summary>
                         <description>The number, starting with 1, of the stage of interest. This defaults to 1.</description>
                     </xsd:annotation>
-                    <data type="int"/>
+                    <data type="integer"/>
                 </element>
             </optional>
             <element name="type">
@@ -406,7 +406,7 @@
                         <summary>The number of the stage</summary>
                         <description>The number, starting with 1, of the stage of interest. This defaults to 1.</description>
                     </xsd:annotation>
-                    <data type="int"/>
+                    <data type="integer"/>
                 </element>
             </optional>
             <ref name="unit"/>
@@ -423,7 +423,7 @@
                         <summary>The number of the stage</summary>
                         <description>The number, starting with 1, of the stage of interest. This defaults to 1.</description>
                     </xsd:annotation>
-                    <data type="int"/>
+                    <data type="integer"/>
                 </element>
             </optional>
             <ref name="unit"/>
@@ -440,7 +440,7 @@
                         <summary>The number of the stage</summary>
                         <description>The number, starting with 1, of the stage of interest. This defaults to 1.</description>
                     </xsd:annotation>
-                    <data type="int"/>
+                    <data type="integer"/>
                 </element>
             </optional>
             <optional>
@@ -450,7 +450,7 @@
                         <description>The number, starting with 1, of the filter of interest within the given stage. This
                             defaults to 1.</description>
                     </xsd:annotation>
-                    <data type="int"/>
+                    <data type="integer"/>
                 </element>
             </optional>
             <element name="type">
