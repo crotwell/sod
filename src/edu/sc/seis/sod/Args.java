@@ -106,7 +106,7 @@ public class Args {
             }
         }
         jsap.setUsage(builder.toString());
-        result = jsap.parse(args);
+        result = jsap.parse((String[])toParse.toArray(new String[0]));
         if(result.getBoolean("version")) {
             System.out.println("SOD " + Version.getVersion());
             System.exit(0);
