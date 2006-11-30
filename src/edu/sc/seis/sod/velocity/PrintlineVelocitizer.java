@@ -13,6 +13,7 @@ import org.apache.velocity.exception.ParseErrorException;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
+import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.database.util.SQLLoader;
@@ -68,12 +69,19 @@ public class PrintlineVelocitizer {
                          ContextWrangler.createContext(chan));
     }
 
+    public String evaluate(String fileTemplate, String template, Station sta)
+            throws IOException {
+        return evalulate(fileTemplate,
+                         template,
+                         ContextWrangler.createContext(sta));
+    }
+
     public String evaluate(String filename,
-                         String template,
-                         EventAccessOperations event,
-                         Channel channel,
-                         RequestFilter[] request,
-                         CookieJar cookieJar) throws IOException {
+                           String template,
+                           EventAccessOperations event,
+                           Channel channel,
+                           RequestFilter[] request,
+                           CookieJar cookieJar) throws IOException {
         return evaluate(filename,
                         template,
                         event,
