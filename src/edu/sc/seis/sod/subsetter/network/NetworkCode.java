@@ -3,6 +3,8 @@ package edu.sc.seis.sod.subsetter.network;
 import org.w3c.dom.Element;
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 
 public class NetworkCode implements NetworkSubsetter {
 
@@ -10,8 +12,8 @@ public class NetworkCode implements NetworkSubsetter {
         this.desiredCode = SodUtil.getText(config);
     }
 
-    public boolean accept(NetworkAttr attr) throws Exception {
-        return attr.get_code().equals(desiredCode);
+    public StringTree accept(NetworkAttr attr) throws Exception {
+        return new StringTreeLeaf(this, attr.get_code().equals(desiredCode));
     }
 
     private String desiredCode;

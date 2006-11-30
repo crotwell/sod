@@ -1,20 +1,17 @@
 package edu.sc.seis.sod.subsetter.network;
 
-import java.util.regex.Pattern;
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
+import edu.iris.Fissures.network.NetworkIdUtil;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 
 /**
  * @author groves Created on May 4, 2005
  */
 public class TemporaryNetwork implements NetworkSubsetter {
 
-    public boolean accept(NetworkAttr attr) {
-        return isTemporary(attr.get_code());
+    public StringTree accept(NetworkAttr attr) {
+        return new StringTreeLeaf(this, NetworkIdUtil.isTemporary(attr.get_id()));
     }
 
-    public static boolean isTemporary(String code) {
-        return p.matcher(code).matches();
-    }
-
-    private static Pattern p = Pattern.compile("[XYZ].?");
 }

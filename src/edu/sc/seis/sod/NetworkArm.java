@@ -269,8 +269,8 @@ public class NetworkArm implements Arm {
                 // Must be a concrete, continue
             }
             try {
-                if(netEffectiveSubsetter.accept(allNets[i].get_attributes())) {
-                    if(attrSubsetter.accept(allNets[i].get_attributes())) {
+                if(netEffectiveSubsetter.accept(allNets[i].get_attributes()).isSuccess()) {
+                    if(attrSubsetter.accept(allNets[i].get_attributes()).isSuccess()) {
                         int dbid;
                         synchronized(netTable) {
                             dbid = netTable.put(allNets[i].get_attributes());

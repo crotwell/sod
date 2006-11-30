@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.subsetter.network;
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
+import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.Subsetter;
 
 /**
@@ -13,7 +14,7 @@ import edu.sc.seis.sod.subsetter.Subsetter;
 
 public interface NetworkSubsetter extends Subsetter {
 
-    public boolean accept(NetworkAttr attr) throws Exception;
+    public StringTree accept(NetworkAttr attr) throws Exception;
 
 
 }// NetworkSubsetter

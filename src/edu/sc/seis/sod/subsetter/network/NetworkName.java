@@ -1,9 +1,11 @@
 package edu.sc.seis.sod.subsetter.network;
 
+import org.w3c.dom.Element;
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
-import org.w3c.dom.Element;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 
 /**
  * NetworkAttrName.java
@@ -24,10 +26,10 @@ public class NetworkName implements NetworkSubsetter {
         this.config = config;
     }
 
-    public boolean accept(NetworkAttr net) {
-        if(net.name.equals(SodUtil.getNestedText(config))) return true;
-        else return false;
+    public StringTree accept(NetworkAttr net) {
+        return new StringTreeLeaf(this, net.name.equals(SodUtil.getNestedText(config)));
     }
 
     private Element config;
+    
 }// NetworkAttrName

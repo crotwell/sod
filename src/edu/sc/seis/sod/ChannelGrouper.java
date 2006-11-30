@@ -145,7 +145,7 @@ public class ChannelGrouper {
                                                         .get_attributes();
                                             }
                                             NetworkSubsetter netSubsetter = (NetworkSubsetter)subsetter;
-                                            if(!netSubsetter.accept(netAttr)) {
+                                            if(!netSubsetter.accept(netAttr).isSuccess()) {
                                                 accept = false;
                                             }
                                         }

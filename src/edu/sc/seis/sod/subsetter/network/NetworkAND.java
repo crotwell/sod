@@ -1,9 +1,8 @@
 package edu.sc.seis.sod.subsetter.network;
 
-import java.util.Iterator;
 import org.w3c.dom.Element;
-import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.status.StringTree;
 
 public final class NetworkAND extends NetworkLogicalSubsetter implements
         NetworkSubsetter {
@@ -12,12 +11,18 @@ public final class NetworkAND extends NetworkLogicalSubsetter implements
         super(config);
     }
 
-    public boolean accept(NetworkAttr net) throws Exception {
-        Iterator it = filterList.iterator();
-        while(it.hasNext()) {
-            NetworkSubsetter filter = (NetworkSubsetter)it.next();
-            if(!filter.accept(net)) { return false; }
+    public boolean shouldContinue(StringTree result) {
+        return result.isSuccess();
+    }
+
+
+    public boolean isSuccess(StringTree[] reasons) {
+        for(int i = 0; i < reasons.length; i++) {
+            if(!reasons[i].isSuccess()){
+                return false;
+            }
         }
         return true;
     }
+    
 }// NetworkAttrAND
