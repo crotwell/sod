@@ -8,17 +8,16 @@ import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
+import edu.sc.seis.sod.subsetter.AbstractPrintlineProcess;
 import edu.sc.seis.sod.velocity.PrintlineVelocitizer;
 
 /**
  * @author <a href="mailto:crotwell@pooh">Philip Crotwell </a>
  */
-public class PrintlineChannelProcess implements ChannelSubsetter {
+public class PrintlineChannelProcess extends AbstractPrintlineProcess implements ChannelSubsetter {
 
     public PrintlineChannelProcess(Element config) throws ConfigurationException {
-        filename = DOMHelper.extractText(config, "filename", "");
-        template = DOMHelper.extractText(config, "template", DEFAULT_TEMPLATE);
-        velocitizer = new PrintlineVelocitizer(new String[]{filename, template});
+        super(config);
     }
 
     public StringTree accept(Channel channel, ProxyNetworkAccess network)
@@ -29,7 +28,8 @@ public class PrintlineChannelProcess implements ChannelSubsetter {
 
     public static final String DEFAULT_TEMPLATE = "Channel: $channel";
 
-    private PrintlineVelocitizer velocitizer;
-
-    private String filename, template;
+    public String getDefaultTemplate() {
+        return DEFAULT_TEMPLATE;
+    }
+    
 }// PrintlineChannelProcessor

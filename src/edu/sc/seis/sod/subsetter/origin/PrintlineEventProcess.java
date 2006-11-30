@@ -9,34 +9,26 @@ import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
+import edu.sc.seis.sod.subsetter.AbstractPrintlineProcess;
 import edu.sc.seis.sod.velocity.PrintlineVelocitizer;
 
-public class PrintlineEventProcess implements OriginSubsetter {
+public class PrintlineEventProcess extends AbstractPrintlineProcess implements OriginSubsetter {
 
     public PrintlineEventProcess(Element config) throws ConfigurationException {
-        filenameTemplate = extractFilename(config);
-        template = extractTemplate(config);
-        velocitizer = new PrintlineVelocitizer(new String[]{filenameTemplate, template});
+        super(config);
     }
 
-    private static String extractTemplate(Element config) {
-        return DOMHelper.extractText(config, "template", DEFAULT_TEMPLATE);
-    }
-
-    public static String extractFilename(Element config) {
-        return DOMHelper.extractText(config, "filename", "");
-    }
 
     public StringTree accept(EventAccessOperations event,
                              EventAttr attr,
                              Origin origin) throws IOException {
-        velocitizer.evaluate(filenameTemplate, template, event);
+        velocitizer.evaluate(filename, template, event);
         return new StringTreeLeaf(this, true);
     }
 
     public static final String DEFAULT_TEMPLATE = "$event.region ($event.latitude, $event.longitude) $event.time $event.magnitude";
 
-    private PrintlineVelocitizer velocitizer;
-
-    private String filenameTemplate, template;
+    public String getDefaultTemplate() {
+        return DEFAULT_TEMPLATE;
+    }
 }// PrintlineEventProcess
