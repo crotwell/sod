@@ -3,12 +3,14 @@ package edu.sc.seis.sod.velocity;
 import org.apache.velocity.VelocityContext;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.velocity.event.VelocityEvent;
 import edu.sc.seis.sod.velocity.network.VelocityChannel;
+import edu.sc.seis.sod.velocity.network.VelocityNetwork;
 import edu.sc.seis.sod.velocity.seismogram.VelocitySeismogram;
 
 /**
@@ -35,6 +37,19 @@ public class ContextWrangler {
         VelocityEvent ev = VelocityEvent.wrap(event);
         ctx.put("event", ev);
         return ev;
+    }
+
+    public static VelocityContext createContext(NetworkAttr net) {
+        VelocityContext ctx = createContext();
+        insertIntoContext(net, ctx);
+        return ctx;
+    }
+
+    public static VelocityNetwork insertIntoContext(NetworkAttr net,
+                                                    VelocityContext ctx) {
+        VelocityNetwork velChan = VelocityNetwork.wrap(net);
+        velChan.insertIntoContext(ctx);
+        return velChan;
     }
 
     public static VelocityContext createContext(Channel chan) {
