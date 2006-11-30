@@ -67,8 +67,7 @@ public class JDBCConfig extends SodJDBC {
     }
 
     public static String extractConfigString(InputSource is) throws IOException {
-        InputStreamReader isr = new InputStreamReader(is.getByteStream());
-        return extractConfigString(new BufferedReader(isr));
+        return extractConfigString(new BufferedReader(is.getCharacterStream()));
     }
 
     private static String extractConfigString(BufferedReader r1)
