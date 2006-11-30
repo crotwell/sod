@@ -326,15 +326,15 @@ public class Start {
             event.setWaitForWaveformProcessing(false);
         }
         if(RUN_ARMS) {
-            startArm(network, "Network Arm");
-            startArm(event, "Event Arm");
-            startArm(waveform, "Waveform Arm");
+            startArm(network);
+            startArm(event);
+            startArm(waveform);
         }
     }
 
-    private void startArm(Runnable arm, String name) {
+    private void startArm(Arm arm) {
         if(arm != null) {
-            new Thread(arm, name).start();
+            new Thread(arm, arm.getName()).start();
         }
     }
 
@@ -472,6 +472,30 @@ public class Start {
     public static void add(Properties newProps) {
         props.putAll(newProps);
     }
+    
+    public static void armFailure(Arm arm, Throwable t) {
+        armFailure = true;
+        GlobalExceptionHandler.handle("Problem running "+arm.getName()+", SOD is exiting abnormally. "
+                                      + "Please email this to the sod development team at sod@seis.sc.edu",
+                              t);
+        logger.fatal("Arm "+arm.getName()+" failed. Sod is giving up and quiting", t);
+        // wake up any sleeping arms
+        Arm[] arms = new Arm[] {network, event, waveform};
+        for(int i = 0; i < arms.length; i++) {
+            synchronized(arms[i]) {
+                arms[i].notify();
+            }
+        }
+        synchronized(OutputScheduler.getDefault()) {
+            OutputScheduler.getDefault().notify();
+        }
+    }
+    
+    public static boolean isArmFailure() {
+        return armFailure;
+    }
+    
+    private static boolean armFailure = false;
 
     public static final String DEFAULT_PARSER = "org.apache.xerces.parsers.SAXParser";
 

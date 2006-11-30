@@ -9,4 +9,6 @@ public interface Arm extends Runnable {
     
     public boolean isActive();
     
+    public String getName();
+    
 }

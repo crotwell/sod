@@ -82,13 +82,17 @@ public class NetworkArm implements Arm {
         try {
             getSuccessfulNetworks();
         } catch(Throwable e) {
-            GlobalExceptionHandler.handle(e);
-            logger.info("NetworkArm ending");
+            Start.armFailure(this, e);
+            armFinished = true;
         }
     }
 
     public boolean isActive() {
         return !armFinished;
+    }
+    
+    public String getName() {
+        return "NetworkArm";
     }
 
     public ProxyNetworkAccess getNetwork(NetworkId network_id) throws Exception {

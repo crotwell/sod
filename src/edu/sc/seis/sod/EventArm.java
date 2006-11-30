@@ -53,6 +53,10 @@ public class EventArm implements Arm {
     public boolean isActive() {
         return alive;
     }
+    
+    public String getName() {
+        return "EventArm";
+    }
 
     public void run() {
         try {
@@ -63,8 +67,7 @@ public class EventArm implements Arm {
             }
             getEvents();
         } catch(Throwable e) {
-            GlobalExceptionHandler.handle("Exception caught while processing the EventArm",
-                                          e);
+            Start.armFailure(this, e);
         }
         logger.info("Event arm finished");
         alive = false;
@@ -96,7 +99,7 @@ public class EventArm implements Arm {
     }
 
     private void getEvents() throws Exception {
-        while(atLeastOneSourceHasNext()) {
+        while( !Start.isArmFailure() && atLeastOneSourceHasNext()) {
             Iterator it = sources.iterator();
             while(it.hasNext()) {
                 EventSource source = (EventSource)it.next();
@@ -114,6 +117,12 @@ public class EventArm implements Arm {
                     }
                     handle(source.next());
                     waitForProcessing();
+                    if (waitForWaveformProcessing && Start.isArmFailure()) {
+                        // we are supposed to wait for the waveform arm to process, but
+                        // if it is no longer active due to an arm failure, then we should not wait forever
+                        logger.warn("Arm failure, "+getName()+" exiting early");
+                        return;
+                    }
                 }
             }
         }
@@ -141,7 +150,7 @@ public class EventArm implements Arm {
         synchronized(eventStatus) {
             numWaiting = eventStatus.getNumWaiting();
         }
-        if(waitForWaveformProcessing  &&  numWaiting > MIN_WAIT_EVENTS) {
+        if( !Start.isArmFailure() && waitForWaveformProcessing  &&  numWaiting > MIN_WAIT_EVENTS) {
             synchronized(this) {
                 setStatus("eventArm waiting until there are less than "+MIN_WAIT_EVENTS+" events waiting to be processed.");
                 wait();
