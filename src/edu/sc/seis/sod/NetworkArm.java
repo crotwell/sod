@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import javax.print.attribute.standard.Finishings;
 import org.apache.log4j.Logger;
 import org.omg.CORBA.BAD_PARAM;
 import org.w3c.dom.Element;
@@ -90,7 +89,7 @@ public class NetworkArm implements Arm {
     public boolean isActive() {
         return !armFinished;
     }
-    
+
     public String getName() {
         return "NetworkArm";
     }
@@ -358,11 +357,14 @@ public class NetworkArm implements Arm {
         }
 
         public void run() {
-            StationDbObject[] staDbs = getSuccessfulStations(netDb);
-            for(int j = 0; j < staDbs.length; j++) {
-                SiteDbObject[] siteDbs = getSuccessfulSites(netDb, staDbs[j]);
-                for(int k = 0; k < siteDbs.length; k++) {
-                    getSuccessfulChannels(netDb, siteDbs[k]);
+            if(!Start.isArmFailure()) {
+                StationDbObject[] staDbs = getSuccessfulStations(netDb);
+                for(int j = 0; j < staDbs.length; j++) {
+                    SiteDbObject[] siteDbs = getSuccessfulSites(netDb,
+                                                                staDbs[j]);
+                    for(int k = 0; k < siteDbs.length; k++) {
+                        getSuccessfulChannels(netDb, siteDbs[k]);
+                    }
                 }
             }
             synchronized(this) {
