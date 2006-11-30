@@ -65,6 +65,12 @@ public class IndexTemplate extends FileWritingTemplate implements
             SodUtil.copyFile(key, dirName + "/images/mapkey.gif");
             SodUtil.copyFile(individualKey, dirName
                     + "/images/individualEventMapKey.gif");
+            String configFileLoc = Start.getConfigFileName();
+            String configFileName = new File(configFileLoc).getName();
+            configFile = configFileName;
+            SodUtil.copyFile(Start.getConfigFileName(),
+                             FileWritingTemplate.getBaseDirectoryName() + "/"
+                                     + configFile);
             /*
              * To avoid problems during rendering of XML by some of the browsers
              * like Mac Safari
@@ -74,15 +80,6 @@ public class IndexTemplate extends FileWritingTemplate implements
             GlobalExceptionHandler.handle("unexpected problem creating index.html page",
                                           e);
         }
-    }
-
-    public static void setConfigFileLoc() throws FileNotFoundException {
-        String configFileLoc = Start.getConfigFileName();
-        String configFileName = new File(configFileLoc).getName();
-        configFile = configFileName;
-        SodUtil.copyFile(Start.getConfigFileName(),
-                         FileWritingTemplate.getBaseDirectoryName() + "/"
-                                 + configFile);
     }
 
     public static String getCopiedConfigFileLocation() {

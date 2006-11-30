@@ -8,7 +8,6 @@ import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.Arm;
-import edu.sc.seis.sod.Start;
 
 public class OutputScheduler extends Thread {
 
@@ -78,7 +77,6 @@ public class OutputScheduler extends Thread {
     }
 
     private boolean anyArmsActive() {
-        if (Start.isArmFailure()) {return false;}
         Arm[] curArms = new Arm[0];
         synchronized(arms) {
             curArms = (Arm[])arms.toArray(curArms);
