@@ -1,5 +1,7 @@
 package edu.sc.seis.sod.velocity;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -58,6 +60,21 @@ public class SimpleVelocitizer {
         try {
             try {
                 Velocity.evaluate(ctx, writer, "SimpleVelocitizer", template);
+            } catch(ParseErrorException parseError) {
+                return ERR_PREFIX + "Invalid Velocity";
+            }
+            return writer.toString();
+        } catch(Exception e) {
+            GlobalExceptionHandler.handle(e);
+            return "Unable to evaluate " + template;
+        }
+    }
+
+    public String evaluate(InputStream template, VelocityContext ctx) {
+        StringWriter writer = new StringWriter();
+        try {
+            try {
+                Velocity.evaluate(ctx, writer, "SimpleVelocitizer", new InputStreamReader(template));
             } catch(ParseErrorException parseError) {
                 return ERR_PREFIX + "Invalid Velocity";
             }
