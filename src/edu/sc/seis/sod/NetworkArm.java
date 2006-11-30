@@ -280,8 +280,15 @@ public class NetworkArm implements Arm {
                         networkDBs.add(netDb);
                         change(allNets[i], Status.get(Stage.NETWORK_SUBSETTER,
                                                       Standing.SUCCESS));
-                        lastPusher = new NetworkPusher(netDb);
-                        netPopulators.invokeLater(lastPusher);
+                        if ( ! (Start.getWaveformArm() == null &&
+                                stationSubsetter.getClass().equals(PassStation.class) &&
+                                siteSubsetter.getClass().equals(PassSite.class) &&
+                                chanSubsetters.size()==0)) {
+                            // only do netpushers if there are more subsetters downstream
+                            // or the waveform arm exists, otherwise there is no point
+                            lastPusher = new NetworkPusher(netDb);
+                            netPopulators.invokeLater(lastPusher);
+                        }
                     } else {
                         change(allNets[i], Status.get(Stage.NETWORK_SUBSETTER,
                                                       Standing.REJECT));
@@ -304,9 +311,11 @@ public class NetworkArm implements Arm {
         }
         if(lastPusher != null) {
             lastPusher.setLastPusher();
-        }
-        if(allNets.length == 0) {
-            logger.warn("Found no networks.  Make sure the network codes you entered are valid");
+        } else {
+            // no pushers
+            if(allNets.length == 0) {
+                logger.warn("Found no networks.  Make sure the network codes you entered are valid");
+            }
             finish();
         }
         // Set the time of the last check to now
@@ -359,11 +368,16 @@ public class NetworkArm implements Arm {
         public void run() {
             if(!Start.isArmFailure()) {
                 StationDbObject[] staDbs = getSuccessfulStations(netDb);
-                for(int j = 0; j < staDbs.length; j++) {
-                    SiteDbObject[] siteDbs = getSuccessfulSites(netDb,
-                                                                staDbs[j]);
-                    for(int k = 0; k < siteDbs.length; k++) {
-                        getSuccessfulChannels(netDb, siteDbs[k]);
+                if ( ! (Start.getWaveformArm() == null &&
+                        siteSubsetter.getClass().equals(PassSite.class) &&
+                        chanSubsetters.size()==0)) {
+                    // only get sites/channels if there are subsetters or a waveform arm
+                    for(int j = 0; j < staDbs.length; j++) {
+                        SiteDbObject[] siteDbs = getSuccessfulSites(netDb,
+                                                                    staDbs[j]);
+                        for(int k = 0; k < siteDbs.length; k++) {
+                            getSuccessfulChannels(netDb, siteDbs[k]);
+                        }
                     }
                 }
             }
