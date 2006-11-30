@@ -2,6 +2,7 @@ package edu.sc.seis.sod.velocity.network;
 
 import java.util.List;
 import org.apache.velocity.VelocityContext;
+import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.model.MicroSecondDate;
@@ -154,5 +155,12 @@ public class VelocityNetwork extends NetworkAttr {
 
     public void insertIntoContext(VelocityContext ctx) {
         ctx.put("network", this);
+    }
+
+    public static VelocityNetwork wrap(NetworkAttr net) {
+        if(net instanceof VelocityNetwork) {
+            return (VelocityNetwork)net;
+        }
+        return new VelocityNetwork(net);
     }
 }
