@@ -44,6 +44,7 @@
             <ref name="area"/>
             <ref name="stationPointDistance"/>
             <ref name="stationPointAzimuth"/>
+            <ref name="printlineStationProcess"/>
             <ref name="stationPointBackAzimuth"/>
             <ref name="AND"/>
             <ref name="OR"/>
@@ -285,6 +286,30 @@
                 </example>
             </xsd:annotation>
 <text/>
+        </element>
+    </define>
+    <define name="printlineStationProcess">
+        <element name="printlineStationProcess">
+            <xsd:annotation>
+                <summary>Prints every successful station to the console or to the specified file</summary>
+                <description>Prints out each station on a new line. The template and filename elements are both <a
+                        href="../../templates.html">Velocity templates</a> containing <a
+                    href="../../templateTypes.html#station">station</a> and <a
+                    href="../../templateTypes.html#net">net</a> variables. If no template element is given, it defaults
+                    to "Station: $station". If no filename is given, the output goes to standard out.</description>
+            </xsd:annotation>
+            <interleave>
+                <optional>
+                    <element name="template">
+                        <text/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
+            </interleave>
         </element>
     </define>
 </grammar>
