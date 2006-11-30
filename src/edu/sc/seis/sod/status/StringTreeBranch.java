@@ -6,6 +6,9 @@ public class StringTreeBranch extends StringTree {
 
     public StringTreeBranch(Object actor, boolean status, StringTree branch) {
         this(actor, status, new StringTree[] {branch});
+        if (branch == null) {
+            throw new IllegalArgumentException("branch cannot be null");
+        }
     }
 
     public StringTreeBranch(Object actor, boolean status, StringTree[] branches) {
@@ -29,7 +32,11 @@ public class StringTreeBranch extends StringTree {
             if(branches[i] instanceof ShortCircuit){
                 break;
             }
-            s += "\n" + branches[i].toString(indentationLevel + 1);
+            if (branches[i] != null) {
+                s += "\n" + branches[i].toString(indentationLevel + 1);
+            } else {
+                s += "\n" + "-NULL-"+i;
+            }
         }
         return s;
     }
