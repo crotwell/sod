@@ -4,6 +4,7 @@ import org.apache.velocity.VelocityContext;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
+import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.CookieJar;
@@ -11,6 +12,7 @@ import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.velocity.event.VelocityEvent;
 import edu.sc.seis.sod.velocity.network.VelocityChannel;
 import edu.sc.seis.sod.velocity.network.VelocityNetwork;
+import edu.sc.seis.sod.velocity.network.VelocityStation;
 import edu.sc.seis.sod.velocity.seismogram.VelocitySeismogram;
 
 /**
@@ -29,6 +31,13 @@ public class ContextWrangler {
     public static VelocityContext createContext(EventAccessOperations event) {
         VelocityContext ctx = createContext();
         insertIntoContext(event, ctx);
+        return ctx;
+    }
+
+    public static VelocityContext createContext(Station sta) {
+        VelocityContext ctx = createContext();
+        VelocityStation velSta = new VelocityStation(sta);
+        velSta.insertIntoContext(ctx);
         return ctx;
     }
 
