@@ -47,9 +47,9 @@ public class ContextWrangler {
 
     public static VelocityNetwork insertIntoContext(NetworkAttr net,
                                                     VelocityContext ctx) {
-        VelocityNetwork velChan = VelocityNetwork.wrap(net);
-        velChan.insertIntoContext(ctx);
-        return velChan;
+        VelocityNetwork velNet = VelocityNetwork.wrap(net);
+        velNet.insertIntoContext(ctx);
+        return velNet;
     }
 
     public static VelocityContext createContext(Channel chan) {
