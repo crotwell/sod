@@ -8,6 +8,8 @@ package edu.sc.seis.sod.database.network;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import edu.iris.Fissures.Time;
+import edu.iris.Fissures.TimeRange;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
@@ -15,6 +17,7 @@ import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.iris.Fissures.IfNetwork.Site;
 import edu.iris.Fissures.IfNetwork.Station;
+import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
@@ -28,6 +31,7 @@ import edu.sc.seis.fissuresUtil.database.network.JDBCStation;
 import edu.sc.seis.sod.database.ChannelDbObject;
 import edu.sc.seis.sod.database.NetworkDbObject;
 import edu.sc.seis.sod.database.SiteDbObject;
+import edu.sc.seis.sod.subsetter.network.NetworkEffectiveTimeOverlap;
 
 public class JDBCNetworkUnifier {
 
@@ -76,21 +80,45 @@ public class JDBCNetworkUnifier {
         NetworkId id = netDb.get(netDbId).get_id();
         ProxyNetworkAccess na;
         synchronized(ndc) {
-        	   try {
-        		   na = (ProxyNetworkAccess)ndc.a_finder().retrieve_by_id(id);
-        	   } catch(NetworkNotFound e) {
-        		   // didn't get by id, try by code
-        		   logger.debug("Caught exception with retrieve_by_id  for "+NetworkIdUtil.toString(id)+", trying by code",e);
-        		   if (NetworkIdUtil.isTemporary(id)) {
-        			   // need dates for temp nets, so shamefully give up?
-        			   throw e;
-        		   }
-        		   NetworkAccess[] netArray = ndc.a_finder().retrieve_by_code(id.network_code);
-        		   if (netArray.length != 1) {
-        			   throw new NetworkNotFound("Cant retrieve_by_code for "+NetworkIdUtil.toString(id)+" received "+netArray.length+" nets.");
-        		   }
-        		   na = (ProxyNetworkAccess)netArray[0];
-        	   }
+            try {
+                na = (ProxyNetworkAccess)ndc.a_finder().retrieve_by_id(id);
+            } catch(NetworkNotFound e) {
+                // didn't get by id, try by code
+                logger.debug("Caught exception with retrieve_by_id  for "
+                        + NetworkIdUtil.toString(id) + ", trying by code", e);
+                NetworkAccess[] netArray = ndc.a_finder()
+                        .retrieve_by_code(id.network_code);
+                if(NetworkIdUtil.isTemporary(id)) {
+                    // temp net codes are never reused in the same year, so
+                    // find a network that overlaps the year we have in the id
+                    // and hope it is right
+                    // first make sure format is ok, just to make Charlie happy
+                    MicroSecondDate formatCheck = new MicroSecondDate(id.begin_time);
+                    String netYear = id.begin_time.date_time.substring(0, 4);
+                    TimeRange year = new TimeRange(new Time(netYear
+                            + "0101T00:00:01.000Z", -1), new Time(netYear
+                            + "1231T23:59:59.000Z", -1));
+                    NetworkEffectiveTimeOverlap yearOverlap = new NetworkEffectiveTimeOverlap(year);
+                    NetworkAccess found = null;
+                    for(int i = 0; i < netArray.length; i++) {
+                        if(yearOverlap.overlaps(netArray[i].get_attributes().effective_time)) {
+                            if(found != null) {
+                                // two overlap, just give up?
+                                throw new NetworkNotFound("No network matches id="
+                                        + NetworkIdUtil.toString(id)
+                                        + " and more than one overlaps year="
+                                        + netYear);
+                            }
+                            found = netArray[i];
+                        }
+                    }
+                } else if(netArray.length != 1) {
+                    throw new NetworkNotFound("Cant retrieve_by_code for "
+                            + NetworkIdUtil.toString(id) + " received "
+                            + netArray.length + " nets.");
+                }
+                na = (ProxyNetworkAccess)netArray[0];
+            }
         }
         return new NetworkDbObject(netDbId, na);
     }
