@@ -1,0 +1,25 @@
+<sod>
+	<networkArm>
+		<networkFinder>
+			<name>$server.name</name>
+			<dns>$server.dns</dns>
+		</networkFinder>
+#if($networks.length)
+		<networkOR>
+#foreach($code in $networks)
+			<networkCode>$code</networkCode>
+#end
+		</networkOR>
+#end
+		<stationAND>
+#if($stations.length)
+		    <stationOR>
+#foreach($code in $stations)
+			    <stationCode>$code</stationCode>
+#end
+            </stationOR>
+#end
+		    <printlineStationProcess/>
+		</stationAND>
+	</networkArm>
+</sod>
