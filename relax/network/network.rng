@@ -23,6 +23,7 @@
             <ref name="NOT"/>
             <ref name="externalNetworkSubsetter"/>
             <ref name="temporaryNetwork"/>
+            <ref name="printlineNetworkProcess"/>
         </choice>
     </define>
     <define name="code">
@@ -166,6 +167,18 @@
                         <classname>edu.somewhere.seis.sodExt.subsetter.network.MyNetworkSubsetter</classname>
                     </externalNetworkSubsetter>
                 </example>
+            </xsd:annotation>
+            <ref name="externalClass"/>
+        </element>
+    </define>
+    <define name="printlineNetworkProcess">
+        <element name="printlineNetworkProcess">
+            <xsd:annotation>
+                <summary>Prints every successful network to the console or to the specified file</summary>
+                <description>Prints out each network on a new line. The template and filename elements are both <a
+                    href="../../templates.html">Velocity templates</a> containing <a
+                            href="../../templateTypes.html#net">net</a> variables. If no template element is given, it defaults
+                    to "Network: $net". If no filename is given, the output goes to standard out.</description>
             </xsd:annotation>
             <ref name="externalClass"/>
         </element>
