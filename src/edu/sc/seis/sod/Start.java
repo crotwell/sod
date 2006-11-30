@@ -3,8 +3,11 @@ package edu.sc.seis.sod;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -73,11 +76,24 @@ public class Start {
      * file in confFilename
      */
     public Start(Args args) throws Exception {
+        this(args, new InputSourceCreator(), null);
+    }
+    
+    public static class InputSourceCreator {
+
+        public InputSource create() throws IOException {
+            return createInputSource(Start.class.getClassLoader(),
+                                     configFileName);
+        }
+    }
+
+    public Start(Args args, InputSourceCreator sourceMaker, Properties props)
+            throws Exception {
         this.args = args;
+        this.creator = sourceMaker;
         configFileName = args.getRecipe();
-        ClassLoader cl = getClass().getClassLoader();
         try {
-            setConfig(createDoc(createInputSource(cl, configFileName),
+            setConfig(createDoc(sourceMaker.create(),
                                 configFileName).getDocumentElement());
         } catch(IOException io) {
             informUserOfBadFileAndExit(configFileName);
@@ -86,7 +102,7 @@ public class Start {
         }
         try {
             Validator validator = new Validator(Validator.SOD_SCHEMA_LOC);
-            if(!validator.validate(createInputSource(cl, configFileName))) {
+            if(!validator.validate(sourceMaker.create())) {
                 logger.info("Invalid strategy file!");
                 allHopeAbandon(validator.getErrorMessage());
             }
@@ -97,6 +113,11 @@ public class Start {
             GlobalExceptionHandler.handle("Problem configuring schema validator",
                                           e);
             exit("Problem configuring schema validator: " + e.getMessage());
+        }
+        if(props == null) {
+            loadProps();
+        } else {
+            Start.props = props;
         }
         initDocument();
     }
@@ -126,6 +147,13 @@ public class Start {
     }
 
     protected void initDocument() throws Exception {
+        loadRunProps(getConfig());
+        ConnMgr.installDbProperties(props, args.getInitialArgs());
+        CommonAccess.getCommonAccess().setProps(props);
+        CommonAccess.getCommonAccess().initORB(args.getInitialArgs());
+    }
+
+    private void loadProps() throws IOException {
         // get some defaults
         Initializer.loadProps((Start.class).getClassLoader()
                 .getResourceAsStream(DEFAULT_PROPS), props);
@@ -144,12 +172,6 @@ public class Start {
         // Error html dir and output should be set up now, so remove the
         // Std out reporter
         GlobalExceptionHandler.remove(sysOutReporter);
-        // now override the properties with any values in the recipe
-        loadRunProps(getConfig());
-        ConnMgr.installDbProperties(props, args.getInitialArgs());
-        IndexTemplate.setConfigFileLoc();// Must happen after load runProps
-        CommonAccess.getCommonAccess().setProps(props);
-        CommonAccess.getCommonAccess().initORB(args.getInitialArgs());
     }
 
     public static void loadRunProps(Element doc) throws ConfigurationException {
@@ -170,6 +192,16 @@ public class Start {
 
     public static InputSource createInputSource(ClassLoader cl, String loc)
             throws IOException {
+        return new InputSource(new InputStreamReader(createInputStream(cl, loc)));
+    }
+
+    public static InputStream createInputStream(String loc) throws IOException,
+            MalformedURLException, FileNotFoundException {
+        return createInputStream(Start.class.getClassLoader(), loc);
+    }
+
+    public static InputStream createInputStream(ClassLoader cl, String loc)
+            throws IOException, MalformedURLException, FileNotFoundException {
         InputStream in = null;
         if(loc.startsWith("http:") || loc.startsWith("ftp:")) {
             in = new URL(loc).openConnection().getInputStream();
@@ -182,7 +214,7 @@ public class Start {
         if(in == null) {
             throw new IOException("Unable to load configuration file " + loc);
         }
-        return new InputSource(new BufferedInputStream(in));
+        return new BufferedInputStream(in);
     }
 
     public static void setConfig(Element config) {
@@ -249,8 +281,7 @@ public class Start {
         new UpdateChecker(false);
         handleStartupRunProperties();
         checkDBVersion();
-        ClassLoader cl = getClass().getClassLoader();
-        checkConfig(createInputSource(cl, getConfigFileName()));
+        checkConfig(creator.create());
         // this next line sets up the status page for exception reporting, so
         // it should be as early as possible in the startup sequence
         IndexTemplate indexTemplate = null;
@@ -306,8 +337,7 @@ public class Start {
         for(int i = 0; i < armNodes.getLength(); i++) {
             if(armNodes.item(i) instanceof Element) {
                 Element el = (Element)armNodes.item(i);
-                if(el.getTagName().equals("eventArm")
-                        && args.doEventArm()) {
+                if(el.getTagName().equals("eventArm") && args.doEventArm()) {
                     event = new EventArm(el);
                     sched.registerArm(event);
                 } else if(el.getTagName().equals("networkArm")
@@ -411,7 +441,8 @@ public class Start {
     private void checkConfig(InputSource is) {
         try {
             String configString = JDBCConfig.extractConfigString(is);
-            JDBCConfig dbConfig = new JDBCConfig(configString, args.replaceDBConfig());
+            JDBCConfig dbConfig = new JDBCConfig(configString,
+                                                 args.replaceDBConfig());
             if(!dbConfig.isSameConfig(configString)) {
                 allHopeAbandon("Your config file has changed since your last run.  "
                         + "It may not be advisable to continue this SOD run.");
@@ -422,6 +453,8 @@ public class Start {
         }
     }
     
+    private InputSourceCreator creator;
+
     private Args args;
 
     public static Element getConfig() {
@@ -472,13 +505,16 @@ public class Start {
     public static void add(Properties newProps) {
         props.putAll(newProps);
     }
-    
+
     public static void armFailure(Arm arm, Throwable t) {
         armFailure = true;
-        GlobalExceptionHandler.handle("Problem running "+arm.getName()+", SOD is exiting abnormally. "
-                                      + "Please email this to the sod development team at sod@seis.sc.edu",
-                              t);
-        logger.fatal("Arm "+arm.getName()+" failed. Sod is giving up and quiting", t);
+        GlobalExceptionHandler.handle("Problem running "
+                                              + arm.getName()
+                                              + ", SOD is exiting abnormally. "
+                                              + "Please email this to the sod development team at sod@seis.sc.edu",
+                                      t);
+        logger.fatal("Arm " + arm.getName()
+                + " failed. Sod is giving up and quiting", t);
         // wake up any sleeping arms
         Arm[] arms = new Arm[] {network, event, waveform};
         for(int i = 0; i < arms.length; i++) {
@@ -490,11 +526,11 @@ public class Start {
             OutputScheduler.getDefault().notify();
         }
     }
-    
+
     public static boolean isArmFailure() {
         return armFailure;
     }
-    
+
     private static boolean armFailure = false;
 
     public static final String DEFAULT_PARSER = "org.apache.xerces.parsers.SAXParser";
