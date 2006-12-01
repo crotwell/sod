@@ -2,17 +2,13 @@ package edu.sc.seis.sod.subsetter;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Reader;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import edu.iris.Fissures.BoxArea;
-import edu.iris.Fissures.GlobalArea;
 import edu.iris.Fissures.Location;
 import edu.sc.seis.fissuresUtil.bag.AreaUtil;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
@@ -47,7 +43,8 @@ public class AreaSubsetter {
             try {
                 locationArray = AreaUtil.loadPolygon(makeRelativeOrRecipeDirReader(fileLocation));
             } catch(FileNotFoundException e) {
-                throw new UserConfigurationException(e.getMessage() + " as a polygon file.");
+                throw new UserConfigurationException(e.getMessage()
+                        + " as a polygon file.");
             } catch(IOException e) {
                 throw new ConfigurationException("Problem reading from file "
                         + fileLocation, e);
@@ -55,7 +52,8 @@ public class AreaSubsetter {
         }
     }
 
-    public static BufferedReader makeRelativeOrRecipeDirReader(String fileLocation) throws FileNotFoundException {
+    public static BufferedReader makeRelativeOrRecipeDirReader(String fileLocation)
+            throws FileNotFoundException {
         File simpleLocation = new File(fileLocation);
         Reader fileInput;
         try {
@@ -67,22 +65,17 @@ public class AreaSubsetter {
                 fileInput = new FileReader(inConfigDir);
             } catch(FileNotFoundException e2) {
                 throw new FileNotFoundException("Unable to find '"
-                        + simpleLocation + "' or '" + inConfigDir
-                        + "'");
+                        + simpleLocation + "' or '" + inConfigDir + "'");
             }
         }
         return new BufferedReader(fileInput);
     }
 
     public boolean accept(Location loc) {
-        if(area instanceof BoxArea) {
-            return AreaUtil.inArea((BoxArea)area, loc);
-        } else if(area instanceof GlobalArea) {
-            return true;
-        } else if(locationArray != null) {
+        if(locationArray != null) {
             return AreaUtil.inArea(locationArray, loc);
         }
-        return true;
+        return AreaUtil.inArea(area, loc);
     }
 
     protected edu.iris.Fissures.Area area = null;
