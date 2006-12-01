@@ -1,4 +1,4 @@
-log4j.rootCategory=debug, C
+log4j.rootCategory=warn, C
 log4j.appender.C=org.apache.log4j.ConsoleAppender
 log4j.appender.C.layout=org.apache.log4j.PatternLayout
 log4j.appender.C.layout.ConversionPattern=%d{ISO8601} - %m%n

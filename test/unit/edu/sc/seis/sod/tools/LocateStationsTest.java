@@ -1,11 +1,8 @@
 package edu.sc.seis.sod.tools;
 
-import java.util.HashMap;
-import java.util.Map;
 import junit.framework.TestCase;
 import org.apache.velocity.VelocityContext;
 import com.martiansoftware.jsap.JSAPException;
-import com.martiansoftware.jsap.ParseException;
 
 public class LocateStationsTest extends TestCase {
 
@@ -13,16 +10,12 @@ public class LocateStationsTest extends TestCase {
         LocateStations ls = new LocateStations();
         VelocityContext vc = ls.getContext();
         assertTrue(vc.containsKey("server"));
-        Map server = (HashMap)vc.get("server");
-        checkServerMap(server);
     }
 
     public void testDefaultStationArg() throws JSAPException {
         LocateStations ls = new LocateStations();
         VelocityContext vc = ls.getContext();
-        assertTrue(vc.containsKey("stations"));
-        Object[] codes = (Object[])vc.get("stations");
-        assertEquals(0, codes.length);
+        assertFalse(vc.containsKey("stations"));
     }
 
     public void testSingleStationShortArg() throws JSAPException {
@@ -54,23 +47,27 @@ public class LocateStationsTest extends TestCase {
         assertEquals("CHICKENS", codes[0]);
     }
 
-    public void testDefaultServerParser() throws ParseException {
-        LocateStations.ServerParser sp = new LocateStations.ServerParser();
-        checkServerMap((Map)sp.parse("edu/iris/dmc/IRIS_NetworkDC"));
+    public void testDefaultBoxArea() throws JSAPException {
+        LocateStations ls = new LocateStations(new String[] {});
+        VelocityContext vc = ls.getContext();
+        assertFalse(vc.containsKey("box"));
     }
 
-    public void testBadServerParser() {
-        LocateStations.ServerParser sp = new LocateStations.ServerParser();
-        try {
-            checkServerMap((Map)sp.parse("IRIS_NetworkDC"));
-            fail("A server without a DNS should raise an exception!");
-        } catch(ParseException pe) {
-            assertTrue(pe.getMessage().contains("IRIS_NetworkDC"));
-        }
+    public void testSuppliedBoxArea() throws JSAPException {
+        LocateStations ls = new LocateStations(new String[] {"-R", "12/32/32/12"});
+        VelocityContext vc = ls.getContext();
+        assertTrue(vc.containsKey("box"));
     }
 
-    private void checkServerMap(Map server) {
-        assertEquals("edu/iris/dmc", server.get("dns"));
-        assertEquals("IRIS_NetworkDC", server.get("name"));
+    public void testDefaultDonutArea() throws JSAPException {
+        LocateStations ls = new LocateStations(new String[] {});
+        VelocityContext vc = ls.getContext();
+        assertFalse(vc.containsKey("donut"));
+    }
+
+    public void testSuppliedDonut() throws JSAPException {
+        LocateStations ls = new LocateStations(new String[] {"--donut", "12/32/32/58"});
+        VelocityContext vc = ls.getContext();
+        assertTrue(vc.containsKey("donut"));
     }
 }

@@ -1,50 +1,40 @@
 /**
  * StationPointDistance.java
- *
+ * 
  * @author Philip Crotwell
  */
-
 package edu.sc.seis.sod.subsetter.station;
 
+import org.w3c.dom.Element;
+import edu.iris.Fissures.Location;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.bag.DistAz;
 import edu.sc.seis.sod.subsetter.origin.AbstractOriginPoint;
-import org.apache.log4j.Logger;
-import org.w3c.dom.Element;
 
-public class StationPointDistance extends AbstractOriginPoint implements StationSubsetter{
+public class StationPointDistance extends AbstractOriginPoint implements
+        StationSubsetter {
 
-
-    /**
-     * Creates a new <code>OriginPointDistance</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     */
-    public StationPointDistance (Element config) throws Exception{
+    public StationPointDistance(Element config) throws Exception {
         super(config);
+        min = getMin().convertTo(UnitImpl.DEGREE).get_value();
+        max = getMax().convertTo(UnitImpl.DEGREE).get_value();
     }
 
     /**
-     * Accepts an origin only if it lies within the geven distance range of the
+     * Accepts a station only if it lies within the given distance range of the
      * given lat and lon.
-     *
+     * 
      */
     public boolean accept(Station station, NetworkAccess network) {
-        double oLat = station.my_location.latitude;
-        double oLon = station.my_location.longitude;
-        DistAz distaz = new DistAz(latitude, longitude, oLat, oLon);
-        if (getMin().convertTo(UnitImpl.DEGREE).get_value() <= distaz.getDelta() &&
-            getMax().convertTo(UnitImpl.DEGREE).get_value() >= distaz.getDelta()) {
-            return true;
-        } else {
-            logger.debug("reject distance "+station+" distaz="+distaz.getDelta());
-            return false;
-        }
+        Location loc = station.my_location;
+        DistAz distaz = new DistAz(latitude,
+                                   longitude,
+                                   loc.latitude,
+                                   loc.longitude);
+        return min <= distaz.getDelta() && max >= distaz.getDelta();
     }
 
-    private static final Logger logger = Logger.getLogger(StationPointDistance.class);
-
+    private double min, max;
 }
-

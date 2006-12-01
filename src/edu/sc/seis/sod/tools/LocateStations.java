@@ -2,13 +2,9 @@ package edu.sc.seis.sod.tools;
 
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.velocity.VelocityContext;
 import org.xml.sax.InputSource;
@@ -18,8 +14,6 @@ import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.Option;
 import com.martiansoftware.jsap.Parameter;
-import com.martiansoftware.jsap.ParseException;
-import com.martiansoftware.jsap.StringParser;
 import com.martiansoftware.jsap.Switch;
 import edu.sc.seis.fissuresUtil.simple.Initializer;
 import edu.sc.seis.sod.Args;
@@ -37,9 +31,23 @@ public class LocateStations {
                               new ServerParser(),
                               "edu/iris/dmc/IRIS_NetworkDC",
                               false,
-                              'y',
+                              'S',
                               "server",
                               "The network server to use.  The default is edu/iris/dmc/IRIS_NetworkDC"));
+        add(new FlaggedOption("box",
+                              new BoxAreaParser(),
+                              null,
+                              false,
+                              'R',
+                              "box-area",
+                              "A box the stations must be in.  It's specified as west/east/north/south"));
+        add(new FlaggedOption("donut",
+                              new DonutParser(),
+                              null,
+                              false,
+                              'd',
+                              "donut",
+                              "A donut the stations must be in.  It's specified as centerLat/centerLon/minRadiusDegrees/maxRadiusDegrees"));
         add(new Switch("recipe",
                        'r',
                        "recipe",
@@ -73,8 +81,8 @@ public class LocateStations {
 
     private void add(Parameter param) throws JSAPException {
         jsap.registerParameter(param);
-        if(param instanceof Option){
-        options.add(param);
+        if(param instanceof Option) {
+            options.add(param);
         }
     }
 
@@ -84,7 +92,10 @@ public class LocateStations {
         while(it.hasNext()) {
             Option param = (Option)it.next();
             if(param.isList()) {
-                vc.put(param.getID(), result.getObjectArray(param.getID()));
+                Object[] paramResult = result.getObjectArray(param.getID());
+                if(paramResult.length > 0) {
+                    vc.put(param.getID(), paramResult);
+                }
             } else {
                 vc.put(param.getID(), result.getObject(param.getID()));
             }
@@ -102,23 +113,6 @@ public class LocateStations {
 
     private JSAP jsap = new JSAP();
 
-    public static class ServerParser extends StringParser {
-
-        public Object parse(String arg) throws ParseException {
-            Matcher m = nameDNS.matcher(arg);
-            if(!m.matches()) {
-                throw new ParseException("The argument should be the server's dns followed by a / then its name like 'edu/iris/dmc/IRIS_NetworkDC' not '"
-                        + arg + "'");
-            }
-            Map server = new HashMap();
-            server.put("dns", m.group(1));
-            server.put("name", m.group(2));
-            return server;
-        }
-
-        private static final Pattern nameDNS = Pattern.compile("(.*)/(\\w+)");
-    }
-
     public static void main(String[] args) throws Exception {
         // get some defaults
         Properties props = System.getProperties();
@@ -129,7 +123,7 @@ public class LocateStations {
         LocateStations ls = new LocateStations(args);
         final String result = sv.evaluate(Start.createInputStream("jar:edu/sc/seis/sod/tools/locate_stations.vm"),
                                           ls.getContext());
-        if(ls.printRecipe()){
+        if(ls.printRecipe()) {
             System.out.println(result);
             System.exit(0);
         }
