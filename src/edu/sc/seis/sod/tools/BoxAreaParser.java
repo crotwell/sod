@@ -1,5 +1,7 @@
 package edu.sc.seis.sod.tools;
 
+import com.martiansoftware.jsap.FlaggedOption;
+
 public class BoxAreaParser extends PatternParser {
 
     public BoxAreaParser() {
@@ -9,8 +11,18 @@ public class BoxAreaParser extends PatternParser {
                                                                    "north"});
     }
 
+    public static FlaggedOption createParam(String helpMessage) {
+        return new FlaggedOption("box",
+                                 new BoxAreaParser(),
+                                 null,
+                                 false,
+                                 'R',
+                                 "box-area",
+                                 helpMessage);
+    }
+
     public String getErrorMessage(String arg) {
-        return "The argument should be the boxes edges specified as west/east/south/north not '"
+        return "A box area is specified as its edges separated by slashes, west/east/south/north, not '"
                 + arg + "'";
     }
 }

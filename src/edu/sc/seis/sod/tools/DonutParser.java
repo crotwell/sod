@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.tools;
 
+import com.martiansoftware.jsap.FlaggedOption;
 
 public class DonutParser extends PatternParser {
 
@@ -10,8 +11,18 @@ public class DonutParser extends PatternParser {
                                                                "max"});
     }
 
+    public static FlaggedOption createParam(String helpMessage) {
+        return new FlaggedOption("donut",
+                                 new DonutParser(),
+                                 null,
+                                 false,
+                                 'd',
+                                 "donut",
+                                 helpMessage);
+    }
+
     public String getErrorMessage(String arg) {
-        return "The argument should be the donut specified as centerLat/centerLon/minRadiusDegrees/maxRadiusDegrees not '"
+        return "A donut is specified as centerLat/centerLon/minRadiusDegrees/maxRadiusDegrees not '"
                 + arg + "'";
     }
 }

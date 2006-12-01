@@ -1,0 +1,56 @@
+<sod>
+    <eventArm>
+        <eventFinder>
+            <name>$server.name</name>
+            <dns>$server.dns</dns>
+#if($box)
+            <boxArea>
+                <latitudeRange>
+                    <min>$box.south</min>
+                    <max>$box.north</max>
+                </latitudeRange>
+                <longitudeRange>
+                    <min>$box.west</min>
+                    <max>$box.east</max>
+                </longitudeRange>
+            </boxArea>
+#end
+            <originDepthRange>
+                <unit>KILOMETER</unit>
+                <min>$depth.min</min>
+                <max>$depth.max</max>
+            </originDepthRange>
+            <originTimeRange>
+                <startTime>
+                    <year>$begin.year</year>
+                    <month>$begin.month</month>
+                    <day>$begin.day</day>
+                </startTime>
+                <endTime>
+                    <year>$end.year</year>
+                    <month>$end.month</month>
+                    <day>$end.day</day>
+                </endTime>
+            </originTimeRange>
+            <magnitudeRange>
+                <min>$magnitude.min</min>
+                <max>$magnitude.max</max>
+            </magnitudeRange>
+#if($catalogs)
+#foreach($cat in $catalogs)
+            <catalog>$cat</catalog>
+#end
+#end
+        </eventFinder>
+#if($donut)
+        <originPointDistance>
+            <unit>DEGREES</unit>
+            <min>$donut.min</min>
+            <max>$donut.max</max>
+            <latitude>$donut.lat</latitude>
+            <longitude>$donut.lon</longitude>
+        </originPointDistance>
+#end
+        <CSVEventPrinter/>
+    </eventArm>
+</sod>

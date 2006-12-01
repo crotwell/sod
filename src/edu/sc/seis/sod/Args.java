@@ -80,32 +80,8 @@ public class Args {
                               'f',
                               "recipe",
                               "The recipe to run"));
-        StringBuffer builder = new StringBuffer("Usage: sod [-");
-        Iterator it = parameters.iterator();
-        while(it.hasNext()) {
-            Parameter p = (Parameter)it.next();
-            if(p instanceof Switch && ((Switch)p).getShortFlagCharacter() != null) {
-                builder.append(((Switch)p).getShortFlagCharacter());
-            }
-        }
-        builder.append("] ");
-        it = parameters.iterator();
-        while(it.hasNext()) {
-            Parameter p = (Parameter)it.next();
-            if(p instanceof FlaggedOption) {
-                FlaggedOption fo = (FlaggedOption)p;
-                if(!fo.required()) {
-                    builder.append('[');
-                }
-                builder.append("-" + ((FlaggedOption)p).getShortFlagCharacter()
-                        + " <" + p.getID() + ">");
-                if(!fo.required()) {
-                    builder.append(']');
-                }
-                builder.append(' ');
-            }
-        }
-        jsap.setUsage(builder.toString());
+        Iterator it;
+        jsap.setUsage(makeUsage("sod", parameters));
         result = jsap.parse((String[])toParse.toArray(new String[0]));
         if(result.getBoolean("version")) {
             System.out.println("SOD " + Version.getVersion());
@@ -129,6 +105,35 @@ public class Args {
             }
             System.exit(1);
         }
+    }
+
+    public static String makeUsage(String command, List params) {
+        StringBuffer builder = new StringBuffer("Usage: " + command + " [-");
+        Iterator it = params.iterator();
+        while(it.hasNext()) {
+            Parameter p = (Parameter)it.next();
+            if(p instanceof Switch && ((Switch)p).getShortFlagCharacter() != null) {
+                builder.append(((Switch)p).getShortFlagCharacter());
+            }
+        }
+        builder.append("] ");
+        it = params.iterator();
+        while(it.hasNext()) {
+            Parameter p = (Parameter)it.next();
+            if(p instanceof FlaggedOption) {
+                FlaggedOption fo = (FlaggedOption)p;
+                if(!fo.required()) {
+                    builder.append('[');
+                }
+                builder.append("-" + ((FlaggedOption)p).getShortFlagCharacter()
+                        + " <" + p.getID() + ">");
+                if(!fo.required()) {
+                    builder.append(']');
+                }
+                builder.append(' ');
+            }
+        }
+        return builder.toString();
     }
 
     private void add(Parameter p) throws JSAPException {
