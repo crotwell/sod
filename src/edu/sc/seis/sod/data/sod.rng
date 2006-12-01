@@ -69072,9 +69072,11 @@
                 </interleave>
             </element>
             <element name="CSVEventPrinter">
-                <element name="filename">
-                    <text/>
-                </element>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
             </element>
         </choice>
     </define>
@@ -69319,9 +69321,11 @@
                 </interleave>
             </element>
             <element name="CSVEventPrinter">
-                <element name="filename">
-                    <text/>
-                </element>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
             </element>
         </choice>
     </define>
@@ -69566,9 +69570,11 @@
                 </interleave>
             </element>
             <element name="CSVEventPrinter">
-                <element name="filename">
-                    <text/>
-                </element>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
             </element>
         </choice>
     </define>
@@ -69813,9 +69819,11 @@
                 </interleave>
             </element>
             <element name="CSVEventPrinter">
-                <element name="filename">
-                    <text/>
-                </element>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
             </element>
         </choice>
     </define>
@@ -70060,9 +70068,11 @@
                 </interleave>
             </element>
             <element name="CSVEventPrinter">
-                <element name="filename">
-                    <text/>
-                </element>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
             </element>
         </choice>
     </define>
@@ -70307,9 +70317,11 @@
                 </interleave>
             </element>
             <element name="CSVEventPrinter">
-                <element name="filename">
-                    <text/>
-                </element>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
             </element>
         </choice>
     </define>
@@ -70554,9 +70566,11 @@
                 </interleave>
             </element>
             <element name="CSVEventPrinter">
-                <element name="filename">
-                    <text/>
-                </element>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
             </element>
         </choice>
     </define>
@@ -70801,9 +70815,11 @@
                 </interleave>
             </element>
             <element name="CSVEventPrinter">
-                <element name="filename">
-                    <text/>
-                </element>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
             </element>
         </choice>
     </define>
@@ -71048,9 +71064,11 @@
                 </interleave>
             </element>
             <element name="CSVEventPrinter">
-                <element name="filename">
-                    <text/>
-                </element>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
             </element>
         </choice>
     </define>
@@ -71295,9 +71313,11 @@
                 </interleave>
             </element>
             <element name="CSVEventPrinter">
-                <element name="filename">
-                    <text/>
-                </element>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
             </element>
         </choice>
     </define>
@@ -71542,9 +71562,11 @@
                 </interleave>
             </element>
             <element name="CSVEventPrinter">
-                <element name="filename">
-                    <text/>
-                </element>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
             </element>
         </choice>
     </define>
@@ -71789,9 +71811,11 @@
                 </interleave>
             </element>
             <element name="CSVEventPrinter">
-                <element name="filename">
-                    <text/>
-                </element>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
             </element>
         </choice>
     </define>
@@ -72036,9 +72060,11 @@
                 </interleave>
             </element>
             <element name="CSVEventPrinter">
-                <element name="filename">
-                    <text/>
-                </element>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
             </element>
         </choice>
     </define>
@@ -72283,9 +72309,11 @@
                 </interleave>
             </element>
             <element name="CSVEventPrinter">
-                <element name="filename">
-                    <text/>
-                </element>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
             </element>
         </choice>
     </define>
@@ -72530,9 +72558,11 @@
                 </interleave>
             </element>
             <element name="CSVEventPrinter">
-                <element name="filename">
-                    <text/>
-                </element>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
             </element>
         </choice>
     </define>
@@ -72777,9 +72807,11 @@
                 </interleave>
             </element>
             <element name="CSVEventPrinter">
-                <element name="filename">
-                    <text/>
-                </element>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
             </element>
         </choice>
     </define>
@@ -73024,9 +73056,11 @@
                 </interleave>
             </element>
             <element name="CSVEventPrinter">
-                <element name="filename">
-                    <text/>
-                </element>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
             </element>
         </choice>
     </define>
@@ -73271,9 +73305,11 @@
                 </interleave>
             </element>
             <element name="CSVEventPrinter">
-                <element name="filename">
-                    <text/>
-                </element>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
             </element>
         </choice>
     </define>
@@ -73518,9 +73554,11 @@
                 </interleave>
             </element>
             <element name="CSVEventPrinter">
-                <element name="filename">
-                    <text/>
-                </element>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
             </element>
         </choice>
     </define>
@@ -73765,9 +73803,11 @@
                 </interleave>
             </element>
             <element name="CSVEventPrinter">
-                <element name="filename">
-                    <text/>
-                </element>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
             </element>
         </choice>
     </define>
@@ -74012,9 +74052,11 @@
                 </interleave>
             </element>
             <element name="CSVEventPrinter">
-                <element name="filename">
-                    <text/>
-                </element>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
             </element>
         </choice>
     </define>
@@ -74259,9 +74301,11 @@
                 </interleave>
             </element>
             <element name="CSVEventPrinter">
-                <element name="filename">
-                    <text/>
-                </element>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
             </element>
         </choice>
     </define>
@@ -74506,9 +74550,11 @@
                 </interleave>
             </element>
             <element name="CSVEventPrinter">
-                <element name="filename">
-                    <text/>
-                </element>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
             </element>
         </choice>
     </define>

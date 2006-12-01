@@ -12,7 +12,7 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Magnitude;
 import edu.iris.Fissures.IfEvent.Origin;
-import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.source.event.CSVEventSource;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
@@ -25,39 +25,49 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
 public class CSVEventPrinter implements OriginSubsetter {
 
     public CSVEventPrinter(Element config) throws Exception {
-        Element filenameEl = SodUtil.getElement(config, "filename");
-        String filename = SodUtil.getNestedText(filenameEl);
-        file = new File(filename);
+        String STDOUT = "<stdout>";
+        String filename = DOMHelper.extractText(config, "filename", STDOUT);
+        if(!filename.equals(STDOUT)) {
+            file = new File(filename);
+        }
         createFileAndWriteHeaderIfNeeded();
     }
 
     public StringTree accept(EventAccessOperations eventAccess,
                              EventAttr eventAttr,
                              Origin preferred_origin) throws Exception {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
-        writer.write(preferred_origin.origin_time.date_time + COM);
+        StringBuffer buff = new StringBuffer();
+        buff.append(preferred_origin.origin_time.date_time + COM);
         Location loc = preferred_origin.my_location;
-        writer.write(loc.latitude + COM);
-        writer.write(loc.longitude + COM);
+        buff.append(loc.latitude + COM);
+        buff.append(loc.longitude + COM);
         Quantity q = loc.depth;
-        writer.write(q.value + COM);
-        writer.write(q.the_units + COM);
+        buff.append(q.value + COM);
+        buff.append(q.the_units + COM);
         Magnitude mag = preferred_origin.magnitudes[0];
-        writer.write(mag.value + COM);
-        writer.write(mag.type + COM);
-        writer.write(preferred_origin.catalog + COM);
-        writer.write(preferred_origin.contributor + COM);
-        writer.write(eventAttr.name + COM);
+        buff.append(mag.value + COM);
+        buff.append(mag.type + COM);
+        buff.append(preferred_origin.catalog + COM);
+        buff.append(preferred_origin.contributor + COM);
+        buff.append(eventAttr.name + COM);
         FlinnEngdahlRegion region = eventAttr.region;
-        writer.write(region.number + COM);
-        writer.write("" + region.type.value());
-        writer.newLine();
-        writer.close();
+        buff.append(region.number + COM);
+        buff.append("" + region.type.value());
+        if(file == null) {
+            System.out.println(buff.toString());
+        } else {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
+            writer.write(buff.toString());
+            writer.newLine();
+            writer.close();
+        }
         return new StringTreeLeaf(this, true);
     }
 
     private void createFileAndWriteHeaderIfNeeded() throws IOException {
-        if(!file.exists()) {
+        if(file == null) {
+            System.out.println(getHeader());
+        } else if(!file.exists()) {
             file.getAbsoluteFile().getParentFile().mkdirs();
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             writer.write(getHeader());

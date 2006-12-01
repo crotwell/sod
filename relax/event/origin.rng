@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <include href="../base/include/externalClass.rng"/>
     <start>
         <ref name="origin"/>
@@ -12,8 +11,7 @@
         <choice>
             <xsd:annotation>
                 <summary>Tactics for selecting events</summary>
-                <description>This collects all of the subsetters that make decisions on the contents
-                    of an event.</description>
+                <description>This collects all of the subsetters that make decisions on the contents of an event.</description>
                 <velocity>#eventArmPage()</velocity>
             </xsd:annotation>
             <ref name="removeEventDuplicate"/>
@@ -60,8 +58,8 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Matches the geographic Flinn-Engdahl region number</summary>
-                    <description> Evaluates to true if the numerical value of the Flinn-Engdahl
-                        geographic region of the event matches the given value. </description>
+                    <description> Evaluates to true if the numerical value of the Flinn-Engdahl geographic region of the
+                        event matches the given value. </description>
                     <example>
                         <geographicalRegion>12</geographicalRegion>
                     </example>
@@ -79,8 +77,8 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Matches the seismic Flinn-Engdahl region number</summary>
-                    <description>Evaluates to true if the numerical value of the Flinn-Engdahl
-                        seismic region of the event matches the given value. </description>
+                    <description>Evaluates to true if the numerical value of the Flinn-Engdahl seismic region of the
+                        event matches the given value. </description>
                     <example>
                         <seismicRegion>12</seismicRegion>
                     </example>
@@ -105,8 +103,8 @@
         <element name="originArrayAND">
             <xsd:annotation>
                 <summary>Enclosed subsetter matches all origins for an event</summary>
-                <description>Evalutes to true only if all origins (not just the preferred origin)
-                    evaluate to true for the enclosed subsetter.</description>
+                <description>Evalutes to true only if all origins (not just the preferred origin) evaluate to true for
+                    the enclosed subsetter.</description>
             </xsd:annotation>
             <ref name="origin"/>
         </element>
@@ -115,8 +113,8 @@
         <element name="originArrayOR">
             <xsd:annotation>
                 <summary>Enclosed subsetter matches at least one origin for an event</summary>
-                <description>Evalutes to true if at least one origin (not necessarily the preferred
-                    origin) evaluates to true for the enclosed subsetter.</description>
+                <description>Evalutes to true if at least one origin (not necessarily the preferred origin) evaluates to
+                    true for the enclosed subsetter.</description>
             </xsd:annotation>
             <ref name="origin"/>
         </element>
@@ -126,10 +124,9 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Matches all enclosed Origin subsetters</summary>
-                    <description>The output is the logical AND of the outputs of all included Origin
-                        subsetters. This means that it will evaluate to true only if all the
-                        enclosed Origin subsetters evaluate to true. The subsetters after the first
-                        false outputted are not evaluated.</description>
+                    <description>The output is the logical AND of the outputs of all included Origin subsetters. This
+                        means that it will evaluate to true only if all the enclosed Origin subsetters evaluate to true.
+                        The subsetters after the first false outputted are not evaluated.</description>
                     <example>
                         <originAND>
                             <catalog>FINGER</catalog>
@@ -148,10 +145,9 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Matches at least one enclosed Origin subsetter</summary>
-                    <description>The output is the logical OR of the outputs of all included Origin
-                        subsetters. This means that it will evaluate to true if at least one of the
-                        enclosed Origin subsetters evaluate to true. The subsetters after the first
-                        true outputted are not evaluated.</description>
+                    <description>The output is the logical OR of the outputs of all included Origin subsetters. This
+                        means that it will evaluate to true if at least one of the enclosed Origin subsetters evaluate
+                        to true. The subsetters after the first true outputted are not evaluated.</description>
                     <example>
                         <originOR>
                             <catalog>FINGER</catalog>
@@ -170,9 +166,9 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Matches the negated output of the enclosed Origin subsetter</summary>
-                    <description>The output is the logical NOT of the output of the enclosed Origin
-                        subsetter. This means that it will evaluate to false if the enclosed Origin
-                        subsetter evaluates to true, and vice versa.</description>
+                    <description>The output is the logical NOT of the output of the enclosed Origin subsetter. This
+                        means that it will evaluate to false if the enclosed Origin subsetter evaluates to true, and
+                        vice versa.</description>
                     <example>
                         <originNOT>
                             <catalog>FINGER</catalog>
@@ -187,9 +183,8 @@
         <element name="originPointDistance">
             <xsd:annotation>
                 <summary>Distance range from a fixed point</summary>
-                <description>True if the origin is within the given distance range of the given lat
-                    and lon. This allows for the definition of donuts and circles of accepted
-                    events.</description>
+                <description>True if the origin is within the given distance range of the given lat and lon. This allows
+                    for the definition of donuts and circles of accepted events.</description>
                 <example>
                     <originPointDistance>
                         <latitude>35</latitude>
@@ -207,10 +202,9 @@
         <element name="pointLinearDistanceMagnitude">
             <xsd:annotation>
                 <summary>Accepts events above a linear threshold of magnitude with distance</summary>
-                <description> If the magnitude of the event is greater than or equal to the linear
-                    interpolation at the event point distance, then the event is accepted. To
-                    reverse and take events smaller than the linear interpolation, enclose this in
-                    an originNOT. </description>
+                <description> If the magnitude of the event is greater than or equal to the linear interpolation at the
+                    event point distance, then the event is accepted. To reverse and take events smaller than the linear
+                    interpolation, enclose this in an originNOT. </description>
             </xsd:annotation>
             <ref name="latLonUnitRange"/>
             <externalRef href="../base/externalRef/magnitudeRange.rng"/>
@@ -243,8 +237,7 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Azimuth range from a fixed point</summary>
-                    <description> True if the origin is within the given azimuth range of the given
-                        lat and lon. </description>
+                    <description> True if the origin is within the given azimuth range of the given lat and lon. </description>
                     <example>
                         <originPointAzimuth>
                             <latitude>35</latitude>
@@ -264,8 +257,7 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Back azimuth range from a fixed point</summary>
-                    <description> True if the origin is within the given back azimuth range of the
-                        given lat and lon. </description>
+                    <description> True if the origin is within the given back azimuth range of the given lat and lon. </description>
                     <example>
                         <originPointBackAzimuth>
                             <latitude>35</latitude>
@@ -283,12 +275,10 @@
     <define name="removeEventDuplicate">
         <element name="removeEventDuplicate">
             <xsd:annotation>
-                <description>This subsetter first gets all of the events SOD has accepted. Then it
-                    takes the current event, and if its time plus or minus the time variance, its
-                    depth plus or minus the depth variance, or its location plus or minus the
-                    distance variance falls within the values of one of the already accepted events,
-                    the event is rejected. This allows for the use of only one of several very
-                    similar events</description>
+                <description>This subsetter first gets all of the events SOD has accepted. Then it takes the current
+                    event, and if its time plus or minus the time variance, its depth plus or minus the depth variance,
+                    or its location plus or minus the distance variance falls within the values of one of the already
+                    accepted events, the event is rejected. This allows for the use of only one of several very similar events</description>
                 <summary>Accepts events that are dissimilar from already accepted events</summary>
             </xsd:annotation>
             <optional>
@@ -325,8 +315,7 @@
     <define name="youngerThan">
         <element name="youngerThan">
             <xsd:annotation>
-                <summary>The event must have occured more recently than now minus the given time
-                    interval</summary>
+                <summary>The event must have occured more recently than now minus the given time interval</summary>
             </xsd:annotation>
             <ref name="time"/>
         </element>
@@ -335,37 +324,41 @@
         <element name="printlineEventProcess">
             <xsd:annotation>
                 <summary>Prints out each event on a new line</summary>
-                <description>Prints out each event on a new line.  The template and filename elements are both
-                <a href="../../templates.html">Velocity templates</a> containing <a href="../../templateTypes.html#event">event</a> as their only variable.
-                    If no template element is given, it defaults to "$event.region ($event.latitude, $event.longitude) $event.time $event.magnitude".
-                    If no filename is given, the output goes to standard out.</description>
+                <description>Prints out each event on a new line. The template and filename elements are both <a
+                        href="../../templates.html">Velocity templates</a> containing <a
+                    href="../../templateTypes.html#event">event</a> as their only variable. If no template element is
+                    given, it defaults to "$event.region ($event.latitude, $event.longitude) $event.time
+                    $event.magnitude". If no filename is given, the output goes to standard out.</description>
             </xsd:annotation>
             <interleave>
-            <optional>
-                <element name="template">
-                    <text/>
-                </element>
-            </optional>
-            <optional>
-                <element name="filename">
-                    <text/>
-                </element>
-            </optional>
+                <optional>
+                    <element name="template">
+                        <text/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
             </interleave>
         </element>
     </define>
     <define name="CSVEventPrinter">
         <element name="CSVEventPrinter">
             <xsd:annotation>
-                <summary>Prints out events into a comma-separated text file</summary>
+                <summary>Prints out events into a comma-separated text file. If no filename is given, the csv is written
+                    to the console.</summary>
             </xsd:annotation>
-            <element name="filename">
-                <text>
-                    <xsd:annotation>
-                        <example>events.csv</example>
-                    </xsd:annotation>
-                </text>
-            </element>
+            <optional>
+                <element name="filename">
+                    <text>
+                        <xsd:annotation>
+                            <example>events.csv</example>
+                        </xsd:annotation>
+                    </text>
+                </element>
+            </optional>
         </element>
     </define>
 </grammar>
