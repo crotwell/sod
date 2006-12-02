@@ -350,6 +350,14 @@
                 </includes>
             </resource>
             <resource>
+            <directory>src/edu/sc/seis/sod/tools</directory>
+            <targetPath>edu/sc/seis/sod/tools</targetPath>
+            <includes>
+            <include>*.props</include>
+            <include>*.vm</include>
+            </includes>
+        </resource>
+         <resource>
                 <directory>src/edu/sc/seis/sod/data</directory>
                 <targetPath>edu/sc/seis/sod/data</targetPath>
                 <includes>
