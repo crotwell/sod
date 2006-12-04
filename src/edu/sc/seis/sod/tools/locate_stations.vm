@@ -43,7 +43,7 @@
             </stationPointDistance>
 #end
             <printlineStationProcess>
-				<template>$station.getLongitude(' ##0.0000;-##0.0000') $station.getLatitude(' ##0.0000;-##0.0000') $station.getElevation('###0.') $station.code</template>
+                <template>$station.getLongitude(' ##0.0000;-##0.0000') $station.getLatitude(' ##0.0000;-##0.0000') $station.getElevation('###0.') $station.code</template>
 			</printlineStationProcess>
         </stationAND>
     </networkArm>

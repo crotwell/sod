@@ -31,7 +31,10 @@ public class CommandLineTool {
         String[] segs = getClass().getName().split("\\.");
         jsap.setUsage(Args.makeUsage(segs[segs.length - 1], params));
         result = jsap.parse(args);
-        noArgs = args.length == 0;
+        if(args.length == 0) {
+            result.addException("Must use at least one option",
+                                new RuntimeException("Must use at least one option"));
+        }
     }
 
     protected FlaggedOption createListOption(String id,
@@ -85,7 +88,7 @@ public class CommandLineTool {
     }
 
     public boolean shouldPrintHelp() {
-        return noArgs || result.getBoolean("help");
+        return result.getBoolean("help");
     }
 
     public boolean shouldPrintRecipe() {
@@ -117,8 +120,6 @@ public class CommandLineTool {
         String className = getClass().getName().replace('.', '/');
         return Start.createInputStream("jar:" + className + ".vm");
     }
-
-    private boolean noArgs;
 
     private List params = new ArrayList();
 
