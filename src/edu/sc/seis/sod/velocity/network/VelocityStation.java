@@ -61,8 +61,8 @@ public class VelocityStation extends Station {
     public String getCode() {
         return get_code();
     }
-    
-    public String getCodes(){
+
+    public String getCodes() {
         return getNetCode() + "." + getCode();
     }
 
@@ -93,7 +93,8 @@ public class VelocityStation extends Station {
         if(dateFormat.equals("longfile")) {
             return FissuresFormatter.formatDateForFile(effective_time.start_time);
         }
-        return SimpleVelocitizer.format(new MicroSecondDate(effective_time.start_time), dateFormat);
+        return SimpleVelocitizer.format(new MicroSecondDate(effective_time.start_time),
+                                        dateFormat);
     }
 
     public String getEnd() {
@@ -104,7 +105,8 @@ public class VelocityStation extends Station {
         if(dateFormat.equals("longfile")) {
             return FissuresFormatter.formatDateForFile(effective_time.end_time);
         }
-        return SimpleVelocitizer.format(new MicroSecondDate(effective_time.end_time), dateFormat);
+        return SimpleVelocitizer.format(new MicroSecondDate(effective_time.end_time),
+                                        dateFormat);
     }
 
     public String getName() {
@@ -114,11 +116,11 @@ public class VelocityStation extends Station {
     public String getCSVName() {
         return name.replaceAll(",", "");
     }
-    
+
     public String getDescription() {
         return description;
     }
-    
+
     public String getOperator() {
         return operator;
     }
@@ -126,14 +128,23 @@ public class VelocityStation extends Station {
     public String getComment() {
         return comment;
     }
-    
+
     public String getLatitude() {
         return df.format(sta.my_location.latitude);
+    }
+
+    public String getLatitude(String format) {
+        return new DecimalFormat(format).format(sta.my_location.latitude);
     }
 
     public String getLongitude() {
         return df.format(sta.my_location.longitude);
     }
+
+    public String getLongitude(String format) {
+        return new DecimalFormat(format).format(sta.my_location.longitude);
+    }
+
 
     public String getOrientedLatitude() {
         if(sta.my_location.latitude < 0) {
@@ -155,6 +166,12 @@ public class VelocityStation extends Station {
 
     public String getElevation() {
         return FissuresFormatter.formatDepth(QuantityImpl.createQuantityImpl(sta.my_location.elevation));
+    }
+
+    public String getElevation(String format) {
+        double elevInMeters = QuantityImpl.createQuantityImpl(sta.my_location.elevation)
+                .convertTo(UnitImpl.METER).value;
+        return new DecimalFormat(format).format(elevInMeters);
     }
 
     public String getDistance(VelocityEvent event) {
@@ -187,15 +204,15 @@ public class VelocityStation extends Station {
     public String getURL() {
         return "stations/" + getNetCode() + "/" + getCode();
     }
-    
+
     public String toXML() throws XMLStreamException {
         StringWriter writer = new StringWriter();
         XMLStreamWriter xmlWriter = XMLUtil.staxOutputFactory.createXMLStreamWriter(writer);
         XMLStation.insert(xmlWriter, this);
         return writer.toString();
     }
-    
-    public String toString(){
+
+    public String toString() {
         return StationIdUtil.toString(get_id());
     }
 
@@ -217,14 +234,15 @@ public class VelocityStation extends Station {
     }
 
     public int hashCode() {
-        if(!hashCalc){
-            hash =   StationIdUtil.toString(get_id()).hashCode();
+        if(!hashCalc) {
+            hash = StationIdUtil.toString(get_id()).hashCode();
             hashCalc = true;
         }
         return hash;
     }
-    
+
     private boolean hashCalc = false;
+
     private int hash = 0;
 
     private VelocityNetwork velocityNet = null;
@@ -249,7 +267,7 @@ public class VelocityStation extends Station {
         ctx.put("station", this);
         getNet().insertIntoContext(ctx);
     }
-    
+
     public static VelocityStation[] wrap(Station[] stations) {
         VelocityStation[] out = new VelocityStation[stations.length];
         for(int i = 0; i < out.length; i++) {
