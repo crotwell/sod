@@ -1,6 +1,9 @@
 package edu.sc.seis.sod.tools;
 
+import java.util.HashMap;
+import java.util.Map;
 import com.martiansoftware.jsap.FlaggedOption;
+import com.martiansoftware.jsap.ParseException;
 
 public class TimeParser extends PatternParser {
 
@@ -8,6 +11,15 @@ public class TimeParser extends PatternParser {
         super("(\\d{4})-(\\d{1,2})-(\\d{1,2})", new String[] {"year",
                                                           "month",
                                                           "day"});
+    }
+
+    public Object parse(String arg) throws ParseException {
+        if(arg.equals("now")){
+            Map result = new HashMap();
+            result.put("now", Boolean.TRUE);
+            return result;
+        }
+        return super.parse(arg);
     }
 
     public static FlaggedOption createParam(String name,

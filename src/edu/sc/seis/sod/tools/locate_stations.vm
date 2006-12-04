@@ -42,7 +42,9 @@
                 <longitude>$donut.lon</longitude>
             </stationPointDistance>
 #end
-            <printlineStationProcess/>
+            <printlineStationProcess>
+				<template>$station.getLongitude(' ##0.0000;-##0.0000') $station.getLatitude(' ##0.0000;-##0.0000') $station.getElevation('###0.') $station.code</template>
+			</printlineStationProcess>
         </stationAND>
     </networkArm>
 </sod>

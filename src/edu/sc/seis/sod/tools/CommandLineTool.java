@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import org.apache.log4j.Level;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.velocity.VelocityContext;
 import org.xml.sax.InputSource;
@@ -20,6 +21,7 @@ import com.martiansoftware.jsap.Switch;
 import edu.sc.seis.fissuresUtil.simple.Initializer;
 import edu.sc.seis.sod.Args;
 import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.velocity.PrintlineVelocitizer;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
 public class CommandLineTool {
@@ -29,6 +31,7 @@ public class CommandLineTool {
         String[] segs = getClass().getName().split("\\.");
         jsap.setUsage(Args.makeUsage(segs[segs.length - 1], params));
         result = jsap.parse(args);
+        noArgs = args.length == 0;
     }
 
     protected FlaggedOption createListOption(String id,
@@ -82,7 +85,7 @@ public class CommandLineTool {
     }
 
     public boolean shouldPrintHelp() {
-        return result.getBoolean("help");
+        return noArgs || result.getBoolean("help");
     }
 
     public boolean shouldPrintRecipe() {
@@ -115,6 +118,8 @@ public class CommandLineTool {
         return Start.createInputStream("jar:" + className + ".vm");
     }
 
+    private boolean noArgs;
+
     private List params = new ArrayList();
 
     private JSAPResult result;
@@ -136,7 +141,9 @@ public class CommandLineTool {
             System.exit(1);
         }
         SimpleVelocitizer sv = new SimpleVelocitizer();
+        Level current = PrintlineVelocitizer.quietLogger();
         final String result = sv.evaluate(ls.getTemplate(), ls.getContext());
+        PrintlineVelocitizer.reinstateLogger(current);
         if(ls.shouldPrintRecipe()) {
             System.out.println(result);
             System.exit(0);

@@ -27,8 +27,8 @@ public class locate_events extends CommandLineTool {
                                                                            UnitImpl.WEEK))),
                                    "The earliest time for an accepted event.  Must be in 'YYYY-MM-DD' format."));
         add(TimeParser.createParam("end",
-                                   df.format(now),
-                                   "The latest time for an accepted event.  Must be in 'YYYY-MM-DD' format."));
+                                   "now",
+                                   "The latest time for an accepted event.  Must be in 'YYYY-MM-DD' format or 'now' for the current time."));
         add(RangeParser.createParam("magnitude",
                                     "0-10",
                                     "The range of acceptable magnitudes."));
