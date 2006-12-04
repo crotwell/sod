@@ -38,14 +38,12 @@ public class PrintlineVelocitizer {
     public PrintlineVelocitizer(String[] strings) throws ConfigurationException {
         for(int i = 0; i < strings.length; i++) {
             try {
-                Logger velocityLogger = Logger.getLogger(SQLLoader.class);
-                Level current = velocityLogger.getEffectiveLevel();
-                velocityLogger.setLevel(Level.FATAL);
+                Level cur = quietLogger();
                 Velocity.evaluate(new VelocityContext(),
                                   new StringWriter(),
                                   "PrintlineTest",
                                   strings[i]);
-                velocityLogger.setLevel(current);
+                reinstateLogger(cur);
             } catch(ParseErrorException e) {
                 throw new UserConfigurationException("Malformed Velocity '"
                         + strings[i] + "'.  " + e.getMessage());
@@ -55,8 +53,27 @@ public class PrintlineVelocitizer {
             }
         }
     }
+    
+    public static Level quietLogger(){
+        String prop = (String)Velocity.getProperty(SQLLoader.VELOCITY_LOGGER_NAME);
+        Level current = null;
+        if(prop != null) {
+            current = Logger.getLogger(prop).getEffectiveLevel();
+            Logger.getLogger(prop).setLevel(Level.FATAL);
+        }
+        return current;
+    }
+    
+    public static void reinstateLogger(Level level){
+        String prop = (String)Velocity.getProperty(SQLLoader.VELOCITY_LOGGER_NAME);
+        if(prop != null) {
+            Logger.getLogger(prop).setLevel(level);
+        }
+    }
 
-    public String evaluate(String fileTemplate, String template, NetworkAttr attr) throws IOException {
+    public String evaluate(String fileTemplate,
+                           String template,
+                           NetworkAttr attr) throws IOException {
         return evalulate(fileTemplate,
                          template,
                          ContextWrangler.createContext(attr));
