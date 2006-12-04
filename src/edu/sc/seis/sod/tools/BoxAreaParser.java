@@ -5,10 +5,8 @@ import com.martiansoftware.jsap.FlaggedOption;
 public class BoxAreaParser extends PatternParser {
 
     public BoxAreaParser() {
-        super("(-?\\d+)/(-?\\d+)/(-?\\d+)/(-?\\d+)", new String[] {"west",
-                                                                   "east",
-                                                                   "south",
-                                                                   "north"});
+        super("(-?\\d+\\.?\\d*)/(-?\\d+\\.?\\d*)/(-?\\d+\\.?\\d*)/(-?\\d+\\.?\\d*)",
+              new String[] {"west", "east", "south", "north"});
     }
 
     public static FlaggedOption createParam(String helpMessage) {
