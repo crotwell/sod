@@ -4,22 +4,22 @@ import junit.framework.TestCase;
 import org.apache.velocity.VelocityContext;
 import com.martiansoftware.jsap.JSAPException;
 
-public class LocateStationsTest extends TestCase {
+public class find_stationsTest extends TestCase {
 
     public void testDefaultServerArg() throws JSAPException {
-        locate_stations ls = new locate_stations();
+        find_stations ls = new find_stations();
         VelocityContext vc = ls.getContext();
         assertTrue(vc.containsKey("server"));
     }
 
     public void testDefaultStationArg() throws JSAPException {
-        locate_stations ls = new locate_stations();
+        find_stations ls = new find_stations();
         VelocityContext vc = ls.getContext();
         assertFalse(vc.containsKey("stations"));
     }
 
     public void testSingleStationShortArg() throws JSAPException {
-        locate_stations ls = new locate_stations(new String[] {"-s", "ANMO"});
+        find_stations ls = new find_stations(new String[] {"-s", "ANMO"});
         VelocityContext vc = ls.getContext();
         assertTrue(vc.containsKey("stations"));
         Object[] codes = (Object[])vc.get("stations");
@@ -28,7 +28,7 @@ public class LocateStationsTest extends TestCase {
     }
 
     public void testMultipleStationLongArg() throws JSAPException {
-        locate_stations ls = new locate_stations(new String[] {"--stations",
+        find_stations ls = new find_stations(new String[] {"--stations",
                                                              "CHICKENS,HORSES,COWS,PIGS,SHEEP"});
         VelocityContext vc = ls.getContext();
         assertTrue(vc.containsKey("stations"));
@@ -38,7 +38,7 @@ public class LocateStationsTest extends TestCase {
     }
 
     public void testMultipleNetworkLongArg() throws JSAPException {
-        locate_stations ls = new locate_stations(new String[] {"--networks",
+        find_stations ls = new find_stations(new String[] {"--networks",
                                                              "CHICKENS,HORSES,COWS,PIGS,SHEEP"});
         VelocityContext vc = ls.getContext();
         assertTrue(vc.containsKey("networks"));
@@ -48,25 +48,25 @@ public class LocateStationsTest extends TestCase {
     }
 
     public void testDefaultBoxArea() throws JSAPException {
-        locate_stations ls = new locate_stations(new String[] {});
+        find_stations ls = new find_stations(new String[] {});
         VelocityContext vc = ls.getContext();
         assertFalse(vc.containsKey("box"));
     }
 
     public void testSuppliedBoxArea() throws JSAPException {
-        locate_stations ls = new locate_stations(new String[] {"-R", "12/32/32/12"});
+        find_stations ls = new find_stations(new String[] {"-R", "12/32/32/12"});
         VelocityContext vc = ls.getContext();
         assertTrue(vc.containsKey("box"));
     }
 
     public void testDefaultDonutArea() throws JSAPException {
-        locate_stations ls = new locate_stations(new String[] {});
+        find_stations ls = new find_stations(new String[] {});
         VelocityContext vc = ls.getContext();
         assertFalse(vc.containsKey("donut"));
     }
 
     public void testSuppliedDonut() throws JSAPException {
-        locate_stations ls = new locate_stations(new String[] {"--donut", "12/32/32/58"});
+        find_stations ls = new find_stations(new String[] {"--donut", "12/32/32/58"});
         VelocityContext vc = ls.getContext();
         assertTrue(vc.containsKey("donut"));
     }

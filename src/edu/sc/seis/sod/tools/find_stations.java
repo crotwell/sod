@@ -2,13 +2,13 @@ package edu.sc.seis.sod.tools;
 
 import com.martiansoftware.jsap.JSAPException;
 
-public class locate_stations extends CommandLineTool {
+public class find_stations extends CommandLineTool {
 
-    public locate_stations() throws JSAPException {
+    public find_stations() throws JSAPException {
         this(new String[0]);
     }
 
-    public locate_stations(String[] args) throws JSAPException {
+    public find_stations(String[] args) throws JSAPException {
         super(args);
     }
 
@@ -29,6 +29,6 @@ public class locate_stations extends CommandLineTool {
     }
 
     public static void main(String[] args) throws Exception {
-        CommandLineTool.run(new locate_stations(args));
+        CommandLineTool.run(new find_stations(args));
     }
 }

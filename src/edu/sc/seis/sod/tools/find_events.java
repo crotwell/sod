@@ -8,9 +8,9 @@ import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 
-public class locate_events extends CommandLineTool {
+public class find_events extends CommandLineTool {
 
-    public locate_events(String[] args) throws JSAPException {
+    public find_events(String[] args) throws JSAPException {
         super(args);
     }
 
@@ -43,6 +43,6 @@ public class locate_events extends CommandLineTool {
     }
 
     public static void main(String[] args) throws Exception {
-        CommandLineTool.run(new locate_events(args));
+        CommandLineTool.run(new find_events(args));
     }
 }
