@@ -1,0 +1,66 @@
+<sod>
+    <networkArm>
+        <networkFinder>
+            <name>$server.name</name>
+            <dns>$server.dns</dns>
+        </networkFinder>
+#if($networks)
+        <networkOR>
+#foreach($code in $networks)
+            <networkCode>$code</networkCode>
+#end
+        </networkOR>
+#end
+        <stationAND>
+#if($stations)
+            <stationOR>
+#foreach($code in $stations)
+                <stationCode>$code</stationCode>
+#end
+            </stationOR>
+#end
+#if($box)
+            <stationArea>
+                <boxArea>
+                    <latitudeRange>
+                        <min>$box.south</min>
+                        <max>$box.north</max>
+                    </latitudeRange>
+                    <longitudeRange>
+                        <min>$box.west</min>
+                        <max>$box.east</max>
+                    </longitudeRange>
+                </boxArea>
+            </stationArea>
+#end
+#if($donut)
+            <stationPointDistance>
+                <unit>DEGREES</unit>
+                <min>$donut.min</min>
+                <max>$donut.max</max>
+                <latitude>$donut.lat</latitude>
+                <longitude>$donut.lon</longitude>
+            </stationPointDistance>
+#end
+        </stationAND>
+#if($sites)
+        <siteOR>
+#foreach($code in $sites)
+            <siteCode>$code</siteCode>
+#end
+		</siteOR>
+#end
+#if($channels)
+        <channelOR>
+#foreach($code in $channels)
+            <channelCode>$code</channelCode>
+#end
+        </channelOR>
+#end
+        <responseWriter>
+#if($responseDirectory)
+            <workingDir>$responseDirectory</workingDir>
+#end
+        </responseWriter>
+    </networkArm>
+</sod>
