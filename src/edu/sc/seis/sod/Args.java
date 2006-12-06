@@ -133,6 +133,7 @@ public class Args {
                 builder.append(' ');
             }
         }
+        builder.append('\n');
         return builder.toString();
     }
 
