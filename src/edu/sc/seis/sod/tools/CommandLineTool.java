@@ -21,6 +21,7 @@ import com.martiansoftware.jsap.Switch;
 import edu.sc.seis.fissuresUtil.simple.Initializer;
 import edu.sc.seis.sod.Args;
 import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.Version;
 import edu.sc.seis.sod.velocity.PrintlineVelocitizer;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
@@ -54,6 +55,10 @@ public class CommandLineTool {
     }
 
     protected void addParams() throws JSAPException {
+        add(new Switch("version",
+                       'v',
+                       "version",
+                       "Print SOD's version and exit."));
         add(new Switch("recipe",
                        'r',
                        "recipe",
@@ -93,6 +98,10 @@ public class CommandLineTool {
 
     public boolean shouldPrintRecipe() {
         return result.getBoolean("recipe");
+    }
+
+    public boolean shouldPrintVersion() {
+        return result.getBoolean("version");
     }
 
     public boolean isSuccess() {
@@ -135,6 +144,10 @@ public class CommandLineTool {
         PropertyConfigurator.configure(props);
         if(ls.shouldPrintHelp()) {
             System.err.println(ls.getHelpMessage());
+            System.exit(0);
+        }
+        if(ls.shouldPrintVersion()) {
+            System.err.println("SOD " + Version.getVersion());
             System.exit(0);
         }
         if(!ls.isSuccess()) {

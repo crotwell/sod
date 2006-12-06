@@ -50,6 +50,22 @@
 #end
 		</siteOR>
 #end
+        <channelEffectiveTimeOverlap>
+            <startTime>
+               <year>$begin.year</year>
+               <month>$begin.month</month>
+               <day>$begin.day</day>
+            </startTime>
+            <endTime>
+#if($end.now)
+                <now/>
+#else
+               <year>$end.year</year>
+               <month>$end.month</month>
+               <day>$end.day</day>
+#end
+            </endTime>
+        </channelEffectiveTimeOverlap>
 #if($channels)
         <channelOR>
 #foreach($code in $channels)
@@ -57,10 +73,18 @@
 #end
         </channelOR>
 #end
+#if($format == 'polezero')
+        <sacPoleZeroWriter>
+#if($responseDirectory)
+            <workingDir>$responseDirectory</workingDir>
+#end
+        </sacPoleZeroWriter>
+#else
         <responseWriter>
 #if($responseDirectory)
             <workingDir>$responseDirectory</workingDir>
 #end
         </responseWriter>
+#end
     </networkArm>
 </sod>

@@ -23,8 +23,8 @@ public class find_events extends CommandLineTool {
         MicroSecondDate now = ClockUtil.now();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         add(TimeParser.createParam("begin",
-                                   df.format(now.subtract(new TimeInterval(2,
-                                                                           UnitImpl.WEEK))),
+                                   df.format(now.subtract(new TimeInterval(1,
+                                                                           UnitImpl.DAY))),
                                    "The earliest time for an accepted event.  Must be in 'YYYY-MM-DD' format."));
         add(TimeParser.createParam("end",
                                    "now",
