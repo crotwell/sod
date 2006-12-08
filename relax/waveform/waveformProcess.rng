@@ -60,6 +60,7 @@
             <ref name="saveSeismogramToFile"/>
             <ref name="seismogramSampling"/>
             <ref name="decimate"/>
+            <ref name="compressionType"/>
         </choice>
     </define>
     <define name="seismogramAND">
@@ -972,6 +973,21 @@
             </xsd:annotation>
             <oneOrMore>
                 <ref name="seismogramProcess"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="compressionType">
+        <element name="compressionType">
+            <xsd:annotation>
+                <summary>Passes a seismogram's data if it is compressed with the given types.</summary>
+                <description>This checks the compression algorithm used by the seismograms and passes if
+                each seismogram matches one of the given types. The integers follow the compression types
+                as defined in the SEED manual for blockette 1000.</description>
+            </xsd:annotation>
+            <oneOrMore>
+                <element name="type">
+                    <data type="integer"/>
+                </element>
             </oneOrMore>
         </element>
     </define>
