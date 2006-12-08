@@ -14,6 +14,10 @@ public class WaveformResult {
     public WaveformResult(boolean success, LocalSeismogramImpl[] seismograms, Object actor) {
         this(seismograms, new StringTreeLeaf(actor, success));
     }
+    
+    public WaveformResult(boolean success, LocalSeismogramImpl[] seismograms, Object actor, String reason) {
+        this(seismograms, new StringTreeLeaf(actor, success, reason));
+    }
 
     public WaveformResult(LocalSeismogramImpl[] seismograms, StringTree reason) {
         this.seismograms = seismograms;
