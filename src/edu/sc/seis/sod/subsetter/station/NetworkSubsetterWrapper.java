@@ -2,6 +2,7 @@ package edu.sc.seis.sod.subsetter.station;
 
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Station;
+import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.network.NetworkSubsetter;
 
 /**
@@ -13,8 +14,8 @@ public class NetworkSubsetterWrapper implements StationSubsetter {
         this.ns = ns;
     }
 
-    public boolean accept(Station station, NetworkAccess network) throws Exception {
-        return ns.accept(station.my_network).isSuccess();
+    public StringTree accept(Station station, NetworkAccess network) throws Exception {
+        return ns.accept(station.my_network);
     }
 
     private NetworkSubsetter ns;

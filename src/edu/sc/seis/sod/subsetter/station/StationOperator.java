@@ -4,6 +4,9 @@ import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.status.Fail;
+import edu.sc.seis.sod.status.Pass;
+import edu.sc.seis.sod.status.StringTree;
 import org.w3c.dom.Element;
 
 /**
@@ -23,9 +26,9 @@ public class StationOperator implements StationSubsetter {
         this.config = config;
     }
 
-    public boolean accept(Station e, NetworkAccess network) {
-        if(e.operator.equals(SodUtil.getNestedText(config))) return true;
-        else return false;
+    public StringTree accept(Station e, NetworkAccess network) {
+        if(e.operator.equals(SodUtil.getNestedText(config))) return new Pass(this);
+        else return new Fail(this);
     }
 
     Element config;

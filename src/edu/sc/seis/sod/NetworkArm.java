@@ -430,10 +430,12 @@ public class NetworkArm implements Arm {
                 Station[] stations = networkDbObject.getNetworkAccess()
                         .retrieve_stations();
                 for(int subCounter = 0; subCounter < stations.length; subCounter++) {
-                    if(staEffectiveSubsetter.accept(stations[subCounter],
-                                                    networkDbObject.getNetworkAccess())) {
-                        if(stationSubsetter.accept(stations[subCounter],
-                                                   networkDbObject.getNetworkAccess())) {
+                    StringTree effResult = staEffectiveSubsetter.accept(stations[subCounter],
+                                                                        networkDbObject.getNetworkAccess());
+                    if(effResult.isSuccess()) {
+                        StringTree staResult = stationSubsetter.accept(stations[subCounter],
+                                                                       networkDbObject.getNetworkAccess());
+                        if(staResult.isSuccess()) {
                             int dbid;
                             synchronized(netTable) {
                                 dbid = netTable.put(stations[subCounter]);
@@ -449,14 +451,14 @@ public class NetworkArm implements Arm {
                                    Status.get(Stage.NETWORK_SUBSETTER,
                                               Standing.REJECT));
                             failLogger.info(StationIdUtil.toString(stations[subCounter].get_id())
-                                    + " was rejected");
+                                    + " was rejected: "+staResult);
                         }
                     } else {
                         change(stations[subCounter],
                                Status.get(Stage.NETWORK_SUBSETTER,
                                           Standing.REJECT));
                         failLogger.info(StationIdUtil.toString(stations[subCounter].get_id())
-                                + " was rejected based on its effective time not matching the range of requested events");
+                                + " was rejected based on its effective time not matching the range of requested events: "+effResult);
                     }
                 }
             } catch(Exception e) {
@@ -506,10 +508,12 @@ public class NetworkArm implements Arm {
             try {
                 Channel[] channels = networkAccess.retrieve_for_station(station.get_id());
                 for(int i = 0; i < channels.length; i++) {
-                    if(siteEffectiveSubsetter.accept(channels[i].my_site,
-                                                     networkAccess)) {
-                        if(siteSubsetter.accept(channels[i].my_site,
-                                                networkAccess)) {
+                    StringTree effResult = siteEffectiveSubsetter.accept(channels[i].my_site,
+                                                                         networkAccess);
+                    if(effResult.isSuccess()) {
+                        StringTree siteResult = siteSubsetter.accept(channels[i].my_site,
+                                                                     networkAccess);
+                        if(siteResult.isSuccess()) {
                             int dbid;
                             synchronized(netTable) {
                                 dbid = netTable.put(channels[i].my_site);
@@ -523,10 +527,10 @@ public class NetworkArm implements Arm {
                                                   Standing.SUCCESS));
                             }
                         } else if(!failures.contains(channels[i].my_site)) {
-                            failSite(failures, channels[i]);
+                            failSite(failures, channels[i], siteResult);
                         }
                     } else {
-                        failSite(failures, channels[i]);
+                        failSite(failures, channels[i], effResult);
                         failLogger.info(SiteIdUtil.toString(channels[i].my_site.get_id())
                                 + " was rejected based on its effective time not matching the range of requested events");
                     }
@@ -543,11 +547,11 @@ public class NetworkArm implements Arm {
         }
     }
 
-    private void failSite(List failures, Channel channel) {
+    private void failSite(List failures, Channel channel, StringTree reason) {
         change(channel.my_site, Status.get(Stage.NETWORK_SUBSETTER,
                                            Standing.REJECT));
         failLogger.info(SiteIdUtil.toString(channel.my_site.get_id())
-                + " was rejected");
+                + " was rejected: "+reason);
         failures.add(channel.my_site);
         // fail all channels in a failed site, just for
         // status

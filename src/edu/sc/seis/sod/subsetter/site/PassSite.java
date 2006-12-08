@@ -2,6 +2,8 @@ package edu.sc.seis.sod.subsetter.site;
 
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Site;
+import edu.sc.seis.sod.status.Pass;
+import edu.sc.seis.sod.status.StringTree;
 
 /**
  * PassSiteSubsetter.java
@@ -15,6 +17,6 @@ import edu.iris.Fissures.IfNetwork.Site;
 
 public class PassSite implements SiteSubsetter{
 
-    public boolean accept(Site site, NetworkAccess network) { return true;}
+    public StringTree accept(Site site, NetworkAccess network) { return new Pass(this);}
 
 }// NullSiteSubsetter

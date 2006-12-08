@@ -1,10 +1,8 @@
 package edu.sc.seis.sod.subsetter.site;
 
-import java.util.Iterator;
 import org.w3c.dom.Element;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
-import edu.iris.Fissures.IfNetwork.Site;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.status.StringTree;
 
 public final class SiteNOT extends SiteLogicalSubsetter implements
         SiteSubsetter {
@@ -13,12 +11,11 @@ public final class SiteNOT extends SiteLogicalSubsetter implements
         super(config);
     }
 
-    public boolean accept(Site e, NetworkAccess network) throws Exception {
-        Iterator it = subsetters.iterator();
-        if(it.hasNext()) {
-            SiteSubsetter filter = (SiteSubsetter)it.next();
-            if(filter.accept(e, network)) { return false; }
-        }
-        return true;
+    public boolean isSuccess(StringTree[] reasons) {
+        return !reasons[0].isSuccess();
+    }
+
+    public boolean shouldContinue(StringTree result) {
+        return false;
     }
 }// SiteNOT

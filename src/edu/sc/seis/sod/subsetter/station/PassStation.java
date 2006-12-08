@@ -2,6 +2,8 @@ package edu.sc.seis.sod.subsetter.station;
 
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Station;
+import edu.sc.seis.sod.status.Pass;
+import edu.sc.seis.sod.status.StringTree;
 
 /**
  * PassStation.java
@@ -15,6 +17,6 @@ import edu.iris.Fissures.IfNetwork.Station;
 
 public class  PassStation implements StationSubsetter{
 
-    public boolean accept(Station station, NetworkAccess network) { return true;  }
+    public StringTree accept(Station station, NetworkAccess network) { return new Pass(this);  }
 
 }// PassStation

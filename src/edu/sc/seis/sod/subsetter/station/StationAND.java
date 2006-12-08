@@ -1,10 +1,8 @@
 package edu.sc.seis.sod.subsetter.station;
 
-import java.util.Iterator;
 import org.w3c.dom.Element;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
-import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.status.StringTree;
 
 public final class StationAND extends StationLogicalSubsetter implements
         StationSubsetter {
@@ -13,11 +11,15 @@ public final class StationAND extends StationLogicalSubsetter implements
         super(config);
     }
 
-    public boolean accept(Station e, NetworkAccess network) throws Exception {
-        Iterator it = subsetters.iterator();
-        while(it.hasNext()) {
-            StationSubsetter filter = (StationSubsetter)it.next();
-            if(!filter.accept(e, network)) { return false; }
+    public boolean shouldContinue(StringTree result) {
+        return result.isSuccess();
+    }
+
+    public boolean isSuccess(StringTree[] reasons) {
+        for(int i = 0; i < reasons.length; i++) {
+            if(!reasons[i].isSuccess()){
+                return false;
+            }
         }
         return true;
     }

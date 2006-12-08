@@ -16,7 +16,7 @@ public class SiteSubsetterWrapper implements ChannelSubsetter {
     }
 
     public StringTree accept(Channel channel, ProxyNetworkAccess network) throws Exception {
-        return new StringTreeLeaf(this, s.accept(channel.my_site, network));
+        return s.accept(channel.my_site, network);
     }
 
     private SiteSubsetter s;

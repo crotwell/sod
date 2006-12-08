@@ -61,7 +61,7 @@ public class BelongsToVirtualTest extends TestCase {
         BelongsToVirtual btv = new BelongsToVirtual(na, FORTNIGHT);
         Station[] stations = na.retrieve_stations();
         for(int i = 0; i < stations.length; i++) {
-            assertTrue(btv.accept(stations[i], na));
+            assertTrue(btv.accept(stations[i], na).isSuccess());
         }
     }
 
@@ -70,7 +70,7 @@ public class BelongsToVirtualTest extends TestCase {
         BelongsToVirtual btv = new BelongsToVirtual(na, FORTNIGHT);
         Station[] stations = MockStation.createMultiSplendoredStations();
         for(int i = 0; i < stations.length; i++) {
-            assertFalse(btv.accept(stations[i], na));
+            assertFalse(btv.accept(stations[i], na).isSuccess());
         }
     }
 

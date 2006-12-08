@@ -34,8 +34,8 @@ public class EmbeddedStationSubsetter implements EventStationSubsetter {
                              CookieJar cookieJar) throws Exception {
         NetworkAccess network = Start.getNetworkArm()
                 .getNetwork(station.get_id().network_id);
-        return new StringTreeLeaf(this, stationSubsetter.accept(station,
-                                                                network));
+        return stationSubsetter.accept(station,
+                                       network);
     }
 
     private StationSubsetter stationSubsetter = null;

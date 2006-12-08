@@ -3,6 +3,8 @@ package edu.sc.seis.sod.subsetter.site;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Site;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.site.SiteSubsetter;
 import org.w3c.dom.Element;
 
@@ -21,8 +23,8 @@ public class SiteCode implements SiteSubsetter {
         }
     }
 
-    public boolean accept(Site site, NetworkAccess network) {
-        return site.get_id().site_code.equals(code);
+    public StringTree accept(Site site, NetworkAccess network) {
+        return new StringTreeLeaf(this, site.get_id().site_code.equals(code));
     }
 
     private String code;

@@ -11,6 +11,8 @@ import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.bag.DistAz;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.origin.AbstractOriginPoint;
 
 public class StationPointDistance extends AbstractOriginPoint implements
@@ -27,13 +29,13 @@ public class StationPointDistance extends AbstractOriginPoint implements
      * given lat and lon.
      * 
      */
-    public boolean accept(Station station, NetworkAccess network) {
+    public StringTree accept(Station station, NetworkAccess network) {
         Location loc = station.my_location;
         DistAz distaz = new DistAz(latitude,
                                    longitude,
                                    loc.latitude,
                                    loc.longitude);
-        return min <= distaz.getDelta() && max >= distaz.getDelta();
+        return new StringTreeLeaf(this, min <= distaz.getDelta() && max >= distaz.getDelta());
     }
 
     private double min, max;

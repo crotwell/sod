@@ -155,7 +155,7 @@ public class ChannelGrouper {
                                             NetworkAccess network = Start.getNetworkArm()
                                                     .getNetwork(channels[0].my_site.my_station.get_id().network_id);
                                             if(!stationSubsetter.accept(channels[0].my_site.my_station,
-                                                                        network)) {
+                                                                        network).isSuccess()) {
                                                 accept = false;
                                             }
                                         }

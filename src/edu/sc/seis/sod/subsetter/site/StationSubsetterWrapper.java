@@ -2,6 +2,7 @@ package edu.sc.seis.sod.subsetter.site;
 
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Site;
+import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.station.StationSubsetter;
 
 /**
@@ -13,7 +14,7 @@ public class StationSubsetterWrapper implements SiteSubsetter {
         this.sub = sub;
     }
 
-    public boolean accept(Site site, NetworkAccess network) throws Exception {
+    public StringTree accept(Site site, NetworkAccess network) throws Exception {
         return sub.accept(site.my_station, network);
     }
 

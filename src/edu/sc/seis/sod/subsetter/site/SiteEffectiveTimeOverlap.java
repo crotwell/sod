@@ -6,6 +6,8 @@ import edu.iris.Fissures.TimeRange;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Site;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.EffectiveTimeOverlap;
 
 public class SiteEffectiveTimeOverlap extends EffectiveTimeOverlap implements
@@ -20,8 +22,8 @@ public class SiteEffectiveTimeOverlap extends EffectiveTimeOverlap implements
         super(tr);
     }
 
-    public boolean accept(Site site, NetworkAccess network) {
-        return overlaps(site.effective_time);
+    public StringTree accept(Site site, NetworkAccess network) {
+        return new StringTreeLeaf(this, overlaps(site.effective_time));
     }
 
     static Category logger = Category.getInstance(SiteEffectiveTimeOverlap.class.getName());
