@@ -12,13 +12,13 @@ public abstract class LogicalSubsetter implements Subsetter {
         NodeList kids = config.getChildNodes();
         for (int i = 0; i< kids.getLength(); i++) {
             if (kids.item(i) instanceof Element) {
-                Object obj = SodUtil.load((Element)kids.item(i), getArmName());
+                Object obj = SodUtil.load((Element)kids.item(i), getPackage());
                 if(obj instanceof Subsetter){ filterList.add(obj); }
             }
         }
     }
 
-    public abstract String getArmName();
+    public abstract String getPackage();
 
     protected List filterList = new LinkedList();
 

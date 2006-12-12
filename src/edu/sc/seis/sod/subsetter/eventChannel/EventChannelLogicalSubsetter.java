@@ -14,7 +14,7 @@ public class EventChannelLogicalSubsetter extends LogicalSubsetter {
         super(config);
     }
 
-    public String getArmName() {
+    public String getPackage() {
         return "eventChannel";
     }
 }

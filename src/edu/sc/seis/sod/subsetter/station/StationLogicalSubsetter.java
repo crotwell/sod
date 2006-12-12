@@ -29,8 +29,8 @@ public abstract class StationLogicalSubsetter extends LogicalSubsetter {
         return (StationSubsetter[])filterList.toArray(new StationSubsetter[0]);
     }
 
-    public String getArmName() {
-        return "network";
+    public String getPackage() {
+        return "station";
     }
 
     public StringTree accept(Station sta, NetworkAccess network) throws Exception {

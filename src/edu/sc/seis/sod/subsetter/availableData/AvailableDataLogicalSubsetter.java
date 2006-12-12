@@ -14,7 +14,7 @@ public class AvailableDataLogicalSubsetter extends LogicalSubsetter {
         super(config);
     }
 
-    public String getArmName() {
+    public String getPackage() {
         return "availableData";
     }
 }

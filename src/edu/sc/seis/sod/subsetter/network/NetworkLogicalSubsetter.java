@@ -24,7 +24,7 @@ public abstract class NetworkLogicalSubsetter extends LogicalSubsetter {
         return (NetworkSubsetter[])filterList.toArray(new NetworkSubsetter[0]);
     }
 
-    public String getArmName() {
+    public String getPackage() {
         return "network";
     }
 

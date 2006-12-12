@@ -28,8 +28,8 @@ public abstract class SiteLogicalSubsetter extends LogicalSubsetter {
         return (SiteSubsetter[])filterList.toArray(new SiteSubsetter[0]);
     }
 
-    public String getArmName() {
-        return "network";
+    public String getPackage() {
+        return "site";
     }
 
     public StringTree accept(Site sta, NetworkAccess network) throws Exception {

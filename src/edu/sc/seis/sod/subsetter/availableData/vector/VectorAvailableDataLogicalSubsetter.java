@@ -14,7 +14,7 @@ public class VectorAvailableDataLogicalSubsetter extends LogicalSubsetter {
         super(config);
     }
 
-    public String getArmName() {
+    public String getPackage() {
         return "availableData.vector";
     }
 }

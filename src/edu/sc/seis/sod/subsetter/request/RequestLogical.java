@@ -13,7 +13,7 @@ public class RequestLogical extends LogicalSubsetter {
         super(config);
     }
 
-    public String getArmName() {
+    public String getPackage() {
         return "request";
     }
 }
