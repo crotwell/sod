@@ -301,7 +301,7 @@
                 <description>Cuts the seismograms in the vector to their intersection.  This is useful for processors like rotateGCP which expect seismograms to be of the same length and time.</description>
                 
             </xsd:annotation>
-                <text/>
+            <empty/>
         </element>
     </define>
 </grammar>

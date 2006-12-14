@@ -65101,7 +65101,7 @@
                 <empty/>
             </element>
             <element name="vectorTrim">
-                <text/>
+                <empty/>
             </element>
             <element name="embeddedEventVector">
                 <ref name="eventVector"/>
