@@ -1,7 +1,9 @@
 package edu.sc.seis.sod.tools;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -154,9 +156,33 @@ public class CommandLineTool {
             System.err.println(ls.getErrorMessage());
             System.exit(1);
         }
+        VelocityContext ctx = ls.getContext();
         SimpleVelocitizer sv = new SimpleVelocitizer();
         Level current = PrintlineVelocitizer.quietLogger();
-        final String result = sv.evaluate(ls.getTemplate(), ls.getContext());
+        if(System.in.available() > 0) {
+            StringBuffer buff = new StringBuffer();
+            BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
+            String line;
+            boolean inSod = false;
+            while((line = r.readLine()) != null) {
+                if(!inSod && line.contains("<sod>")){
+                    inSod = true;
+                }else if(inSod){
+                    if(line.contains("</sod>")){
+                        inSod = false;
+                    }else{
+                        buff.append(line);
+                        buff.append('\n');
+                    }
+                }
+            }
+            if(buff.length() == 0){
+                System.err.println("There was input on sysin, but it doesn't look like it was a recipe file");
+                System.exit(1);
+            }
+            ctx.put("additionalArms", buff.toString());
+        }
+        final String result = sv.evaluate(ls.getTemplate(), ctx);
         PrintlineVelocitizer.reinstateLogger(current);
         if(ls.shouldPrintRecipe()) {
             System.out.println(result);

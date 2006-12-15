@@ -1,4 +1,7 @@
 <sod>
+#if($additionalArms)
+$additionalArms
+#end
     <networkArm>
         <networkFinder>
             <name>$server.name</name>
@@ -44,7 +47,7 @@
 #end
             <printlineStationProcess>
                 <template>$station.getLongitude(' ##0.0000;-##0.0000') $station.getLatitude(' ##0.0000;-##0.0000') $station.getElevation('###0.') $station.code</template>
-			</printlineStationProcess>
+            </printlineStationProcess>
         </stationAND>
     </networkArm>
 </sod>

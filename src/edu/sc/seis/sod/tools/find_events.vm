@@ -1,10 +1,10 @@
 <sod>
-	<properties>
-		<eventLag>
-			<unit>HOUR</unit>
-			<value>0</value>
-		</eventLag>
-	</properties>
+    <properties>
+        <eventLag>
+            <unit>HOUR</unit>
+            <value>0</value>
+        </eventLag>
+    </properties>
     <eventArm>
         <eventFinder>
             <name>$server.name</name>
@@ -63,4 +63,7 @@
 #end
         <CSVEventPrinter/>
     </eventArm>
+#if($additionalArms)
+$additionalArms
+#end
 </sod>
