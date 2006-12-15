@@ -3,6 +3,7 @@ package edu.sc.seis.sod.velocity;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Properties;
@@ -25,8 +26,8 @@ import edu.sc.seis.sod.CookieJar;
  * Created on May 25, 2005
  */
 public class SimpleVelocitizer {
-    
-    public static String format(MicroSecondDate date, String format){
+
+    public static String format(MicroSecondDate date, String format) {
         DateFormat dateFormat = new SimpleDateFormat(format);
         dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
         return dateFormat.format(date);
@@ -74,15 +75,24 @@ public class SimpleVelocitizer {
         StringWriter writer = new StringWriter();
         try {
             try {
-                Velocity.evaluate(ctx, writer, "SimpleVelocitizer", new InputStreamReader(template));
+                evaluate(template, ctx, writer);
             } catch(ParseErrorException parseError) {
                 return ERR_PREFIX + "Invalid Velocity";
             }
-            return writer.toString();
         } catch(Exception e) {
             GlobalExceptionHandler.handle(e);
             return "Unable to evaluate " + template;
         }
+        return writer.toString();
+    }
+
+    public void evaluate(InputStream template,
+                         VelocityContext ctx,
+                         Writer writer) throws ParseErrorException, Exception {
+        Velocity.evaluate(ctx,
+                          writer,
+                          "SimpleVelocitizer",
+                          new InputStreamReader(template));
     }
 
     public static String cleanUpErrorStringForDisplay(String string) {

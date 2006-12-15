@@ -9,12 +9,12 @@ public class TimeParser extends PatternParser {
 
     public TimeParser() {
         super("(\\d{4})-(\\d{1,2})-(\\d{1,2})", new String[] {"year",
-                                                          "month",
-                                                          "day"});
+                                                              "month",
+                                                              "day"});
     }
 
     public Object parse(String arg) throws ParseException {
-        if(arg.equals("now")){
+        if(arg.equals("now")) {
             Map result = new HashMap();
             result.put("now", Boolean.TRUE);
             return result;

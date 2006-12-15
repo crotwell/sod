@@ -1,0 +1,38 @@
+#if($additionalArms.length() > 0)
+$additionalArms#end
+    <waveformArm>
+#if($sites)
+        <siteOR>
+#foreach($code in $sites)
+            <siteCode>$code</siteCode>
+#end
+		</siteOR>
+#end
+#if($channels)
+        <embeddedChannel>
+            <channelOR>
+#foreach($code in $channels)
+                <channelCode>$code</channelCode>
+#end
+            </channelOR>
+        </embeddedChannel>
+#end
+        <phaseRequest>
+            <beginPhase>$beginPhase.name</beginPhase>
+            <beginOffset>
+                <unit>MINUTE</unit>
+                <value>$beginPhase.offset</value>
+            </beginOffset>
+            <endPhase>$endPhase.name</endPhase>
+            <endOffset>
+                <unit>MINUTE</unit>
+                <value>$endPhase.offset</value>
+            </endOffset>
+        </phaseRequest>
+        <fixedDataCenter>
+            <name>$server.name</name>
+            <dns>$server.dns</dns>
+        </fixedDataCenter>
+        <sacWriter/>
+    </waveformArm>
+</sod>
