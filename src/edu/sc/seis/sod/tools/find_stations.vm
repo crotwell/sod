@@ -1,7 +1,5 @@
-<sod>
-#if($additionalArms)
-$additionalArms
-#end
+#if($additionalArms.length() > 0)
+$additionalArms#end
     <networkArm>
         <networkFinder>
             <name>$server.name</name>

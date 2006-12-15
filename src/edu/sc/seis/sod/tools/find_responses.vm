@@ -1,4 +1,3 @@
-<sod>
     <networkArm>
         <networkFinder>
             <name>$server.name</name>

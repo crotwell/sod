@@ -1,4 +1,3 @@
-<sod>
     <properties>
         <eventLag>
             <unit>HOUR</unit>
@@ -63,7 +62,6 @@
 #end
         <CSVEventPrinter/>
     </eventArm>
-#if($additionalArms)
-$additionalArms
-#end
+#if($additionalArms.length() > 0)
+$additionalArms#end
 </sod>

@@ -139,6 +139,20 @@ public class CommandLineTool {
     private JSAP jsap = new JSAP();
 
     public static void run(CommandLineTool ls) throws Exception {
+        if(ls.shouldPrintRecipe()) {
+            /*
+             * Sad, sad, sad, sad, sad hack to get piping system.in to work in
+             * java.
+             * 
+             * Print something out immediately so downstream CommandLineTools
+             * starting at the same time will get something from
+             * System.in.available() and read in the data. If we don't use
+             * System.in.available() there's no way to tell if there's something
+             * in the pipe and we block forever on System.in.read()
+             */
+            System.out.println("<sod>");
+            System.out.flush();
+        }
         // get some defaults
         Properties props = System.getProperties();
         Initializer.loadProps(Start.createInputStream("jar:edu/sc/seis/sod/tools/simple.props"),
@@ -165,18 +179,18 @@ public class CommandLineTool {
             String line;
             boolean inSod = false;
             while((line = r.readLine()) != null) {
-                if(!inSod && line.contains("<sod>")){
+                if(!inSod && line.contains("<sod>")) {
                     inSod = true;
-                }else if(inSod){
-                    if(line.contains("</sod>")){
+                } else if(inSod) {
+                    if(line.contains("</sod>")) {
                         inSod = false;
-                    }else{
+                    } else {
                         buff.append(line);
                         buff.append('\n');
                     }
                 }
             }
-            if(buff.length() == 0){
+            if(buff.length() == 0) {
                 System.err.println("There was input on sysin, but it doesn't look like it was a recipe file");
                 System.exit(1);
             }
@@ -192,7 +206,8 @@ public class CommandLineTool {
                             new Start.InputSourceCreator() {
 
                                 public InputSource create() {
-                                    return new InputSource(new StringReader(result));
+                                    return new InputSource(new StringReader("<sod>\n"
+                                            + result));
                                 }
                             },
                             props);
