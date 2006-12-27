@@ -12,6 +12,8 @@ import javax.xml.stream.XMLStreamWriter;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.model.QuantityImpl;
+import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.ProxyEventAccessOperations;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
@@ -73,6 +75,15 @@ public class VelocityEvent extends ProxyEventAccessOperations {
         return df.format(origin.my_location.longitude);
     }
 
+    public String getLatitude(String format) {
+        return new DecimalFormat(format).format(origin.my_location.latitude);
+    }
+
+    public String getLongitude(String format) {
+        return new DecimalFormat(format).format(origin.my_location.longitude);
+    }
+
+
     public Float getFloatLatitude() {
         return new Float(origin.my_location.latitude);
     }
@@ -97,6 +108,22 @@ public class VelocityEvent extends ProxyEventAccessOperations {
 
     public String getDepth() {
         return FissuresFormatter.formatDepth(FissuresFormatter.getDepth(origin));
+    }
+
+    public String getDepth(String format) {
+        double depthInKM = QuantityImpl.createQuantityImpl(origin.my_location.depth)
+                .convertTo(UnitImpl.KILOMETER).value;
+        return new DecimalFormat(format).format(depthInKM);
+    }
+
+    public String getElevation() {
+        return FissuresFormatter.formatDepth(QuantityImpl.createQuantityImpl(origin.my_location.elevation));
+    }
+
+    public String getElevation(String format) {
+        double elevInMeters = QuantityImpl.createQuantityImpl(origin.my_location.elevation)
+                .convertTo(UnitImpl.METER).value;
+        return new DecimalFormat(format).format(elevInMeters);
     }
 
     public String getTime() {

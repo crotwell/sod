@@ -25,7 +25,21 @@ public class find_stationsTest extends TestCase {
         Object[] codes = (Object[])vc.get("stations");
         assertEquals(1, codes.length);
         assertEquals("ANMO", codes[0]);
+        assertTrue(vc.containsKey("needsStationAND"));
     }
+
+    public void testNeedsStationByDefault() throws JSAPException {
+        find_stations ls = new find_stations();
+        VelocityContext vc = ls.getContext();
+        assertEquals(Boolean.TRUE, vc.get("needsStationAND"));
+    }
+
+    public void testNeedsStationFalseWhenOutputIsNone() throws JSAPException {
+        find_stations ls = new find_stations(new String[]{"-o", "none"});
+        VelocityContext vc = ls.getContext();
+        assertFalse(vc.containsKey("needsStationAND"));
+    }
+
 
     public void testMultipleStationLongArg() throws JSAPException {
         find_stations ls = new find_stations(new String[] {"--stations",
@@ -35,6 +49,7 @@ public class find_stationsTest extends TestCase {
         Object[] codes = (Object[])vc.get("stations");
         assertEquals(5, codes.length);
         assertEquals("CHICKENS", codes[0]);
+        assertTrue(vc.containsKey("needsStationAND"));
     }
 
     public void testMultipleNetworkLongArg() throws JSAPException {
@@ -57,6 +72,7 @@ public class find_stationsTest extends TestCase {
         find_stations ls = new find_stations(new String[] {"-R", "12/32/32/12"});
         VelocityContext vc = ls.getContext();
         assertTrue(vc.containsKey("box"));
+        assertTrue(vc.containsKey("needsStationAND"));
     }
 
     public void testDefaultDonutArea() throws JSAPException {
@@ -69,5 +85,6 @@ public class find_stationsTest extends TestCase {
         find_stations ls = new find_stations(new String[] {"--donut", "12/32/32/58"});
         VelocityContext vc = ls.getContext();
         assertTrue(vc.containsKey("donut"));
+        assertTrue(vc.containsKey("needsStationAND"));
     }
 }

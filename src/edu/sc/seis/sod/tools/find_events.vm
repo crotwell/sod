@@ -42,6 +42,11 @@
                 </endTime>
             </originTimeRange>
             <magnitudeRange>
+#if($types)
+#foreach($type in $types)
+                <magType>$type</magType>
+#end
+#end
                 <min>$magnitude.min</min>
                 <max>$magnitude.max</max>
             </magnitudeRange>
@@ -60,7 +65,21 @@
             <longitude>$donut.lon</longitude>
         </originPointDistance>
 #end
-        <CSVEventPrinter/>
+#if($seismicRegions)
+#foreach($region in $seismicRegions)
+        <seismicRegion>$region</seismicRegion>
+#end
+#end
+#if($geographicRegions)
+#foreach($region in $geographicRegions)
+        <geographicalRegion>$region</geographicalRegion>
+#end
+#end
+#if($output)
+        <printlineEventProcess>
+            <template>$output</template>
+        </printlineEventProcess>
+#end
     </eventArm>
 #if($additionalArms.length() > 0)
 $additionalArms#end

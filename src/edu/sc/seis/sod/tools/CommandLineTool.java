@@ -93,7 +93,11 @@ public class CommandLineTool {
         }
         return vc;
     }
-
+    
+    protected boolean isSpecified(Parameter p){
+        return result.contains(p.getID());
+    }
+    
     public boolean shouldPrintHelp() {
         return result.getBoolean("help");
     }
@@ -134,7 +138,7 @@ public class CommandLineTool {
 
     private List params = new ArrayList();
 
-    private JSAPResult result;
+    protected JSAPResult result;
 
     private JSAP jsap = new JSAP();
 

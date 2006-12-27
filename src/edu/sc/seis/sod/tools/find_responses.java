@@ -34,8 +34,8 @@ public class find_responses extends find_stations {
                               JSAP.STRING_PARSER,
                               "responses",
                               false,
-                              'o',
-                              "output-directory",
+                              'D',
+                              "directory",
                               "Directory to write responses to"));
         add(new FlaggedOption("format",
                               new ResponseFormatParser(),

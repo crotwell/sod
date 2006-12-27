@@ -164,6 +164,12 @@ public class VelocityStation extends Station {
         return FissuresFormatter.formatDepth(QuantityImpl.createQuantityImpl(sta.my_location.depth));
     }
 
+    public String getDepth(String format) {
+        double depthInKM = QuantityImpl.createQuantityImpl(sta.my_location.depth)
+                .convertTo(UnitImpl.KILOMETER).value;
+        return new DecimalFormat(format).format(depthInKM);
+    }
+
     public String getElevation() {
         return FissuresFormatter.formatDepth(QuantityImpl.createQuantityImpl(sta.my_location.elevation));
     }

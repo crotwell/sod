@@ -12,6 +12,7 @@ $additionalArms#end
 #end
         </networkOR>
 #end
+#if($needsStationAND)
         <stationAND>
 #if($stations)
             <stationOR>
@@ -43,9 +44,12 @@ $additionalArms#end
                 <longitude>$donut.lon</longitude>
             </stationPointDistance>
 #end
+#if($output)
             <printlineStationProcess>
-                <template>$station.getLongitude(' ##0.0000;-##0.0000') $station.getLatitude(' ##0.0000;-##0.0000') $station.getElevation('###0.') $station.code</template>
+                <template>$output</template>
             </printlineStationProcess>
+#end
         </stationAND>
+#end
     </networkArm>
 </sod>
