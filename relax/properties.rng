@@ -52,6 +52,9 @@
                     <ref name="checkpoint"/>
                 </optional>
                 <optional>
+                    <ref name="loserEventCleaner"/>
+                </optional>
+                <optional>
                     <ref name="allowNetworksOutsideEventRequestTime"/>
                 </optional>
             </interleave>
@@ -236,6 +239,16 @@
                 <summary>Periodically send a CHECKPOINT to the database</summary>
                 <description>If present, SOD sends a CHECKPOINT command to the database every
                 hour.  Defaults to FALSE.</description>
+            </xsd:annotation>
+            <ref name="trueOrFalse"/>
+        </element>
+    </define>
+    <define name="loserEventCleaner">
+        <element name="loserEventCleaner">
+            <xsd:annotation>
+                <summary>Periodically removes failed events from the database. </summary>
+                <description>If present, SOD removes failed events from the database once a week.  This will greatly speed things up
+                if a run goes for years and gathers tens of thousands of rejected events.  Defaults to FALSE.</description>
             </xsd:annotation>
             <ref name="trueOrFalse"/>
         </element>

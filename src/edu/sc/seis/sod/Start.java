@@ -298,6 +298,9 @@ public class Start {
         if(runProps.checkpointPeriodically()) {
             new PeriodicCheckpointer();
         }
+        if(runProps.loserEventCleaner()) {
+            new TotalLoserEventCleaner();
+        }
     }
 
     public void allHopeAbandon(String message) {

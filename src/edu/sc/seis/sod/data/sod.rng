@@ -74,6 +74,11 @@
                             </element>
                         </optional>
                         <optional>
+                            <element name="loserEventCleaner">
+                                <ref name="trueOrFalse"/>
+                            </element>
+                        </optional>
+                        <optional>
                             <element name="allowNetworksOutsideEventRequestTime">
                                 <ref name="trueOrFalse"/>
                             </element>

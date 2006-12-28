@@ -76,6 +76,9 @@ public class RunProperties {
             if(DOMHelper.hasElement(el, "checkpointPeriodically")) {
                 checkpointPeriodically = true;
             }
+            if(DOMHelper.hasElement(el, "loserEventCleaner")) {
+                loserEventCleaner = true;
+            }
             if(DOMHelper.hasElement(el, "allowNetworksOutsideEventRequestTime")) {
                 allowDeadNets = true;
             }
@@ -139,6 +142,10 @@ public class RunProperties {
         return checkpointPeriodically;
     }
 
+    public boolean loserEventCleaner() {
+        return loserEventCleaner;
+    }
+
     public boolean allowDeadNets() {
         return allowDeadNets;
     }
@@ -185,7 +192,9 @@ public class RunProperties {
 
     private String evChanPairProc = AT_LEAST_ONCE;
 
-    private boolean checkpointPeriodically;
+    private boolean checkpointPeriodically = false;
+
+    private boolean loserEventCleaner = false;
 
     private boolean allowDeadNets;
 }
