@@ -151,9 +151,7 @@
                 <description> True if the station is within the given distance range of the given
                     lat and lon. </description>
             </xsd:annotation>
-            <ref name="range"/>
-            <ref name="lat"/>
-            <ref name="lon"/>
+            <externalRef href="../base/externalRef/latLonUnitRange.rng"/>
         </element>
     </define>
     <define name="stationPointAzimuth">
@@ -164,9 +162,7 @@
                     and lon. In keeping with common seismic terminology, azimuth is measured from
                     the point to the station.</description>
             </xsd:annotation>
-            <ref name="range"/>
-            <ref name="lat"/>
-            <ref name="lon"/>
+            <externalRef href="../base/externalRef/latLonUnitRange.rng"/>
         </element>
     </define>
     <define name="stationPointBackAzimuth">
@@ -177,9 +173,7 @@
                     given lat and lon. In keeping with common seismic terminology, back azimuth is
                     measured from the station to the point. </description>
             </xsd:annotation>
-            <ref name="range"/>
-            <ref name="lat"/>
-            <ref name="lon"/>
+            <externalRef href="../base/externalRef/latLonUnitRange.rng"/>
         </element>
     </define>
     <define name="AND">

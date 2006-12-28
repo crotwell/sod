@@ -195,7 +195,7 @@
                     </originPointDistance>
                 </example>
             </xsd:annotation>
-            <ref name="latLonUnitRange"/>
+            <externalRef href="../base/externalRef/latLonUnitRange.rng"/>
         </element>
     </define>
     <define name="pointLinearDistanceMagnitude">
@@ -206,31 +206,9 @@
                     event point distance, then the event is accepted. To reverse and take events smaller than the linear
                     interpolation, enclose this in an originNOT. </description>
             </xsd:annotation>
-            <ref name="latLonUnitRange"/>
+            <externalRef href="../base/externalRef/latLonUnitRange.rng"/>
             <externalRef href="../base/externalRef/magnitudeRange.rng"/>
         </element>
-    </define>
-    <define name="latLonUnitRange">
-        <group>
-            <xsd:annotation>
-                <summary>A range of distance from a point defined by a lat and lon</summary>
-            </xsd:annotation>
-            <element name="latitude">
-                <data type="double">
-                    <xsd:annotation>
-                        <example>19</example>
-                    </xsd:annotation>
-                </data>
-            </element>
-            <element name="longitude">
-                <data type="double">
-                    <xsd:annotation>
-                        <example>52</example>
-                    </xsd:annotation>
-                </data>
-            </element>
-            <ref name="range"/>
-        </group>
     </define>
     <define name="originPointAzimuth">
         <element name="originPointAzimuth">
@@ -249,7 +227,7 @@
                     </example>
                 </xsd:documentation>
             </xsd:annotation>
-            <ref name="latLonUnitRange"/>
+            <externalRef href="../base/externalRef/latLonUnitRange.rng"/>
         </element>
     </define>
     <define name="originPointBackAzimuth">
@@ -269,7 +247,7 @@
                     </example>
                 </xsd:documentation>
             </xsd:annotation>
-            <ref name="latLonUnitRange"/>
+            <externalRef href="../base/externalRef/latLonUnitRange.rng"/>
         </element>
     </define>
     <define name="removeEventDuplicate">
