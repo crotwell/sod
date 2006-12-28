@@ -6,7 +6,7 @@ import com.martiansoftware.jsap.FlaggedOption;
 public class PhaseTimeParser extends PatternParser {
 
     public PhaseTimeParser() {
-        super("(-?\\d+\\.?\\d*)(\\w+)", new String[] {"offset", "name"});
+        super(BoxAreaParser.DECIMAL_NUMBER_RE + "(\\w+)", new String[] {"offset", "name"});
     }
 
     public static FlaggedOption createParam(String name,

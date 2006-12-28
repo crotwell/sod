@@ -5,7 +5,8 @@ import com.martiansoftware.jsap.FlaggedOption;
 public class RangeParser extends PatternParser {
 
     public RangeParser() {
-        super("(\\d+\\.?\\d*)-(\\d+\\.?\\d*)", new String[] {"min", "max"});
+        super(BoxAreaParser.DECIMAL_NUMBER_RE + "-"
+                + BoxAreaParser.DECIMAL_NUMBER_RE, new String[] {"min", "max"});
     }
 
     public static FlaggedOption createParam(String name,

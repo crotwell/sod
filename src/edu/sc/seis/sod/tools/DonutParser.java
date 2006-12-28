@@ -5,10 +5,8 @@ import com.martiansoftware.jsap.FlaggedOption;
 public class DonutParser extends PatternParser {
 
     public DonutParser() {
-        super("(-?\\d+)/(-?\\d+)/(\\d+)/(\\d+)", new String[] {"lat",
-                                                               "lon",
-                                                               "min",
-                                                               "max"});
+        super(BoxAreaParser.FOUR_SLASH_DELIMITED_DECIMALS_RE,
+              new String[] {"lat", "lon", "min", "max"});
     }
 
     public static FlaggedOption createParam(String helpMessage) {
