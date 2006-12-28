@@ -37,7 +37,7 @@ $additionalArms#end
 #end
 #if($donut)
             <stationPointDistance>
-                <unit>DEGREES</unit>
+                <unit>DEGREE</unit>
                 <min>$donut.min</min>
                 <max>$donut.max</max>
                 <latitude>$donut.lat</latitude>

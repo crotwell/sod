@@ -54,11 +54,13 @@
 #foreach($cat in $catalogs)
             <catalog>$cat</catalog>
 #end
+#else
+            <catalog>PREF</catalog>
 #end
         </eventFinder>
 #if($donut)
         <originPointDistance>
-            <unit>DEGREES</unit>
+            <unit>DEGREE</unit>
             <min>$donut.min</min>
             <max>$donut.max</max>
             <latitude>$donut.lat</latitude>
