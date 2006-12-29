@@ -71,8 +71,18 @@ public class EventArm implements Arm {
         }
         logger.info("Event arm finished");
         alive = false;
+        notifyWaveformArm();
         synchronized(OutputScheduler.getDefault()) {
             OutputScheduler.getDefault().notify();
+        }
+    }
+
+    private void notifyWaveformArm() {
+        WaveformArm waveformArm = Start.getWaveformArm();
+        if(waveformArm != null){
+            synchronized(waveformArm) {
+                waveformArm.notify();
+            }
         }
     }
 
@@ -212,6 +222,9 @@ public class EventArm implements Arm {
                 }
             }
             change(event, IN_PROG);
+            if(lastEvent == null){
+                notifyWaveformArm();
+            }
             lastEvent = event;
         }
     }

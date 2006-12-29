@@ -73,7 +73,7 @@ public class WaveformArm implements Arm {
     public boolean isActive() {
         return !finished;
     }
-    
+
     public String getName() {
         return "WaveformArm";
     }
@@ -99,13 +99,13 @@ public class WaveformArm implements Arm {
                 int numEvents = populateEventChannelDb();
                 retryIfNeededAndAvailable();
                 sleepALittle(numEvents, sleepTime, logInterval);
-            } while( !Start.isArmFailure() && eventArm.isActive());
+            } while(possibleToContinue());
             logger.info("Main waveform arm done.  Retrying failures.");
             MicroSecondDate runFinishTime = ClockUtil.now();
             MicroSecondDate serverFailDelayEnd = runFinishTime.add(SERVER_RETRY_DELAY);
             corbaFailures.setLastRetryTime(serverFailDelayEnd);
-            while( !Start.isArmFailure() && retries.willHaveNext() || corbaFailures.willHaveNext()
-                    || pool.isEmployed()) {
+            while(!Start.isArmFailure() && retries.willHaveNext()
+                    || corbaFailures.willHaveNext() || pool.isEmployed()) {
                 retryIfNeededAndAvailable();
                 try {
                     logger.debug("Sleeping while waiting for retries");
@@ -121,6 +121,10 @@ public class WaveformArm implements Arm {
         synchronized(OutputScheduler.getDefault()) {
             OutputScheduler.getDefault().notify();
         }
+    }
+
+    private boolean possibleToContinue() {
+        return !Start.isArmFailure() && eventArm.isActive();
     }
 
     private void sleepALittle(int numEvents,
@@ -543,9 +547,12 @@ public class WaveformArm implements Arm {
         synchronized(eventStatus) {
             next = eventStatus.getNext();
         }
-        while( !Start.isArmFailure() && eventArm.isActive() && next == -1) {
+        while(possibleToContinue() && next == -1) {
+            logger.debug("Waiting for the first exciting event to show up");
             try {
-                Thread.sleep(1000);
+                synchronized(this) {
+                    wait();
+                }
             } catch(InterruptedException e) {}
             synchronized(eventStatus) {
                 next = eventStatus.getNext();
