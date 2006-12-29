@@ -111,7 +111,7 @@ public class VectorImageProcess extends SeismogramImageProcess implements
         MicroSecondTimeRange timeWindow = null;
         if(seis.length > 0) {
             timeWindow = getTimeWindow(phaseWindow, seis[0]);
-            updateTitlers(event, chans[0], timeWindow);
+            updateTitles(event, chans[0], timeWindow);
         }
         ComponentSortedSeismogramDisplay sd = new ComponentSortedSeismogramDisplay(false);
         BasicSeismogramDisplay vert = (BasicSeismogramDisplay)vdc.createDisplay();

@@ -7,9 +7,6 @@ package edu.sc.seis.sod.process.waveform;
 
 import java.awt.Dimension;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import javax.swing.SwingUtilities;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
@@ -45,7 +42,6 @@ import edu.sc.seis.fissuresUtil.xml.DataSet;
 import edu.sc.seis.fissuresUtil.xml.DataSetSeismogram;
 import edu.sc.seis.fissuresUtil.xml.MemoryDataSet;
 import edu.sc.seis.fissuresUtil.xml.MemoryDataSetSeismogram;
-import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.StringTreeLeaf;
@@ -92,21 +88,9 @@ public class SeismogramImageProcess implements WaveformProcess {
         if(DOMHelper.hasElement(el, "titleBorder")) {
             titleBorder = new BorderConfiguration();
             titleBorder.configure(DOMHelper.getElement(el, "titleBorder"));
-            configureTitlers(el, titleBorder);
+            titler = new SeismogramTitler(titleBorder);
         }
         locator = new SeismogramImageOutputLocator(el);
-    }
-
-    protected void configureTitlers(Element el, BorderConfiguration titleBorder)
-            throws ConfigurationException {
-        if(DOMHelper.hasElement(el, "titler")) {
-            NodeList titlerConfigs = DOMHelper.getElements(el, "titler");
-            for(int i = 0; i < titlerConfigs.getLength(); i++) {
-                SeismogramTitler titler = new SeismogramTitler(titleBorder);
-                titler.configure((Element)titlerConfigs.item(i));
-                titlers.add(titler);
-            }
-        }
     }
 
     public WaveformResult process(EventAccessOperations event,
@@ -230,7 +214,7 @@ public class SeismogramImageProcess implements WaveformProcess {
         MicroSecondTimeRange timeWindow = null;
         if(seis.length > 0) {
             timeWindow = getTimeWindow(phaseWindow, seis[0]);
-            updateTitlers(event, channel, timeWindow);
+            updateTitles(event, channel, timeWindow);
         }
         SeismogramDisplay bsd = sdc.createDisplay();
         TimeConfig tc = new BasicTimeConfig();
@@ -303,12 +287,11 @@ public class SeismogramImageProcess implements WaveformProcess {
         return new MicroSecondTimeRange(rf);
     }
 
-    public void updateTitlers(EventAccessOperations event,
-                              Channel channel,
-                              MicroSecondTimeRange timeRange) {
-        Iterator it = titlers.iterator();
-        while(it.hasNext()) {
-            ((SeismogramTitler)it.next()).title(event, channel, timeRange);
+    public void updateTitles(EventAccessOperations event,
+                             Channel channel,
+                             MicroSecondTimeRange timeRange) {
+        if(titler != null) {
+            titler.title(event, channel, timeRange);
         }
     }
 
@@ -374,11 +357,11 @@ public class SeismogramImageProcess implements WaveformProcess {
 
     protected BorderConfiguration titleBorder;
 
-    protected List titlers = new ArrayList();
-
     private TauPUtil tauP = TauPUtil.getTauPUtil();
 
     private boolean showOnlyFirst;
+
+    private SeismogramTitler titler;
 
     protected PhaseWindow phaseWindow;
 
