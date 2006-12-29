@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <include href="../base/include/externalClass.rng"/>
     <include href="../base/include/seismogramImage.rng"/>
     <start>
@@ -40,8 +39,8 @@
         <element name="threeComponentData">
             <xsd:annotation>
                 <summary>Checks for data in all three components</summary>
-                <description>If there is some data in all three components, then this returns true,
-                    if any are empty, then false.</description>
+                <description>If there is some data in all three components, then this returns true, if any are empty,
+                    then false.</description>
             </xsd:annotation>
             <empty/>
         </element>
@@ -50,10 +49,9 @@
         <element name="ANDWaveformProcessWrapper">
             <xsd:annotation>
                 <summary>Allows a waveform processor to be used in a waveformVector as an AND</summary>
-                <description>Each of the components of the waveformVector are processed
-                    independently by the waveformProcess and the results are ANDed together. This
-                    operation short circuits, so no waveforms after the first failure are
-                processed.</description>
+                <description>Each of the components of the waveformVector are processed independently by the
+                    waveformProcess and the results are ANDed together. This operation short circuits, so no waveforms
+                    after the first failure are processed.</description>
             </xsd:annotation>
             <externalRef href="waveformProcess.rng"/>
         </element>
@@ -62,10 +60,9 @@
         <element name="ORWaveformProcessWrapper">
             <xsd:annotation>
                 <summary>Allows a waveform processor to be used in a waveformVector as an OR</summary>
-                <description>Each of the components of the waveformVector are processed
-                    independently by the waveformProcess and the results are ORed together. This
-                    operation short circuits, so no waveforms after the first success are
-                processed.</description>
+                <description>Each of the components of the waveformVector are processed independently by the
+                    waveformProcess and the results are ORed together. This operation short circuits, so no waveforms
+                    after the first success are processed.</description>
             </xsd:annotation>
             <externalRef href="waveformProcess.rng"/>
         </element>
@@ -74,10 +71,9 @@
         <element name="legacyVectorExecute">
             <xsd:annotation>
                 <summary>Executes an external program</summary>
-                <description>The legacyVectorExecute processor is capable of running existing
-                    command line programs. It does this by passing the filenames of the seismograms
-                    saved by a earlier SaveSeismogramToFile processor to a program started with
-                    Runtime.exec().</description>
+                <description>The legacyVectorExecute processor is capable of running existing command line programs. It
+                    does this by passing the filenames of the seismograms saved by a earlier SaveSeismogramToFile
+                    processor to a program started with Runtime.exec().</description>
                 <example>
                     <legacyVectorExecute>
                         <command>echo</command>
@@ -103,9 +99,8 @@
         <element name="waveformVectorFork">
             <xsd:annotation>
                 <summary>Forks the processing for vector waveform data</summary>
-                <description>The seismograms are copied and sent through the fork allowing
-                    independent processing of the same data. The return value is true if all of the
-                    sub processors complete successfully, false otherwise.</description>
+                <description>The seismograms are copied and sent through the fork allowing independent processing of the
+                    same data. The return value is true if all of the sub processors complete successfully, false otherwise.</description>
                 <example>
                     <waveformVectorFork>
                         <rMean/>
@@ -127,11 +122,10 @@
         <element name="waveformVectorAND">
             <xsd:annotation>
                 <summary>Matches all included waveformVector processors</summary>
-                <description>The output is the logical AND of the outputs of all included
-                    waveformVector processors. This means that it will evaluate to true only if all
-                    of the included processors evaluate to true. The subsetters after the first
-                    false outputted are not evaluated. The seismic data passed down the chain is the
-                    data passed in. Seismogram results of the contained processors are ignored.</description>
+                <description>The output is the logical AND of the outputs of all included waveformVector processors.
+                    This means that it will evaluate to true only if all of the included processors evaluate to true.
+                    The subsetters after the first false outputted are not evaluated. The seismic data passed down the
+                    chain is the data passed in. Seismogram results of the contained processors are ignored.</description>
                 <example>
                     <waveformVectorAND>
                         <waveformVectorNOT>
@@ -155,12 +149,10 @@
         <element name="waveformVectorOR">
             <xsd:annotation>
                 <summary>Matches at least one of the included waveformVector processors</summary>
-                <description>The output is the logical OR of the outputs of all included
-                    waveformVector processors. This means that it will evaluate to true as long as
-                    one of the included waveformVector processors evaluate to true. The processors
-                    after the first true outputted are not evaluated. The seismic data passed down
-                    the chain is the data passed in. Seismogram results of the contained processors
-                    are ignored.</description>
+                <description>The output is the logical OR of the outputs of all included waveformVector processors. This
+                    means that it will evaluate to true as long as one of the included waveformVector processors
+                    evaluate to true. The processors after the first true outputted are not evaluated. The seismic data
+                    passed down the chain is the data passed in. Seismogram results of the contained processors are ignored.</description>
                 <example>
                     <waveformVectorOR>
                         <waveformVectorNOT>
@@ -184,10 +176,9 @@
         <element name="waveformVectorNOT">
             <xsd:annotation>
                 <summary>Matches the negated output of the included waveformVector processor</summary>
-                <description>The output is the logical NOT of the output of the included
-                    waveformVector processors. This means that it will evaluate to true if the
-                    included processor evaluates to false, and vice versa. The seismic data passed
-                    down the chain is the data passed in. Seismogram results of the contained
+                <description>The output is the logical NOT of the output of the included waveformVector processors. This
+                    means that it will evaluate to true if the included processor evaluates to false, and vice versa.
+                    The seismic data passed down the chain is the data passed in. Seismogram results of the contained
                     processors are ignored.</description>
                 <example>
                     <waveformVectorNOT>
@@ -202,8 +193,8 @@
         <element name="waveformVectorAlwaysSuccess">
             <xsd:annotation>
                 <summary>Executes a subprocessor, but always returns true.</summary>
-                <description>This executes the enclosed processor, but always returns a success
-                    regardless of whether the enclosed processor succeeded or failed. </description>
+                <description>This executes the enclosed processor, but always returns a success regardless of whether
+                    the enclosed processor succeeded or failed. </description>
                 <example>
                     <waveformVectorAlwaysSuccess>
                         <waveformVectorFork>
@@ -237,7 +228,16 @@
     </define>
     <define name="vectorImageProcess">
         <element name="vectorImageProcess">
+            <optional>
+                <attribute name="id"/>
+            </optional>
             <ref name="seismogramImageBase"/>
+            <optional>
+                <ref name="titleBorder"/>
+            </optional>
+            <optional>
+                <ref name="globalizedAmpConfig"/>
+            </optional>
             <optional>
                 <element name="displayTemplate">
                     <ref name="basicSeismogramDisplayContents"/>
@@ -266,14 +266,15 @@
                 <ref name="waveformVectorProcess"/>
             </oneOrMore>
         </element>
-    </define><define name="rotateGCP">
+    </define>
+    <define name="rotateGCP">
         <element name="rotateGCP">
             <xsd:annotation>
                 <summary>Rotate the seismograms to Great Circle Path</summary>
-                <description>The horizontal seismograms are rotated to the great circle path. 
-                The channel codes are changed to end in R for radial or T for transverse, so 
-                BHN and BHE would become BHR and BHT. If seismograms are not being rotated,
-                try applying a <a href="vectorTrim.html">vectorTrim</a> to align all of the seismograms in the vector.</description>
+                <description>The horizontal seismograms are rotated to the great circle path. The channel codes are
+                    changed to end in R for radial or T for transverse, so BHN and BHE would become BHR and BHT. If
+                    seismograms are not being rotated, try applying a <a href="vectorTrim.html">vectorTrim</a> to align
+                    all of the seismograms in the vector.</description>
             </xsd:annotation>
             <empty/>
         </element>
@@ -297,9 +298,9 @@
     <define name="vectorTrim">
         <element name="vectorTrim">
             <xsd:annotation>
-                <summary>Cuts all seismograms in the vector to their smallest overlapping pieces.</summary> 
-                <description>Cuts the seismograms in the vector to their intersection.  This is useful for processors like rotateGCP which expect seismograms to be of the same length and time.</description>
-                
+                <summary>Cuts all seismograms in the vector to their smallest overlapping pieces.</summary>
+                <description>Cuts the seismograms in the vector to their intersection. This is useful for processors
+                    like rotateGCP which expect seismograms to be of the same length and time.</description>
             </xsd:annotation>
             <empty/>
         </element>

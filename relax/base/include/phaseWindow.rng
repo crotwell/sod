@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar xmlns="http://relaxng.org/ns/structure/1.0"
-    datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
-    <include href="quantity.rng"/>   
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <include href="quantity.rng"/>
     <include href="taup.rng"/>
     <start combine="choice">
         <notAllowed/>
@@ -24,7 +23,10 @@
                     </beginOffset>
                 </example>
             </xsd:annotation>
-            <ref name="time"/>
+            <choice>
+                <ref name="time"/>
+                <ref name="randomOffset"/>
+            </choice>
         </element>
         <element name="endPhase">
             <ref name="phaseName"/>
@@ -38,7 +40,25 @@
                     </endOffset>
                 </example>
             </xsd:annotation>
+            <choice>
+                <ref name="time"/>
+                <ref name="randomOffset"/>
+            </choice>
+        </element>
+    </define>
+    <define name="randomOffset">
+        <optional>
+            <element name="ratio">
+                <data type="double"/>
+            </element>
+        </optional>
+        <element name="minimum">
             <ref name="time"/>
         </element>
+        <optional>
+            <element name="negative">
+                <empty/>
+            </element>
+        </optional>
     </define>
 </grammar>

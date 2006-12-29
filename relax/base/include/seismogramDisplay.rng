@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar xmlns="http://relaxng.org/ns/structure/1.0"
-    datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-    xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <start combine="choice">
         <notAllowed/>
     </start>
@@ -73,6 +71,9 @@
         <optional>
             <ref name="ampConfig"/>
         </optional>
+        <optional>
+            <ref name="outlineColor"/>
+        </optional>
     </define>
     <define name="displaySpecificElements">
         <notAllowed/>
@@ -80,8 +81,7 @@
     <define name="dontDrawNamed">
         <element name="dontDrawNamedDrawableNames">
             <xsd:annotation>
-                <summary>Turns off the names of seismograms and other named drawables in the
-                display</summary>
+                <summary>Turns off the names of seismograms and other named drawables in the display</summary>
             </xsd:annotation>
             <empty/>
         </element>
@@ -89,9 +89,8 @@
     <define name="flagColors">
         <element name="flagColors">
             <xsd:annotation>
-                <summary>A list of colors to use for flags added to the display. The first flag gets
-                    the first color, the second flag gets the second color and so on and so
-                forth.</summary>
+                <summary>A list of colors to use for flags added to the display. The first flag gets the first color,
+                    the second flag gets the second color and so on and so forth.</summary>
             </xsd:annotation>
             <ref name="defineAndReference"/>
             <oneOrMore>
@@ -102,9 +101,8 @@
     <define name="traceColors">
         <element name="traceColors">
             <xsd:annotation>
-                <summary>A list of colors to use for seismograms added to the display. The first
-                    trace gets the first color, the second trace gets the second color and so on and
-                    so forth.</summary>
+                <summary>A list of colors to use for seismograms added to the display. The first trace gets the first
+                    color, the second trace gets the second color and so on and so forth.</summary>
             </xsd:annotation>
             <ref name="defineAndReference"/>
             <oneOrMore>
@@ -124,6 +122,14 @@
         <element name="borderColor">
             <xsd:annotation>
                 <summary>The color of the ticks and text on the borders</summary>
+            </xsd:annotation>
+            <ref name="colorContents"/>
+        </element>
+    </define>
+    <define name="outlineColor">
+        <element name="outlineColor">
+            <xsd:annotation>
+                <summary>The color of the outline around the display</summary>
             </xsd:annotation>
             <ref name="colorContents"/>
         </element>
@@ -169,71 +175,98 @@
     </define>
     <define name="border">
         <element name="border">
-            <ref name="defineAndReference"/>
-            <element name="type">
-                <choice>
-                    <value>title</value>
-                    <value>dist</value>
-                    <value>amp</value>
-                    <value>time</value>
-                    <value>triangle</value>
-                </choice>
-            </element>
-            <element name="position">
-                <choice>
-                    <value>bottom</value>
-                    <value>top</value>
-                    <value>left</value>
-                    <value>right</value>
-                </choice>
-            </element>
-            <optional>
-                <element name="triangleColors">
-                    <oneOrMore>
-                        <element name="color">
-                            <ref name="colorContents"/>
-                        </element>
-                    </oneOrMore>
-                </element>
-            </optional>
-            <optional>
-                <element name="clipTicks">
-                    <element name="min">
-                        <data type="double"/>
-                    </element>
-                    <element name="max">
-                        <data type="double"/>
-                    </element>
-                </element>
-            </optional>
-            <optional>
-                <element name="titleFont">
-                    <ref name="fontContents"/>
-                </element>
-            </optional>
-            <optional>
-                <element name="titleColor">
-                    <ref name="colorContents"/>
-                </element>
-            </optional>
-            <zeroOrMore>
-                <element name="title">
-                    <element name="text">
-                        <data type="string"/>
-                    </element>
-                    <optional>
-                        <element name="font">
-                            <ref name="fontContents"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="titleColor">
-                            <ref name="colorContents"/>
-                        </element>
-                    </optional>
-                </element>
-            </zeroOrMore>
+            <ref name="borderContents"/>
         </element>
+    </define>
+    <define name="titleBorder">
+        <element name="titleBorder">
+            <ref name="borderContents"/>
+        </element>
+    </define>
+    <define name="borderContents">
+        <ref name="defineAndReference"/>
+        <element name="type">
+            <choice>
+                <value>title</value>
+                <value>dist</value>
+                <value>amp</value>
+                <value>time</value>
+                <value>triangle</value>
+                <value>elapsed</value>
+            </choice>
+        </element>
+        <element name="position">
+            <choice>
+                <value>bottom</value>
+                <value>top</value>
+                <value>left</value>
+                <value>right</value>
+                <value>bottom left</value>
+                <value>bottom right</value>
+                <value>top left</value>
+                <value>top right</value>
+            </choice>
+        </element>
+        <optional>
+            <element name="titleCentered">
+                <choice>
+                    <value>true</value>
+                    <value>false</value>
+                </choice>
+            </element>
+        </optional>
+        <optional>
+            <element name="triangleColors">
+                <oneOrMore>
+                    <element name="color">
+                        <ref name="colorContents"/>
+                    </element>
+                </oneOrMore>
+            </element>
+        </optional>
+        <optional>
+            <element name="clipTicks">
+                <element name="min">
+                    <data type="double"/>
+                </element>
+                <element name="max">
+                    <data type="double"/>
+                </element>
+            </element>
+        </optional>
+        <optional>
+            <element name="titleFont">
+                <ref name="fontContents"/>
+            </element>
+        </optional>
+        <optional>
+            <element name="titleColor">
+                <ref name="colorContents"/>
+            </element>
+        </optional>
+        <optional>
+            <element name="background">
+                <ref name="colorContents"/>
+            </element>
+        </optional>
+        <zeroOrMore>
+            <element name="title">
+                <ref name="defineAndReference"/>
+                <element name="text">
+                    <data type="string"/>
+                </element>
+                <optional>
+                    <element name="font">
+                        <ref name="fontContents"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="titleColor">
+                        <ref name="colorContents"/>
+                    </element>
+                </optional>
+            </element>
+        </zeroOrMore>
     </define>
     <define name="fontContents">
         <ref name="defineAndReference"/>
@@ -294,17 +327,25 @@
     </define>
     <define name="ampConfig">
         <element name="ampConfig">
-            <ref name="defineAndReference"/>
-            <element name="type">
-                <choice>
-                    <value>basic</value>
-                    <value>rmean</value>
-                    <value>individual</value>
-                </choice>
-            </element>
-            <optional>
-                <ref name="ampConfig"/>
-            </optional>
+            <ref name="ampConfigContents"/>
         </element>
+    </define>
+    <define name="globalizedAmpConfig">
+        <element name="globalizedAmpConfig">
+            <ref name="ampConfigContents"/>
+        </element>
+    </define>
+    <define name="ampConfigContents">
+        <ref name="defineAndReference"/>
+        <element name="type">
+            <choice>
+                <value>basic</value>
+                <value>rmean</value>
+                <value>individual</value>
+            </choice>
+        </element>
+        <optional>
+            <ref name="ampConfig"/>
+        </optional>
     </define>
 </grammar>
