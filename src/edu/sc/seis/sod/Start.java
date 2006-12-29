@@ -359,15 +359,18 @@ public class Start {
             event.setWaitForWaveformProcessing(false);
         }
         if(RUN_ARMS) {
-            startArm(network);
-            startArm(event);
-            startArm(waveform);
+            startArm(network, "NetworkArm");
+            startArm(event, "EventArm");
+            startArm(waveform, "WaveformArm");
         }
     }
 
-    private void startArm(Arm arm) {
+    private void startArm(Arm arm, String name) {
         if(arm != null) {
             new Thread(arm, arm.getName()).start();
+            logger.debug(name + " started");
+        }else{
+            logger.debug(name + " doesn't exist");
         }
     }
 
