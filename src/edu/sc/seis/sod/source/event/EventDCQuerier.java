@@ -1,6 +1,8 @@
 package edu.sc.seis.sod.source.event;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import org.apache.log4j.Logger;
@@ -14,6 +16,7 @@ import edu.iris.Fissures.IfEvent.EventAccessSeqHolder;
 import edu.iris.Fissures.IfEvent.EventSeqIter;
 import edu.iris.Fissures.IfEvent.EventSeqIterHolder;
 import edu.iris.Fissures.model.GlobalAreaImpl;
+import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
@@ -107,7 +110,16 @@ public class EventDCQuerier {
             }
             events = (EventAccessOperations[])allEvents.toArray(new EventAccessOperations[0]);
         }
-        return cacheEvents(events);
+        CacheEvent[] cached = cacheEvents(events);
+        Arrays.sort(cached, new Comparator() {
+
+            public int compare(Object first, Object second) {
+                MicroSecondDate firstOrigin = new MicroSecondDate(((CacheEvent)first).getOrigin().origin_time);
+                MicroSecondDate secondOrigin = new MicroSecondDate(((CacheEvent)second).getOrigin().origin_time);
+                return firstOrigin.compareTo(secondOrigin);
+            }
+        });
+        return cached;
     }
 
     private EventAccessOperations[] getEvents(MicroSecondTimeRange tr,
