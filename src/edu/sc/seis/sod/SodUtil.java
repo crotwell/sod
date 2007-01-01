@@ -276,7 +276,7 @@ public class SodUtil {
                 }
             }
         }
-        return new Time(getNestedText(el), 0);
+        return new Time(getNestedText(el).trim(), 0);
     }
 
     private static Time loadSplitupTime(Element element, boolean endOfDay)
