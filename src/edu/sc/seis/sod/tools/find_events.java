@@ -1,12 +1,6 @@
 package edu.sc.seis.sod.tools;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import com.martiansoftware.jsap.JSAPException;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 
 public class find_events extends CommandLineTool {
 
@@ -20,12 +14,8 @@ public class find_events extends CommandLineTool {
                                      "The event server to use."));
         add(BoxAreaParser.createParam("A box the events must be in.  It's specified as west/east/north/south"));
         add(DonutParser.createParam("A donut the events must be in.  It's specified as centerLat/centerLon/minRadiusDegrees/maxRadiusDegrees"));
-        MicroSecondDate now = ClockUtil.now();
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        add(TimeParser.createParam("begin",
-                                   df.format(now.subtract(new TimeInterval(1,
-                                                                           UnitImpl.DAY))),
-                                   "The earliest time for an accepted event.  Must be in 'YYYY-MM-DD' format."));
+        add(TimeParser.createYesterdayParam("begin",
+                                            "The earliest time for an accepted event.  Must be in 'YYYY-MM-DD' format."));
         add(TimeParser.createParam("end",
                                    "now",
                                    "The latest time for an accepted event.  Must be in 'YYYY-MM-DD' format or 'now' for the current time."));
