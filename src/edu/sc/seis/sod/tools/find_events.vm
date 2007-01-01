@@ -27,18 +27,10 @@
             </originDepthRange>
             <originTimeRange>
                 <startTime>
-                    <year>$begin.year</year>
-                    <month>$begin.month</month>
-                    <day>$begin.day</day>
+                    $begin
                 </startTime>
                 <endTime>
-#if($end.now)
-                    <now/>
-#else
-                    <year>$end.year</year>
-                    <month>$end.month</month>
-                    <day>$end.day</day>
-#end
+                    $end
                 </endTime>
             </originTimeRange>
             <magnitudeRange>

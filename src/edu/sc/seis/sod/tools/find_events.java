@@ -15,10 +15,10 @@ public class find_events extends CommandLineTool {
         add(BoxAreaParser.createParam("A box the events must be in.  It's specified as west/east/north/south"));
         add(DonutParser.createParam("A donut the events must be in.  It's specified as centerLat/centerLon/minRadiusDegrees/maxRadiusDegrees"));
         add(TimeParser.createYesterdayParam("begin",
-                                            "The earliest time for an accepted event.  Must be in 'YYYY-MM-DD' format."));
+                                            "The earliest time for an accepted event.  Must be in 'YYYY[[[[[-MM]-DD]-hh]-mm]-ss]' format."));
         add(TimeParser.createParam("end",
                                    "now",
-                                   "The latest time for an accepted event.  Must be in 'YYYY-MM-DD' format or 'now' for the current time."));
+                                   "The latest time for an accepted event.  Must be in 'YYYY[[[[[-MM]-DD]-hh]-mm]-ss]' format or 'now' for the current time."));
         add(RangeParser.createParam("magnitude",
                                     "0-10",
                                     "The range of acceptable magnitudes."));
