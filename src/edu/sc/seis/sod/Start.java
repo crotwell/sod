@@ -78,7 +78,7 @@ public class Start {
     public Start(Args args) throws Exception {
         this(args, new InputSourceCreator(), null);
     }
-    
+
     public static class InputSourceCreator {
 
         public InputSource create() throws IOException {
@@ -93,8 +93,7 @@ public class Start {
         this.creator = sourceMaker;
         configFileName = args.getRecipe();
         try {
-            setConfig(createDoc(sourceMaker.create(),
-                                configFileName).getDocumentElement());
+            setConfig(createDoc(sourceMaker.create(), configFileName).getDocumentElement());
         } catch(IOException io) {
             informUserOfBadFileAndExit(configFileName);
         } catch(Exception e) {
@@ -369,7 +368,7 @@ public class Start {
         if(arm != null) {
             new Thread(arm, arm.getName()).start();
             logger.debug(name + " started");
-        }else{
+        } else {
             logger.debug(name + " doesn't exist");
         }
     }
@@ -416,27 +415,15 @@ public class Start {
     private void checkDBVersion() {
         try {
             JDBCVersion dbVersion = new JDBCVersion();
-            if(!dbVersion.getDBVersion().equals(Version.getVersion())) {
+            if(Version.hasSchemaChangedSince(dbVersion.getDBVersion())) {
                 System.err.println("SOD version: " + Version.getVersion());
                 System.err.println("Database version: "
                         + dbVersion.getDBVersion());
                 System.err.println("Your database was created with an older version "
                         + "of SOD.");
-                if(Version.hasSchemaChangedSince(dbVersion.getDBVersion())) {
-                    allHopeAbandon("There has been a change in the database "
-                            + "structure since the database was created!  "
-                            + "Continuing this sod run is not advisable!");
-                } else {
-                    System.err.println("The structure of the database has not "
-                            + "changed, so SOD may work if there "
-                            + "haven't been significant underlying "
-                            + "changes in SOD. Check "
-                            + "http://www.seis.sc.edu/SOD/download.html "
-                            + "to see the differences between your "
-                            + "running version, " + Version.getVersion()
-                            + ", and the version that created the "
-                            + "database, " + dbVersion.getDBVersion());
-                }
+                allHopeAbandon("There has been a change in the database "
+                        + "structure since the database was created!  "
+                        + "Continuing this sod run is not advisable!");
             }
         } catch(Exception e) {
             GlobalExceptionHandler.handle("Trouble checking database version",
@@ -458,7 +445,7 @@ public class Start {
                                           e);
         }
     }
-    
+
     private InputSourceCreator creator;
 
     private Args args;
