@@ -13,7 +13,7 @@ public abstract class VectorResultWrapper implements
         NodeList children = config.getChildNodes();
         for(int i = 0; i < children.getLength(); i++) {
             Node node = children.item(i);
-            if(node instanceof Element) {
+            if(node instanceof Element && !node.getLocalName().equals("classname")) {
                 subProcess = MotionVectorArm.loadAndWrap((Element)node);
             } // end of if (node instanceof Element)
         } // end of for (int i=0; i<children.getSize(); i++)
