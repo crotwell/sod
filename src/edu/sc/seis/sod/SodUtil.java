@@ -12,7 +12,6 @@ import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
@@ -168,10 +167,10 @@ public class SodUtil {
     }
 
     /**
-	 * loads the class named in the element "classname" in config with config as
-	 * a costructor argument. If the loaded class doesnt implement
-	 * mustImplement, a configuration exception is thrown
-	 */
+     * loads the class named in the element "classname" in config with config as
+     * a costructor argument. If the loaded class doesnt implement
+     * mustImplement, a configuration exception is thrown
+     */
     public static synchronized Object loadExternal(String tagName,
                                                    String[] armNames,
                                                    Element config)
@@ -181,37 +180,18 @@ public class SodUtil {
             Class extClass = Class.forName(classname);
             Class mustImplement = load(tagName.substring("external".length()),
                                        armNames);
-            Class[] implementedInterfaces = getInterfaces(extClass);
-            for(int i = 0; i < implementedInterfaces.length; i++) {
-                Class curInterface = implementedInterfaces[i];
-                if(curInterface.equals(mustImplement)) {
-                    return loadClass(extClass, config);
-                }
+            if(mustImplement.isAssignableFrom(extClass)) {
+                return loadClass(extClass, config);
             }
             throw new ConfigurationException("External class " + classname
                     + " does not implement the class it's working with, "
-                    + mustImplement + ".  Make classname implement "
+                    + mustImplement + ".  Make " + classname + " implement "
                     + mustImplement
                     + " to use it at this point in the strategy file.");
         } catch(ClassNotFoundException e1) {
             throw new ConfigurationException("Unable to find external class "
                     + classname + ".  Make sure it's on the classpath", e1);
         }
-    }
-
-    private static Class[] getInterfaces(Class c) {
-        List l = new ArrayList();
-        Class[] cInterfaces = c.getInterfaces();
-        for(int i = 0; i < cInterfaces.length; i++) {
-            l.add(cInterfaces[i]);
-        }
-        if(c.getSuperclass() != null) {
-            Class[] superInterfaces = getInterfaces(c.getSuperclass());
-            for(int i = 0; i < superInterfaces.length; i++) {
-                l.add(superInterfaces[i]);
-            }
-        }
-        return (Class[])l.toArray(new Class[l.size()]);
     }
 
     private static Object loadClass(Class subsetter, Element config)
@@ -256,9 +236,9 @@ public class SodUtil {
     }
 
     /*
-	 * If endOfDay is true, and the hours, minutes and seconds are unspecified
-	 * by this time element, those fields are set to the end of the day
-	 */
+     * If endOfDay is true, and the hours, minutes and seconds are unspecified
+     * by this time element, those fields are set to the end of the day
+     */
     public static Time loadTime(Element el, boolean endOfDay)
             throws ConfigurationException {
         NodeList kids = el.getChildNodes();
@@ -367,16 +347,17 @@ public class SodUtil {
                     + config.getTagName(), e);
         } // end of try-catch
     }
-    
-    public static int loadInt(Element config, String elementName,
-			int defaultValue) {
-		Element child = XMLUtil.getElement(config, elementName);
-		if (child != null) {
-			return Integer.parseInt(XMLUtil.getText(child));
-		} else {
-			return defaultValue;
-		}
-	}
+
+    public static int loadInt(Element config,
+                              String elementName,
+                              int defaultValue) {
+        Element child = XMLUtil.getElement(config, elementName);
+        if(child != null) {
+            return Integer.parseInt(XMLUtil.getText(child));
+        } else {
+            return defaultValue;
+        }
+    }
 
     public static void copyFile(String src, String dest)
             throws FileNotFoundException {
@@ -497,8 +478,8 @@ public class SodUtil {
     }
 
     /**
-	 * returns the element with the given name
-	 */
+     * returns the element with the given name
+     */
     public static Element getElement(Element config, String elementName) {
         NodeList children = config.getChildNodes();
         for(int counter = 0; counter < children.getLength(); counter++) {
@@ -523,8 +504,8 @@ public class SodUtil {
     }
 
     /**
-	 * returns the first text child within the node.
-	 */
+     * returns the first text child within the node.
+     */
     public static String getText(Element config) {
         NodeList children = config.getChildNodes();
         for(int i = 0; i < children.getLength(); i++) {
