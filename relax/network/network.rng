@@ -88,7 +88,12 @@
         <element name="networkEffectiveTimeOverlap">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <description>Matches if the network exists during given time range</description>
+                    <summary>Matches if the network exists during given time range.</summary>
+                    <description>Matches if the network exists during given time range. This is generally used
+                    to avoid processing networks that did not yet exist, or were deactivated before a time range of interest.
+                    By default, SOD uses a networkEffectiveTimeOverlap configured with the event arm's time range.  
+                    If all you want to do is make sure your networks are active during 
+                    your events, that's already done.</description>
                 </xsd:documentation>
             </xsd:annotation>
             <ref name="timeRange"/>

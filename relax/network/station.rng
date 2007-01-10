@@ -129,9 +129,11 @@
         <element name="stationEffectiveTimeOverlap">
             <xsd:annotation>
                 <summary>Matches if the station effective time overlaps the given time range</summary>
-                <description> Matches if the station effective time overlaps the given time range.
+                <description>Matches if the station effective time overlaps the given time range.
                     This is generally used to avoid processing stations that did not yet exist, or
-                    were deactivated before a time range of interest. </description>
+                    were deactivated before a time range of interest.  By default, SOD uses a stationEffectiveTimeOverlap configured with the event arm's time range.  
+                    If all you want to do is make sure your stations are active during 
+                    your events, that's already done.</description>
             </xsd:annotation>
             <ref name="timeRange"/>
         </element>

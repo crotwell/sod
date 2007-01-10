@@ -80,7 +80,9 @@
                     <summary>Matches if the site effective time overlaps the given time range</summary>
                     <description>Matches if the site effective time overlaps the given time range.
                         This is generally used to avoid processing sites that did not yet exist, or
-                        were deactivated before a time range of interest</description>
+                        were deactivated before a time range of interest.  By default, SOD uses a siteEffectiveTimeOverlap configured with the event arm's time range.
+                          If all you want to do is make sure your sites are active during 
+                    your events, that's already done.</description>
                 </xsd:documentation>
             </xsd:annotation>
             <ref name="timeRange"/>

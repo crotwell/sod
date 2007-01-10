@@ -264,7 +264,10 @@
             <xsd:annotation>
                 <summary>Matches if the channel effective time overlaps the given time range</summary>
                 <description>Matches if the channel effective time overlaps the given time range. This is generally used
-                    to avoid processing channels that did not yet exist, or were deactivated before a time range of interest.</description>
+                    to avoid processing channels that did not yet exist, or were deactivated before a time range of interest.
+                    By default, SOD uses a channelEffectiveTimeOverlap configured with the event arm's time range.  
+                    If all you want to do is make sure your channels are active during 
+                    your events, that's already done.</description>
             </xsd:annotation>
             <ref name="timeRange"/>
         </element>
