@@ -29,9 +29,6 @@ import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
 public class CommandLineTool {
 
-    private static final String VERSION_STRING = "SOD Command Line Tools:"
-            + Version.getVersion();
-
     public CommandLineTool(String[] args) throws JSAPException {
         addParams();
         String[] segs = getClass().getName().split("\\.");
@@ -116,7 +113,7 @@ public class CommandLineTool {
     public boolean isSuccess() {
         return result.success();
     }
-
+    
     public String getErrorMessage() {
         StringBuffer buff = new StringBuffer();
         buff.append(jsap.getUsage() + "\n");
@@ -138,6 +135,8 @@ public class CommandLineTool {
         String className = getClass().getName().replace('.', '/');
         return Start.createInputStream("jar:" + className + ".vm");
     }
+    
+    protected boolean requiresStdin = false;
 
     private List params = new ArrayList();
 
@@ -204,6 +203,9 @@ public class CommandLineTool {
                 System.exit(1);
             }
             ctx.put("additionalArms", buff.toString());
+        }else if(ls.requiresStdin){
+            System.err.println("This tool requires that a recipe be piped into it");
+            System.exit(1);
         }
         final String result = sv.evaluate(ls.getTemplate(), ctx);
         PrintlineVelocitizer.reinstateLogger(current);
@@ -222,4 +224,7 @@ public class CommandLineTool {
                             props);
         s.start();
     }
+
+    private static final String VERSION_STRING = "SOD Command Line Tools: s"
+            + Version.getVersion();
 }

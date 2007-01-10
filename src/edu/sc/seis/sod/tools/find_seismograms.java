@@ -6,6 +6,7 @@ public class find_seismograms extends CommandLineTool {
 
     public find_seismograms(String[] args) throws JSAPException {
         super(args);
+        requiresStdin = true;
     }
 
     protected void addParams() throws JSAPException {
