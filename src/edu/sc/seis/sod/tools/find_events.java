@@ -20,14 +20,16 @@ public class find_events extends CommandLineTool {
                                    "now",
                                    "The latest time for an accepted event.  Must be in 'YYYY[[[[[-MM]-DD]-hh]-mm]-ss]' format or 'now' for the current time."));
         add(RangeParser.createParam("magnitude",
-                                    "0-10",
+                                    "0",
+                                    "10",
                                     "The range of acceptable magnitudes."));
         add(createListOption("types",
                              't',
                              "types",
                              "The types of magnitudes to retrieve.  If unspecified, all magnitude types will be retrieved"));
         add(RangeParser.createParam("depth",
-                                    "0-10000",
+                                    "0",
+                                    "10000",
                                     "The range of acceptable depths in kilometers.",
                                     'D'));
         add(OutputFormatParser.createParam("$event.getLongitude('##0.0000;-##0.0000') $event.getLatitude('##0.0000;-##0.0000') $event.getDepth('###0.##') ${event.getTime('yyyy_DDD_HH_mm_sss')} $event.magnitudeValue$event.magnitudeType",
