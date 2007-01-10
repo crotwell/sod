@@ -29,6 +29,9 @@ import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
 public class CommandLineTool {
 
+    private static final String VERSION_STRING = "SOD Command Line Tools:"
+            + Version.getVersion();
+
     public CommandLineTool(String[] args) throws JSAPException {
         addParams();
         String[] segs = getClass().getName().split("\\.");
@@ -93,11 +96,11 @@ public class CommandLineTool {
         }
         return vc;
     }
-    
-    protected boolean isSpecified(Parameter p){
+
+    protected boolean isSpecified(Parameter p) {
         return result.contains(p.getID());
     }
-    
+
     public boolean shouldPrintHelp() {
         return result.getBoolean("help");
     }
@@ -167,7 +170,7 @@ public class CommandLineTool {
             System.exit(0);
         }
         if(ls.shouldPrintVersion()) {
-            System.err.println("SOD " + Version.getVersion());
+            System.err.println(VERSION_STRING);
             System.exit(0);
         }
         if(!ls.isSuccess()) {
@@ -195,7 +198,9 @@ public class CommandLineTool {
                 }
             }
             if(buff.length() == 0) {
-                System.err.println("There was input on sysin, but it doesn't look like it was a recipe file");
+                if(!inSod) {
+                    System.err.println("There was input on sysin, but it doesn't look like it was a recipe file");
+                }
                 System.exit(1);
             }
             ctx.put("additionalArms", buff.toString());
