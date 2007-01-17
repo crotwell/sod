@@ -4,16 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import org.apache.log4j.Category;
 import org.w3c.dom.Element;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
@@ -50,28 +46,24 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
         if(!updateTable(event, chan, original, available, seismograms, cookieJar)){
             return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
         }
-        acceptableChannels.add(ChannelIdUtil.toString(chan.get_id()));
+        makeRecordSection(event);
+        return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
+    }
+
+    public void makeRecordSection(EventAccessOperations event) throws Exception, NoPreferredOrigin, IOException {
         try {
             DataSetSeismogram[] dss = extractSeismograms(event);
-            List acceptableSeis = new ArrayList();
-            for(int i = 0; i < dss.length; i++) {
-                if(acceptableChannels.contains(ChannelIdUtil.toString(dss[i].getChannelId()))) {
-                    acceptableSeis.add(dss[i]);
-                }
-            }
             String regionName = PR.getRegionName(event.get_attributes().region);
             String dateTime = event.get_preferred_origin().origin_time.date_time;
             String msg = "Got " + dss.length
                     + " DataSetSeismograms from DSML file for event in "
                     + regionName + " at " + dateTime;
             logger.debug(msg);
-            dss = (DataSetSeismogram[])acceptableSeis.toArray(new DataSetSeismogram[0]);
             outputBestRecordSection(event, dss);
         } catch(IOException e) {
             throw new IOException("Problem opening dsml file in RecordSectionDisplayGenerator"
                     + e);
         }
-        return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
     }
 
     public String getFileLoc(EventAccessOperations event) throws Exception {
@@ -125,8 +117,6 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
     }
 
     protected String filename = "recordsection" + FILE_EXTENSION;
-
-    private Set acceptableChannels = new HashSet();
 
     protected static final String FILE_EXTENSION = ".png";
 
