@@ -465,29 +465,8 @@ public class WaveformArm implements Arm {
     }
 
     private void addSuspendedPairsToQueue(int[] pairIds) throws SQLException {
-        /*
-         * if we're going to run suspended pairs we need to prepopulate the
-         * networkArm. That's what this lovely monsterous triple for-loop does.
-         * You can remove it once the network db returns real channels.
-         */
-        if(pairIds.length > 0) {
-            try {
-                NetworkDbObject[] nets = networkArm.getSuccessfulNetworks();
-                for(int i = 0; i < nets.length; i++) {
-                    StationDbObject[] stas = networkArm.getSuccessfulStations(nets[i]);
-                    for(int j = 0; j < stas.length; j++) {
-                        SiteDbObject[] sites = networkArm.getSuccessfulSites(nets[i],
-                                                                             stas[j]);
-                        for(int k = 0; k < sites.length; k++) {
-                            networkArm.getSuccessfulChannels(nets[i], sites[k]);
-                        }
-                    }
-                }
-            } catch(Exception e) {
-                GlobalExceptionHandler.handle(e);
-            }
-        }
         for(int i = 0; i < pairIds.length; i++) {
+            logger.debug("Starting suspended pair " + pairIds[i]);
             WaveformWorkUnit workUnit = null;
             if(localSeismogramArm != null) {
                 workUnit = new LocalSeismogramWaveformWorkUnit(pairIds[i]);
@@ -518,7 +497,10 @@ public class WaveformArm implements Arm {
                 }
             }
             if(workUnit != null) {
+                logger.debug("Adding " + workUnit + " to pool");
                 pool.invokeLater(workUnit);
+            } else {
+                logger.debug("Unable to find work unit for pair");
             }
         }
     }
@@ -704,6 +686,10 @@ public class WaveformArm implements Arm {
                 GlobalExceptionHandler.handle(BIG_ERROR_MSG, t);
             }
         }
+        
+        public String toString(){
+            return "LocalSeismogramWorkUnit(" + pairId + ")";
+        }
 
         private EventChannelPair extractEventChannelPair() throws Exception {
             try {
@@ -804,6 +790,15 @@ public class WaveformArm implements Arm {
                 t.printStackTrace(System.err);
                 GlobalExceptionHandler.handle(BIG_ERROR_MSG, t);
             }
+        }
+        
+        public String toString(){
+            StringBuffer buff = new StringBuffer("MotionVectorWorkUnit(");
+            for(int i = 0; i < pairIds.length; i++) {
+                buff.append(pairIds[i]);
+                buff.append(',');
+            }
+            return buff.toString();
         }
 
         private EventVectorPair extractEventVectorPair() throws Exception {

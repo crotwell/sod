@@ -54,6 +54,7 @@ public class JDBCEventStatus extends SodJDBC {
     public void restartCompletedEvents() throws SQLException {
         CacheEvent[] events = getAll(Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                                 Standing.SUCCESS));
+        logger.debug("Restting " + events.length + " completed events");
         for(int i = 0; i < events.length; i++) {
             setStatus(events[i], Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                             Standing.IN_PROG));
@@ -195,4 +196,6 @@ public class JDBCEventStatus extends SodJDBC {
             getAll, getByTimeAndDepthRanges;
 
     private Connection conn;
+    
+    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(JDBCEventStatus.class);
 }

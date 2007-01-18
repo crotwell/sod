@@ -269,8 +269,10 @@ public class NetworkArm implements Arm {
                 // Must be a concrete, continue
             }
             try {
-                if(netEffectiveSubsetter.accept(allNets[i].get_attributes()).isSuccess()) {
-                    if(attrSubsetter.accept(allNets[i].get_attributes()).isSuccess()) {
+                if(netEffectiveSubsetter.accept(allNets[i].get_attributes())
+                        .isSuccess()) {
+                    if(attrSubsetter.accept(allNets[i].get_attributes())
+                            .isSuccess()) {
                         int dbid;
                         synchronized(netTable) {
                             dbid = netTable.put(allNets[i].get_attributes());
@@ -280,12 +282,15 @@ public class NetworkArm implements Arm {
                         networkDBs.add(netDb);
                         change(allNets[i], Status.get(Stage.NETWORK_SUBSETTER,
                                                       Standing.SUCCESS));
-                        if ( ! (Start.getWaveformArm() == null &&
-                                stationSubsetter.getClass().equals(PassStation.class) &&
-                                siteSubsetter.getClass().equals(PassSite.class) &&
-                                chanSubsetters.size()==0)) {
-                            // only do netpushers if there are more subsetters downstream
-                            // or the waveform arm exists, otherwise there is no point
+                        if(!(Start.getWaveformArm() == null
+                                && stationSubsetter.getClass()
+                                        .equals(PassStation.class)
+                                && siteSubsetter.getClass()
+                                        .equals(PassSite.class) && chanSubsetters.size() == 0)) {
+                            // only do netpushers if there are more subsetters
+                            // downstream
+                            // or the waveform arm exists, otherwise there is no
+                            // point
                             lastPusher = new NetworkPusher(netDb);
                             netPopulators.invokeLater(lastPusher);
                         }
@@ -367,11 +372,12 @@ public class NetworkArm implements Arm {
 
         public void run() {
             if(!Start.isArmFailure()) {
+                logger.info("Starting work on " + netDb);
                 StationDbObject[] staDbs = getSuccessfulStations(netDb);
-                if ( ! (Start.getWaveformArm() == null &&
-                        siteSubsetter.getClass().equals(PassSite.class) &&
-                        chanSubsetters.size()==0)) {
-                    // only get sites/channels if there are subsetters or a waveform arm
+                if(!(Start.getWaveformArm() == null
+                        && siteSubsetter.getClass().equals(PassSite.class) && chanSubsetters.size() == 0)) {
+                    // only get sites/channels if there are subsetters or a
+                    // waveform arm
                     for(int j = 0; j < staDbs.length; j++) {
                         SiteDbObject[] siteDbs = getSuccessfulSites(netDb,
                                                                     staDbs[j]);
@@ -451,14 +457,15 @@ public class NetworkArm implements Arm {
                                    Status.get(Stage.NETWORK_SUBSETTER,
                                               Standing.REJECT));
                             failLogger.info(StationIdUtil.toString(stations[subCounter].get_id())
-                                    + " was rejected: "+staResult);
+                                    + " was rejected: " + staResult);
                         }
                     } else {
                         change(stations[subCounter],
                                Status.get(Stage.NETWORK_SUBSETTER,
                                           Standing.REJECT));
                         failLogger.info(StationIdUtil.toString(stations[subCounter].get_id())
-                                + " was rejected based on its effective time not matching the range of requested events: "+effResult);
+                                + " was rejected based on its effective time not matching the range of requested events: "
+                                + effResult);
                     }
                 }
             } catch(Exception e) {
@@ -551,7 +558,7 @@ public class NetworkArm implements Arm {
         change(channel.my_site, Status.get(Stage.NETWORK_SUBSETTER,
                                            Standing.REJECT));
         failLogger.info(SiteIdUtil.toString(channel.my_site.get_id())
-                + " was rejected: "+reason);
+                + " was rejected: " + reason);
         failures.add(channel.my_site);
         // fail all channels in a failed site, just for
         // status

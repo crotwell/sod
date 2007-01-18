@@ -375,6 +375,12 @@ public class Start {
 
     private void handleStartupRunProperties() {
         if(runProps.removeDatabase()) {
+            String dbUrl = ConnMgr.getURL();
+            if(!dbUrl.startsWith("jdbc:hsqldb") || dbUrl.contains("hsql://")
+                    || !dbUrl.contains(DATABASE_DIR)) {
+                logger.warn("The database isn't the default local hsqldb, so it couldn't be deleted as specified by the properties");
+                return;
+            }
             File dbDir = new File(DATABASE_DIR);
             if(dbDir.exists()) {
                 logger.info("Removing old database");
@@ -399,15 +405,13 @@ public class Start {
                                               e);
             }
         } else {
-            File dbDir = new File(DATABASE_DIR);
-            if(dbDir.exists()) {
-                try {
-                    JDBCEventChannelStatus evChanStatusTable = new JDBCEventChannelStatus();
-                    suspendedPairs = evChanStatusTable.getSuspendedEventChannelPairs(runProps.getEventChannelPairProcessing());
-                } catch(Exception e) {
-                    GlobalExceptionHandler.handle("Trouble updating status of "
-                            + "existing event-channel pairs", e);
-                }
+            try {
+                JDBCEventChannelStatus evChanStatusTable = new JDBCEventChannelStatus();
+                suspendedPairs = evChanStatusTable.getSuspendedEventChannelPairs(runProps.getEventChannelPairProcessing());
+                logger.debug("Found " + suspendedPairs.length + " event channel pairs that were in process");
+            } catch(Exception e) {
+                GlobalExceptionHandler.handle("Trouble updating status of "
+                        + "existing event-channel pairs", e);
             }
         }
     }
