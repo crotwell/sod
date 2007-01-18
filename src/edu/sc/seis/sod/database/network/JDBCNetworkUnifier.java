@@ -81,13 +81,19 @@ public class JDBCNetworkUnifier {
         ProxyNetworkAccess na;
         synchronized(ndc) {
             try {
-                na = (ProxyNetworkAccess)ndc.a_finder().retrieve_by_id(id);
+            	return new NetworkDbObject(netDbId, (ProxyNetworkAccess)ndc.a_finder().retrieve_by_id(id));
             } catch(NetworkNotFound e) {
                 // didn't get by id, try by code
                 logger.debug("Caught exception with retrieve_by_id  for "
                         + NetworkIdUtil.toString(id) + ", trying by code", e);
                 NetworkAccess[] netArray = ndc.a_finder()
                         .retrieve_by_code(id.network_code);
+                if (netArray.length == 0) {
+                	throw new NetworkNotFound("Cant retrieve_by_code for "
+                            + NetworkIdUtil.toString(id) + " received "
+                            + netArray.length + " nets.");
+                }
+                na = (ProxyNetworkAccess)netArray[0];
                 if(NetworkIdUtil.isTemporary(id)) {
                     // temp net codes are never reused in the same year, so
                     // find a network that overlaps the year we have in the id
@@ -112,15 +118,23 @@ public class JDBCNetworkUnifier {
                             found = netArray[i];
                         }
                     }
+                    if (found != null) {
+                    	// found exactly one match so return it
+                    	return new NetworkDbObject(netDbId,  (ProxyNetworkAccess)found);
+                    } else {
+                    	throw new NetworkNotFound("Cant retrieve_by_code for "
+                                + NetworkIdUtil.toString(id) + " no  year overlaps in "
+                                + netArray.length + " nets.");
+                    }
                 } else if(netArray.length != 1) {
                     throw new NetworkNotFound("Cant retrieve_by_code for "
                             + NetworkIdUtil.toString(id) + " received "
                             + netArray.length + " nets.");
+                } else {
+                	return new NetworkDbObject(netDbId, na);
                 }
-                na = (ProxyNetworkAccess)netArray[0];
             }
         }
-        return new NetworkDbObject(netDbId, na);
     }
 
     public int put(NetworkAttr net) throws SQLException {
