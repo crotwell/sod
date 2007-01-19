@@ -658,9 +658,11 @@ public class WaveformArm implements Arm {
                 StringTree accepted = new StringTreeLeaf(this, false);
                 try {
                     Station evStation = ecp.getChannel().my_site.my_station;
-                    accepted = eventStationSubsetter.accept(ecp.getEvent(),
-                                                            evStation,
-                                                            ecp.getCookieJar());
+                    synchronized(eventStationSubsetter) {
+                        accepted = eventStationSubsetter.accept(ecp.getEvent(),
+                                                                evStation,
+                                                                ecp.getCookieJar());
+                    }
                 } catch(Throwable e) {
                     ecp.update(e, Status.get(Stage.EVENT_STATION_SUBSETTER,
                                              Standing.SYSTEM_FAILURE));
@@ -762,9 +764,11 @@ public class WaveformArm implements Arm {
                 StringTree accepted = new StringTreeLeaf(this, false);
                 try {
                     Station evStation = ecp.getChannelGroup().getChannels()[0].my_site.my_station;
-                    accepted = eventStationSubsetter.accept(ecp.getEvent(),
-                                                            evStation,
-                                                            ecp.getCookieJar());
+                    synchronized(eventStationSubsetter) {
+                        accepted = eventStationSubsetter.accept(ecp.getEvent(),
+                                                                evStation,
+                                                                ecp.getCookieJar());
+                    }
                 } catch(Throwable e) {
                     ecp.update(e, Status.get(Stage.EVENT_STATION_SUBSETTER,
                                              Standing.SYSTEM_FAILURE));
