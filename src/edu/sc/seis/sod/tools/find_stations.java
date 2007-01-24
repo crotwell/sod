@@ -42,7 +42,7 @@ public class find_stations extends CommandLineTool {
         needsStationAndIfSpecified = new ArrayList();
         add(ServerParser.createParam("edu/iris/dmc/IRIS_NetworkDC",
                                      "The network server to use."));
-        addStationParam(BoxAreaParser.createParam("A box the stations must be in.  It's specified as west/east/north/south"));
+        addStationParam(BoxAreaParser.createParam("A box the stations must be in.  It's specified as west/east/south/north"));
         addStationParam(DonutParser.createParam("A donut the stations must be in.  It's specified as centerLat/centerLon/minRadiusDegrees/maxRadiusDegrees"));
         addStationParam(createListOption("stations",
                                          's',

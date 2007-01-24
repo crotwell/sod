@@ -12,7 +12,7 @@ public class find_events extends CommandLineTool {
         super.addParams();
         add(ServerParser.createParam("edu/iris/dmc/IRIS_EventDC",
                                      "The event server to use."));
-        add(BoxAreaParser.createParam("A box the events must be in.  It's specified as west/east/north/south"));
+        add(BoxAreaParser.createParam("A box the events must be in.  It's specified as west/east/south/north"));
         add(DonutParser.createParam("A donut the events must be in.  It's specified as centerLat/centerLon/minRadiusDegrees/maxRadiusDegrees"));
         add(TimeParser.createYesterdayParam("begin",
                                             "The earliest time for an accepted event.  Must be in 'YYYY[[[[[-MM]-DD]-hh]-mm]-ss]' format."));
