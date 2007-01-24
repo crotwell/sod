@@ -271,6 +271,7 @@ public class VelocityStation extends Station {
 
     public void insertIntoContext(VelocityContext ctx) {
         ctx.put("station", this);
+        ctx.put("sta", this);
         getNet().insertIntoContext(ctx);
     }
 

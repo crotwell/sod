@@ -137,6 +137,7 @@ public class VelocityChannel extends Channel {
 
     public void insertIntoContext(VelocityContext ctx) {
         ctx.put("channel", this);
+        ctx.put("chan", this);
         getSite().insertIntoContext(ctx);
     }
 
