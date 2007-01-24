@@ -152,7 +152,7 @@ public class VelocityNetwork extends NetworkAttr {
 
     private NetworkAttr net;
 
-    public void insertsIntoContext(VelocityContext ctx) {
+    public void insertIntoContext(VelocityContext ctx) {
         ctx.put("network", this);
         ctx.put("net", this);
     }
