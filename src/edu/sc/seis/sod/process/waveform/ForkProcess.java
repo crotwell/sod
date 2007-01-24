@@ -124,4 +124,8 @@ public class ForkProcess implements WaveformProcess, Threadable {
     }
 
     protected List localSeisProcessList = new ArrayList();
+
+    public WaveformProcess[] getWrappedProcessors() {
+        return (WaveformProcess[])localSeisProcessList.toArray(new WaveformProcess[0]);
+    }
 }

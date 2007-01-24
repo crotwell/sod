@@ -14,9 +14,7 @@ import edu.sc.seis.sod.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.MotionVectorArm;
-import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.process.waveform.ForkProcess;
-import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.status.StringTreeLeaf;
@@ -76,6 +74,10 @@ public class VectorForkProcess implements WaveformVectorProcess {
             out[i] = ForkProcess.copySeismograms(seismograms[i]);
         }
         return out;
+    }
+
+    public WaveformVectorProcess[] getWrappedProcessors() {
+        return (WaveformVectorProcess[])processes.toArray(new WaveformVectorProcess[0]);
     }
 
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(VectorForkProcess.class);
