@@ -204,7 +204,7 @@ public class CommandLineTool {
             }
             ctx.put("additionalArms", buff.toString());
         }else if(ls.requiresStdin){
-            System.err.println("This tool requires that a recipe be piped into it");
+            System.err.println("This tool requires that a recipe be piped into it.");
             System.exit(1);
         }
         final String result = sv.evaluate(ls.getTemplate(), ctx);
