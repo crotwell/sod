@@ -334,7 +334,6 @@ public class WaveformArm implements Arm {
         int numInPool = pool.getNumWaiting();
         if(numInPool == 0
                 || getNumRetryWaiting() / (double)numInPool < retryPercentage) {
-            logger.debug("retrying if available");
             retryIfAvailable();
         }
     }
