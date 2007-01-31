@@ -6,6 +6,7 @@
 package edu.sc.seis.sod.validator.model;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,7 +18,6 @@ import java.util.Set;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import org.xml.sax.InputSource;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
@@ -48,8 +48,8 @@ public class StAXModelBuilder implements XMLStreamConstants {
                 definedGrammar.add(start);
             } else {
                 ClassLoader cl = getClass().getClassLoader();
-                InputSource relaxSource = Start.createInputSource(cl, relaxLoc);
-                reader = XMLUtil.staxInputFactory.createXMLStreamReader(relaxSource.getByteStream());
+                InputStream relaxSource = Start.createInputStream(cl, relaxLoc);
+                reader = XMLUtil.staxInputFactory.createXMLStreamReader(relaxSource);
                 definedGrammar = new Grammar(relaxLoc);
                 reader.next();// SKIP SPACE
                 reader.next();// GET TO GRAMMAR START TAG
