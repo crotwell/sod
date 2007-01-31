@@ -122,13 +122,15 @@
             <xsd:annotation>
                 <summary>Matches the entire channel code</summary>
                 <description>Matches a channel code, such as BHZ. See the <a
-                        href="http://www.iris.edu/manuals/SEED_appA.htm">SEED manual</a> for the list of available code letters.</description>
+                        href="http://www.iris.edu/manuals/SEED_appA.htm">SEED manual</a> for the list of available code letters.
+                        '*' can be used to match any letter in a position.  For example 'BH*' matches BHZ, BHE and BHN but not 
+                        LHZ.  '*Z' matches BHZ and LHZ but not BHN or BHE.</description>
             </xsd:annotation>
             <data type="string">
                 <xsd:annotation>
                     <example>BHZ</example>
                 </xsd:annotation>
-                <param name="pattern">[A-Z0-9]{3}</param>
+                <param name="pattern">[A-Z0-9\*]{0,3}</param>
             </data>
         </element>
     </define>
