@@ -52,7 +52,11 @@ public class find_stations extends CommandLineTool {
                              'n',
                              "networks",
                              "The codes of networks to retrieve"));
-        outputFormatFlag = OutputFormatParser.createParam("$station.getLongitude(' ##0.0000;-##0.0000') $station.getLatitude(' ##0.0000;-##0.0000') $station.getElevation('###0.') $station.code");
+        String lonPrinter = "$station.getLongitude(' ##0.0000;-##0.0000')";
+        String latPrinter = "$station.getLatitude(' ##0.0000;-##0.0000')";
+        String theRest = "$station.getElevation('###0.') $station.code";
+        outputFormatFlag = OutputFormatParser.createParam(lonPrinter + " " + latPrinter + " " + theRest,
+                                                          latPrinter + " " + lonPrinter + " " + theRest);
         add(outputFormatFlag);
     }
 

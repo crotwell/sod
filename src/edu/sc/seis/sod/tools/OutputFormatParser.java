@@ -6,13 +6,14 @@ import com.martiansoftware.jsap.StringParser;
 
 public class OutputFormatParser extends StringParser {
 
-    public OutputFormatParser(String xyFormat) {
+    public OutputFormatParser(String xyFormat, String yxFormat) {
         this.xyFormat = xyFormat;
+        this.yxFormat = yxFormat;
     }
 
-    public static FlaggedOption createParam(String xyFormat) {
+    public static FlaggedOption createParam(String xyFormat, String yxFormat) {
         return new FlaggedOption("output",
-                                 new OutputFormatParser(xyFormat),
+                                 new OutputFormatParser(xyFormat, yxFormat),
                                  "xy",
                                  true,
                                  'o',
@@ -26,9 +27,11 @@ public class OutputFormatParser extends StringParser {
         }
         if(format.equals("xy")) {
             return xyFormat;
+        }else if(format.equals("yx")){
+            return yxFormat;
         }
         return format;
     }
 
-    private String xyFormat;
+    private String xyFormat, yxFormat;
 }

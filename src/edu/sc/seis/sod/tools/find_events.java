@@ -32,7 +32,11 @@ public class find_events extends CommandLineTool {
                                     "10000",
                                     "The range of acceptable depths in kilometers",
                                     'D'));
-        add(OutputFormatParser.createParam("$event.getLongitude('##0.0000;-##0.0000') $event.getLatitude('##0.0000;-##0.0000') $event.getDepth('###0.##') ${event.getTime('yyyy_DDD_HH_mm_sss')} $event.magnitudeValue$event.magnitudeType"));
+        String latPrinter = "$event.getLatitude('##0.0000;-##0.0000')";
+        String lonPrinter = "$event.getLongitude('##0.0000;-##0.0000')";
+        String theRest = "$event.getDepth('###0.##') ${event.getTime('yyyy_DDD_HH_mm_sss')} $event.magnitudeValue$event.magnitudeType";
+        add(OutputFormatParser.createParam(lonPrinter + " " + latPrinter + " " + theRest,
+                                           latPrinter + " " + lonPrinter + " " + theRest));
         add(createListOption("catalogs",
                              'c',
                              "catalogs",
