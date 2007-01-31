@@ -18,18 +18,18 @@ public class find_responses extends find_stations {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         add(TimeParser.createParam("begin",
                                    df.format(new Date(0)),
-                                   "The earliest time for an accepted channel.  Must be in 'YYYY[[[[[-MM]-DD]-hh]-mm]-ss]' format"));
+                                   "The earliest time for an accepted channel"));
         add(TimeParser.createParam("end",
                                    "now",
-                                   "The latest time for an accepted channel.  Must be in 'YYYY[[[[[-MM]-DD]-hh]-mm]-ss]' format or 'now' for the current time"));
+                                   "The latest time for an accepted channel"));
         add(createListOption("channels",
                              'c',
                              "channels",
-                             "The codes of channels to retrieve.  If unspecified, all channels for retrieved sites will be retrieved"));
+                             "The codes of channels to retrieve"));
         add(createListOption("sites",
                              'l',
                              "sites",
-                             "The codes of sites(location codes) to retrieve.  If unspecified, all sites for retrieved stations will be retrieved"));
+                             "The codes of sites(location codes) to retrieve"));
         add(new FlaggedOption("responseDirectory",
                               JSAP.STRING_PARSER,
                               "responses",

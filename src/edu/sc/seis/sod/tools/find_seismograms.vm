@@ -18,15 +18,15 @@ $additionalArms#end
         </embeddedChannel>
 #end
         <phaseRequest>
-            <beginPhase>$beginPhase.name</beginPhase>
+            <beginPhase>$begin.name</beginPhase>
             <beginOffset>
                 <unit>MINUTE</unit>
-                <value>$beginPhase.offset</value>
+                <value>$begin.offset</value>
             </beginOffset>
-            <endPhase>$endPhase.name</endPhase>
+            <endPhase>$end.name</endPhase>
             <endOffset>
                 <unit>MINUTE</unit>
-                <value>$endPhase.offset</value>
+                <value>$end.offset</value>
             </endOffset>
         </phaseRequest>
         <fixedDataCenter>

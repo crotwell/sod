@@ -13,6 +13,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.velocity.VelocityContext;
 import org.xml.sax.InputSource;
+import com.martiansoftware.jsap.Flagged;
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
@@ -30,6 +31,7 @@ import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 public class CommandLineTool {
 
     public CommandLineTool(String[] args) throws JSAPException {
+        this.args = args;
         addParams();
         String[] segs = getClass().getName().split("\\.");
         jsap.setUsage(Args.makeUsage(segs[segs.length - 1], params));
@@ -60,12 +62,19 @@ public class CommandLineTool {
         add(new Switch("version",
                        'v',
                        "version",
-                       "Print SOD's version and exit."));
+                       "Print SOD's version and exit"));
         add(new Switch("recipe",
                        'r',
                        "recipe",
-                       "Print the created recipe to stdout instead of running it."));
+                       "Print the created recipe to stdout instead of running it"));
         add(new Switch("help", 'h', "help", "Print this message."));
+        add(new FlaggedOption("props",
+                              JSAP.STRING_PARSER,
+                              null,
+                              false,
+                              'p',
+                              "props",
+                              "Use an additional props file"));
     }
 
     protected void add(Parameter param) throws JSAPException {
@@ -97,6 +106,10 @@ public class CommandLineTool {
     protected boolean isSpecified(Parameter p) {
         return result.contains(p.getID());
     }
+    
+    public String[] getArgs(){
+        return args;
+    }
 
     public boolean shouldPrintHelp() {
         return result.getBoolean("help");
@@ -113,7 +126,7 @@ public class CommandLineTool {
     public boolean isSuccess() {
         return result.success();
     }
-    
+
     public String getErrorMessage() {
         StringBuffer buff = new StringBuffer();
         buff.append(jsap.getUsage() + "\n");
@@ -126,8 +139,35 @@ public class CommandLineTool {
 
     public String getHelpMessage() {
         StringBuffer buff = new StringBuffer();
-        buff.append(jsap.getUsage() + '\n');
-        buff.append(jsap.getHelp());
+        buff.append(jsap.getUsage());
+        buff.append('\n');
+        Iterator it = params.iterator();
+        while(it.hasNext()) {
+            Parameter sw = (Parameter)it.next();
+            buff.append("  -");
+            buff.append(((Flagged)sw).getShortFlag());
+            buff.append("/--");
+            buff.append(((Flagged)sw).getLongFlag());
+            buff.append(' ');
+            if(sw instanceof FlaggedOption) {
+                FlaggedOption fo = (FlaggedOption)sw;
+                if(fo.isList()) {
+                    buff.append(fo.getShortFlag());
+                    buff.append("1,");
+                    buff.append(fo.getShortFlag());
+                    buff.append("2,...,");
+                    buff.append(fo.getShortFlag());
+                    buff.append('n');
+                } else {
+                    buff.append("<");
+                    buff.append(sw.getID());
+                    buff.append(">");
+                }
+            }
+            buff.append("  ");
+            buff.append(sw.getHelp());
+            buff.append('\n');
+        }
         return buff.toString();
     }
 
@@ -135,7 +175,7 @@ public class CommandLineTool {
         String className = getClass().getName().replace('.', '/');
         return Start.createInputStream("jar:" + className + ".vm");
     }
-    
+
     protected boolean requiresStdin = false;
 
     private List params = new ArrayList();
@@ -143,6 +183,8 @@ public class CommandLineTool {
     protected JSAPResult result;
 
     private JSAP jsap = new JSAP();
+    
+    private String[] args;
 
     public static void run(CommandLineTool ls) throws Exception {
         if(ls.shouldPrintRecipe()) {
@@ -163,6 +205,7 @@ public class CommandLineTool {
         Properties props = System.getProperties();
         Initializer.loadProps(Start.createInputStream("jar:edu/sc/seis/sod/tools/simple.props"),
                               props);
+        Initializer.loadProperties(ls.getArgs(), props, false);
         PropertyConfigurator.configure(props);
         if(ls.shouldPrintHelp()) {
             System.err.println(ls.getHelpMessage());
@@ -203,7 +246,7 @@ public class CommandLineTool {
                 System.exit(1);
             }
             ctx.put("additionalArms", buff.toString());
-        }else if(ls.requiresStdin){
+        } else if(ls.requiresStdin) {
             System.err.println("This tool requires that a recipe be piped into it.");
             System.exit(1);
         }

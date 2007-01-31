@@ -42,18 +42,17 @@ public class find_stations extends CommandLineTool {
         needsStationAndIfSpecified = new ArrayList();
         add(ServerParser.createParam("edu/iris/dmc/IRIS_NetworkDC",
                                      "The network server to use."));
-        addStationParam(BoxAreaParser.createParam("A box the stations must be in.  It's specified as west/east/south/north"));
-        addStationParam(DonutParser.createParam("A donut the stations must be in.  It's specified as centerLat/centerLon/minRadiusDegrees/maxRadiusDegrees"));
+        addStationParam(BoxAreaParser.createParam("A station constraining box as west/east/south/north"));
+        addStationParam(DonutParser.createParam("A donut  as lat/lon/minRadius/maxRadius"));
         addStationParam(createListOption("stations",
                                          's',
                                          "stations",
-                                         "The codes of stations to retrieve.  If unspecified, all stations for retrieved networks will be retrieved"));
+                                         "The codes of stations to retrieve"));
         add(createListOption("networks",
                              'n',
                              "networks",
-                             "The codes of networks to retrieve.  If unspecified, all networks will be retrieved"));
-        outputFormatFlag = OutputFormatParser.createParam("$station.getLongitude(' ##0.0000;-##0.0000') $station.getLatitude(' ##0.0000;-##0.0000') $station.getElevation('###0.') $station.code",
-                                                          "http://www.seis.sc.edu/sod/ingredients/event/origin/printline.html");
+                             "The codes of networks to retrieve"));
+        outputFormatFlag = OutputFormatParser.createParam("$station.getLongitude(' ##0.0000;-##0.0000') $station.getLatitude(' ##0.0000;-##0.0000') $station.getElevation('###0.') $station.code");
         add(outputFormatFlag);
     }
 

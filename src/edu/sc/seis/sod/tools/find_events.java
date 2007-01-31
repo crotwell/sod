@@ -12,40 +12,39 @@ public class find_events extends CommandLineTool {
         super.addParams();
         add(ServerParser.createParam("edu/iris/dmc/IRIS_EventDC",
                                      "The event server to use."));
-        add(BoxAreaParser.createParam("A box the events must be in.  It's specified as west/east/south/north"));
-        add(DonutParser.createParam("A donut the events must be in.  It's specified as centerLat/centerLon/minRadiusDegrees/maxRadiusDegrees"));
+        add(BoxAreaParser.createParam("Event constraining box as west/east/south/north"));
+        add(DonutParser.createParam("Event constraining donut as lat/lon/minRadius/maxRadius"));
         add(TimeParser.createYesterdayParam("begin",
-                                            "The earliest time for an accepted event.  Must be in 'YYYY[[[[[-MM]-DD]-hh]-mm]-ss]' format."));
+                                            "The earliest time for an accepted event"));
         add(TimeParser.createParam("end",
                                    "now",
-                                   "The latest time for an accepted event.  Must be in 'YYYY[[[[[-MM]-DD]-hh]-mm]-ss]' format or 'now' for the current time."));
+                                   "The latest time for an accepted event"));
         add(RangeParser.createParam("magnitude",
                                     "0",
                                     "10",
-                                    "The range of acceptable magnitudes."));
+                                    "The range of acceptable magnitudes"));
         add(createListOption("types",
                              't',
                              "types",
-                             "The types of magnitudes to retrieve.  If unspecified, all magnitude types will be retrieved"));
+                             "The types of magnitudes to retrieve."));
         add(RangeParser.createParam("depth",
                                     "0",
                                     "10000",
-                                    "The range of acceptable depths in kilometers.",
+                                    "The range of acceptable depths in kilometers",
                                     'D'));
-        add(OutputFormatParser.createParam("$event.getLongitude('##0.0000;-##0.0000') $event.getLatitude('##0.0000;-##0.0000') $event.getDepth('###0.##') ${event.getTime('yyyy_DDD_HH_mm_sss')} $event.magnitudeValue$event.magnitudeType",
-                                           "http://www.seis.sc.edu/sod/ingredients/event/origin/printline.html"));
+        add(OutputFormatParser.createParam("$event.getLongitude('##0.0000;-##0.0000') $event.getLatitude('##0.0000;-##0.0000') $event.getDepth('###0.##') ${event.getTime('yyyy_DDD_HH_mm_sss')} $event.magnitudeValue$event.magnitudeType"));
         add(createListOption("catalogs",
                              'c',
                              "catalogs",
-                             "A comma separated list of catalogs to search.  If unspecified, all catalogs will be searched"));
+                             "A comma separated list of catalogs to search"));
         add(createListOption("seismicRegions",
                              's',
-                             "seismic-regions",
-                             "A comma separated list of seismic Flinn-Engdahl regions.  An event must be in one of these regions to pass.  If unspecified, all regions will be acceptable"));
+                             "seis-regions",
+                             "A comma separated list of seismic regions"));
         add(createListOption("geographicRegions",
                              'g',
-                             "geographic-regions",
-                             "A comma separated list of geographic Flinn-Engdahl regions.  An event must be in one of these regions to pass.  If unspecified, all regions will be acceptable"));
+                             "geo-regions",
+                             "A comma separated list of geographic regions"));
     }
 
     public static void main(String[] args) throws Exception {

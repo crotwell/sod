@@ -13,20 +13,20 @@ public class find_seismograms extends CommandLineTool {
         super.addParams();
         add(ServerParser.createParam("edu/iris/dmc/IRIS_BudDataCenter",
                                      "The seismogram server to use."));
-        add(PhaseTimeParser.createParam("beginPhase",
+        add(PhaseTimeParser.createParam("begin",
                                         "-10origin",
-                                        "The begin time for seismograms specified as a phase name and an offset in minutes like 12ttp or -3s."));
-        add(PhaseTimeParser.createParam("endPhase",
+                                        "Phase name and offset for the seismogram's begin"));
+        add(PhaseTimeParser.createParam("end",
                                         "20ttp",
-                                        "The end time for seismograms specified as a phase name and an offset in minutes like 12ttp or -3s."));
+                                        "Phase name and offset for the seismogram's end"));
         add(createListOption("channels",
                              'c',
                              "channels",
-                             "The codes of channels to retrieve.  If unspecified, all channels for retrieved sites will be retrieved"));
+                             "The codes of channels to retrieve"));
         add(createListOption("sites",
                              'l',
                              "sites",
-                             "The codes of sites(location codes) to retrieve.  If unspecified, all sites for retrieved stations will be retrieved"));
+                             "The codes of sites(location codes) to retrieve"));
     }
 
     public static void main(String[] args) throws Exception {

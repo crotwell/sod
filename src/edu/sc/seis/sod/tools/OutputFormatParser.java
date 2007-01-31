@@ -10,15 +10,14 @@ public class OutputFormatParser extends StringParser {
         this.xyFormat = xyFormat;
     }
 
-    public static FlaggedOption createParam(String xyFormat, String templateURL) {
+    public static FlaggedOption createParam(String xyFormat) {
         return new FlaggedOption("output",
                                  new OutputFormatParser(xyFormat),
                                  "xy",
                                  true,
                                  'o',
                                  "output",
-                                 "The format for output.  Can be none, xy or a Velocity template as described on "
-                                         + templateURL);
+                                 "The format for output to standard out.");
     }
 
     public Object parse(String format) throws ParseException {
