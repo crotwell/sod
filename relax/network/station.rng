@@ -25,6 +25,7 @@
             <ref name="area"/>
             <ref name="stationPointDistance"/>
             <ref name="stationPointAzimuth"/>
+            <ref name="printlineStationProcess"/>
             <ref name="stationPointBackAzimuth"/>
             <ref name="AND"/>
             <ref name="OR"/>
