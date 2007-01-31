@@ -1,7 +1,5 @@
 package edu.sc.seis.sod.process.waveform;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.w3c.dom.Element;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
@@ -37,10 +35,8 @@ public class SNEPProblem implements WaveformProcess {
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) throws Exception {
         String name = "snep.problem";
-        List out = new ArrayList();
         for(int i = 0; i < seismograms.length; i++) {
-            LocalSeismogramImpl cur = seismograms[i];
-            Property[] properties = cur.properties;
+            Property[] properties = seismograms[i].properties;
             for(int j = 0; j < properties.length; j++) {
                 if(properties[j].name.equals(name)) {
                     if(type == null
