@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.TimeZone;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import edu.iris.Fissures.FlinnEngdahlRegion;
+import edu.iris.Fissures.FlinnEngdahlType;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.model.MicroSecondDate;
@@ -35,6 +37,12 @@ public class VelocityEvent extends ProxyEventAccessOperations {
 
     public String getRegion() {
         return pr.getRegionName(get_attributes().region);
+    }
+    
+    public String getRegionNumber(){
+        FlinnEngdahlRegion region = get_attributes().region;
+        String type = region.type == FlinnEngdahlType.GEOGRAPHIC_REGION ? "Geographic" : "Seismic";
+        return type + " " + get_attributes().region.number;
     }
 
     public String getMagnitude() {

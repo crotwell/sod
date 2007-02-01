@@ -50,6 +50,9 @@
             <catalog>PREF</catalog>
 #end
         </eventFinder>
+#if(!$allowDupes)
+        <removeEventDuplicate/>
+#end
 #if($donut)
         <originPointDistance>
             <unit>DEGREE</unit>

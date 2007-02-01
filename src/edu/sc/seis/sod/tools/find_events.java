@@ -1,6 +1,8 @@
 package edu.sc.seis.sod.tools;
 
+import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
+import com.martiansoftware.jsap.Switch;
 
 public class find_events extends CommandLineTool {
 
@@ -10,6 +12,10 @@ public class find_events extends CommandLineTool {
 
     protected void addParams() throws JSAPException {
         super.addParams();
+        add(new Switch("allowDupes",
+                       JSAP.NO_SHORTFLAG,
+                       "allow-duplicates",
+                       "Without this very similar events are rejected"));
         add(ServerParser.createParam("edu/iris/dmc/IRIS_EventDC",
                                      "The event server to use."));
         add(BoxAreaParser.createParam("Event constraining box as west/east/south/north"));
@@ -35,18 +41,18 @@ public class find_events extends CommandLineTool {
         String latPrinter = "$event.getLatitude('##0.0000;-##0.0000')";
         String lonPrinter = "$event.getLongitude('##0.0000;-##0.0000')";
         String theRest = "$event.getDepth('###0.##') ${event.getTime('yyyy_DDD_HH_mm_sss')} $event.magnitudeValue$event.magnitudeType";
-        add(OutputFormatParser.createParam(lonPrinter + " " + latPrinter + " " + theRest,
-                                           latPrinter + " " + lonPrinter + " " + theRest));
+        add(OutputFormatParser.createParam(lonPrinter + " " + latPrinter + " "
+                + theRest, latPrinter + " " + lonPrinter + " " + theRest));
         add(createListOption("catalogs",
                              'c',
                              "catalogs",
                              "A comma separated list of catalogs to search"));
         add(createListOption("seismicRegions",
-                             's',
+                             JSAP.NO_SHORTFLAG,
                              "seis-regions",
                              "A comma separated list of seismic regions"));
         add(createListOption("geographicRegions",
-                             'g',
+                             JSAP.NO_SHORTFLAG,
                              "geo-regions",
                              "A comma separated list of geographic regions"));
     }

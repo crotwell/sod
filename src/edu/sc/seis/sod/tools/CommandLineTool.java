@@ -20,6 +20,7 @@ import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.Option;
 import com.martiansoftware.jsap.Parameter;
+import com.martiansoftware.jsap.StringParser;
 import com.martiansoftware.jsap.Switch;
 import edu.sc.seis.fissuresUtil.simple.Initializer;
 import edu.sc.seis.sod.Args;
@@ -36,19 +37,50 @@ public class CommandLineTool {
         String[] segs = getClass().getName().split("\\.");
         jsap.setUsage(Args.makeUsage(segs[segs.length - 1], params));
         result = jsap.parse(args);
-        if(args.length == 0) {
+        if(requiresAtLeastOneArg() && args.length == 0) {
             result.addException("Must use at least one option",
                                 new RuntimeException("Must use at least one option"));
         }
+    }
+
+    protected boolean requiresAtLeastOneArg() {
+        return true;
     }
 
     protected FlaggedOption createListOption(String id,
                                              char shortFlag,
                                              String longFlag,
                                              String help) {
+        return createListOption(id,
+                                shortFlag,
+                                longFlag,
+                                help,
+                                null,
+                                JSAP.STRING_PARSER);
+    }
+
+    protected FlaggedOption createListOption(String id,
+                                             char shortFlag,
+                                             String longFlag,
+                                             String help,
+                                             String defaultArg) {
+        return createListOption(id,
+                                shortFlag,
+                                longFlag,
+                                help,
+                                defaultArg,
+                                JSAP.STRING_PARSER);
+    }
+
+    protected FlaggedOption createListOption(String id,
+                                             char shortFlag,
+                                             String longFlag,
+                                             String help,
+                                             String defaultArg,
+                                             StringParser parser) {
         FlaggedOption listOption = new FlaggedOption(id,
-                                                     JSAP.STRING_PARSER,
-                                                     null,
+                                                     parser,
+                                                     defaultArg,
                                                      false,
                                                      shortFlag,
                                                      longFlag,
@@ -87,17 +119,21 @@ public class CommandLineTool {
         Iterator it = params.iterator();
         while(it.hasNext()) {
             Object cur = it.next();
-            if(!(cur instanceof Option)) {
-                continue;
-            }
-            Option param = (Option)cur;
-            if(param.isList()) {
-                Object[] paramResult = result.getObjectArray(param.getID());
-                if(paramResult.length > 0) {
-                    vc.put(param.getID(), paramResult);
+            if(cur instanceof Switch) {
+                Switch sw = (Switch)cur;
+                if(result.getBoolean(sw.getID())) {
+                    vc.put(sw.getID(), Boolean.TRUE);
                 }
             } else {
-                vc.put(param.getID(), result.getObject(param.getID()));
+                Option param = (Option)cur;
+                if(param.isList()) {
+                    Object[] paramResult = result.getObjectArray(param.getID());
+                    if(paramResult.length > 0) {
+                        vc.put(param.getID(), paramResult);
+                    }
+                } else {
+                    vc.put(param.getID(), result.getObject(param.getID()));
+                }
             }
         }
         return vc;
@@ -106,8 +142,8 @@ public class CommandLineTool {
     protected boolean isSpecified(Parameter p) {
         return result.contains(p.getID());
     }
-    
-    public String[] getArgs(){
+
+    public String[] getArgs() {
         return args;
     }
 
@@ -144,9 +180,13 @@ public class CommandLineTool {
         Iterator it = params.iterator();
         while(it.hasNext()) {
             Parameter sw = (Parameter)it.next();
-            buff.append("  -");
-            buff.append(((Flagged)sw).getShortFlag());
-            buff.append("/--");
+            buff.append("  ");
+            if(((Flagged)sw).getShortFlag() != JSAP.NO_SHORTFLAG) {
+                buff.append('-');
+                buff.append(((Flagged)sw).getShortFlag());
+                buff.append('/');
+            }
+            buff.append("--");
             buff.append(((Flagged)sw).getLongFlag());
             buff.append(' ');
             if(sw instanceof FlaggedOption) {
@@ -183,7 +223,7 @@ public class CommandLineTool {
     protected JSAPResult result;
 
     private JSAP jsap = new JSAP();
-    
+
     private String[] args;
 
     public static void run(CommandLineTool ls) throws Exception {

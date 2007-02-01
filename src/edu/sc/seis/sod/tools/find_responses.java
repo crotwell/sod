@@ -25,11 +25,14 @@ public class find_responses extends find_stations {
         add(createListOption("channels",
                              'c',
                              "channels",
-                             "The codes of channels to retrieve"));
+                             "The codes of channels to retrieve",
+                             "BH*"));
         add(createListOption("sites",
                              'l',
                              "sites",
-                             "The codes of sites(location codes) to retrieve"));
+                             "The codes of sites(location codes) to retrieve",
+                             null,
+                             new SiteCodeParser()));
         add(new FlaggedOption("responseDirectory",
                               JSAP.STRING_PARSER,
                               "responses",

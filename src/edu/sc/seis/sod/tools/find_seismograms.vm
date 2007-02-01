@@ -33,6 +33,13 @@ $additionalArms#end
             <name>$server.name</name>
             <dns>$server.dns</dns>
         </fixedDataCenter>
-        <sacWriter/>
+        <sacWriter>
+#foreach($header in $mark-phases)
+           <phaseTimeHeader>
+               <phaseName>$header.phase</phaseName>
+               <tHeader>$header.header</tHeader>
+           </phaseTimeHeader> 
+#end
+        </sacWriter>
     </waveformArm>
 </sod>
