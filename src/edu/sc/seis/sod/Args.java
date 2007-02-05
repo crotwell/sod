@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import com.martiansoftware.jsap.Flagged;
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
@@ -20,6 +21,8 @@ import edu.sc.seis.fissuresUtil.simple.Initializer;
 import edu.sc.seis.sod.editor.SimpleGUIEditor;
 
 public class Args {
+
+    private static final String COMMAND_NAME = "sod";
 
     public Args(String[] args) throws JSAPException {
         this.args = args;
@@ -51,7 +54,7 @@ public class Args {
                        "network-arm",
                        "Only run the network arm"));
         add(new Switch("validate",
-                       'v',
+                       'V',
                        "validate",
                        "Validate the recipe and exit"));
         add(new Switch("invalid",
@@ -61,11 +64,11 @@ public class Args {
         add(new Switch("replace-recipe",
                        'r',
                        "replace-recipe",
-                       "Replace the recipe in the db with the one specified for this run"));
-        Switch version = new Switch("version");
-        version.setLongFlag("version");
-        version.setHelp("Print SOD's version and exit");
-        add(version);
+                       "Replace the recipe in the db with this one"));
+        add(new Switch("version",
+                       'v',
+                       "version",
+                       "Print SOD's version and exit"));
         add(new FlaggedOption("props",
                               new FileParser(),
                               null,
@@ -80,16 +83,13 @@ public class Args {
                               'f',
                               "recipe",
                               "The recipe to run"));
-        Iterator it;
-        jsap.setUsage(makeUsage("sod", parameters));
         result = jsap.parse((String[])toParse.toArray(new String[0]));
         if(result.getBoolean("version")) {
             System.out.println("SOD " + Version.getVersion());
             System.exit(0);
         }
         if(result.getBoolean("help")) {
-            System.out.println(jsap.getUsage());
-            System.out.println(jsap.getHelp());
+            System.err.println(makeHelp(COMMAND_NAME, parameters));
             System.exit(0);
         }
         if(result.userSpecified("event-arm")
@@ -98,11 +98,7 @@ public class Args {
                                 new RuntimeException("Only one of -e and -n may be specified"));
         }
         if(!result.success()) {
-            System.out.println(jsap.getUsage());
-            it = result.getErrorMessageIterator();
-            while(it.hasNext()) {
-                System.err.println(it.next());
-            }
+            System.err.println(makeError(COMMAND_NAME, parameters, result));
             System.exit(1);
         }
     }
@@ -112,7 +108,8 @@ public class Args {
         Iterator it = params.iterator();
         while(it.hasNext()) {
             Parameter p = (Parameter)it.next();
-            if(p instanceof Switch && ((Switch)p).getShortFlagCharacter() != null) {
+            if(p instanceof Switch
+                    && ((Switch)p).getShortFlagCharacter() != null) {
                 builder.append(((Switch)p).getShortFlagCharacter());
             }
         }
@@ -125,8 +122,16 @@ public class Args {
                 if(!fo.required()) {
                     builder.append('[');
                 }
-                builder.append("-" + ((FlaggedOption)p).getShortFlagCharacter()
-                        + " <" + p.getID() + ">");
+                if(((FlaggedOption)p).getShortFlag() != JSAP.NO_SHORTFLAG) {
+                    builder.append('-');
+                    builder.append(((FlaggedOption)p).getShortFlag());
+                } else {
+                    builder.append("--");
+                    builder.append(((FlaggedOption)p).getLongFlag());
+                }
+                builder.append(" <");
+                builder.append(p.getID());
+                builder.append('>');
                 if(!fo.required()) {
                     builder.append(']');
                 }
@@ -135,6 +140,58 @@ public class Args {
         }
         builder.append('\n');
         return builder.toString();
+    }
+
+    public static String makeHelp(String command, List params) {
+        StringBuffer buff = new StringBuffer();
+        buff.append(makeUsage(command, params));
+        buff.append('\n');
+        Iterator it = params.iterator();
+        while(it.hasNext()) {
+            Parameter sw = (Parameter)it.next();
+            buff.append("  ");
+            if(((Flagged)sw).getShortFlag() != JSAP.NO_SHORTFLAG) {
+                buff.append('-');
+                buff.append(((Flagged)sw).getShortFlag());
+                buff.append('/');
+            }
+            buff.append("--");
+            buff.append(((Flagged)sw).getLongFlag());
+            buff.append(' ');
+            if(sw instanceof FlaggedOption) {
+                FlaggedOption fo = (FlaggedOption)sw;
+                if(fo.isList()) {
+                    buff.append(fo.getShortFlag());
+                    buff.append("1,");
+                    buff.append(fo.getShortFlag());
+                    buff.append("2,...,");
+                    buff.append(fo.getShortFlag());
+                    buff.append('n');
+                } else {
+                    buff.append('<');
+                    buff.append(sw.getID());
+                    buff.append('>');
+                }
+            }
+            buff.append("  ");
+            buff.append(sw.getHelp());
+            buff.append('\n');
+        }
+        return buff.toString();
+    }
+
+    public static String makeError(String command,
+                                   List params,
+                                   JSAPResult result) {
+        StringBuffer buff = new StringBuffer();
+        buff.append(Args.makeUsage(command, params));
+        buff.append('\n');
+        Iterator it = result.getErrorMessageIterator();
+        while(it.hasNext()) {
+            buff.append(it.next());
+            buff.append('\n');
+        }
+        return buff.toString();
     }
 
     private void add(Parameter p) throws JSAPException {

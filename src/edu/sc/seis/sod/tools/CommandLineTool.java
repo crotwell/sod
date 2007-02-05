@@ -35,7 +35,7 @@ public class CommandLineTool {
         this.args = args;
         addParams();
         String[] segs = getClass().getName().split("\\.");
-        jsap.setUsage(Args.makeUsage(segs[segs.length - 1], params));
+        commandName = segs[segs.length - 1];
         result = jsap.parse(args);
         if(requiresAtLeastOneArg() && args.length == 0) {
             result.addException("Must use at least one option",
@@ -163,54 +163,6 @@ public class CommandLineTool {
         return result.success();
     }
 
-    public String getErrorMessage() {
-        StringBuffer buff = new StringBuffer();
-        buff.append(jsap.getUsage() + "\n");
-        Iterator it = result.getErrorMessageIterator();
-        while(it.hasNext()) {
-            buff.append(it.next() + "\n");
-        }
-        return buff.toString();
-    }
-
-    public String getHelpMessage() {
-        StringBuffer buff = new StringBuffer();
-        buff.append(jsap.getUsage());
-        buff.append('\n');
-        Iterator it = params.iterator();
-        while(it.hasNext()) {
-            Parameter sw = (Parameter)it.next();
-            buff.append("  ");
-            if(((Flagged)sw).getShortFlag() != JSAP.NO_SHORTFLAG) {
-                buff.append('-');
-                buff.append(((Flagged)sw).getShortFlag());
-                buff.append('/');
-            }
-            buff.append("--");
-            buff.append(((Flagged)sw).getLongFlag());
-            buff.append(' ');
-            if(sw instanceof FlaggedOption) {
-                FlaggedOption fo = (FlaggedOption)sw;
-                if(fo.isList()) {
-                    buff.append(fo.getShortFlag());
-                    buff.append("1,");
-                    buff.append(fo.getShortFlag());
-                    buff.append("2,...,");
-                    buff.append(fo.getShortFlag());
-                    buff.append('n');
-                } else {
-                    buff.append("<");
-                    buff.append(sw.getID());
-                    buff.append(">");
-                }
-            }
-            buff.append("  ");
-            buff.append(sw.getHelp());
-            buff.append('\n');
-        }
-        return buff.toString();
-    }
-
     public InputStream getTemplate() throws IOException {
         String className = getClass().getName().replace('.', '/');
         return Start.createInputStream("jar:" + className + ".vm");
@@ -225,6 +177,8 @@ public class CommandLineTool {
     private JSAP jsap = new JSAP();
 
     private String[] args;
+    
+    private String commandName;
 
     public static void run(CommandLineTool ls) throws Exception {
         if(ls.shouldPrintRecipe()) {
@@ -241,6 +195,7 @@ public class CommandLineTool {
             System.out.println("<sod>");
             System.out.flush();
         }
+        Start.setCommandName(ls.commandName);
         // get some defaults
         Properties props = System.getProperties();
         Initializer.loadProps(Start.createInputStream("jar:edu/sc/seis/sod/tools/simple.props"),
@@ -248,15 +203,15 @@ public class CommandLineTool {
         Initializer.loadProperties(ls.getArgs(), props, false);
         PropertyConfigurator.configure(props);
         if(ls.shouldPrintHelp()) {
-            System.err.println(ls.getHelpMessage());
+            System.err.println(Args.makeHelp(ls.commandName, ls.params));
             System.exit(0);
         }
         if(ls.shouldPrintVersion()) {
-            System.err.println(VERSION_STRING);
+            System.err.println(ls.commandName + " " + Version.getVersion());
             System.exit(0);
         }
         if(!ls.isSuccess()) {
-            System.err.println(ls.getErrorMessage());
+            System.err.println(Args.makeError(ls.commandName, ls.params, ls.result));
             System.exit(1);
         }
         VelocityContext ctx = ls.getContext();
@@ -308,6 +263,4 @@ public class CommandLineTool {
         s.start();
     }
 
-    private static final String VERSION_STRING = "SOD Command Line Tools: s"
-            + Version.getVersion();
 }
