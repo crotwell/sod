@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.subsetter.dataCenter;
 
+import org.w3c.dom.Element;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
@@ -9,9 +10,8 @@ import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodElement;
-import edu.sc.seis.sod.UserReportRetryStrategy;
+import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.subsetter.AbstractSource;
-import org.w3c.dom.Element;
 
 /**
  * FixedDataCenter.java Created: Wed Mar 20 14:27:42 2002
@@ -24,15 +24,14 @@ public class FixedDataCenter extends AbstractSource implements SodElement,
 
     public FixedDataCenter(Element element) throws Exception {
         super(element);
-        CommonAccess commonAccess = CommonAccess.getCommonAccess();
-        fissuresNamingService = commonAccess.getFissuresNamingService();
+        fissuresNamingService = CommonAccess.getNameService();
         dns = getDNS();
         objectName = getName();
         dataCenter = BulletproofVestFactory.vestSeismogramDC(dns,
                                                              objectName,
                                                              fissuresNamingService,
                                                              BulletproofVestFactory.getDefaultNumRetry(),
-                                                             new UserReportRetryStrategy());
+                                                             Start.createRetryStrategy());
     }
 
     public ProxySeismogramDC getSeismogramDC(EventAccessOperations event,

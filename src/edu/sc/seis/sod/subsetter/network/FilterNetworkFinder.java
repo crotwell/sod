@@ -6,7 +6,7 @@ import edu.sc.seis.fissuresUtil.cache.FilterNetworkDC;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
 import edu.sc.seis.fissuresUtil.cache.VestingNetworkDC;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.UserReportRetryStrategy;
+import edu.sc.seis.sod.Start;
 
 /**
  * @author groves Created on Feb 4, 2005
@@ -24,7 +24,7 @@ public class FilterNetworkFinder extends NetworkFinder {
             netDC = new FilterNetworkDC(new VestingNetworkDC(getDNS(),
                                                              getName(),
                                                              getFissuresNamingService(),
-                                                             new UserReportRetryStrategy()),
+                                                             Start.createRetryStrategy()),
                                         patterns);
         }
         return netDC;

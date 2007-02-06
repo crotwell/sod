@@ -20,6 +20,5 @@ public class BestIRISDataCenter implements SeismogramDCLocator {
         return router.getDataCenter(infilters);
     }
 
-    HardCodeDataCenterRouter router = new HardCodeDataCenterRouter(CommonAccess.getCommonAccess()
-            .getFissuresNamingService());
+    HardCodeDataCenterRouter router = new HardCodeDataCenterRouter(CommonAccess.getNameService());
 }

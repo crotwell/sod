@@ -98,8 +98,7 @@ public class Args {
                                 new RuntimeException("Only one of -e and -n may be specified"));
         }
         if(!result.success()) {
-            System.err.println(makeError(COMMAND_NAME, parameters, result));
-            System.exit(1);
+            Start.exit(makeError(COMMAND_NAME, parameters, result));
         }
     }
 

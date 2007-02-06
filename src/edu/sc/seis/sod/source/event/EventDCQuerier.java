@@ -27,7 +27,7 @@ import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.UserReportRetryStrategy;
+import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.subsetter.DepthRange;
 import edu.sc.seis.sod.subsetter.origin.Catalog;
 import edu.sc.seis.sod.subsetter.origin.Contributor;
@@ -76,13 +76,12 @@ public class EventDCQuerier {
 
     public ProxyEventDC getEventDC() {
         if(eventDC == null) {
-            CommonAccess common = CommonAccess.getCommonAccess();
-            FissuresNamingService fissName = common.getFissuresNamingService();
+            FissuresNamingService fissName = CommonAccess.getNameService();
             eventDC = new VestingEventDC(serverName,
                                          serverDNS,
                                          fissName,
                                          -1,
-                                         new UserReportRetryStrategy());
+                                         Start.createRetryStrategy());
         }
         return eventDC;
     }

@@ -24,6 +24,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
+import edu.sc.seis.fissuresUtil.cache.RetryStrategy;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.exceptionHandler.Extractor;
@@ -148,8 +149,7 @@ public class Start {
     protected void initDocument() throws Exception {
         loadRunProps(getConfig());
         ConnMgr.installDbProperties(props, args.getInitialArgs());
-        CommonAccess.getCommonAccess().setProps(props);
-        CommonAccess.getCommonAccess().initORB(args.getInitialArgs());
+        CommonAccess.initialize(props, args.getInitialArgs());
     }
 
     private void loadProps() throws IOException {
@@ -214,6 +214,18 @@ public class Start {
             throw new IOException("Unable to load configuration file " + loc);
         }
         return new BufferedInputStream(in);
+    }
+
+    public static RetryStrategy createRetryStrategy() {
+        if(commandName.equals("sod")) {
+            return new UserReportRetryStrategy("SOD will pick up where it left off when restarted.");
+        } else {
+            return new UserReportRetryStrategy();
+        }
+    }
+
+    public static void setCommandName(String name) {
+        commandName = name;
     }
 
     public static void setConfig(Element config) {
@@ -408,7 +420,8 @@ public class Start {
             try {
                 JDBCEventChannelStatus evChanStatusTable = new JDBCEventChannelStatus();
                 suspendedPairs = evChanStatusTable.getSuspendedEventChannelPairs(runProps.getEventChannelPairProcessing());
-                logger.debug("Found " + suspendedPairs.length + " event channel pairs that were in process");
+                logger.debug("Found " + suspendedPairs.length
+                        + " event channel pairs that were in process");
             } catch(Exception e) {
                 GlobalExceptionHandler.handle("Trouble updating status of "
                         + "existing event-channel pairs", e);
@@ -494,7 +507,7 @@ public class Start {
         logger.info("Finished starting all threads.");
     } // end of main ()
 
-    private static void exit(String reason) {
+    public static void exit(String reason) {
         System.err.println(reason);
         System.exit(1);
     }
@@ -546,7 +559,7 @@ public class Start {
 
     protected static NetworkArm network;
 
-    private static String configFileName;
+    private static String configFileName, commandName = "sod";
 
     private static MicroSecondDate startTime;
 

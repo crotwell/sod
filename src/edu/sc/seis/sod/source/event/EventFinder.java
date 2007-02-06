@@ -16,7 +16,6 @@ import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.UserReportRetryStrategy;
 import edu.sc.seis.sod.database.JDBCQueryTime;
 import edu.sc.seis.sod.subsetter.AbstractSource;
 import edu.sc.seis.sod.subsetter.origin.OriginTimeRange;
@@ -55,14 +54,24 @@ public class EventFinder extends AbstractSource implements EventSource {
     }
 
     public CacheEvent[] next() {
-        int retryCount = 0;
-        while(true) {
+        int count = 0;
+        SystemException latest;
+        try {
+            return loadMoreResults();
+        } catch(SystemException t) {
+            latest = t;
+        }
+        while(retryStrat.shouldRetry(latest, querier.getEventDC(), count++, -1)) {
             try {
-                return loadMoreResults();
-            } catch(SystemException se) {
-                retryStrat.shouldRetry(se, querier.getEventDC(), retryCount, -1);
+                CacheEvent[] result = loadMoreResults();
+                retryStrat.serverRecovered(querier.getEventDC());
+                return result;
+            } catch(SystemException t) {
+                latest = t;
             }
         }
+        //-1 in shouldRetry means we go forever and this never gets thrown
+        throw latest;
     }
 
     protected CacheEvent[] loadMoreResults() {
@@ -179,5 +188,5 @@ public class EventFinder extends AbstractSource implements EventSource {
 
     protected TimeInterval increment, lag, refreshInterval;
 
-    private RetryStrategy retryStrat = new UserReportRetryStrategy();
+    private RetryStrategy retryStrat = Start.createRetryStrategy();
 }// EventFinder

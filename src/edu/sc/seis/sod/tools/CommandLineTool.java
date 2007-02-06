@@ -25,6 +25,7 @@ import com.martiansoftware.jsap.Switch;
 import edu.sc.seis.fissuresUtil.simple.Initializer;
 import edu.sc.seis.sod.Args;
 import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.UserConfigurationException;
 import edu.sc.seis.sod.Version;
 import edu.sc.seis.sod.velocity.PrintlineVelocitizer;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
@@ -177,7 +178,7 @@ public class CommandLineTool {
     private JSAP jsap = new JSAP();
 
     private String[] args;
-    
+
     private String commandName;
 
     public static void run(CommandLineTool ls) throws Exception {
@@ -211,8 +212,9 @@ public class CommandLineTool {
             System.exit(0);
         }
         if(!ls.isSuccess()) {
-            System.err.println(Args.makeError(ls.commandName, ls.params, ls.result));
-            System.exit(1);
+            Start.exit(Args.makeError(ls.commandName,
+                                              ls.params,
+                                              ls.result));
         }
         VelocityContext ctx = ls.getContext();
         SimpleVelocitizer sv = new SimpleVelocitizer();
@@ -242,8 +244,7 @@ public class CommandLineTool {
             }
             ctx.put("additionalArms", buff.toString());
         } else if(ls.requiresStdin) {
-            System.err.println("This tool requires that a recipe be piped into it.");
-            System.exit(1);
+           Start.exit("This tool requires that a recipe be piped into it.");
         }
         final String result = sv.evaluate(ls.getTemplate(), ctx);
         PrintlineVelocitizer.reinstateLogger(current);
@@ -251,16 +252,20 @@ public class CommandLineTool {
             System.out.println(result);
             System.exit(0);
         }
-        Start s = new Start(new Args(new String[] {"-f", "<stream>"}),
-                            new Start.InputSourceCreator() {
+        try {
+            Start s = new Start(new Args(new String[] {"-f", "<stream>"}),
+                                new Start.InputSourceCreator() {
 
-                                public InputSource create() {
-                                    return new InputSource(new StringReader("<sod>\n"
-                                            + result));
-                                }
-                            },
-                            props);
-        s.start();
+                                    public InputSource create() {
+                                        return new InputSource(new StringReader("<sod>\n"
+                                                + result));
+                                    }
+                                },
+                                props);
+            s.start();
+        } catch(UserConfigurationException e) {
+            Start.exit(e.getMessage()
+                    + "  SOD will quit now and continue to cowardly quit until this is corrected.");
+        }
     }
-
 }

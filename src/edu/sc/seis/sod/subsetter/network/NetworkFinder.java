@@ -8,15 +8,14 @@ import edu.sc.seis.fissuresUtil.cache.VestingNetworkDC;
 import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.UserReportRetryStrategy;
+import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.subsetter.AbstractSource;
 
 public class NetworkFinder extends AbstractSource {
 
     public NetworkFinder(Element element) throws Exception {
         super(element);
-        CommonAccess commonAccess = CommonAccess.getCommonAccess();
-        fns = commonAccess.getFissuresNamingService();
+        fns = CommonAccess.getNameService();
         Element subElement = SodUtil.getElement(element, "refreshInterval");
         if(subElement != null) {
             refreshInterval = SodUtil.loadTimeInterval(subElement);
@@ -30,7 +29,7 @@ public class NetworkFinder extends AbstractSource {
             netDC = new VestingNetworkDC(getDNS(),
                                          getName(),
                                          getFissuresNamingService(),
-                                         new UserReportRetryStrategy(),
+                                         Start.createRetryStrategy(),
                                          -1);
         }
         return netDC;

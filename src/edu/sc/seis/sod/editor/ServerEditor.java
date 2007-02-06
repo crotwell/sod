@@ -112,6 +112,11 @@ public abstract class ServerEditor {
         public String getServerDNS() {
             return server.getServerDNS();
         }
+        
+        public String getFullName(){
+            return getServerDNS() + "/" + getServerName();
+        }
+
 
         public org.omg.CORBA.Object getCorbaObject() {
             return server.getCorbaObject();
