@@ -18,7 +18,6 @@ import com.martiansoftware.jsap.ParseException;
 import com.martiansoftware.jsap.StringParser;
 import com.martiansoftware.jsap.Switch;
 import edu.sc.seis.fissuresUtil.simple.Initializer;
-import edu.sc.seis.sod.editor.SimpleGUIEditor;
 
 public class Args {
 
@@ -39,7 +38,7 @@ public class Args {
             if(args[i].equals("-demo") || args[i].equals("--demo")) {
                 // replace demo with a like -f command
                 toParse.add("-f");
-                toParse.add(SimpleGUIEditor.TUTORIAL_LOC);
+                toParse.add(Start.TUTORIAL_LOC);
             } else if(args[i].equals("-hsql")) {
                 // Skip over -hsql and its argument
                 i++;

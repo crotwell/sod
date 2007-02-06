@@ -37,7 +37,6 @@ import edu.sc.seis.sod.database.JDBCStatus;
 import edu.sc.seis.sod.database.JDBCVersion;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
-import edu.sc.seis.sod.editor.SimpleGUIEditor;
 import edu.sc.seis.sod.status.IndexTemplate;
 import edu.sc.seis.sod.status.OutputScheduler;
 import edu.sc.seis.sod.status.TemplateFileLoader;
@@ -471,17 +470,6 @@ public class Start {
         return config;
     }
 
-    public static String getConfFileName(String[] args) {
-        for(int i = 0; i < args.length; i++) {
-            if(args[i].equals("-f")) {
-                return args[i + 1];
-            } else if(args[i].equals("-demo") || args[i].equals("--demo")) {
-                return SimpleGUIEditor.TUTORIAL_LOC;
-            }
-        }
-        return null;
-    }
-
     // this is not the real exception reporter, but do this to catch
     // initialization exceptions so they are not lost in the log file
     private static SystemOutReporter sysOutReporter = new SystemOutReporter();
@@ -570,6 +558,8 @@ public class Start {
     public static boolean RUN_ARMS = true;
 
     protected static int[] suspendedPairs = new int[0];
+
+    public static final String TUTORIAL_LOC = "jar:edu/sc/seis/sod/data/configFiles/demo.xml";
 
     public static final String DEFAULT_PROPS = "edu/sc/seis/sod/data/sod.prop";
 }// Start
