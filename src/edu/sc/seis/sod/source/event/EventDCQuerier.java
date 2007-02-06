@@ -15,11 +15,15 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.EventAccessSeqHolder;
 import edu.iris.Fissures.IfEvent.EventSeqIter;
 import edu.iris.Fissures.IfEvent.EventSeqIterHolder;
+import edu.iris.Fissures.IfEvent.Magnitude;
+import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
+import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.model.GlobalAreaImpl;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
+import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.cache.ProxyEventDC;
 import edu.sc.seis.fissuresUtil.cache.VestingEventDC;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
@@ -28,6 +32,7 @@ import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.subsetter.DepthRange;
 import edu.sc.seis.sod.subsetter.origin.Catalog;
 import edu.sc.seis.sod.subsetter.origin.Contributor;
@@ -144,10 +149,57 @@ public class EventDCQuerier {
             } else {
                 cached[counter] = new CacheEvent(uncached[counter]);
                 cached[counter].get_attributes();
-                cached[counter].get_origins();
+                // Call get_origins to cache it, and reorder the magnitudes so
+                // that one that passed is first while we're at it
+                Origin[] origins = cached[counter].get_origins();
+                for(int i = 0; i < origins.length; i++) {
+                    putPassingMagFirst(origins[i], minMag, maxMag, searchTypes);
+                }
+                putPassingMagFirst(EventUtil.extractOrigin(cached[counter]),
+                                   minMag,
+                                   maxMag,
+                                   searchTypes);
             }
         }
         return cached;
+    }
+
+    /**
+     * Reorder the magnitudes in o such that a magnitude >= minMag and <= maxMag
+     * with a type in searchTypes is in the 0th position of the magnitudes array
+     * 
+     * @return - True if a magnitude is found and moved into the 0th position
+     */
+    public static boolean putPassingMagFirst(Origin o,
+                                             double minMag,
+                                             double maxMag,
+                                             String[] searchTypes) {
+        for(int j = 0; j < o.magnitudes.length; j++) {
+            if(o.magnitudes[j].value >= minMag
+                    && o.magnitudes[j].value <= maxMag
+                    && acceptableType(searchTypes, o.magnitudes[j].type)) {
+                Magnitude zeroth = o.magnitudes[0];
+                o.magnitudes[0] = o.magnitudes[j];
+                o.magnitudes[j] = zeroth;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @return true if type is in searchTypes or if searchTypes is length 0
+     */
+    private static boolean acceptableType(String[] searchTypes, String type) {
+        if(searchTypes.length == 0) {
+            return true;
+        }
+        for(int i = 0; i < searchTypes.length; i++) {
+            if(searchTypes[i].equals(type)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public String toString() {
