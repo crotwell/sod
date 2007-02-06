@@ -3,7 +3,6 @@ package edu.sc.seis.sod.tools;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,8 +12,16 @@ import com.martiansoftware.jsap.StringParser;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
+import edu.sc.seis.sod.SodUtil;
 
 public class TimeParser extends StringParser {
+    
+    /**
+     * @param  - should unspecified fields be floored or ceilinged.
+     */
+    public TimeParser(boolean ceiling){
+        this.ceiling = ceiling;
+    }
 
     public Object parse(String arg) throws ParseException {
         if(arg.equals("now")) {
@@ -27,54 +34,47 @@ public class TimeParser extends StringParser {
             throw new ParseException("A time must be formatted as YYYY[[[[[-MM]-DD]-hh]-mm]-ss] like 2006-11-19, not '"
                     + arg + "'");
         }
-        Calendar cal = GregorianCalendar.getInstance(TimeZone.getTimeZone("GMT"));
-        cal.clear();
-        for(int i = 0; i < calendarFieldForGroup.length; i++) {
-            if(m.group(i + 1) == null) {
-                cal.set(calendarFieldForGroup[i], defaultForGroup[i]);
-            } else {
-                int val = Integer.parseInt(m.group(i + 1));
-                // Subtract one from the value in the string because the
-                // bloody Calendar API counts months from 0 unlike civilized
-                // folk.
-                if(calendarFieldForGroup[i] == Calendar.MONTH) {
-                    val -= 1;
-                }
-                cal.set(calendarFieldForGroup[i], val);
-            }
-        }
-        DateFormat passcalFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSS'Z'");
+        Calendar cal = SodUtil.createCalendar(Integer.parseInt(m.group(1)),
+                                              extract(m, 2),
+                                              extract(m, 3),
+                                              extract(m, 4),
+                                              extract(m, 5),
+                                              extract(m, 6),
+                                              ceiling);
+        DateFormat passcalFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         passcalFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
         return passcalFormat.format(cal.getTime());
     }
 
+    private int extract(Matcher m, int i) {
+        if(m.group(i) == null) {
+            return -1;
+        }
+        return Integer.parseInt(m.group(i));
+    }
+
     private Pattern datePattern = Pattern.compile("(\\d{4})-?(\\d{2})?-?(\\d{2})?-?(\\d{2})?-?(\\d{2})?-?(\\d{2})?");
 
-    private int[] defaultForGroup = new int[] {-1, 0, 1, 0, 0, 0};
-
-    private int[] calendarFieldForGroup = new int[] {Calendar.YEAR,
-                                                     Calendar.MONTH,
-                                                     Calendar.DAY_OF_MONTH,
-                                                     Calendar.HOUR_OF_DAY,
-                                                     Calendar.MINUTE,
-                                                     Calendar.SECOND};
-
     public static FlaggedOption createYesterdayParam(String name,
-                                                     String helpMessage) {
-        return createParam(name, PREVIOUS_DAY_BEGIN, helpMessage);
+                                                     String helpMessage,
+                                                     boolean ceiling) {
+        return createParam(name, PREVIOUS_DAY_BEGIN, helpMessage, ceiling);
     }
 
     public static FlaggedOption createParam(String name,
                                             String defaultTime,
-                                            String helpMessage) {
+                                            String helpMessage,
+                                            boolean ceiling) {
         return new FlaggedOption(name,
-                                 new TimeParser(),
+                                 new TimeParser(ceiling),
                                  defaultTime,
                                  false,
                                  name.charAt(0),
                                  name,
                                  helpMessage);
     }
+
+    private boolean ceiling;
 
     private static DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 

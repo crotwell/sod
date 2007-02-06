@@ -35,10 +35,12 @@ public class find_responses extends find_stations {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         add(TimeParser.createParam("begin",
                                    df.format(new Date(0)),
-                                   "The earliest time for an accepted channel"));
+                                   "The earliest time for an accepted channel",
+                                   false));
         add(TimeParser.createParam("end",
                                    "now",
-                                   "The latest time for an accepted channel"));
+                                   "The latest time for an accepted channel",
+                                   true));
         add(createListOption("channels",
                              'c',
                              "channels",

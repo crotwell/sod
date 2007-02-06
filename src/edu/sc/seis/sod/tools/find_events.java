@@ -21,10 +21,12 @@ public class find_events extends CommandLineTool {
         add(BoxAreaParser.createParam("Event constraining box as west/east/south/north"));
         add(DonutParser.createParam("Event constraining donut as lat/lon/minRadius/maxRadius"));
         add(TimeParser.createYesterdayParam("begin",
-                                            "The earliest time for an accepted event"));
+                                            "The earliest time for an accepted event",
+                                            false));
         add(TimeParser.createParam("end",
                                    "now",
-                                   "The latest time for an accepted event"));
+                                   "The latest time for an accepted event",
+                                   true));
         add(RangeParser.createParam("magnitude",
                                     "0",
                                     "10",

@@ -259,47 +259,60 @@ public class SodUtil {
         return new Time(getNestedText(el).trim(), 0);
     }
 
-    private static Time loadSplitupTime(Element element, boolean endOfDay)
+    private static Time loadSplitupTime(Element element, boolean ceiling)
             throws ConfigurationException {
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-        if(endOfDay) {
-            cal.set(Calendar.HOUR_OF_DAY, 23);
-            cal.set(Calendar.MILLISECOND, 999);
-            cal.set(Calendar.SECOND, 59);
-            cal.set(Calendar.MINUTE, 59);
-        } else {
-            cal.set(Calendar.HOUR_OF_DAY, 0);
-            cal.set(Calendar.MILLISECOND, 0);
-            cal.set(Calendar.SECOND, 0);
-            cal.set(Calendar.MINUTE, 0);
+        int year = DOMHelper.extractInt(element, "year", -1);
+        if(year == -1) {
+            throw new ConfigurationException("No year given");
         }
-        if(DOMHelper.hasElement(element, "year")) {
-            cal.set(Calendar.YEAR,
-                    Integer.parseInt(DOMHelper.extractText(element, "year")));
-            if(DOMHelper.hasElement(element, "month")) {
-                cal.set(Calendar.MONTH,
-                        Integer.parseInt(DOMHelper.extractText(element, "month")) - 1);
-                if(DOMHelper.hasElement(element, "day")) {
-                    cal.set(Calendar.DAY_OF_MONTH,
-                            Integer.parseInt(DOMHelper.extractText(element,
-                                                                   "day")));
-                } else if(endOfDay) {
-                    cal.set(Calendar.DAY_OF_MONTH,
-                            cal.getActualMaximum(Calendar.DAY_OF_MONTH));
-                } else {
-                    cal.set(Calendar.DAY_OF_MONTH, 1);
-                }
-            } else if(endOfDay) {
-                cal.set(Calendar.DAY_OF_YEAR,
-                        cal.getActualMaximum(Calendar.DAY_OF_YEAR));
-            } else {
-                cal.set(Calendar.DAY_OF_YEAR, 1);
-            }
-        } else {
-            throw new ConfigurationException("No year given"
-                    + element.toString());
-        }
+        Calendar cal = createCalendar(year,
+                                      DOMHelper.extractInt(element, "month", -1),
+                                      DOMHelper.extractInt(element, "day", -1),
+                                      DOMHelper.extractInt(element, "hour", -1),
+                                      DOMHelper.extractInt(element,
+                                                           "minute",
+                                                           -1),
+                                      DOMHelper.extractInt(element,
+                                                           "second",
+                                                           -1),
+                                      ceiling);
         return new MicroSecondDate(cal.getTime()).getFissuresTime();
+    }
+
+    /**
+     * Creates a calendar in the given year. Year must be specified, but all
+     * other fields can be -1 if unknown. If -1, they're either the greatest of
+     * least value of the calendar's current state depending on the value of ceiling.
+     */
+    public static Calendar createCalendar(int year,
+                                          int month,
+                                          int day,
+                                          int hour,
+                                          int minute,
+                                          int second,
+                                          boolean ceiling) {
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+        cal.set(Calendar.YEAR, year);
+        fillInField(Calendar.MONTH, month - 1, ceiling, cal);
+        fillInField(Calendar.DAY_OF_MONTH, day, ceiling, cal);
+        fillInField(Calendar.HOUR_OF_DAY, hour, ceiling, cal);
+        fillInField(Calendar.MINUTE, minute, ceiling, cal);
+        fillInField(Calendar.SECOND, second, ceiling, cal);
+        fillInField(Calendar.MILLISECOND, -1, ceiling, cal);
+        return cal;
+    }
+
+    public static void fillInField(int field,
+                                   int value,
+                                   boolean ceiling,
+                                   Calendar cal) {
+        if(value >= 0) {
+            cal.set(field, value);
+        } else if(ceiling) {
+            cal.set(field, cal.getActualMaximum(field));
+        } else {
+            cal.set(field, cal.getActualMinimum(field));
+        }
     }
 
     private static Time loadRelativeTime(Element el)
