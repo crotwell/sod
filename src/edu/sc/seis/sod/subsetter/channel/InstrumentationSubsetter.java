@@ -83,14 +83,20 @@ public abstract class InstrumentationSubsetter implements ChannelSubsetter {
         }
     }
 
-    protected void handleChannelNotFound(ChannelNotFound ex) {
-        logger.info("Channel not found in network, generally indicates no response for this channel in the server.",
+    public static String getChannelNotFoundMsg() {
+        return "Channel not found in network, generally indicates no response for this channel in the server.";
+    }
+    
+    public static void handleChannelNotFound(ChannelNotFound ex) {
+        logger.info(getChannelNotFoundMsg(),
                                       ex);
     }
     
-    protected void handle(InstrumentationInvalid e) {
-        logger.info("Invalid instrumentation for "
-                    + ChannelIdUtil.toString(e.getChannelId()), e);
+    public static  String getInstrumentationInvalidMsg() {
+        return "Invalid instrumentation ";
+    }
+    public static void handle(InstrumentationInvalid e) {
+        logger.info(getInstrumentationInvalidMsg(), e);
     }
     
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(InstrumentationSubsetter.class);
