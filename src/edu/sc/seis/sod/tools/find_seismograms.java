@@ -1,7 +1,10 @@
 package edu.sc.seis.sod.tools;
 
+import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
+import edu.sc.seis.sod.process.waveform.AbstractSeismogramWriter;
+import edu.sc.seis.sod.process.waveform.SacWriter;
 
 public class find_seismograms extends CommandLineTool {
 
@@ -9,8 +12,8 @@ public class find_seismograms extends CommandLineTool {
         super(args);
         requiresStdin = true;
     }
-    
-    protected boolean requiresAtLeastOneArg(){
+
+    protected boolean requiresAtLeastOneArg() {
         return false;
     }
 
@@ -32,13 +35,21 @@ public class find_seismograms extends CommandLineTool {
         add(createListOption("sites",
                              'l',
                              "sites",
-                             "The codes of sites(location codes) to retrieve", 
+                             "The codes of sites(location codes) to retrieve",
                              null,
                              new SiteCodeParser()));
+        add(new FlaggedOption("seismogramFilename",
+                              JSAP.STRING_PARSER,
+                              AbstractSeismogramWriter.DEFAULT_WORKING_DIR
+                                      + SacWriter.DEFAULT_FILE_TEMPLATE,
+                              false,
+                              'f',
+                              "filename",
+                              "Filename template for seismograms"));
         add(createListOption("mark-phases",
                              JSAP.NO_SHORTFLAG,
                              "mark-phases",
-                             "Phase arrival times to record in the SAC t headers", 
+                             "Phase arrival times to record in the SAC t headers",
                              null,
                              new SetSACParser()));
     }

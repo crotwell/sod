@@ -34,6 +34,8 @@ $additionalArms#end
             <dns>$server.dns</dns>
         </fixedDataCenter>
         <sacWriter>
+			<workingDir></workingDir>
+			<location>$seismogramFilename</location>
 #foreach($header in $mark-phases)
            <phaseTimeHeader>
                <phaseName>$header.phase</phaseName>

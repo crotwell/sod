@@ -21,7 +21,7 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
 
     protected static final String DEFAULT_PREFIX = "";
 
-    protected static final String DEFAULT_WORKING_DIR = "seismograms/";
+    public static final String DEFAULT_WORKING_DIR = "seismograms/";
 
     private String template, prefix;
 
@@ -115,6 +115,6 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
     }
 
     protected static String extractWorkingDir(Element el) {
-        return DOMHelper.extractText(el, "workingDir", DEFAULT_WORKING_DIR);
+        return DOMHelper.extractText(el, "workingDir", DEFAULT_WORKING_DIR, true);
     }
 }

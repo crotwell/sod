@@ -64,17 +64,16 @@
 #end
         </channelOR>
 #end
-#if($format == 'polezero')
+        <printlineChannelProcess/>
+#if($type == 'polezero')
         <sacPoleZeroWriter>
-#if($responseDirectory)
-            <workingDir>$responseDirectory</workingDir>
-#end
+            <workingDir></workingDir>
+            <location>$fileTemplate</location>
         </sacPoleZeroWriter>
 #else
         <responseWriter>
-#if($responseDirectory)
-            <workingDir>$responseDirectory</workingDir>
-#end
+            <workingDir></workingDir>
+            <location>$fileTemplate</location>
         </responseWriter>
 #end
     </networkArm>

@@ -15,7 +15,6 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
-import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.VelocityFileElementParser;
 import edu.sc.seis.sod.velocity.PrintlineVelocitizer;
 
@@ -23,7 +22,7 @@ public class ResponseWriter implements ChannelSubsetter {
 
     public ResponseWriter(Element config) throws ConfigurationException {
         VelocityFileElementParser parser = new VelocityFileElementParser(config,
-                                                                         "responses/",
+                                                                         DEFAULT_DIRECTORY,
                                                                          DEFAULT_TEMPLATE);
         template = parser.getTemplate();
         velocitizer = new PrintlineVelocitizer(new String[] {template});
@@ -48,6 +47,8 @@ public class ResponseWriter implements ChannelSubsetter {
         }
         return new Pass(this);
     }
+    
+    public static final String DEFAULT_DIRECTORY = "responses/";
 
     public static final String DEFAULT_TEMPLATE = "${channel.codes}.${channel.getStart('yyyy_DDD_HH_mm_ss')}.resp";
 

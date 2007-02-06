@@ -15,7 +15,7 @@ public class VelocityFileElementParser {
     public VelocityFileElementParser(Element config,
                                      String defaultWorkingDir,
                                      String defaultLocation) {
-        this(DOMHelper.extractText(config, "workingDir", defaultWorkingDir),
+        this(DOMHelper.extractText(config, "workingDir", defaultWorkingDir, true),
              DOMHelper.extractText(config, "location", defaultLocation));
     }
 
