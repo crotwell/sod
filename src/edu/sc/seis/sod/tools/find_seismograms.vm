@@ -33,6 +33,7 @@ $additionalArms#end
             <name>$server.name</name>
             <dns>$server.dns</dns>
         </fixedDataCenter>
+        <responseGain/>
         <sacWriter>
 			<workingDir></workingDir>
 			<location>$seismogramFilename</location>

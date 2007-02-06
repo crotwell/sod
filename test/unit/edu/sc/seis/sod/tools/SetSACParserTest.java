@@ -18,22 +18,34 @@ public class SetSACParserTest extends TestCase {
         assertEquals("P", results.get("phase"));
     }
 
-    public void testDashRequired() {
-        try {
-            ssp.parse("0P");
-            fail("a dash should be required");
-        } catch(ParseException e) {
-            assertTrue(e.getMessage().contains("0P"));
-        }
+    public void testSingleAutoHeader() throws ParseException {
+        Map results = (Map)ssp.parse("P");
+        assertEquals("0", results.get("header"));
+        assertEquals("P", results.get("phase"));
     }
 
-    public void testHeaderRequired() {
-        try {
-            ssp.parse("P-");
-            fail("a header should be required");
-        } catch(ParseException e) {
-            assertTrue(e.getMessage().contains("P-"));
-        }
+    public void testMultipleAutoHeader() throws ParseException {
+        Map results = (Map)ssp.parse("P");
+        assertEquals("0", results.get("header"));
+        assertEquals("P", results.get("phase"));
+        results = (Map)ssp.parse("tts");
+        assertEquals("1", results.get("header"));
+        assertEquals("tts", results.get("phase"));
+    }
+
+    public void testSpecifiedAndAutoHeader() throws ParseException {
+        Map results = (Map)ssp.parse("P-0");
+        assertEquals("0", results.get("header"));
+        assertEquals("P", results.get("phase"));
+        results = (Map)ssp.parse("tts");
+        assertEquals("1", results.get("header"));
+        assertEquals("tts", results.get("phase"));
+        results = (Map)ssp.parse("ttp");
+        assertEquals("2", results.get("header"));
+        assertEquals("ttp", results.get("phase"));
+        results = (Map)ssp.parse("q-a");
+        assertEquals("a", results.get("header"));
+        assertEquals("q", results.get("phase"));
     }
 
     public void testValidHeaderRequired() {
