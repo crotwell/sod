@@ -64,10 +64,7 @@ public class SacWriter extends AbstractSeismogramWriter {
                                                     EventUtil.extractOrigin(ev));
         applyProcessors(writer, ev, chan);
         if (littleEndian) {
-            writer.swapHeader();
-            for(int i = 0; i < writer.amp.length; i++) {
-                SacTimeSeries.swapBytes(writer.amp[i]);
-            }
+            writer.littleEndian();
         }
         File f = new File(location);
         writer.write(f);
