@@ -64050,6 +64050,11 @@
                         <ref name="phaseTimeContents4"/>
                     </element>
                 </zeroOrMore>
+                <optional>
+                    <element name="littleEndian">
+                        <empty/>
+                    </element>
+                </optional>
             </element>
             <element name="mseedWriter">
                 <ref name="seisWriterBase4"/>
@@ -64584,6 +64589,11 @@
                         <ref name="phaseTimeContents"/>
                     </element>
                 </zeroOrMore>
+                <optional>
+                    <element name="littleEndian">
+                        <empty/>
+                    </element>
+                </optional>
             </element>
             <element name="mseedWriter">
                 <ref name="seisWriterBase"/>
@@ -65118,6 +65128,11 @@
                         <ref name="phaseTimeContents3"/>
                     </element>
                 </zeroOrMore>
+                <optional>
+                    <element name="littleEndian">
+                        <empty/>
+                    </element>
+                </optional>
             </element>
             <element name="mseedWriter">
                 <ref name="seisWriterBase3"/>
@@ -65652,6 +65667,11 @@
                         <ref name="phaseTimeContents2"/>
                     </element>
                 </zeroOrMore>
+                <optional>
+                    <element name="littleEndian">
+                        <empty/>
+                    </element>
+                </optional>
             </element>
             <element name="mseedWriter">
                 <ref name="seisWriterBase2"/>

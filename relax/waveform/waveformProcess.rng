@@ -294,7 +294,7 @@
                     filename.2. The phaseTimeHeader element will cause the travel time of the given phase to be placed
                     in the sac header corresponding to the tHeader element. tHeader can be 0-9 as well as a. In the case
                     of 0-9, the ray parameter is inserted into the corresponding userX header as rad/sec. See the TauP
-                    user manual, http://www.seis.sc.edu/TauP, for the phase naming convention.</description>
+                    user manual, http://www.seis.sc.edu/TauP, for the phase naming convention.  If the littleEndian element is added to the sacWriter, it will write out sac files in little endian byte order.  It defaults to writing in big endian order.</description>
                 <example>
                     <sacWriter>
                         <workingDir>seismograms</workingDir>
@@ -321,6 +321,11 @@
                     <ref name="phaseTimeContents"/>
                 </element>
             </zeroOrMore>
+            <optional>
+                <element name="littleEndian">
+                    <empty/>
+                </element>
+            </optional>
         </element>
     </define>
     <define name="mseedWriter">
@@ -865,8 +870,8 @@
                     frequency limits to be too large, specified in lowCut, lowPass, highPass and highCut, you will be
                     dividing one very small number by another very small number, which due to rounding errors may
                     generate very large amplitudes at long periods which are not real. Also, you should almost always
-                    apply an rmean and taper before applying transferResponse. See the sac <a href="http://www.llnl.gov/sac/SAC_Commands/transfer">manual</a> for more discussion of
-                    transfer. </description>
+                    apply an rmean and taper before applying transferResponse. See the sac <a
+                    href="http://www.llnl.gov/sac/SAC_Commands/transfer">manual</a> for more discussion of transfer. </description>
                 <example>
                     <transferResponse>
                         <lowCut>0.005</lowCut>
@@ -981,9 +986,9 @@
         <element name="compressionType">
             <xsd:annotation>
                 <summary>Passes a seismogram's data if it is compressed with the given types.</summary>
-                <description>This checks the compression algorithm used by the seismograms and passes if
-                each seismogram matches one of the given types. The integers follow the compression types
-                as defined in the SEED manual for blockette 1000.</description>
+                <description>This checks the compression algorithm used by the seismograms and passes if each seismogram
+                    matches one of the given types. The integers follow the compression types as defined in the SEED
+                    manual for blockette 1000.</description>
             </xsd:annotation>
             <oneOrMore>
                 <element name="type">
@@ -995,12 +1000,10 @@
     <define name="SNEPProblem">
         <element name="SNEPProblem">
             <xsd:annotation>
-            	<summary>A SNEP-project-specific waveform process that passes data if it is tagged as having 
-            	a problem.</summary>
-            	<description>This processor checks the seismograms' properties and passes the data if a
-            	property with the name "snep.problem" exists and, optionally, if it is of a specified
-            	type.  This is only used within the SNEP project and is fairly useless to anyone not working
-            	with its data.</description>
+                <summary>A SNEP-project-specific waveform process that passes data if it is tagged as having a problem.</summary>
+                <description>This processor checks the seismograms' properties and passes the data if a property with
+                    the name "snep.problem" exists and, optionally, if it is of a specified type. This is only used
+                    within the SNEP project and is fairly useless to anyone not working with its data.</description>
             </xsd:annotation>
             <optional>
                 <element name="type">
