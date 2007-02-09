@@ -20,7 +20,8 @@ public class SacWriter extends AbstractSeismogramWriter {
         this(extractWorkingDir(el),
              extractFileTemplate(el, DEFAULT_FILE_TEMPLATE),
              extractPrefix(el),
-             extractProcessors(el));
+             extractProcessors(el),
+             DOMHelper.hasElement(el, "littleEndian"));
     }
 
     private static SacProcess[] extractProcessors(Element el) {
@@ -41,16 +42,17 @@ public class SacWriter extends AbstractSeismogramWriter {
     }
 
     public SacWriter(String workingDir, String fileTemplate) throws ConfigurationException {
-        this(workingDir, fileTemplate, DEFAULT_PREFIX, new SacProcess[0]);
+        this(workingDir, fileTemplate, DEFAULT_PREFIX, new SacProcess[0], false);
     }
 
     public SacWriter(SacProcess[] processes) throws ConfigurationException {
-        this(DEFAULT_WORKING_DIR, DEFAULT_FILE_TEMPLATE, DEFAULT_PREFIX, processes);
+        this(DEFAULT_WORKING_DIR, DEFAULT_FILE_TEMPLATE, DEFAULT_PREFIX, processes, false);
     }
 
-    public SacWriter(String workingDir, String fileTemplate, String prefix, SacProcess[] processes) throws ConfigurationException {
+    public SacWriter(String workingDir, String fileTemplate, String prefix, SacProcess[] processes, boolean littleEndian) throws ConfigurationException {
         super(workingDir, fileTemplate, prefix);
         this.processors = processes;
+        this.littleEndian=littleEndian;
     }
 
     public void write(String location,
@@ -61,6 +63,12 @@ public class SacWriter extends AbstractSeismogramWriter {
                                                     chan,
                                                     EventUtil.extractOrigin(ev));
         applyProcessors(writer, ev, chan);
+        if (littleEndian) {
+            writer.swapHeader();
+            for(int i = 0; i < writer.amp.length; i++) {
+                SacTimeSeries.swapBytes(writer.amp[i]);
+            }
+        }
         File f = new File(location);
         writer.write(f);
         SaveSeismogramToFile.addBytesWritten(f.length());
@@ -73,6 +81,8 @@ public class SacWriter extends AbstractSeismogramWriter {
             processors[i].process(writer, ev, chan);
         }
     }
+    
+    boolean littleEndian;
 
     private SacProcess[] processors;
 }
