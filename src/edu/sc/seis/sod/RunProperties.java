@@ -134,6 +134,10 @@ public class RunProperties {
         return evChanPairProc;
     }
 
+    public boolean reopenSuspended() {
+        return !evChanPairProc.equals(DONT_RESTART);
+    }
+
     public boolean doStatusPages() {
         return statusPages;
     }
@@ -185,6 +189,8 @@ public class RunProperties {
     private boolean removeDatabase = false;
 
     private boolean statusPages = false;
+
+    public static final String DONT_RESTART = "noCheck";
 
     public static final String AT_LEAST_ONCE = "atLeastOnce";
 

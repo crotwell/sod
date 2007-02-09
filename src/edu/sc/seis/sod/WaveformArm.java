@@ -83,8 +83,8 @@ public class WaveformArm implements Arm {
             addSuspendedPairsToQueue(Start.suspendedPairs);
             while(pool.isEmployed()) {
                 try {
-                    logger.debug("pool employed, sleeping for 1 sec");
-                    Thread.sleep(1000);
+                    logger.debug("pool employed, sleeping for 100 sec");
+                    Thread.sleep(100000);
                 } catch(InterruptedException e) {}
             }
             waitForInitialEvent();
@@ -552,6 +552,7 @@ public class WaveformArm implements Arm {
     protected void processConfig(Element config) throws ConfigurationException {
         if(config.getTagName().equals("waveformVectorArm")) {
             motionVectorArm = new MotionVectorArm();
+            channelGrouper = new ChannelGrouper();
         } else {
             localSeismogramArm = new LocalSeismogramArm();
         }
@@ -687,8 +688,8 @@ public class WaveformArm implements Arm {
                 GlobalExceptionHandler.handle(BIG_ERROR_MSG, t);
             }
         }
-        
-        public String toString(){
+
+        public String toString() {
             return "LocalSeismogramWorkUnit(" + pairId + ")";
         }
 
@@ -794,8 +795,8 @@ public class WaveformArm implements Arm {
                 GlobalExceptionHandler.handle(BIG_ERROR_MSG, t);
             }
         }
-        
-        public String toString(){
+
+        public String toString() {
             StringBuffer buff = new StringBuffer("MotionVectorWorkUnit(");
             for(int i = 0; i < pairIds.length; i++) {
                 buff.append(pairIds[i]);
@@ -848,7 +849,7 @@ public class WaveformArm implements Arm {
 
     private JDBCRetryQueue corbaFailures, retries;
 
-    private ChannelGrouper channelGrouper = new ChannelGrouper();
+    private ChannelGrouper channelGrouper;
 
     private List usedPairGroups = new ArrayList();
 

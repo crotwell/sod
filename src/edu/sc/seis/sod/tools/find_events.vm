@@ -3,6 +3,7 @@
             <unit>HOUR</unit>
             <value>0</value>
         </eventLag>
+        <eventChannelPairProcessing>noCheck</eventChannelPairProcessing>
     </properties>
     <eventArm>
         <eventFinder>

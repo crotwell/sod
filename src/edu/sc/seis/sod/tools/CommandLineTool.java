@@ -261,7 +261,8 @@ public class CommandLineTool {
                                                 + result));
                                     }
                                 },
-                                props);
+                                props,
+                                true);
             s.start();
         } catch(UserConfigurationException e) {
             Start.exit(e.getMessage()

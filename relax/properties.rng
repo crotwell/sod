@@ -216,11 +216,13 @@
                     might mean that some processors get run a second time on the items, so if a
                     processor expects to see everything only once, use the second value,
                     "atMostOnce". This tells SOD to switch all of the indeterminate items over to
-                    the failed state and ignore them from now on. SOD defaults to atLeastOnce</description>
+                    the failed state and ignore them from now on. "noCheck" tells SOD to ignore all suspened pairs and just do new items.
+                    SOD defaults to atLeastOnce</description>
             </xsd:annotation>
             <choice>
                 <value>atLeastOnce</value>
                 <value>atMostOnce</value>
+                <value>noCheck</value>
             </choice>
         </element>
     </define>

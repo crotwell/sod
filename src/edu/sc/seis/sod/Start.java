@@ -76,7 +76,7 @@ public class Start {
      * file in confFilename
      */
     public Start(Args args) throws Exception {
-        this(args, new InputSourceCreator(), null);
+        this(args, new InputSourceCreator(), null, false);
     }
 
     public static class InputSourceCreator {
@@ -87,10 +87,13 @@ public class Start {
         }
     }
 
-    public Start(Args args, InputSourceCreator sourceMaker, Properties props)
-            throws Exception {
+    public Start(Args args,
+                 InputSourceCreator sourceMaker,
+                 Properties props,
+                 boolean commandLineToolRun) throws Exception {
         this.args = args;
         this.creator = sourceMaker;
+        this.commandLineToolRun = commandLineToolRun;
         configFileName = args.getRecipe();
         try {
             setConfig(createDoc(sourceMaker.create(), configFileName).getDocumentElement());
@@ -99,6 +102,18 @@ public class Start {
         } catch(Exception e) {
             GlobalExceptionHandler.handle("Trouble creating xml document", e);
         }
+        if(!commandLineToolRun) {
+            validate(sourceMaker);
+        }
+        if(props == null) {
+            loadProps();
+        } else {
+            Start.props = props;
+        }
+        initDocument();
+    }
+
+    private void validate(InputSourceCreator sourceMaker) {
         try {
             Validator validator = new Validator(Validator.SOD_SCHEMA_LOC);
             if(!validator.validate(sourceMaker.create())) {
@@ -113,12 +128,6 @@ public class Start {
                                           e);
             exit("Problem configuring schema validator: " + e.getMessage());
         }
-        if(props == null) {
-            loadProps();
-        } else {
-            Start.props = props;
-        }
-        initDocument();
     }
 
     private static void informUserOfBadFileAndExit(String confFilename) {
@@ -288,11 +297,14 @@ public class Start {
 
     public void start() throws Exception {
         startTime = ClockUtil.now();
-        new UpdateChecker(false);
-        handleStartupRunProperties();
-        checkDBVersion();
-        checkConfig(creator.create());
-        // this next line sets up the status page for exception reporting, so
+        if(!commandLineToolRun) {
+            new UpdateChecker(false);
+            handleStartupRunProperties();
+            checkDBVersion();
+            checkConfig(creator.create());
+        }
+        // this next line sets up the status page for exception reporting,
+        // so
         // it should be as early as possible in the startup sequence
         IndexTemplate indexTemplate = null;
         if(runProps.doStatusPages()) {
@@ -303,13 +315,15 @@ public class Start {
             indexTemplate.performRegistration();
         }
         new JDBCStatus();
-        addMailExceptionReporter(props);
-        addResultMailer(props);
-        if(runProps.checkpointPeriodically()) {
-            new PeriodicCheckpointer();
-        }
-        if(runProps.loserEventCleaner()) {
-            new TotalLoserEventCleaner();
+        if(!commandLineToolRun) {
+            addMailExceptionReporter(props);
+            addResultMailer(props);
+            if(runProps.checkpointPeriodically()) {
+                new PeriodicCheckpointer();
+            }
+            if(runProps.loserEventCleaner()) {
+                new TotalLoserEventCleaner();
+            }
         }
     }
 
@@ -415,7 +429,7 @@ public class Start {
                 GlobalExceptionHandler.handle("Trouble restarting completed events",
                                               e);
             }
-        } else {
+        } else if(runProps.reopenSuspended()) {
             try {
                 JDBCEventChannelStatus evChanStatusTable = new JDBCEventChannelStatus();
                 suspendedPairs = evChanStatusTable.getSuspendedEventChannelPairs(runProps.getEventChannelPairProcessing());
@@ -461,6 +475,8 @@ public class Start {
                                           e);
         }
     }
+
+    private boolean commandLineToolRun;
 
     private InputSourceCreator creator;
 

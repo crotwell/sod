@@ -8,7 +8,7 @@
                         <ref name="network5"/>
                     </optional>
                     <optional>
-                        <ref name="station4"/>
+                        <ref name="station3"/>
                     </optional>
                     <optional>
                         <ref name="site"/>
@@ -37,7 +37,7 @@
     <define name="AND5">
         <element name="stationAND">
             <oneOrMore>
-                <ref name="stationLogical4"/>
+                <ref name="stationLogical3"/>
             </oneOrMore>
         </element>
     </define>
@@ -58,7 +58,7 @@
     <define name="AND3">
         <element name="stationAND">
             <oneOrMore>
-                <ref name="stationLogical3"/>
+                <ref name="stationLogical4"/>
             </oneOrMore>
         </element>
     </define>
@@ -86,7 +86,7 @@
     <define name="channelCode">
         <element name="channelCode">
             <data type="string">
-                <param name="pattern">[A-Z0-9]{3}</param>
+                <param name="pattern">[A-Z0-9\*]{0,3}</param>
             </data>
         </element>
     </define>
@@ -105,7 +105,7 @@
             <ref name="code5"/>
             <ref name="depthRange5"/>
             <ref name="effectiveTimeOverlap6"/>
-            <ref name="area5"/>
+            <ref name="area6"/>
             <ref name="AND7"/>
             <ref name="OR3"/>
             <ref name="NOT3"/>
@@ -119,12 +119,12 @@
             <ref name="code3"/>
             <ref name="depthRange3"/>
             <ref name="effectiveTimeOverlap3"/>
-            <ref name="area3"/>
+            <ref name="area4"/>
             <ref name="AND4"/>
             <ref name="OR7"/>
             <ref name="NOT7"/>
             <ref name="externalSiteSubsetter2"/>
-            <ref name="station3"/>
+            <ref name="station4"/>
             <ref name="network8"/>
         </choice>
     </define>
@@ -503,14 +503,14 @@
     <define name="OR5">
         <element name="stationOR">
             <oneOrMore>
-                <ref name="stationLogical4"/>
+                <ref name="stationLogical3"/>
             </oneOrMore>
         </element>
     </define>
     <define name="OR6">
         <element name="stationOR">
             <oneOrMore>
-                <ref name="stationLogical3"/>
+                <ref name="stationLogical4"/>
             </oneOrMore>
         </element>
     </define>
@@ -547,7 +547,7 @@
             <ref name="code3"/>
             <ref name="depthRange3"/>
             <ref name="effectiveTimeOverlap3"/>
-            <ref name="area3"/>
+            <ref name="area4"/>
             <ref name="AND4"/>
             <ref name="OR7"/>
             <ref name="NOT7"/>
@@ -559,7 +559,7 @@
             <ref name="code5"/>
             <ref name="depthRange5"/>
             <ref name="effectiveTimeOverlap6"/>
-            <ref name="area5"/>
+            <ref name="area6"/>
             <ref name="AND7"/>
             <ref name="OR3"/>
             <ref name="NOT3"/>
@@ -1518,68 +1518,42 @@
     </define>
     <define name="stationLogical4">
         <choice>
-            <ref name="code4"/>
-            <ref name="regExp3"/>
-            <ref name="name3"/>
-            <ref name="operator3"/>
-            <ref name="depthRange4"/>
-            <ref name="effectiveTimeOverlap4"/>
-            <ref name="area4"/>
-            <ref name="stationPointDistance3"/>
-            <ref name="stationPointAzimuth4"/>
-            <element name="printlineStationProcess">
-                <interleave>
-                    <optional>
-                        <element name="template">
-                            <text/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="filename">
-                            <text/>
-                        </element>
-                    </optional>
-                </interleave>
-            </element>
-            <ref name="stationPointBackAzimuth4"/>
-            <ref name="AND5"/>
-            <ref name="OR5"/>
-            <ref name="NOT5"/>
-            <ref name="externalStationSubsetter3"/>
-            <ref name="network6"/>
-        </choice>
-    </define>
-    <define name="stationLogical3">
-        <choice>
             <ref name="code2"/>
             <ref name="regExp2"/>
             <ref name="name2"/>
             <ref name="operator2"/>
             <ref name="depthRange2"/>
             <ref name="effectiveTimeOverlap2"/>
-            <ref name="area2"/>
-            <ref name="stationPointDistance2"/>
+            <ref name="area3"/>
+            <ref name="stationPointDistance3"/>
             <ref name="stationPointAzimuth3"/>
-            <element name="printlineStationProcess">
-                <interleave>
-                    <optional>
-                        <element name="template">
-                            <text/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="filename">
-                            <text/>
-                        </element>
-                    </optional>
-                </interleave>
-            </element>
+            <ref name="printlineStationProcess3"/>
             <ref name="stationPointBackAzimuth3"/>
             <ref name="AND3"/>
             <ref name="OR6"/>
             <ref name="NOT6"/>
             <ref name="externalStationSubsetter4"/>
             <ref name="network7"/>
+        </choice>
+    </define>
+    <define name="stationLogical3">
+        <choice>
+            <ref name="code4"/>
+            <ref name="regExp3"/>
+            <ref name="name3"/>
+            <ref name="operator3"/>
+            <ref name="depthRange4"/>
+            <ref name="effectiveTimeOverlap4"/>
+            <ref name="area5"/>
+            <ref name="stationPointDistance4"/>
+            <ref name="stationPointAzimuth4"/>
+            <ref name="printlineStationProcess4"/>
+            <ref name="stationPointBackAzimuth4"/>
+            <ref name="AND5"/>
+            <ref name="OR5"/>
+            <ref name="NOT5"/>
+            <ref name="externalStationSubsetter3"/>
+            <ref name="network6"/>
         </choice>
     </define>
     <define name="stationLogical2">
@@ -1590,23 +1564,10 @@
             <ref name="operator4"/>
             <ref name="depthRange6"/>
             <ref name="effectiveTimeOverlap7"/>
-            <ref name="area6"/>
-            <ref name="stationPointDistance4"/>
+            <ref name="area2"/>
+            <ref name="stationPointDistance2"/>
             <ref name="stationPointAzimuth2"/>
-            <element name="printlineStationProcess">
-                <interleave>
-                    <optional>
-                        <element name="template">
-                            <text/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="filename">
-                            <text/>
-                        </element>
-                    </optional>
-                </interleave>
-            </element>
+            <ref name="printlineStationProcess2"/>
             <ref name="stationPointBackAzimuth2"/>
             <ref name="AND2"/>
             <ref name="OR4"/>
@@ -1626,20 +1587,7 @@
             <ref name="area"/>
             <ref name="stationPointDistance"/>
             <ref name="stationPointAzimuth"/>
-            <element name="printlineStationProcess">
-                <interleave>
-                    <optional>
-                        <element name="template">
-                            <text/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="filename">
-                            <text/>
-                        </element>
-                    </optional>
-                </interleave>
-            </element>
+            <ref name="printlineStationProcess"/>
             <ref name="stationPointBackAzimuth"/>
             <ref name="AND"/>
             <ref name="OR2"/>
@@ -1659,6 +1607,7 @@
             <ref name="area"/>
             <ref name="stationPointDistance"/>
             <ref name="stationPointAzimuth"/>
+            <ref name="printlineStationProcess"/>
             <ref name="stationPointBackAzimuth"/>
             <ref name="AND"/>
             <ref name="OR2"/>
@@ -1671,20 +1620,21 @@
     </define>
     <define name="station4">
         <choice>
-            <ref name="code4"/>
-            <ref name="regExp3"/>
-            <ref name="name3"/>
-            <ref name="operator3"/>
-            <ref name="depthRange4"/>
-            <ref name="effectiveTimeOverlap4"/>
-            <ref name="area4"/>
+            <ref name="code2"/>
+            <ref name="regExp2"/>
+            <ref name="name2"/>
+            <ref name="operator2"/>
+            <ref name="depthRange2"/>
+            <ref name="effectiveTimeOverlap2"/>
+            <ref name="area3"/>
             <ref name="stationPointDistance3"/>
-            <ref name="stationPointAzimuth4"/>
-            <ref name="stationPointBackAzimuth4"/>
-            <ref name="AND5"/>
-            <ref name="OR5"/>
-            <ref name="NOT5"/>
-            <ref name="externalStationSubsetter3"/>
+            <ref name="stationPointAzimuth3"/>
+            <ref name="printlineStationProcess3"/>
+            <ref name="stationPointBackAzimuth3"/>
+            <ref name="AND3"/>
+            <ref name="OR6"/>
+            <ref name="NOT6"/>
+            <ref name="externalStationSubsetter4"/>
             <element name="belongsToVirtual">
                 <text/>
             </element>
@@ -1698,9 +1648,10 @@
             <ref name="operator4"/>
             <ref name="depthRange6"/>
             <ref name="effectiveTimeOverlap7"/>
-            <ref name="area6"/>
-            <ref name="stationPointDistance4"/>
+            <ref name="area2"/>
+            <ref name="stationPointDistance2"/>
             <ref name="stationPointAzimuth2"/>
+            <ref name="printlineStationProcess2"/>
             <ref name="stationPointBackAzimuth2"/>
             <ref name="AND2"/>
             <ref name="OR4"/>
@@ -1713,20 +1664,21 @@
     </define>
     <define name="station3">
         <choice>
-            <ref name="code2"/>
-            <ref name="regExp2"/>
-            <ref name="name2"/>
-            <ref name="operator2"/>
-            <ref name="depthRange2"/>
-            <ref name="effectiveTimeOverlap2"/>
-            <ref name="area2"/>
-            <ref name="stationPointDistance2"/>
-            <ref name="stationPointAzimuth3"/>
-            <ref name="stationPointBackAzimuth3"/>
-            <ref name="AND3"/>
-            <ref name="OR6"/>
-            <ref name="NOT6"/>
-            <ref name="externalStationSubsetter4"/>
+            <ref name="code4"/>
+            <ref name="regExp3"/>
+            <ref name="name3"/>
+            <ref name="operator3"/>
+            <ref name="depthRange4"/>
+            <ref name="effectiveTimeOverlap4"/>
+            <ref name="area5"/>
+            <ref name="stationPointDistance4"/>
+            <ref name="stationPointAzimuth4"/>
+            <ref name="printlineStationProcess4"/>
+            <ref name="stationPointBackAzimuth4"/>
+            <ref name="AND5"/>
+            <ref name="OR5"/>
+            <ref name="NOT5"/>
+            <ref name="externalStationSubsetter3"/>
             <element name="belongsToVirtual">
                 <text/>
             </element>
@@ -1980,7 +1932,7 @@
         </element>
     </define>
     <define name="area3">
-        <element name="siteArea">
+        <element name="stationArea">
             <choice>
                 <element name="boxArea">
                     <element name="latitudeRange">
@@ -2018,44 +1970,6 @@
         </element>
     </define>
     <define name="area4">
-        <element name="stationArea">
-            <choice>
-                <element name="boxArea">
-                    <element name="latitudeRange">
-                        <optional>
-                            <element name="min">
-                                <data type="double"/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="max">
-                                <data type="double"/>
-                            </element>
-                        </optional>
-                    </element>
-                    <element name="longitudeRange">
-                        <optional>
-                            <element name="min">
-                                <data type="double"/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="max">
-                                <data type="double"/>
-                            </element>
-                        </optional>
-                    </element>
-                </element>
-                <element name="globalArea">
-                    <empty/>
-                </element>
-                <element name="polygonFile">
-                    <data type="string"/>
-                </element>
-            </choice>
-        </element>
-    </define>
-    <define name="area5">
         <element name="siteArea">
             <choice>
                 <element name="boxArea">
@@ -2093,8 +2007,46 @@
             </choice>
         </element>
     </define>
-    <define name="area6">
+    <define name="area5">
         <element name="stationArea">
+            <choice>
+                <element name="boxArea">
+                    <element name="latitudeRange">
+                        <optional>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                    </element>
+                    <element name="longitudeRange">
+                        <optional>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                    </element>
+                </element>
+                <element name="globalArea">
+                    <empty/>
+                </element>
+                <element name="polygonFile">
+                    <data type="string"/>
+                </element>
+            </choice>
+        </element>
+    </define>
+    <define name="area6">
+        <element name="siteArea">
             <choice>
                 <element name="boxArea">
                     <element name="latitudeRange">
@@ -2442,12 +2394,12 @@
     </define>
     <define name="NOT6">
         <element name="stationNOT">
-            <ref name="station3"/>
+            <ref name="station4"/>
         </element>
     </define>
     <define name="NOT5">
         <element name="stationNOT">
-            <ref name="station4"/>
+            <ref name="station3"/>
         </element>
     </define>
     <define name="orientationAzimuthRange">
@@ -2737,6 +2689,54 @@
             </oneOrMore>
         </element>
     </define>
+    <define name="printlineStationProcess3">
+        <element name="printlineStationProcess">
+            <interleave>
+                <optional>
+                    <element name="template">
+                        <text/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
+            </interleave>
+        </element>
+    </define>
+    <define name="printlineStationProcess2">
+        <element name="printlineStationProcess">
+            <interleave>
+                <optional>
+                    <element name="template">
+                        <text/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
+            </interleave>
+        </element>
+    </define>
+    <define name="printlineStationProcess">
+        <element name="printlineStationProcess">
+            <interleave>
+                <optional>
+                    <element name="template">
+                        <text/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
+            </interleave>
+        </element>
+    </define>
     <define name="externalChannelSubsetter">
         <element name="externalChannelSubsetter">
             <element name="classname">
@@ -2748,6 +2748,22 @@
                     <ref name="xml14"/>
                 </choice>
             </oneOrMore>
+        </element>
+    </define>
+    <define name="printlineStationProcess4">
+        <element name="printlineStationProcess">
+            <interleave>
+                <optional>
+                    <element name="template">
+                        <text/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
+            </interleave>
         </element>
     </define>
     <define name="time15">
