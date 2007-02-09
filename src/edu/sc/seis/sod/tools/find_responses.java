@@ -31,7 +31,18 @@ public class find_responses extends find_stations {
     }
 
     protected void addParams() throws JSAPException {
-        super.addParams();
+        super.addDefaultParams();
+        add(createListOption("sites",
+                             'l',
+                             "sites",
+                             "The codes of sites(location codes) to retrieve",
+                             null,
+                             new SiteCodeParser()));
+        add(createListOption("channels",
+                             'c',
+                             "channels",
+                             "The codes of channels to retrieve",
+                             "BH*"));
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         add(TimeParser.createParam("begin",
                                    df.format(new Date(0)),
@@ -41,17 +52,6 @@ public class find_responses extends find_stations {
                                    "now",
                                    "The latest time for an accepted channel",
                                    true));
-        add(createListOption("channels",
-                             'c',
-                             "channels",
-                             "The codes of channels to retrieve",
-                             "BH*"));
-        add(createListOption("sites",
-                             'l',
-                             "sites",
-                             "The codes of sites(location codes) to retrieve",
-                             null,
-                             new SiteCodeParser()));
         add(new FlaggedOption(FILE_TEMPLATE_OPTION,
                               JSAP.STRING_PARSER,
                               DEFAULT_TEMPLATE,

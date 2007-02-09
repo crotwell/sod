@@ -19,7 +19,7 @@ public class find_stations extends CommandLineTool {
 
     public VelocityContext getContext() {
         VelocityContext con = super.getContext();
-        if(!Boolean.FALSE.equals(result.getObject(outputFormatFlag.getID()))
+        if((outputFormatFlag != null && !Boolean.FALSE.equals(result.getObject(outputFormatFlag.getID())))
                 || needsStationAndSpecified()) {
             con.put("needsStationAND", Boolean.TRUE);
         }
@@ -38,6 +38,17 @@ public class find_stations extends CommandLineTool {
     }
 
     protected void addParams() throws JSAPException {
+        addDefaultParams();
+        String lonPrinter = "$station.getLongitude(' ##0.0000;-##0.0000')";
+        String latPrinter = "$station.getLatitude(' ##0.0000;-##0.0000')";
+        String theRest = "$station.getElevation('###0.') $station.code";
+        outputFormatFlag = OutputFormatParser.createParam(lonPrinter + " "
+                + latPrinter + " " + theRest, latPrinter + " " + lonPrinter
+                + " " + theRest);
+        add(outputFormatFlag);
+    }
+
+    protected void addDefaultParams() throws JSAPException {
         super.addParams();
         needsStationAndIfSpecified = new ArrayList();
         add(ServerParser.createParam("edu/iris/dmc/IRIS_NetworkDC",
@@ -52,12 +63,6 @@ public class find_stations extends CommandLineTool {
                              'n',
                              "networks",
                              "The codes of networks to retrieve"));
-        String lonPrinter = "$station.getLongitude(' ##0.0000;-##0.0000')";
-        String latPrinter = "$station.getLatitude(' ##0.0000;-##0.0000')";
-        String theRest = "$station.getElevation('###0.') $station.code";
-        outputFormatFlag = OutputFormatParser.createParam(lonPrinter + " " + latPrinter + " " + theRest,
-                                                          latPrinter + " " + lonPrinter + " " + theRest);
-        add(outputFormatFlag);
     }
 
     private void addStationParam(FlaggedOption option) throws JSAPException {
