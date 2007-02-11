@@ -44,5 +44,10 @@ $additionalArms#end
            </phaseTimeHeader> 
 #end
         </sacWriter>
+#if($output)
+        <printlineSeismogramProcess>
+            <template>$output</template>
+        </printlineSeismogramProcess>
+#end
     </waveformArm>
 </sod>

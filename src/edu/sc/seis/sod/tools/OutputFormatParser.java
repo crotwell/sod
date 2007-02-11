@@ -1,20 +1,30 @@
 package edu.sc.seis.sod.tools;
 
+import java.util.HashMap;
+import java.util.Map;
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.ParseException;
 import com.martiansoftware.jsap.StringParser;
 
 public class OutputFormatParser extends StringParser {
 
-    public OutputFormatParser(String xyFormat, String yxFormat) {
-        this.xyFormat = xyFormat;
-        this.yxFormat = yxFormat;
+    public OutputFormatParser(Map shortcutFormats) {
+        shortcutFormats.put("none", Boolean.FALSE);
+        this.shortcutFormats = shortcutFormats;
     }
 
     public static FlaggedOption createParam(String xyFormat, String yxFormat) {
+        Map shortcuts = new HashMap();
+        shortcuts.put("xy", xyFormat);
+        shortcuts.put("yx", yxFormat);
+        return createParam(shortcuts, "xy");
+    }
+
+    public static FlaggedOption createParam(Map shortcutFormats,
+                                            String defaultFormat) {
         return new FlaggedOption("output",
-                                 new OutputFormatParser(xyFormat, yxFormat),
-                                 "xy",
+                                 new OutputFormatParser(shortcutFormats),
+                                 defaultFormat,
                                  true,
                                  'o',
                                  "output",
@@ -22,16 +32,11 @@ public class OutputFormatParser extends StringParser {
     }
 
     public Object parse(String format) throws ParseException {
-        if(format.equals("none")) {
-            return Boolean.FALSE;
-        }
-        if(format.equals("xy")) {
-            return xyFormat;
-        }else if(format.equals("yx")){
-            return yxFormat;
+        if(shortcutFormats.containsKey(format)) {
+            return shortcutFormats.get(format);
         }
         return format;
     }
 
-    private String xyFormat, yxFormat;
+    private Map shortcutFormats;
 }
