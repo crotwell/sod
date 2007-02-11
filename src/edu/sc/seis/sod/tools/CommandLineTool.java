@@ -13,7 +13,6 @@ import org.apache.log4j.Level;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.velocity.VelocityContext;
 import org.xml.sax.InputSource;
-import com.martiansoftware.jsap.Flagged;
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
@@ -212,16 +211,22 @@ public class CommandLineTool {
             System.exit(0);
         }
         if(!ls.isSuccess()) {
-            Start.exit(Args.makeError(ls.commandName,
-                                              ls.params,
-                                              ls.result));
+            Start.exit(Args.makeError(ls.commandName, ls.params, ls.result));
         }
         VelocityContext ctx = ls.getContext();
         SimpleVelocitizer sv = new SimpleVelocitizer();
         Level current = PrintlineVelocitizer.quietLogger();
+        // Wait half a second before checking for input on system in to allow
+        // sluggardly pipers to do their work
+        try {
+            Thread.sleep(500);
+        } catch(InterruptedException ie) {
+            // What do you want me to do?
+        }
         if(System.in.available() > 0) {
             StringBuffer buff = new StringBuffer();
-            BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
+            InputStreamReader isr = new InputStreamReader(System.in);
+            BufferedReader r = new BufferedReader(isr);
             String line;
             boolean inSod = false;
             while((line = r.readLine()) != null) {
@@ -244,7 +249,7 @@ public class CommandLineTool {
             }
             ctx.put("additionalArms", buff.toString());
         } else if(ls.requiresStdin) {
-           Start.exit("This tool requires that a recipe be piped into it.");
+            Start.exit("This tool requires that a recipe be piped into it.");
         }
         final String result = sv.evaluate(ls.getTemplate(), ctx);
         PrintlineVelocitizer.reinstateLogger(current);
