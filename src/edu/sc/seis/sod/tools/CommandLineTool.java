@@ -216,10 +216,10 @@ public class CommandLineTool {
         VelocityContext ctx = ls.getContext();
         SimpleVelocitizer sv = new SimpleVelocitizer();
         Level current = PrintlineVelocitizer.quietLogger();
-        // Wait half a second before checking for input on system in to allow
+        // Wait three seconds before checking for input on system in to allow
         // sluggardly pipers to do their work
         try {
-            Thread.sleep(500);
+            Thread.sleep(3000);
         } catch(InterruptedException ie) {
             // What do you want me to do?
         }
