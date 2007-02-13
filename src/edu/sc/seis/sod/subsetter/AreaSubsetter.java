@@ -40,21 +40,26 @@ public class AreaSubsetter {
                 }
             }
         } else {
-            try {
-                locationArray = AreaUtil.loadPolygon(makeRelativeOrRecipeDirReader(fileLocation));
-            } catch(FileNotFoundException e) {
-                throw new UserConfigurationException(e.getMessage()
-                        + " as a polygon file.");
-            } catch(IOException e) {
-                throw new ConfigurationException("Problem reading from file "
-                        + fileLocation, e);
-            }
+            locationArray = extractPolygon(fileLocation);
+        }
+    }
+
+    public static Location[] extractPolygon(String fileLocation)
+            throws ConfigurationException {
+        try {
+            return AreaUtil.loadPolygon(makeRelativeOrRecipeDirReader(fileLocation));
+        } catch(FileNotFoundException e) {
+            throw new UserConfigurationException(e.getMessage()
+                    + " as a polygon file.");
+        } catch(IOException e) {
+            throw new ConfigurationException("Problem reading from file "
+                    + fileLocation, e);
         }
     }
 
     public static BufferedReader makeRelativeOrRecipeDirReader(String fileLocation)
             throws FileNotFoundException {
-        File simpleLocation = new File(fileLocation);
+        File simpleLocation = new File(fileLocation.trim());
         Reader fileInput;
         try {
             fileInput = new FileReader(simpleLocation);

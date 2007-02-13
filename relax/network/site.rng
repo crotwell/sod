@@ -19,6 +19,8 @@
             <ref name="depthRange"/>
             <ref name="effectiveTimeOverlap"/>
             <ref name="area"/>
+            <ref name="siteBoxArea"/>
+            <ref name="sitePolygonFile"/>
             <ref name="AND"/>
             <ref name="OR"/>
             <ref name="NOT"/>
@@ -31,6 +33,8 @@
             <ref name="depthRange"/>
             <ref name="effectiveTimeOverlap"/>
             <ref name="area"/>
+            <ref name="siteBoxArea"/>
+            <ref name="sitePolygonFile"/>
             <ref name="AND"/>
             <ref name="OR"/>
             <ref name="NOT"/>
@@ -92,10 +96,37 @@
         <element name="siteArea">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary>Matches sites that are within a given area</summary>
+                    <summary>Matches sites that are within a given area</summary> 
+                    <deprecated>siteArea can be replaced by a tag for the area inside of it.  siteBoxArea if it contains boxArea or sitePolygonFile if it contains polygonFile.</deprecated>
                 </xsd:documentation>
             </xsd:annotation>
             <externalRef href="../base/externalRef/area.rng"/>
+        </element>
+    </define>
+    <define name="siteBoxArea">
+        <element name="siteBoxArea">
+            <xsd:annotation>
+                <summary>Accepts sites that occur within a lat lon box </summary>
+                <description>Accepts sites that occur within the latitude longitude box defined
+                    here</description>
+            </xsd:annotation>
+            <externalRef href="../base/externalRef/latitudeRange.rng"/>
+            <externalRef href="../base/externalRef/longitudeRange.rng"/>
+        </element>
+    </define>
+    <define name="sitePolygonFile">
+        <element name="sitePolygonFile">
+            <xsd:annotation>
+                <summary>Reads in a file with lat long points and accepts any site that falls inside
+                    the shape they create</summary>
+                <description>Reads the file at the location given and parses out a shape based on
+                    the points listed in the file. The points should be given as a longitude value, 
+                    a space then a latitude value as in <a href="../../../pentagon.txt">this example</a>.
+                    Longitude values range from -180 to 180 and latitudes range from -90 to 90.
+                    The file can contain as many points as
+                    necessary to create the shape. Any point landing inside the shape is accepted.</description>
+            </xsd:annotation>
+            <data type="string"/>
         </element>
     </define>
     <define name="AND">

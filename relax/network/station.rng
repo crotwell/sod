@@ -23,6 +23,8 @@
             <ref name="depthRange"/>
             <ref name="effectiveTimeOverlap"/>
             <ref name="area"/>
+            <ref name="stationBoxArea"/>
+            <ref name="stationPolygonFile"/>
             <ref name="stationPointDistance"/>
             <ref name="stationPointAzimuth"/>
             <ref name="printlineStationProcess"/>
@@ -43,6 +45,8 @@
             <ref name="depthRange"/>
             <ref name="effectiveTimeOverlap"/>
             <ref name="area"/>
+            <ref name="stationBoxArea"/>
+            <ref name="stationPolygonFile"/>
             <ref name="stationPointDistance"/>
             <ref name="stationPointAzimuth"/>
             <ref name="printlineStationProcess"/>
@@ -51,6 +55,7 @@
             <ref name="OR"/>
             <ref name="NOT"/>
             <ref name="externalStationSubsetter"/>
+            <ref name="belongsToVirtual"/>
             <externalRef href="network.rng"/>
         </choice>
     </define>
@@ -143,8 +148,35 @@
         <element name="stationArea">
             <xsd:annotation>
                 <summary>Matches stations that are within a given area</summary>
+                <deprecated>stationArea can be replaced by a tag for the area inside of it.  stationBoxArea if it contains boxArea or stationPolygonFile if it contains polygonFile.</deprecated>
             </xsd:annotation>
             <externalRef href="../base/externalRef/area.rng"/>
+        </element>
+    </define>
+    <define name="stationBoxArea">
+        <element name="stationBoxArea">
+            <xsd:annotation>
+                <summary>Accepts stations that occur within a lat lon box </summary>
+                <description>Accepts stations that occur within the latitude longitude box defined
+                    here</description>
+            </xsd:annotation>
+            <externalRef href="../base/externalRef/latitudeRange.rng"/>
+            <externalRef href="../base/externalRef/longitudeRange.rng"/>
+        </element>
+    </define>
+    <define name="stationPolygonFile">
+        <element name="stationPolygonFile">
+            <xsd:annotation>
+                <summary>Reads in a file with lat long points and accepts any station that falls inside
+                    the shape they create</summary>
+                <description>Reads the file at the location given and parses out a shape based on
+                    the points listed in the file. The points should be given as a longitude value, 
+                    a space then a latitude value as in <a href="../../../pentagon.txt">this example</a>.
+                    Longitude values range from -180 to 180 and latitudes range from -90 to 90.
+                    The file can contain as many points as
+                    necessary to create the shape. Any point landing inside the shape is accepted.</description>
+            </xsd:annotation>
+            <data type="string"/>
         </element>
     </define>
     <define name="stationPointDistance">

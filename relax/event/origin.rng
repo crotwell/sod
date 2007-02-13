@@ -26,6 +26,8 @@
             <ref name="originPointBackAzimuth"/>
             <ref name="pointLinearDistanceMagnitude"/>
             <ref name="eventArea"/>
+            <ref name="eventBoxArea"/>
+            <ref name="eventPolygonFile"/>
             <externalRef href="catalog.rng"/>
             <externalRef href="contributor.rng"/>
             <ref name="arrayAND"/>
@@ -95,8 +97,35 @@
         <element name="eventArea">
             <xsd:annotation>
                 <summary>Matches events that occur within a specified area</summary>
+                <deprecated>Just replace this with the area type inside of here. eventBoxArea for boxArea and eventPolygonFile for polygonFile.</deprecated>
             </xsd:annotation>
             <ref name="area"/>
+        </element>
+    </define>
+    <define name="eventBoxArea">
+        <element name="eventBoxArea">
+            <xsd:annotation>
+                <summary>Accepts events that occur within a lat lon box </summary>
+                <description>Accepts events that occur within the latitude longitude box defined
+                    here</description>
+            </xsd:annotation>
+            <externalRef href="../base/externalRef/latitudeRange.rng"/>
+            <externalRef href="../base/externalRef/longitudeRange.rng"/>
+        </element>
+    </define>
+    <define name="eventPolygonFile">
+        <element name="eventPolygonFile">
+            <xsd:annotation>
+                <summary>Reads in a file with lat long points and accepts any event that falls inside
+                    the shape they create</summary>
+                <description>Reads the file at the location given and parses out a shape based on
+                    the points listed in the file. The points should be given as a longitude value, 
+                    a space then a latitude value as in <a href="../../../pentagon.txt">this example</a>.
+                    Longitude values range from -180 to 180 and latitudes range from -90 to 90.
+                    The file can contain as many points as
+                    necessary to create the shape. Any point landing inside the shape is accepted.</description>
+            </xsd:annotation>
+            <data type="string"/>
         </element>
     </define>
     <define name="arrayAND">

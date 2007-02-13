@@ -19,7 +19,7 @@
     <define name="globalArea">
         <element name="globalArea">
             <xsd:annotation>
-                <summary>Accepts events that occur anywhere in the world </summary>
+                <summary>Accepts any location in the world </summary>
             </xsd:annotation>
             <empty/>
         </element>
@@ -38,7 +38,7 @@
     <define name="polygonFile">
         <element name="polygonFile">
             <xsd:annotation>
-                <summary>Reads in a file  with lat long points and accepts anything that falls inside
+                <summary>Reads in a file with lat long points and accepts anything that falls inside
                     the shape they create</summary>
                 <description>Reads the file at the location given and parses out a shape based on
                     the points listed in the file. The points should be given as a longitude value, 
