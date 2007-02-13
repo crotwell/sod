@@ -10,9 +10,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import edu.sc.seis.sod.SodUtil;
@@ -46,12 +44,15 @@ public class SchemaDocumenter {
         Collection defs = StAXModelBuilder.getAllDefinitions();
         Iterator it = defs.iterator();
         while(it.hasNext()) {
-            render(c, ve, (Definition)it.next());
+            Definition def = (Definition)it.next();
+//            if(!def.getName().equals("eventArea")){
+//                continue;
+//            }
+            render(c, ve, def);
             System.out.print('.');
         }
+        System.out.println();
     }
-
-    static Set renderLocs = new HashSet();
 
     public static void render(VelocityContext c,
                               VelocityEngine ve,

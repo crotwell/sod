@@ -208,6 +208,8 @@ public class StAXModelBuilder implements XMLStreamConstants {
                         note.setSummary(reader.getText());
                     } else if(reader.getLocalName().equals("description")) {
                         note.setDescription(extractSubstructure());
+                    } else if(reader.getLocalName().equals("deprecated")) {
+                        note.setDeprecation(extractSubstructure());
                     } else if(reader.getLocalName().equals("include")) {
                         reader.next();
                         note.setInclude(true);

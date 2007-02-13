@@ -14,6 +14,10 @@ public class Annotation {
     public void setDescription(String description) {
         desc = description;
     }
+    
+    public void setDeprecation(String deprecation){
+        this.deprecation = deprecation;
+    }
 
     public void setSummary(String summary) {
         this.summary = summary.replaceAll("\n\\s*", " ");
@@ -30,6 +34,10 @@ public class Annotation {
 
     public String getDescription() {
         return desc;
+    }
+
+    public String getDeprecation() {
+        return deprecation;
     }
 
     public String getSummary() {
@@ -106,6 +114,7 @@ public class Annotation {
         Annotation copy = new Annotation();
         copy.summary = summary;
         copy.desc = desc;
+        copy.deprecation = deprecation;
         copy.hasExampleFromAnnotation = hasExampleFromAnnotation;
         copy.example = example;
         copy.include = include;
@@ -116,7 +125,7 @@ public class Annotation {
 
     private boolean hasExampleFromAnnotation = false;
 
-    private String summary, desc, example, vel = "#ingredientPage()";
+    private String summary, desc, example, vel = "#ingredientPage()", deprecation;
 
     private FormProvider formProvider;
 

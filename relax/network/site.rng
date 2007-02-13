@@ -97,7 +97,8 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Matches sites that are within a given area</summary> 
-                    <deprecated>siteArea can be replaced by a tag for the area inside of it.  siteBoxArea if it contains boxArea or sitePolygonFile if it contains polygonFile.</deprecated>
+                    <deprecated>siteArea can be replaced by a tag for the area inside of it.  
+                    <a href="siteBoxArea.html">siteBoxArea</a> if it contains boxArea or <a href="sitePolygonFile.html">sitePolygonFile</a> if it contains polygonFile.</deprecated>
                 </xsd:documentation>
             </xsd:annotation>
             <externalRef href="../base/externalRef/area.rng"/>

@@ -148,7 +148,9 @@
         <element name="stationArea">
             <xsd:annotation>
                 <summary>Matches stations that are within a given area</summary>
-                <deprecated>stationArea can be replaced by a tag for the area inside of it.  stationBoxArea if it contains boxArea or stationPolygonFile if it contains polygonFile.</deprecated>
+                <deprecated>stationArea can be replaced by a tag for the area inside of it.  
+                <a href="stationBoxArea.html">stationBoxArea</a> if it contains boxArea or <a href="stationPolygonFile.html">stationPolygonFile</a> 
+                if it contains polygonFile.</deprecated>
             </xsd:annotation>
             <externalRef href="../base/externalRef/area.rng"/>
         </element>

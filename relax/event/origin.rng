@@ -97,7 +97,8 @@
         <element name="eventArea">
             <xsd:annotation>
                 <summary>Matches events that occur within a specified area</summary>
-                <deprecated>Just replace this with the area type inside of here. eventBoxArea for boxArea and eventPolygonFile for polygonFile.</deprecated>
+                <deprecated>Just replace this with the area type inside of here. <a href="eventBoxArea.html">eventBoxArea</a>
+                 for boxArea or <a href="eventPolygonFile.html">eventPolygonFile</a> for polygonFile.</deprecated>
             </xsd:annotation>
             <ref name="area"/>
         </element>

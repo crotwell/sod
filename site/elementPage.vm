@@ -82,6 +82,14 @@ $ann.velocity
             </p>
 		#end
 	</div>
+		#if($ann.deprecation)
+			<div class="section">
+			<h3 class="red">This ingredient is deprecated!</h3>
+			<p>While it will continue to be supported by sod, there is now a better way.
+				$ann.deprecation
+			</p>
+			</div>
+		#end
 			<div class="section">
 				<h3>
 					<a name="Example">Example</a>
