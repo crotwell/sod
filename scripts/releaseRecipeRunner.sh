@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=2.2
+VERSION=2.2.1
 run(){
     mkdir $1
     cd $1
