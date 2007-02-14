@@ -3,7 +3,7 @@
     <pomVersion>3</pomVersion>
     <id>sod</id>
     <name>sod</name>
-    <currentVersion>2.2.1</currentVersion>
+    <currentVersion>2.2.2internal</currentVersion>
     <organization>
         <name>Seismology at the University of South Carolina</name>
         <url>http://www.seis.sc.edu</url>
@@ -121,12 +121,12 @@
         </dependency>
         <dependency>
             <id>fissuresUtil</id>
-            <version>1.0.17</version>
+            <version>1.0.18internal</version>
             <url>http://www.seis.sc.edu/software/fissuresUtil</url>
         </dependency>
         <dependency>
             <id>fissuresImpl</id>
-            <version>1.1.12</version>
+            <version>1.1.13internal</version>
             <url>http://www.seis.sc.edu/software/fissuresImpl</url>
         </dependency>
         <dependency>
