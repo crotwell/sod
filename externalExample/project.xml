@@ -3,7 +3,7 @@
     <pomVersion>3</pomVersion>
     <id>sodExternals</id>
     <name>Sod Externals</name>
-    <currentVersion>2.2rc1</currentVersion>
+    <currentVersion>2.2.1</currentVersion>
     <package>edu.sc.seis.sod</package>
     <description>External Processors to be used with sod</description>
     <shortDescription>Externals4SOD</shortDescription>
@@ -26,7 +26,7 @@
     <dependency>
       <artifactId>seisFile</artifactId>
       <groupId>seisFile</groupId>
-      <version>1.0.1</version>
+      <version>1.0.2</version>
     </dependency>
         <dependency>
             <id>itext</id>
@@ -87,12 +87,12 @@
         </dependency>
         <dependency>
             <id>fissuresUtil</id>
-            <version>1.0.17beta</version>
+            <version>1.0.17</version>
             <url>http://www.seis.sc.edu/software/fissuresUtil</url>
         </dependency>
         <dependency>
             <id>fissuresImpl</id>
-            <version>1.1.12beta</version>
+            <version>1.1.12</version>
             <url>http://www.seis.sc.edu/software/fissuresImpl</url>
         </dependency>
         <dependency>
@@ -254,7 +254,7 @@
         </dependency>
         <dependency>
     <id>sod</id>
-    <version>2.2.1beta1</version>
+    <version>2.2.1</version>
 </dependency>
 </dependencies>
     <build>
