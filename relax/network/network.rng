@@ -32,7 +32,9 @@
                 <xsd:documentation xml:lang="en">
                     <summary>Matches a given network code</summary>
                     <description> A network is accepted if its network code matches the given code
-                        exactly. </description>
+                        exactly. If a two digit year is appended to the code, the network will be checked
+                        that its start year matches the given one in addition to checking against the
+                        actual network code.</description>
                 </xsd:documentation>
             </xsd:annotation>
             <data type="string">
