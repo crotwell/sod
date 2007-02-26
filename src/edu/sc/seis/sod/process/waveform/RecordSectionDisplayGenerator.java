@@ -1,6 +1,8 @@
 package edu.sc.seis.sod.process.waveform;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.Connection;
@@ -43,14 +45,21 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) throws Exception {
-        if(!updateTable(event, chan, original, available, seismograms, cookieJar)){
-            return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
+        if(!updateTable(event,
+                        chan,
+                        original,
+                        available,
+                        seismograms,
+                        cookieJar)) {
+            return new WaveformResult(seismograms, new StringTreeLeaf(this,
+                                                                      true));
         }
         makeRecordSection(event);
         return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
     }
 
-    public void makeRecordSection(EventAccessOperations event) throws Exception, NoPreferredOrigin, IOException {
+    public void makeRecordSection(EventAccessOperations event)
+            throws Exception, NoPreferredOrigin, IOException {
         try {
             DataSetSeismogram[] dss = extractSeismograms(event);
             String regionName = PR.getRegionName(event.get_attributes().region);
@@ -89,15 +98,14 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
     }
 
     public void outputRecordSection(DataSetSeismogram[] dataSeis,
+                                    EventAccessOperations event,
                                     OutputStream out) throws Exception {
-        RecordSectionDisplay rsDisplay = getConfiguredRSDisplay();
-        rsDisplay.add(wrap(dataSeis));
-        rsDisplay.outputToPNG(out, getRecSecDimension());
+        writeImage(wrap(dataSeis), event, out);
     }
 
     protected void writeImage(DataSetSeismogram[] dataSeis,
-                              EventAccessOperations event) throws Exception {
-        String fileLoc = getFileLoc(event);
+                              EventAccessOperations event,
+                              OutputStream out) throws Exception {
         RecordSectionDisplay rsDisplay = getConfiguredRSDisplay();
         rsDisplay.add(dataSeis);
         if(dataSeis.length > 0) {
@@ -106,13 +114,21 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
         }
         logger.debug("Added " + dataSeis.length
                 + " seismograms to RecordSectionDisplay");
+        rsDisplay.outputToPNG(out, getRecSecDimension());
+    }
+
+    protected void writeImage(DataSetSeismogram[] dataSeis,
+                              EventAccessOperations event) throws Exception {
+        String fileLoc = getFileLoc(event);
         try {
             File outPNG = new File(getFileBaseDir() + "/" + fileLoc);
-            rsDisplay.outputToPNG(outPNG, getRecSecDimension());
+            writeImage(dataSeis,
+                       event,
+                       new BufferedOutputStream(new FileOutputStream(outPNG)));
         } catch(IOException e) {
-            logger.debug("Problem writing recordsection output to PNG", e);
-            throw new IOException("Problem writing recordSection output to PNG "
-                    + e);
+            String msg = "Problem writing recordsection output to PNG ";
+            logger.debug(msg, e);
+            throw new IOException(msg, e);
         }
     }
 
