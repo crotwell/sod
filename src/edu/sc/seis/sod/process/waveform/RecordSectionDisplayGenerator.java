@@ -12,6 +12,7 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
@@ -114,6 +115,9 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
         }
         logger.debug("Added " + dataSeis.length
                 + " seismograms to RecordSectionDisplay");
+        for(int i = 0; i < dataSeis.length; i++) {
+            System.out.println(ChannelIdUtil.toString(dataSeis[i].getChannelId()));
+        }
         rsDisplay.outputToPNG(out, getRecSecDimension());
     }
 
@@ -128,7 +132,7 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
         } catch(IOException e) {
             String msg = "Problem writing recordsection output to PNG ";
             logger.debug(msg, e);
-            throw new IOException(msg, e);
+            throw new IOException(msg + e);
         }
     }
 
