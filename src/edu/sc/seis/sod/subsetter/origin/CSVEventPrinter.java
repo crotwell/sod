@@ -25,8 +25,10 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
 public class CSVEventPrinter implements OriginSubsetter {
 
     public CSVEventPrinter(Element config) throws Exception {
-        String STDOUT = "<stdout>";
-        String filename = DOMHelper.extractText(config, "filename", STDOUT);
+        this(DOMHelper.extractText(config, "filename", STDOUT));
+    }
+
+    public CSVEventPrinter(String filename) throws Exception {
         if(!filename.equals(STDOUT)) {
             file = new File(filename);
         }
@@ -56,7 +58,8 @@ public class CSVEventPrinter implements OriginSubsetter {
         if(file == null) {
             System.out.println(buff.toString());
         } else {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file,
+                                                                      true));
             writer.write(buff.toString());
             writer.newLine();
             writer.close();
@@ -89,4 +92,6 @@ public class CSVEventPrinter implements OriginSubsetter {
     private File file;
 
     private static final String COM = ", ";
+
+    private static final String STDOUT = "<stdout>";
 }

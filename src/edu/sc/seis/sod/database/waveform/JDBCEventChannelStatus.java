@@ -424,6 +424,7 @@ public class JDBCEventChannelStatus extends SodJDBC {
         }
         // get rid of last OR
         query = query.substring(0, query.length() - 2);
+        logger.debug("the query being sent will be : "+ query);
         Statement stmt = conn.createStatement();
         try {
             ResultSet rs = stmt.executeQuery(query);

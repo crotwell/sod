@@ -101,7 +101,7 @@
         <dependency>
             <groupId>JacORB</groupId>
             <artifactId>JacORB</artifactId>
-            <version>2.2.3</version>
+            <version>2.3.0</version>
             <url>http://www.jacorb.org</url>
         </dependency>
         <dependency>
@@ -262,11 +262,17 @@
             <groupId>stax</groupId>
             <artifactId>stax-api</artifactId>
             <version>1.0</version>
+            <properties>
+                <endorsed/>
+            </properties>
         </dependency>
         <dependency>
             <groupId>stax</groupId>
             <artifactId>stax</artifactId>
             <version>1.1.1-dev</version>
+            <properties>
+                <endorsed/>
+            </properties>
         </dependency>
         <dependency>
             <groupId>mapData</groupId>
