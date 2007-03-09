@@ -245,7 +245,14 @@ public class NetworkArm implements Arm {
                 NetworkFinder netFinder = netDC.a_finder();
                 List constrainedNets = new ArrayList(constrainingCodes.length);
                 for(int i = 0; i < constrainingCodes.length; i++) {
-                    NetworkAccess[] found = netFinder.retrieve_by_code(constrainingCodes[i]);
+                    NetworkAccess[] found;
+                    // this is a bit of a hack as names could be one or two characters, but works with _US-TA style
+                    // virtual networks at the DMC
+                    if (constrainingCodes[i].length() >2) {
+                    	found = netFinder.retrieve_by_name(constrainingCodes[i]);
+                    } else {
+                    	found = netFinder.retrieve_by_code(constrainingCodes[i]);
+                    }
                     for(int j = 0; j < found.length; j++) {
                         constrainedNets.add(found[j]);
                     }
