@@ -240,7 +240,7 @@ public class WaveformArm implements Arm {
         } // end of if ()
         ChannelDbObject[] chans = networkArm.getSuccessfulChannels(net, site);
         if(motionVectorArm != null) {
-            startChannelGroups(ev, chans);
+            startChannelGroups(overlap, ev, chans);
         } else {
             // individual local seismograms
             for(int i = 0; i < chans.length; i++) {
@@ -249,21 +249,32 @@ public class WaveformArm implements Arm {
         }
     }
 
-    private void startChannelGroups(EventDbObject ev, ChannelDbObject[] chans)
+    private void startChannelGroups(EventEffectiveTimeOverlap overlap,
+                                    EventDbObject ev,
+                                    ChannelDbObject[] chans)
             throws SQLException {
-        ChannelGroup[] chanGroups = groupChannels(chans, ev.getDbId());
+        List overlapList = new ArrayList();
+        for(int i = 0; i < chans.length; i++) {
+            if(overlap.overlaps(chans[i].getChannel())) {
+                overlapList.add(chans[i]);
+            } else {
+                logger.debug("The channel effective time does not overlap the event time");
+            }
+        }
+        ChannelDbObject[] overlapChans = (ChannelDbObject[])overlapList.toArray(new ChannelDbObject[0]);
+        ChannelGroup[] chanGroups = groupChannels(overlapChans, ev.getDbId());
         int evDbId = ev.getDbId();
         Status eventStationInit = Status.get(Stage.EVENT_STATION_SUBSETTER,
                                              Standing.INIT);
         for(int i = 0; i < chanGroups.length; i++) {
             int[] pairIds = new int[3];
             for(int j = 0; j < pairIds.length; j++) {
-                for(int k = 0; k < chans.length; k++) {
-                    if(ChannelIdUtil.areEqual(chans[k].getChannel().get_id(),
-                                              chanGroups[i].getChannels()[j].get_id())) {
+                for(int k = 0; k < overlapChans.length; k++) {
+                    if(ChannelIdUtil.areEqual(overlapChans[k].getChannel()
+                            .get_id(), chanGroups[i].getChannels()[j].get_id())) {
                         synchronized(evChanStatus) {
                             pairIds[j] = evChanStatus.put(evDbId,
-                                                          chans[k].getDbId(),
+                                                          overlapChans[k].getDbId(),
                                                           eventStationInit);
                         }
                         break;
