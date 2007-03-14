@@ -25,8 +25,8 @@ import edu.sc.seis.fissuresUtil.exceptionHandler.Section;
 public class ResultMailer {
 
     /**
-     * The four key strings' SMTP, SUBJECT, FROM and TO values must be set in the
-     * passed in properties
+     * The four key strings' SMTP, SUBJECT, FROM and TO values must be set in
+     * the passed in properties
      */
     public ResultMailer(Properties props) throws ConfigurationException {
         this.props = props;
@@ -34,9 +34,6 @@ public class ResultMailer {
         logger.info("Exception mailer going to " + props.getProperty(TO)
                 + " from " + props.getProperty(FROM) + " through "
                 + props.getProperty(SMTP) + " created");
-        if(props.containsKey(LIMIT)) {
-            limit = Integer.parseInt(props.getProperty(LIMIT));
-        }
     }
 
     private void checkProperties() throws ConfigurationException {
@@ -53,35 +50,26 @@ public class ResultMailer {
         }
     }
 
-
     public void mail(String message, String bodyText, List sections)
             throws Exception {
-        if(numSent < limit) {
-            numSent++;
-            Session session = Session.getDefaultInstance(props, null);
-            Message msg = new MimeMessage(session);
-            InternetAddress addressFrom = new InternetAddress(props.getProperty(FROM));
-            msg.setFrom(addressFrom);
-            Address addressTo = new InternetAddress(props.getProperty(TO));
-            msg.setRecipient(Message.RecipientType.TO, addressTo);
-            String subject = props.getProperty(SUBJECT) + " " + message;
-            msg.setSubject(subject);
-            Multipart multipart = new MimeMultipart();
-            BodyPart bodyPart = new MimeBodyPart();
-            bodyPart.setText(message + "\n"
-                    + bodyText);
-            multipart.addBodyPart(bodyPart);
-            Iterator it = sections.iterator();
-            while(it.hasNext()) {
-                multipart.addBodyPart(createAttachement((Section)it.next()));
-            }
-            msg.setContent(multipart);
-            Transport.send(msg);
-        } else {
-            logger.debug("Not sending an email since " + numSent
-                    + " have been sent and " + limit
-                    + " is the max number to send");
+        Session session = Session.getDefaultInstance(props, null);
+        Message msg = new MimeMessage(session);
+        InternetAddress addressFrom = new InternetAddress(props.getProperty(FROM));
+        msg.setFrom(addressFrom);
+        Address addressTo = new InternetAddress(props.getProperty(TO));
+        msg.setRecipient(Message.RecipientType.TO, addressTo);
+        String subject = props.getProperty(SUBJECT) + " " + message;
+        msg.setSubject(subject);
+        Multipart multipart = new MimeMultipart();
+        BodyPart bodyPart = new MimeBodyPart();
+        bodyPart.setText(message + "\n" + bodyText);
+        multipart.addBodyPart(bodyPart);
+        Iterator it = sections.iterator();
+        while(it.hasNext()) {
+            multipart.addBodyPart(createAttachement((Section)it.next()));
         }
+        msg.setContent(multipart);
+        Transport.send(msg);
     }
 
     private BodyPart createAttachement(Section section) throws IOException,
@@ -92,13 +80,9 @@ public class ResultMailer {
         bp.setFileName(section.getName() + ".txt");
         return bp;
     }
-    
-    private int numSent = 0;
-
-    private int limit = Integer.MAX_VALUE;
 
     private Properties props;
-    
+
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(ResultMailer.class);
 
     /**
@@ -121,11 +105,6 @@ public class ResultMailer {
      */
     public static final String SUBJECT = "mail.subject";
 
-    /**
-     * mail.limit specifies the number of emails to send
-     */
-    public static final String LIMIT = "mail.limit";
-    
     class SectionDataSource implements DataSource {
 
         SectionDataSource(Section s) {
