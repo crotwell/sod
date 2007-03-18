@@ -19,6 +19,6 @@ public class OriginTimeRange extends TimeRange implements OriginSubsetter {
     public StringTree accept(EventAccessOperations event,
                           EventAttr eventAttr,
                           Origin origin) {
-        return new StringTreeLeaf(this, getMSTR().intersects(new MicroSecondDate(origin.origin_time)));
+        return new StringTreeLeaf(this, getMSTR().contains(new MicroSecondDate(origin.origin_time)));
     }
 }// EventTimeRange

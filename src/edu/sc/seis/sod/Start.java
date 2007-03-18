@@ -328,6 +328,7 @@ public class Start {
     }
 
     public void allHopeAbandon(String message) {
+        logger.warn("All hope abandon: " + message);
         System.err.println();
         System.err.println("******************************************************************");
         System.err.println();
