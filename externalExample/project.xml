@@ -8,10 +8,10 @@
     <description>External Processors to be used with sod</description>
     <shortDescription>Externals4SOD</shortDescription>
     <url>http://www.seis.sc.edu/software/${pom.artifactId}</url>
-    <siteAddress>roo.seis.sc.edu</siteAddress>
-    <siteDirectory>/Library/WebServer/software/${pom.artifactId}</siteDirectory>
-    <distributionSite>roo.seis.sc.edu</distributionSite>
-    <distributionDirectory>/Library/WebServer/software/mavenRepository</distributionDirectory>
+    <siteAddress>hopalong.seis.sc.edu</siteAddress>
+    <siteDirectory>/var/www/html/software/${pom.artifactId}</siteDirectory>
+    <distributionSite>hopalong.seis.sc.edu</distributionSite>
+    <distributionDirectory>/var/www/html/software/mavenRepository</distributionDirectory>
     <repository>
         <url>http://roo.seis.sc.edu/fisheye/viewrep/seis/trunk/${pom.artifactId}</url>
     </repository>
@@ -87,12 +87,12 @@
         </dependency>
         <dependency>
             <id>fissuresUtil</id>
-            <version>1.0.17</version>
+            <version>1.0.18internal</version>
             <url>http://www.seis.sc.edu/software/fissuresUtil</url>
         </dependency>
         <dependency>
             <id>fissuresImpl</id>
-            <version>1.1.12</version>
+            <version>1.1.13internal</version>
             <url>http://www.seis.sc.edu/software/fissuresImpl</url>
         </dependency>
         <dependency>
@@ -254,7 +254,7 @@
         </dependency>
         <dependency>
     <id>sod</id>
-    <version>2.2.1</version>
+    <version>2.2.2internal</version>
 </dependency>
 </dependencies>
     <build>
