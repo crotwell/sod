@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+
 import org.w3c.dom.Element;
+
 import edu.iris.Fissures.FlinnEngdahlRegion;
 import edu.iris.Fissures.FlinnEngdahlType;
 import edu.iris.Fissures.Location;
@@ -19,8 +21,10 @@ import edu.iris.Fissures.IfParameterMgr.ParameterRef;
 import edu.iris.Fissures.event.EventAttrImpl;
 import edu.iris.Fissures.event.OriginImpl;
 import edu.iris.Fissures.model.FlinnEngdahlRegionImpl;
+import edu.iris.Fissures.model.ISOTime;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
+import edu.iris.Fissures.model.UnsupportedFormat;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
@@ -96,11 +100,16 @@ public class CSVEventSource extends SimpleEventSource {
                 throw new UserConfigurationException("There are "
                         + values.size() + " values on line " + lineNum
                         + " but there are " + fields.size()
-                        + " in the header in csv files" + filename + ".");
+                        + " in the header in " + filename + ".");
             }
             // time to start populating field values
             // first up: the only required field...
             Time time = new Time((String)values.get(fields.indexOf(TIME)), 0);
+            try{
+                new ISOTime(time.date_time);
+            }catch(UnsupportedFormat uf){
+            	throw new UserConfigurationException("The time '" + time.date_time + "' on line " + (lineNum) + " in " + filename + " is invalid.");
+            }
             float latitude = 0f;
             if(fields.contains(LATITUDE)) {
                 latitude = Float.parseFloat((String)values.get(fields.indexOf(LATITUDE)));
