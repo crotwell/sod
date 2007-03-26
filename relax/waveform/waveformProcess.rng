@@ -294,7 +294,9 @@
                     filename.2. The phaseTimeHeader element will cause the travel time of the given phase to be placed
                     in the sac header corresponding to the tHeader element. tHeader can be 0-9 as well as a. In the case
                     of 0-9, the ray parameter is inserted into the corresponding userX header as rad/sec. See the TauP
-                    user manual, http://www.seis.sc.edu/TauP, for the phase naming convention.  If the littleEndian element is added to the sacWriter, it will write out sac files in little endian byte order.  It defaults to writing in big endian order.</description>
+                    user manual, http://www.seis.sc.edu/TauP, for the phase naming convention.  
+                    If the littleEndian element is added to the sacWriter, it will write out sac files in Intel processor style 
+                    little endian byte order.  It defaults to writing in big endian order.</description>
                 <example>
                     <sacWriter>
                         <workingDir>seismograms</workingDir>
