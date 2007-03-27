@@ -8,24 +8,8 @@ import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 
-/**
- * TimeRange.java
- *
- *
- * Created: Tue Mar 19 13:27:02 2002
- *
- * @author <a href="mailto:">Philip Crotwell</a>
- * @version
- */
-
 public abstract class TimeRange implements Subsetter{
 
-    /**
-     * Creates a new <code>TimeRange</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     * @throws ConfigurationException
-     */
     public TimeRange (Element config) throws ConfigurationException{
         timeRange = SodUtil.loadTimeRange(config);
     }

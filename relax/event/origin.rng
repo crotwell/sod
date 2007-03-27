@@ -30,6 +30,7 @@
             <ref name="eventPolygonFile"/>
             <externalRef href="catalog.rng"/>
             <externalRef href="contributor.rng"/>
+            <externalRef href="networkTimeRange.rng"/>
             <ref name="arrayAND"/>
             <ref name="arrayOR"/>
             <ref name="AND"/>

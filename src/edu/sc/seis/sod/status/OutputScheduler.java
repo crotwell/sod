@@ -3,117 +3,140 @@ package edu.sc.seis.sod.status;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
 import org.apache.log4j.Logger;
+
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.Arm;
+import edu.sc.seis.sod.ArmListener;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.NetworkArm;
+import edu.sc.seis.sod.Start;
 
-public class OutputScheduler extends Thread {
+public class OutputScheduler extends Thread implements ArmListener {
 
-    private OutputScheduler() {
-        super("OutputScheduler");
-    }
-    
-    public void registerArm(Arm arm) {
-        synchronized(arms) {
-            arms.add(arm);
-        }
-    }
+	private OutputScheduler() {
+		super("OutputScheduler");
+		Start.add(this);
+	}
 
-    public void schedule(Runnable a) {
-        synchronized(runnables) {
-            runnables.add(a);
-        }
-    }
+	public void starting(Arm arm) {
+		synchronized (arms) {
+			arms.add(arm);
+		}
+		if (arm instanceof NetworkArm) {
+			((NetworkArm) arm).add(this);
+		}
+	}
 
-    public void scheduleForExit(Runnable a) {
-        synchronized(onExitRunnables) {
-            onExitRunnables.add(a);
-        }
-    }
+	public void finished(Arm arm) {
+		synchronized (this) {
+			notify();
+		}
+	}
 
-    public void run() {
-        // initial sleep before first set of status pages
-        try {
-            Thread.sleep(INITIAL_SLEEP);
-        } catch(InterruptedException e) {}
-        while(true) {
-            runAll(runnables);
-            if(!anyArmsActive()) {
-                runAll(runnables);
-                runAll(onExitRunnables);
-                logger.debug("Output Scheduler done.");
-                String lcOSName = System.getProperty("os.name").toLowerCase();
-                boolean MAC_OS_X = lcOSName.startsWith("mac os x");
-                if(MAC_OS_X) {
-                    // hopefully everything is done!
-                    logger.debug("Using System.exit(0) only on the mac due to AWT thread not exiting.");
-                    System.exit(0);
-                }
-                return;
-            }
-            try {
-                synchronized(this) {
-                    wait(ACTION_INTERVAL_MILLIS);
-                }
-            } catch(InterruptedException e) {}
-        }
-    }
+	public void started() throws ConfigurationException {
+	}
 
-    private void runAll(Set toRun) {
-        Runnable[] currentRunnables = new Runnable[0];
-        synchronized(toRun) {
-            currentRunnables = (Runnable[])toRun.toArray(currentRunnables);
-            toRun.clear();
-        }
-        for(int i = 0; i < currentRunnables.length; i++) {
-            try {
-                currentRunnables[i].run();
-            } catch(Throwable t) {
-                GlobalExceptionHandler.handle(t);
-            }
-        }
-    }
+	public void schedule(Runnable a) {
+		synchronized (runnables) {
+			runnables.add(a);
+		}
+	}
 
-    private boolean anyArmsActive() {
-        Arm[] curArms = new Arm[0];
-        synchronized(arms) {
-            curArms = (Arm[])arms.toArray(curArms);
-        }
-        boolean active = false;
-        for(int i = 0; i < curArms.length; i++) {
-            if (curArms[i].isActive()) {
-                active = true;
-                break;
-            }
-        }
-        return active;
-    }
-    
-    public synchronized static OutputScheduler getDefault() {
-        if(DEFAULT == null) {
-            DEFAULT = new OutputScheduler();
-            DEFAULT.start();
-        }
-        return DEFAULT;
-    }
+	public void scheduleForExit(Runnable a) {
+		synchronized (onExitRunnables) {
+			onExitRunnables.add(a);
+		}
+	}
 
-    private static final TimeInterval ACTION_INTERVAL = new TimeInterval(2,
-                                                                         UnitImpl.MINUTE);
+	public void run() {
+		// initial sleep before first set of status pages
+		try {
+			Thread.sleep(INITIAL_SLEEP);
+		} catch (InterruptedException e) {
+		}
+		while (true) {
+			runAll(runnables);
+			if (!anyArmsActive()) {
+				runAll(runnables);
+				runAll(onExitRunnables);
+				logger.debug("Output Scheduler done.");
+				String lcOSName = System.getProperty("os.name").toLowerCase();
+				boolean MAC_OS_X = lcOSName.startsWith("mac os x");
+				if (MAC_OS_X) {
+					// hopefully everything is done!
+					logger
+							.debug("Using System.exit(0) only on the mac due to AWT thread not exiting.");
+					System.exit(0);
+				}
+				return;
+			}
+			try {
+				synchronized (this) {
+					wait(ACTION_INTERVAL_MILLIS);
+				}
+			} catch (InterruptedException e) {
+			}
+		}
+	}
 
-    private static final long ACTION_INTERVAL_MILLIS = (long)ACTION_INTERVAL.convertTo(UnitImpl.MILLISECOND)
-            .get_value();
+	private void runAll(Set toRun) {
+		Runnable[] currentRunnables = new Runnable[0];
+		synchronized (toRun) {
+			currentRunnables = (Runnable[]) toRun.toArray(currentRunnables);
+			toRun.clear();
+		}
+		for (int i = 0; i < currentRunnables.length; i++) {
+			try {
+				currentRunnables[i].run();
+			} catch (Throwable t) {
+				GlobalExceptionHandler.handle(t);
+			}
+		}
+	}
 
-    private static final long INITIAL_SLEEP = 10000l;
+	private boolean anyArmsActive() {
+		Arm[] curArms = new Arm[0];
+		synchronized (arms) {
+			curArms = (Arm[]) arms.toArray(curArms);
+		}
+		boolean active = false;
+		for (int i = 0; i < curArms.length; i++) {
+			if (curArms[i].isActive()) {
+				active = true;
+				break;
+			}
+		}
+		return active;
+	}
 
-    private static OutputScheduler DEFAULT = null;
-    
-    private Set arms = Collections.synchronizedSet(new HashSet());
+	public synchronized static OutputScheduler getDefault() {
+		if (DEFAULT == null) {
+			DEFAULT = new OutputScheduler();
+			DEFAULT.start();
+		}
+		return DEFAULT;
+	}
 
-    private Set runnables = Collections.synchronizedSet(new HashSet());
+	private static final TimeInterval ACTION_INTERVAL = new TimeInterval(2,
+			UnitImpl.MINUTE);
 
-    private Set onExitRunnables = Collections.synchronizedSet(new HashSet());
+	private static final long ACTION_INTERVAL_MILLIS = (long) ACTION_INTERVAL
+			.convertTo(UnitImpl.MILLISECOND).get_value();
 
-    private static final Logger logger = Logger.getLogger(OutputScheduler.class);
+	private static final long INITIAL_SLEEP = 10000l;
+
+	private static OutputScheduler DEFAULT = null;
+
+	private Set arms = Collections.synchronizedSet(new HashSet());
+
+	private Set runnables = Collections.synchronizedSet(new HashSet());
+
+	private Set onExitRunnables = Collections.synchronizedSet(new HashSet());
+
+	private static final Logger logger = Logger
+			.getLogger(OutputScheduler.class);
 }

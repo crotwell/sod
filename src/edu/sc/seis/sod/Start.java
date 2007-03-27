@@ -10,6 +10,9 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -361,22 +364,18 @@ public class Start {
     }
 
     private void startArms(NodeList armNodes) throws Exception {
-        OutputScheduler sched = OutputScheduler.getDefault();
         for(int i = 0; i < armNodes.getLength(); i++) {
             if(armNodes.item(i) instanceof Element) {
                 Element el = (Element)armNodes.item(i);
                 if(el.getTagName().equals("eventArm") && args.doEventArm()) {
                     event = new EventArm(el);
-                    sched.registerArm(event);
                 } else if(el.getTagName().equals("networkArm")
                         && args.doNetArm()) {
                     network = new NetworkArm(el);
-                    sched.registerArm(network);
                 } else if(el.getTagName().startsWith("waveform")
                         && args.doWaveformArm()) {
                     int poolSize = runProps.getNumWaveformWorkerThreads();
                     waveform = new WaveformArm(el, event, network, poolSize);
-                    sched.registerArm(waveform);
                 }
             }
         }
@@ -388,10 +387,21 @@ public class Start {
             startArm(event, "EventArm");
             startArm(waveform, "WaveformArm");
         }
+    	for (Iterator iter = armListeners.iterator(); iter.hasNext();) {
+			((ArmListener) iter.next()).started();
+		}
+    }
+    
+    public static void add(ArmListener listener){
+    	armListeners.add(listener);
     }
 
-    private void startArm(Arm arm, String name) {
+    private void startArm(Arm arm, String name) throws ConfigurationException {
         if(arm != null) {
+        	for (Iterator iter = armListeners.iterator(); iter.hasNext();) {
+    			ArmListener element = (ArmListener) iter.next();
+    			element.starting(arm);
+    		}
             new Thread(arm, arm.getName()).start();
             logger.debug(name + " started");
         } else {
@@ -575,6 +585,8 @@ public class Start {
     public static boolean RUN_ARMS = true;
 
     protected static int[] suspendedPairs = new int[0];
+    
+    private static List armListeners = new ArrayList();
 
     public static final String TUTORIAL_LOC = "jar:edu/sc/seis/sod/data/configFiles/demo.xml";
 

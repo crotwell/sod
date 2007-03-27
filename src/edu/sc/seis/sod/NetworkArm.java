@@ -128,7 +128,7 @@ public class NetworkArm implements Arm {
     private void configureEffectiveTimeCheckers() {
         EventArm arm = Start.getEventArm();
         if(arm != null && !Start.getRunProps().allowDeadNets()) {
-            logger.debug("Using event time range to constrain effective times");
+            System.out.println("Using event time range to constrain effective times");
             EventSource[] sources = arm.getSources();
             MicroSecondTimeRange fullTime = sources[0].getEventTimeRange();
             for(int i = 1; i < sources.length; i++) {
@@ -419,11 +419,21 @@ public class NetworkArm implements Arm {
     private void finish() {
         armFinished = true;
         logger.info("Network arm finished.");
-        synchronized(OutputScheduler.getDefault()) {
-            OutputScheduler.getDefault().notify();
-        }
+        for (Iterator iter = armListeners.iterator(); iter.hasNext();) {
+			ArmListener listener = (ArmListener) iter.next();
+			System.out.println("CALLING FINISHED");
+			listener.finished(this);
+		}
     }
+    
 
+    
+    public void add(ArmListener listener){
+    	armListeners.add(listener);
+    	if(armFinished == true){
+    		listener.finished(this);
+    	}
+    }
     /**
      * @return stations for the given network object that pass this arm's
      *         station subsetter
@@ -858,6 +868,8 @@ public class NetworkArm implements Arm {
     private NetworkDbObject[] netDbs;
 
     private List statusMonitors = new ArrayList();
+    
+    private List armListeners = new ArrayList();
 
     private static Logger logger = Logger.getLogger(NetworkArm.class);
 

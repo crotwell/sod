@@ -12,195 +12,202 @@ import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 
 public class RunProperties {
 
-    public RunProperties() throws ConfigurationException {
-        this(null);
-    }
+	public RunProperties() throws ConfigurationException {
+		this(null);
+	}
 
-    public RunProperties(Element el) throws ConfigurationException {
-        if(el != null) {
-            Element runNameChild = SodUtil.getElement(el, "runName");
-            if(runNameChild != null) {
-                runName = SodUtil.getText(runNameChild);
-            }
-            Element statusBaseChild = SodUtil.getElement(el, "statusBase");
-            if(statusBaseChild != null) {
-                statusDir = SodUtil.getText(statusBaseChild);
-            }
-            Element eventQueryChild = SodUtil.getElement(el,
-                                                         "eventQueryIncrement");
-            if(eventQueryChild != null) {
-                eventQueryIncrement = SodUtil.loadTimeInterval(eventQueryChild);
-            }
-            Element eventLagChild = SodUtil.getElement(el, "eventLag");
-            if(eventLagChild != null) {
-                eventLag = SodUtil.loadTimeInterval(eventLagChild);
-            }
-            Element eventRefreshChild = SodUtil.getElement(el,
-                                                           "eventRefreshInterval");
-            if(eventRefreshChild != null) {
-                eventRefresh = SodUtil.loadTimeInterval(eventRefreshChild);
-            }
-            Element maxRetryChild = SodUtil.getElement(el, "maxRetryDelay");
-            if(maxRetryChild != null) {
-                maxRetry = SodUtil.loadTimeInterval(maxRetryChild);
-            }
-            Element seismogramLatencyEl = SodUtil.getElement(el,
-                                                             "seismogramLag");
-            if(seismogramLatencyEl != null) {
-                seismogramLatency = SodUtil.loadTimeInterval(seismogramLatencyEl);
-            }
-            Element serverRetryChild = SodUtil.getElement(el,
-                                                          "serverRetryDelay");
-            if(serverRetryChild != null) {
-                serverRetryDelay = SodUtil.loadTimeInterval(serverRetryChild);
-            }
-            Element numWorkersChild = SodUtil.getElement(el,
-                                                         "waveformWorkerThreads");
-            if(numWorkersChild != null) {
-                numWorkers = Integer.parseInt(SodUtil.getText(numWorkersChild));
-            }
-            Element evChanPairProcChild = SodUtil.getElement(el,
-                                                             "eventChannelPairProcessing");
-            if(evChanPairProcChild != null) {
-                evChanPairProc = SodUtil.getText(evChanPairProcChild);
-            }
-            if(SodUtil.isTrue(el, "reopenEvents")) {
-                reopenEvents = true;
-            }
-            if(SodUtil.isTrue(el, "removeDatabase")) {
-                removeDatabase = true;
-            }
-            if(SodUtil.isTrue(el, "statusPages")) {
-                statusPages = true;
-            }
-            if(DOMHelper.hasElement(el, "checkpointPeriodically")) {
-                checkpointPeriodically = true;
-            }
-            if(DOMHelper.hasElement(el, "loserEventCleaner")) {
-                loserEventCleaner = true;
-            }
-            if(DOMHelper.hasElement(el, "allowNetworksOutsideEventRequestTime")) {
-                allowDeadNets = true;
-            }
-        }
-        CookieJar.getCommonContext().put("runName", runName);
-    }
+	public RunProperties(Element el) throws ConfigurationException {
+		if (el != null) {
+			Element runNameChild = SodUtil.getElement(el, "runName");
+			if (runNameChild != null) {
+				runName = SodUtil.getText(runNameChild);
+			}
+			Element statusBaseChild = SodUtil.getElement(el, "statusBase");
+			if (statusBaseChild != null) {
+				statusDir = SodUtil.getText(statusBaseChild);
+			}
+			Element eventQueryChild = SodUtil.getElement(el,
+					"eventQueryIncrement");
+			if (eventQueryChild != null) {
+				eventQueryIncrement = SodUtil.loadTimeInterval(eventQueryChild);
+			}
+			Element eventLagChild = SodUtil.getElement(el, "eventLag");
+			if (eventLagChild != null) {
+				eventLag = SodUtil.loadTimeInterval(eventLagChild);
+			}
+			Element eventRefreshChild = SodUtil.getElement(el,
+					"eventRefreshInterval");
+			if (eventRefreshChild != null) {
+				eventRefresh = SodUtil.loadTimeInterval(eventRefreshChild);
+			}
+			Element maxRetryChild = SodUtil.getElement(el, "maxRetryDelay");
+			if (maxRetryChild != null) {
+				maxRetry = SodUtil.loadTimeInterval(maxRetryChild);
+			}
+			Element seismogramLatencyEl = SodUtil.getElement(el,
+					"seismogramLag");
+			if (seismogramLatencyEl != null) {
+				seismogramLatency = SodUtil
+						.loadTimeInterval(seismogramLatencyEl);
+			}
+			Element serverRetryChild = SodUtil.getElement(el,
+					"serverRetryDelay");
+			if (serverRetryChild != null) {
+				serverRetryDelay = SodUtil.loadTimeInterval(serverRetryChild);
+			}
+			Element numWorkersChild = SodUtil.getElement(el,
+					"waveformWorkerThreads");
+			if (numWorkersChild != null) {
+				numWorkers = Integer.parseInt(SodUtil.getText(numWorkersChild));
+			}
+			Element evChanPairProcChild = SodUtil.getElement(el,
+					"eventChannelPairProcessing");
+			if (evChanPairProcChild != null) {
+				evChanPairProc = SodUtil.getText(evChanPairProcChild);
+			}
+			if (SodUtil.isTrue(el, "reopenEvents")) {
+				reopenEvents = true;
+			}
+			if (SodUtil.isTrue(el, "removeDatabase")) {
+				removeDatabase = true;
+			}
+			if (SodUtil.isTrue(el, "statusPages")) {
+				statusPages = true;
+			}
+			if (DOMHelper.hasElement(el, "checkpointPeriodically")) {
+				checkpointPeriodically = true;
+			}
+			if (DOMHelper.hasElement(el, "loserEventCleaner")) {
+				loserEventCleaner = true;
+			}
+			if (DOMHelper
+					.hasElement(el, "allowNetworksOutsideEventRequestTime")) {
+				allowDeadNets = true;
+			}
+		}
+		CookieJar.getCommonContext().put("runName", runName);
+	}
 
-    public TimeInterval getMaxRetryDelay() {
-        return maxRetry;
-    }
+	public TimeInterval getMaxRetryDelay() {
+		return maxRetry;
+	}
 
-    public TimeInterval getServerRetryDelay() {
-        return serverRetryDelay;
-    }
+	public TimeInterval getServerRetryDelay() {
+		return serverRetryDelay;
+	}
 
-    public TimeInterval getEventQueryIncrement() {
-        return eventQueryIncrement;
-    }
+	public TimeInterval getEventQueryIncrement() {
+		return eventQueryIncrement;
+	}
 
-    public TimeInterval getEventLag() {
-        return eventLag;
-    }
+	public TimeInterval getEventLag() {
+		return eventLag;
+	}
 
-    public TimeInterval getEventRefreshInterval() {
-        return eventRefresh;
-    }
+	public TimeInterval getEventRefreshInterval() {
+		return eventRefresh;
+	}
 
-    public TimeInterval getSeismogramLatency() {
-        return seismogramLatency;
-    }
+	public TimeInterval getSeismogramLatency() {
+		return seismogramLatency;
+	}
 
-    public String getRunName() {
-        return runName;
-    }
+	public String getRunName() {
+		return runName;
+	}
 
-    public String getStatusBaseDir() {
-        return statusDir;
-    }
+	public String getStatusBaseDir() {
+		return statusDir;
+	}
 
-    public int getNumWaveformWorkerThreads() {
-        return numWorkers;
-    }
+	public int getNumWaveformWorkerThreads() {
+		return numWorkers;
+	}
 
-    public boolean reopenEvents() {
-        return reopenEvents;
-    }
+	public boolean reopenEvents() {
+		return reopenEvents;
+	}
 
-    public boolean removeDatabase() {
-        return removeDatabase;
-    }
+	public boolean removeDatabase() {
+		return removeDatabase;
+	}
 
-    public String getEventChannelPairProcessing() {
-        return evChanPairProc;
-    }
+	public String getEventChannelPairProcessing() {
+		return evChanPairProc;
+	}
 
-    public boolean reopenSuspended() {
-        return !evChanPairProc.equals(DONT_RESTART);
-    }
+	public boolean reopenSuspended() {
+		return !evChanPairProc.equals(DONT_RESTART);
+	}
 
-    public boolean doStatusPages() {
-        return statusPages;
-    }
+	public boolean doStatusPages() {
+		return statusPages;
+	}
 
-    public boolean checkpointPeriodically() {
-        return checkpointPeriodically;
-    }
+	public boolean checkpointPeriodically() {
+		return checkpointPeriodically;
+	}
 
-    public boolean loserEventCleaner() {
-        return loserEventCleaner;
-    }
+	public boolean loserEventCleaner() {
+		return loserEventCleaner;
+	}
 
-    public boolean allowDeadNets() {
-        return allowDeadNets;
-    }
+	public void setAllowDeadNets(boolean b) {
+		this.allowDeadNets = b;
+	}
 
-    public static final TimeInterval NO_TIME = new TimeInterval(0,
-                                                                UnitImpl.SECOND);
+	public boolean allowDeadNets() {
+		return allowDeadNets;
+	}
 
-    public static final TimeInterval ONE_WEEK = new TimeInterval(7,
-                                                                 UnitImpl.DAY);
+	public static final TimeInterval NO_TIME = new TimeInterval(0,
+			UnitImpl.SECOND);
 
-    public static final TimeInterval TEN_MIN = new TimeInterval(10,
-                                                                UnitImpl.MINUTE);
+	public static final TimeInterval ONE_WEEK = new TimeInterval(7,
+			UnitImpl.DAY);
 
-    public static final TimeInterval DAYS_180 = new TimeInterval(180,
-                                                                 UnitImpl.DAY);
+	public static final TimeInterval TEN_MIN = new TimeInterval(10,
+			UnitImpl.MINUTE);
 
-    private TimeInterval eventQueryIncrement = ONE_WEEK;
+	public static final TimeInterval DAYS_180 = new TimeInterval(180,
+			UnitImpl.DAY);
 
-    private TimeInterval eventLag = ONE_WEEK;
+	private TimeInterval eventQueryIncrement = ONE_WEEK;
 
-    private TimeInterval eventRefresh = TEN_MIN;
+	private TimeInterval eventLag = ONE_WEEK;
 
-    private TimeInterval maxRetry = DAYS_180;
+	private TimeInterval eventRefresh = TEN_MIN;
 
-    private TimeInterval serverRetryDelay = NO_TIME;
+	private TimeInterval maxRetry = DAYS_180;
 
-    private TimeInterval seismogramLatency = (TimeInterval)ONE_WEEK.multiplyBy(4);
+	private TimeInterval serverRetryDelay = NO_TIME;
 
-    private String runName = "Your Sod";
+	private TimeInterval seismogramLatency = (TimeInterval) ONE_WEEK
+			.multiplyBy(4);
 
-    private String statusDir = "status";
+	private String runName = "Your Sod";
 
-    private int numWorkers = 1;
+	private String statusDir = "status";
 
-    private boolean reopenEvents = false;
+	private int numWorkers = 1;
 
-    private boolean removeDatabase = false;
+	private boolean reopenEvents = false;
 
-    private boolean statusPages = false;
+	private boolean removeDatabase = false;
 
-    public static final String DONT_RESTART = "noCheck";
+	private boolean statusPages = false;
 
-    public static final String AT_LEAST_ONCE = "atLeastOnce";
+	public static final String DONT_RESTART = "noCheck";
 
-    public static final String AT_MOST_ONCE = "atMostOnce";
+	public static final String AT_LEAST_ONCE = "atLeastOnce";
 
-    private String evChanPairProc = AT_LEAST_ONCE;
+	public static final String AT_MOST_ONCE = "atMostOnce";
 
-    private boolean checkpointPeriodically = false;
+	private String evChanPairProc = AT_LEAST_ONCE;
 
-    private boolean loserEventCleaner = false;
+	private boolean checkpointPeriodically = false;
 
-    private boolean allowDeadNets;
+	private boolean loserEventCleaner = false;
+
+	private boolean allowDeadNets;
 }

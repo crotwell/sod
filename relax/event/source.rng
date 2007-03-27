@@ -40,7 +40,10 @@
             <optional>
                 <externalRef href="../base/externalRef/originDepthRange.rng"/>
             </optional>
-            <externalRef href="../base/externalRef/originTimeRange.rng"/>
+            <choice>
+                <externalRef href="../base/externalRef/originTimeRange.rng"/>
+                <externalRef href="networkTimeRange.rng"/>
+            </choice>
             <optional>
                 <externalRef href="../base/externalRef/magnitudeRange.rng"/>
             </optional>
