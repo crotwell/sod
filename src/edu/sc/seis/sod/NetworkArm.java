@@ -44,7 +44,6 @@ import edu.sc.seis.sod.database.SiteDbObject;
 import edu.sc.seis.sod.database.StationDbObject;
 import edu.sc.seis.sod.database.network.JDBCNetworkUnifier;
 import edu.sc.seis.sod.source.event.EventSource;
-import edu.sc.seis.sod.status.OutputScheduler;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.networkArm.NetworkMonitor;
 import edu.sc.seis.sod.subsetter.channel.ChannelEffectiveTimeOverlap;
@@ -128,7 +127,6 @@ public class NetworkArm implements Arm {
     private void configureEffectiveTimeCheckers() {
         EventArm arm = Start.getEventArm();
         if(arm != null && !Start.getRunProps().allowDeadNets()) {
-            System.out.println("Using event time range to constrain effective times");
             EventSource[] sources = arm.getSources();
             MicroSecondTimeRange fullTime = sources[0].getEventTimeRange();
             for(int i = 1; i < sources.length; i++) {
@@ -183,14 +181,10 @@ public class NetworkArm implements Arm {
         TimeInterval refreshInterval = finder.getRefreshInterval();
         if(refreshInterval == null)
             return false;
-        logger.debug("checking the refresh interval which is "
-                + refreshInterval.getValue() + " " + refreshInterval.getUnit());
         MicroSecondDate databaseTime;
         try {
             databaseTime = queryTimeTable.getQuery(finder.getName(),
                                                    finder.getDNS());
-            logger.debug("the last time the networks were checked was "
-                    + databaseTime);
             MicroSecondDate lastTime = new MicroSecondDate(databaseTime);
             MicroSecondDate currentTime = ClockUtil.now();
             TimeInterval timeInterval = currentTime.difference(lastTime);
@@ -235,7 +229,7 @@ public class NetworkArm implements Arm {
             return netDbs;
         }
         statusChanged("Getting networks");
-        logger.debug("Getting NetworkDBObjects from network");
+        logger.info("Getting networks");
         ArrayList networkDBs = new ArrayList();
         NetworkDCOperations netDC = finder.getNetworkDC();
         NetworkAccess[] allNets;
@@ -246,12 +240,13 @@ public class NetworkArm implements Arm {
                 List constrainedNets = new ArrayList(constrainingCodes.length);
                 for(int i = 0; i < constrainingCodes.length; i++) {
                     NetworkAccess[] found;
-                    // this is a bit of a hack as names could be one or two characters, but works with _US-TA style
+                    // this is a bit of a hack as names could be one or two
+                    // characters, but works with _US-TA style
                     // virtual networks at the DMC
-                    if (constrainingCodes[i].length() >2) {
-                    	found = netFinder.retrieve_by_name(constrainingCodes[i]);
+                    if(constrainingCodes[i].length() > 2) {
+                        found = netFinder.retrieve_by_name(constrainingCodes[i]);
                     } else {
-                    	found = netFinder.retrieve_by_code(constrainingCodes[i]);
+                        found = netFinder.retrieve_by_code(constrainingCodes[i]);
                     }
                     for(int j = 0; j < found.length; j++) {
                         constrainedNets.add(found[j]);
@@ -262,8 +257,7 @@ public class NetworkArm implements Arm {
                 allNets = netDC.a_finder().retrieve_all();
             }
         }
-        logger.debug("found " + allNets.length
-                + " network access objects from the network DC finder");
+        logger.info("Found " + allNets.length + " networks");
         NetworkPusher lastPusher = null;
         for(int i = 0; i < allNets.length; i++) {
             try {
@@ -336,7 +330,7 @@ public class NetworkArm implements Arm {
                                 ClockUtil.now());
         netDbs = new NetworkDbObject[networkDBs.size()];
         networkDBs.toArray(netDbs);
-        logger.debug("got " + netDbs.length + " networkDBobjects");
+        logger.info(netDbs.length + " networks passed");
         statusChanged("Waiting for a request");
         return netDbs;
     }
@@ -419,21 +413,19 @@ public class NetworkArm implements Arm {
     private void finish() {
         armFinished = true;
         logger.info("Network arm finished.");
-        for (Iterator iter = armListeners.iterator(); iter.hasNext();) {
-			ArmListener listener = (ArmListener) iter.next();
-			System.out.println("CALLING FINISHED");
-			listener.finished(this);
-		}
+        for(Iterator iter = armListeners.iterator(); iter.hasNext();) {
+            ArmListener listener = (ArmListener)iter.next();
+            listener.finished(this);
+        }
     }
-    
 
-    
-    public void add(ArmListener listener){
-    	armListeners.add(listener);
-    	if(armFinished == true){
-    		listener.finished(this);
-    	}
+    public void add(ArmListener listener) {
+        armListeners.add(listener);
+        if(armFinished == true) {
+            listener.finished(this);
+        }
     }
+
     /**
      * @return stations for the given network object that pass this arm's
      *         station subsetter
@@ -532,9 +524,10 @@ public class NetworkArm implements Arm {
             try {
                 Channel[] channels = networkAccess.retrieve_for_station(station.get_id());
                 for(int i = 0; i < channels.length; i++) {
-                    //Works around http://www.iris.edu/jira/browse/DHI-28  
-                    //Remove when fixed.
-                    if(!StationIdUtil.areEqual(station, channels[i].my_site.my_station)){
+                    // Works around http://www.iris.edu/jira/browse/DHI-28
+                    // Remove when fixed.
+                    if(!StationIdUtil.areEqual(station,
+                                               channels[i].my_site.my_station)) {
                         logger.debug("Tossing channel returned for station other than the one requested!");
                         continue;
                     }
@@ -868,7 +861,7 @@ public class NetworkArm implements Arm {
     private NetworkDbObject[] netDbs;
 
     private List statusMonitors = new ArrayList();
-    
+
     private List armListeners = new ArrayList();
 
     private static Logger logger = Logger.getLogger(NetworkArm.class);
