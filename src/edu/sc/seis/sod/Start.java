@@ -383,6 +383,8 @@ public class Start {
             event.setWaitForWaveformProcessing(false);
         }
         if(RUN_ARMS) {
+            //Make sure the OutputScheduler exists when the arms are started
+            OutputScheduler.getDefault();
             startArm(network, "NetworkArm");
             startArm(event, "EventArm");
             startArm(waveform, "WaveformArm");
