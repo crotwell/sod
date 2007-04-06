@@ -675,9 +675,15 @@ public class WaveformArm implements Arm {
                                                                 ecp.getCookieJar());
                     }
                 } catch(Throwable e) {
-                    ecp.update(e, Status.get(Stage.EVENT_STATION_SUBSETTER,
-                                             Standing.SYSTEM_FAILURE));
-                    failLogger.warn(ecp, e);
+                    if(e instanceof org.omg.CORBA.SystemException) {
+                        ecp.update(e, Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.CORBA_FAILURE));
+                        failLogger.info("Network or server problem, SOD will continue to retry this item periodically: ("+e.getClass().getName()+") "+ecp);
+                        logger.debug(ecp, e);
+                    } else {
+                        ecp.update(e, Status.get(Stage.EVENT_STATION_SUBSETTER,
+                                                 Standing.SYSTEM_FAILURE));
+                        failLogger.warn(ecp, e);
+                    }
                     return;
                 }
                 if(accepted.isSuccess()) {

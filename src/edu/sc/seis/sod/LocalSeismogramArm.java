@@ -3,6 +3,7 @@ package edu.sc.seis.sod;
 import java.util.Iterator;
 import java.util.LinkedList;
 import org.apache.log4j.Logger;
+import org.omg.CORBA.SystemException;
 import edu.iris.Fissures.FissuresException;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
@@ -166,6 +167,7 @@ public class LocalSeismogramArm implements Subsetter {
                     outfilters = dataCenter.available_data(infilters);
                     logger.debug("after successful available_data call retries="
                             + retries);
+                    serverSuccessful(dataCenter);
                     break;
                 } catch(org.omg.CORBA.SystemException e) {
                     retries++;
@@ -185,7 +187,7 @@ public class LocalSeismogramArm implements Subsetter {
                             dataCenter.reset();
                         }
                     } else {
-                        handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e);
+                        handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e, dataCenter);
                         return;
                     }
                 }
@@ -401,6 +403,10 @@ public class LocalSeismogramArm implements Subsetter {
     }
 
     private static void handle(EventChannelPair ecp, Stage stage, Throwable t) {
+        handle(ecp, stage, t, null);
+    }
+     
+    private static void handle(EventChannelPair ecp, Stage stage, Throwable t, ProxySeismogramDC server) {
         if(t instanceof org.omg.CORBA.SystemException) {
             ecp.update(t, Status.get(stage, Standing.CORBA_FAILURE));
         } else {
@@ -410,9 +416,21 @@ public class LocalSeismogramArm implements Subsetter {
             FissuresException f = (FissuresException)t;
             failLogger.warn(f.the_error.error_code + " "
                     + f.the_error.error_description + " " + ecp, t);
+        } else if(t instanceof org.omg.CORBA.SystemException) {
+            // just to generate user message if needed
+            if (server != null) {
+                Start.createRetryStrategy().shouldRetry((SystemException)t, server, 0, 0);
+            } else {
+                failLogger.info("Network or server problem: ("+t.getClass().getName()+") "+ecp);
+            }
+            logger.debug(ecp, t);
         } else {
             failLogger.warn(ecp, t);
         }
+    }
+    
+    private static void serverSuccessful(ProxySeismogramDC dataCenter) {
+        Start.createRetryStrategy().serverRecovered(dataCenter);
     }
 
     private EventChannelSubsetter eventChannel = new PassEventChannel();

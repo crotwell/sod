@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import org.apache.log4j.Logger;
+import org.omg.CORBA.SystemException;
 import org.w3c.dom.Element;
 import edu.iris.Fissures.FissuresException;
 import edu.iris.Fissures.UnitBase;
@@ -212,6 +213,7 @@ public class MotionVectorArm implements Subsetter {
                         outfilters[i] = dataCenter.available_data(infilters[i]);
                         logger.debug("after successful available_data call retries="
                                 + retries);
+                        serverSuccessful(dataCenter);
                         break;
                     } catch(org.omg.CORBA.SystemException e) {
                         retries++;
@@ -232,7 +234,7 @@ public class MotionVectorArm implements Subsetter {
                                 dataCenter.reset();
                             }
                         } else {
-                            handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e);
+                            handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e, dataCenter);
                             return;
                         }
                     }
@@ -605,6 +607,10 @@ public class MotionVectorArm implements Subsetter {
     }
 
     private static void handle(EventVectorPair ecp, Stage stage, Throwable t) {
+        handle(ecp, stage, t, null);
+    }
+    
+    private static void handle(EventVectorPair ecp, Stage stage, Throwable t, ProxySeismogramDC server) {
         if(t instanceof org.omg.CORBA.SystemException) {
             ecp.update(t, Status.get(stage, Standing.CORBA_FAILURE));
         } else {
@@ -613,11 +619,23 @@ public class MotionVectorArm implements Subsetter {
         if (t instanceof FissuresException) {
             FissuresException f = (FissuresException)t;
             failLogger.warn(f.the_error.error_code+" "+f.the_error.error_description+" "+ecp, t);
+        } else if(t instanceof org.omg.CORBA.SystemException) {
+            // just to generate user message if needed
+            if (server != null) {
+                Start.createRetryStrategy().shouldRetry((SystemException)t, server, 0, 0);
+            } else {
+                failLogger.info("Network or server problem, SOD will continue to retry this item periodically: ("+t.getClass().getName()+") "+ecp);
+            }
+            logger.debug(ecp, t);
         } else {
             failLogger.warn(ecp, t);
         }
     }
 
+    private static void serverSuccessful(ProxySeismogramDC dataCenter) {
+        Start.createRetryStrategy().serverRecovered(dataCenter);
+    }
+    
     private EventVectorSubsetter eventChannelGroup = new PassEventChannel();
 
     private VectorRequestGenerator requestGenerator;

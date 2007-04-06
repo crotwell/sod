@@ -228,12 +228,17 @@ public class Start {
     }
 
     public static RetryStrategy createRetryStrategy() {
+        if (retryStrategy != null) {
+            return retryStrategy;
+        }
         if(commandName.equals("sod")) {
             return new UserReportRetryStrategy("SOD will pick up where it left off when restarted.");
         } else {
             return new UserReportRetryStrategy();
         }
     }
+    
+    private static RetryStrategy retryStrategy = null;
 
     public static void setCommandName(String name) {
         commandName = name;
