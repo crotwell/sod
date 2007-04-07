@@ -35,7 +35,7 @@ public class JDBCConfig extends SodJDBC {
         this(ConnMgr.createConnection());
         Statement stmt = conn.createStatement();
         try {
-            if(!isSameConfig(config)) {
+            if(!isSameConfig(config) && update) {
                 stmt.executeUpdate("UPDATE config SET configString = '"
                         + escapeConfigString(config) + "'");
             }
@@ -56,8 +56,7 @@ public class JDBCConfig extends SodJDBC {
     }
 
     public boolean isSameConfig(String config) throws NotFound, SQLException {
-        String val = getCurrentConfig();
-        return val.equals(config);
+        return getCurrentConfig().equals(config);
     }
 
     public static String extractConfigString(File configFile)
