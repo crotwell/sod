@@ -9,7 +9,49 @@
                     <summary>Matches events whose time occurs within the given range</summary>
                 </xsd:documentation>
             </xsd:annotation>
-            <ref name="timeRange"/>
+        <element name="startTime">
+            <xsd:annotation>
+                <example>
+                    <startTime>20020701T00:00:00.001Z</startTime>
+                </example>
+            </xsd:annotation>
+            <ref name="originTime"/>
+        </element>
+        <element name="endTime">
+            <xsd:annotation>
+                <example>
+                    <endTime>20021030T00:00:00.001Z</endTime>
+                </example>
+            </xsd:annotation>
+            <ref name="originTime"/>
+        </element>
         </element>
     </start>
+    <define name="originTime">
+            <choice>
+                <ref name="time"/>
+                <ref name="networkStartTime"/>
+                <ref name="networkEndTime"/>
+            </choice>
+    </define>
+    <define name="networkStartTime">
+        <element name="networkStartTime">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Provides the earliest start time from the channels retrieved by the network arm.</summary>
+                </xsd:documentation>
+            </xsd:annotation>
+            <empty/>
+        </element>
+    </define>
+    <define name="networkEndTime">
+        <element name="networkEndTime">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Provides the latest end time from the channels retrieved by the network arm.  This is often far in the future if the channel is still active.</summary>
+                </xsd:documentation>
+            </xsd:annotation>
+            <empty/>
+        </element>
+    </define>
 </grammar>

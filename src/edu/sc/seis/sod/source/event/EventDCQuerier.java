@@ -50,7 +50,7 @@ public class EventDCQuerier {
             Node node = childNodes.item(counter);
             if(node instanceof Element) {
                 String tagName = ((Element)node).getTagName();
-                if(!tagName.equals("name") && !tagName.equals("dns")) {
+                if(!tagName.equals("name") && !tagName.equals("dns") && !tagName.equals("originTimeRange")) {
                     Object object = SodUtil.load((Element)node,
                                                  new String[] {"eventArm",
                                                                "origin"});

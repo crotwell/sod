@@ -61,12 +61,10 @@ public class SodUtil {
         return false;
     }
 
-    public static File makeOutputDirectory(Element config)
-            throws ConfigurationException {
+    public static File makeOutputDirectory(Element config) throws ConfigurationException {
         String outputDirName = "html";
         if(config != null) {
-            Element outputElement = SodUtil.getElement(config,
-                                                       "outputDirectory");
+            Element outputElement = SodUtil.getElement(config, "outputDirectory");
             if(outputElement != null) {
                 if(SodUtil.getText(outputElement) != null) {
                     outputDirName = SodUtil.getText(outputElement);
@@ -125,20 +123,18 @@ public class SodUtil {
             if(subException instanceof ConfigurationException) {
                 throw (ConfigurationException)subException;
             } else if(subException instanceof Exception) {
-                throw new ConfigurationException("Problem creating "
-                        + config.getTagName(), subException);
+                throw new ConfigurationException("Problem creating " + config.getTagName(),
+                                                 subException);
             } else {
                 // not an Exception, so must be an Error
                 throw (java.lang.Error)subException;
             } // end of else
         } catch(Exception e) {
-            throw new ConfigurationException("Problem understanding "
-                    + config.getTagName(), e);
+            throw new ConfigurationException("Problem understanding " + config.getTagName(), e);
         } // end of try-catch
     }
 
-    private static Class load(String tagName, String[] armNames)
-            throws ClassNotFoundException {
+    private static Class load(String tagName, String[] armNames) throws ClassNotFoundException {
         if(tagName.equals("beginOffset") || tagName.equals("endOffset")) {
             tagName = "interval";
         }
@@ -146,8 +142,7 @@ public class SodUtil {
         for(int j = 0; j < armNames.length; j++) {
             String armName = armNames[j];
             for(int i = 0; i < basePackageNames.length; i++) {
-                String packageName = baseName + "." + basePackageNames[i] + "."
-                        + armName;
+                String packageName = baseName + "." + basePackageNames[i] + "." + armName;
                 try {
                     return Class.forName(packageName + "." + tagName);
                 } catch(ClassNotFoundException ex) {}// will be handled at
@@ -171,31 +166,26 @@ public class SodUtil {
      * a costructor argument. If the loaded class doesnt implement
      * mustImplement, a configuration exception is thrown
      */
-    public static synchronized Object loadExternal(String tagName,
-                                                   String[] armNames,
-                                                   Element config)
+    public static synchronized Object loadExternal(String tagName, String[] armNames, Element config)
             throws Exception {
         String classname = getNestedText(SodUtil.getElement(config, "classname"));
         try {
             Class extClass = Class.forName(classname);
-            Class mustImplement = load(tagName.substring("external".length()),
-                                       armNames);
+            Class mustImplement = load(tagName.substring("external".length()), armNames);
             if(mustImplement.isAssignableFrom(extClass)) {
                 return loadClass(extClass, config);
             }
             throw new ConfigurationException("External class " + classname
-                    + " does not implement the class it's working with, "
-                    + mustImplement + ".  Make " + classname + " implement "
-                    + mustImplement
+                    + " does not implement the class it's working with, " + mustImplement
+                    + ".  Make " + classname + " implement " + mustImplement
                     + " to use it at this point in the strategy file.");
         } catch(ClassNotFoundException e1) {
-            throw new ConfigurationException("Unable to find external class "
-                    + classname + ".  Make sure it's on the classpath", e1);
+            throw new ConfigurationException("Unable to find external class " + classname
+                    + ".  Make sure it's on the classpath", e1);
         }
     }
 
-    private static Object loadClass(Class subsetter, Element config)
-            throws Exception {
+    private static Object loadClass(Class subsetter, Element config) throws Exception {
         Class[] argTypes = {Element.class};
         Constructor constructor = null;
         try {
@@ -212,13 +202,9 @@ public class SodUtil {
 
     private static String baseName = "edu.sc.seis.sod";
 
-    private static String[] basePackageNames = {"subsetter",
-                                                "process",
-                                                "status",
-                                                "source"};
+    private static String[] basePackageNames = {"subsetter", "process", "status", "source"};
 
-    public static UnitImpl loadUnit(Element config)
-            throws ConfigurationException {
+    public static UnitImpl loadUnit(Element config) throws ConfigurationException {
         String unitName = null;
         NodeList children = config.getChildNodes();
         if(children.item(0) instanceof Text) {
@@ -239,8 +225,7 @@ public class SodUtil {
      * If endOfDay is true, and the hours, minutes and seconds are unspecified
      * by this time element, those fields are set to the end of the day
      */
-    public static Time loadTime(Element el, boolean endOfDay)
-            throws ConfigurationException {
+    public static Time loadTime(Element el, boolean endOfDay) throws ConfigurationException {
         NodeList kids = el.getChildNodes();
         for(int i = 0; i < kids.getLength(); i++) {
             Node node = kids.item(i);
@@ -269,12 +254,8 @@ public class SodUtil {
                                       DOMHelper.extractInt(element, "month", -1),
                                       DOMHelper.extractInt(element, "day", -1),
                                       DOMHelper.extractInt(element, "hour", -1),
-                                      DOMHelper.extractInt(element,
-                                                           "minute",
-                                                           -1),
-                                      DOMHelper.extractInt(element,
-                                                           "second",
-                                                           -1),
+                                      DOMHelper.extractInt(element, "minute", -1),
+                                      DOMHelper.extractInt(element, "second", -1),
                                       ceiling);
         return new MicroSecondDate(cal.getTime()).getFissuresTime();
     }
@@ -282,7 +263,8 @@ public class SodUtil {
     /**
      * Creates a calendar in the given year. Year must be specified, but all
      * other fields can be -1 if unknown. If -1, they're either the greatest of
-     * least value of the calendar's current state depending on the value of ceiling.
+     * least value of the calendar's current state depending on the value of
+     * ceiling.
      */
     public static Calendar createCalendar(int year,
                                           int month,
@@ -302,10 +284,7 @@ public class SodUtil {
         return cal;
     }
 
-    public static void fillInField(int field,
-                                   int value,
-                                   boolean ceiling,
-                                   Calendar cal) {
+    public static void fillInField(int field, int value, boolean ceiling, Calendar cal) {
         if(value >= 0) {
             cal.set(field, value);
         } else if(ceiling) {
@@ -315,10 +294,8 @@ public class SodUtil {
         }
     }
 
-    private static Time loadRelativeTime(Element el)
-            throws ConfigurationException {
-        TimeInterval duration = loadTimeInterval(DOMHelper.getElement(el,
-                                                                      "timeInterval"));
+    private static Time loadRelativeTime(Element el) throws ConfigurationException {
+        TimeInterval duration = loadTimeInterval(DOMHelper.getElement(el, "timeInterval"));
         MicroSecondDate now = ClockUtil.now();
         if(el.getTagName().equals("earlier")) {
             return now.subtract(duration).getFissuresTime();
@@ -326,44 +303,35 @@ public class SodUtil {
         return now.add(duration).getFissuresTime();
     }
 
-    public static TimeInterval loadTimeInterval(Element config)
-            throws ConfigurationException {
+    public static TimeInterval loadTimeInterval(Element config) throws ConfigurationException {
         try {
             UnitImpl unit = loadUnit(XMLUtil.getElement(config, "unit"));
             if(DOMHelper.hasElement(config, "randomValue")) {
                 Element rvConf = DOMHelper.getElement(config, "randomValue");
-                double min = Double.parseDouble(DOMHelper.extractText(rvConf,
-                                                                      "min"));
-                double max = Double.parseDouble(DOMHelper.extractText(rvConf,
-                                                                      "max"));
+                double min = Double.parseDouble(DOMHelper.extractText(rvConf, "min"));
+                double max = Double.parseDouble(DOMHelper.extractText(rvConf, "max"));
                 return new RandomTimeInterval(min, max, unit);
             } else {
-                double value = Double.parseDouble(DOMHelper.extractText(config,
-                                                                        "value"));
+                double value = Double.parseDouble(DOMHelper.extractText(config, "value"));
                 return new TimeInterval(value, unit);
             }
         } catch(Exception e) {
-            throw new ConfigurationException("Can't load TimeInterval from "
-                    + config.getTagName(), e);
+            throw new ConfigurationException("Can't load TimeInterval from " + config.getTagName(),
+                                             e);
         } // end of try-catch
     }
 
-    public static QuantityImpl loadQuantity(Element config)
-            throws ConfigurationException {
+    public static QuantityImpl loadQuantity(Element config) throws ConfigurationException {
         try {
-            double value = Double.parseDouble(XMLUtil.getText(XMLUtil.getElement(config,
-                                                                                 "value")));
+            double value = Double.parseDouble(XMLUtil.getText(XMLUtil.getElement(config, "value")));
             UnitImpl unit = loadUnit(XMLUtil.getElement(config, "unit"));
             return new QuantityImpl(value, unit);
         } catch(Exception e) {
-            throw new ConfigurationException("Can't load quantity from "
-                    + config.getTagName(), e);
+            throw new ConfigurationException("Can't load quantity from " + config.getTagName(), e);
         } // end of try-catch
     }
 
-    public static int loadInt(Element config,
-                              String elementName,
-                              int defaultValue) {
+    public static int loadInt(Element config, String elementName, int defaultValue) {
         Element child = XMLUtil.getElement(config, elementName);
         if(child != null) {
             return Integer.parseInt(XMLUtil.getText(child));
@@ -372,16 +340,13 @@ public class SodUtil {
         }
     }
 
-    public static void copyFile(String src, String dest)
-            throws FileNotFoundException {
+    public static void copyFile(String src, String dest) throws FileNotFoundException {
         if(src.startsWith("jar")) {
             try {
-                URL url = TemplateFileLoader.getUrl(SodUtil.class.getClassLoader(),
-                                                    src);
+                URL url = TemplateFileLoader.getUrl(SodUtil.class.getClassLoader(), src);
                 copyStream(url.openStream(), dest);
             } catch(Exception e) {
-                GlobalExceptionHandler.handle("trouble creating url for copying",
-                                              e);
+                GlobalExceptionHandler.handle("trouble creating url for copying", e);
             }
         } else {
             File f = new File(src);
@@ -405,16 +370,13 @@ public class SodUtil {
                 try {
                     os.close();
                 } catch(IOException e1) {
-                    GlobalExceptionHandler.handle("Unable to close output stream for file "
-                                                          + f,
-                                                  e1);
+                    GlobalExceptionHandler.handle("Unable to close output stream for file " + f, e1);
                 }
             }
         }
     }
 
-    public static UnitRangeImpl loadUnitRange(Element config)
-            throws ConfigurationException {
+    public static UnitRangeImpl loadUnitRange(Element config) throws ConfigurationException {
         Unit unit = null;
         double min = Double.MIN_VALUE;
         double max = Double.MAX_VALUE;
@@ -436,8 +398,7 @@ public class SodUtil {
         return unitRange;
     }
 
-    public static MicroSecondTimeRange loadTimeRange(Element config)
-            throws ConfigurationException {
+    public static MicroSecondTimeRange loadTimeRange(Element config) throws ConfigurationException {
         NodeList children = config.getChildNodes();
         Time begin = null, end = null;
         for(int i = 0; i < children.getLength(); i++) {
@@ -460,13 +421,12 @@ public class SodUtil {
         return new Dimension(Integer.parseInt(width), Integer.parseInt(height));
     }
 
-    public static String nodeValueOfXPath(Element el, String xpath)
-            throws DOMException, TransformerException {
+    public static String nodeValueOfXPath(Element el, String xpath) throws DOMException,
+            TransformerException {
         return XPathAPI.selectSingleNode(el, xpath).getNodeValue();
     }
 
-    public static BoxAreaImpl loadBoxArea(Element config)
-            throws ConfigurationException {
+    public static BoxAreaImpl loadBoxArea(Element config) throws ConfigurationException {
         NodeList children = config.getChildNodes();
         float minLatitude = 0;
         float maxLatitude = 0;
@@ -484,10 +444,7 @@ public class SodUtil {
                 }
             }
         }
-        return new BoxAreaImpl(minLatitude,
-                               maxLatitude,
-                               minLongitude,
-                               maxLongitude);
+        return new BoxAreaImpl(minLatitude, maxLatitude, minLongitude, maxLongitude);
     }
 
     /**
@@ -554,9 +511,7 @@ public class SodUtil {
         return rtnValue;
     }
 
-    public static String getRelativePath(String fromPath,
-                                         String toPath,
-                                         String separator) {
+    public static String getRelativePath(String fromPath, String toPath, String separator) {
         StringTokenizer fromTok = new StringTokenizer(fromPath, separator);
         StringTokenizer toTok = new StringTokenizer(toPath, separator);
         StringBuffer dotBuf = new StringBuffer();
@@ -582,8 +537,7 @@ public class SodUtil {
         return dotBuf.toString() + pathBuf.toString();
     }
 
-    public static String getAbsolutePath(String baseLoc, String relativeLoc)
-            throws IOException {
+    public static String getAbsolutePath(String baseLoc, String relativeLoc) throws IOException {
         if(baseLoc.startsWith("jar:")) {
             String noFileBase = removeFileName(baseLoc);
             int numDirUp = countDots(relativeLoc);
@@ -638,10 +592,8 @@ public class SodUtil {
             if(node instanceof Element) {
                 if(((Element)node).getTagName().equals("property")) {
                     Element elem = (Element)node;
-                    String propName = SodUtil.getNestedText(SodUtil.getElement(elem,
-                                                                               "name"));
-                    String propValue = SodUtil.getNestedText(SodUtil.getElement(elem,
-                                                                                "value"));
+                    String propName = SodUtil.getNestedText(SodUtil.getElement(elem, "name"));
+                    String propValue = SodUtil.getNestedText(SodUtil.getElement(elem, "value"));
                     props.setProperty(propName, propValue);
                 }
             }
