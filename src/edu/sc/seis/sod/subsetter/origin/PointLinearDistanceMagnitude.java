@@ -19,7 +19,7 @@ public class PointLinearDistanceMagnitude extends LinearDistanceMagnitudeRange i
 
     public PointLinearDistanceMagnitude(Element element) throws ConfigurationException {
         super(element);
-        double[] latlon = AbstractOriginPoint.getLatLon(element);
+        double[] latlon = AbstractOriginPoint.getLatLon(element, "pointLinearDistanceMagnitude");
         lat = latlon[0];
         lon = latlon[1];
     }

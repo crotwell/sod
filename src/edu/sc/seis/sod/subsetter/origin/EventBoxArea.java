@@ -12,7 +12,6 @@ import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
 public class EventBoxArea implements OriginSubsetter {
-    //TODO longitude range
     public EventBoxArea(Element el) throws ConfigurationException {
         this.ba = SodUtil.loadBoxArea(el);
     }

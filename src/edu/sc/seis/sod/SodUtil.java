@@ -18,7 +18,6 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
 import javax.xml.transform.TransformerException;
-import org.apache.log4j.Logger;
 import org.apache.xpath.XPathAPI;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
@@ -92,9 +91,7 @@ public class SodUtil {
         try {
             String tagName = config.getTagName();
             // make sure first letter is upper case
-            String firstLetter = tagName.substring(0, 1);
-            firstLetter = firstLetter.toUpperCase();
-            tagName = firstLetter + tagName.substring(1);
+            tagName = tagName.substring(0, 1).toUpperCase() + tagName.substring(1);
             // first check for things that are not SodElements
             if(tagName.equals("Unit")) {
                 return loadUnit(config);
@@ -129,6 +126,9 @@ public class SodUtil {
                 // not an Exception, so must be an Error
                 throw (java.lang.Error)subException;
             } // end of else
+        }catch(ConfigurationException ce){
+            //Just rethrow config exceptions 
+            throw ce;
         } catch(Exception e) {
             throw new ConfigurationException("Problem understanding " + config.getTagName(), e);
         } // end of try-catch
@@ -607,6 +607,10 @@ public class SodUtil {
         }
         return array;
     }
+    
+    public static String getSimpleName(Class c){
+        return c.getName().substring(c.getName().lastIndexOf(".") + 1);
+    }
 
     public static final UnitImpl[] LENGTH_UNITS = {UnitImpl.KILOMETER,
                                                    UnitImpl.METER,
@@ -633,6 +637,4 @@ public class SodUtil {
                                                  UnitImpl.FORTNIGHT};
 
     public static final UnitImpl[] FREQ_UNITS = {UnitImpl.HERTZ};
-
-    private static Logger logger = Logger.getLogger(SodUtil.class);
 }// SubsetterUtil

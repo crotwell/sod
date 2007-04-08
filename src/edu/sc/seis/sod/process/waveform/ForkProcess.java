@@ -112,8 +112,7 @@ public class ForkProcess implements WaveformProcess, Threadable {
     }
 
     public String toString() {
-        String name = getClass().getName();
-        String s = name.substring(name.lastIndexOf(".") + 1) + "(";
+        String s = SodUtil.getSimpleName(getClass()) + "(";
         Iterator it = localSeisProcessList.iterator();
         while(it.hasNext()) {
             s += it.next().toString() + ",";

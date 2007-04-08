@@ -46,8 +46,9 @@ public class AreaSubsetter {
 
     public static Location[] extractPolygon(String fileLocation)
             throws ConfigurationException {
+        Location[] locs;
         try {
-            return AreaUtil.loadPolygon(makeRelativeOrRecipeDirReader(fileLocation));
+            locs = AreaUtil.loadPolygon(makeRelativeOrRecipeDirReader(fileLocation));
         } catch(FileNotFoundException e) {
             throw new UserConfigurationException(e.getMessage()
                     + " as a polygon file.");
@@ -55,6 +56,11 @@ public class AreaSubsetter {
             throw new ConfigurationException("Problem reading from file "
                     + fileLocation, e);
         }
+        for(int i = 0; i < locs.length; i++) {
+            LatitudeRange.check(locs[i].latitude, fileLocation);
+            LongitudeRange.sanitize(locs[i].longitude, fileLocation);
+        }
+        return locs;
     }
 
     public static BufferedReader makeRelativeOrRecipeDirReader(String fileLocation)
