@@ -28,6 +28,12 @@ public class TimeParser extends StringParser {
             return "<now/>";
         } else if(arg.equals(PREVIOUS_DAY_BEGIN)) {
             arg = PREVIOUS_DAY;
+        }else if(arg.equals("network")){
+            if(ceiling){
+                return "<networkEndTime/>";
+            }else{
+                return "<networkStartTime/>";
+            }
         }
         Matcher m = datePattern.matcher(arg);
         if(!m.matches()) {
