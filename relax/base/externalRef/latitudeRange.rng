@@ -1,9 +1,24 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <include href="../include/range.rng"/>
+    <include href="../include/latLon.rng"/>
     <start combine="choice">
         <element name="latitudeRange">
-            <ref name="degreeRange"/>
+            <optional>
+                <element name="min">
+                    <xsd:annotation>
+                        <include/>
+                    </xsd:annotation>
+                    <ref name="latitudeData"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="max">
+                    <xsd:annotation>
+                        <include/>
+                    </xsd:annotation>
+                    <ref name="latitudeData"/>
+                </element>
+            </optional>
         </element>
     </start>
 </grammar>

@@ -1,15 +1,27 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
-    <include href="../include/range.rng"/>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <include href="../include/latLon.rng"/>
     <start combine="choice">
         <element name="longitudeRange">
             <xsd:annotation>
                 <summary>A range of degrees longitude</summary>
-                <description>From min to max longitude measured in degrees from the Grenwich meridian,
-                    positive is east</description>
+                <description>From min to max longitude measured in degrees from the Grenwich meridian, positive is east</description>
             </xsd:annotation>
-            <ref name="degreeRange"/>
+            <optional>
+                <element name="min">
+                    <xsd:annotation>
+                        <include/>
+                    </xsd:annotation>
+                    <ref name="longitudeData"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="max">
+                    <xsd:annotation>
+                        <include/>
+                    </xsd:annotation>
+                    <ref name="longitudeData"/>
+                </element>
+            </optional>
         </element>
     </start>
 </grammar>

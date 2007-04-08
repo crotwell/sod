@@ -1,24 +1,13 @@
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <include href="../include/range.rng"/>
+    <include href="../include/latLon.rng"/>
     <start combine="choice">
         <interleave>
             <xsd:annotation>
                 <summary>A range of distance from a point defined by a lat and lon</summary>
             </xsd:annotation>
-            <element name="latitude">
-                <data type="double">
-                    <xsd:annotation>
-                        <example>19</example>
-                    </xsd:annotation>
-                </data>
-            </element>
-            <element name="longitude">
-                <data type="double">
-                    <xsd:annotation>
-                        <example>52</example>
-                    </xsd:annotation>
-                </data>
-            </element>
+            <ref name="lat"/>
+            <ref name="lon"/>
             <ref name="range"/>
         </interleave>
     </start>
