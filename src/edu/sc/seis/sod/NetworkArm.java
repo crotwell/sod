@@ -524,13 +524,6 @@ public class NetworkArm implements Arm {
             try {
                 Channel[] channels = networkAccess.retrieve_for_station(station.get_id());
                 for(int i = 0; i < channels.length; i++) {
-                    // Works around http://www.iris.edu/jira/browse/DHI-28
-                    // Remove when fixed.
-                    if(!StationIdUtil.areEqual(station,
-                                               channels[i].my_site.my_station)) {
-                        logger.debug("Tossing channel returned for station other than the one requested!");
-                        continue;
-                    }
                     StringTree effResult = siteEffectiveSubsetter.accept(channels[i].my_site,
                                                                          networkAccess);
                     if(effResult.isSuccess()) {
