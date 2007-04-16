@@ -10,7 +10,7 @@ import edu.sc.seis.sod.ConfigurationException;
 
 public class MseedWriter extends AbstractSeismogramWriter {
 
-    private static final String DEFAULT_FILE_TEMPLATE = "Event_${event.getTime('yyyy_DDD_HH_mm_ss')}/${channel.codes}.mseed";
+    private static final String DEFAULT_FILE_TEMPLATE = "Event_${event.getTime('yyyy_DDD_HH_mm_ss')}/${channel.codes}${index}.mseed";
 
     public MseedWriter(Element el) throws ConfigurationException {
         super(extractWorkingDir(el),

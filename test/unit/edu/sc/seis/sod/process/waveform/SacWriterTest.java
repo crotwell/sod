@@ -30,42 +30,30 @@ public class SacWriterTest extends TestCase {
         BasicConfigurator.configure(new NullAppender());
     }
 
-    public void testGenerateBase() throws ConfigurationException {
+    public void testGenerate() throws ConfigurationException {
         String[][] templateAndResult = new String[][] { {"${seismogram.name}.sac",
-                                                         seis.getName()
-                                                                 + ".sac"},
+                                                         seis.getName() + ".sac"},
                                                        {"/${event.catalog}",
-                                                        "/"
-                                                                + EventUtil.extractOrigin(ev).catalog},
-                                                       {"${channel.name}",
-                                                        chan.name}};
+                                                        "/" + EventUtil.extractOrigin(ev).catalog},
+                                                       {"${channel.name}", chan.name}};
         for(int i = 0; i < templateAndResult.length; i++) {
             assertEquals(FissuresFormatter.filize(templateAndResult[i][1]),
-                         new SacWriter("", templateAndResult[i][0]).generateBase(ev,
-                                                                                 chan,
-                                                                                 seis));
+                         new SacWriter("", templateAndResult[i][0]).generate(ev, chan, seis, 0));
         }
         assertEquals(FissuresFormatter.filize("test/" + seis.getName()),
-                     new SacWriter("test/", seis.getName()).generateBase(ev,
-                                                                         chan,
-                                                                         seis));
+                     new SacWriter("test/", seis.getName()).generate(ev, chan, seis, 0));
         assertEquals(FissuresFormatter.filize("test/" + seis.getName()),
-                     new SacWriter("test", seis.getName()).generateBase(ev,
-                                                                        chan,
-                                                                        seis));
+                     new SacWriter("test", seis.getName()).generate(ev, chan, seis, 0));
     }
 
-    public void testApplyProcessorsWithNoProcessors() throws CodecException,
-            ConfigurationException {
+    public void testApplyProcessorsWithNoProcessors() throws CodecException, ConfigurationException {
         new SacWriter().applyProcessors(sts, ev, chan);
     }
 
     public void testApplyPhaseHeaderProcessor() throws ConfigurationException {
         SacWriter sw = new SacWriter(new SacProcess[] {new SacProcess() {
 
-            public void process(SacTimeSeries sac,
-                                EventAccessOperations event,
-                                Channel channel) {
+            public void process(SacTimeSeries sac, EventAccessOperations event, Channel channel) {
                 sac.kt0 = "ttp";
             }
         }});
@@ -75,26 +63,30 @@ public class SacWriterTest extends TestCase {
 
     public void testGenerateLocations() throws ConfigurationException {
         SacWriter sw = new SacWriter("${seismogram.name}.sac");
-        String base = sw.generateBase(ev, chan, seis);
-        assertEquals(1, sw.generateLocations(base, 1).length);
-        assertEquals(base, sw.generateLocations(base, 1)[0]);
-        assertTrue(sw.generateLocations(base, 2)[1].endsWith(".sac.1"));
+        assertTrue(sw.generate(ev, chan, seis, 1).endsWith("1.sac"));
     }
 
     public void testRemoveExisting() throws FileNotFoundException, IOException,
             ConfigurationException {
-        SacWriter sw = new SacWriter("", System.getProperty("java.io.tmpdir")
-                + File.separator + "blahblah");
-        String base = sw.generateBase(ev, chan, seis);
-        String[] locs = sw.generateLocations(base, 5);
+        SacWriter sw = new SacWriter("", System.getProperty("java.io.tmpdir") + File.separator
+                + "blahblah");
+        String[] locs = new String[5];
         for(int i = 0; i < locs.length; i++) {
+            locs[i] = sw.generate(ev, chan, seis, i);
             new FileOutputStream(locs[i]).close();
             assertTrue(new File(locs[i]).exists());
         }
-        sw.removeExisting(base);
+        sw.removeExisting(ev, chan, seis);
         for(int i = 0; i < locs.length; i++) {
             assertFalse(new File(locs[i]).exists());
         }
+    }
+
+    public void testIndexAppending() throws FileNotFoundException, IOException,
+            ConfigurationException {
+        assertEquals("harar${index}", new SacWriter("", "harar").getTemplate());
+        assertEquals("$index/harar",new SacWriter("", "$index/harar").getTemplate());
+        assertEquals("ha${index}rar",new SacWriter("", "ha${index}rar").getTemplate());
     }
 
     EventAccessOperations ev = MockEventAccessOperations.createEvent();

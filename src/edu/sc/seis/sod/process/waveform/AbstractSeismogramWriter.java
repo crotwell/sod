@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.process.waveform;
 
 import java.io.File;
+import java.util.regex.Pattern;
 import org.apache.velocity.VelocityContext;
 import org.w3c.dom.Element;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
@@ -25,48 +26,40 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
 
     private String template, prefix;
 
-    public AbstractSeismogramWriter(String workingDir,
-                                    String fileTemplate,
-                                    String prefix)
+    public AbstractSeismogramWriter(String workingDir, String fileTemplate, String prefix)
             throws ConfigurationException {
-        VelocityFileElementParser parser = new VelocityFileElementParser(workingDir,
-                                                                         fileTemplate);
+        if(!INDEX_VAR.matcher(fileTemplate).matches()) {
+            fileTemplate += "${index}";
+        }
+        VelocityFileElementParser parser = new VelocityFileElementParser(workingDir, fileTemplate);
         this.template = parser.getTemplate();
         this.prefix = prefix;
         new PrintlineVelocitizer(new String[] {fileTemplate});
     }
 
-    public void removeExisting(String base) {
-        File baseFile = new File(base);
-        int count = 1;
-        while(baseFile.exists()) {
-            baseFile.delete();
-            baseFile = new File(generateFile(base, count++));
-        }
-    }
-
-    public String[] generateLocations(String base, int length) {
-        String[] locs = new String[length];
-        for(int i = 0; i < locs.length; i++) {
-            locs[i] = generateFile(base, i);
-        }
-        return locs;
-    }
-
-    private String generateFile(String base, int position) {
-        if(position == 0) {
-            return base;
-        }
-        return base + "." + position;
-    }
-
-    public String generateBase(EventAccessOperations event,
+    public void removeExisting(EventAccessOperations event,
                                Channel channel,
                                LocalSeismogramImpl representativeSeismogram) {
+        for(int i = 0; true; i++) {
+            File cur = new File(generate(event, channel, representativeSeismogram, i));
+            if(!cur.exists()) {
+                break;
+            }
+            cur.delete();
+        }
+    }
+
+    public String generate(EventAccessOperations event,
+                           Channel channel,
+                           LocalSeismogramImpl representativeSeismogram,
+                           int index) {
         VelocityContext ctx = ContextWrangler.createContext(event);
-        ContextWrangler.insertIntoContext(representativeSeismogram,
-                                          channel,
-                                          ctx);
+        if(index > 0) {
+            ctx.put("index", "." + index);
+        } else {
+            ctx.put("index", "");
+        }
+        ContextWrangler.insertIntoContext(representativeSeismogram, channel, ctx);
         return FissuresFormatter.filize(velocitizer.evaluate(template, ctx));
     }
 
@@ -77,11 +70,10 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) throws Exception {
         if(seismograms.length > 0) {
-            String base = generateBase(event, channel, seismograms[0]);
-            removeExisting(base);
-            String[] locs = generateLocations(base, seismograms.length);
-            for(int i = 0; i < locs.length; i++) {
-                File parent = new File(locs[i]).getParentFile();
+            removeExisting(event, channel, seismograms[0]);
+            for(int i = 0; i < seismograms.length; i++) {
+                String loc = generate(event, channel, seismograms[i], i);
+                File parent = new File(loc).getParentFile();
                 if(!parent.exists() && !parent.mkdirs()) {
                     StringTreeLeaf reason = new StringTreeLeaf(this,
                                                                false,
@@ -89,14 +81,15 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
                                                                        + parent);
                     return new WaveformResult(seismograms, reason);
                 }
-                write(locs[i], seismograms[i], channel, event);
-                cookieJar.put(SaveSeismogramToFile.getCookieName(prefix,
-                                                                 channel.get_id(),
-                                                                 i),
-                              locs[i]);
+                write(loc, seismograms[i], channel, event);
+                cookieJar.put(SaveSeismogramToFile.getCookieName(prefix, channel.get_id(), i), loc);
             }
         }
         return new WaveformResult(true, seismograms, this);
+    }
+    
+    public String getTemplate(){
+        return template;
     }
 
     public abstract void write(String loc,
@@ -117,4 +110,6 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
     protected static String extractWorkingDir(Element el) {
         return DOMHelper.extractText(el, "workingDir", DEFAULT_WORKING_DIR, true);
     }
+
+    private static final Pattern INDEX_VAR = Pattern.compile(".*\\$\\{?index\\}?.*");
 }
