@@ -177,13 +177,6 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         acceptableChannels.add(ChannelIdUtil.toString(chan.get_id()));
         int eq_dbid = eventAccess.getDBId(event);
         DataSetSeismogram[] dss = extractSeismograms(event);
-        ArrayList acceptableSeis = new ArrayList();
-        for(int i = 0; i < dss.length; i++) {
-            if(acceptableChannels.contains(ChannelIdUtil.toString(dss[i].getChannelId()))) {
-                acceptableSeis.add(dss[i]);
-            }
-        }
-        dss = (DataSetSeismogram[])acceptableSeis.toArray(new DataSetSeismogram[0]);
         if(recordSectionChannel.contains(id,
                                          eq_dbid,
                                          cookieJar.getEventChannelPair()
