@@ -612,7 +612,8 @@ public class MotionVectorArm implements Subsetter {
     
     private static void handle(EventVectorPair ecp, Stage stage, Throwable t, ProxySeismogramDC server) {
         if(t instanceof org.omg.CORBA.SystemException) {
-            ecp.update(t, Status.get(stage, Standing.CORBA_FAILURE));
+            // don't log exception here, let RetryStragtegy do it
+            ecp.update(Status.get(stage, Standing.CORBA_FAILURE));
         } else {
             ecp.update(t, Status.get(stage, Standing.SYSTEM_FAILURE));
         }
