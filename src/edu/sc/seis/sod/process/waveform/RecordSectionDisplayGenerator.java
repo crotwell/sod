@@ -6,17 +6,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import org.apache.log4j.Category;
 import org.w3c.dom.Element;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
@@ -50,10 +45,6 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) throws Exception {
-        if(acceptableChannels == null) {
-            acceptableChannels = new HashSet();
-        }
-        acceptableChannels.add(ChannelIdUtil.toString(chan.get_id()));
         if(!updateTable(event,
                         chan,
                         original,
@@ -71,15 +62,6 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
             throws Exception, NoPreferredOrigin, IOException {
         try {
             DataSetSeismogram[] dss = extractSeismograms(event);
-            if(acceptableChannels != null) {
-                List acceptableSeis = new ArrayList();
-                for(int i = 0; i < dss.length; i++) {
-                    if(acceptableChannels.contains(ChannelIdUtil.toString(dss[i].getChannelId()))) {
-                        acceptableSeis.add(dss[i]);
-                    }
-                }
-                dss = (DataSetSeismogram[])acceptableSeis.toArray(new DataSetSeismogram[0]);
-            }
             String regionName = PR.getRegionName(event.get_attributes().region);
             String dateTime = event.get_preferred_origin().origin_time.date_time;
             String msg = "Got " + dss.length
@@ -149,8 +131,6 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
             throw new IOException(msg + e);
         }
     }
-
-    private Set acceptableChannels;
 
     protected String filename = "recordsection" + FILE_EXTENSION;
 

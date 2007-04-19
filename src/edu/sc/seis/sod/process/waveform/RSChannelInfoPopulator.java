@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.xml.transform.TransformerException;
 import org.apache.xpath.XPathAPI;
@@ -170,6 +171,9 @@ public class RSChannelInfoPopulator implements WaveformProcess {
                                RequestFilter[] available,
                                LocalSeismogramImpl[] seismograms,
                                CookieJar cookieJar) throws Exception {
+        if(acceptableChannels == null) {
+            acceptableChannels = new HashSet();
+        }
         acceptableChannels.add(ChannelIdUtil.toString(chan.get_id()));
         int eq_dbid = eventAccess.getDBId(event);
         DataSetSeismogram[] dss = extractSeismograms(event);
@@ -220,11 +224,15 @@ public class RSChannelInfoPopulator implements WaveformProcess {
                 .toURI()
                 .toURL());
         String[] dataSeisNames = ds.getDataSetSeismogramNames();
-        DataSetSeismogram[] dss = new DataSetSeismogram[dataSeisNames.length];
+        List dss = new ArrayList();
         for(int i = 0; i < dataSeisNames.length; i++) {
-            dss[i] = ds.getDataSetSeismogram(dataSeisNames[i]);
+            DataSetSeismogram seis = ds.getDataSetSeismogram(dataSeisNames[i]);
+            if(acceptableChannels == null
+                    || (acceptableChannels != null && acceptableChannels.contains(ChannelIdUtil.toString(seis.getChannelId())))) {
+                dss.add(seis);
+            }
         }
-        return dss;
+        return (DataSetSeismogram[])dss.toArray(new DataSetSeismogram[0]);
     }
 
     public RecordSectionDisplay getConfiguredRSDisplay() {
@@ -259,7 +267,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
 
     private SeismogramDisplayConfiguration displayCreator;
 
-    private Set acceptableChannels = new HashSet();
+    private Set acceptableChannels;
 
     private int internalId;
 }
