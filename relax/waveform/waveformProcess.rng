@@ -526,6 +526,9 @@
                 </element>
             </optional>
             <optional>
+                <ref name="embeddedEventChannelProcessor"/>
+            </optional>
+            <optional>
                 <element name="fileNameBase">
                     <data type="string"/>
                 </element>
