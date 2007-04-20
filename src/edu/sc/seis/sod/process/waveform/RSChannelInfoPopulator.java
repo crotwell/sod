@@ -4,9 +4,7 @@ import java.awt.Dimension;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import javax.xml.transform.TransformerException;
 import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
@@ -15,7 +13,6 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.NotFound;
@@ -36,6 +33,7 @@ import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.database.waveform.JDBCRecordSectionChannel;
 import edu.sc.seis.sod.status.StringTreeLeaf;
+import edu.sc.seis.sod.subsetter.eventChannel.PassEventChannel;
 
 /**
  * @author danala Created on Mar 30, 2005
@@ -69,9 +67,16 @@ public class RSChannelInfoPopulator implements WaveformProcess {
 
     public static final String GENS_POPS_XPATH = "//recordSectionDisplayGenerator | //RSChannelInfoPopulator | //externalWaveformProcess[classname/text() = \"edu.sc.seis.rev.map.RecordSectionAndMapGenerator\"]";
 
-    private void initConfig(Element config) throws NoSuchFieldException {
+    private void initConfig(Element config) throws NoSuchFieldException,
+            ConfigurationException {
         id = SodUtil.getText(SodUtil.getElement(config, "id"));
         saveSeisId = DOMHelper.extractText(config, "saveSeisId", id);
+        if(DOMHelper.hasElement(config, "embeddedEventChannelProcessor")) {
+            channelAcceptor = new EmbeddedEventChannelProcessor(SodUtil.getElement(config,
+                                                                                   "embeddedEventChannelProcessor"));
+        } else {
+            channelAcceptor = new EmbeddedEventChannelProcessor(new PassEventChannel());
+        }
         if(DOMHelper.hasElement(config, "percentSeisHeight")) {
             percentSeisHeight = new Double(SodUtil.getText(SodUtil.getElement(config,
                                                                               "percentSeisHeight"))).doubleValue();
@@ -171,34 +176,38 @@ public class RSChannelInfoPopulator implements WaveformProcess {
                                RequestFilter[] available,
                                LocalSeismogramImpl[] seismograms,
                                CookieJar cookieJar) throws Exception {
-        if(acceptableChannels == null) {
-            acceptableChannels = new HashSet();
+        if(channelAcceptor.process(event,
+                                   chan,
+                                   original,
+                                   available,
+                                   seismograms,
+                                   cookieJar).isSuccess()) {
+            int eq_dbid = eventAccess.getDBId(event);
+            DataSetSeismogram[] dss = extractSeismograms(event);
+            if(recordSectionChannel.contains(id,
+                                             eq_dbid,
+                                             cookieJar.getEventChannelPair()
+                                                     .getChannelDbId(),
+                                             internalId)) {
+                return false;
+            }
+            recordSectionChannel.insert(id,
+                                        eq_dbid,
+                                        cookieJar.getEventChannelPair()
+                                                .getChannelDbId(),
+                                        new double[] {0, 0, 0, 0},
+                                        0,
+                                        internalId);
+            DataSetSeismogram[] bestSeismos = dss;
+            if(spacer != null) {
+                bestSeismos = spacer.spaceOut(dss);
+            }
+            return recordSectionChannel.updateChannels(id,
+                                                       eq_dbid,
+                                                       getChannelDBIds(bestSeismos),
+                                                       internalId);
         }
-        acceptableChannels.add(ChannelIdUtil.toString(chan.get_id()));
-        int eq_dbid = eventAccess.getDBId(event);
-        DataSetSeismogram[] dss = extractSeismograms(event);
-        if(recordSectionChannel.contains(id,
-                                         eq_dbid,
-                                         cookieJar.getEventChannelPair()
-                                                 .getChannelDbId(),
-                                         internalId)) {
-            return false;
-        }
-        recordSectionChannel.insert(id,
-                                    eq_dbid,
-                                    cookieJar.getEventChannelPair()
-                                            .getChannelDbId(),
-                                    new double[] {0, 0, 0, 0},
-                                    0,
-                                    internalId);
-        DataSetSeismogram[] bestSeismos = dss;
-        if(spacer != null) {
-            bestSeismos = spacer.spaceOut(dss);
-        }
-        return recordSectionChannel.updateChannels(id,
-                                                   eq_dbid,
-                                                   getChannelDBIds(bestSeismos),
-                                                   internalId);
+        return false;
     }
 
     public int[] getChannelDBIds(DataSetSeismogram[] dss) throws SQLException,
@@ -220,8 +229,9 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         List dss = new ArrayList();
         for(int i = 0; i < dataSeisNames.length; i++) {
             DataSetSeismogram seis = ds.getDataSetSeismogram(dataSeisNames[i]);
-            if(acceptableChannels == null
-                    || (acceptableChannels != null && acceptableChannels.contains(ChannelIdUtil.toString(seis.getChannelId())))) {
+            Channel chan = seis.getChannel();
+            if(channelAcceptor.eventChannelSubsetter.accept(eao, chan, null)
+                    .isSuccess()) {
                 dss.add(seis);
             }
         }
@@ -260,7 +270,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
 
     private SeismogramDisplayConfiguration displayCreator;
 
-    private Set acceptableChannels;
+    private EmbeddedEventChannelProcessor channelAcceptor;
 
     private int internalId;
 }

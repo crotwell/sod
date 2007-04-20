@@ -17,6 +17,10 @@ import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
  */
 public class EmbeddedEventChannelProcessor implements WaveformProcess {
 
+    public EmbeddedEventChannelProcessor(EventChannelSubsetter eventChannel) {
+        this.eventChannelSubsetter = eventChannel;
+    }
+
     public EmbeddedEventChannelProcessor(Element config)
             throws ConfigurationException {
         NodeList childNodes = config.getChildNodes();
