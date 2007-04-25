@@ -53,8 +53,7 @@ public class Filter implements WaveformProcess, Threadable {
         if(highFreqCorner.get_unit().isConvertableTo(UnitImpl.SECOND)) {
             highFreqCorner = highFreqCorner.inverse();
         }
-        filter = new ButterworthFilter(new SeisGramText(),
-                                       lowFreqCorner.convertTo(UnitImpl.HERTZ)
+        filter = new ButterworthFilter(lowFreqCorner.convertTo(UnitImpl.HERTZ)
                                                .getValue(),
                                        highFreqCorner.convertTo(UnitImpl.HERTZ)
                                                .getValue(),
