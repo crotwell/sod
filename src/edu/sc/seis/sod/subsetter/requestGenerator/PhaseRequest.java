@@ -22,9 +22,32 @@ import edu.sc.seis.sod.SodUtil;
 
 public class PhaseRequest implements RequestGenerator {
 
+    protected PhaseRequest(String beginPhase, String endPhase, String model)
+            throws ConfigurationException {
+        this.beginPhase = beginPhase;
+        this.endPhase = endPhase;
+        try {
+            util = TauPUtil.getTauPUtil(model);
+        } catch(TauModelException e) {
+            throw new ConfigurationException(model
+                    + " caused a TauModelException", e);
+        }
+    }
+
+    public PhaseRequest(String beginPhase,
+                        TimeInterval beginOffest,
+                        String endPhase,
+                        TimeInterval endOffset,
+                        String model) throws ConfigurationException {
+        this(beginPhase, endPhase, model);
+        this.beginOffset = beginOffest;
+        this.endOffset = endOffset;
+    }
+
     public PhaseRequest(Element config) throws ConfigurationException {
-        beginPhase = DOMHelper.extractText(config, "beginPhase");
-        endPhase = DOMHelper.extractText(config, "endPhase");
+        this(DOMHelper.extractText(config, "beginPhase"),
+             DOMHelper.extractText(config, "endPhase"),
+             DOMHelper.extractText(config, "model", "prem"));
         Element beginEl = DOMHelper.extractElement(config, "beginOffset");
         if(DOMHelper.hasElement(beginEl, "ratio")) {
             beginOffsetRatio = DOMHelper.extractDouble(beginEl, "ratio", 1.0);
@@ -46,13 +69,6 @@ public class PhaseRequest implements RequestGenerator {
             }
         } else {
             endOffset = SodUtil.loadTimeInterval(endEl);
-        }
-        String model = DOMHelper.extractText(config, "model", "prem");
-        try {
-            util = TauPUtil.getTauPUtil(model);
-        } catch(TauModelException e) {
-            throw new ConfigurationException(model
-                    + " caused a TauModelException", e);
         }
     }
 
