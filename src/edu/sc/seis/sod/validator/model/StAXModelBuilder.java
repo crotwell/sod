@@ -450,7 +450,7 @@ public class StAXModelBuilder implements XMLStreamConstants {
         while(reader.getEventType() != END_ELEMENT) {
             reader.next();
         }
-        reader.next();
+        reader.nextTag();
     }
 
     private boolean isData(String tag) {
