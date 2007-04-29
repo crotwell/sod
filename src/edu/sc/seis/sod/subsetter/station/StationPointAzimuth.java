@@ -1,12 +1,5 @@
-/**
- * StationPointAzimuth.java
- *
- * @author Philip Crotwell
- */
-
 package edu.sc.seis.sod.subsetter.station;
 
-import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Station;
@@ -23,11 +16,6 @@ public class StationPointAzimuth  extends AbstractOriginPoint implements Station
         super(config);
     }
 
-    /**
-     * Accepts an origin only if it lies within the geven azimuth range of the
-     * given lat and lon.
-     *
-     */
     public StringTree accept(Station station, NetworkAccess network) {
         double oLat = station.my_location.latitude;
         double oLon = station.my_location.longitude;
@@ -36,12 +24,9 @@ public class StationPointAzimuth  extends AbstractOriginPoint implements Station
             getMax().convertTo(UnitImpl.DEGREE).get_value() >= distaz.getAz()) {
             return new Pass(this);
         } else {
-            logger.debug("reject azimuth "+station+" distaz="+distaz.getAz());
-            return new Fail(this);
+            return new Fail(this, "reject azimuth "+station+" distaz="+distaz.getAz());
         }
     }
-
-    private static final Logger logger = Logger.getLogger(StationPointAzimuth.class);
 
 }
 

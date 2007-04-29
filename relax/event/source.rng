@@ -35,6 +35,7 @@
                 <choice>
                     <ref name="globalArea"/>
                     <ref name="boxArea"/>
+                    <ref name="pointDistance"/>
                 </choice>
             </optional>
             <optional>

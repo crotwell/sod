@@ -36,6 +36,7 @@ import edu.sc.seis.sod.subsetter.origin.Catalog;
 import edu.sc.seis.sod.subsetter.origin.Contributor;
 import edu.sc.seis.sod.subsetter.origin.MagnitudeRange;
 import edu.sc.seis.sod.subsetter.origin.OriginDepthRange;
+import edu.sc.seis.sod.subsetter.origin.OriginPointDistance;
 
 public class EventDCQuerier {
 

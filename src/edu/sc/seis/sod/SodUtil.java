@@ -41,6 +41,7 @@ import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.status.TemplateFileLoader;
 import edu.sc.seis.sod.subsetter.LatitudeRange;
 import edu.sc.seis.sod.subsetter.LongitudeRange;
+import edu.sc.seis.sod.subsetter.origin.OriginPointDistance;
 import edu.sc.seis.sod.subsetter.requestGenerator.RandomTimeInterval;
 
 public class SodUtil {
@@ -105,8 +106,8 @@ public class SodUtil {
                 return new GlobalAreaImpl();
             } else if(tagName.equals("BoxArea")) {
                 return loadBoxArea(config);
-            } else if(tagName.equals("PointArea")) {
-                return loadBoxArea(config);
+            } else if(tagName.equals("PointDistance")) {
+                return new OriginPointDistance(config).getArea();
             }
             // not a known non-sodElement type, so load via reflection
             if(tagName.startsWith("External")) {

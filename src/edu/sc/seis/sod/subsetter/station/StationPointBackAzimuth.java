@@ -1,11 +1,5 @@
-/**
- * StationPointBackAzimuth.java
- * 
- * @author Philip Crotwell
- */
 package edu.sc.seis.sod.subsetter.station;
 
-import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Station;
@@ -31,11 +25,7 @@ public class StationPointBackAzimuth extends AbstractOriginPoint implements
                 && getMax().convertTo(UnitImpl.DEGREE).get_value() >= distaz.getBaz()) {
             return new Pass(this);
         } else {
-            logger.debug("reject back azimuth " + station + " distaz="
-                    + distaz.getBaz());
-            return new Fail(this);
+            return new Fail(this, "reject back azimuth " + station + " distaz=" + distaz.getBaz());
         }
     }
-
-    private static final Logger logger = Logger.getLogger(StationPointBackAzimuth.class);
 }

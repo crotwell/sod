@@ -54,7 +54,7 @@ public class find_stations extends CommandLineTool {
         add(ServerParser.createParam("edu/iris/dmc/IRIS_NetworkDC",
                                      "The network server to use."));
         addStationParam(BoxAreaParser.createParam("A station constraining box as west/east/south/north"));
-        addStationParam(DonutParser.createParam("A donut  as lat/lon/minRadius/maxRadius"));
+        addStationParam(DonutParser.createParam("A donut as lat/lon/minRadius/maxRadius"));
         addStationParam(createListOption("stations",
                                          's',
                                          "stations",

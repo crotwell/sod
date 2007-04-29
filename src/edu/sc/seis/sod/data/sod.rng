@@ -98,6 +98,51 @@
                                     <choice>
                                     <ref name="globalArea2"/>
                                     <ref name="boxArea2"/>
+                                    <element name="pointDistance">
+                                    <interleave>
+                                    <element name="latitude">
+                                    <data type="float">
+                                    <param name="minInclusive">-90.0</param>
+                                    <param name="maxInclusive">90.0</param>
+                                    </data>
+                                    </element>
+                                    <element name="longitude">
+                                    <data type="float">
+                                    <param name="minInclusive">-180.0</param>
+                                    <param name="maxInclusive">360.0</param>
+                                    </data>
+                                    </element>
+                                    <group>
+                                    <element name="unit">
+                                    <choice>
+                                    <value>KILOMETER</value>
+                                    <value>METER</value>
+                                    <value>CENTIMETER</value>
+                                    <value>NANOMETER</value>
+                                    <value>MICROMETER</value>
+                                    <value>MICRON</value>
+                                    <value>MILLIMETER</value>
+                                    <value>PICOMETER</value>
+                                    <value>INCH</value>
+                                    <value>FOOT</value>
+                                    <value>MILE</value>
+                                    <value>DEGREE</value>
+                                    <value>RADIAN</value>
+                                    </choice>
+                                    </element>
+                                    <optional>
+                                    <element name="min">
+                                    <data type="double"/>
+                                    </element>
+                                    </optional>
+                                    <optional>
+                                    <element name="max">
+                                    <data type="double"/>
+                                    </element>
+                                    </optional>
+                                    </group>
+                                    </interleave>
+                                    </element>
                                     </choice>
                                 </optional>
                                 <optional>
@@ -379,6 +424,51 @@
                                     <choice>
                                     <ref name="globalArea"/>
                                     <ref name="boxArea"/>
+                                    <element name="pointDistance">
+                                    <interleave>
+                                    <element name="latitude">
+                                    <data type="float">
+                                    <param name="minInclusive">-90.0</param>
+                                    <param name="maxInclusive">90.0</param>
+                                    </data>
+                                    </element>
+                                    <element name="longitude">
+                                    <data type="float">
+                                    <param name="minInclusive">-180.0</param>
+                                    <param name="maxInclusive">360.0</param>
+                                    </data>
+                                    </element>
+                                    <group>
+                                    <element name="unit">
+                                    <choice>
+                                    <value>KILOMETER</value>
+                                    <value>METER</value>
+                                    <value>CENTIMETER</value>
+                                    <value>NANOMETER</value>
+                                    <value>MICROMETER</value>
+                                    <value>MICRON</value>
+                                    <value>MILLIMETER</value>
+                                    <value>PICOMETER</value>
+                                    <value>INCH</value>
+                                    <value>FOOT</value>
+                                    <value>MILE</value>
+                                    <value>DEGREE</value>
+                                    <value>RADIAN</value>
+                                    </choice>
+                                    </element>
+                                    <optional>
+                                    <element name="min">
+                                    <data type="double"/>
+                                    </element>
+                                    </optional>
+                                    <optional>
+                                    <element name="max">
+                                    <data type="double"/>
+                                    </element>
+                                    </optional>
+                                    </group>
+                                    </interleave>
+                                    </element>
                                     </choice>
                                     </optional>
                                     <optional>
@@ -661,6 +751,51 @@
                                     <choice>
                                     <ref name="globalArea3"/>
                                     <ref name="boxArea3"/>
+                                    <element name="pointDistance">
+                                    <interleave>
+                                    <element name="latitude">
+                                    <data type="float">
+                                    <param name="minInclusive">-90.0</param>
+                                    <param name="maxInclusive">90.0</param>
+                                    </data>
+                                    </element>
+                                    <element name="longitude">
+                                    <data type="float">
+                                    <param name="minInclusive">-180.0</param>
+                                    <param name="maxInclusive">360.0</param>
+                                    </data>
+                                    </element>
+                                    <group>
+                                    <element name="unit">
+                                    <choice>
+                                    <value>KILOMETER</value>
+                                    <value>METER</value>
+                                    <value>CENTIMETER</value>
+                                    <value>NANOMETER</value>
+                                    <value>MICROMETER</value>
+                                    <value>MICRON</value>
+                                    <value>MILLIMETER</value>
+                                    <value>PICOMETER</value>
+                                    <value>INCH</value>
+                                    <value>FOOT</value>
+                                    <value>MILE</value>
+                                    <value>DEGREE</value>
+                                    <value>RADIAN</value>
+                                    </choice>
+                                    </element>
+                                    <optional>
+                                    <element name="min">
+                                    <data type="double"/>
+                                    </element>
+                                    </optional>
+                                    <optional>
+                                    <element name="max">
+                                    <data type="double"/>
+                                    </element>
+                                    </optional>
+                                    </group>
+                                    </interleave>
+                                    </element>
                                     </choice>
                                     </optional>
                                     <optional>

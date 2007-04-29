@@ -7,7 +7,6 @@ package edu.sc.seis.sod.subsetter.origin;
 
 import org.w3c.dom.Element;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
-import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.UserConfigurationException;
 import edu.sc.seis.sod.subsetter.DistanceRangeSubsetter;
 import edu.sc.seis.sod.subsetter.LatitudeRange;
@@ -17,9 +16,7 @@ public class AbstractOriginPoint extends DistanceRangeSubsetter {
 
     public AbstractOriginPoint(Element config) throws Exception {
         super(config);
-        String simpleName = SodUtil.getSimpleName(getClass());
-        simpleName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
-        double[] out = getLatLon(config, simpleName);
+        double[] out = getLatLon(config, config.getNodeName());
         latitude = out[0];
         longitude = out[1];
     }

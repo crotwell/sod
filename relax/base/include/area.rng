@@ -35,6 +35,25 @@
             <externalRef href="../externalRef/longitudeRange.rng"/>
         </element>
     </define>
+    <define name="pointDistance">
+        <element name="pointDistance">
+            <xsd:annotation>
+                <summary>Distance range from a fixed point</summary>
+                <description>True if the event is within the given distance range of the given lat and lon. This allows
+                    for the definition of donuts and circles of accepted events.</description>
+                <example>
+                    <pointDistance>
+                        <latitude>35</latitude>
+                        <longitude>-85</longitude>
+                        <unit>DEGREE</unit>
+                        <min>30</min>
+                        <max>90</max>
+                    </pointDistance>
+                </example>
+            </xsd:annotation>
+            <externalRef href="../externalRef/latLonUnitRange.rng"/>
+        </element>
+    </define>
     <define name="polygonFile">
         <element name="polygonFile">
             <xsd:annotation>

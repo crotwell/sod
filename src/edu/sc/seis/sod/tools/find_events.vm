@@ -20,6 +20,14 @@
                     <max>$box.east</max>
                 </longitudeRange>
             </boxArea>
+#elseif($donut)
+            <pointDistance>
+                <unit>DEGREE</unit>
+                <min>$donut.min</min>
+                <max>$donut.max</max>
+                <latitude>$donut.lat</latitude>
+                <longitude>$donut.lon</longitude>
+            </pointDistance>
 #end
             <originDepthRange>
                 <unit>KILOMETER</unit>
@@ -53,15 +61,6 @@
         </eventFinder>
 #if(!$allowDupes)
         <removeEventDuplicate/>
-#end
-#if($donut)
-        <originPointDistance>
-            <unit>DEGREE</unit>
-            <min>$donut.min</min>
-            <max>$donut.max</max>
-            <latitude>$donut.lat</latitude>
-            <longitude>$donut.lon</longitude>
-        </originPointDistance>
 #end
 #if($seismicRegions)
 #foreach($region in $seismicRegions)

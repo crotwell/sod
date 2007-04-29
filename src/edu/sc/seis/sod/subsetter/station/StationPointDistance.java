@@ -1,8 +1,3 @@
-/**
- * StationPointDistance.java
- * 
- * @author Philip Crotwell
- */
 package edu.sc.seis.sod.subsetter.station;
 
 import org.w3c.dom.Element;
@@ -27,7 +22,6 @@ public class StationPointDistance extends AbstractOriginPoint implements
     /**
      * Accepts a station only if it lies within the given distance range of the
      * given lat and lon.
-     * 
      */
     public StringTree accept(Station station, NetworkAccess network) {
         Location loc = station.my_location;
