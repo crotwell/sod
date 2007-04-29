@@ -47,8 +47,15 @@ public class CommonAccess {
             throw new RuntimeException("Initialize should only be called once on CommonAccess");
         }
         vetNSLoc(props);
-        initORB(props, args);
-        initNS();
+        
+        // Initialize the ORB.
+        orb = (org.omg.CORBA_2_3.ORB)org.omg.CORBA.ORB.init(args, props);
+        logger.info("ORB class is " + orb.getClass().getName());
+        new AllVTFactory().register(orb);
+        
+        //Initialize the NS
+        ns = new FissuresNamingService(getORB());
+        ns.setNameServiceCorbaLoc(nsLoc);
     }
 
     private static void vetNSLoc(Properties props)
@@ -74,34 +81,6 @@ public class CommonAccess {
                     + nsLoc
                     + " was supplied in the properties");
         }
-    }
-
-    private static void initORB(Properties props, String[] args) {
-        // Initialize the ORB.
-        orb = (org.omg.CORBA_2_3.ORB)org.omg.CORBA.ORB.init(args, props);
-        logger.info("ORB class is " + orb.getClass().getName());
-        // register valuetype factories
-        new AllVTFactory().register(orb);
-    }
-
-    private static void initNS() throws UserConfigurationException {
-        ns = new FissuresNamingService(getORB());
-        String addr = nsLoc.substring(CORBALOC_DESC.length(), nsLoc.length()
-                - NAME_SERVICE_ADDRESS.length());
-        String host = addr.substring(0, addr.indexOf(':'));
-        String port = addr.substring(addr.indexOf(':') + 1);
-        try {
-            new Socket(host, Integer.parseInt(port));
-        } catch(UnknownHostException e) {
-            throw new UserConfigurationException("Unable to lookup the host "
-                    + host
-                    + " specified as the name server.  This could be caused by several things: your network connection being down, your DNS server being broken or the host given for the name server being wrong.");
-        } catch(IOException e) {
-            throw new UserConfigurationException("Unable to connect to "
-                    + addr
-                    + " which was given as the name server.   This could be caused by several things: your network connection being down, your DNS server being broken or the host given for the name server address wrong.");
-        }
-        ns.setNameServiceCorbaLoc(nsLoc);
     }
 
     private static org.omg.CORBA_2_3.ORB orb;
