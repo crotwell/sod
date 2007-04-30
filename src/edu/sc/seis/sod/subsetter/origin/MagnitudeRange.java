@@ -30,11 +30,18 @@ public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter {
     public StringTree accept(EventAccessOperations event,
                              EventAttr eventAttr,
                              Origin origin) {
-        return new StringTreeLeaf(this,
-                                  EventDCQuerier.putPassingMagFirst(origin,
-                                                                    getMinValue(),
-                                                                    getMaxValue(),
-                                                                    getSearchTypes()));
+        for(int i = 0; i < origin.magnitudes.length; i++) {
+            if(accept(origin.magnitudes[i].value)) {
+                if(getSearchTypes().length == 0) {
+                    // don't care about search types
+                    return new StringTreeLeaf(this, true);
+                }
+                for(int j = 0; j < searchTypes.length; j++) {
+                    if(origin.magnitudes[i].type.equals(searchTypes[j])) { return new StringTreeLeaf(this, true); }
+                }
+            }
+        }
+        return new StringTreeLeaf(this, false);
     }
 
     public String[] getSearchTypes() {
