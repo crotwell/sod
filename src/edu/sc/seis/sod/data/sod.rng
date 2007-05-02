@@ -196,6 +196,24 @@
                                     <data type="string"/>
                                     </element>
                                     </zeroOrMore>
+                                    <zeroOrMore>
+                                    <element name="contributor">
+                                    <data type="string"/>
+                                    </element>
+                                    </zeroOrMore>
+                                    <optional>
+                                    <choice>
+                                    <element name="any">
+                                    <empty/>
+                                    </element>
+                                    <element name="largest">
+                                    <empty/>
+                                    </element>
+                                    <element name="smallest">
+                                    <empty/>
+                                    </element>
+                                    </choice>
+                                    </optional>
                                     <optional>
                                     <choice>
                                     <element name="min">
@@ -290,6 +308,24 @@
                                     <data type="string"/>
                                     </element>
                                     </zeroOrMore>
+                                    <zeroOrMore>
+                                    <element name="contributor">
+                                    <data type="string"/>
+                                    </element>
+                                    </zeroOrMore>
+                                    <optional>
+                                    <choice>
+                                    <element name="any">
+                                    <empty/>
+                                    </element>
+                                    <element name="largest">
+                                    <empty/>
+                                    </element>
+                                    <element name="smallest">
+                                    <empty/>
+                                    </element>
+                                    </choice>
+                                    </optional>
                                     <optional>
                                     <choice>
                                     <element name="min">
@@ -522,6 +558,24 @@
                                     <data type="string"/>
                                     </element>
                                     </zeroOrMore>
+                                    <zeroOrMore>
+                                    <element name="contributor">
+                                    <data type="string"/>
+                                    </element>
+                                    </zeroOrMore>
+                                    <optional>
+                                    <choice>
+                                    <element name="any">
+                                    <empty/>
+                                    </element>
+                                    <element name="largest">
+                                    <empty/>
+                                    </element>
+                                    <element name="smallest">
+                                    <empty/>
+                                    </element>
+                                    </choice>
+                                    </optional>
                                     <optional>
                                     <choice>
                                     <element name="min">
@@ -616,6 +670,24 @@
                                     <data type="string"/>
                                     </element>
                                     </zeroOrMore>
+                                    <zeroOrMore>
+                                    <element name="contributor">
+                                    <data type="string"/>
+                                    </element>
+                                    </zeroOrMore>
+                                    <optional>
+                                    <choice>
+                                    <element name="any">
+                                    <empty/>
+                                    </element>
+                                    <element name="largest">
+                                    <empty/>
+                                    </element>
+                                    <element name="smallest">
+                                    <empty/>
+                                    </element>
+                                    </choice>
+                                    </optional>
                                     <optional>
                                     <choice>
                                     <element name="min">
@@ -849,6 +921,24 @@
                                     <data type="string"/>
                                     </element>
                                     </zeroOrMore>
+                                    <zeroOrMore>
+                                    <element name="contributor">
+                                    <data type="string"/>
+                                    </element>
+                                    </zeroOrMore>
+                                    <optional>
+                                    <choice>
+                                    <element name="any">
+                                    <empty/>
+                                    </element>
+                                    <element name="largest">
+                                    <empty/>
+                                    </element>
+                                    <element name="smallest">
+                                    <empty/>
+                                    </element>
+                                    </choice>
+                                    </optional>
                                     <optional>
                                     <choice>
                                     <element name="min">
@@ -943,6 +1033,24 @@
                                     <data type="string"/>
                                     </element>
                                     </zeroOrMore>
+                                    <zeroOrMore>
+                                    <element name="contributor">
+                                    <data type="string"/>
+                                    </element>
+                                    </zeroOrMore>
+                                    <optional>
+                                    <choice>
+                                    <element name="any">
+                                    <empty/>
+                                    </element>
+                                    <element name="largest">
+                                    <empty/>
+                                    </element>
+                                    <element name="smallest">
+                                    <empty/>
+                                    </element>
+                                    </choice>
+                                    </optional>
                                     <optional>
                                     <choice>
                                     <element name="min">
@@ -48302,6 +48410,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -48440,6 +48566,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -48578,6 +48722,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -48716,6 +48878,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -48854,6 +49034,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -48992,6 +49190,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -49130,6 +49346,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -49268,6 +49502,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -49406,6 +49658,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -49544,6 +49814,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -49682,6 +49970,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -49820,6 +50126,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -49958,6 +50282,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -50096,6 +50438,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -50234,6 +50594,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -50372,6 +50750,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -50510,6 +50906,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -50648,6 +51062,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -50786,6 +51218,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -50924,6 +51374,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -89483,6 +89951,24 @@
                         <data type="string"/>
                     </element>
                 </zeroOrMore>
+                <zeroOrMore>
+                    <element name="contributor">
+                        <data type="string"/>
+                    </element>
+                </zeroOrMore>
+                <optional>
+                    <choice>
+                        <element name="any">
+                            <empty/>
+                        </element>
+                        <element name="largest">
+                            <empty/>
+                        </element>
+                        <element name="smallest">
+                            <empty/>
+                        </element>
+                    </choice>
+                </optional>
                 <optional>
                     <choice>
                         <element name="min">
@@ -89724,6 +90210,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -89932,6 +90436,24 @@
                         <data type="string"/>
                     </element>
                 </zeroOrMore>
+                <zeroOrMore>
+                    <element name="contributor">
+                        <data type="string"/>
+                    </element>
+                </zeroOrMore>
+                <optional>
+                    <choice>
+                        <element name="any">
+                            <empty/>
+                        </element>
+                        <element name="largest">
+                            <empty/>
+                        </element>
+                        <element name="smallest">
+                            <empty/>
+                        </element>
+                    </choice>
+                </optional>
                 <optional>
                     <choice>
                         <element name="min">
@@ -90173,6 +90695,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -90381,6 +90921,24 @@
                         <data type="string"/>
                     </element>
                 </zeroOrMore>
+                <zeroOrMore>
+                    <element name="contributor">
+                        <data type="string"/>
+                    </element>
+                </zeroOrMore>
+                <optional>
+                    <choice>
+                        <element name="any">
+                            <empty/>
+                        </element>
+                        <element name="largest">
+                            <empty/>
+                        </element>
+                        <element name="smallest">
+                            <empty/>
+                        </element>
+                    </choice>
+                </optional>
                 <optional>
                     <choice>
                         <element name="min">
@@ -90622,6 +91180,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -90830,6 +91406,24 @@
                         <data type="string"/>
                     </element>
                 </zeroOrMore>
+                <zeroOrMore>
+                    <element name="contributor">
+                        <data type="string"/>
+                    </element>
+                </zeroOrMore>
+                <optional>
+                    <choice>
+                        <element name="any">
+                            <empty/>
+                        </element>
+                        <element name="largest">
+                            <empty/>
+                        </element>
+                        <element name="smallest">
+                            <empty/>
+                        </element>
+                    </choice>
+                </optional>
                 <optional>
                     <choice>
                         <element name="min">
@@ -91071,6 +91665,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -91279,6 +91891,24 @@
                         <data type="string"/>
                     </element>
                 </zeroOrMore>
+                <zeroOrMore>
+                    <element name="contributor">
+                        <data type="string"/>
+                    </element>
+                </zeroOrMore>
+                <optional>
+                    <choice>
+                        <element name="any">
+                            <empty/>
+                        </element>
+                        <element name="largest">
+                            <empty/>
+                        </element>
+                        <element name="smallest">
+                            <empty/>
+                        </element>
+                    </choice>
+                </optional>
                 <optional>
                     <choice>
                         <element name="min">
@@ -91520,6 +92150,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -91728,6 +92376,24 @@
                         <data type="string"/>
                     </element>
                 </zeroOrMore>
+                <zeroOrMore>
+                    <element name="contributor">
+                        <data type="string"/>
+                    </element>
+                </zeroOrMore>
+                <optional>
+                    <choice>
+                        <element name="any">
+                            <empty/>
+                        </element>
+                        <element name="largest">
+                            <empty/>
+                        </element>
+                        <element name="smallest">
+                            <empty/>
+                        </element>
+                    </choice>
+                </optional>
                 <optional>
                     <choice>
                         <element name="min">
@@ -91969,6 +92635,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -92177,6 +92861,24 @@
                         <data type="string"/>
                     </element>
                 </zeroOrMore>
+                <zeroOrMore>
+                    <element name="contributor">
+                        <data type="string"/>
+                    </element>
+                </zeroOrMore>
+                <optional>
+                    <choice>
+                        <element name="any">
+                            <empty/>
+                        </element>
+                        <element name="largest">
+                            <empty/>
+                        </element>
+                        <element name="smallest">
+                            <empty/>
+                        </element>
+                    </choice>
+                </optional>
                 <optional>
                     <choice>
                         <element name="min">
@@ -92418,6 +93120,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -92626,6 +93346,24 @@
                         <data type="string"/>
                     </element>
                 </zeroOrMore>
+                <zeroOrMore>
+                    <element name="contributor">
+                        <data type="string"/>
+                    </element>
+                </zeroOrMore>
+                <optional>
+                    <choice>
+                        <element name="any">
+                            <empty/>
+                        </element>
+                        <element name="largest">
+                            <empty/>
+                        </element>
+                        <element name="smallest">
+                            <empty/>
+                        </element>
+                    </choice>
+                </optional>
                 <optional>
                     <choice>
                         <element name="min">
@@ -92867,6 +93605,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -93075,6 +93831,24 @@
                         <data type="string"/>
                     </element>
                 </zeroOrMore>
+                <zeroOrMore>
+                    <element name="contributor">
+                        <data type="string"/>
+                    </element>
+                </zeroOrMore>
+                <optional>
+                    <choice>
+                        <element name="any">
+                            <empty/>
+                        </element>
+                        <element name="largest">
+                            <empty/>
+                        </element>
+                        <element name="smallest">
+                            <empty/>
+                        </element>
+                    </choice>
+                </optional>
                 <optional>
                     <choice>
                         <element name="min">
@@ -93316,6 +94090,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -93524,6 +94316,24 @@
                         <data type="string"/>
                     </element>
                 </zeroOrMore>
+                <zeroOrMore>
+                    <element name="contributor">
+                        <data type="string"/>
+                    </element>
+                </zeroOrMore>
+                <optional>
+                    <choice>
+                        <element name="any">
+                            <empty/>
+                        </element>
+                        <element name="largest">
+                            <empty/>
+                        </element>
+                        <element name="smallest">
+                            <empty/>
+                        </element>
+                    </choice>
+                </optional>
                 <optional>
                     <choice>
                         <element name="min">
@@ -93765,6 +94575,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -93973,6 +94801,24 @@
                         <data type="string"/>
                     </element>
                 </zeroOrMore>
+                <zeroOrMore>
+                    <element name="contributor">
+                        <data type="string"/>
+                    </element>
+                </zeroOrMore>
+                <optional>
+                    <choice>
+                        <element name="any">
+                            <empty/>
+                        </element>
+                        <element name="largest">
+                            <empty/>
+                        </element>
+                        <element name="smallest">
+                            <empty/>
+                        </element>
+                    </choice>
+                </optional>
                 <optional>
                     <choice>
                         <element name="min">
@@ -94214,6 +95060,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -94422,6 +95286,24 @@
                         <data type="string"/>
                     </element>
                 </zeroOrMore>
+                <zeroOrMore>
+                    <element name="contributor">
+                        <data type="string"/>
+                    </element>
+                </zeroOrMore>
+                <optional>
+                    <choice>
+                        <element name="any">
+                            <empty/>
+                        </element>
+                        <element name="largest">
+                            <empty/>
+                        </element>
+                        <element name="smallest">
+                            <empty/>
+                        </element>
+                    </choice>
+                </optional>
                 <optional>
                     <choice>
                         <element name="min">
@@ -94663,6 +95545,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -94871,6 +95771,24 @@
                         <data type="string"/>
                     </element>
                 </zeroOrMore>
+                <zeroOrMore>
+                    <element name="contributor">
+                        <data type="string"/>
+                    </element>
+                </zeroOrMore>
+                <optional>
+                    <choice>
+                        <element name="any">
+                            <empty/>
+                        </element>
+                        <element name="largest">
+                            <empty/>
+                        </element>
+                        <element name="smallest">
+                            <empty/>
+                        </element>
+                    </choice>
+                </optional>
                 <optional>
                     <choice>
                         <element name="min">
@@ -95112,6 +96030,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -95320,6 +96256,24 @@
                         <data type="string"/>
                     </element>
                 </zeroOrMore>
+                <zeroOrMore>
+                    <element name="contributor">
+                        <data type="string"/>
+                    </element>
+                </zeroOrMore>
+                <optional>
+                    <choice>
+                        <element name="any">
+                            <empty/>
+                        </element>
+                        <element name="largest">
+                            <empty/>
+                        </element>
+                        <element name="smallest">
+                            <empty/>
+                        </element>
+                    </choice>
+                </optional>
                 <optional>
                     <choice>
                         <element name="min">
@@ -95561,6 +96515,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -95769,6 +96741,24 @@
                         <data type="string"/>
                     </element>
                 </zeroOrMore>
+                <zeroOrMore>
+                    <element name="contributor">
+                        <data type="string"/>
+                    </element>
+                </zeroOrMore>
+                <optional>
+                    <choice>
+                        <element name="any">
+                            <empty/>
+                        </element>
+                        <element name="largest">
+                            <empty/>
+                        </element>
+                        <element name="smallest">
+                            <empty/>
+                        </element>
+                    </choice>
+                </optional>
                 <optional>
                     <choice>
                         <element name="min">
@@ -96010,6 +97000,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -96218,6 +97226,24 @@
                         <data type="string"/>
                     </element>
                 </zeroOrMore>
+                <zeroOrMore>
+                    <element name="contributor">
+                        <data type="string"/>
+                    </element>
+                </zeroOrMore>
+                <optional>
+                    <choice>
+                        <element name="any">
+                            <empty/>
+                        </element>
+                        <element name="largest">
+                            <empty/>
+                        </element>
+                        <element name="smallest">
+                            <empty/>
+                        </element>
+                    </choice>
+                </optional>
                 <optional>
                     <choice>
                         <element name="min">
@@ -96459,6 +97485,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -96667,6 +97711,24 @@
                         <data type="string"/>
                     </element>
                 </zeroOrMore>
+                <zeroOrMore>
+                    <element name="contributor">
+                        <data type="string"/>
+                    </element>
+                </zeroOrMore>
+                <optional>
+                    <choice>
+                        <element name="any">
+                            <empty/>
+                        </element>
+                        <element name="largest">
+                            <empty/>
+                        </element>
+                        <element name="smallest">
+                            <empty/>
+                        </element>
+                    </choice>
+                </optional>
                 <optional>
                     <choice>
                         <element name="min">
@@ -96908,6 +97970,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -97116,6 +98196,24 @@
                         <data type="string"/>
                     </element>
                 </zeroOrMore>
+                <zeroOrMore>
+                    <element name="contributor">
+                        <data type="string"/>
+                    </element>
+                </zeroOrMore>
+                <optional>
+                    <choice>
+                        <element name="any">
+                            <empty/>
+                        </element>
+                        <element name="largest">
+                            <empty/>
+                        </element>
+                        <element name="smallest">
+                            <empty/>
+                        </element>
+                    </choice>
+                </optional>
                 <optional>
                     <choice>
                         <element name="min">
@@ -97357,6 +98455,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -97565,6 +98681,24 @@
                         <data type="string"/>
                     </element>
                 </zeroOrMore>
+                <zeroOrMore>
+                    <element name="contributor">
+                        <data type="string"/>
+                    </element>
+                </zeroOrMore>
+                <optional>
+                    <choice>
+                        <element name="any">
+                            <empty/>
+                        </element>
+                        <element name="largest">
+                            <empty/>
+                        </element>
+                        <element name="smallest">
+                            <empty/>
+                        </element>
+                    </choice>
+                </optional>
                 <optional>
                     <choice>
                         <element name="min">
@@ -97806,6 +98940,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -98014,6 +99166,24 @@
                         <data type="string"/>
                     </element>
                 </zeroOrMore>
+                <zeroOrMore>
+                    <element name="contributor">
+                        <data type="string"/>
+                    </element>
+                </zeroOrMore>
+                <optional>
+                    <choice>
+                        <element name="any">
+                            <empty/>
+                        </element>
+                        <element name="largest">
+                            <empty/>
+                        </element>
+                        <element name="smallest">
+                            <empty/>
+                        </element>
+                    </choice>
+                </optional>
                 <optional>
                     <choice>
                         <element name="min">
@@ -98255,6 +99425,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -98463,6 +99651,24 @@
                         <data type="string"/>
                     </element>
                 </zeroOrMore>
+                <zeroOrMore>
+                    <element name="contributor">
+                        <data type="string"/>
+                    </element>
+                </zeroOrMore>
+                <optional>
+                    <choice>
+                        <element name="any">
+                            <empty/>
+                        </element>
+                        <element name="largest">
+                            <empty/>
+                        </element>
+                        <element name="smallest">
+                            <empty/>
+                        </element>
+                    </choice>
+                </optional>
                 <optional>
                     <choice>
                         <element name="min">
@@ -98704,6 +99910,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -98912,6 +100136,24 @@
                         <data type="string"/>
                     </element>
                 </zeroOrMore>
+                <zeroOrMore>
+                    <element name="contributor">
+                        <data type="string"/>
+                    </element>
+                </zeroOrMore>
+                <optional>
+                    <choice>
+                        <element name="any">
+                            <empty/>
+                        </element>
+                        <element name="largest">
+                            <empty/>
+                        </element>
+                        <element name="smallest">
+                            <empty/>
+                        </element>
+                    </choice>
+                </optional>
                 <optional>
                     <choice>
                         <element name="min">
@@ -99153,6 +100395,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
@@ -99361,6 +100621,24 @@
                         <data type="string"/>
                     </element>
                 </zeroOrMore>
+                <zeroOrMore>
+                    <element name="contributor">
+                        <data type="string"/>
+                    </element>
+                </zeroOrMore>
+                <optional>
+                    <choice>
+                        <element name="any">
+                            <empty/>
+                        </element>
+                        <element name="largest">
+                            <empty/>
+                        </element>
+                        <element name="smallest">
+                            <empty/>
+                        </element>
+                    </choice>
+                </optional>
                 <optional>
                     <choice>
                         <element name="min">
@@ -99602,6 +100880,24 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <optional>
+                        <choice>
+                            <element name="any">
+                                <empty/>
+                            </element>
+                            <element name="largest">
+                                <empty/>
+                            </element>
+                            <element name="smallest">
+                                <empty/>
+                            </element>
+                        </choice>
+                    </optional>
                     <optional>
                         <choice>
                             <element name="min">
