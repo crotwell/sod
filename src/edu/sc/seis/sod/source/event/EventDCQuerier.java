@@ -36,7 +36,6 @@ import edu.sc.seis.sod.subsetter.origin.Catalog;
 import edu.sc.seis.sod.subsetter.origin.Contributor;
 import edu.sc.seis.sod.subsetter.origin.MagnitudeRange;
 import edu.sc.seis.sod.subsetter.origin.OriginDepthRange;
-import edu.sc.seis.sod.subsetter.origin.OriginPointDistance;
 
 public class EventDCQuerier {
 
@@ -51,7 +50,8 @@ public class EventDCQuerier {
             Node node = childNodes.item(counter);
             if(node instanceof Element) {
                 String tagName = ((Element)node).getTagName();
-                if(!tagName.equals("name") && !tagName.equals("dns") && !tagName.equals("originTimeRange")) {
+                if(!tagName.equals("name") && !tagName.equals("dns")
+                        && !tagName.equals("originTimeRange")) {
                     Object object = SodUtil.load((Element)node,
                                                  new String[] {"eventArm",
                                                                "origin"});
@@ -60,10 +60,7 @@ public class EventDCQuerier {
                         minDepth = dr.getMinDepth();
                         maxDepth = dr.getMaxDepth();
                     } else if(tagName.equals("magnitudeRange")) {
-                        MagnitudeRange magRange = (MagnitudeRange)object;
-                        minMag = (float)magRange.getMinValue();
-                        maxMag = (float)magRange.getMaxValue();
-                        searchTypes = magRange.getSearchTypes();
+                        magRange = (MagnitudeRange)object;
                     } else if(object instanceof edu.iris.Fissures.Area) {
                         area = (edu.iris.Fissures.Area)object;
                     } else if(tagName.equals("catalog")) {
@@ -127,17 +124,18 @@ public class EventDCQuerier {
 
     private EventAccessOperations[] getEvents(MicroSecondTimeRange tr,
                                               EventSeqIterHolder holder) {
-        return getEventDC().a_finder().query_events(area,
-                                                    minDepth,
-                                                    maxDepth,
-                                                    tr.getFissuresTimeRange(),
-                                                    searchTypes,
-                                                    minMag,
-                                                    maxMag,
-                                                    catalogs,
-                                                    contributors,
-                                                    sequenceMaximum,
-                                                    holder);
+        return getEventDC().a_finder()
+                .query_events(area,
+                              minDepth,
+                              maxDepth,
+                              tr.getFissuresTimeRange(),
+                              magRange.getSearchTypes(),
+                              (float)magRange.getMinValue(),
+                              (float)magRange.getMaxValue(),
+                              catalogs,
+                              contributors,
+                              sequenceMaximum,
+                              holder);
     }
 
     private CacheEvent[] cacheEvents(EventAccessOperations[] uncached) {
@@ -152,12 +150,10 @@ public class EventDCQuerier {
                 // that one that passed is first while we're at it
                 Origin[] origins = cached[counter].get_origins();
                 for(int i = 0; i < origins.length; i++) {
-                    putPassingMagFirst(origins[i], minMag, maxMag, searchTypes);
+                    putPassingMagFirst(origins[i], magRange);
                 }
                 putPassingMagFirst(EventUtil.extractOrigin(cached[counter]),
-                                   minMag,
-                                   maxMag,
-                                   searchTypes);
+                                   magRange);
             }
         }
         return cached;
@@ -169,33 +165,16 @@ public class EventDCQuerier {
      * 
      * @return - True if a magnitude is found and moved into the 0th position
      */
-    public static boolean putPassingMagFirst(Origin o,
-                                             double minMag,
-                                             double maxMag,
-                                             String[] searchTypes) {
-        for(int j = 0; j < o.magnitudes.length; j++) {
-            if(o.magnitudes[j].value >= minMag
-                    && o.magnitudes[j].value <= maxMag
-                    && acceptableType(searchTypes, o.magnitudes[j].type)) {
-                Magnitude zeroth = o.magnitudes[0];
-                o.magnitudes[0] = o.magnitudes[j];
-                o.magnitudes[j] = zeroth;
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * @return true if type is in searchTypes or if searchTypes is length 0
-     */
-    private static boolean acceptableType(String[] searchTypes, String type) {
-        if(searchTypes.length == 0) {
-            return true;
-        }
-        for(int i = 0; i < searchTypes.length; i++) {
-            if(searchTypes[i].equals(type)) {
-                return true;
+    public static boolean putPassingMagFirst(Origin o, MagnitudeRange magRange) {
+        Magnitude[] acceptable = magRange.getAcceptable(o.magnitudes);
+        if(acceptable.length > 0) {
+            Magnitude zeroth = o.magnitudes[0];
+            for(int i = 0; i < o.magnitudes.length; i++) {
+                if(o.magnitudes[i].equals(acceptable[0])) {
+                    o.magnitudes[0] = acceptable[0];
+                    o.magnitudes[i] = zeroth;
+                    return true;
+                }
             }
         }
         return false;
@@ -215,11 +194,9 @@ public class EventDCQuerier {
 
     private Quantity maxDepth = new QuantityImpl(90000.0, UnitImpl.KILOMETER);
 
-    private String[] searchTypes = {};
-
     private String serverName, serverDNS;
 
-    private float minMag = -99.0f, maxMag = 99.0f;
+    private MagnitudeRange magRange = new MagnitudeRange();
 
     private edu.iris.Fissures.Area area = new GlobalAreaImpl();
 

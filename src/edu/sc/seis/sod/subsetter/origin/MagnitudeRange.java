@@ -33,18 +33,18 @@ public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter {
     public StringTree accept(EventAccessOperations event,
                              EventAttr eventAttr,
                              Origin origin) {
-        return new StringTreeLeaf(this, accept(origin.magnitudes));
+        return new StringTreeLeaf(this, getAcceptable(origin.magnitudes).length > 0);
     }
 
     public String[] getSearchTypes() {
         return searchTypes;
     }
-    
+
     public String[] getContributors() {
         return contributors;
     }
 
-    public boolean accept(Magnitude[] mags) {
+    public Magnitude[] getAcceptable(Magnitude[] mags) {
         List matchList = new ArrayList();
         for(int i = 0; i < mags.length; i++) {
             if((contributors.length == 0 || accept(contribAcceptor,
@@ -64,7 +64,7 @@ public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter {
                 matches = new Magnitude[] {EventUtil.getSmallest(matches)};
             }
         }
-        return matches.length > 0 && acceptValues(matches);
+        return acceptValues(matches);
     }
 
     private boolean accept(StringValueAcceptor acceptor,
@@ -78,13 +78,14 @@ public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter {
         return false;
     }
 
-    private boolean acceptValues(Magnitude[] mags) {
+    private Magnitude[] acceptValues(Magnitude[] mags) {
+        List accepted = new ArrayList();
         for(int i = 0; i < mags.length; i++) {
             if(accept(mags[i].value)) {
-                return true;
+                accepted.add(mags[i]);
             }
         }
-        return false;
+        return (Magnitude[])accepted.toArray(new Magnitude[0]);
     }
 
     private void parseValueTolerance(Element config) {
