@@ -13,6 +13,7 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.NotFound;
@@ -229,7 +230,8 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         List dss = new ArrayList();
         for(int i = 0; i < dataSeisNames.length; i++) {
             DataSetSeismogram seis = ds.getDataSetSeismogram(dataSeisNames[i]);
-            Channel chan = seis.getChannel();
+            Channel chan = ds.getChannel(getMatchingChanIdIgnoreDates(seis.getChannelId(),
+                                                                      ds.getChannelIds()));
             if(channelAcceptor.eventChannelSubsetter.accept(eao, chan, null)
                     .isSuccess()) {
                 dss.add(seis);
@@ -248,6 +250,22 @@ public class RSChannelInfoPopulator implements WaveformProcess {
             rsDisplay.setLayout(custConfig);
         }
         return rsDisplay;
+    }
+
+    public static ChannelId getMatchingChanIdIgnoreDates(ChannelId chan,
+                                                         ChannelId[] channels) {
+        for(int i = 0; i < channels.length; i++) {
+            if(ChannelIdUtil.areEqualExceptForBeginTime(chan, channels[i])) {
+                if(!ChannelIdUtil.areEqual(chan, channels[i])) {
+                    logger.debug("seismogram channel "
+                            + ChannelIdUtil.toString(chan)
+                            + " has a different start time than dataset channel "
+                            + ChannelIdUtil.toString(channels[i]));
+                }
+                return channels[i];
+            }
+        }
+        return null;
     }
 
     private SaveSeismogramToFile saveSeisToFile;
@@ -273,4 +291,6 @@ public class RSChannelInfoPopulator implements WaveformProcess {
     private EmbeddedEventChannelProcessor channelAcceptor;
 
     private int internalId;
+
+    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(RSChannelInfoPopulator.class);
 }
