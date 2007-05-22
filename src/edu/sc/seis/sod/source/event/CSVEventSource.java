@@ -1,14 +1,13 @@
 package edu.sc.seis.sod.source.event;
 
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.StringTokenizer;
-
 import org.w3c.dom.Element;
-
+import com.csvreader.CsvReader;
 import edu.iris.Fissures.FlinnEngdahlRegion;
 import edu.iris.Fissures.FlinnEngdahlType;
 import edu.iris.Fissures.Location;
@@ -43,7 +42,8 @@ public class CSVEventSource extends SimpleEventSource {
         try {
             events = getEventsFromCSVFile(csvFilename);
         } catch(FileNotFoundException e) {
-            throw new UserConfigurationException(e.getMessage() + " as a event CSV file.");
+            throw new UserConfigurationException(e.getMessage()
+                    + " as a event CSV file.");
         } catch(IOException e) {
             throw new ConfigurationException("Unable to read " + csvFilename, e);
         }
@@ -54,85 +54,56 @@ public class CSVEventSource extends SimpleEventSource {
     }
 
     public static CacheEvent[] getEventsFromCSVFile(String filename)
+            throws FileNotFoundException, IOException, ConfigurationException {
+        return getEventsFromReader(AreaSubsetter.makeRelativeOrRecipeDirReader(filename));
+    }
+
+    public static CacheEvent[] getEventsFromReader(Reader reader)
             throws IOException, FileNotFoundException, ConfigurationException {
-        BufferedReader reader = AreaSubsetter.makeRelativeOrRecipeDirReader(filename);
-        // let's get the fields
-        List fields = new ArrayList();
-        String line = reader.readLine();
-        if(line != null) {
-            StringTokenizer tok = new StringTokenizer(line, ", ");
-            while(tok.hasMoreTokens()) {
-                String cur = tok.nextToken().trim();
-                if(isValidField(cur)) {
-                    fields.add(cur);
-                } else {
-                    String allFields = getHeader();
-                    throw new UserConfigurationException(cur
-                            + " is not a known CSV field.  " + allFields
-                            + " are valid options.");
-                }
-            }
-        } else {
-            throw new UserConfigurationException("No header row in csv file "
-                    + filename + ".");
-        }
-        if(!fields.contains("time")) {
-            throw new UserConfigurationException("Required header 'time' not found in csv event file "
-                    + filename + ".");
-        }
-        // let's get the events!
         List events = new ArrayList();
-        int lineNum = 1;
-        while((line = reader.readLine()) != null) {
-            lineNum++;
-            List values = new ArrayList();
-            if(line.startsWith("#")) {// Comment line
-                continue;
+        CsvReader csvReader = new CsvReader(reader);
+        csvReader.readHeaders();
+        List headers = Arrays.asList(csvReader.getHeaders());
+        for(int i = 0; i < headers.size(); i++) {
+            String cur = (String)headers.get(i);
+            if(!isValidField(cur)) {
+                throw new UserConfigurationException(cur
+                        + " is not a known CSV field.  "
+                        + concatenateValidFields() + " are valid options.");
             }
-            StringTokenizer tok = new StringTokenizer(line, ",");
-            while(tok.hasMoreTokens()) {
-                values.add(tok.nextToken().trim());
-            }
-            if(values.size() == 0) { // Empty line
-                continue;
-            }
-            if(values.size() != fields.size()) {
-                throw new UserConfigurationException("There are "
-                        + values.size() + " values on line " + lineNum
-                        + " but there are " + fields.size()
-                        + " in the header in " + filename + ".");
-            }
+        }
+        while(csvReader.readRecord()) {
             // time to start populating field values
             // first up: the only required field...
-            Time time = new Time((String)values.get(fields.indexOf(TIME)), 0);
-            try{
+            Time time = new Time(csvReader.get(TIME), 0);
+            try {
                 new ISOTime(time.date_time);
-            }catch(UnsupportedFormat uf){
-            	throw new UserConfigurationException("The time '" + time.date_time + "' on line " + (lineNum) + " in " + filename + " is invalid.");
+            } catch(UnsupportedFormat uf) {
+                throw new UserConfigurationException("The time '"
+                        + time.date_time + "' in record "
+                        + csvReader.getCurrentRecord() + " is invalid.");
             }
             float latitude = 0f;
-            if(fields.contains(LATITUDE)) {
-                latitude = Float.parseFloat((String)values.get(fields.indexOf(LATITUDE)));
+            if(headers.contains(LATITUDE)) {
+                latitude = Float.parseFloat(csvReader.get(LATITUDE));
             }
             float longitude = 0f;
-            if(fields.contains(LONGITUDE)) {
-                longitude = Float.parseFloat((String)values.get(fields.indexOf(LONGITUDE)));
+            if(headers.contains(LONGITUDE)) {
+                longitude = Float.parseFloat(csvReader.get(LONGITUDE));
             }
             double depth = 0f;
-            if(fields.contains(DEPTH)) {
-                depth = Double.parseDouble((String)values.get(fields.indexOf(DEPTH)));
+            if(headers.contains(DEPTH)) {
+                depth = Double.parseDouble(csvReader.get(DEPTH));
             }
             Unit depthUnit = UnitImpl.KILOMETER;
-            if(fields.contains(DEPTH_UNITS)) {
-                String unitName = (String)values.get(fields.indexOf(DEPTH_UNITS));
+            if(headers.contains(DEPTH_UNITS)) {
+                String unitName = csvReader.get(DEPTH_UNITS);
                 try {
                     depthUnit = UnitImpl.getUnitFromString(unitName);
                 } catch(NoSuchFieldException e) {
                     throw new UserConfigurationException(unitName
-                            + " on line "
-                            + lineNum
-                            + " in "
-                            + filename
+                            + " in record "
+                            + csvReader.getCurrentRecord()
                             + " is not a valid unit name.  Try KILOMETER or METER");
                 }
             }
@@ -144,36 +115,64 @@ public class CSVEventSource extends SimpleEventSource {
                                              LocationType.GEOGRAPHIC);
             String defaultString = "csvEvent";
             String catalog = defaultString;
-            if(fields.contains(CATALOG)) {
-                catalog = (String)values.get(fields.indexOf(CATALOG));
+            if(headers.contains(CATALOG)) {
+                catalog = csvReader.get(CATALOG);
             }
             String contributor = defaultString;
-            if(fields.contains(CONTRIBUTOR)) {
-                contributor = (String)values.get(fields.indexOf(CONTRIBUTOR));
+            if(headers.contains(CONTRIBUTOR)) {
+                contributor = csvReader.get(CONTRIBUTOR);
             }
-            String magType = "M";
-            if(fields.contains(MAGNITUDE_TYPE)) {
-                magType = (String)values.get(fields.indexOf(MAGNITUDE_TYPE));
+            Magnitude[] magnitudes = new Magnitude[0];
+            String[] magValues, magTypes, magContribs;
+            if(headers.contains(MAGNITUDE)) {
+                magValues = parseValuesFromSeparatedValues(csvReader.get(MAGNITUDE),
+                                                           ':',
+                                                           "0");
+            } else {
+                magValues = new String[] {"0"};
             }
-            float magVal = 0f;
-            if(fields.contains(MAGNITUDE)) {
-                magVal = Float.parseFloat((String)values.get(fields.indexOf(MAGNITUDE)));
+            if(magValues.length > 1 || (headers.contains(MAGNITUDE_TYPE))) {
+                magTypes = parseValuesFromSeparatedValues(csvReader.get(MAGNITUDE_TYPE),
+                                                          ':',
+                                                          "M");
+                if(magTypes.length != magValues.length) {
+                    throw new UserConfigurationException("count of magnitude types does not match count of magnitude values in record "
+                            + csvReader.getCurrentRecord());
+                }
+            } else {
+                magTypes = new String[] {"M"};
             }
-            Magnitude magnitude = new Magnitude(magType, magVal, contributor);
+            if(magValues.length > 1 || headers.contains(MAGNITUDE_CONTRIBUTOR)) {
+                magContribs = parseValuesFromSeparatedValues(csvReader.get(MAGNITUDE_CONTRIBUTOR),
+                                                             ':',
+                                                             defaultString);
+                if(magContribs.length != magValues.length) {
+                    throw new UserConfigurationException("count of magnitude types does not match count of magnitude values in record "
+                            + csvReader.getCurrentRecord());
+                }
+            } else {
+                magContribs = new String[] {defaultString};
+            }
+            magnitudes = new Magnitude[magValues.length];
+            for(int i = 0; i < magValues.length; i++) {
+                magnitudes[i] = new Magnitude(magTypes[i],
+                                              Float.parseFloat(magValues[i]),
+                                              magContribs[i]);
+            }
             Origin origin = new OriginImpl("",
                                            catalog,
                                            contributor,
                                            time,
                                            location,
-                                           new Magnitude[] {magnitude},
+                                           magnitudes,
                                            new ParameterRef[0]);
             String name = defaultString;
-            if(fields.contains(NAME)) {
-                name = (String)values.get(fields.indexOf(NAME));
+            if(headers.contains(NAME)) {
+                name = csvReader.get(NAME);
             }
             FlinnEngdahlType feType = FlinnEngdahlType.SEISMIC_REGION;
-            if(fields.contains(FE_REGION_TYPE)) {
-                int type = Integer.parseInt((String)values.get(fields.indexOf(FE_REGION_TYPE)));
+            if(headers.contains(FE_REGION_TYPE)) {
+                int type = Integer.parseInt(csvReader.get(FE_REGION_TYPE));
                 if(type == FlinnEngdahlType._SEISMIC_REGION) {
                     feType = FlinnEngdahlType.SEISMIC_REGION;
                 } else if(type == FlinnEngdahlType._GEOGRAPHIC_REGION) {
@@ -181,16 +180,45 @@ public class CSVEventSource extends SimpleEventSource {
                 }
             }
             FlinnEngdahlRegion feRegion = new FlinnEngdahlRegionImpl(feType, 0);
-            if(fields.contains(FE_REGION)) {
+            if(headers.contains(FE_REGION)) {
                 feRegion = new FlinnEngdahlRegionImpl(feType,
-                                                      Integer.parseInt((String)values.get(fields.indexOf(FE_REGION))));
+                                                      Integer.parseInt(csvReader.get(FE_REGION)));
             }
             events.add(new CacheEvent(new EventAttrImpl(name, feRegion), origin));
         }
         return (CacheEvent[])events.toArray(new CacheEvent[0]);
     }
 
-    public static String getHeader() {
+    private static String[] parseValuesFromSeparatedValues(String uberValue,
+                                                           char delim,
+                                                           String defaultVal) {
+        List values = new ArrayList();
+        StringBuffer buf = new StringBuffer();
+        for(int i = 0; i < uberValue.length(); i++) {
+            char curChar = uberValue.charAt(i);
+            if(curChar == delim) {
+                buf = readCurrentValue(defaultVal, values, buf);
+            } else {
+                buf.append(curChar);
+            }
+        }
+        readCurrentValue(defaultVal, values, buf);
+        return (String[])values.toArray(new String[0]);
+    }
+
+    private static StringBuffer readCurrentValue(String defaultVal,
+                                                 List values,
+                                                 StringBuffer buf) {
+        if(buf.length() == 0) {
+            values.add(defaultVal);
+            return buf;
+        } else {
+            values.add(buf.toString());
+            return new StringBuffer();
+        }
+    }
+
+    public static String concatenateValidFields() {
         String allFields = "";
         for(int i = 0; i < FIELDS.length - 1; i++) {
             allFields += FIELDS[i] + ", ";
@@ -206,8 +234,8 @@ public class CSVEventSource extends SimpleEventSource {
         }
         return false;
     }
-    
-    public String toString(){
+
+    public String toString() {
         return "CSVEventSource using " + csvFilename;
     }
 
@@ -244,22 +272,23 @@ public class CSVEventSource extends SimpleEventSource {
 
     public static final String MAGNITUDE_TYPE = "magnitudeType";
 
+    public static final String MAGNITUDE_CONTRIBUTOR = "magnitudeContributor";
+
     private static final String[] FIELDS = new String[] {TIME,
                                                          LONGITUDE,
                                                          LATITUDE,
                                                          DEPTH,
+                                                         DEPTH_UNITS,
                                                          MAGNITUDE,
+                                                         MAGNITUDE_TYPE,
+                                                         MAGNITUDE_CONTRIBUTOR,
                                                          CATALOG,
                                                          CONTRIBUTOR,
                                                          NAME,
                                                          FE_SEIS_REGION,
                                                          FE_GEO_REGION,
                                                          FE_REGION,
-                                                         FE_REGION_TYPE,
-                                                         DEPTH_UNITS,
-                                                         MAGNITUDE_TYPE};
+                                                         FE_REGION_TYPE};
 
     private String csvFilename;
-    
-    
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry output="target/test-classes" kind="src" path="test/unit"/>
+	<classpathentry kind="src" output="target/test-classes" path="test/unit"/>
 	<classpathentry kind="src" path="externalExample/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/fissuresUtil1"/>
@@ -12,5 +12,6 @@
 	<classpathentry kind="var" path="MAVEN_REPO/msv/jars/msv-20030807.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/jing/jars/jing-20030619.jar"/>
 	<classpathentry exported="true" kind="var" path="MAVEN_REPO/JSAP/jars/JSAP-2.1.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/JavaCSV/jars/javacsv-2.0.jar" sourcepath="/MAVEN_REPO/JavaCSV/jars/javacsv-2.0-src.zip"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

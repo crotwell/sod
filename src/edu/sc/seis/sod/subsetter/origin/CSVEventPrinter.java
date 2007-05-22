@@ -46,9 +46,31 @@ public class CSVEventPrinter implements OriginSubsetter {
         Quantity q = loc.depth;
         buff.append(q.value + COM);
         buff.append(q.the_units + COM);
-        Magnitude mag = preferred_origin.magnitudes[0];
-        buff.append(mag.value + COM);
-        buff.append(mag.type + COM);
+        StringBuffer magValBuf = new StringBuffer();
+        StringBuffer magTypeBuf = new StringBuffer();
+        StringBuffer magContribBuf = new StringBuffer();
+        Magnitude[] mags = preferred_origin.magnitudes;
+        for(int i = 0; i < mags.length; i++) {
+            magValBuf.append(mags[i].value);
+            if(mags[i].type == null || mags[i].type.equals("")) {
+                magTypeBuf.append("");
+            } else {
+                magTypeBuf.append(mags[i].type);
+            }
+            if(mags[i].contributor == null || mags[i].contributor.equals("")) {
+                magContribBuf.append("");
+            } else {
+                magContribBuf.append(mags[i].contributor);
+            }
+            if(i < mags.length - 1) {
+                magValBuf.append(':');
+                magTypeBuf.append(':');
+                magContribBuf.append(':');
+            }
+        }
+        buff.append(magValBuf + COM);
+        buff.append(magTypeBuf + COM);
+        buff.append(magContribBuf + COM);
         buff.append(preferred_origin.catalog + COM);
         buff.append(preferred_origin.contributor + COM);
         buff.append(eventAttr.name + COM);
@@ -84,6 +106,7 @@ public class CSVEventPrinter implements OriginSubsetter {
                 + CSVEventSource.LONGITUDE + COM + CSVEventSource.DEPTH + COM
                 + CSVEventSource.DEPTH_UNITS + COM + CSVEventSource.MAGNITUDE
                 + COM + CSVEventSource.MAGNITUDE_TYPE + COM
+                + CSVEventSource.MAGNITUDE_CONTRIBUTOR + COM
                 + CSVEventSource.CATALOG + COM + CSVEventSource.CONTRIBUTOR
                 + COM + CSVEventSource.NAME + COM + CSVEventSource.FE_REGION
                 + COM + CSVEventSource.FE_REGION_TYPE;
