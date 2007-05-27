@@ -22,7 +22,7 @@ public class DonutParserTest extends TestCase {
             sp.parse("24/43/2223");
             fail("A donut missing a slash should raise an exception!");
         } catch(ParseException pe) {
-            assertTrue(pe.getMessage().contains("24/43/2223"));
+            assertTrue(pe.getMessage().indexOf("24/43/2223") != -1);
         }
     }
 }

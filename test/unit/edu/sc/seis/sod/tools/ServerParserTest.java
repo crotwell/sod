@@ -17,7 +17,7 @@ public class ServerParserTest extends TestCase {
             checkServerMap((Map)sp.parse("IRIS_NetworkDC"));
             fail("A server without a DNS should raise an exception!");
         } catch(ParseException pe) {
-            assertTrue(pe.getMessage().contains("IRIS_NetworkDC"));
+            assertTrue(pe.getMessage().indexOf("IRIS_NetworkDC") != -1);
         }
     }
 

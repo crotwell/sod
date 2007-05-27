@@ -38,7 +38,7 @@ public class OriginTimeRange implements OriginSubsetter, MicroSecondTimeRangeSup
             return new MicroSecondDateLoader() {
 
                 public MicroSecondDate load() {
-                    if(netElName.contains("Start")) {
+                    if(netElName.indexOf("Start") != -1) {
                         return ntr.getMSTR().getBeginTime();
                     } else {
                         return ntr.getMSTR().getEndTime();
@@ -47,7 +47,7 @@ public class OriginTimeRange implements OriginSubsetter, MicroSecondTimeRangeSup
             };
         } else {
             final MicroSecondDate date = new MicroSecondDate(SodUtil.loadTime(timeEl,
-                                                                              time.contains("end")));
+                                                                              time.indexOf("end") != -1));
             return new MicroSecondDateLoader() {
 
                 public MicroSecondDate load() {

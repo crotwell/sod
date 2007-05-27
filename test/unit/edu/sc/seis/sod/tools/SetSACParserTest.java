@@ -53,7 +53,7 @@ public class SetSACParserTest extends TestCase {
             ssp.parse("P-Q");
             fail("a valid header should be required");
         } catch(ParseException e) {
-            assertTrue(e.getMessage().contains("P-Q"));
+            assertTrue(e.getMessage().indexOf("P-Q") != -1);
         }
     }
 
@@ -62,7 +62,7 @@ public class SetSACParserTest extends TestCase {
             ssp.parse("-a");
             fail("a phase should be required");
         } catch(ParseException e) {
-            assertTrue(e.getMessage().contains("-a"));
+            assertTrue(e.getMessage().indexOf("-a") != -1);
         }
     }
 

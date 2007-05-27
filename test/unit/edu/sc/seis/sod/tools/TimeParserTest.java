@@ -32,7 +32,7 @@ public class TimeParserTest extends TestCase {
             System.out.println(floor.parse("2006-111-19"));
             fail("Shouldn't be able to parse a time like that");
         } catch(ParseException pe) {
-            assertTrue(pe.getMessage().contains("2006-111-19"));
+            assertTrue(pe.getMessage().indexOf("2006-111-19") != -1);
         }
     }
 

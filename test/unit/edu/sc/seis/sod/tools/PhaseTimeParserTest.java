@@ -29,7 +29,7 @@ public class PhaseTimeParserTest extends TestCase {
             ptp.parse("2006");
             fail("PhaseTimeParsing should fail without a phase given");
         } catch(ParseException pe) {
-            assertTrue(pe.getMessage().contains("2006"));
+            assertTrue(pe.getMessage().indexOf("2006") != -1);
         }
     }
 
@@ -38,7 +38,7 @@ public class PhaseTimeParserTest extends TestCase {
             ptp.parse("ttp");
             fail("PhaseTimeParsing should fail without a offset given");
         } catch(ParseException pe) {
-            assertTrue(pe.getMessage().contains("ttp"));
+            assertTrue(pe.getMessage().indexOf("ttp") != -1);
         }
     }
 

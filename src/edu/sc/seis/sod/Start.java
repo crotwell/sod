@@ -419,8 +419,8 @@ public class Start {
     private void handleStartupRunProperties() {
         if(runProps.removeDatabase()) {
             String dbUrl = ConnMgr.getURL();
-            if(!dbUrl.startsWith("jdbc:hsqldb") || dbUrl.contains("hsql://")
-                    || !dbUrl.contains(DATABASE_DIR)) {
+            if(!dbUrl.startsWith("jdbc:hsqldb") || dbUrl.indexOf("hsql://") != -1
+                    || !(dbUrl.indexOf(DATABASE_DIR) != -1)) {
                 logger.warn("The database isn't the default local hsqldb, so it couldn't be deleted as specified by the properties");
                 return;
             }

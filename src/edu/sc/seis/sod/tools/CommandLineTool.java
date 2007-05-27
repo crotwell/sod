@@ -230,10 +230,10 @@ public class CommandLineTool {
             String line;
             boolean inSod = false;
             while((line = r.readLine()) != null) {
-                if(!inSod && line.contains("<sod>")) {
+                if(!inSod && line.indexOf("<sod>") != -1) {
                     inSod = true;
                 } else if(inSod) {
-                    if(line.contains("</sod>")) {
+                    if(line.indexOf("</sod>") != -1) {
                         inSod = false;
                     } else {
                         buff.append(line);
