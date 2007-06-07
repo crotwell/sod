@@ -3,6 +3,7 @@ package edu.sc.seis.sod.velocity.seismogram;
 import java.util.ArrayList;
 import java.util.List;
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfSeismogramDC.Property;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.SamplingImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
@@ -43,7 +44,23 @@ public class VelocitySeismogram extends LocalSeismogramImpl {
     public SamplingImpl getSampling() {
         return new VelocitySampling(super.getSampling());
     }
+    
+    public VelocityProperty[] getProps() {
+        VelocityProperty[] vProps = new VelocityProperty[properties.length];
+        for(int i = 0; i < vProps.length; i++) {
+            vProps[i] = new VelocityProperty(properties[i]);
+        }
+        return vProps;
+    }
 
+    public String getAllProps() {
+        String out = "Props: ";
+        for(int i = 0; i < properties.length; i++) {
+            out += "( "+properties[i].name+", "+properties[i].value+" )";
+        }
+        return out;
+    }
+    
     public String toString() {
         return "Seismogram on " + getChannel() + " from" + getBegin() + " to "
                 + getEnd();
