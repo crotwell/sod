@@ -27,7 +27,7 @@ public class RepairSensitivity implements ChannelSubsetter {
         } catch(ChannelNotFound e) {
             return new Fail(this, "No instrumentation");
         } catch (InstrumentationInvalid e) {
-            return new Fail(this, "Invalid instrumentation");
+            return new Fail(this, "Invalid instrumentation", e);
         }
         if(InstrumentationLoader.isValid(instrumentation)) {
             return new Pass(this);
@@ -35,9 +35,8 @@ public class RepairSensitivity implements ChannelSubsetter {
         Response resp = instrumentation.the_response;
         Stage[] stages = resp.stages;
         if(stages.length == 0) {
-            logger.debug("No stages in the response of "
-                    + ChannelIdUtil.toString(channel.get_id()));
-            return new StringTreeLeaf(this, false);
+            return new StringTreeLeaf(this, false, "No stages in the response of "
+                                      + ChannelIdUtil.toString(channel.get_id()));
         }
         InstrumentationLoader.repairResponse(instrumentation.the_response);
         return new StringTreeLeaf(this, InstrumentationLoader.isValid(instrumentation.the_response));
