@@ -42,7 +42,7 @@ public class find_events extends CommandLineTool {
                                     'D'));
         String latPrinter = "$event.getLatitude('##0.0000;-##0.0000')";
         String lonPrinter = "$event.getLongitude('##0.0000;-##0.0000')";
-        String theRest = "$event.getDepth('###0.##') ${event.getTime('yyyy_DDD_HH_mm_ss.SSS')} $event.magnitudeValue$event.magnitudeType";
+        String theRest = "$event.getDepth('###0.##') ${event.getTime('yyyy_DDD_HH_mm_ss_SSS')} $event.magnitudeValue$event.magnitudeType";
         add(OutputFormatParser.createParam(lonPrinter + " " + latPrinter + " "
                 + theRest, latPrinter + " " + lonPrinter + " " + theRest));
         add(createListOption("catalogs",
