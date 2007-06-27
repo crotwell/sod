@@ -40,6 +40,7 @@
             <ref name="youngerThan"/>
             <ref name="printline"/>
             <ref name="CSVEventPrinter"/>
+            <ref name="similarEvent"/>
         </choice>
     </define>
     <define name="name">
@@ -368,6 +369,14 @@
                     </text>
                 </element>
             </optional>
+        </element>
+    </define>
+    <define name="similarEvent">
+        <element name="similarEvent">
+            <xsd:annotation>
+                <summary>Accepts events that are similar to one in the included event source.</summary>
+            </xsd:annotation>
+            <externalRef href="source.rng"/>
         </element>
     </define>
 </grammar>

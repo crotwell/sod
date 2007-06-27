@@ -59,22 +59,8 @@ public class RemoveEventDuplicate implements OriginSubsetter {
                           EventAttr eventAttr,
                           Origin preferred_origin)
         throws Exception {
-
-        MicroSecondDate originTime = new MicroSecondDate(preferred_origin.origin_time);
-        MicroSecondDate minTime = originTime.subtract(new TimeInterval(timeVariance));
-        MicroSecondDate maxTime = originTime.add(new TimeInterval(timeVariance));
-
-        QuantityImpl originDepth = QuantityImpl.createQuantityImpl(preferred_origin.my_location.depth);
-        QuantityImpl depthRangeImpl = QuantityImpl.createQuantityImpl(depthVariance);
-        QuantityImpl minDepth = originDepth.subtract(depthRangeImpl);
-        QuantityImpl maxDepth = originDepth.add(depthRangeImpl);
-
-        CacheEvent[] matchingEvents = 
-            eventTable.getEventsByTimeAndDepthRanges(minTime,
-                                                     maxTime,
-                                                     minDepth.getValue(UnitImpl.KILOMETER),
-                                                     maxDepth.getValue(UnitImpl.KILOMETER));
-
+        // first eliminate based on time and depth as these are easy and the database can do efficiently
+        CacheEvent[] matchingEvents = getEventsNearTimeAndDepth(preferred_origin);
         for (int i = 0; i < matchingEvents.length; i++) {
             if (!matchingEvents[i].equals(eventAccess)){
                 Origin curOrig = matchingEvents[i].getOrigin();
@@ -86,9 +72,26 @@ public class RemoveEventDuplicate implements OriginSubsetter {
         }
         return new StringTreeLeaf(this, true);
     }
+
+    public CacheEvent[] getEventsNearTimeAndDepth(Origin preferred_origin) throws SQLException {
+        MicroSecondDate originTime = new MicroSecondDate(preferred_origin.origin_time);
+        MicroSecondDate minTime = originTime.subtract(new TimeInterval(timeVariance));
+        MicroSecondDate maxTime = originTime.add(new TimeInterval(timeVariance));
+
+        QuantityImpl originDepth = QuantityImpl.createQuantityImpl(preferred_origin.my_location.depth);
+        QuantityImpl depthRangeImpl = QuantityImpl.createQuantityImpl(depthVariance);
+        QuantityImpl minDepth = originDepth.subtract(depthRangeImpl);
+        QuantityImpl maxDepth = originDepth.add(depthRangeImpl);
+
+        return
+            eventTable.getEventsByTimeAndDepthRanges(minTime,
+                                                     maxTime,
+                                                     minDepth.getValue(UnitImpl.KILOMETER),
+                                                     maxDepth.getValue(UnitImpl.KILOMETER));
+    }
     
 
-    private Quantity timeVariance, distanceVariance, depthVariance;
+    protected QuantityImpl timeVariance, distanceVariance, depthVariance;
     private JDBCEventStatus eventTable;
 }
 
