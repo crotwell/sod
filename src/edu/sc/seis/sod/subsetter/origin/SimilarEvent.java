@@ -41,7 +41,8 @@ public class SimilarEvent extends RemoveEventDuplicate {
         Iterator it = eventList.iterator();
         while(it.hasNext()) {
             CacheEvent event = (CacheEvent)it.next();
-            if (new MicroSecondDate(event.getOrigin().origin_time).difference(new MicroSecondDate(preferred_origin.origin_time)).lessThanEqual(timeVariance)) {
+            if (new MicroSecondDate(event.getOrigin().origin_time).difference(new MicroSecondDate(preferred_origin.origin_time)).lessThanEqual(timeVariance)
+                    && (((QuantityImpl)event.getOrigin().my_location.depth).subtract((QuantityImpl)preferred_origin.my_location.depth).getValue(depthVariance.get_unit()) <= depthVariance.getValue())) {
                 out.add(event);
             }
         }
