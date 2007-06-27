@@ -35,6 +35,10 @@ public class TimeParser extends StringParser {
                 return "<networkStartTime/>";
             }
         }
+        return parseDate(arg);
+    }
+    
+    public String parseDate(String arg) throws ParseException {
         Matcher m = datePattern.matcher(arg);
         if(!m.matches()) {
             throw new ParseException("A time must be formatted as YYYY[[[[[-MM]-DD]-hh]-mm]-ss] like 2006-11-19, not '"
