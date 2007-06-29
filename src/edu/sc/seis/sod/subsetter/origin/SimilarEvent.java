@@ -41,12 +41,25 @@ public class SimilarEvent extends RemoveEventDuplicate {
         Iterator it = eventList.iterator();
         while(it.hasNext()) {
             CacheEvent event = (CacheEvent)it.next();
-            if (new MicroSecondDate(event.getOrigin().origin_time).difference(new MicroSecondDate(preferred_origin.origin_time)).lessThanEqual(timeVariance)
-                    && (((QuantityImpl)event.getOrigin().my_location.depth).subtract((QuantityImpl)preferred_origin.my_location.depth).getValue(depthVariance.get_unit()) <= depthVariance.getValue())) {
+            if (isTimeOK(event, preferred_origin)
+                    && isDepthOK(event, preferred_origin)) {
                 out.add(event);
             }
         }
         return (CacheEvent[])out.toArray(new CacheEvent[0]);
+    }
+    
+    private boolean isTimeOK(CacheEvent event, Origin preferred_origin) {
+        MicroSecondDate eventTime = new MicroSecondDate(event.getOrigin().origin_time);
+        MicroSecondDate originTime = new MicroSecondDate(preferred_origin.origin_time);
+        return eventTime.difference(originTime).lessThanEqual(timeVariance);
+    }
+    
+    private boolean isDepthOK(CacheEvent event, Origin preferred_origin) {
+        QuantityImpl eventDepth = (QuantityImpl)event.getOrigin().my_location.depth;
+        QuantityImpl originDepth = (QuantityImpl)preferred_origin.my_location.depth;
+        double difference = eventDepth.subtract(originDepth).getValue(depthVariance.get_unit());
+        return Math.abs(difference) <= depthVariance.getValue();
     }
     
     ArrayList eventList;
