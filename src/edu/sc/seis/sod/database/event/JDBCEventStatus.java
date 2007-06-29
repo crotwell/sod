@@ -187,6 +187,10 @@ public class JDBCEventStatus extends SodJDBC {
         rs.next();
         return rs.getInt("num_waiting");
     }
+    
+    public Connection getConnection() {
+        return conn;
+    }
 
     private JDBCEventAccess eventAccessTable;
 
