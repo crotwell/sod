@@ -157,7 +157,7 @@ public class EventArm implements Arm {
     
     private void waitForProcessing() throws Exception {
         int numWaiting;
-        synchronized(eventStatus) {
+        synchronized(eventStatus.getConnection()) {
             numWaiting = eventStatus.getNumWaiting();
         }
         if( !Start.isArmFailure() && waitForWaveformProcessing  &&  numWaiting > MIN_WAIT_EVENTS) {
@@ -231,19 +231,21 @@ public class EventArm implements Arm {
 
     private boolean hasAlreadyPassed(CacheEvent event) throws SQLException,
             edu.sc.seis.fissuresUtil.database.NotFound {
-        int dbId = eventStatus.getDbId(event);
-        if(dbId != -1) {
-            Status status = eventStatus.getStatus(dbId);
-            if(status == IN_PROG || status == SUCCESS) {
-                return true;
+        synchronized(eventStatus.getConnection()) {
+            int dbId = eventStatus.getDbId(event);
+            if(dbId != -1) {
+                Status status = eventStatus.getStatus(dbId);
+                if(status == IN_PROG || status == SUCCESS) {
+                    return true;
+                }
             }
+            return false;
         }
-        return false;
     }
 
     public void change(EventAccessOperations event, Status status)
             throws Exception {
-        synchronized(eventStatus) {
+        synchronized(eventStatus.getConnection()) {
             eventStatus.setStatus(event, status);
         }
         Iterator it = statusMonitors.iterator();
