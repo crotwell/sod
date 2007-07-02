@@ -12,7 +12,10 @@ import edu.iris.Fissures.model.TimeInterval;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.XMLConfigUtil;
 import edu.sc.seis.sod.source.event.EventSource;
+import edu.sc.seis.sod.status.Fail;
+import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
@@ -23,7 +26,6 @@ public class SimilarEvent extends RemoveEventDuplicate {
         super(config);
         Element sourceElement = SodUtil.getFirstEmbeddedElement(config);
         EventSource source = (EventSource)SodUtil.load(sourceElement, new String[] { "event" } );
-        eventList = new ArrayList();
         while(source.hasNext()) {
             CacheEvent[] events = source.next();
             for(int i = 0; i < events.length; i++) {
@@ -32,8 +34,26 @@ public class SimilarEvent extends RemoveEventDuplicate {
         }
     }
 
-    public StringTree accept(EventAccessOperations eventAccess, EventAttr eventAttr, Origin preferred_origin) throws Exception {
-        return new StringTreeLeaf(this, ! super.accept(eventAccess, eventAttr, preferred_origin).isSuccess());
+    public SimilarEvent(CacheEvent[] events) {
+        for(int i = 0; i < events.length; i++) {
+            eventList.add(events[i]);
+        }
+    }
+    
+
+    
+    public StringTree accept(EventAccessOperations eventAccess,
+                          EventAttr eventAttr,
+                          Origin preferred_origin)
+        throws Exception {
+        // first eliminate based on time and depth as these are easy and the database can do efficiently
+        CacheEvent[] matchingEvents = getEventsNearTimeAndDepth(preferred_origin);
+        for (int i = 0; i < matchingEvents.length; i++) {
+            if (matchingEvents[i].equals(eventAccess) || isDistanceClose(matchingEvents[i], preferred_origin)){
+                return new Pass(this);
+            }
+        }
+        return new Fail(this);
     }
 
     public CacheEvent[] getEventsNearTimeAndDepth(Origin preferred_origin) {
@@ -62,5 +82,5 @@ public class SimilarEvent extends RemoveEventDuplicate {
         return Math.abs(difference) <= depthVariance.getValue();
     }
     
-    ArrayList eventList;
+    ArrayList eventList = new ArrayList();;
 }
