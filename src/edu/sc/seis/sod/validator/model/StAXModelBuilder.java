@@ -44,7 +44,7 @@ public class StAXModelBuilder implements XMLStreamConstants {
                 start.set(anyXML);
                 Annotation ann = new Annotation();
                 ann.setSummary("Any well-formed XML");
-                ann.setDescription("This tactic describes any well formed XML document.  You must replace it with a root element, and then inside of it, any well formed XML will do.");
+                ann.setDescription("This ingredient describes any well formed XML document.  You must replace it with a root element, and then inside of it, any well formed XML will do.");
                 definedGrammar.add(start);
             } else {
                 ClassLoader cl = getClass().getClassLoader();

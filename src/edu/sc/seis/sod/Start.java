@@ -120,7 +120,7 @@ public class Start {
         try {
             Validator validator = new Validator(Validator.SOD_SCHEMA_LOC);
             if(!validator.validate(sourceMaker.create())) {
-                logger.info("Invalid strategy file!");
+                logger.info("Invalid recipe file!");
                 allHopeAbandon(validator.getErrorMessage());
             }
             if(args.onlyValidate()) {
@@ -136,7 +136,7 @@ public class Start {
     private static void informUserOfBadFileAndExit(String confFilename) {
         File configFile = new File(confFilename);
         System.err.println("You told SOD to use "
-                + configFile.getAbsolutePath() + " as its strategy file");
+                + configFile.getAbsolutePath() + " as its recipe file");
         if(configFile.exists()) {
             System.err.println("SOD was unable to open it.  Make sure the file is readable.");
         } else {
