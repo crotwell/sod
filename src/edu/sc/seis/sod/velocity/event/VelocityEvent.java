@@ -117,6 +117,10 @@ public class VelocityEvent extends ProxyEventAccessOperations {
     public String getDepth() {
         return FissuresFormatter.formatDepth(FissuresFormatter.getDepth(origin));
     }
+    
+    public String getDepthValue() {
+        return df.format(FissuresFormatter.getDepth(origin).getValue(UnitImpl.KILOMETER));
+    }
 
     public String getDepth(String format) {
         double depthInKM = QuantityImpl.createQuantityImpl(origin.my_location.depth)
