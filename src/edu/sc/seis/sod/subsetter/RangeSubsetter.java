@@ -6,15 +6,20 @@ import edu.sc.seis.sod.SodUtil;
 
 public class RangeSubsetter {
 
-    public RangeSubsetter() {}
+    public RangeSubsetter() {
+    }
 
     public RangeSubsetter(Element config) {
-        this(config, -1f * (Double.MAX_VALUE - 1), Double.MAX_VALUE);
+        parseConfig(config);
     }
 
     public RangeSubsetter(Element config, double defaultMin, double defaultMax) {
         min = defaultMin;
         max = defaultMax;
+        parseConfig(config);
+    }
+    
+    protected void parseConfig(Element config) {
         NodeList children = config.getChildNodes();
         for(int i = 0; i < children.getLength(); i++) {
             if(children.item(i) instanceof Element) {
@@ -47,6 +52,15 @@ public class RangeSubsetter {
     public boolean acceptMax(double value) {
         return max > value || (allowEqualsToMax && max == value);
     }
+    
+    public String toString() {
+        String out = "(";
+        out += min==DEFAULT_MIN? "-inf" : ""+min;
+        out += ", ";
+        out += max==DEFAULT_MAX ? "inf" : ""+max;
+        out +=")";
+        return out;
+    }
 
     boolean allowEqualsToMin = true, allowEqualsToMax = true;
 
@@ -62,5 +76,8 @@ public class RangeSubsetter {
         return max;
     }
 
-    protected double min, max;
+    public static final double DEFAULT_MIN = -1f * (Double.MAX_VALUE - 1);
+    public static final double DEFAULT_MAX = Double.MAX_VALUE;
+    protected double min = DEFAULT_MIN;
+    protected double max = DEFAULT_MAX;
 }

@@ -138,6 +138,26 @@ public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter {
             return mag.contributor != null && mag.contributor.equals(value);
         }
     };
+    
+    public String toString() {
+        String out = super.toString();
+        out += " types={";
+        for(int i = 0; i < searchTypes.length; i++) {
+            out += searchTypes[i];
+            if (i != searchTypes.length-1) {
+                out += ",";
+            }
+        }
+        out += "} contributors=={";
+        for(int i = 0; i < contributors.length; i++) {
+            out += contributors[i];
+            if (i != contributors.length-1) {
+                out += ",";
+            }
+        }
+        out += "}";
+        return out;
+    }
 
     private String[] searchTypes = {};
 
