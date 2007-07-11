@@ -226,11 +226,11 @@
             <xsd:annotation>
                 <summary>Creates a NetDC request and saves it to a file and returns true</summary>
                 <description>Mainly useful for accessing data that is not available via Fissures/DHI, such as restricted
-                    PASSCAL datasets or data from datacenters that have a breqfast system but not DHI seismogram
+                    PASSCAL datasets or data from datacenters that have a netdc system but not DHI seismogram
                     servers. Of course the network information must be available to SOD. As this subsetter always
                     returns true, processing will continue past this point. In most cases, the whole reason to generate
-                    breqfast requests is that it is the only way to get the data, and so there is not much point in
-                    proceeding down the waveform arm. You will generally want to wrap the breqFastRequest in a
+                    netdc requests is that it is the only way to get the data, and so there is not much point in
+                    proceeding down the waveform arm. You will generally want to wrap the netDCRequest in a
                     requestNOT so that the return value is false. This will allow SOD to proceed to the next piece of
                     work and avoid the wasted time in going to the server to get data.</description>
             </xsd:annotation>
