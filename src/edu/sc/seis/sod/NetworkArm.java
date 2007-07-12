@@ -61,11 +61,6 @@ import edu.sc.seis.sod.subsetter.station.PassStation;
 import edu.sc.seis.sod.subsetter.station.StationEffectiveTimeOverlap;
 import edu.sc.seis.sod.subsetter.station.StationSubsetter;
 
-/**
- * Handles the subsetting of the Channels. Created: Wed Mar 20 13:30:06 2002
- * 
- * @author <a href="mailto:">Srinivasa Telukutla </a>
- */
 public class NetworkArm implements Arm {
 
     public NetworkArm(Element config) throws SQLException,
