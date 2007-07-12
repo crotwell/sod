@@ -19,6 +19,9 @@ import java.util.StringTokenizer;
 import java.util.TimeZone;
 import javax.xml.transform.TransformerException;
 import org.apache.xpath.XPathAPI;
+import org.python.core.PyJavaInstance;
+import org.python.core.PyObject;
+import org.python.util.PythonInterpreter;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -38,6 +41,7 @@ import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
+import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.status.TemplateFileLoader;
 import edu.sc.seis.sod.subsetter.LatitudeRange;
 import edu.sc.seis.sod.subsetter.LongitudeRange;
@@ -113,6 +117,9 @@ public class SodUtil {
             if(tagName.startsWith("External")) {
                 return loadExternal(tagName, armNames, config);
             }
+            if(tagName.startsWith("Jython")) {
+                return loadJython(tagName, armNames, config);
+            }
             return loadClass(load(tagName, armNames), config);
         } catch(InvocationTargetException e) {
             // occurs if the constructor throws an exception
@@ -162,6 +169,22 @@ public class SodUtil {
         return Class.forName(baseName + "." + tagName);
     }
 
+    public static synchronized Object loadJython(String tagName, String[] armNames, Element config)
+    throws Exception {
+        String moduleName = getNestedText(SodUtil.getElement(config, "module"));
+        String className = getNestedText(SodUtil.getElement(config, "class"));
+        if (interpreter == null) {
+            interpreter = new PythonInterpreter();
+            interpreter.exec("import sys");
+            interpreter.exec("print sys.path");
+            interpreter.exec("sys.path.append('.')");
+        }
+        interpreter.exec("from "+moduleName+" import "+className);
+        PyObject jyWaveformProcessClass = interpreter.get(className);
+        PyObject pyWaveformProcessObj = jyWaveformProcessClass.__call__(new PyJavaInstance(config));
+        Class mustImplement = load(tagName.substring("jython".length()), armNames);
+        return pyWaveformProcessObj.__tojava__(mustImplement);
+    }
     /**
      * loads the class named in the element "classname" in config with config as
      * a costructor argument. If the loaded class doesnt implement
@@ -612,6 +635,8 @@ public class SodUtil {
     public static String getSimpleName(Class c){
         return c.getName().substring(c.getName().lastIndexOf(".") + 1);
     }
+    
+    public static PythonInterpreter interpreter;
 
     public static final UnitImpl[] LENGTH_UNITS = {UnitImpl.KILOMETER,
                                                    UnitImpl.METER,
