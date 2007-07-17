@@ -36,6 +36,7 @@
             <ref name="rTrend"/>
             <ref name="taper"/>
             <ref name="externalWaveformProcess"/>
+            <ref name="jythonWaveformProcess"/>
             <ref name="localSeismogramStatus"/>
             <ref name="filter"/>
             <ref name="forkProcess"/>
@@ -606,6 +607,31 @@
                 </example>
             </xsd:annotation>
             <element name="classname">
+                <data type="string"/>
+            </element>
+            <zeroOrMore>
+                <externalRef href="../base/externalRef/anyXML.rng"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="jythonWaveformProcess">
+        <element name="jythonWaveformProcess">
+            <xsd:annotation>
+                <summary>Runs an externally defined Jython processor</summary>
+                <description>$jythonWaveformProcessInfo.getRelaxHTML('../../../')</description>
+                <example>
+                    <jythonWaveformProcess>
+                        <module>helloSod</module>
+                        <class>helloSod</class>
+                        <dataDirectory>POND_II</dataDirectory>
+                        <extraParam>1.7</extraParam>
+                    </jythonWaveformProcess>
+                </example>
+            </xsd:annotation>
+            <element name="module">
+                <data type="string"/>
+            </element>
+            <element name="class">
                 <data type="string"/>
             </element>
             <zeroOrMore>
