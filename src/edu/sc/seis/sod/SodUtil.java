@@ -176,7 +176,6 @@ public class SodUtil {
         if (interpreter == null) {
             interpreter = new PythonInterpreter();
             interpreter.exec("import sys");
-            interpreter.exec("print sys.path");
             interpreter.exec("sys.path.append('.')");
         }
         interpreter.exec("from "+moduleName+" import "+className);
