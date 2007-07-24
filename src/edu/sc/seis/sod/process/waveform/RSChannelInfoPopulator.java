@@ -5,10 +5,13 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.transform.TransformerException;
+
 import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
@@ -36,9 +39,6 @@ import edu.sc.seis.sod.database.waveform.JDBCRecordSectionChannel;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.eventChannel.PassEventChannel;
 
-/**
- * @author danala Created on Mar 30, 2005
- */
 public class RSChannelInfoPopulator implements WaveformProcess {
 
     public RSChannelInfoPopulator(Element config) throws Exception {
@@ -167,8 +167,8 @@ public class RSChannelInfoPopulator implements WaveformProcess {
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) throws Exception {
-        updateTable(event, chan, original, available, seismograms, cookieJar);
-        return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
+        boolean out = updateTable(event, chan, original, available, seismograms, cookieJar);
+        return new WaveformResult(seismograms, new StringTreeLeaf(this, out));
     }
 
     public boolean updateTable(EventAccessOperations event,
@@ -266,6 +266,14 @@ public class RSChannelInfoPopulator implements WaveformProcess {
             }
         }
         return null;
+    }
+    
+    public String getId() {
+        return id;
+    }
+    
+    public String getSaveSeisId() {
+        return saveSeisId;
     }
 
     private SaveSeismogramToFile saveSeisToFile;

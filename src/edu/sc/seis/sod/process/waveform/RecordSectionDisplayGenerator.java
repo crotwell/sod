@@ -6,8 +6,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.Connection;
+
 import org.apache.log4j.Category;
 import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.IfNetwork.Channel;
@@ -45,14 +47,15 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) throws Exception {
-        if(!updateTable(event,
-                        chan,
-                        original,
-                        available,
-                        seismograms,
-                        cookieJar)) {
+        boolean out = updateTable(event,
+                                  chan,
+                                  original,
+                                  available,
+                                  seismograms,
+                                  cookieJar);
+        if(!out) {
             return new WaveformResult(seismograms, new StringTreeLeaf(this,
-                                                                      true));
+                                                                      out));
         }
         makeRecordSection(event);
         return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
