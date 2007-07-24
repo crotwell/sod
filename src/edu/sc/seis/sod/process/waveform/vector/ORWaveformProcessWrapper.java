@@ -8,7 +8,6 @@ package edu.sc.seis.sod.process.waveform.vector;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
@@ -29,10 +28,9 @@ public class ORWaveformProcessWrapper implements WaveformProcessWrapper {
     public ORWaveformProcessWrapper(WaveformProcess subsetter) {
         this.subsetter = subsetter;
     }
-String id;
+
     public ORWaveformProcessWrapper(Element config)
             throws ConfigurationException {
-        id = config.getAttribute("id");
         NodeList childNodes = config.getChildNodes();
         Node node;
         for(int counter = 0; counter < childNodes.getLength(); counter++) {
@@ -67,7 +65,6 @@ String id;
             Channel chan = channelGroup.getChannels()[i];
             CookieJar chansCookies = channelGroup.getEventChannelPair(chan)
                     .getCookieJar();
-            logger.debug(id+" record section ORWaveformProcess for "+i+" "+ChannelIdUtil.toStringNoDates(chan));
             WaveformResult result = subsetter.process(event,
                                                       chan,
                                                       original[i],
@@ -77,7 +74,6 @@ String id;
             out[i] = result.getSeismograms();
             b |= result.isSuccess();
             reason[i] = result.getReason();
-            logger.debug(id+" record section ORWaveformProcess for "+i+" "+ChannelIdUtil.toStringNoDates(chan)+"  "+b+"  "+result.getReason());
         }
         for(int j = i; j < channelGroup.getChannels().length; j++) {
             reason[j] = new ShortCircuit(this);
@@ -101,6 +97,4 @@ String id;
     public WaveformProcess getWrappedProcess() {
         return subsetter;
     }
-    
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(ORWaveformProcessWrapper.class);
 }
