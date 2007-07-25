@@ -228,7 +228,7 @@ public class Start {
     }
 
     public static RetryStrategy createRetryStrategy() {
-        if (retryStrategy != null) {
+        if(retryStrategy != null) {
             return retryStrategy;
         }
         if(commandName.equals("sod")) {
@@ -237,7 +237,7 @@ public class Start {
             return new UserReportRetryStrategy();
         }
     }
-    
+
     private static RetryStrategy retryStrategy = null;
 
     public static void setCommandName(String name) {
@@ -318,6 +318,9 @@ public class Start {
         if(runProps.doStatusPages()) {
             indexTemplate = new IndexTemplate();
         }
+        // make sure database tables are created cleanly
+        new JDBCEventStatus();
+        new JDBCEventChannelStatus();
         startArms(getConfig().getChildNodes());
         if(runProps.doStatusPages()) {
             indexTemplate.performRegistration();
@@ -388,27 +391,27 @@ public class Start {
             event.setWaitForWaveformProcessing(false);
         }
         if(RUN_ARMS) {
-            //Make sure the OutputScheduler exists when the arms are started
+            // Make sure the OutputScheduler exists when the arms are started
             OutputScheduler.getDefault();
             startArm(network, "NetworkArm");
             startArm(event, "EventArm");
             startArm(waveform, "WaveformArm");
         }
-    	for (Iterator iter = armListeners.iterator(); iter.hasNext();) {
-			((ArmListener) iter.next()).started();
-		}
+        for(Iterator iter = armListeners.iterator(); iter.hasNext();) {
+            ((ArmListener)iter.next()).started();
+        }
     }
-    
-    public static void add(ArmListener listener){
-    	armListeners.add(listener);
+
+    public static void add(ArmListener listener) {
+        armListeners.add(listener);
     }
 
     private void startArm(Arm arm, String name) throws ConfigurationException {
         if(arm != null) {
-        	for (Iterator iter = armListeners.iterator(); iter.hasNext();) {
-    			ArmListener element = (ArmListener) iter.next();
-    			element.starting(arm);
-    		}
+            for(Iterator iter = armListeners.iterator(); iter.hasNext();) {
+                ArmListener element = (ArmListener)iter.next();
+                element.starting(arm);
+            }
             new Thread(arm, arm.getName()).start();
             logger.debug(name + " started");
         } else {
@@ -419,7 +422,8 @@ public class Start {
     private void handleStartupRunProperties() {
         if(runProps.removeDatabase()) {
             String dbUrl = ConnMgr.getURL();
-            if(!dbUrl.startsWith("jdbc:hsqldb") || dbUrl.indexOf("hsql://") != -1
+            if(!dbUrl.startsWith("jdbc:hsqldb")
+                    || dbUrl.indexOf("hsql://") != -1
                     || !(dbUrl.indexOf(DATABASE_DIR) != -1)) {
                 logger.warn("The database isn't the default local hsqldb, so it couldn't be deleted as specified by the properties");
                 return;
@@ -592,7 +596,7 @@ public class Start {
     public static boolean RUN_ARMS = true;
 
     protected static int[] suspendedPairs = new int[0];
-    
+
     private static List armListeners = new ArrayList();
 
     public static final String TUTORIAL_LOC = "jar:edu/sc/seis/sod/data/configFiles/demo.xml";
