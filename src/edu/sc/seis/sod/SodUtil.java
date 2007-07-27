@@ -17,7 +17,9 @@ import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
+
 import javax.xml.transform.TransformerException;
+
 import org.apache.xpath.XPathAPI;
 import org.python.core.PyJavaInstance;
 import org.python.core.PyObject;
@@ -27,6 +29,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+
 import edu.iris.Fissures.Time;
 import edu.iris.Fissures.Unit;
 import edu.iris.Fissures.model.BoxAreaImpl;
@@ -36,12 +39,12 @@ import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.model.UnitRangeImpl;
+import edu.sc.seis.bag.BagUtil;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
-import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.status.TemplateFileLoader;
 import edu.sc.seis.sod.subsetter.LatitudeRange;
 import edu.sc.seis.sod.subsetter.LongitudeRange;
@@ -177,6 +180,8 @@ public class SodUtil {
             interpreter = new PythonInterpreter();
             interpreter.exec("import sys");
             interpreter.exec("sys.path.append('.')");
+            BagUtil.addBagLibsToSysPath(interpreter);
+            BagUtil.addClassAdapters();
         }
         interpreter.exec("from "+moduleName+" import "+className);
         PyObject jyWaveformProcessClass = interpreter.get(className);
