@@ -15,5 +15,5 @@ class AvailableSod(AvailableDataSubsetter):
                  cookieJar):
 	print "Available Sod: "
 	for r in available:
-	    print bag.wrap(r)
+	    print r
 	return Pass(self)

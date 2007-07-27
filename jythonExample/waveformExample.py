@@ -13,5 +13,7 @@ class HelloSod(WaveformProcess):
                  available,
                  seismograms,
                  cookieJar):
-	print "Hello Sod"
+	print "Hello Sod "
+	for s in seismograms:
+	    print len(s)
 	return WaveformResult(True, seismograms, self)
