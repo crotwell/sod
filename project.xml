@@ -58,6 +58,11 @@
     </developers>
     <dependencies>
         <dependency>
+            <artifactId>bag</artifactId>
+            <groupId>bag</groupId>
+            <version>0.1</version>
+        </dependency>
+        <dependency>
             <artifactId>seisFile</artifactId>
             <groupId>seisFile</groupId>
             <version>1.0.2</version>
