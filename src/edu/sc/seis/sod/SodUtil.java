@@ -180,7 +180,6 @@ public class SodUtil {
             interpreter = new PythonInterpreter();
             interpreter.exec("import sys");
             interpreter.exec("sys.path.append('.')");
-            BagUtil.addBagLibsToSysPath(interpreter);
             BagUtil.addClassAdapters();
         }
         interpreter.exec("from "+moduleName+" import "+className);
