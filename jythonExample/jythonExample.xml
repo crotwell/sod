@@ -88,10 +88,13 @@
             <name>IRIS_PondDataCenter</name>
             <dns>edu/iris/dmc</dns>
         </fixedDataCenter>
+        <availableDataAND>
+            <someCoverage/>
         <jythonAvailableDataSubsetter>
             <module>availableDataExample</module>
             <class>AvailableSod</class>
         </jythonAvailableDataSubsetter>
+        </availableDataAND>
         <printlineSeismogramProcess/>
         <jythonWaveformProcess>
             <module>waveformExample</module>
