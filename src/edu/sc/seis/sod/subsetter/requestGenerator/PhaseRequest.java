@@ -90,11 +90,16 @@ public class PhaseRequest implements RequestGenerator {
     public RequestFilter[] generateRequest(EventAccessOperations event,
                                            Channel channel,
                                            CookieJar jar) throws Exception {
-        RequestFilter rf = phaseReq.generateRequest(event, channel);
+        RequestFilter rf =  generateRequest(event, channel);
         if(rf == null) {
             return new RequestFilter[0];
         }
         return new RequestFilter[] {rf};
+    }
+
+    public RequestFilter generateRequest(EventAccessOperations event,
+                                           Channel channel) throws Exception {
+        return phaseReq.generateRequest(event, channel);
     }
 
     private edu.sc.seis.fissuresUtil.bag.PhaseRequest phaseReq;

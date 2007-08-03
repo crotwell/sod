@@ -24,7 +24,7 @@ public class PhaseDataCoverage implements WaveformProcess {
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) throws Exception {
         RequestFilter req = phaseRequest.generateRequest(event, channel);
-        RequestFilter[] uncovered = CoverageTool.notCovered(new RequestFilter[] {req},
+        RequestFilter[] uncovered = CoverageTool.notCovered(new RequestFilter[] { req },
                                                             seismograms);
         return new WaveformResult(seismograms,
                                   new StringTreeLeaf(this,
