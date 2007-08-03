@@ -230,8 +230,13 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         List dss = new ArrayList();
         for(int i = 0; i < dataSeisNames.length; i++) {
             DataSetSeismogram seis = ds.getDataSetSeismogram(dataSeisNames[i]);
-            Channel chan = ds.getChannel(getMatchingChanIdIgnoreDates(seis.getChannelId(),
-                                                                      ds.getChannelIds()));
+            ChannelId chanId = getMatchingChanIdIgnoreDates(seis.getChannelId(),
+                                                            ds.getChannelIds());
+            if (chanId == null) {
+                logger.error("no channel in dataset for id="+ChannelIdUtil.toString(seis.getChannelId())+" even though seismogram is in dataset. Skipping this seismogram.");
+                continue;
+            }
+            Channel chan = ds.getChannel(chanId);
             if(channelAcceptor.eventChannelSubsetter.accept(eao, chan, null)
                     .isSuccess()) {
                 dss.add(seis);
