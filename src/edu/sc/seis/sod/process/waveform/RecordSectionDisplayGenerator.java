@@ -6,10 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.Connection;
-
 import org.apache.log4j.Category;
 import org.w3c.dom.Element;
-
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.IfNetwork.Channel;
@@ -39,6 +37,9 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
                                                           "fileNameBase"))
                     + FILE_EXTENSION;
         }
+        if(DOMHelper.hasElement(config, "baseDir")) {
+            baseDirName = SodUtil.getText(SodUtil.getElement(config, "baseDir"));
+        }
     }
 
     public WaveformResult process(EventAccessOperations event,
@@ -54,8 +55,8 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
                                   seismograms,
                                   cookieJar);
         if(!out) {
-            return new WaveformResult(seismograms, new StringTreeLeaf(this,
-                                                                      out));
+            return new WaveformResult(seismograms,
+                                      new StringTreeLeaf(this, out));
         }
         makeRecordSection(event);
         return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
@@ -86,8 +87,12 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
         return fileLoc;
     }
 
-    public static String getFileBaseDir() {
-        return Start.getRunProps().getStatusBaseDir() + "/earthquakes";
+    public String getFileBaseDir() {
+        return Start.getRunProps().getStatusBaseDir() + '/' + baseDirName;
+    }
+
+    public String getBaseDirName() {
+        return baseDirName;
     }
 
     public void outputBestRecordSection(EventAccessOperations event,
@@ -137,7 +142,11 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
 
     protected String filename = "recordsection" + FILE_EXTENSION;
 
+    protected String baseDirName = DEFAULT_BASE_DIRNAME;
+
     protected static final String FILE_EXTENSION = ".png";
+
+    protected static final String DEFAULT_BASE_DIRNAME = "earthquakes";
 
     private static final ParseRegions PR = ParseRegions.getInstance();
 
