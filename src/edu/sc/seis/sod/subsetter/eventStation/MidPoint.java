@@ -20,22 +20,16 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
+import edu.sc.seis.sod.subsetter.AreaSubsetter;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class MidPoint implements EventStationSubsetter {
+public class MidPoint extends AreaSubsetter  implements EventStationSubsetter {
 
     public MidPoint(Element config) throws ConfigurationException {
-        NodeList children = config.getChildNodes();
-        for(int i = 0; i < children.getLength(); i++) {
-            Node node = children.item(i);
-            if(node instanceof Element) {
-                area = (edu.iris.Fissures.Area)SodUtil.load((Element)node,
-                                                            "origin");
-                break;
-            }
-        }
+    	super(config);
     }
 
     public StringTree accept(EventAccessOperations eventAccess,
@@ -61,35 +55,11 @@ public class MidPoint implements EventStationSubsetter {
                                                   originLoc.longitude,
                                                   dist,
                                                   azimuth);
-        if(area instanceof edu.iris.Fissures.BoxArea) {
-            edu.iris.Fissures.BoxArea boxArea = (edu.iris.Fissures.BoxArea)area;
-            if(latitude >= boxArea.min_latitude
-                    && latitude <= boxArea.max_latitude
-                    && longitude >= boxArea.min_longitude
-                    && longitude <= boxArea.max_longitude) {
-                return new StringTreeLeaf(this, true);
-            } else return new StringTreeLeaf(this, false);
-        } else if(area instanceof GlobalArea) {
-            return new StringTreeLeaf(this, true);
-        } else if(area instanceof PointDistanceArea) {
-            PointDistanceArea pDist = (PointDistanceArea)area;
-            pDist.min_distance = QuantityImpl.createQuantityImpl(pDist.min_distance)
-                    .convertTo(UnitImpl.DEGREE);
-            pDist.max_distance = QuantityImpl.createQuantityImpl(pDist.max_distance)
-                    .convertTo(UnitImpl.DEGREE);
-            double midDist = SphericalCoords.distance(latitude,
-                                                      longitude,
-                                                      pDist.latitude,
-                                                      pDist.longitude);
-            if(midDist >= pDist.min_distance.value
-                    && midDist <= pDist.max_distance.value) {
-                return new StringTreeLeaf(this, true);
-            } else {
-                return new StringTreeLeaf(this, false);
-            }
-        }
-        throw new Exception("Unknown Area, class=" + area.getClass());
+        return new StringTreeLeaf(this, accept(new Location((float)latitude, (float)longitude, ZERO, ZERO, originLoc.type)));
     }
 
     Area area;
+    
+    static final QuantityImpl ZERO = new QuantityImpl(0, UnitImpl.KILOMETER);
+    
 }
