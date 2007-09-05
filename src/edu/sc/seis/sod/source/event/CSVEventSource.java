@@ -38,7 +38,11 @@ import edu.sc.seis.sod.subsetter.AreaSubsetter;
 public class CSVEventSource extends SimpleEventSource {
 
     public CSVEventSource(Element config) throws ConfigurationException {
-        csvFilename = DOMHelper.extractText(config, "filename");
+        this(DOMHelper.extractText(config, "filename"));
+    }
+    
+    public CSVEventSource(String filename) throws ConfigurationException {
+        this.csvFilename = filename;
         try {
             events = getEventsFromCSVFile(csvFilename);
         } catch(FileNotFoundException e) {
@@ -125,30 +129,28 @@ public class CSVEventSource extends SimpleEventSource {
             Magnitude[] magnitudes = new Magnitude[0];
             String[] magValues, magTypes, magContribs;
             if(headers.contains(MAGNITUDE)) {
-                magValues = parseValuesFromSeparatedValues(csvReader.get(MAGNITUDE),
-                                                           ':',
-                                                           "0");
+                magValues = csvReader.get(MAGNITUDE).split(":");
             } else {
                 magValues = new String[] {"0"};
             }
             if(magValues.length > 1 || (headers.contains(MAGNITUDE_TYPE))) {
-                magTypes = parseValuesFromSeparatedValues(csvReader.get(MAGNITUDE_TYPE),
-                                                          ':',
-                                                          "M");
+                magTypes = csvReader.get(MAGNITUDE_TYPE).split(":");
                 if(magTypes.length != magValues.length) {
                     throw new UserConfigurationException("count of magnitude types does not match count of magnitude values in record "
-                            + csvReader.getCurrentRecord());
+                            + csvReader.getCurrentRecord()+", "+magTypes.length +"!="+ magValues.length);
                 }
             } else {
                 magTypes = new String[] {"M"};
             }
             if(magValues.length > 1 || headers.contains(MAGNITUDE_CONTRIBUTOR)) {
-                magContribs = parseValuesFromSeparatedValues(csvReader.get(MAGNITUDE_CONTRIBUTOR),
-                                                             ':',
-                                                             defaultString);
+                magContribs = csvReader.get(MAGNITUDE_CONTRIBUTOR).split(":");
                 if(magContribs.length != magValues.length) {
-                    throw new UserConfigurationException("count of magnitude types does not match count of magnitude values in record "
-                            + csvReader.getCurrentRecord());
+                    String[] tmp = magContribs;
+                    magContribs = new String[magValues.length];
+                    System.arraycopy(tmp, 0, magContribs, 0, tmp.length);
+                    for(int i = tmp.length; i<magContribs.length; i++) {
+                        magContribs[i] = UNKNOWN;
+                    }
                 }
             } else {
                 magContribs = new String[] {defaultString};
@@ -187,35 +189,6 @@ public class CSVEventSource extends SimpleEventSource {
             events.add(new CacheEvent(new EventAttrImpl(name, feRegion), origin));
         }
         return (CacheEvent[])events.toArray(new CacheEvent[0]);
-    }
-
-    private static String[] parseValuesFromSeparatedValues(String uberValue,
-                                                           char delim,
-                                                           String defaultVal) {
-        List values = new ArrayList();
-        StringBuffer buf = new StringBuffer();
-        for(int i = 0; i < uberValue.length(); i++) {
-            char curChar = uberValue.charAt(i);
-            if(curChar == delim) {
-                buf = readCurrentValue(defaultVal, values, buf);
-            } else {
-                buf.append(curChar);
-            }
-        }
-        readCurrentValue(defaultVal, values, buf);
-        return (String[])values.toArray(new String[0]);
-    }
-
-    private static StringBuffer readCurrentValue(String defaultVal,
-                                                 List values,
-                                                 StringBuffer buf) {
-        if(buf.length() == 0) {
-            values.add(defaultVal);
-            return buf;
-        } else {
-            values.add(buf.toString());
-            return new StringBuffer();
-        }
     }
 
     public static String concatenateValidFields() {
@@ -289,6 +262,8 @@ public class CSVEventSource extends SimpleEventSource {
                                                          FE_GEO_REGION,
                                                          FE_REGION,
                                                          FE_REGION_TYPE};
+    
+    public static final String UNKNOWN = "unknown";
 
     private String csvFilename;
 }
