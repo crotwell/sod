@@ -524,6 +524,7 @@ public class Start {
             logger.info("Start start()");
             start.start();
         } catch(UserConfigurationException e) {
+            logger.error("User configuration problem, quiting", e);
             exit(e.getMessage()
                     + "  SOD will quit now and continue to cowardly quit until this is corrected.");
         } catch(Exception e) {
