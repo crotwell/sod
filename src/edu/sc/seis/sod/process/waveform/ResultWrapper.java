@@ -17,7 +17,7 @@ public abstract class ResultWrapper implements WaveformProcess {
         NodeList children = config.getChildNodes();
         for(int i = 0; i < children.getLength(); i++) {
             Node node = children.item(i);
-            if(node instanceof Element) {
+            if(node instanceof Element && !node.getLocalName().equals("classname")) {
                 subprocess = (WaveformProcess)SodUtil.load((Element)node,
                                                            "waveform");
             }
