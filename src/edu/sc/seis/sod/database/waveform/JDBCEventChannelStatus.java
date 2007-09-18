@@ -14,11 +14,13 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.DBUtil;
 import edu.sc.seis.fissuresUtil.database.JDBCSequence;
+import edu.sc.seis.fissuresUtil.database.JDBCTable;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.database.event.JDBCEventAccess;
 import edu.sc.seis.fissuresUtil.database.network.JDBCChannel;
 import edu.sc.seis.fissuresUtil.database.network.JDBCStation;
 import edu.sc.seis.fissuresUtil.database.util.SQLLoader;
+import edu.sc.seis.fissuresUtil.database.util.TableSetup;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.ChannelGroup;
@@ -36,22 +38,19 @@ import edu.sc.seis.sod.database.ChannelDbObject;
 import edu.sc.seis.sod.database.EventDbObject;
 import edu.sc.seis.sod.database.SodJDBC;
 
-public class JDBCEventChannelStatus extends SodJDBC {
+public class JDBCEventChannelStatus extends JDBCTable {
 
     public JDBCEventChannelStatus() throws SQLException {
         this(ConnMgr.createConnection());
     }
 
     public JDBCEventChannelStatus(Connection conn) throws SQLException {
-        this.conn = conn;
-        if(!DBUtil.tableExists("eventchannelstatus", conn)) {
-            Statement stmt = conn.createStatement();
-            stmt.executeUpdate(ConnMgr.getSQL("eventchannelstatus.create"));
-            stmt.executeUpdate("CREATE INDEX evchanstatus_chan ON eventchannelstatus( channelid)");
-        }
-        seq = new JDBCSequence(conn, "EventChannelSeq");
+        super("eventchannelstatus", conn);
         chanTable = new JDBCChannel(conn);
         eventTable = new JDBCEventAccess(conn);
+        seq = new JDBCSequence(conn, "EventChannelSeq");
+        TableSetup.setup(this, "edu/sc/seis/sod/database/props/default.props");
+        
         insert = conn.prepareStatement("INSERT into eventchannelstatus (pairid, eventid, channelid) "
                 + "VALUES (? , ?, ?)");
         ofEventAndPair = conn.prepareStatement("SELECT pairid FROM eventchannelstatus WHERE eventid = ? and channelid = ?");
@@ -477,8 +476,6 @@ public class JDBCEventChannelStatus extends SodJDBC {
     private JDBCEventAccess eventTable;
 
     private JDBCChannel chanTable;
-
-    private Connection conn;
 
     public static String getRetryStatusRequest() {
         return getStatusRequest(RETRY_STATUS);
