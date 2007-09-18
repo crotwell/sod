@@ -17,16 +17,15 @@ import java.sql.Statement;
 import org.xml.sax.InputSource;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.DBUtil;
+import edu.sc.seis.fissuresUtil.database.JDBCTable;
 import edu.sc.seis.fissuresUtil.database.NotFound;
+import edu.sc.seis.fissuresUtil.database.util.TableSetup;
 
-public class JDBCConfig extends SodJDBC {
+public class JDBCConfig extends JDBCTable {
 
     public JDBCConfig(Connection conn) throws SQLException, IOException {
-        this.conn = conn;
-        if(!DBUtil.tableExists("config", conn)) {
-            Statement stmt = conn.createStatement();
-            stmt.executeUpdate(ConnMgr.getSQL("config.create"));
-        }
+        super("config",  conn);
+        TableSetup.setup(this, "edu/sc/seis/sod/database/props/default.props");
         getConfig = prepare("SELECT configString FROM config");
     }
 
@@ -90,8 +89,6 @@ public class JDBCConfig extends SodJDBC {
     private PreparedStatement prepare(String query) throws SQLException {
         return conn.prepareStatement(query);
     }
-
-    private Connection conn;
 
     private PreparedStatement getConfig;
     
