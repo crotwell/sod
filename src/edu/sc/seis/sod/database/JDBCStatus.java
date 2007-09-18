@@ -5,20 +5,25 @@
  */
 package edu.sc.seis.sod.database;
 
-import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
-import edu.sc.seis.fissuresUtil.database.DBUtil;
+import edu.sc.seis.fissuresUtil.database.JDBCTable;
+import edu.sc.seis.fissuresUtil.database.util.TableSetup;
 import edu.sc.seis.sod.Status;
 
-public class JDBCStatus {
+public class JDBCStatus extends JDBCTable {
 
     public JDBCStatus() throws SQLException {
-        Connection conn = ConnMgr.createConnection();
+        super("status", ConnMgr.createConnection());
+        TableSetup.setup(this, "edu/sc/seis/sod/database/props/default.props");
         Statement stmt = conn.createStatement();
-        if(!DBUtil.tableExists("status", conn)) {
-            stmt.executeUpdate("CREATE TABLE status ( id int, name varchar )");
+        ResultSet rs = stmt.executeQuery("select * from "+getTableName());
+        
+        if( ! rs.next()) {
+            // result set is empty, so add status
             Status[][] all = Status.ALL;
             for(int i = 0; i < all.length; i++) {
                 for(int j = 0; j < all[i].length; j++) {
