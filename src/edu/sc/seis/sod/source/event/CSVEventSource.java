@@ -153,7 +153,7 @@ public class CSVEventSource extends SimpleEventSource {
                     }
                 }
             } else {
-                magContribs = new String[] {defaultString};
+                magContribs = new String[] {UNKNOWN};
             }
             magnitudes = new Magnitude[magValues.length];
             for(int i = 0; i < magValues.length; i++) {
