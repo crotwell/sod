@@ -8,6 +8,8 @@ package edu.sc.seis.sod.database.waveform;
 
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.DBUtil;
+import edu.sc.seis.fissuresUtil.database.JDBCTable;
+import edu.sc.seis.fissuresUtil.database.util.TableSetup;
 import edu.sc.seis.sod.CookieJarResult;
 import edu.sc.seis.sod.database.SodJDBC;
 import java.sql.Connection;
@@ -20,18 +22,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.io.Serializable;
 
-public class JDBCEventChannelCookieJar extends SodJDBC{
+public class JDBCEventChannelCookieJar extends JDBCTable {
 
     public JDBCEventChannelCookieJar() throws SQLException{
         this(ConnMgr.createConnection());
     }
 
     public JDBCEventChannelCookieJar(Connection conn) throws SQLException{
-        this.conn = conn;
-        if(!DBUtil.tableExists("eventchannelcookiejar", conn)){
-            Statement stmt = conn.createStatement();
-            stmt.executeUpdate(ConnMgr.getSQL("eventchannelcookiejar.create"));
-        }
+        super("eventchannelcookiejar", conn);
+        TableSetup.setup(this, "edu/sc/seis/sod/database/props/default.props");
         statusTable = new JDBCEventChannelStatus(conn);
         insertDouble = conn.prepareStatement("INSERT into eventchannelcookiejar (pairid, name, value) " +
                                                  "VALUES (? , ?, ?)");
@@ -199,7 +198,6 @@ public class JDBCEventChannelCookieJar extends SodJDBC{
     private PreparedStatement insertDouble, insertString, insertObject, updateDouble, updateString, updateObject, get, getForPair, getForName, remove;
 
     private JDBCEventChannelStatus statusTable;
-    private Connection conn;
 
 }
 
