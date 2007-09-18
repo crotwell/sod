@@ -183,7 +183,7 @@
         </dependency>
         <dependency>
             <id>log4j</id>
-            <version>1.2.8</version>
+            <version>1.2.15</version>
             <url>http://jakarta.apache.org/log4j/docs/index.html</url>
         </dependency>
         <dependency>
@@ -299,7 +299,7 @@
         <dependency>
             <groupId>jython</groupId>
             <artifactId>jython</artifactId>
-            <version>2.2rc3</version>
+            <version>2.2</version>
         </dependency>
     </dependencies>
     <build>
