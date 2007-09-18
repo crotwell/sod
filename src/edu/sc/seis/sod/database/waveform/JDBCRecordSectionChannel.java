@@ -12,23 +12,23 @@ import java.util.List;
 import java.util.Set;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.DBUtil;
+import edu.sc.seis.fissuresUtil.database.JDBCTable;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.database.network.JDBCStation;
+import edu.sc.seis.fissuresUtil.database.util.TableSetup;
 import edu.sc.seis.sod.database.SodJDBC;
 import edu.sc.seis.sod.velocity.network.VelocityStation;
 
-public class JDBCRecordSectionChannel extends SodJDBC {
+public class JDBCRecordSectionChannel extends JDBCTable {
 
     public JDBCRecordSectionChannel() throws SQLException {
         this(ConnMgr.createConnection());
     }
 
     public JDBCRecordSectionChannel(Connection conn) throws SQLException {
-        this.conn = conn;
-        String createStmt = "CREATE TABLE "
-                + tableName
-                + " (recSecId varchar, eq_dbid int, channelid int,topLeftX double, topLeftY double,bottomRightX double,"
-                + "bottomRightY double, best int, internalId int)";
+        super("recsecchannel", conn);
+
+        TableSetup.setup(this, "edu/sc/seis/sod/database/props/default.props");
         String insertStmt = "INSERT INTO "
                 + tableName
                 + " (recSecId,eq_dbid,channelid,topLeftX,topLeftY,bottomRightX,bottomRightY,best,internalId) VALUES (?, ?, ?, ?, ?, ?,?,?,?)";
@@ -48,14 +48,6 @@ public class JDBCRecordSectionChannel extends SodJDBC {
                 + " where  recSecId=? AND eq_dbid=? ";
         String whichRecSecsStmt = "SELECT DISTINCT recsecid FROM " + tableName
                 + " WHERE eq_dbid = ?";
-        if(!DBUtil.tableExists(tableName, conn)) {
-            Statement stmt = conn.createStatement();
-            stmt.executeUpdate(createStmt);
-            stmt.executeUpdate("CREATE INDEX rec_eq_index ON " + tableName
-                    + " (eq_dbid)");
-            stmt.executeUpdate("CREATE INDEX rec_best_eq ON " + tableName
-                    + " (recsecid, eq_dbid, best)");
-        }
         insert = conn.prepareStatement(insertStmt);
         contains = conn.prepareStatement(containsStmt);
         getChannels = conn.prepareStatement(getChannelsStmt);
@@ -222,8 +214,6 @@ public class JDBCRecordSectionChannel extends SodJDBC {
     PreparedStatement insert, contains, getPixelInfo, getChannels,
             getAllChannels, getStations, recSecExists, getInternalId,
             whichRecSecs;
-
-    Connection conn;
 
     String tableName = "recsecchannel";
 
