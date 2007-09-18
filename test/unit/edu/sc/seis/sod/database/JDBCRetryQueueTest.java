@@ -9,6 +9,7 @@ import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
+import edu.sc.seis.fissuresUtil.database.JDBCTearDown;
 import edu.sc.seis.fissuresUtil.database.event.JDBCEventAccess;
 import edu.sc.seis.fissuresUtil.mockFissures.IfEvent.MockEventAccessOperations;
 import edu.sc.seis.sod.Stage;
@@ -16,7 +17,7 @@ import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
 
-public class JDBCRetryQueueTest extends TestCase {
+public class JDBCRetryQueueTest extends JDBCTearDown {
 
     private static final TimeInterval ZERO_TIME = new TimeInterval(0, UnitImpl.MINUTE);
 
@@ -113,10 +114,6 @@ public class JDBCRetryQueueTest extends TestCase {
                               Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
                                          Standing.RETRY));
         queue = new JDBCRetryQueue("test");
-    }
-
-    public void tearDown() throws SQLException {
-        ConnMgr.createConnection().createStatement().execute("SHUTDOWN");
     }
 
     private int statusId;
