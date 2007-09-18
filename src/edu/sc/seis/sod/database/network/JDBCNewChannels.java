@@ -9,7 +9,9 @@ package edu.sc.seis.sod.database.network;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.DBUtil;
+import edu.sc.seis.fissuresUtil.database.JDBCTable;
 import edu.sc.seis.fissuresUtil.database.network.JDBCChannel;
+import edu.sc.seis.fissuresUtil.database.util.TableSetup;
 import edu.sc.seis.sod.database.SodJDBC;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,14 +19,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 
-public class JDBCNewChannels extends SodJDBC {
+public class JDBCNewChannels extends JDBCTable {
 
     public JDBCNewChannels() throws SQLException {
-        Connection conn = ConnMgr.createConnection();
+        super("newchannels", ConnMgr.createConnection());
         channelTable = new JDBCChannel();
-        if (!DBUtil.tableExists("newchannels", conn)){
-            conn.createStatement().executeUpdate(ConnMgr.getSQL("newchannels.create"));
-        }
+        TableSetup.setup(this, "edu/sc/seis/sod/database/props/default.props");
         put = conn.prepareStatement("INSERT INTO newchannels (channelid) values (?)");
         getNext =  conn.prepareStatement("SELECT TOP 1 channelid FROM newchannels");
         remove = conn.prepareStatement("DELETE FROM newchannels WHERE channelid = ?");
