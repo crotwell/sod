@@ -6,24 +6,23 @@
 
 package edu.sc.seis.sod.database;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
-import edu.sc.seis.fissuresUtil.database.DBUtil;
+import edu.sc.seis.fissuresUtil.database.JDBCTable;
 import edu.sc.seis.fissuresUtil.database.NotFound;
+import edu.sc.seis.fissuresUtil.database.util.TableSetup;
 import edu.sc.seis.sod.Version;
 
-public class JDBCVersion extends SodJDBC{
+public class JDBCVersion extends JDBCTable {
 
     public JDBCVersion() throws SQLException{
-        conn = ConnMgr.createConnection();
-        if (!DBUtil.tableExists("version", conn)){
-            Statement stmt = conn.createStatement();
-            stmt.executeUpdate(ConnMgr.getSQL("version.create"));
-            stmt.executeUpdate("INSERT INTO version (dbversion) values ('"
+        super("version", ConnMgr.createConnection());
+        TableSetup.setup(this, "edu/sc/seis/sod/database/props/default.props");
+        synchronized(TableSetup.class) {
+            getConnection().createStatement().executeUpdate("INSERT INTO version (dbversion) values ('"
                                    + Version.getVersion()
                                    +"')");
         }
@@ -42,8 +41,6 @@ public class JDBCVersion extends SodJDBC{
     private PreparedStatement prepare(String query) throws SQLException{
         return conn.prepareStatement(query);
     }
-
-    private Connection conn;
 
     private PreparedStatement getVersion;
 }
