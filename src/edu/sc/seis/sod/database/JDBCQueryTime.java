@@ -7,16 +7,15 @@ import java.sql.SQLException;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.DBUtil;
+import edu.sc.seis.fissuresUtil.database.JDBCTable;
 import edu.sc.seis.fissuresUtil.database.NotFound;
+import edu.sc.seis.fissuresUtil.database.util.TableSetup;
 
-public class JDBCQueryTime extends SodJDBC {
+public class JDBCQueryTime extends JDBCTable {
 
     public JDBCQueryTime() throws SQLException {
-        conn = ConnMgr.createConnection();
-        if(!DBUtil.tableExists("querytimes", conn)) {
-            conn.createStatement()
-                    .executeUpdate(ConnMgr.getSQL("querytimes.create"));
-        }
+        super("querytimes", ConnMgr.createConnection());
+        TableSetup.setup(this, "edu/sc/seis/sod/database/props/default.props");
         getQuery = conn.prepareStatement("SELECT query_time FROM querytimes WHERE server = ? AND dns = ?");
         putServerDNS = conn.prepareStatement("INSERT into querytimes ( server, dns, query_time) "
                 + "VALUES (?, ?, ?)");
@@ -75,5 +74,4 @@ public class JDBCQueryTime extends SodJDBC {
 
     private PreparedStatement getQuery, setQuery, serverDNSExist, putServerDNS;
 
-    private Connection conn;
 }
