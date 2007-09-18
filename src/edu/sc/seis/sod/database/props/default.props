@@ -10,6 +10,8 @@ eventchannelstatus.create=CREATE TABLE eventchannelstatus( pairid int, \
                                                            status int, \
                                                            PRIMARY KEY (pairid), \
                                                            UNIQUE (eventid, channelid))
+eventchannelstatus.index_evchanstatus=CREATE INDEX evchanstatus_chan ON eventchannelstatus( channelid)
+
 eventchannelretry.create=CREATE TABLE eventchannelretry( pairid int, \
                                                          numfailure int DEFAULT 0, \
                                                          retry_time timestamp, \
@@ -39,3 +41,13 @@ networkstatus.create=CREATE TABLE networkstatus( networkid int, status int, \
 newchannels.create=CREATE TABLE newchannels( channelid int, \
                                              FOREIGN KEY(channelid) \
                                              REFERENCES channel (chan_id))
+                                             
+recsecchannel.create=CREATE TABLE recsecchannel \
+                 (recSecId varchar, eq_dbid int, channelid int,topLeftX double, topLeftY double,bottomRightX double, \
+                bottomRightY double, best int, internalId int)
+
+recsecchannel.index_rec_eq=CREATE INDEX rec_eq_index ON recsecchannel (eq_dbid)
+
+recsecchannel.index_rec_best_eq=CREATE INDEX rec_best_eq ON recsecchannel (recsecid, eq_dbid, best)
+
+status.create=CREATE TABLE status ( id int, name varchar )
