@@ -6,8 +6,10 @@ import edu.iris.Fissures.model.MicroSecondDate;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.DBUtil;
+import edu.sc.seis.fissuresUtil.database.JDBCTable;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.database.event.JDBCEventAccess;
+import edu.sc.seis.fissuresUtil.database.util.TableSetup;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.Stage;
 import edu.sc.seis.sod.Standing;
@@ -21,15 +23,19 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JDBCEventStatus extends SodJDBC {
+public class JDBCEventStatus extends JDBCTable {
 
     public JDBCEventStatus() throws SQLException {
-        conn = ConnMgr.createConnection();
+        this(ConnMgr.createConnection());
+    }
+    
+    public JDBCEventStatus(Connection conn) throws SQLException {
+        super("eventstatus", conn);
         eventAccessTable = new JDBCEventAccess(conn);
-        if(!DBUtil.tableExists("eventstatus", conn)) {
-            Statement stmt = conn.createStatement();
-            stmt.executeUpdate(ConnMgr.getSQL("eventstatus.create"));
-        }
+
+        TableSetup.setup(this,
+                         "edu/sc/seis/sod/database/props/default.props");
+        
         getStatus = prepare("SELECT eventcondition FROM eventstatus WHERE eventid = ?");
         putEvent = prepare("INSERT into eventstatus (eventcondition, eventid) "
                 + "VALUES (?, ?)");
@@ -187,10 +193,6 @@ public class JDBCEventStatus extends SodJDBC {
         rs.next();
         return rs.getInt("num_waiting");
     }
-    
-    public Connection getConnection() {
-        return conn;
-    }
 
     private JDBCEventAccess eventAccessTable;
 
@@ -198,8 +200,6 @@ public class JDBCEventStatus extends SodJDBC {
             getAllOfEventArmStatus, getAllOfWaveformArmStatus,
             getWaveformStatus, getAllOrderByDate, getNextStmt, getNumWaiting,
             getAll, getByTimeAndDepthRanges;
-
-    private Connection conn;
     
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(JDBCEventStatus.class);
 }
