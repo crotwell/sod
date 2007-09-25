@@ -1,4 +1,4 @@
-package edu.sc.seis.sod.subsetter.network;
+package edu.sc.seis.sod.source.network;
 
 import org.w3c.dom.Element;
 import edu.iris.Fissures.model.TimeInterval;
@@ -11,7 +11,7 @@ import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.subsetter.AbstractSource;
 
-public class NetworkFinder extends AbstractSource {
+public class NetworkFinder extends NetworkSource {
 
     public NetworkFinder(Element element) throws Exception {
         super(element);
@@ -35,10 +35,6 @@ public class NetworkFinder extends AbstractSource {
         return netDC;
     }
 
-    public TimeInterval getRefreshInterval() {
-        return this.refreshInterval;
-    }
-
     public FissuresNamingService getFissuresNamingService() {
         return fns;
     }
@@ -46,6 +42,4 @@ public class NetworkFinder extends AbstractSource {
     private FissuresNamingService fns;
 
     private VestingNetworkDC netDC;
-
-    private TimeInterval refreshInterval;
 }// NetworkFinder

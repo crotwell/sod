@@ -1,4 +1,4 @@
-package edu.sc.seis.sod.subsetter.network;
+package edu.sc.seis.sod.source.network;
 
 import java.util.regex.Pattern;
 import org.w3c.dom.Element;

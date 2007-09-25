@@ -16,7 +16,6 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.IfNetwork.NetworkDCOperations;
-import edu.iris.Fissures.IfNetwork.NetworkFinder;
 import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.iris.Fissures.IfNetwork.Site;
@@ -44,6 +43,7 @@ import edu.sc.seis.sod.database.SiteDbObject;
 import edu.sc.seis.sod.database.StationDbObject;
 import edu.sc.seis.sod.database.network.JDBCNetworkUnifier;
 import edu.sc.seis.sod.source.event.EventSource;
+import edu.sc.seis.sod.source.network.NetworkFinder;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.networkArm.NetworkMonitor;
 import edu.sc.seis.sod.subsetter.channel.ChannelEffectiveTimeOverlap;
@@ -144,9 +144,9 @@ public class NetworkArm implements Arm {
                                              "station",
                                              "network"};
 
-    private void loadConfigElement(Object sodElement) {
-        if(sodElement instanceof edu.sc.seis.sod.subsetter.network.NetworkFinder) {
-            finder = (edu.sc.seis.sod.subsetter.network.NetworkFinder)sodElement;
+    private void loadConfigElement(Object sodElement) throws ConfigurationException {
+        if(sodElement instanceof NetworkFinder) {
+            finder = (NetworkFinder)sodElement;
         } else if(sodElement instanceof NetworkSubsetter) {
             attrSubsetter = (NetworkSubsetter)sodElement;
         } else if(sodElement instanceof StationSubsetter) {
@@ -155,6 +155,8 @@ public class NetworkArm implements Arm {
             siteSubsetter = (SiteSubsetter)sodElement;
         } else if(sodElement instanceof ChannelSubsetter) {
             chanSubsetters.add(sodElement);
+        } else {
+            throw new ConfigurationException("Unknown configuration object: "+sodElement);
         }
     }
 
@@ -171,15 +173,15 @@ public class NetworkArm implements Arm {
     public TimeInterval getRefreshInterval() {
         return finder.getRefreshInterval();
     }
-
-    private boolean needsRefresh() {
-        TimeInterval refreshInterval = finder.getRefreshInterval();
+    
+    private boolean needsRefresh(NetworkFinder f) {
+        TimeInterval refreshInterval = f.getRefreshInterval();
         if(refreshInterval == null)
             return false;
         MicroSecondDate databaseTime;
         try {
-            databaseTime = queryTimeTable.getQuery(finder.getName(),
-                                                   finder.getDNS());
+            databaseTime = queryTimeTable.getQuery(f.getName(),
+                                                   f.getDNS());
             MicroSecondDate lastTime = new MicroSecondDate(databaseTime);
             MicroSecondDate currentTime = ClockUtil.now();
             TimeInterval timeInterval = currentTime.difference(lastTime);
@@ -210,7 +212,7 @@ public class NetworkArm implements Arm {
      */
     public synchronized NetworkDbObject[] getSuccessfulNetworks()
             throws NetworkNotFound, SQLException, NotFound {
-        if(!needsRefresh()) {
+        if(!needsRefresh(finder)) {
             if(netDbs == null) {
                 netDbs = netTable.getAllNets(getNetworkDC());
                 for(int i = 0; i < netDbs.length; i++) {
@@ -231,7 +233,7 @@ public class NetworkArm implements Arm {
         synchronized(netDC) {
             String[] constrainingCodes = getConstrainingNetworkCodes(attrSubsetter);
             if(constrainingCodes.length > 0) {
-                NetworkFinder netFinder = netDC.a_finder();
+                edu.iris.Fissures.IfNetwork.NetworkFinder netFinder = netDC.a_finder();
                 List constrainedNets = new ArrayList(constrainingCodes.length);
                 for(int i = 0; i < constrainingCodes.length; i++) {
                     NetworkAccess[] found;
@@ -824,7 +826,7 @@ public class NetworkArm implements Arm {
     private WorkerThreadPool netPopulators = new WorkerThreadPool("NetPopulator",
                                                                   1);
 
-    private edu.sc.seis.sod.subsetter.network.NetworkFinder finder = null;
+    private NetworkFinder finder = null;
 
     private NetworkSubsetter attrSubsetter = new PassNetwork();
 
