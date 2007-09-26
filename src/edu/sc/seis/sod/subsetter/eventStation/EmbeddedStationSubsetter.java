@@ -8,6 +8,7 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.station.StationSubsetter;
 import org.w3c.dom.Element;
@@ -34,9 +35,11 @@ public class EmbeddedStationSubsetter implements EventStationSubsetter {
                              CookieJar cookieJar) throws Exception {
         NetworkAccess network = Start.getNetworkArm()
                 .getNetwork(station.get_id().network_id);
-        return stationSubsetter.accept(station,
-                                       network);
+        StringTree out = stationSubsetter.accept(station,
+                                                 network);
+        return new StringTreeBranch(this, out.isSuccess(), out);
     }
 
     private StationSubsetter stationSubsetter = null;
+    
 }// EmbeddedStationSubsetter
