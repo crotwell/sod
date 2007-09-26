@@ -99,21 +99,29 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
                                         DataSetSeismogram[] dataSeis)
             throws Exception {
         if(spacer != null) {
-            writeImage(wrap(spacer.spaceOut(dataSeis)), event);
+            writeImage(wrap(spacer.spaceOut(dataSeis)), event, false);
         } else {
-            writeImage(wrap(dataSeis), event);
+            writeImage(wrap(dataSeis), event, false);
         }
+    }
+    
+    public void outputRecordSection(DataSetSeismogram[] dataSeis,
+                                    EventAccessOperations event,
+                                    OutputStream out) throws Exception {
+        outputRecordSection(dataSeis, event, out, false);
     }
 
     public void outputRecordSection(DataSetSeismogram[] dataSeis,
                                     EventAccessOperations event,
-                                    OutputStream out) throws Exception {
-        writeImage(wrap(dataSeis), event, out);
+                                    OutputStream out, 
+                                    boolean isPDF) throws Exception {
+        writeImage(wrap(dataSeis), event, out, isPDF);
     }
 
     protected void writeImage(DataSetSeismogram[] dataSeis,
                               EventAccessOperations event,
-                              OutputStream out) throws Exception {
+                              OutputStream out,
+                              boolean isPDF) throws Exception {
         RecordSectionDisplay rsDisplay = getConfiguredRSDisplay();
         rsDisplay.add(dataSeis);
         if(dataSeis.length > 0) {
@@ -122,24 +130,30 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
         }
         logger.debug("Added " + dataSeis.length
                 + " seismograms to RecordSectionDisplay");
-        rsDisplay.outputToPNG(out, getRecSecDimension());
+        if (isPDF) {
+            rsDisplay.outputToPDF(out);
+        } else {
+            rsDisplay.outputToPNG(out, getRecSecDimension());
+        }
     }
 
     protected void writeImage(DataSetSeismogram[] dataSeis,
-                              EventAccessOperations event) throws Exception {
+                              EventAccessOperations event,
+                              boolean isPDF) throws Exception {
         String fileLoc = getFileLoc(event);
         try {
-            File outPNG = new File(getFileBaseDir() + "/" + fileLoc);
+            File outFile = new File(getFileBaseDir() + "/" + fileLoc);
             writeImage(dataSeis,
                        event,
-                       new BufferedOutputStream(new FileOutputStream(outPNG)));
+                       new BufferedOutputStream(new FileOutputStream(outFile)),
+                       isPDF);
         } catch(IOException e) {
-            String msg = "Problem writing recordsection output to PNG ";
+            String msg = "Problem writing recordsection output to image file ";
             logger.debug(msg, e);
             throw new IOException(msg + e);
         }
     }
-
+    
     protected String filename = "recordsection" + FILE_EXTENSION;
 
     protected String baseDirName = DEFAULT_BASE_DIRNAME;

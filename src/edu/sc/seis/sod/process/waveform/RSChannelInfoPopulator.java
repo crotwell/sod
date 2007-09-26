@@ -5,13 +5,10 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.transform.TransformerException;
-
 import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
@@ -167,7 +164,12 @@ public class RSChannelInfoPopulator implements WaveformProcess {
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) throws Exception {
-        boolean out = updateTable(event, chan, original, available, seismograms, cookieJar);
+        boolean out = updateTable(event,
+                                  chan,
+                                  original,
+                                  available,
+                                  seismograms,
+                                  cookieJar);
         return new WaveformResult(seismograms, new StringTreeLeaf(this, out));
     }
 
@@ -232,8 +234,10 @@ public class RSChannelInfoPopulator implements WaveformProcess {
             DataSetSeismogram seis = ds.getDataSetSeismogram(dataSeisNames[i]);
             ChannelId chanId = getMatchingChanIdIgnoreDates(seis.getChannelId(),
                                                             ds.getChannelIds());
-            if (chanId == null) {
-                logger.error("no channel in dataset for id="+ChannelIdUtil.toString(seis.getChannelId())+" even though seismogram is in dataset. Skipping this seismogram.");
+            if(chanId == null) {
+                logger.error("no channel in dataset for id="
+                        + ChannelIdUtil.toString(seis.getChannelId())
+                        + " even though seismogram is in dataset. Skipping this seismogram.");
                 continue;
             }
             Channel chan = ds.getChannel(chanId);
@@ -272,11 +276,28 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         }
         return null;
     }
-    
+
+    public static ChannelId getMatchingChanIdByStationCode(ChannelId chan,
+                                                           ChannelId[] channels) {
+        for(int i = 0; i < channels.length; i++) {
+            if(channels[i].station_code.equals(chan.station_code)
+                    && channels[i].channel_code.equals(chan.channel_code)) {
+                if(!ChannelIdUtil.areEqual(chan, channels[i])) {
+                    logger.debug("seismogram channel "
+                            + ChannelIdUtil.toString(chan)
+                            + " is not totally equal to dataset channel "
+                            + ChannelIdUtil.toString(channels[i]));
+                }
+                return channels[i];
+            }
+        }
+        return null;
+    }
+
     public String getId() {
         return id;
     }
-    
+
     public String getSaveSeisId() {
         return saveSeisId;
     }
