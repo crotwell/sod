@@ -49,6 +49,15 @@ public class WaveformArm implements Arm {
                        EventArm eventArm,
                        NetworkArm networkArm,
                        int threadPoolSize) throws Exception {
+        initDb();
+        processConfig(config);
+        this.networkArm = networkArm;
+        this.eventArm = eventArm;
+        pool = new WorkerThreadPool("Waveform EventChannel Processor",
+                                    threadPoolSize);
+    }
+    
+    private void initDb() throws SQLException {
         RunProperties runProps = Start.getRunProps();
         SERVER_RETRY_DELAY = runProps.getServerRetryDelay();
         eventStatus = new JDBCEventStatus();
@@ -63,11 +72,6 @@ public class WaveformArm implements Arm {
         corbaFailures = new JDBCRetryQueue("corbaFailure");
         corbaFailures.setMinRetryWait(new TimeInterval(2, UnitImpl.HOUR));
         corbaFailures.setMaxRetries(10);
-        processConfig(config);
-        this.networkArm = networkArm;
-        this.eventArm = eventArm;
-        pool = new WorkerThreadPool("Waveform EventChannel Processor",
-                                    threadPoolSize);
     }
 
     public boolean isActive() {
