@@ -63,7 +63,10 @@
                     location. This is mainly used with an AND or OR where one condition only depends
                     on the station.</description>
             </xsd:annotation>
-            <externalRef href="../network/station.rng"/>
+            <choice>
+                <externalRef href="../network/station.rng"/>
+                <externalRef href="../network/network.rng"/>
+            </choice>
         </element>
     </define>
     <define name="azimuthRange">
