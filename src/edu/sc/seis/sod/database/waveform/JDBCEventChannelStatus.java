@@ -10,6 +10,7 @@ import java.util.List;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.Station;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.DBUtil;
@@ -347,18 +348,14 @@ public class JDBCEventChannelStatus extends JDBCTable {
         CacheEvent event = eventTable.getEvent(eventId);
         int chanId = rs.getInt("channelid");
         NetworkArm na = Start.getNetworkArm();
-        Channel chan = null;
+        ChannelImpl chan = null;
         if(na != null) {
-            chan = na.getChannel(chanId);
+            chan = (ChannelImpl)na.getChannel(chanId);
         }
         if(chan == null) {
             chan = chanTable.get(chanId);
         }
-        EventChannelPair cur = new EventChannelPair(new EventDbObject(eventId,
-                                                                      event),
-                                                    new ChannelDbObject(chanId,
-                                                                        chan),
-                                                    owner,
+        EventChannelPair cur = new EventChannelPair(event, chan,
                                                     rs.getInt("pairid"),
                                                     s);
         return cur;

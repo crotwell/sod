@@ -69,6 +69,8 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) throws Exception {
+        if (cookieJar == null) {throw new NullPointerException("CookieJar cannot be null");}
+        if (channel == null) {throw new NullPointerException("Channel cannot be null");}
         if(seismograms.length > 0) {
             removeExisting(event, channel, seismograms[0]);
             for(int i = 0; i < seismograms.length; i++) {

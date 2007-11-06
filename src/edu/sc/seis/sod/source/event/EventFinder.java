@@ -1,7 +1,5 @@
 package edu.sc.seis.sod.source.event;
 
-import java.sql.SQLException;
-
 import org.apache.log4j.Logger;
 import org.omg.CORBA.SystemException;
 import org.w3c.dom.Element;
@@ -16,9 +14,10 @@ import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.QueryTime;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.database.JDBCQueryTime;
+import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.subsetter.AbstractSource;
 
 public class EventFinder extends AbstractSource implements EventSource {
@@ -27,7 +26,6 @@ public class EventFinder extends AbstractSource implements EventSource {
 		super(config);
 		eventFinderId = eventFinderCount++;
 		processConfig(config);
-		queryTimes = new JDBCQueryTime();
 		refreshInterval = Start.getRunProps().getEventRefreshInterval();
 		lag = Start.getRunProps().getEventLag();
 		increment = Start.getRunProps().getEventQueryIncrement();
@@ -54,7 +52,7 @@ public class EventFinder extends AbstractSource implements EventSource {
 						+ getQueryStart()
 						+ " and we're querying to "
 						+ queryEnd);
-		return quitDate.after(ClockUtil.now())
+		return  quitDate.after(ClockUtil.now())
 				|| !getQueryStart().equals(queryEnd);
 	}
 
@@ -83,6 +81,7 @@ public class EventFinder extends AbstractSource implements EventSource {
 	protected CacheEvent[] loadMoreResults() {
 		MicroSecondTimeRange queryTime = getQueryTime();
 		CacheEvent[] results = querier.query(queryTime);
+		logger.debug("Retrieved"+results.length+" events for time range "+queryTime);
 		updateQueryEdge(queryTime);
 		return results;
 	}
@@ -116,8 +115,8 @@ public class EventFinder extends AbstractSource implements EventSource {
 		try {
 			return getQueryEdge();
 		} catch (edu.sc.seis.fissuresUtil.database.NotFound e) {
-			logger
-					.debug("the query times database didn't have an entry for our server/dns combo, just use the time in the config file");
+			logger.debug("the query times database didn't have an entry for our server/dns combo, just use the time in the config file");
+			setQueryEdge(getEventTimeRange().getBeginTime());
 			return getEventTimeRange().getBeginTime();
 		}
 	}
@@ -154,24 +153,25 @@ public class EventFinder extends AbstractSource implements EventSource {
 	 * @return - latest time queried
 	 */
 	protected MicroSecondDate getQueryEdge() throws NotFound {
-		try {
-			return queryTimes.getQuery(getUniqueName(), getDNS());
-		} catch (SQLException e) {
-			throw new RuntimeException(
-					"Database trouble with EventFinder query table", e);
-		}
+        SodDB sdb = new SodDB();
+	    QueryTime t = sdb.getQueryTime(getUniqueName(), getDNS());
+	    sdb.commit();
+	    if (t == null) {throw new NotFound();}
+	    return new MicroSecondDate(t.getTime());
 	}
 
 	/**
 	 * sets the latest time queried
 	 */
 	protected void setQueryEdge(MicroSecondDate edge) {
-		try {
-			queryTimes.setQuery(getUniqueName(), getDNS(), edge);
-		} catch (SQLException e) {
-			throw new RuntimeException(
-					"Database trouble with EventFinder query table", e);
-		}
+        SodDB sdb = new SodDB();
+	    QueryTime qt = sdb.getQueryTime(getUniqueName(), getDNS());
+	    if (qt != null) {
+	        qt.setTime( edge.getTimestamp());
+	    } else {
+	        sdb.putQueryTime(new QueryTime(getUniqueName(), getDNS(), edge.getTimestamp()));
+	    }
+	    sdb.commit();
 	}
 
 	private String getUniqueName() {
@@ -189,8 +189,6 @@ public class EventFinder extends AbstractSource implements EventSource {
 	private MicroSecondTimeRangeSupplier eventTimeRange;
 
 	private static Logger logger = Logger.getLogger(EventFinder.class);
-
-	private JDBCQueryTime queryTimes;
 
 	protected TimeInterval increment, lag, refreshInterval;
 

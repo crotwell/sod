@@ -11,19 +11,14 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 
 public class EventVectorPair {
 
+    /** for hibernate */
+    protected EventVectorPair() {}
+    
     public EventVectorPair(EventChannelPair[] chanPairs) {
         if(chanPairs == null || chanPairs.length != 3) {
             throw new IllegalArgumentException("Number of EventChannelPairs must equal 3");
         }
         this.pairs = chanPairs;
-        Channel[] chans = new Channel[pairs.length];
-        for(int i = 0; i < pairs.length; i++) {
-            chans[i] = pairs[i].getChannel();
-        }
-        this.channels = new ChannelGroup(chans);
-        for(int i = 0; i < chanPairs.length; i++) {
-            channels.addEventChannelPair(chanPairs[i]);
-        }
     }
 
     public int getEventDbId() {
@@ -43,6 +38,16 @@ public class EventVectorPair {
     }
 
     public ChannelGroup getChannelGroup() {
+        if (channels == null) {
+            Channel[] chans = new Channel[pairs.length];
+            for(int i = 0; i < pairs.length; i++) {
+                chans[i] = pairs[i].getChannel();
+            }
+            this.channels = new ChannelGroup(chans);
+            for(int i = 0; i < pairs.length; i++) {
+                channels.addEventChannelPair(pairs[i]);
+            }
+        }
         return channels;
     }
 
@@ -98,4 +103,21 @@ public class EventVectorPair {
     ChannelGroup channels;
 
     EventChannelPair[] pairs;
+	
+	// hibernate
+	protected int pairId;
+	protected void setPairId(int pairId) {this.pairId = pairId;}
+	public int getPairId() {return pairId;}
+	
+    protected  EventChannelPair getEcp1() { return pairs[0];}
+    protected EventChannelPair getEcp2() { return pairs[1];}
+    protected EventChannelPair getEcp3() { return pairs[2];}
+    private void checkPairs() {
+        if (pairs == null || pairs.length != 3) {
+            pairs = new EventChannelPair[3];
+        }
+    }
+    protected void setEcp1(EventChannelPair ecp) {checkPairs();pairs[0] = ecp;}
+    protected void setEcp2(EventChannelPair ecp) {checkPairs();pairs[1] = ecp;}
+    protected void setEcp3(EventChannelPair ecp) {checkPairs();pairs[2] = ecp;}
 }

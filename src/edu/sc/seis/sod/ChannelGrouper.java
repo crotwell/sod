@@ -30,6 +30,7 @@ import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.sc.seis.fissuresUtil.bag.OrientationUtil;
+import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.database.NetworkDbObject;
@@ -133,15 +134,15 @@ public class ChannelGrouper {
                                                                     NetworkArm.PACKAGES);
                                     if(subsetter instanceof NetworkSubsetter) {
                                         NetworkId netId = channels[0].get_id().network_id;
-                                        NetworkDbObject[] networks = Start.getNetworkArm()
+                                        CacheNetworkAccess[] networks = Start.getNetworkArm()
                                                 .getSuccessfulNetworks();
                                         NetworkAttr netAttr = null;
                                         for(int nCount = 0; nCount < networks.length; nCount++) {
-                                            if(NetworkIdUtil.areEqual(networks[nCount].getNetworkAccess()
+                                            if(NetworkIdUtil.areEqual(networks[nCount]
                                                                               .get_attributes()
                                                                               .get_id(),
                                                                       netId)) {
-                                                netAttr = networks[nCount].getNetworkAccess()
+                                                netAttr = networks[nCount]
                                                         .get_attributes();
                                             }
                                             NetworkSubsetter netSubsetter = (NetworkSubsetter)subsetter;

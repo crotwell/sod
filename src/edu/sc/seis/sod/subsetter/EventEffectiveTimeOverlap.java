@@ -2,10 +2,12 @@ package edu.sc.seis.sod.subsetter;
 
 import edu.iris.Fissures.IfEvent.*;
 import edu.iris.Fissures.IfNetwork.*;
+import edu.iris.Fissures.Time;
 import edu.iris.Fissures.TimeRange;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.UnitImpl;
+import edu.sc.seis.sod.database.event.StatefulEvent;
 
 /**
  * EventEffectiveTimeOverlap.java Created: Wed Mar 19 10:49:54 2003
@@ -15,14 +17,16 @@ import edu.iris.Fissures.model.UnitImpl;
  */
 public class EventEffectiveTimeOverlap extends EffectiveTimeOverlap {
 
-    public EventEffectiveTimeOverlap(EventAccessOperations event)
+    public EventEffectiveTimeOverlap(StatefulEvent event)
             throws NoPreferredOrigin {
         super(createTimeRange(event));
     } // EventEffectiveTimeOverlap constructor
 
-    static TimeRange createTimeRange(EventAccessOperations event)
+    static TimeRange createTimeRange(StatefulEvent event)
             throws NoPreferredOrigin {
-        MicroSecondDate originTime = new MicroSecondDate(event.get_preferred_origin().origin_time);
+        Time otime = event.getOrigin().origin_time;
+        if (otime == null) {throw new RuntimeException("origin time is null");}
+        MicroSecondDate originTime = new MicroSecondDate(otime);
         return new TimeRange(originTime.getFissuresTime(),
                              originTime.add(DEFAULT_OFFSET).getFissuresTime());
     }

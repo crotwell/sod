@@ -13,7 +13,13 @@
 	<classpathentry kind="var" path="MAVEN_REPO/jing/jars/jing-20030619.jar"/>
 	<classpathentry exported="true" kind="var" path="MAVEN_REPO/JSAP/jars/JSAP-2.1.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/JavaCSV/jars/javacsv-2.0.jar" sourcepath="/MAVEN_REPO/JavaCSV/jars/javacsv-2.0-src.zip"/>
-	<classpathentry kind="var" path="MAVEN_REPO/jython/jars/jython-2.2rc3.jar" sourcepath="/MAVEN_REPO/jython/jars/jython2.2.rc2_src.zip"/>
+	<classpathentry kind="var" path="MAVEN_REPO/jython/jars/jython-2.2.jar" sourcepath="/MAVEN_REPO/jython/jars/jython2.2.rc2_src.zip"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/bag"/>
+	<classpathentry kind="var" path="MAVEN_REPO/hibernate/jars/antlr-2.7.6.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/hibernate/jars/asm-unknown_USC1.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/hibernate/jars/cglib-2.1.3.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/hibernate/jars/hibernate-3.2.5.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/hibernate/jars/hibernate-tools-3.2.0beta9a.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/hibernate/jars/jta-unknown_USC1.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

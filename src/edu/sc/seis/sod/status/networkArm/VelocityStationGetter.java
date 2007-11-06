@@ -11,16 +11,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
+
 import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.network.NetworkIdUtil;
+import edu.iris.Fissures.network.StationImpl;
+import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.database.network.JDBCStation;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.Stage;
 import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Status;
-import edu.sc.seis.sod.database.NetworkDbObject;
 import edu.sc.seis.sod.database.StationDbObject;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
 
@@ -32,10 +33,10 @@ public class VelocityStationGetter {
 
     public List getSuccessful() throws Exception {
         List out = new LinkedList();
-        NetworkDbObject[] nets = Start.getNetworkArm().getSuccessfulNetworks();
+        CacheNetworkAccess[] nets = Start.getNetworkArm().getSuccessfulNetworks();
         for (int i = 0; i < nets.length; i++) {
-            if (NetworkIdUtil.areEqual(nets[i].getNetworkAccess().get_attributes().get_id(), net)) {
-                StationDbObject[] sta = Start.getNetworkArm().getSuccessfulStations(nets[i]);
+            if (NetworkIdUtil.areEqual(nets[i].get_attributes().get_id(), net)) {
+                StationImpl[] sta = Start.getNetworkArm().getSuccessfulStations(nets[i]);
                 for (int j = 0; j < sta.length; j++) {
                     out.add(sta[j]);
                 }

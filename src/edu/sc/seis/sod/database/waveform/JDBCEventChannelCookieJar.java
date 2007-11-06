@@ -31,7 +31,6 @@ public class JDBCEventChannelCookieJar extends JDBCTable {
     public JDBCEventChannelCookieJar(Connection conn) throws SQLException{
         super("eventchannelcookiejar", conn);
         TableSetup.setup(this, "edu/sc/seis/sod/database/props/default.props");
-        statusTable = new JDBCEventChannelStatus(conn);
         insertDouble = conn.prepareStatement("INSERT into eventchannelcookiejar (pairid, name, value) " +
                                                  "VALUES (? , ?, ?)");
         insertString = conn.prepareStatement("INSERT into eventchannelcookiejar (pairid, name, valuestring) " +
@@ -197,7 +196,6 @@ public class JDBCEventChannelCookieJar extends JDBCTable {
 
     private PreparedStatement insertDouble, insertString, insertObject, updateDouble, updateString, updateObject, get, getForPair, getForName, remove;
 
-    private JDBCEventChannelStatus statusTable;
 
 }
 

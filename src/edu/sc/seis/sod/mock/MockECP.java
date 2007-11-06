@@ -4,7 +4,7 @@
  * @author Created by Charles Groves
  */
 
-package edu.sc.seis.sod.subsetter.waveformArm;
+package edu.sc.seis.sod.mock;
 import java.sql.SQLException;
 
 import edu.iris.Fissures.network.ChannelImpl;

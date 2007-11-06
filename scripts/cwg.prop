@@ -26,7 +26,8 @@ log4j.appender.error.layout=org.apache.log4j.PatternLayout
 log4j.appender.error.layout.ConversionPattern=%d{ISO8601} %p %t %c{2} - %m%n
 log4j.appender.error.Threshold=error
 
-log4j.logger.edu.sc.seis.sod.subsetter.eventArm=debug,EventFile
+log4j.logger.edu.sc.seis.sod.source.event=debug,EventFile
+log4j.logger.edu.sc.seis.sod.subsetter.origin=debug,EventFile
 log4j.logger.edu.sc.seis.sod.EventArm=debug,EventFile
 log4j.appender.EventFile=org.apache.log4j.RollingFileAppender
 log4j.appender.EventFile.File=${log4j.logpath}/EventArm.log
@@ -67,3 +68,11 @@ log4j.appender.NetworkFile.MaxFileSize=1000000KB
 log4j.appender.NetworkFile.MaxBackupIndex=4
 log4j.appender.NetworkFile.layout=org.apache.log4j.PatternLayout
 log4j.appender.NetworkFile.layout.ConversionPattern=%d{ISO8601} %p %t %c{2} - %m%n
+
+log4j.logger.org.hibernate=info,hibernate
+log4j.appender.hibernate=org.apache.log4j.RollingFileAppender
+log4j.appender.hibernate.File=${log4j.logpath}/hibernate.log
+log4j.appender.hibernate.MaxFileSize=100000KB
+log4j.appender.hibernate.MaxBackupIndex=4
+log4j.appender.hibernate.layout=org.apache.log4j.PatternLayout
+log4j.appender.hibernate.layout.ConversionPattern=%d{ISO8601} %p %t %c{2} - %m%n

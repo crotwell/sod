@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.database;
 
 import edu.iris.Fissures.IfNetwork.Site;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.SiteIdUtil;
 
 /**
@@ -27,7 +28,7 @@ public class SiteDbObject extends DbObject{
         return SiteIdUtil.toString(site.get_id());
     }
 
-    public ChannelDbObject[] channelDbObjects = null;
+    public ChannelImpl[] channelDbObjects = null;
 
     private Site site;
     

@@ -1,6 +1,7 @@
 package edu.sc.seis.sod;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -9,24 +10,31 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.hibernate.Hibernate;
+import org.hibernate.dialect.function.SQLFunctionTemplate;
+import org.hibernate.tool.hbm2ddl.SchemaUpdate;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
+import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
+import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.RetryStrategy;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
@@ -34,12 +42,12 @@ import edu.sc.seis.fissuresUtil.exceptionHandler.Extractor;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.exceptionHandler.SystemOutReporter;
 import edu.sc.seis.fissuresUtil.exceptionHandler.WindowConnectionInterceptor;
+import edu.sc.seis.fissuresUtil.hibernate.HibernateUtil;
+import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
+import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockNetworkAttr;
 import edu.sc.seis.fissuresUtil.simple.Initializer;
-import edu.sc.seis.sod.database.JDBCConfig;
-import edu.sc.seis.sod.database.JDBCStatus;
-import edu.sc.seis.sod.database.JDBCVersion;
-import edu.sc.seis.sod.database.event.JDBCEventStatus;
-import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
+import edu.sc.seis.sod.hibernate.SodDB;
+import edu.sc.seis.sod.hibernate.StatefulEventDB;
 import edu.sc.seis.sod.status.IndexTemplate;
 import edu.sc.seis.sod.status.OutputScheduler;
 import edu.sc.seis.sod.status.TemplateFileLoader;
@@ -160,6 +168,24 @@ public class Start {
     protected void initDocument() throws Exception {
         loadRunProps(getConfig());
         ConnMgr.installDbProperties(props, args.getInitialArgs());
+        synchronized(HibernateUtil.class) {
+        HibernateUtil.getConfiguration()
+        .setProperty("hibernate.connection.url", ConnMgr.getURL())
+        .setProperty("hibernate.connection.username", ConnMgr.getUser())
+        .setProperty("hibernate.connection.password", ConnMgr.getPass())
+        .addResource("edu/sc/seis/sod/hibernate/sod.hbm.xml")
+        .addProperties(props)
+        .addSqlFunction( "datediff", new SQLFunctionTemplate(Hibernate.LONG, "datediff(?1, ?2, ?3)" ) );
+        }
+
+        SchemaUpdate update = new SchemaUpdate(HibernateUtil.getConfiguration());
+        update.execute(false, true);
+        // check that hibernate is ok
+        SodDB sodDb = new SodDB();
+        logger.debug("SodDB in init document:"+sodDb);
+        Object s = sodDb.getSession();
+        if (s == null) {logger.warn("Session is null");}
+        sodDb.rollback();
         CommonAccess.initialize(props, args.getInitialArgs());
     }
 
@@ -302,9 +328,10 @@ public class Start {
     }
 
     private static ResultMailer mailer;
-
+    
     public void start() throws Exception {
-        startTime = ClockUtil.now();
+        //startTime = ClockUtil.now();
+        startTime = new MicroSecondDate();
         if(!commandLineToolRun) {
             new UpdateChecker(false);
             handleStartupRunProperties();
@@ -319,13 +346,10 @@ public class Start {
             indexTemplate = new IndexTemplate();
         }
         // make sure database tables are created cleanly
-        new JDBCEventStatus();
-        new JDBCEventChannelStatus();
         startArms(getConfig().getChildNodes());
         if(runProps.doStatusPages()) {
             indexTemplate.performRegistration();
         }
-        new JDBCStatus();
         if(!commandLineToolRun) {
             addMailExceptionReporter(props);
             addResultMailer(props);
@@ -400,6 +424,7 @@ public class Start {
         for(Iterator iter = armListeners.iterator(); iter.hasNext();) {
             ((ArmListener)iter.next()).started();
         }
+
     }
 
     public static void add(ArmListener listener) {
@@ -444,33 +469,35 @@ public class Start {
                 }
             }
         } else if(runProps.reopenEvents()) {
-            try {
-                JDBCEventStatus eventStatus = new JDBCEventStatus();
-                eventStatus.restartCompletedEvents();
-            } catch(SQLException e) {
-                GlobalExceptionHandler.handle("Trouble restarting completed events",
-                                              e);
-            }
+            StatefulEventDB eventDb = new StatefulEventDB();
+            eventDb.restartCompletedEvents();
         } else if(runProps.reopenSuspended()) {
+            SodDB sodDb = new SodDB();
             try {
-                JDBCEventChannelStatus evChanStatusTable = new JDBCEventChannelStatus();
-                suspendedPairs = evChanStatusTable.getSuspendedEventChannelPairs(runProps.getEventChannelPairProcessing());
+                logger.debug("SodDB in reopen suspended events:"+sodDb);
+                suspendedPairs = sodDb.getSuspendedEventChannelPairs(runProps.getEventChannelPairProcessing());
                 logger.debug("Found " + suspendedPairs.length
                         + " event channel pairs that were in process");
+                sodDb.commit();
             } catch(Exception e) {
                 GlobalExceptionHandler.handle("Trouble updating status of "
                         + "existing event-channel pairs", e);
+                sodDb.rollback();
             }
         }
     }
 
     private void checkDBVersion() {
+        SodDB sodDb = new SodDB();
         try {
-            JDBCVersion dbVersion = new JDBCVersion();
-            if(Version.hasSchemaChangedSince(dbVersion.getDBVersion())) {
-                System.err.println("SOD version: " + Version.getVersion());
+            logger.debug("SodDB in check DBVersion:"+sodDb);
+            Version dbVersion = sodDb.getDBVersion();
+            sodDb.commit();
+            if (dbVersion == null) {throw new RuntimeException("db version is null");}
+            if(Version.hasSchemaChangedSince(dbVersion.getVersion())) {
+                System.err.println("SOD version: " + Version.current().getVersion());
                 System.err.println("Database version: "
-                        + dbVersion.getDBVersion());
+                        + dbVersion.getVersion());
                 System.err.println("Your database was created with an older version "
                         + "of SOD.");
                 allHopeAbandon("There has been a change in the database "
@@ -478,23 +505,40 @@ public class Start {
                         + "Continuing this sod run is not advisable!");
             }
         } catch(Exception e) {
+        	logger.error(e);
+        	sodDb.rollback();
             GlobalExceptionHandler.handle("Trouble checking database version",
                                           e);
         }
     }
 
     private void checkConfig(InputSource is) {
+        SodDB sodDb = new SodDB();
         try {
-            String configString = JDBCConfig.extractConfigString(is);
-            JDBCConfig dbConfig = new JDBCConfig(configString,
-                                                 args.replaceDBConfig());
-            if(!dbConfig.isSameConfig(configString)) {
-                allHopeAbandon("Your config file has changed since your last run.  "
-                        + "It may not be advisable to continue this SOD run.");
+            Thread.sleep(1000);
+        } catch(InterruptedException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+        try {
+            SodConfig conf = new SodConfig(new BufferedReader(is.getCharacterStream()));
+            SodConfig dbConfig =  sodDb.getCurrentConfig();
+            if(dbConfig == null) {
+                sodDb.putConfig(conf);
+            } else if(dbConfig.getConfig().equals(conf.getConfig())) {
+            } else {
+                if( args.replaceDBConfig()) {
+                    sodDb.putConfig(conf);
+                } else {
+                    allHopeAbandon("Your config file has changed since your last run.  "
+                                   + "It may not be advisable to continue this SOD run.");
+                }
             }
+            sodDb.commit();
         } catch(Exception e) {
             GlobalExceptionHandler.handle("Trouble checking stored config file",
                                           e);
+            sodDb.rollback();
         }
     }
 
@@ -527,7 +571,7 @@ public class Start {
             logger.error("User configuration problem, quiting", e);
             exit(e.getMessage()
                     + "  SOD will quit now and continue to cowardly quit until this is corrected.");
-        } catch(Exception e) {
+        } catch(Throwable e) {
             GlobalExceptionHandler.handle("Problem in main, quiting", e);
             exit("Quitting due to error: " + e.getMessage());
         }
@@ -596,7 +640,7 @@ public class Start {
 
     public static boolean RUN_ARMS = true;
 
-    protected static int[] suspendedPairs = new int[0];
+    protected static EventChannelPair[] suspendedPairs = new EventChannelPair[0];
 
     private static List armListeners = new ArrayList();
 

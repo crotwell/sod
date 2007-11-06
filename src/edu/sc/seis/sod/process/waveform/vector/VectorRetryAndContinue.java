@@ -1,14 +1,15 @@
 package edu.sc.seis.sod.process.waveform.vector;
 
 import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.database.JDBCRetryQueue;
+import edu.sc.seis.sod.LocalSeismogramWaveformWorkUnit;
+import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.status.StringTreeBranch;
 
 public class VectorRetryAndContinue extends VectorResultWrapper {
@@ -23,8 +24,8 @@ public class VectorRetryAndContinue extends VectorResultWrapper {
                                         RequestFilter[][] available,
                                         LocalSeismogramImpl[][] seismograms,
                                         CookieJar cookieJar) throws Exception {
-        if(retryQueue == null) {
-            retryQueue = Start.getWaveformArm().getRetryQueue();
+        if(sodDb == null) {
+            sodDb = new SodDB();
         }
         WaveformVectorResult result = subProcess.process(event,
                                                          channelGroup,
@@ -33,7 +34,7 @@ public class VectorRetryAndContinue extends VectorResultWrapper {
                                                          seismograms,
                                                          cookieJar);
         if(!result.isSuccess()) {
-            retryQueue.retry(cookieJar.getEventChannelPair().getPairId());
+            sodDb.retry(new LocalSeismogramWaveformWorkUnit(cookieJar.getEventChannelPair()));
             return wrap(result);
         }
         return result;
@@ -46,5 +47,5 @@ public class VectorRetryAndContinue extends VectorResultWrapper {
                                                              result.getReason()));
     }
 
-    private JDBCRetryQueue retryQueue;
+    private SodDB sodDb;
 }

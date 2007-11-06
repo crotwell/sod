@@ -9,6 +9,8 @@ package edu.sc.seis.sod.status.waveformArm;
 import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.hibernate.SodDB;
+
 import java.sql.SQLException;
 import java.util.HashSet;
 import org.apache.velocity.context.Context;
@@ -68,7 +70,7 @@ public class StationWaveformContext  extends WaveformArmContext {
                 HashSet out = new HashSet();
                 if (Start.getWaveformArm().getMotionVectorArm() != null) {
                     for (int i = 0; i < ecps.length; i++) {
-                        out.add(Start.getWaveformArm().getEventVectorPair(ecps[i]));
+                        out.add(new SodDB().getEventVectorPair(ecps[i]));
                     }
                 } else {
                     for (int i = 0; i < ecps.length; i++) {
@@ -77,8 +79,6 @@ public class StationWaveformContext  extends WaveformArmContext {
                 }
                 return out;
             } catch (SQLException e) {
-                throw new RuntimeException("can't get for key="+key, e);
-            } catch(NetworkNotFound e) {
                 throw new RuntimeException("can't get for key="+key, e);
             }
         } else {

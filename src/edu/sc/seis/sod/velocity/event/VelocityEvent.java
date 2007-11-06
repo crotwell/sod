@@ -164,11 +164,11 @@ public class VelocityEvent extends ProxyEventAccessOperations {
     }
 
     public int getId() {
-        return ((CacheEvent)event).getDbId();
+        return ((CacheEvent)event).getDbid();
     }
 
     public int getDbId() {
-        return ((CacheEvent)event).getDbId();
+        return ((CacheEvent)event).getDbid();
     }
 
     public String getParam(String name) {

@@ -15,7 +15,7 @@ public class UpdateChecker  {
     public UpdateChecker(boolean gui) {
         UpdateCheckerJob job = new UpdateCheckerJob("SOD update checker",
                                                     "SOD",
-                                                    Version.getVersion(),
+                                                    Version.current().getVersion(),
                                                     updateURL,
                                                     gui,
                                                     forceCheck);

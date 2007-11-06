@@ -11,6 +11,7 @@ import edu.iris.Fissures.IfNetwork.Site;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
+import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.Stage;
@@ -47,7 +48,7 @@ public class WaveformStationStatus extends AbstractVelocityStatus implements Wav
         if (status.getStage().equals(Stage.PROCESSOR) && status.getStanding().equals(Standing.SUCCESS)) {
             Station station = ecp.getChannel().my_site.my_station;
             try {
-                int stationDbid = Start.getNetworkArm().getStationDbId(station);
+                int stationDbid = ((StationImpl)station).getDbid();
                 VelocityContext context = new VelocityContext(new StationWaveformContext(networkArmContext, stationDbid));
                 context.put("station", station);
                 context.put("networkid", station.get_id().network_id);

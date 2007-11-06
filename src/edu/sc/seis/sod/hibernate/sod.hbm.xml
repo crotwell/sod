@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+	<joined-subclass name="edu.sc.seis.sod.database.event.StatefulEvent"
+		extends="edu.sc.seis.fissuresUtil.cache.CacheEvent"
+		table="eventStatus">
+		<key column="eventStatus_id" />
+		<property name="statusAsShort" type="short"
+			column="eventcondition" />
+	</joined-subclass>
+
+	<class name="edu.sc.seis.sod.EventChannelPair">
+		<id name="pairId" type="integer">
+			<generator class="native" />
+		</id>
+		<many-to-one name="event"
+			class="edu.sc.seis.sod.database.event.StatefulEvent" column="event"
+			foreign-key="FK_ecp_event" 
+			unique-key="event_chan_key" />
+		<many-to-one name="channel"
+			class="edu.iris.Fissures.network.ChannelImpl" column="channel"
+			foreign-key="FK_ecp_channel"
+			unique-key="event_chan_key" />
+		<property name="StatusAsShort" type="short" column="status" />
+	</class>
+
+	<class name="edu.sc.seis.sod.EventVectorPair">
+		<id name="pairId" type="integer">
+			<generator class="native" />
+		</id>
+		<many-to-one name="ecp1"
+			class="edu.sc.seis.sod.EventChannelPair" foreign-key="FK_evp_ecp1"
+			column="ecp1" cascade="save-update" />
+		<many-to-one name="ecp2"
+			class="edu.sc.seis.sod.EventChannelPair" foreign-key="FK_evp_ecp2"
+			column="ecp2" cascade="save-update" />
+		<many-to-one name="ecp3"
+			class="edu.sc.seis.sod.EventChannelPair" foreign-key="FK_evp_ecp3"
+			column="ecp3" cascade="save-update" />
+
+	</class>
+
+	<class name="edu.sc.seis.sod.RetryWaveformWorkUnit">
+		<id name="dbid" type="integer">
+			<generator class="native" />
+		</id>
+		<property name="numRetries" type="integer" />
+		<property name="lastQuery" type="timestamp" />
+		<many-to-one name="ecp" class="edu.sc.seis.sod.EventChannelPair"
+			foreign-key="FK_lswork_ecp" column="ecp" cascade="save-update" />
+	</class>
+
+	<class name="edu.sc.seis.sod.RetryMotionVectorWaveformWorkUnit">
+		<id name="dbid" type="integer">
+			<generator class="native" />
+		</id>
+		<property name="numRetries" type="integer" />
+		<property name="lastQuery" type="timestamp" />
+		<many-to-one name="evp" class="edu.sc.seis.sod.EventVectorPair"
+			foreign-key="FK_mvwork_evp" column="evp" cascade="save-update" />
+	</class>
+
+	<class name="edu.sc.seis.sod.SodConfig">
+		<id name="dbid" type="integer">
+			<generator class="native" />
+		</id>
+		<property name="config" type="string" />
+		<property name="time" type="timestamp" />
+	</class>
+
+	<class name="edu.sc.seis.sod.QueryTime">
+		<id name="dbid" type="integer">
+			<generator class="native" />
+		</id>
+		<property name="serverName" type="string" />
+		<property name="serverDNS" type="string" />
+		<property name="time" type="timestamp" />
+	</class>
+
+	<class name="edu.sc.seis.sod.Version">
+		<id name="dbid" type="integer">
+			<generator class="native" />
+		</id>
+		<property name="version" type="string" />
+		<property name="schemaChange" type="boolean" />
+	</class>
+
+</hibernate-mapping>

@@ -1,13 +1,14 @@
 /**
  * LocalSeismogramTemplateTest.java
- *
+ * 
  * @author Created by Omnicore CodeGuide
  */
-
 package edu.sc.seis.sod.process;
 
 import java.io.*;
 
+import edu.iris.Fissures.network.ChannelImpl;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.mockFissures.IfEvent.MockEventAccessOperations;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannel;
 import edu.sc.seis.sod.CookieJar;
@@ -25,27 +26,37 @@ public class LocalSeismogramTemplateTest extends TestCase {
 
     public void testVelocity() throws Exception {
         BasicConfigurator.configure();
-        EventDbObject edb = new EventDbObject(7, MockEventAccessOperations.createEvent());
-        ChannelDbObject cdb = new ChannelDbObject(3, MockChannel.createChannel());
-        EventChannelPair ecp = new EventChannelPair(edb, cdb, null, 11, Status.get(Stage.DATA_RETRIEVAL, Standing.SUCCESS));
-
+        CacheEvent event = MockEventAccessOperations.createEvent();
+        event.setDbid(7);
+        ChannelImpl c = MockChannel.createChannel();
+        ChannelImpl cdb = new ChannelImpl(c.get_id(),
+                                          c.getName(),
+                                          c.getOrientation(),
+                                          c.getSamplingInfo(),
+                                          c.getEffectiveTime(),
+                                          c.getSite(),
+                                          3);
+        EventChannelPair ecp = new EventChannelPair(event,
+                                                    cdb,
+                                                    11,
+                                                    Status.get(Stage.DATA_RETRIEVAL,
+                                                               Standing.SUCCESS));
         CookieJar cookieJar = new CookieJar(ecp);
-        BufferedReader in = new BufferedReader( new InputStreamReader(LocalSeismogramTemplate.class.getClassLoader().getResourceAsStream("edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml")));
-        //BufferedReader in = new BufferedReader( new InputStreamReader(LocalSeismogramTemplate.class.getClassLoader().getResourceAsStream("edu/sc/seis/sod/data/templates/waveformArm/simplevelocity.xml")));
+        BufferedReader in = new BufferedReader(new InputStreamReader(LocalSeismogramTemplate.class.getClassLoader()
+                .getResourceAsStream("edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml")));
+        // BufferedReader in = new BufferedReader( new
+        // InputStreamReader(LocalSeismogramTemplate.class.getClassLoader().getResourceAsStream("edu/sc/seis/sod/data/templates/waveformArm/simplevelocity.xml")));
         String inString = "";
         String s;
         while((s = in.readLine()) != null) {
             inString += s;
         }
-        String out = LocalSeismogramTemplate.getVelocityResult(inString, cookieJar);
+        String out = LocalSeismogramTemplate.getVelocityResult(inString,
+                                                               cookieJar);
         File outputLoc = new File("LocalSeismogramTemplateTest.html");
         outputLoc.deleteOnExit();
         Writer sw = new BufferedWriter(new FileWriter(outputLoc));
-
         sw.write(out);
         sw.close();
     }
-
 }
-
-

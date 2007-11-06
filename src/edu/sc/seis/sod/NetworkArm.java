@@ -7,41 +7,41 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.log4j.Logger;
+import org.hibernate.LockMode;
 import org.omg.CORBA.BAD_PARAM;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.IfNetwork.NetworkDCOperations;
 import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.IfNetwork.NetworkNotFound;
-import edu.iris.Fissures.IfNetwork.Site;
-import edu.iris.Fissures.IfNetwork.SiteId;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.IfNetwork.VirtualNetworkHelper;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.iris.Fissures.network.ChannelImpl;
+import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.NetworkIdUtil;
-import edu.iris.Fissures.network.SiteIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
+import edu.iris.Fissures.network.StationImpl;
+import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
 import edu.sc.seis.fissuresUtil.cache.WorkerThreadPool;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.database.NotFound;
-import edu.sc.seis.fissuresUtil.database.network.JDBCChannel;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.sod.database.ChannelDbObject;
-import edu.sc.seis.sod.database.JDBCQueryTime;
-import edu.sc.seis.sod.database.NetworkDbObject;
-import edu.sc.seis.sod.database.SiteDbObject;
-import edu.sc.seis.sod.database.StationDbObject;
-import edu.sc.seis.sod.database.network.JDBCNetworkUnifier;
+import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
+import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockNetworkAccess;
+import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.source.event.EventSource;
 import edu.sc.seis.sod.source.network.NetworkFinder;
 import edu.sc.seis.sod.status.StringTree;
@@ -54,8 +54,6 @@ import edu.sc.seis.sod.subsetter.network.NetworkEffectiveTimeOverlap;
 import edu.sc.seis.sod.subsetter.network.NetworkOR;
 import edu.sc.seis.sod.subsetter.network.NetworkSubsetter;
 import edu.sc.seis.sod.subsetter.network.PassNetwork;
-import edu.sc.seis.sod.subsetter.site.PassSite;
-import edu.sc.seis.sod.subsetter.site.SiteEffectiveTimeOverlap;
 import edu.sc.seis.sod.subsetter.site.SiteSubsetter;
 import edu.sc.seis.sod.subsetter.station.PassStation;
 import edu.sc.seis.sod.subsetter.station.StationEffectiveTimeOverlap;
@@ -65,9 +63,7 @@ public class NetworkArm implements Arm {
 
     public NetworkArm(Element config) throws SQLException,
             ConfigurationException {
-        queryTimeTable = new JDBCQueryTime();
-        netTable = new JDBCNetworkUnifier();
-        Start.network = this;
+        networkDB = new NetworkDB();
         processConfig(config);
     }
 
@@ -88,17 +84,12 @@ public class NetworkArm implements Arm {
         return "NetworkArm";
     }
 
-    public ProxyNetworkAccess getNetwork(NetworkId network_id) throws Exception {
-        return getNetworkDbObject(network_id).getNetworkAccess();
-    }
-
-    public NetworkDbObject getNetworkDbObject(NetworkId network_id)
-            throws SQLException, NetworkNotFound, NotFound {
-        NetworkDbObject[] netDbs = getSuccessfulNetworks();
+    public CacheNetworkAccess getNetwork(NetworkId network_id) throws NetworkNotFound {
+        CacheNetworkAccess[] netDbs = getSuccessfulNetworks();
         MicroSecondDate beginTime = new MicroSecondDate(network_id.begin_time);
         String netCode = network_id.network_code;
         for(int i = 0; i < netDbs.length; i++) {
-            NetworkAttr attr = netDbs[i].getNetworkAccess().get_attributes();
+            NetworkAttr attr = netDbs[i].get_attributes();
             if(netCode.equals(attr.get_code())
                     && new MicroSecondTimeRange(attr.effective_time).contains(beginTime)) {
                 return netDbs[i];
@@ -131,7 +122,6 @@ public class NetworkArm implements Arm {
             edu.iris.Fissures.TimeRange eventQueryTimes = fullTime.getFissuresTimeRange();
             netEffectiveSubsetter = new NetworkEffectiveTimeOverlap(eventQueryTimes);
             staEffectiveSubsetter = new StationEffectiveTimeOverlap(eventQueryTimes);
-            siteEffectiveSubsetter = new SiteEffectiveTimeOverlap(eventQueryTimes);
             chanEffectiveSubsetter = new ChannelEffectiveTimeOverlap(eventQueryTimes);
         } else {
             logger.debug("No implicit effective time constraint");
@@ -152,7 +142,14 @@ public class NetworkArm implements Arm {
         } else if(sodElement instanceof StationSubsetter) {
             stationSubsetter = (StationSubsetter)sodElement;
         } else if(sodElement instanceof SiteSubsetter) {
-            siteSubsetter = (SiteSubsetter)sodElement;
+            final SiteSubsetter siteSubsetter = (SiteSubsetter)sodElement;
+            chanSubsetters.add(new ChannelSubsetter() {
+                public StringTree accept(Channel channel,
+                                         ProxyNetworkAccess network)
+                        throws Exception {
+                    return siteSubsetter.accept(channel.my_site, network);
+                }
+            });
         } else if(sodElement instanceof ChannelSubsetter) {
             chanSubsetters.add(sodElement);
         } else {
@@ -173,63 +170,46 @@ public class NetworkArm implements Arm {
     public TimeInterval getRefreshInterval() {
         return finder.getRefreshInterval();
     }
-    
-    private boolean needsRefresh(NetworkFinder f) {
-        TimeInterval refreshInterval = f.getRefreshInterval();
-        if(refreshInterval == null)
-            return false;
-        MicroSecondDate databaseTime;
-        try {
-            databaseTime = queryTimeTable.getQuery(f.getName(),
-                                                   f.getDNS());
-            MicroSecondDate lastTime = new MicroSecondDate(databaseTime);
-            MicroSecondDate currentTime = ClockUtil.now();
-            TimeInterval timeInterval = currentTime.difference(lastTime);
-            timeInterval = (TimeInterval)timeInterval.convertTo(refreshInterval.getUnit());
-            if(timeInterval.getValue() >= refreshInterval.getValue()) {
-                return true;
-            }
-            statusChanged("Waiting until " + lastTime.add(refreshInterval)
-                    + " to recheck networks");
-            return false;
-        } catch(NotFound e) {
-            logger.debug("The query database has no info about the network arm.  Hopefull this the first time through");
-            return true;
-        } catch(SQLException e) {
-            GlobalExceptionHandler.handle("The query database threw this exception trying to find info about the network arm's current finder.  This bodes ill",
-                                          e);
-            return true;
-        }
-    }
 
     /**
      * returns an array of SuccessfulNetworks. if the refreshInterval is valid
      * it gets the networks from the database(may be embedded or external). if
      * not it gets the networks again from the network server specified in the
      * networkFinder. After obtaining the Networks if processes them using the
-     * NetworkSubsetter and returns the succesful networks as an array of
+     * NetworkSubsetter and returns the successful networks as an array of
      * NetworkDbObjects.
+     * @throws NetworkNotFound 
      */
-    public synchronized NetworkDbObject[] getSuccessfulNetworks()
-            throws NetworkNotFound, SQLException, NotFound {
-        if(!needsRefresh(finder)) {
+    public synchronized CacheNetworkAccess[] getSuccessfulNetworks() throws NetworkNotFound {
+        SodDB sodDb = new SodDB();
+        logger.info("SodDB in NetworkArm:"+sodDb);
+        QueryTime qtime = sodDb.getQueryTime(finder.getName(),
+                                             finder.getDNS());
+        if (qtime == null) {
+            qtime = new QueryTime(finder.getName(),
+                                  finder.getDNS(),
+                                  ClockUtil.now().getTimestamp());
+            sodDb.putQueryTime(qtime);
+        } else if(!qtime.needsRefresh(finder.getRefreshInterval())) {
             if(netDbs == null) {
-                netDbs = netTable.getAllNets(getNetworkDC());
+                netDbs = getNetworkDB().getAllNets(getNetworkDC());
                 for(int i = 0; i < netDbs.length; i++) {
                     // this is for the side effect of creating
                     // networkInfoTemplate stuff
                     // avoids a null ptr later
-                    change(netDbs[i].getNetworkAccess(),
+                    change(netDbs[i],
                            Status.get(Stage.NETWORK_SUBSETTER, Standing.SUCCESS));
                 }
             }
+            sodDb.commit();
             return netDbs;
         }
         statusChanged("Getting networks");
         logger.info("Getting networks");
         ArrayList networkDBs = new ArrayList();
+        CacheNetworkAccess[] allNets;
+        
         NetworkDCOperations netDC = finder.getNetworkDC();
-        NetworkAccess[] allNets;
         synchronized(netDC) {
             String[] constrainingCodes = getConstrainingNetworkCodes(attrSubsetter);
             if(constrainingCodes.length > 0) {
@@ -249,9 +229,11 @@ public class NetworkArm implements Arm {
                         constrainedNets.add(found[j]);
                     }
                 }
-                allNets = (NetworkAccess[])constrainedNets.toArray(new NetworkAccess[0]);
+                allNets = (CacheNetworkAccess[])constrainedNets.toArray(new CacheNetworkAccess[0]);
             } else {
-                allNets = netDC.a_finder().retrieve_all();
+                NetworkAccess[] tmpNets = netDC.a_finder().retrieve_all();
+                allNets = new CacheNetworkAccess[tmpNets.length];
+                System.arraycopy(tmpNets, 0, allNets, 0, tmpNets.length);
             }
         }
         logger.info("Found " + allNets.length + " networks");
@@ -267,29 +249,26 @@ public class NetworkArm implements Arm {
                 // Must be a concrete, continue
             }
             try {
-                if(netEffectiveSubsetter.accept(allNets[i].get_attributes())
-                        .isSuccess()) {
-                    if(attrSubsetter.accept(allNets[i].get_attributes())
-                            .isSuccess()) {
-                        int dbid;
-                        synchronized(netTable) {
-                            dbid = netTable.put(allNets[i].get_attributes());
-                        }
-                        NetworkDbObject netDb = new NetworkDbObject(dbid,
-                                                                    (ProxyNetworkAccess)allNets[i]);
-                        networkDBs.add(netDb);
+                NetworkAttrImpl attr = (NetworkAttrImpl)allNets[i].get_attributes();
+                if(netEffectiveSubsetter.accept(attr).isSuccess()) {
+                    if(attrSubsetter.accept(attr).isSuccess()) {
+                        NetworkDB ndb = getNetworkDB();
+                        int dbid= ndb.put(attr);
+                        logger.debug("Session: "+getNetworkDB().getSession().getStatistics().toString());
+                        ndb.commit();
+                        logger.info("store network: "+attr.getDbid()+" "+dbid);
+                        networkDBs.add(allNets[i]);
                         change(allNets[i], Status.get(Stage.NETWORK_SUBSETTER,
                                                       Standing.SUCCESS));
                         if(!(Start.getWaveformArm() == null
                                 && stationSubsetter.getClass()
                                         .equals(PassStation.class)
-                                && siteSubsetter.getClass()
-                                        .equals(PassSite.class) && chanSubsetters.size() == 0)) {
+                                && chanSubsetters.size() == 0)) {
                             // only do netpushers if there are more subsetters
                             // downstream
                             // or the waveform arm exists, otherwise there is no
                             // point
-                            lastPusher = new NetworkPusher(netDb);
+                            lastPusher = new NetworkPusher(allNets[i]);
                             netPopulators.invokeLater(lastPusher);
                         }
                     } else {
@@ -322,10 +301,9 @@ public class NetworkArm implements Arm {
             finish();
         }
         // Set the time of the last check to now
-        queryTimeTable.setQuery(finder.getName(),
-                                finder.getDNS(),
-                                ClockUtil.now());
-        netDbs = new NetworkDbObject[networkDBs.size()];
+        qtime.setTime(ClockUtil.now().getTimestamp());
+        sodDb.commit();
+        netDbs = new CacheNetworkAccess[networkDBs.size()];
         networkDBs.toArray(netDbs);
         logger.info(netDbs.length + " networks passed");
         statusChanged("Waiting for a request");
@@ -364,25 +342,31 @@ public class NetworkArm implements Arm {
      */
     private class NetworkPusher implements Runnable {
 
-        public NetworkPusher(NetworkDbObject netDb) {
+        public NetworkPusher(CacheNetworkAccess netDb) {
             this.netDb = netDb;
         }
 
         public void run() {
             if(!Start.isArmFailure()) {
                 logger.info("Starting work on " + netDb);
-                StationDbObject[] staDbs = getSuccessfulStations(netDb);
+                // new thread, so need to attach net attr instance
+                NetworkDB ndb = getNetworkDB();
+                StationImpl[] staDbs = getSuccessfulStations(netDb);
+                ndb.flush();
                 if(!(Start.getWaveformArm() == null
-                        && siteSubsetter.getClass().equals(PassSite.class) && chanSubsetters.size() == 0)) {
-                    // only get sites/channels if there are subsetters or a
+                        &&  chanSubsetters.size() == 0)) {
+                    // only get channels if there are subsetters or a
                     // waveform arm
                     for(int j = 0; j < staDbs.length; j++) {
-                        SiteDbObject[] siteDbs = getSuccessfulSites(netDb,
+                    	// commit for each station
+                    	synchronized (NetworkArm.this) {
+                        ndb.getSession().lock(netDb.get_attributes(), LockMode.NONE);
+                        ChannelImpl[] chans = getSuccessfulChannels(netDb,
                                                                     staDbs[j]);
-                        for(int k = 0; k < siteDbs.length; k++) {
-                            getSuccessfulChannels(netDb, siteDbs[k]);
-                        }
+						}
                     }
+                } else {
+                    logger.info("Not getting channels as no subsetters or waveform arm");
                 }
             }
             synchronized(this) {
@@ -404,7 +388,7 @@ public class NetworkArm implements Arm {
 
         private boolean lastPusher = false, pusherFinished = false;
 
-        private NetworkDbObject netDb;
+        private CacheNetworkAccess netDb;
     }
 
     private void finish() {
@@ -427,187 +411,112 @@ public class NetworkArm implements Arm {
      * @return stations for the given network object that pass this arm's
      *         station subsetter
      */
-    public StationDbObject[] getSuccessfulStations(NetworkDbObject networkDbObject) {
-        if(networkDbObject.stationDbObjects != null) {
-            return networkDbObject.stationDbObjects;
+    public StationImpl[] getSuccessfulStations(CacheNetworkAccess net) {
+        String netCode =  net.get_attributes().get_code();
+        logger.debug("getSuccessfulStations");
+        Integer netKey = new Integer(((NetworkAttrImpl)net.get_attributes()).getDbid());
+        if(successfulStations.get(netKey) != null) {
+            logger.debug("getSuccessfulStations "+netCode+" - from cache "+((StationImpl[])successfulStations.get(netKey)).length);
+            return (StationImpl[])successfulStations.get(netKey);
         }
         synchronized(this) {
-            if(networkDbObject.stationDbObjects != null) {
-                return networkDbObject.stationDbObjects;
+            // recheck in sync just in case something changed in the last nanosecond
+            if(successfulStations.get(netKey) != null) {
+                logger.debug("getSuccessfulStations "+netCode+" - from cache2");
+                return (StationImpl[])successfulStations.get(netKey);
             }
+            // no dice, try db
+            StationImpl[] sta = getNetworkDB().getStationForNet((NetworkAttrImpl)net.get_attributes());
+            if (sta.length != 0) {
+                successfulStations.put(netKey, sta);
+                logger.debug("getSuccessfulStations "+netCode+" - from db "+sta.length);
+                return sta;
+            }
+            // really no dice, go to server
             statusChanged("Getting stations for "
-                    + networkDbObject.getNetworkAccess().get_attributes().name);
+                    + net.get_attributes().name);
             ArrayList arrayList = new ArrayList();
             try {
-                Station[] stations = networkDbObject.getNetworkAccess()
-                        .retrieve_stations();
-                for(int subCounter = 0; subCounter < stations.length; subCounter++) {
-                    StringTree effResult = staEffectiveSubsetter.accept(stations[subCounter],
-                                                                        networkDbObject.getNetworkAccess());
+                Station[] stations = net.retrieve_stations();
+                for(int i = 0; i < stations.length; i++) {
+                    StringTree effResult = staEffectiveSubsetter.accept(stations[i],
+                                                                        net);
                     if(effResult.isSuccess()) {
-                        StringTree staResult = stationSubsetter.accept(stations[subCounter],
-                                                                       networkDbObject.getNetworkAccess());
+                        StringTree staResult = stationSubsetter.accept(stations[i],
+                                                                       net);
                         if(staResult.isSuccess()) {
                             int dbid;
-                            synchronized(netTable) {
-                                dbid = netTable.put(stations[subCounter]);
-                            }
-                            StationDbObject stationDbObject = new StationDbObject(dbid,
-                                                                                  stations[subCounter]);
-                            arrayList.add(stationDbObject);
-                            change(stations[subCounter],
+                            dbid = getNetworkDB().put((StationImpl)stations[i]);
+                            logger.info("Store "+stations[i].get_code()+" as "+dbid+" in "+getNetworkDB());
+                            arrayList.add(stations[i]);
+                            change(stations[i],
                                    Status.get(Stage.NETWORK_SUBSETTER,
                                               Standing.SUCCESS));
                         } else {
-                            change(stations[subCounter],
+                            change(stations[i],
                                    Status.get(Stage.NETWORK_SUBSETTER,
                                               Standing.REJECT));
-                            failLogger.info(StationIdUtil.toString(stations[subCounter].get_id())
+                            failLogger.info(StationIdUtil.toString(stations[i].get_id())
                                     + " was rejected: " + staResult);
                         }
                     } else {
-                        change(stations[subCounter],
+                        change(stations[i],
                                Status.get(Stage.NETWORK_SUBSETTER,
                                           Standing.REJECT));
-                        failLogger.info(StationIdUtil.toString(stations[subCounter].get_id())
+                        failLogger.info(StationIdUtil.toString(stations[i].get_id())
                                 + " was rejected based on its effective time not matching the range of requested events: "
                                 + effResult);
                     }
                 }
             } catch(Exception e) {
                 GlobalExceptionHandler.handle("Problem in method getSuccessfulStations for net "
-                                                      + NetworkIdUtil.toString(networkDbObject.getNetworkAccess()
-                                                              .get_attributes()
+                                                      + NetworkIdUtil.toString(net.get_attributes()
                                                               .get_id()),
                                               e);
             }
-            StationDbObject[] rtnValues = new StationDbObject[arrayList.size()];
-            rtnValues = (StationDbObject[])arrayList.toArray(rtnValues);
-            networkDbObject.stationDbObjects = rtnValues;
+            StationImpl[] rtnValues = new StationImpl[arrayList.size()];
+            rtnValues = (StationImpl[])arrayList.toArray(rtnValues);
+            successfulStations.put(netKey, rtnValues);
             statusChanged("Waiting for a request");
+            logger.debug("getSuccessfulStations "+netCode+" - from server "+rtnValues.length);
             return rtnValues;
         }
-    }
-
-    /**
-     * a bit of a hack, because network status monitors get Stations and not
-     * StationDBIds.
-     */
-    public int getStationDbId(Station station) throws SQLException {
-        synchronized(netTable) {
-            return netTable.put(station);
-        }
-    }
-
-    /**
-     * @return a SiteDbObject[] containing all the sites from the station that
-     *         pass this network arm's site subsetter
-     */
-    public SiteDbObject[] getSuccessfulSites(NetworkDbObject networkDbObject,
-                                             StationDbObject stationDbObject) {
-        if(stationDbObject.siteDbObjects != null) {
-            return stationDbObject.siteDbObjects;
-        }
-        synchronized(this) {
-            if(stationDbObject.siteDbObjects != null) {
-                return stationDbObject.siteDbObjects;
-            }
-            statusChanged("Getting sites for "
-                    + stationDbObject.getStation().get_id().station_code);
-            ArrayList successes = new ArrayList();
-            List failures = new ArrayList();
-            NetworkAccess networkAccess = networkDbObject.getNetworkAccess();
-            Station station = stationDbObject.getStation();
-            try {
-                Channel[] channels = networkAccess.retrieve_for_station(station.get_id());
-                for(int i = 0; i < channels.length; i++) {
-                    StringTree effResult = siteEffectiveSubsetter.accept(channels[i].my_site,
-                                                                         networkAccess);
-                    if(effResult.isSuccess()) {
-                        StringTree siteResult = siteSubsetter.accept(channels[i].my_site,
-                                                                     networkAccess);
-                        if(siteResult.isSuccess()) {
-                            int dbid;
-                            synchronized(netTable) {
-                                dbid = netTable.put(channels[i].my_site);
-                            }
-                            SiteDbObject siteDbObject = new SiteDbObject(dbid,
-                                                                         channels[i].my_site);
-                            if(!containsSite(siteDbObject, successes)) {
-                                successes.add(siteDbObject);
-                                change(channels[i].my_site,
-                                       Status.get(Stage.NETWORK_SUBSETTER,
-                                                  Standing.SUCCESS));
-                            }
-                        } else if(!failures.contains(channels[i].my_site)) {
-                            failSite(failures, channels[i], siteResult);
-                        }
-                    } else {
-                        failSite(failures, channels[i], effResult);
-                        failLogger.info(SiteIdUtil.toString(channels[i].my_site.get_id())
-                                + " was rejected based on its effective time not matching the range of requested events");
-                    }
-                }
-            } catch(Exception e) {
-                GlobalExceptionHandler.handle("Problem in method getSuccessfulSites",
-                                              e);
-            }
-            SiteDbObject[] rtnValues = new SiteDbObject[successes.size()];
-            rtnValues = (SiteDbObject[])successes.toArray(rtnValues);
-            stationDbObject.siteDbObjects = rtnValues;
-            statusChanged("Waiting for a request");
-            return rtnValues;
-        }
-    }
-
-    private void failSite(List failures, Channel channel, StringTree reason) {
-        change(channel.my_site, Status.get(Stage.NETWORK_SUBSETTER,
-                                           Standing.REJECT));
-        failLogger.info(SiteIdUtil.toString(channel.my_site.get_id())
-                + " was rejected: " + reason);
-        failures.add(channel.my_site);
-        // fail all channels in a failed site, just for
-        // status
-        // pages
-        change(channel, Status.get(Stage.NETWORK_SUBSETTER, Standing.REJECT));
-    }
-
-    private boolean containsSite(SiteDbObject siteDbObject, ArrayList arrayList) {
-        for(int counter = 0; counter < arrayList.size(); counter++) {
-            SiteDbObject tempObject = (SiteDbObject)arrayList.get(counter);
-            if(tempObject.getDbId() == siteDbObject.getDbId())
-                return true;
-        }
-        return false;
     }
 
     /**
      * Obtains the Channels corresponding to the siteDbObject, processes them
      * using the ChannelSubsetter and returns an array of those that pass
+     * @throws NetworkNotFound 
      */
-    public ChannelDbObject[] getSuccessfulChannels(NetworkDbObject networkDbObject,
-                                                   SiteDbObject siteDbObject) {
-        if(siteDbObject.channelDbObjects != null) {
-            return siteDbObject.channelDbObjects;
+    public ChannelImpl[] getSuccessfulChannels(StationImpl siteDbObject) throws NetworkNotFound {
+        Integer staKey = new Integer(siteDbObject.getDbid());
+        if (successfulChannels.containsKey(staKey)) {
+            return (ChannelImpl[])successfulChannels.get(staKey);
+        }
+        return getSuccessfulChannels(getNetwork(siteDbObject.my_network.get_id()), siteDbObject);
+    }
+    
+    public ChannelImpl[] getSuccessfulChannels(CacheNetworkAccess networkAccess, StationImpl siteDbObject) {
+        Integer staKey = new Integer(siteDbObject.getDbid());
+        if (successfulChannels.containsKey(staKey)) {
+            return (ChannelImpl[])successfulChannels.get(staKey);
         }
         synchronized(this) {
-            if(siteDbObject.channelDbObjects != null) {
-                return siteDbObject.channelDbObjects;
+            // check again inside sync in case something change in the last nanosecond
+            if (successfulChannels.containsKey(staKey)) {
+                return (ChannelImpl[])successfulChannels.get(staKey);
             }
             statusChanged("Getting channels for " + siteDbObject);
             List successes = new ArrayList();
-            ProxyNetworkAccess networkAccess = networkDbObject.getNetworkAccess();
-            Site site = siteDbObject.getSite();
             try {
-                Channel[] channels = networkAccess.retrieve_for_station(site.my_station.get_id());
-                JDBCChannel chanDb = netTable.getChannelDb();
+                Channel[] tmpChannels = networkAccess.retrieve_for_station(siteDbObject.get_id());
+                ChannelImpl[] channels = new ChannelImpl[tmpChannels.length];
+                System.arraycopy(tmpChannels, 0, channels, 0, channels.length);
                 Status inProg = Status.get(Stage.NETWORK_SUBSETTER,
                                            Standing.IN_PROG);
+                boolean needCommit = false;
                 for(int i = 0; i < channels.length; i++) {
-                    Channel chan = channels[i];
-                    if(!isSameSite(site, chan.my_site)) {
-                        continue;
-                    }
+                    ChannelImpl chan = channels[i];
                     change(chan, inProg);
                     StringTree effectiveTimeResult = chanEffectiveSubsetter.accept(chan,
                                                                                    networkAccess);
@@ -632,20 +541,11 @@ public class NetworkArm implements Arm {
                             }
                         }
                         if(accepted) {
-                            int dbid;
-                            synchronized(netTable) {
-                                try {
-                                    dbid = chanDb.getDBId(chan.get_id());
-                                } catch(NotFound e) {
-                                    dbid = netTable.put(chan);
-                                }
-                            }
-                            Integer dbidInt = new Integer(dbid);
-                            ChannelDbObject channelDbObject = new ChannelDbObject(dbid,
-                                                                                  chan);
-                            channelMap.put(dbidInt, channelDbObject);
+                            Integer dbidInt = new Integer(getNetworkDB().put(chan));
+                            needCommit = true;
+                            channelMap.put(dbidInt, chan);
                             channelToSiteMap.put(dbidInt, siteDbObject);
-                            successes.add(channelDbObject);
+                            successes.add(chan);
                             change(chan, Status.get(Stage.NETWORK_SUBSETTER,
                                                     Standing.SUCCESS));
                         }
@@ -657,14 +557,17 @@ public class NetworkArm implements Arm {
                                 + effectiveTimeResult);
                     }
                 }
+                if (needCommit) {
+                    getNetworkDB().commit();
+                }
             } catch(Throwable e) {
                 GlobalExceptionHandler.handle("Problem in method getSuccessfulChannels for "
-                                                      + StationIdUtil.toString(site.my_station.get_id()),
+                                                      + StationIdUtil.toString(siteDbObject.get_id()),
                                               e);
+                getNetworkDB().rollback();
             }
-            ChannelDbObject[] values = new ChannelDbObject[successes.size()];
-            values = (ChannelDbObject[])successes.toArray(values);
-            siteDbObject.channelDbObjects = values;
+            ChannelImpl[] values = (ChannelImpl[])successes.toArray(new ChannelImpl[0]);
+            successfulChannels.put(staKey, values);
             statusChanged("Waiting for a request");
             return values;
         }
@@ -675,44 +578,16 @@ public class NetworkArm implements Arm {
     // JDBCEventChannelStatus to quickly pull them out instead of going to the
     // Net database
     public Channel getChannel(int chanId) throws NotFound, SQLException {
-        ChannelDbObject chan = (ChannelDbObject)channelMap.get(new Integer(chanId));
+        ChannelImpl chan = (ChannelImpl)channelMap.get(new Integer(chanId));
         if(chan != null) {
-            return chan.getChannel();
+            return chan;
         }
-        chan = netTable.getChannel(chanId);
+        chan = getNetworkDB().getChannel(chanId);
         channelMap.put(new Integer(chanId), chan);
-        return chan.getChannel();
+        return chan;
     }
 
     private Map channelMap = Collections.synchronizedMap(new HashMap());
-
-    // Yet another HACK. JDBCEventChannelStatus also needs to quickly get all
-    // channels
-    // from the site for the vector arm
-    /**
-     * @throws NotFound
-     * @throws SQLException
-     * @throws NetworkNotFound
-     * @throws
-     * @returns all channels that are in the same site as the channel with the
-     *          given database id
-     */
-    public ChannelDbObject[] getAllChannelsFromSite(int chanId)
-            throws NetworkNotFound, SQLException, NotFound {
-        Channel chan = getChannel(chanId);
-        if(chan == null) {
-            throw new NotFound("Channel for id=" + chanId + " cannot be found.");
-        }
-        SiteDbObject site = (SiteDbObject)channelToSiteMap.get(new Integer(chanId));
-        if(site == null) {
-            int siteDbId = netTable.getSiteDb()
-                    .getDBId(chan.my_site.get_id(), chan.my_site.my_station);
-            site = new SiteDbObject(siteDbId, chan.my_site);
-            channelToSiteMap.put(new Integer(chanId), site);
-        }
-        return getSuccessfulChannels(getNetworkDbObject(chan.get_id().network_id),
-                                     site);
-    }
 
     private Map channelToSiteMap = Collections.synchronizedMap(new HashMap());
 
@@ -784,39 +659,6 @@ public class NetworkArm implements Arm {
         }
     }
 
-    private void change(Site site, Status newStatus) {
-        synchronized(statusMonitors) {
-            Iterator it = statusMonitors.iterator();
-            while(it.hasNext()) {
-                try {
-                    ((NetworkMonitor)it.next()).change(site, newStatus);
-                } catch(Throwable e) {
-                    // caught for one, but should continue with rest after
-                    // logging
-                    // it
-                    GlobalExceptionHandler.handle("Problem changing site status in NetworkArm",
-                                                  e);
-                }
-            }
-        }
-    }
-
-    /**
-     * Checks if the sites are the same assuming the came from the same network
-     * and station
-     */
-    private boolean isSameSite(Site givenSite, Site tempSite) {
-        SiteId givenSiteId = givenSite.get_id();
-        SiteId tempSiteId = tempSite.get_id();
-        if(givenSiteId.site_code.equals(tempSiteId.site_code)) {
-            MicroSecondDate givenDate = new MicroSecondDate(givenSiteId.begin_time);
-            MicroSecondDate tempDate = new MicroSecondDate(tempSiteId.begin_time);
-            if(tempDate.equals(givenDate))
-                return true;
-        }
-        return false;
-    }
-
     // Since we synchronize around the NetDC, only 1 thread can get stuff from
     // the network server at the same time. The pool is here in the off chance
     // the IRIS Network Server is fixed and we can run multiple threads to fill
@@ -835,20 +677,22 @@ public class NetworkArm implements Arm {
     private StationSubsetter stationSubsetter = new PassStation();
 
     private StationSubsetter staEffectiveSubsetter = new PassStation();
-
-    private SiteSubsetter siteSubsetter = new PassSite();
-
-    private SiteSubsetter siteEffectiveSubsetter = new PassSite();
+    
+    private Map successfulStations = new HashMap();
 
     private List chanSubsetters = new ArrayList();
 
     private ChannelSubsetter chanEffectiveSubsetter = new PassChannel();
+    
+    private Map successfulChannels = new HashMap();
+    
+    protected NetworkDB getNetworkDB() {
+        return networkDB;
+    }
+    
+    private NetworkDB networkDB;
 
-    private JDBCQueryTime queryTimeTable;
-
-    private JDBCNetworkUnifier netTable;
-
-    private NetworkDbObject[] netDbs;
+    private CacheNetworkAccess[] netDbs;
 
     private List statusMonitors = new ArrayList();
 

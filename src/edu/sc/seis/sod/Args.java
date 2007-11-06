@@ -84,7 +84,7 @@ public class Args {
                               "The recipe to run"));
         result = jsap.parse((String[])toParse.toArray(new String[0]));
         if(result.getBoolean("version")) {
-            System.out.println("SOD " + Version.getVersion());
+            System.out.println("SOD " + Version.current().getVersion());
             System.exit(0);
         }
         if(result.getBoolean("help")) {

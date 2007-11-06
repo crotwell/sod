@@ -207,7 +207,7 @@ public class CommandLineTool {
             System.exit(0);
         }
         if(ls.shouldPrintVersion()) {
-            System.err.println(ls.commandName + " " + Version.getVersion());
+            System.err.println(ls.commandName + " " + Version.current().getVersion());
             System.exit(0);
         }
         if(!ls.isSuccess()) {

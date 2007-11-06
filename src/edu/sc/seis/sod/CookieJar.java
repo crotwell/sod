@@ -19,9 +19,12 @@ import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.IfNetwork.Site;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.SiteIdUtil;
+import edu.iris.Fissures.network.SiteImpl;
 import edu.iris.Fissures.network.StationIdUtil;
+import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelCookieJar;
 import edu.sc.seis.sod.database.waveform.JDBCVelocityContext;
@@ -92,8 +95,8 @@ public class CookieJar {
     static JDBCEventChannelCookieJar jdbcCookie = null;
 
     public static VelocityContext getChannelContext(EventAccessOperations event,
-                                                    Channel channel) {
-        VelocityContext siteContext = getSiteContext(event, channel.my_site);
+                                                    ChannelImpl channel) {
+        VelocityContext siteContext = getSiteContext(event, channel.getSite());
         String chanIdStr = ChannelIdUtil.toString(channel.get_id());
         if(!siteContext.containsKey(chanIdStr)) {
             VelocityContext chanContext = new VelocityContext(siteContext);
@@ -113,8 +116,8 @@ public class CookieJar {
     }
 
     public static VelocityContext getSiteContext(EventAccessOperations event,
-                                                 Site site) {
-        VelocityContext staContext = getStationContext(event, site.my_station);
+                                                 SiteImpl site) {
+        VelocityContext staContext = getStationContext(event, site.getStation());
         String siteIdStr = SiteIdUtil.toString(site.get_id());
         if(!staContext.containsKey(siteIdStr)) {
             VelocityContext siteContext = new VelocityContext(staContext);
@@ -128,9 +131,9 @@ public class CookieJar {
     }
 
     public static VelocityContext getStationContext(EventAccessOperations event,
-                                                    Station sta) {
+                                                    StationImpl sta) {
         VelocityContext nContext = getNetworkContext(event,
-                                                     sta.my_network.get_id());
+                                                     sta.getNetworkAttr().get_id());
         String staIdStr = StationIdUtil.toString(sta.get_id());
         if(!nContext.containsKey(staIdStr)) {
             VelocityContext staContext = new VelocityContext(nContext);

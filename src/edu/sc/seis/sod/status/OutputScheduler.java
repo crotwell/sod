@@ -1,12 +1,20 @@
 package edu.sc.seis.sod.status;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import org.apache.log4j.Logger;
+
+import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
+import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
+import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
+import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockNetworkAttr;
 import edu.sc.seis.sod.Arm;
 import edu.sc.seis.sod.ArmListener;
 import edu.sc.seis.sod.ConfigurationException;
@@ -72,6 +80,12 @@ public class OutputScheduler extends Thread implements ArmListener {
                 boolean MAC_OS_X = lcOSName.startsWith("mac os x");
                 if(MAC_OS_X) {
                     // hopefully everything is done!
+                    try {
+                        Connection conn = ConnMgr.createConnection();
+                        conn.createStatement().execute("shutdown");
+                    } catch(SQLException e) {
+                        GlobalExceptionHandler.handle(e);
+                    }
                     logger.debug("Using System.exit(0) only on the mac due to AWT thread not exiting.");
                     System.exit(0);
                 }

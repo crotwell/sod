@@ -1,23 +1,25 @@
 package edu.sc.seis.sod;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
 import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.sod.database.event.JDBCEventStatus;
+import edu.sc.seis.sod.database.event.StatefulEvent;
+import edu.sc.seis.sod.hibernate.StatefulEventDB;
 import edu.sc.seis.sod.source.event.EventSource;
 import edu.sc.seis.sod.status.OutputScheduler;
 import edu.sc.seis.sod.status.StringTree;
@@ -34,6 +36,9 @@ import edu.sc.seis.sod.subsetter.origin.OriginSubsetter;
  */
 public class EventArm implements Arm {
 
+    public EventArm() throws ConfigurationException {
+        this(null, true);
+    }
     public EventArm(Element config) throws ConfigurationException {
         this(config, true);
     }
@@ -41,13 +46,10 @@ public class EventArm implements Arm {
     public EventArm(Element config, boolean waitForWaveformProcessing)
             throws ConfigurationException {
         this.waitForWaveformProcessing = waitForWaveformProcessing;
-        try {
-            eventStatus = new JDBCEventStatus();
-        } catch(SQLException e) {
-            throw new RuntimeException("Trouble setting up event status database",
-                                       e);
-        }
+        eventStatus = new StatefulEventDB();
+        if (config != null) {
         processConfig(config);
+        }
     }
 
     public boolean isActive() {
@@ -114,7 +116,16 @@ public class EventArm implements Arm {
             while(it.hasNext()) {
                 EventSource source = (EventSource)it.next();
                 if(source.hasNext()) {
+                    handle(source.next());
+                    waitForProcessing();
+                    if (waitForWaveformProcessing && Start.isArmFailure()) {
+                        // we are supposed to wait for the waveform arm to process, but
+                        // if it is no longer active due to an arm failure, then we should not wait forever
+                        logger.warn("Arm failure, "+getName()+" exiting early");
+                        return;
+                    }
                     TimeInterval wait = source.getWaitBeforeNext();
+                    logger.debug("Wait before next getEvents: "+wait);
                     long waitMillis = (long)wait.convertTo(UnitImpl.MILLISECOND)
                             .get_value();
                     if(waitMillis > 0) {
@@ -124,14 +135,6 @@ public class EventArm implements Arm {
                                     + " to check for new events");
                             Thread.sleep(waitMillis);
                         } catch(InterruptedException e) {}
-                    }
-                    handle(source.next());
-                    waitForProcessing();
-                    if (waitForWaveformProcessing && Start.isArmFailure()) {
-                        // we are supposed to wait for the waveform arm to process, but
-                        // if it is no longer active due to an arm failure, then we should not wait forever
-                        logger.warn("Arm failure, "+getName()+" exiting early");
-                        return;
                     }
                 }
             }
@@ -157,9 +160,7 @@ public class EventArm implements Arm {
     
     private void waitForProcessing() throws Exception {
         int numWaiting;
-        synchronized(eventStatus.getConnection()) {
-            numWaiting = eventStatus.getNumWaiting();
-        }
+        numWaiting = eventStatus.getNumWaiting();
         if( !Start.isArmFailure() && waitForWaveformProcessing  &&  numWaiting > MIN_WAIT_EVENTS) {
             synchronized(this) {
                 setStatus("eventArm waiting until there are less than "+MIN_WAIT_EVENTS+" events waiting to be processed.");
@@ -168,23 +169,29 @@ public class EventArm implements Arm {
         }
     }
 
-    private void handle(CacheEvent[] events) {
+    public void handle(CacheEvent[] events) {
         logger.debug("Handling " + events.length + " events");
         for(int i = 0; i < events.length; i++) {
             try {
                 handle(events[i]);
+                eventStatus.commit();
+                notifyWaveformArm();
+            } catch(HibernateException e) {
+                eventStatus.rollback();
+                handleException(e, events[i], i);
             } catch(Exception e) {
-                // problem with this event, log it and go on
-                GlobalExceptionHandler.handle("Caught an exception for event "
-                        + i + " " + bestEffortEventToString(events[i])
-                        + " Continuing with rest of events", e);
+                handleException(e, events[i], i);
             } catch(Throwable e) {
-                // problem with this event, log it and go on
-                GlobalExceptionHandler.handle("Caught an exception for event "
-                        + i + " " + bestEffortEventToString(events[i])
-                        + " Continuing with rest of events", e);
+                handleException(e, events[i], i);
             }
         }
+    }
+    
+    private void handleException(Throwable t, CacheEvent event, int i) {
+        // problem with this event, log it and go on
+        GlobalExceptionHandler.handle("Caught an exception for event "
+                + i + " " + bestEffortEventToString(event)
+                + " Continuing with rest of events", t);
     }
 
     /**
@@ -204,54 +211,45 @@ public class EventArm implements Arm {
         return s;
     }
 
+    static Status EVENT_IN_PROG = Status.get(Stage.EVENT_ORIGIN_SUBSETTER,
+            Standing.IN_PROG);
+    static Status EVENT_REJECT = Status.get(Stage.EVENT_ORIGIN_SUBSETTER,
+            Standing.REJECT);
+    
     private void handle(CacheEvent event) throws Exception {
-        if(!hasAlreadyPassed(event)) {
-            change(event, Status.get(Stage.EVENT_ORIGIN_SUBSETTER,
-                                     Standing.IN_PROG));
-            EventAttr attr = event.get_attributes();
+        logger.debug("Handle: "+event);
+        StatefulEvent storedEvent = eventStatus.getIdenticalEvent(event);
+        if(storedEvent == null ) {
+        	storedEvent = new StatefulEvent(event,  EVENT_IN_PROG);
+        	eventStatus.put(storedEvent);
+            change(storedEvent);
+        }
+        if (storedEvent.getStatus() != IN_PROG && storedEvent.getStatus() != SUCCESS) {
+        	storedEvent.setStatus(EVENT_IN_PROG);
+            change(storedEvent);
             Iterator it = subsetters.iterator();
             while(it.hasNext()) {
                 OriginSubsetter cur = (OriginSubsetter)it.next();
-                StringTree result = cur.accept(event, attr, event.getOrigin());
+                StringTree result = cur.accept(event, event.get_attributes(), event.getOrigin());
                 if(!result.isSuccess()) {
-                    Status status = Status.get(Stage.EVENT_ORIGIN_SUBSETTER,
-                                               Standing.REJECT);
-                    change(event, status);
+                	storedEvent.setStatus(EVENT_REJECT);
+                    change(storedEvent);
                     failLogger.info(event + " " + result);
                     return;
                 }
             }
-            change(event, IN_PROG);
-            if(lastEvent == null){
-                notifyWaveformArm();
-            }
+            storedEvent.setStatus(IN_PROG);
+            change(storedEvent);
             lastEvent = event;
         }
     }
 
-    private boolean hasAlreadyPassed(CacheEvent event) throws SQLException,
-            edu.sc.seis.fissuresUtil.database.NotFound {
-        synchronized(eventStatus.getConnection()) {
-            int dbId = eventStatus.getDbId(event);
-            if(dbId != -1) {
-                Status status = eventStatus.getStatus(dbId);
-                if(status == IN_PROG || status == SUCCESS) {
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
-
-    public void change(EventAccessOperations event, Status status)
+    public void change(StatefulEvent event)
             throws Exception {
-        synchronized(eventStatus.getConnection()) {
-            eventStatus.setStatus(event, status);
-        }
         Iterator it = statusMonitors.iterator();
         synchronized(statusMonitors) {
             while(it.hasNext()) {
-                ((EventMonitor)it.next()).change(event, status);
+                ((EventMonitor)it.next()).change(event, event.getStatus());
             }
         }
     }
@@ -286,7 +284,7 @@ public class EventArm implements Arm {
 
     private List statusMonitors = Collections.synchronizedList(new ArrayList());
 
-    private JDBCEventStatus eventStatus;
+    private StatefulEventDB eventStatus;
 
     private boolean alive = true;
 
