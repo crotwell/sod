@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import edu.iris.Fissures.IfNetwork.NetworkId;
+import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
@@ -47,21 +48,21 @@ public class VelocityStationGetter {
         return null;
     }
 
-    public int getNumSuccessful(StationDbObject station) throws SQLException {
+    public int getNumSuccessful(Station station) throws SQLException {
         success.setInt(1, station.getDbId());
         ResultSet rs = success.executeQuery();
         rs.next();
         return rs.getInt(1);
     }
 
-    public int getNumFailed(StationDbObject station) throws SQLException {
+    public int getNumFailed(Station station) throws SQLException {
         failed.setInt(1, station.getDbId());
         ResultSet rs = failed.executeQuery();
         rs.next();
         return rs.getInt(1);
     }
 
-    public int getNumRetry(StationDbObject station) throws SQLException {
+    public int getNumRetry(Station station) throws SQLException {
         retry.setInt(1, station.getDbId());
         ResultSet rs = retry.executeQuery();
         rs.next();
@@ -70,27 +71,17 @@ public class VelocityStationGetter {
 
     NetworkId net;
 
-    private static JDBCEventChannelStatus evStatus;
-    private static JDBCStation stationTable;
-    private static PreparedStatement retry, failed, success;
+    private static String retry, failed, success;
 
     static{
-        try {
-            stationTable = new JDBCStation();
-            evStatus = new JDBCEventChannelStatus();
-            String baseStatement = "SELECT COUNT(*) FROM eventchannelstatus, channel, site WHERE " +
-                "site.sta_id = ? AND " +
-                "eventchannelstatus.channelid = channel.chan_id AND " +
-                "channel.site_id = site.site_id";
+            String baseStatement = "SELECT COUNT(*) FROM edu.sc.seis.sod.EventChannelPair ecp WHERE " +
+                "ecp.channel.site.station = :sta " ;
             int pass = Status.get(Stage.PROCESSOR, Standing.SUCCESS).getAsShort();
-            success = evStatus.prepareStatement(baseStatement + " AND status = " + pass);
+            success = baseStatement + " AND status = " + pass;
             String failReq = JDBCEventChannelStatus.getFailedStatusRequest();
-            failed = evStatus.prepareStatement(baseStatement + " AND " + failReq);
+            failed = baseStatement + " AND " + failReq;
             String retryReq = JDBCEventChannelStatus.getRetryStatusRequest();
-            retry = evStatus.prepareStatement(baseStatement + " AND " + retryReq);
-        } catch (SQLException e) {
-            GlobalExceptionHandler.handle(e);
-        }
+            retry = baseStatement + " AND " + retryReq;
     }
 
 }

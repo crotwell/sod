@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.hibernate;
 
 import java.io.Serializable;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -14,9 +15,11 @@ import org.hibernate.SessionFactory;
 
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
+import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.hibernate.AbstractHibernateDB;
@@ -244,6 +247,27 @@ public class SodDB extends AbstractHibernateDB {
 		}
 		return out;
 	}
+	
+    public int getNumSuccessful(StationImpl station) throws SQLException {
+        success.setInt(1, station.getDbid());
+        ResultSet rs = success.executeQuery();
+        rs.next();
+        return rs.getInt(1);
+    }
+
+    public int getNumFailed(StationImpl station) throws SQLException {
+        failed.setInt(1, station.getDbid());
+        ResultSet rs = failed.executeQuery();
+        rs.next();
+        return rs.getInt(1);
+    }
+
+    public int getNumRetry(StationImpl station) throws SQLException {
+        retry.setInt(1, station.getDbid());
+        ResultSet rs = retry.executeQuery();
+        rs.next();
+        return rs.getInt(1);
+    }
 
 	public int putConfig(SodConfig sodConfig) {
 		Session session = getSession();
