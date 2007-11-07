@@ -6,6 +6,7 @@ import edu.iris.Fissures.IfNetwork.SiteId;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.network.SiteIdUtil;
+import edu.iris.Fissures.network.SiteImpl;
 import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
@@ -14,7 +15,7 @@ import edu.sc.seis.sod.velocity.SimpleVelocitizer;
  */
 public class VelocitySite extends Site {
 
-    public VelocitySite(Site s) {
+    public VelocitySite(SiteImpl s) {
         this.site = s;
         my_location = s.my_location;
         effective_time = s.effective_time;
@@ -40,7 +41,7 @@ public class VelocitySite extends Site {
     }
 
     public VelocityStation getStation() {
-        return new VelocityStation(site.my_station);
+        return new VelocityStation(site.getStation());
     }
 
     public VelocityNetwork getNet() {
@@ -114,7 +115,7 @@ public class VelocitySite extends Site {
         return SiteIdUtil.toString(get_id());
     }
 
-    private Site site;
+    private SiteImpl site;
 
     public void insertIntoContext(VelocityContext ctx) {
         ctx.put("site", this);

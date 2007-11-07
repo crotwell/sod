@@ -5,6 +5,7 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.iris.Fissures.network.SiteImpl;
 import edu.sc.seis.fissuresUtil.database.network.DBChannel;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
@@ -81,7 +82,7 @@ public class VelocityChannel extends Channel {
     }
 
     public VelocitySite getSite() {
-        return new VelocitySite(my_site);
+        return new VelocitySite((SiteImpl)my_site);
     }
 
     public MicroSecondDate getStart() {

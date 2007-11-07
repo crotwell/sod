@@ -15,6 +15,7 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.network.StationImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.database.util.SQLLoader;
 import edu.sc.seis.sod.ConfigurationException;
@@ -86,7 +87,7 @@ public class PrintlineVelocitizer {
                          ContextWrangler.createContext(chan));
     }
 
-    public String evaluate(String fileTemplate, String template, Station sta)
+    public String evaluate(String fileTemplate, String template, StationImpl sta)
             throws IOException {
         return evalulate(fileTemplate,
                          template,

@@ -6,6 +6,7 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.network.StationImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.FissuresFormatter;
@@ -34,7 +35,7 @@ public class ContextWrangler {
         return ctx;
     }
 
-    public static VelocityContext createContext(Station sta) {
+    public static VelocityContext createContext(StationImpl sta) {
         VelocityContext ctx = createContext();
         VelocityStation velSta = new VelocityStation(sta);
         velSta.insertIntoContext(ctx);

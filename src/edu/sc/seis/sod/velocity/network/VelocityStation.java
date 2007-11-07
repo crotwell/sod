@@ -11,6 +11,7 @@ import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.StationIdUtil;
+import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.bag.DistAz;
 import edu.sc.seis.fissuresUtil.xml.XMLStation;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
@@ -23,12 +24,7 @@ import edu.sc.seis.sod.velocity.event.VelocityEvent;
  */
 public class VelocityStation extends Station {
 
-    public VelocityStation(Station sta) {
-        this(sta, -1);
-    }
-
-    public VelocityStation(Station sta, int dbid) {
-        this.dbid = dbid;
+    public VelocityStation(StationImpl sta) {
         this.sta = sta;
         name = sta.name;
         my_location = sta.my_location;
@@ -40,14 +36,7 @@ public class VelocityStation extends Station {
     }
 
     public int getDbId() {
-        if(dbid >= 0) {
-            return dbid;
-        }
-        throw new UnsupportedOperationException("This station had no dbid");
-    }
-
-    public void setDbId(int dbid) {
-        this.dbid = dbid;
+        return sta.getDbid();
     }
 
     public StationId get_id() {
@@ -228,7 +217,7 @@ public class VelocityStation extends Station {
         }
         if(o instanceof VelocityStation) {
             VelocityStation oVel = (VelocityStation)o;
-            if(oVel.dbid != -1 && dbid != -1 && oVel.dbid == dbid) {
+            if(oVel.getDbId() != -1 && getDbId() != -1 && oVel.getDbId() == getDbId()) {
                 return true;
             }
         }
@@ -253,10 +242,8 @@ public class VelocityStation extends Station {
 
     private VelocityNetwork velocityNet = null;
 
-    private Station sta;
-
-    private int dbid = -1;
-
+    private StationImpl sta;
+    
     private int[] position;
 
     public void setPosition(int[] position) {
@@ -274,11 +261,15 @@ public class VelocityStation extends Station {
         ctx.put("sta", this);
         getNet().insertIntoContext(ctx);
     }
+    
+    public StationImpl getWrapped() {
+        return sta;
+    }
 
     public static VelocityStation[] wrap(Station[] stations) {
         VelocityStation[] out = new VelocityStation[stations.length];
         for(int i = 0; i < out.length; i++) {
-            out[i] = new VelocityStation(stations[i]);
+            out[i] = new VelocityStation((StationImpl)stations[i]);
         }
         return out;
     }
