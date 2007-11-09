@@ -20,7 +20,9 @@ import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.StationImpl;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
+import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.hibernate.AbstractHibernateDB;
 import edu.sc.seis.fissuresUtil.hibernate.HibernateUtil;
@@ -222,15 +224,13 @@ public class SodDB extends AbstractHibernateDB {
 
 	public List getAllRetries() {
 		String q = "from edu.sc.seis.sod.RetryWaveformWorkUnit r ";
-		Session session = getSession();
-		Query query = session.createQuery(q);
+		Query query = getSession().createQuery(q);
 		return query.list();
 	}
 
 	public RetryWaveformWorkUnit[] getRetryWaveformWorkUnits(int limit) {
 		String q = "from edu.sc.seis.sod.RetryWaveformWorkUnit r where datediff('ss',:now, r.lastQuery) > :minDelay and (datediff('ss',:now, r.lastQuery) > :maxDelay or datediff('ss',:now, r.lastQuery) > power(:base, numRetries))  order by r.lastQuery desc";
-		Session session = getSession();
-		Query query = session.createQuery(q);
+		Query query = getSession().createQuery(q);
 		query.setTimestamp("now", ClockUtil.now());
 		query.setFloat("base", retryBase);
 		query.setFloat("minDelay", minRetryDelay);
@@ -248,19 +248,25 @@ public class SodDB extends AbstractHibernateDB {
 		}
 		return out;
 	}
-	
+    
+    public int getNumSuccessful(CacheEvent event) throws SQLException {
+        Query query = getSession().createQuery(successPerEvent);
+        query.setEntity(":event", event);
+        query.setMaxResults(1);
+        List result = query.list();
+        return ((Integer) result.get(0)).intValue();
+    }
+    
     public int getNumSuccessful(StationImpl station) throws SQLException {
-		Session session = getSession();
-		Query query = session.createQuery(success);
-		query.setEntity(":sta", station);
-		query.setMaxResults(1);
-		List result = query.list();
-		return ((Integer) result.get(0)).intValue();
+        Query query = getSession().createQuery(success);
+        query.setEntity(":sta", station);
+        query.setMaxResults(1);
+        List result = query.list();
+        return ((Integer) result.get(0)).intValue();
     }
 
     public int getNumFailed(StationImpl station) throws SQLException {
-		Session session = getSession();
-		Query query = session.createQuery(failed);
+		Query query = getSession().createQuery(failed);
 		query.setEntity(":sta", station);
 		query.setMaxResults(1);
 		List result = query.list();
@@ -268,8 +274,7 @@ public class SodDB extends AbstractHibernateDB {
     }
 
     public int getNumRetry(StationImpl station) throws SQLException {
-		Session session = getSession();
-		Query query = session.createQuery(retry);
+		Query query = getSession().createQuery(retry);
 		query.setEntity(":sta", station);
 		query.setMaxResults(1);
 		List result = query.list();
@@ -277,15 +282,13 @@ public class SodDB extends AbstractHibernateDB {
     }
 
 	public int putConfig(SodConfig sodConfig) {
-		Session session = getSession();
-		Integer dbid = (Integer) session.save(sodConfig);
+		Integer dbid = (Integer) getSession().save(sodConfig);
 		return dbid.intValue();
 	}
 
 	public SodConfig getCurrentConfig() {
 		String q = "From edu.sc.seis.sod.SodConfig c ORDER BY c.time desc";
-		Session session = getSession();
-		Query query = session.createQuery(q);
+		Query query = getSession().createQuery(q);
 		query.setMaxResults(1);
 		List result = query.list();
 		if (result.size() > 0) {
@@ -297,8 +300,7 @@ public class SodDB extends AbstractHibernateDB {
 
 	public QueryTime getQueryTime(String serverName, String serverDNS) {
 		String q = "From edu.sc.seis.sod.QueryTime q WHERE q.serverName = :serverName AND q.serverDNS = :serverDNS";
-		Session session = getSession();
-		Query query = session.createQuery(q);
+		Query query = getSession().createQuery(q);
 		query.setString("serverName", serverName);
 		query.setString("serverDNS", serverDNS);
 		List result = query.list();
@@ -310,15 +312,14 @@ public class SodDB extends AbstractHibernateDB {
 	}
 
 	public int putQueryTime(QueryTime qtime) {
-		Session session = getSession();
-		Integer dbid = (Integer) session.save(qtime);
+		Integer dbid = (Integer) getSession().save(qtime);
 		return dbid.intValue();
 	}
 
 	public Version getDBVersion() {
 		String q = "From edu.sc.seis.sod.Version ORDER BY dbid desc";
 		Session session = getSession();
-		Query query = session.createQuery(q);
+		Query query = getSession().createQuery(q);
 		query.setMaxResults(1);
 		List result = query.list();
 		if (result.size() > 0) {
@@ -334,8 +335,7 @@ public class SodDB extends AbstractHibernateDB {
 		Version v = getDBVersion();
 		Version current = Version.current();
 		current.setDbid(v.getDbid());
-		Session session = getSession();
-		session.merge(current);
+		getSession().merge(current);
 		commit();
 		return current;
 	}
@@ -391,7 +391,7 @@ public class SodDB extends AbstractHibernateDB {
                                                               Status.get(Stage.PROCESSOR,
                                                                          Standing.CORBA_FAILURE)};
     
-    private static String retry, failed, success;
+    private static String retry, failed, success, successPerEvent;
 
     static{
             String baseStatement = "SELECT COUNT(*) FROM edu.sc.seis.sod.EventChannelPair ecp WHERE " +
@@ -402,8 +402,11 @@ public class SodDB extends AbstractHibernateDB {
             failed = baseStatement + " AND statusAsShort in " + failReq;
             String retryReq = getRetryStatusRequest();
             retry = baseStatement + " AND statusAsShort in " + retryReq;
+             successPerEvent = "SELECT COUNT(*) FROM edu.sc.seis.sod.EventChannelPair ecp WHERE " +
+            "ecp.event = :event  AND status = " + Status.get(Stage.PROCESSOR, Standing.SUCCESS).getAsShort();
     }
     
 	private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger
 			.getLogger(SodDB.class);
+
 }
