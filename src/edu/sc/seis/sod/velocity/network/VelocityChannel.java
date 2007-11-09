@@ -5,6 +5,7 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.SiteImpl;
 import edu.sc.seis.fissuresUtil.database.network.DBChannel;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
@@ -14,22 +15,13 @@ import edu.sc.seis.sod.velocity.SimpleVelocitizer;
  */
 public class VelocityChannel extends Channel {
 
-    public VelocityChannel(Channel chan) {
-        this(chan, -1);
-    }
-
-    public VelocityChannel(DBChannel chan) {
-        this(chan, chan.getDbId());
-    }
-
-    public VelocityChannel(Channel chan, int dbid) {
+    public VelocityChannel(ChannelImpl chan) {
         this.chan = chan;
         my_site = chan.my_site;
         an_orientation = chan.an_orientation;
         sampling_info = chan.sampling_info;
         effective_time = chan.effective_time;
         name = chan.name;
-        this.dbid = dbid;
     }
 
     public ChannelId get_id() {
@@ -114,19 +106,19 @@ public class VelocityChannel extends Channel {
     }
 
     public boolean hasDbId() {
-        return dbid >= 0;
+        return getDbId() >= 0;
     }
 
     public int getDbId() {
         if(hasDbId()) {
-            return dbid;
+            return chan.getDbid();
         }
         throw new UnsupportedOperationException("This channel had no dbid");
     }
 
-    private Channel chan;
-
-    private int dbid;
+    public ChannelImpl getWrapped() {return chan;}
+    
+    private ChannelImpl chan;
 
     public static VelocityChannel[] wrap(Channel[] chans) {
         VelocityChannel[] velChans = new VelocityChannel[chans.length];
