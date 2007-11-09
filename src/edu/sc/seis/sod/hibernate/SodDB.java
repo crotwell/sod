@@ -39,6 +39,7 @@ import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.Version;
 import edu.sc.seis.sod.database.event.StatefulEvent;
+import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
 
 public class SodDB extends AbstractHibernateDB {
 
@@ -249,24 +250,30 @@ public class SodDB extends AbstractHibernateDB {
 	}
 	
     public int getNumSuccessful(StationImpl station) throws SQLException {
-        success.setInt(1, station.getDbid());
-        ResultSet rs = success.executeQuery();
-        rs.next();
-        return rs.getInt(1);
+		Session session = getSession();
+		Query query = session.createQuery(success);
+		query.setEntity(":sta", station);
+		query.setMaxResults(1);
+		List result = query.list();
+		return ((Integer) result.get(0)).intValue();
     }
 
     public int getNumFailed(StationImpl station) throws SQLException {
-        failed.setInt(1, station.getDbid());
-        ResultSet rs = failed.executeQuery();
-        rs.next();
-        return rs.getInt(1);
+		Session session = getSession();
+		Query query = session.createQuery(failed);
+		query.setEntity(":sta", station);
+		query.setMaxResults(1);
+		List result = query.list();
+		return ((Integer) result.get(0)).intValue();
     }
 
     public int getNumRetry(StationImpl station) throws SQLException {
-        retry.setInt(1, station.getDbid());
-        ResultSet rs = retry.executeQuery();
-        rs.next();
-        return rs.getInt(1);
+		Session session = getSession();
+		Query query = session.createQuery(retry);
+		query.setEntity(":sta", station);
+		query.setMaxResults(1);
+		List result = query.list();
+		return ((Integer) result.get(0)).intValue();
     }
 
 	public int putConfig(SodConfig sodConfig) {
@@ -333,6 +340,70 @@ public class SodDB extends AbstractHibernateDB {
 		return current;
 	}
 
+    public static String getRetryStatusRequest() {
+        return getStatusRequest(RETRY_STATUS);
+    }
+
+    public static String getFailedStatusRequest() {
+        return getStatusRequest(FAILED_STATUS);
+    }
+
+    public static String getStatusRequest(Status[] statii) {
+        String request = "( " + statii[0].getAsShort();
+        for(int i = 1; i < statii.length; i++) {
+            request += ", " + statii[i].getAsShort();
+        }
+        request += ")";
+        return request;
+    }
+
+    public static final Status[] FAILED_STATUS = new Status[] {Status.get(Stage.EVENT_STATION_SUBSETTER,
+                                                                          Standing.REJECT),
+                                                               Status.get(Stage.EVENT_STATION_SUBSETTER,
+                                                                          Standing.SYSTEM_FAILURE),
+                                                               Status.get(Stage.EVENT_CHANNEL_SUBSETTER,
+                                                                          Standing.REJECT),
+                                                               Status.get(Stage.EVENT_CHANNEL_SUBSETTER,
+                                                                          Standing.SYSTEM_FAILURE),
+                                                               Status.get(Stage.REQUEST_SUBSETTER,
+                                                                          Standing.REJECT),
+                                                               Status.get(Stage.REQUEST_SUBSETTER,
+                                                                          Standing.SYSTEM_FAILURE),
+                                                               Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
+                                                                          Standing.SYSTEM_FAILURE),
+                                                               Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
+                                                                          Standing.REJECT),
+                                                               Status.get(Stage.DATA_RETRIEVAL,
+                                                                          Standing.SYSTEM_FAILURE),
+                                                               Status.get(Stage.DATA_RETRIEVAL,
+                                                                          Standing.REJECT),
+                                                               Status.get(Stage.PROCESSOR,
+                                                                          Standing.SYSTEM_FAILURE),
+                                                               Status.get(Stage.PROCESSOR,
+                                                                          Standing.REJECT)};
+
+    public static final Status[] RETRY_STATUS = new Status[] {Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
+                                                                         Standing.RETRY),
+                                                              Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
+                                                                         Standing.CORBA_FAILURE),
+                                                              Status.get(Stage.DATA_RETRIEVAL,
+                                                                         Standing.CORBA_FAILURE),
+                                                              Status.get(Stage.PROCESSOR,
+                                                                         Standing.CORBA_FAILURE)};
+    
+    private static String retry, failed, success;
+
+    static{
+            String baseStatement = "SELECT COUNT(*) FROM edu.sc.seis.sod.EventChannelPair ecp WHERE " +
+                "ecp.channel.site.station = :sta " ;
+            int pass = Status.get(Stage.PROCESSOR, Standing.SUCCESS).getAsShort();
+            success = baseStatement + " AND status = " + pass;
+            String failReq = getFailedStatusRequest();
+            failed = baseStatement + " AND statusAsShort in " + failReq;
+            String retryReq = getRetryStatusRequest();
+            retry = baseStatement + " AND statusAsShort in " + retryReq;
+    }
+    
 	private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger
 			.getLogger(SodDB.class);
 }
