@@ -280,6 +280,14 @@ public class SodDB extends AbstractHibernateDB {
 		List result = query.list();
 		return ((Integer) result.get(0)).intValue();
     }
+    
+    public List getStationsForEvent(CacheEvent event) {
+        String q = "select distinct ecp.channel.site.station from "+EventChannelPair.class.getName()+" ecp where ecp.event = :event";
+        Query query = getSession().createQuery(q);
+        query.setEntity("event", event);
+        return query.list();
+        
+    }
 
 	public int putConfig(SodConfig sodConfig) {
 		Integer dbid = (Integer) getSession().save(sodConfig);
