@@ -249,7 +249,7 @@ public class SodDB extends AbstractHibernateDB {
 		return out;
 	}
     
-    public int getNumSuccessful(CacheEvent event) throws SQLException {
+    public int getNumSuccessful(CacheEvent event) {
         Query query = getSession().createQuery(successPerEvent);
         query.setEntity(":event", event);
         query.setMaxResults(1);
@@ -257,7 +257,7 @@ public class SodDB extends AbstractHibernateDB {
         return ((Integer) result.get(0)).intValue();
     }
     
-    public int getNumSuccessful(StationImpl station) throws SQLException {
+    public int getNumSuccessful(StationImpl station) {
         Query query = getSession().createQuery(success);
         query.setEntity(":sta", station);
         query.setMaxResults(1);
@@ -265,7 +265,7 @@ public class SodDB extends AbstractHibernateDB {
         return ((Integer) result.get(0)).intValue();
     }
 
-    public int getNumFailed(StationImpl station) throws SQLException {
+    public int getNumFailed(StationImpl station) {
 		Query query = getSession().createQuery(failed);
 		query.setEntity(":sta", station);
 		query.setMaxResults(1);
@@ -273,7 +273,7 @@ public class SodDB extends AbstractHibernateDB {
 		return ((Integer) result.get(0)).intValue();
     }
 
-    public int getNumRetry(StationImpl station) throws SQLException {
+    public int getNumRetry(StationImpl station) {
 		Query query = getSession().createQuery(retry);
 		query.setEntity(":sta", station);
 		query.setMaxResults(1);

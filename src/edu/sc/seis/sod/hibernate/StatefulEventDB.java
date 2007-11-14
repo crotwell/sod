@@ -8,6 +8,7 @@ import org.hibernate.SessionFactory;
 
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.database.NotFound;
+import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.hibernate.EventDB;
 import edu.sc.seis.fissuresUtil.hibernate.HibernateUtil;
 import edu.sc.seis.sod.Stage;
@@ -28,7 +29,17 @@ public class StatefulEventDB {
     public StatefulEvent getEvent(int dbid) throws NotFound {
         return (StatefulEvent)trans.getEvent(dbid);
     }
+    
+    public List getEventInTimeRange(MicroSecondTimeRange range) {
+        String q = "from "+StatefulEvent.class.getName()+" e where e.statusAsShort = 2310 "
+        + "AND e.preferred.origin_time.time between :minTime AND :maxTime  ";
+        Query query = trans.getSession().createQuery(q);
 
+        query.setTimestamp("minTime", range.getBeginTime().getTimestamp());
+        query.setTimestamp("maxTime", range.getEndTime().getTimestamp());
+        return query.list();
+    }
+    
     public int getNumWaiting() {
         String q = "select count(*) from "
                 + StatefulEvent.class.getName()
