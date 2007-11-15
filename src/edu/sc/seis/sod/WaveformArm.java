@@ -369,7 +369,7 @@ public class WaveformArm implements Arm {
                 logger.debug("Adding " + workUnit + " to pool");
                 pool.invokeLater(workUnit);
             } else {
-                logger.debug("Unable to find work unit for pair "+pairs[i]);
+                logger.debug("Unable to find work unit for pair "+pairs[i].getPairId());
             }
         }
     }
