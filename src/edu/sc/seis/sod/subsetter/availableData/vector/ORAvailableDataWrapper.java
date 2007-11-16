@@ -8,8 +8,8 @@ package edu.sc.seis.sod.subsetter.availableData.vector;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
@@ -37,7 +37,7 @@ public class ORAvailableDataWrapper implements VectorAvailableDataSubsetter {
         }
     }
 
-    public StringTree accept(EventAccessOperations event,
+    public StringTree accept(CacheEvent event,
                              ChannelGroup channelGroup,
                              RequestFilter[][] original,
                              RequestFilter[][] available,

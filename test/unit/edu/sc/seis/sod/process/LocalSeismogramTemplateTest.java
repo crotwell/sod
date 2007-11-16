@@ -5,7 +5,16 @@
  */
 package edu.sc.seis.sod.process;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.InputStreamReader;
+import java.io.Writer;
+
+import junit.framework.TestCase;
+
+import org.apache.log4j.BasicConfigurator;
 
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
@@ -16,11 +25,7 @@ import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.Stage;
 import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Status;
-import edu.sc.seis.sod.database.ChannelDbObject;
-import edu.sc.seis.sod.database.EventDbObject;
 import edu.sc.seis.sod.status.waveformArm.LocalSeismogramTemplate;
-import junit.framework.TestCase;
-import org.apache.log4j.BasicConfigurator;
 
 public class LocalSeismogramTemplateTest extends TestCase {
 

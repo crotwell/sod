@@ -1,7 +1,7 @@
 package edu.sc.seis.sod.subsetter.dataCenter;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 import edu.sc.seis.sod.CookieJar;
 
@@ -17,7 +17,7 @@ import edu.sc.seis.sod.CookieJar;
 
 public interface SeismogramDCLocator {
 
-    public ProxySeismogramDC getSeismogramDC(EventAccessOperations event,
+    public ProxySeismogramDC getSeismogramDC(CacheEvent event,
                                              Channel channel,
                                              RequestFilter[] infilters, CookieJar cookieJar) throws Exception;
 

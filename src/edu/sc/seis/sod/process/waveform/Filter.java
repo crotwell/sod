@@ -8,13 +8,13 @@ package edu.sc.seis.sod.process.waveform;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.bag.ButterworthFilter;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.freq.SeisGramText;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.ConfigurationException;
@@ -65,7 +65,7 @@ public class Filter implements WaveformProcess, Threadable {
         return true;
     }
 
-    public WaveformResult process(EventAccessOperations event,
+    public WaveformResult process(CacheEvent event,
                                   Channel channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,

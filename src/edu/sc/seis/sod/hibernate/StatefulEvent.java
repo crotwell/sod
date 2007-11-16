@@ -4,7 +4,7 @@
  * @author Created by Omnicore CodeGuide
  */
 
-package edu.sc.seis.sod.database.event;
+package edu.sc.seis.sod.hibernate;
 
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;

@@ -1,8 +1,8 @@
 package edu.sc.seis.sod.status.eventArm;
 
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 
 public interface EventTemplate{
-    public String getResult(EventAccessOperations ev);
+    public String getResult(CacheEvent ev);
 }
 

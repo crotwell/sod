@@ -10,7 +10,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import edu.iris.Fissures.FissuresException;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.TimeInterval;
@@ -18,6 +17,7 @@ import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.bag.LongShortStoN;
 import edu.sc.seis.fissuresUtil.bag.LongShortTrigger;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
@@ -51,7 +51,7 @@ public class LongShortSignalToNoise implements WaveformProcess, Threadable {
         return true;
     }
 
-    public WaveformResult process(EventAccessOperations event,
+    public WaveformResult process(CacheEvent event,
                                   Channel channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,

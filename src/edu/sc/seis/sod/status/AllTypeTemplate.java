@@ -5,11 +5,11 @@
  */
 package edu.sc.seis.sod.status;
 
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.IfNetwork.Site;
 import edu.iris.Fissures.IfNetwork.Station;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.status.eventArm.EventTemplate;
 
 public abstract class AllTypeTemplate implements SiteTemplate, StationTemplate,
@@ -29,7 +29,7 @@ public abstract class AllTypeTemplate implements SiteTemplate, StationTemplate,
         return getResult();
     }
 
-    public String getResult(EventAccessOperations ev) {
+    public String getResult(CacheEvent ev) {
         return getResult();
     }
 

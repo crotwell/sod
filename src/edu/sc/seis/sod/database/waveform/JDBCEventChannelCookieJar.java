@@ -6,21 +6,19 @@
 
 package edu.sc.seis.sod.database.waveform;
 
-import edu.sc.seis.fissuresUtil.database.ConnMgr;
-import edu.sc.seis.fissuresUtil.database.DBUtil;
-import edu.sc.seis.fissuresUtil.database.JDBCTable;
-import edu.sc.seis.fissuresUtil.database.util.TableSetup;
-import edu.sc.seis.sod.CookieJarResult;
-import edu.sc.seis.sod.database.SodJDBC;
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.io.Serializable;
+
+import edu.sc.seis.fissuresUtil.database.ConnMgr;
+import edu.sc.seis.fissuresUtil.database.JDBCTable;
+import edu.sc.seis.fissuresUtil.database.util.TableSetup;
+import edu.sc.seis.sod.CookieJarResult;
 
 public class JDBCEventChannelCookieJar extends JDBCTable {
 

@@ -2,7 +2,6 @@ package edu.sc.seis.sod.process.waveform;
 
 import edu.iris.Fissures.Time;
 import edu.iris.Fissures.Unit;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
@@ -10,6 +9,7 @@ import edu.iris.Fissures.IfNetwork.Sensitivity;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.sod.CookieJar;
@@ -23,7 +23,7 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
  * deconvolution, merely a constant multiplier. Created: Wed Nov 6 17:58:10 2002
  * 
  * @author <a href="mailto:www@seis.sc.edu">Philip Crotwell </a>
- * @version $Id: ResponseGain.java 18512 2006-11-20 22:35:04Z groves $
+ * @version $Id: ResponseGain.java 19405 2007-11-16 21:31:29Z crotwell $
  */
 public class ResponseGain implements WaveformProcess, Threadable {
 
@@ -31,7 +31,7 @@ public class ResponseGain implements WaveformProcess, Threadable {
         return true;
     }
 
-    public WaveformResult process(EventAccessOperations event,
+    public WaveformResult process(CacheEvent event,
                                   Channel channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,

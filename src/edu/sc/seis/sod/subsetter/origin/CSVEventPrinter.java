@@ -8,10 +8,10 @@ import org.w3c.dom.Element;
 import edu.iris.Fissures.FlinnEngdahlRegion;
 import edu.iris.Fissures.Location;
 import edu.iris.Fissures.Quantity;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Magnitude;
 import edu.iris.Fissures.IfEvent.Origin;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.source.event.CSVEventSource;
 import edu.sc.seis.sod.status.StringTree;
@@ -35,7 +35,7 @@ public class CSVEventPrinter implements OriginSubsetter {
         createFileAndWriteHeaderIfNeeded();
     }
 
-    public StringTree accept(EventAccessOperations eventAccess,
+    public StringTree accept(CacheEvent eventAccess,
                              EventAttr eventAttr,
                              Origin preferred_origin) throws Exception {
         StringBuffer buff = new StringBuffer();

@@ -2,7 +2,6 @@ package edu.sc.seis.sod.subsetter.origin;
 
 import java.sql.SQLException;
 import org.w3c.dom.Element;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.model.MicroSecondDate;
@@ -52,7 +51,7 @@ public class RemoveEventDuplicate implements OriginSubsetter {
         return eventTable;
     }
     
-    public StringTree accept(EventAccessOperations eventAccess,
+    public StringTree accept(CacheEvent eventAccess,
                           EventAttr eventAttr,
                           Origin preferred_origin)
         throws Exception {

@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.Map;
 import org.w3c.dom.Element;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventChannelPair;
@@ -34,7 +35,7 @@ public class WaveformEventTemplate extends Template implements WaveformMonitor {
         parse(el);
     }
 
-    public String getOutputDirectory(EventAccessOperations ev) {
+    public String getOutputDirectory(CacheEvent ev) {
         return baseDir + "/" + dirNameCreator.getResult(ev) + "/";
     }
 
@@ -47,7 +48,7 @@ public class WaveformEventTemplate extends Template implements WaveformMonitor {
         };
     }
 
-    public void update(EventAccessOperations ev, Status status) {
+    public void update(CacheEvent ev, Status status) {
         String outputDir = getOutputDirectory(ev);
         String loc = outputDir + pageName;
         if(status.equals(Status.get(Stage.EVENT_ORIGIN_SUBSETTER,
@@ -66,7 +67,7 @@ public class WaveformEventTemplate extends Template implements WaveformMonitor {
         update(ecp.getEvent(), outputDir, pageName);
     }
 
-    public void update(EventAccessOperations ev,
+    public void update(CacheEvent ev,
                        String outputDir,
                        String fileLoc) {
         if(map != null) {
@@ -84,18 +85,18 @@ public class WaveformEventTemplate extends Template implements WaveformMonitor {
     public class Writer implements Runnable {
 
         public void run() {
-            EventAccessOperations[] evs = new EventAccessOperations[0];
+            CacheEvent[] evs = new CacheEvent[0];
             String[] fileLocs = new String[0];
             synchronized(toBeRendered) {
                 int numEvsWaiting = toBeRendered.size();
                 if(toBeRendered.size() > 0) {
-                    evs = new EventAccessOperations[toBeRendered.size()];
+                    evs = new CacheEvent[toBeRendered.size()];
                     fileLocs = new String[toBeRendered.size()];
                     Iterator it = toBeRendered.keySet().iterator();
                     while(it.hasNext()) {
                         String loc = (String)it.next();
                         fileLocs[--numEvsWaiting] = loc;
-                        evs[numEvsWaiting] = (EventAccessOperations)toBeRendered.get(loc);
+                        evs[numEvsWaiting] = (CacheEvent)toBeRendered.get(loc);
                     }
                     toBeRendered.clear();
                 }
@@ -105,7 +106,7 @@ public class WaveformEventTemplate extends Template implements WaveformMonitor {
             }
         }
 
-        private String getResult(EventAccessOperations ev) {
+        private String getResult(CacheEvent ev) {
             StringBuffer buf = new StringBuffer();
             Iterator it = templates.iterator();
             while(it.hasNext()) {

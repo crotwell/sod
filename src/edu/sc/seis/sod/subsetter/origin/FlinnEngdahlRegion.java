@@ -3,9 +3,9 @@ package edu.sc.seis.sod.subsetter.origin;
 import org.apache.log4j.Category;
 import org.w3c.dom.Element;
 import edu.iris.Fissures.FlinnEngdahlType;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
@@ -19,7 +19,7 @@ public abstract class FlinnEngdahlRegion implements OriginSubsetter {
         region = Integer.parseInt(SodUtil.getNestedText(config));
     }
 
-    public StringTree accept(EventAccessOperations eventAccess,
+    public StringTree accept(CacheEvent eventAccess,
                           EventAttr eventAttr,
                           Origin preferred_origin) {
         edu.iris.Fissures.FlinnEngdahlRegion reg = eventAttr.region;

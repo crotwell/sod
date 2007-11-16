@@ -5,15 +5,15 @@
  */
 package edu.sc.seis.sod.subsetter.request;
 
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.CookieJar;
 
 public class RequestPrint implements Request {
 
-    public boolean accept(EventAccessOperations event,
+    public boolean accept(CacheEvent event,
                           Channel channel,
                           RequestFilter[] request,
                           CookieJar cookieJar) throws Exception {

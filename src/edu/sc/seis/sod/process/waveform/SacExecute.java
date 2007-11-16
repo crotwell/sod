@@ -11,10 +11,10 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.w3c.dom.Element;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.database.util.SQLLoader;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
@@ -67,7 +67,7 @@ public class SacExecute implements WaveformProcess {
     /**
      * 
      */
-    public WaveformResult process(EventAccessOperations event,
+    public WaveformResult process(CacheEvent event,
                                   Channel channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,

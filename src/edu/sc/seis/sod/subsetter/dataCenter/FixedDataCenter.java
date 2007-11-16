@@ -1,10 +1,10 @@
 package edu.sc.seis.sod.subsetter.dataCenter;
 
 import org.w3c.dom.Element;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.sc.seis.fissuresUtil.cache.BulletproofVestFactory;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
 import edu.sc.seis.sod.CommonAccess;
@@ -34,7 +34,7 @@ public class FixedDataCenter extends AbstractSource implements SodElement,
                                                              Start.createRetryStrategy());
     }
 
-    public ProxySeismogramDC getSeismogramDC(EventAccessOperations event,
+    public ProxySeismogramDC getSeismogramDC(CacheEvent event,
                                              Channel channel,
                                              RequestFilter[] infilters,
                                              CookieJar cookieJar)

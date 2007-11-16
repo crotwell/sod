@@ -7,7 +7,8 @@ package edu.sc.seis.sod.subsetter.eventChannel.vector;
 
 import java.util.Iterator;
 import org.w3c.dom.Element;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
+
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
@@ -22,7 +23,7 @@ public class EventVectorNOT extends EventVectorLogicalSubsetter implements
         super(config);
     }
 
-    public StringTree accept(EventAccessOperations event,
+    public StringTree accept(CacheEvent event,
                           ChannelGroup channel,
                           CookieJar cookieJar) throws Exception {
         Iterator it = filterList.iterator();

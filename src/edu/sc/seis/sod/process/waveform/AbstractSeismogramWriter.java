@@ -8,6 +8,7 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
@@ -63,7 +64,7 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
         return FissuresFormatter.filize(velocitizer.evaluate(template, ctx));
     }
 
-    public WaveformResult process(EventAccessOperations event,
+    public WaveformResult process(CacheEvent event,
                                   Channel channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,

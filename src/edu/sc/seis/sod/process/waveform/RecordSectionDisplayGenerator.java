@@ -13,6 +13,7 @@ import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.fissuresUtil.display.RecordSectionDisplay;
@@ -42,7 +43,7 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
         }
     }
 
-    public WaveformResult process(EventAccessOperations event,
+    public WaveformResult process(CacheEvent event,
                                   Channel chan,
                                   RequestFilter[] original,
                                   RequestFilter[] available,
@@ -62,7 +63,7 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
         return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
     }
 
-    public void makeRecordSection(EventAccessOperations event)
+    public void makeRecordSection(CacheEvent event)
             throws Exception, NoPreferredOrigin, IOException {
         try {
             DataSetSeismogram[] dss = extractSeismograms(event);

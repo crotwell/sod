@@ -6,9 +6,9 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
@@ -32,7 +32,7 @@ public class ChoiceRequest implements RequestGenerator {
         }
     }
 
-    public RequestFilter[] generateRequest(EventAccessOperations event,
+    public RequestFilter[] generateRequest(CacheEvent event,
                                            Channel channel,
                                            CookieJar cookieJar)
             throws Exception {
@@ -78,14 +78,14 @@ public class ChoiceRequest implements RequestGenerator {
             }
         }
 
-        public RequestFilter[] generateRequest(EventAccessOperations event,
+        public RequestFilter[] generateRequest(CacheEvent event,
                                                Channel channel,
                                                CookieJar cookieJar)
                 throws Exception {
             return requestGenerator.generateRequest(event, channel, cookieJar);
         }
 
-        public StringTree accept(EventAccessOperations event,
+        public StringTree accept(CacheEvent event,
                                  Channel channel,
                                  CookieJar cookieJar) throws Exception {
             return eventChannelSubsetter.accept(event, channel, cookieJar);

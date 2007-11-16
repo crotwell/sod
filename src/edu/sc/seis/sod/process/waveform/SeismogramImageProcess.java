@@ -25,6 +25,7 @@ import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
 import edu.sc.seis.fissuresUtil.bag.TauPUtil;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.display.DisplayUtils;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
@@ -93,7 +94,7 @@ public class SeismogramImageProcess implements WaveformProcess {
         locator = new SeismogramImageOutputLocator(el);
     }
 
-    public WaveformResult process(EventAccessOperations event,
+    public WaveformResult process(CacheEvent event,
                                   Channel channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,
@@ -108,7 +109,7 @@ public class SeismogramImageProcess implements WaveformProcess {
     }
 
     /** allows specifying a fileType, png or pdf. */
-    public WaveformResult process(EventAccessOperations event,
+    public WaveformResult process(CacheEvent event,
                                   Channel channel,
                                   RequestFilter[] original,
                                   LocalSeismogramImpl[] seismograms,
@@ -124,7 +125,7 @@ public class SeismogramImageProcess implements WaveformProcess {
     }
 
     /** allows specifying a fileType, png or pdf, and a list of phases. */
-    public WaveformResult process(EventAccessOperations event,
+    public WaveformResult process(CacheEvent event,
                                   Channel channel,
                                   RequestFilter[] original,
                                   LocalSeismogramImpl[] seismograms,
@@ -184,7 +185,7 @@ public class SeismogramImageProcess implements WaveformProcess {
     }
 
     /** allows specifying a fileType, png or pdf, and a list of phases. */
-    public WaveformResult process(EventAccessOperations event,
+    public WaveformResult process(CacheEvent event,
                                   Channel channel,
                                   RequestFilter[] original,
                                   LocalSeismogramImpl[] seismograms,

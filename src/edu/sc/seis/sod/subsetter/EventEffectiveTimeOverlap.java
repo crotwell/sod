@@ -7,7 +7,7 @@ import edu.iris.Fissures.TimeRange;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.UnitImpl;
-import edu.sc.seis.sod.database.event.StatefulEvent;
+import edu.sc.seis.sod.hibernate.StatefulEvent;
 
 /**
  * EventEffectiveTimeOverlap.java Created: Wed Mar 19 10:49:54 2003

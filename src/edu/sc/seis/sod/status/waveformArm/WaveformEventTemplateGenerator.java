@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.SodUtil;
@@ -39,7 +40,7 @@ public class WaveformEventTemplateGenerator implements EventMonitor,
         }
     }
 
-    public void change(EventAccessOperations event, Status status) {
+    public void change(CacheEvent event, Status status) {
         if(!added) {
             if(Start.getWaveformArm() != null) {
                 Start.getWaveformArm().addStatusMonitor(template);

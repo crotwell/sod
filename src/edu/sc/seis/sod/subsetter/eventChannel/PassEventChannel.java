@@ -1,8 +1,8 @@
 package edu.sc.seis.sod.subsetter.eventChannel;
 
 import org.w3c.dom.Element;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ChannelGroup;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.StringTree;
@@ -22,13 +22,13 @@ public class PassEventChannel implements EventChannelSubsetter,
 
     public PassEventChannel(Element config) {}
 
-    public StringTree accept(EventAccessOperations o,
+    public StringTree accept(CacheEvent o,
                           Channel channel,
                           CookieJar cookieJar) {
         return new StringTreeLeaf(this, true);
     }
 
-    public StringTree accept(EventAccessOperations event,
+    public StringTree accept(CacheEvent event,
                           ChannelGroup channel,
                           CookieJar cookieJar) throws Exception {
         return new StringTreeLeaf(this, true);

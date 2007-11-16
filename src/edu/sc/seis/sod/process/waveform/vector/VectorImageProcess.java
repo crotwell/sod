@@ -13,6 +13,7 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.TauP.Arrival;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.display.BasicSeismogramDisplay;
 import edu.sc.seis.fissuresUtil.display.ComponentSortedSeismogramDisplay;
@@ -55,7 +56,7 @@ public class VectorImageProcess extends SeismogramImageProcess implements
         }
     }
 
-    public WaveformVectorResult process(EventAccessOperations event,
+    public WaveformVectorResult process(CacheEvent event,
                                         ChannelGroup channelGroup,
                                         RequestFilter[][] original,
                                         RequestFilter[][] available,

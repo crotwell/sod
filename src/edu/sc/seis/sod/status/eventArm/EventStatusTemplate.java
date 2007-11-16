@@ -1,6 +1,6 @@
 package edu.sc.seis.sod.status.eventArm;
 
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.SodUtil;
@@ -85,7 +85,7 @@ public class EventStatusTemplate extends FileWritingTemplate implements
         write();
     }
 
-    public void change(EventAccessOperations event, Status status) {
+    public void change(CacheEvent event, Status status) {
         if(!addedToWaveformArm && Start.getWaveformArm() != null) {
             Start.getWaveformArm().addStatusMonitor(this);
             addedToWaveformArm = true;

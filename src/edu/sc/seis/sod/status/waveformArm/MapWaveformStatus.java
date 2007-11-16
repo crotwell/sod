@@ -4,13 +4,20 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+
 import javax.swing.SwingUtilities;
+
 import org.apache.log4j.Logger;
+
 import com.bbn.openmap.event.CenterEvent;
+
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.IfNetwork.Station;
+import edu.iris.Fissures.network.StationImpl;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.cache.ProxyEventAccessOperations;
 import edu.sc.seis.fissuresUtil.chooser.AvailableStationDataEvent;
@@ -26,7 +33,7 @@ import edu.sc.seis.fissuresUtil.map.layers.StationLayer;
 import edu.sc.seis.sod.Stage;
 import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Status;
-import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
+import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.status.MapPool;
 import edu.sc.seis.sod.status.OutputScheduler;
 
@@ -38,21 +45,21 @@ public class MapWaveformStatus implements Runnable {
 
     public MapWaveformStatus(MapPool pool) throws SQLException {
         this.pool = pool;
-        evChanStatusTable = new JDBCEventChannelStatus();
+        soddb = new SodDB();
     }
 
     public void run() {
         int numEventsWaiting = 0;
-        ProxyEventAccessOperations[] events = new ProxyEventAccessOperations[0];
+        CacheEvent[] events = new CacheEvent[0];
         String[] fileLocs = new String[0];
         synchronized(eventsToBeRendered) {
             numEventsWaiting = eventsToBeRendered.size();
             if(eventsToBeRendered.size() > 0) {
-                events = new ProxyEventAccessOperations[eventsToBeRendered.size()];
+                events = new CacheEvent[eventsToBeRendered.size()];
                 fileLocs = new String[eventsToBeRendered.size()];
                 Iterator it = eventsToBeRendered.keySet().iterator();
                 while(it.hasNext()) {
-                    ProxyEventAccessOperations cur = (ProxyEventAccessOperations)it.next();
+                    CacheEvent cur = (CacheEvent)it.next();
                     events[--numEventsWaiting] = cur;
                     fileLocs[numEventsWaiting] = (String)eventsToBeRendered.get(cur);
                 }
@@ -64,12 +71,14 @@ public class MapWaveformStatus implements Runnable {
             for(int i = 0; i < events.length; i++) {
                 StationLayer sl = map.getStationLayer();
                 sl.honorRepaint(false);
-                Station[] unsuccessful = evChanStatusTable.getNotOfStatus(success,
-                                                                          events[i]);
-                addStations(sl, unsuccessful, AvailableStationDataEvent.DOWN);
-                Station[] successful = evChanStatusTable.getOfStatus(success,
-                                                                     events[i]);
-                addStations(sl, successful, AvailableStationDataEvent.UP);
+                List up = soddb.getSuccessfulStationsForEvent(events[i]);
+                List down = soddb.getStationsForEvent(events[i]);
+                Iterator it = up.iterator();
+                while(it.hasNext()) {
+                    down.remove(it.next());
+                }
+                addStations(sl, (StationImpl[])down.toArray(new StationImpl[0]), AvailableStationDataEvent.DOWN);
+                addStations(sl, (StationImpl[])up.toArray(new StationImpl[0]), AvailableStationDataEvent.UP);
                 sl.honorRepaint(true);
                 EventLayer el = map.getEventLayer();
                 DistanceLayer dl = map.getDistanceLayer();
@@ -131,7 +140,7 @@ public class MapWaveformStatus implements Runnable {
 
     private MapPool pool;
 
-    private JDBCEventChannelStatus evChanStatusTable;
+    private SodDB soddb;
 
     private static Logger logger = Logger.getLogger(MapWaveformStatus.class);
 }

@@ -1,9 +1,9 @@
 package edu.sc.seis.sod.example;
 
 import org.w3c.dom.Element;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
@@ -16,7 +16,7 @@ public class LatOMatic implements OriginSubsetter {
         maxLat = DOMHelper.extractFloat(el, "maxLat", 0);
     }
 
-    public StringTree accept(EventAccessOperations eventAccess,
+    public StringTree accept(CacheEvent eventAccess,
                              EventAttr eventAttr,
                              Origin preferred_origin) throws Exception {
         if(preferred_origin.my_location.latitude > maxLat) {

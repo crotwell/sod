@@ -1,9 +1,9 @@
 package edu.sc.seis.sod.subsetter.request;
 
 import org.w3c.dom.Element;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
@@ -24,7 +24,7 @@ public class PrintlineRequestProcessor implements Request {
 
     public static final String DEFAULT_TEMPLATE = "Got $originalRequests.size()";
 
-    public boolean accept(EventAccessOperations event,
+    public boolean accept(CacheEvent event,
                           Channel channel,
                           RequestFilter[] request,
                           CookieJar cookieJar) throws Exception {

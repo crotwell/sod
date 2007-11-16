@@ -2,10 +2,11 @@ package edu.sc.seis.sod.status.eventArm;
 import java.sql.SQLException;
 import java.util.Iterator;
 import org.w3c.dom.Element;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
+
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.database.event.StatefulEvent;
+import edu.sc.seis.sod.hibernate.StatefulEvent;
 import edu.sc.seis.sod.status.EventFormatter;
 import edu.sc.seis.sod.status.GenericTemplate;
 import edu.sc.seis.sod.status.Template;
@@ -51,7 +52,7 @@ public class EventGroupTemplate extends Template implements GenericTemplate{
 
     public Object textTemplate(final String text){
         return new EventTemplate(){
-            public String getResult(EventAccessOperations ev) { return text; }
+            public String getResult(CacheEvent ev) { return text; }
         };
     }
 

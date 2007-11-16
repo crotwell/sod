@@ -5,6 +5,7 @@ import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.Location;
 import edu.sc.seis.TauP.SphericalCoords;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
@@ -25,7 +26,7 @@ public class LinearDistanceMagnitudeRange extends DistanceRangeSubsetter
         magnitudeRange = (MagnitudeRange)SodUtil.load(subElement, "origin");
     }
 
-    public StringTree accept(EventAccessOperations eventAccess,
+    public StringTree accept(CacheEvent eventAccess,
                           Station station,
                           CookieJar cookieJar) {
         Location stationLoc = station.my_location;

@@ -1,8 +1,8 @@
 package edu.sc.seis.sod.subsetter.eventStation;
 
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Station;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
@@ -30,7 +30,7 @@ public class EmbeddedStationSubsetter implements EventStationSubsetter {
         }
     }
 
-    public StringTree accept(EventAccessOperations eventAccess,
+    public StringTree accept(CacheEvent eventAccess,
                              Station station,
                              CookieJar cookieJar) throws Exception {
         NetworkAccess network = Start.getNetworkArm()

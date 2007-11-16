@@ -1,11 +1,17 @@
 package edu.sc.seis.sod.database.event;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
-import edu.sc.seis.fissuresUtil.database.DBUtil;
 import edu.sc.seis.fissuresUtil.database.JDBCTable;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.database.event.JDBCEventAccess;
@@ -14,14 +20,7 @@ import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.Stage;
 import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Status;
-import edu.sc.seis.sod.database.SodJDBC;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+import edu.sc.seis.sod.hibernate.StatefulEvent;
 
 public class JDBCEventStatus extends JDBCTable {
 

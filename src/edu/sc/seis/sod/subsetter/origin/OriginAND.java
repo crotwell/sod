@@ -1,8 +1,8 @@
 package edu.sc.seis.sod.subsetter.origin;
 
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.status.ShortCircuit;
 import edu.sc.seis.sod.status.StringTree;
@@ -75,7 +75,7 @@ public final class OriginAND extends EventLogicalSubsetter
         super(config);
     }
 
-    public StringTree accept(EventAccessOperations event, EventAttr eventAttr, Origin e) throws Exception{
+    public StringTree accept(CacheEvent event, EventAttr eventAttr, Origin e) throws Exception{
         Iterator it = filterList.iterator();
         StringTree[] result = new StringTree[filterList.size()];
         int i=0;

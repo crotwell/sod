@@ -17,6 +17,7 @@ import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
@@ -49,7 +50,7 @@ public class BreqFastRequest implements Request {
         format.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
 
-    public boolean accept(EventAccessOperations event,
+    public boolean accept(CacheEvent event,
                           Channel channel,
                           RequestFilter[] request,
                           CookieJar cookieJar) {

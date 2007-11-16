@@ -3,7 +3,6 @@ package edu.sc.seis.sod.process.waveform.vector;
 import java.util.ArrayList;
 import java.util.List;
 import edu.iris.Fissures.FissuresException;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
@@ -12,6 +11,7 @@ import edu.iris.Fissures.model.TimeUtils;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.bag.Cut;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ChannelGroup;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.StringTreeLeaf;
@@ -21,7 +21,7 @@ public class VectorTrim implements WaveformVectorProcess {
     private static final Cut EMPTY_CUT = new Cut(TimeUtils.futurePlusOne,
                                                  new MicroSecondDate(-100000000000000l));
 
-    public WaveformVectorResult process(EventAccessOperations event,
+    public WaveformVectorResult process(CacheEvent event,
                                         ChannelGroup channelGroup,
                                         RequestFilter[][] original,
                                         RequestFilter[][] available,

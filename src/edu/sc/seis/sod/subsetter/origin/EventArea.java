@@ -1,9 +1,9 @@
 package edu.sc.seis.sod.subsetter.origin;
 
 import org.w3c.dom.Element;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.status.StringTree;
@@ -29,7 +29,7 @@ public class EventArea extends AreaSubsetter implements OriginSubsetter,
      * returns true if the given origin is within the area specified in the
      * configuration file else returns false.
      */
-    public StringTree accept(EventAccessOperations event,
+    public StringTree accept(CacheEvent event,
                           EventAttr eventAttr,
                           Origin e) throws Exception {
         return new StringTreeLeaf(this, super.accept(e.my_location));

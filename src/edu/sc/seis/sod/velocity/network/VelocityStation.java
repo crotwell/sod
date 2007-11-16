@@ -2,6 +2,8 @@ package edu.sc.seis.sod.velocity.network;
 
 import java.io.StringWriter;
 import java.text.DecimalFormat;
+import java.util.List;
+
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import org.apache.velocity.VelocityContext;
@@ -264,6 +266,14 @@ public class VelocityStation extends Station {
     
     public StationImpl getWrapped() {
         return sta;
+    }
+
+    public static VelocityStation[] wrap(List stations) {
+        VelocityStation[] out = new VelocityStation[stations.size()];
+        for(int i = 0; i < out.length; i++) {
+            out[i] = new VelocityStation((StationImpl)stations.get(i));
+        }
+        return out;
     }
 
     public static VelocityStation[] wrap(Station[] stations) {

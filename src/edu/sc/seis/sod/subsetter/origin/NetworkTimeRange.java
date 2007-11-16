@@ -1,11 +1,11 @@
 package edu.sc.seis.sod.subsetter.origin;
 
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.StationImpl;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.sod.Arm;
@@ -14,10 +14,6 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.NetworkArm;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.UserConfigurationException;
-import edu.sc.seis.sod.database.ChannelDbObject;
-import edu.sc.seis.sod.database.NetworkDbObject;
-import edu.sc.seis.sod.database.SiteDbObject;
-import edu.sc.seis.sod.database.StationDbObject;
 import edu.sc.seis.sod.source.event.MicroSecondTimeRangeSupplier;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
@@ -52,7 +48,7 @@ public class NetworkTimeRange implements OriginSubsetter, ArmListener,
         }
     }
 
-    public StringTree accept(EventAccessOperations event,
+    public StringTree accept(CacheEvent event,
                              EventAttr eventAttr,
                              Origin origin) {
         return new StringTreeLeaf(this,

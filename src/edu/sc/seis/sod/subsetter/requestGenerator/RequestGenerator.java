@@ -1,7 +1,7 @@
 package edu.sc.seis.sod.subsetter.requestGenerator;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.subsetter.Subsetter;
 
@@ -17,7 +17,7 @@ import edu.sc.seis.sod.subsetter.Subsetter;
 
 public interface  RequestGenerator extends Subsetter{
 
-    public RequestFilter[] generateRequest(EventAccessOperations event,
+    public RequestFilter[] generateRequest(CacheEvent event,
                                            Channel channel, CookieJar cookieJar) throws Exception;
 
 }// RequestGenerator

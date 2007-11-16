@@ -22,6 +22,7 @@ import edu.sc.seis.fissuresUtil.bag.LongShortTrigger;
 import edu.sc.seis.fissuresUtil.bag.PhaseNonExistent;
 import edu.sc.seis.fissuresUtil.bag.SimplePhaseStoN;
 import edu.sc.seis.fissuresUtil.bag.TauPUtil;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
@@ -78,7 +79,7 @@ public class PhaseSignalToNoise  implements WaveformProcess, Threadable {
         return true;
     }
 
-    public WaveformResult process(EventAccessOperations event,
+    public WaveformResult process(CacheEvent event,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,

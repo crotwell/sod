@@ -3,8 +3,8 @@ package edu.sc.seis.sod.subsetter.eventChannel;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
@@ -36,7 +36,7 @@ public class EmbeddedChannel implements EventChannelSubsetter {
         }
     }
 
-    public StringTree accept(EventAccessOperations o,
+    public StringTree accept(CacheEvent o,
                              Channel channel,
                              CookieJar cookieJar) throws Exception {
         ProxyNetworkAccess network = Start.getNetworkArm()

@@ -14,7 +14,6 @@ import edu.sc.seis.fissuresUtil.hibernate.HibernateUtil;
 import edu.sc.seis.sod.Stage;
 import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Status;
-import edu.sc.seis.sod.database.event.StatefulEvent;
 
 public class StatefulEventDB {
 
@@ -24,6 +23,10 @@ public class StatefulEventDB {
 
     public long put(StatefulEvent event) {
         return trans.put(event);
+    }
+    
+    public List getAll() {
+        return trans.getAll();
     }
 
     public StatefulEvent getEvent(int dbid) throws NotFound {

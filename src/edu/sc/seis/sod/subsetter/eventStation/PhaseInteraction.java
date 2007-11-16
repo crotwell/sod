@@ -9,6 +9,7 @@ import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
@@ -46,7 +47,7 @@ public class PhaseInteraction implements EventStationSubsetter {
         }
     }
 
-    public StringTree accept(EventAccessOperations event,
+    public StringTree accept(CacheEvent event,
                           Station station,
                           CookieJar cookieJar) throws Exception {
         if(interactionStyle.equals("PATH")) {

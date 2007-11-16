@@ -5,10 +5,10 @@ import java.util.List;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Magnitude;
 import edu.iris.Fissures.IfEvent.Origin;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
@@ -30,7 +30,7 @@ public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter {
         parseValueTolerance(config);
     }
 
-    public StringTree accept(EventAccessOperations event,
+    public StringTree accept(CacheEvent event,
                              EventAttr eventAttr,
                              Origin origin) {
         return new StringTreeLeaf(this, getAcceptable(origin.magnitudes).length > 0);

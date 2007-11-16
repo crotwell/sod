@@ -5,6 +5,7 @@ import java.util.List;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 import edu.sc.seis.sod.velocity.network.VelocityChannel;
@@ -15,7 +16,7 @@ import edu.sc.seis.sod.velocity.network.VelocityChannel;
 public class VelocityRequest {
 
     public VelocityRequest(RequestFilter rf, Channel chan) {
-        this(rf, new VelocityChannel(chan));
+        this(rf, new VelocityChannel((ChannelImpl)chan));
     }
 
     public VelocityRequest(RequestFilter rf, VelocityChannel chan) {

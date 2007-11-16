@@ -3,9 +3,9 @@ package edu.sc.seis.sod.process.waveform.vector;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
@@ -38,7 +38,7 @@ public class EmbeddedEventStation  implements WaveformVectorProcess {
 
     EventStationSubsetter eventStation;
     
-    public WaveformVectorResult process(EventAccessOperations event,
+    public WaveformVectorResult process(CacheEvent event,
                                         ChannelGroup channelGroup,
                                         RequestFilter[][] original,
                                         RequestFilter[][] available,

@@ -5,6 +5,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
@@ -90,11 +91,11 @@ public class SeismogramImageOutputLocator {
         chanFormatter = new ChannelFormatter(picName, true);
     }
 
-    public String getLocation(EventAccessOperations event, Channel channel) {
+    public String getLocation(CacheEvent event, Channel channel) {
         return getLocation(event, channel, configuredFileType);
     }
 
-    public String getLocation(EventAccessOperations event,
+    public String getLocation(CacheEvent event,
                               Channel channel,
                               String fileType) {
         return FissuresFormatter.filize(getDirectory(event, channel, true)
@@ -110,7 +111,7 @@ public class SeismogramImageOutputLocator {
 
     private ChannelFormatter chanFormatter = ChannelFormatter.makeSiteAndCode();
 
-    public String getDirectory(EventAccessOperations event,
+    public String getDirectory(CacheEvent event,
                                Channel chan,
                                boolean useStatusDir) {
         String dir = useStatusDir ? fileDir : "";

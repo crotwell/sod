@@ -49,7 +49,7 @@ public class WaveformStationStatus extends AbstractVelocityStatus implements Wav
             Station station = ecp.getChannel().my_site.my_station;
             try {
                 int stationDbid = ((StationImpl)station).getDbid();
-                VelocityContext context = new VelocityContext(new StationWaveformContext(networkArmContext, stationDbid));
+                VelocityContext context = new VelocityContext(new StationWaveformContext(networkArmContext, (StationImpl)station));
                 context.put("station", station);
                 context.put("networkid", station.get_id().network_id);
                 context.put("network", station.my_network);

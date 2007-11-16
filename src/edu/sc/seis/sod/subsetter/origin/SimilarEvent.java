@@ -3,7 +3,6 @@ package edu.sc.seis.sod.subsetter.origin;
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.w3c.dom.Element;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.model.MicroSecondDate;
@@ -39,7 +38,7 @@ public class SimilarEvent extends RemoveEventDuplicate {
     
 
     
-    public StringTree accept(EventAccessOperations eventAccess,
+    public StringTree accept(CacheEvent eventAccess,
                           EventAttr eventAttr,
                           Origin preferred_origin)
         throws Exception {

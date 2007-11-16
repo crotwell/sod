@@ -1,9 +1,9 @@
 package edu.sc.seis.sod.subsetter.requestGenerator;
 
 import org.w3c.dom.Element;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.CookieJar;
 
 
@@ -18,7 +18,7 @@ public class NullRequestGenerator implements RequestGenerator {
 
     public NullRequestGenerator(Element config) {}
 
-    public RequestFilter[] generateRequest(EventAccessOperations event,
+    public RequestFilter[] generateRequest(CacheEvent event,
                                            Channel channel, CookieJar cookieJar){
         return new RequestFilter[0];
     }

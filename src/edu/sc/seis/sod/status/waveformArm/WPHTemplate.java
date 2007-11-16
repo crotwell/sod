@@ -7,33 +7,28 @@ package edu.sc.seis.sod.status.waveformArm;
 
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.Stage;
 import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Status;
-import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
+import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.status.AllTypeTemplate;
 
 public class WPHTemplate extends AllTypeTemplate {
 
     public WPHTemplate() throws SQLException {
-        ecs = new JDBCEventChannelStatus();
+        ecs = new SodDB();
     }
 
     public String getResult() {
-        try {
-            int numSuccessful = ecs.getNumOfStatus(SUCCESS);
-            double elapsedTime = getElapsedTime();
-            return df.format(numSuccessful / elapsedTime);
-        } catch(SQLException e) {
-            GlobalExceptionHandler.handle(e);
-            return "";
-        }
+        int numSuccessful = ecs.getNumSuccessful();
+        double elapsedTime = getElapsedTime();
+        return df.format(numSuccessful / elapsedTime);
     }
 
     private double getElapsedTime() {
@@ -45,7 +40,7 @@ public class WPHTemplate extends AllTypeTemplate {
 
     private DecimalFormat df = new DecimalFormat("0.00");
 
-    private JDBCEventChannelStatus ecs;
+    private SodDB ecs;
 
     private static final Status SUCCESS = Status.get(Stage.PROCESSOR,
                                                      Standing.SUCCESS);

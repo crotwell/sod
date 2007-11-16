@@ -1,7 +1,7 @@
 package edu.sc.seis.sod.subsetter.eventChannel;
 
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.Subsetter;
@@ -14,7 +14,7 @@ import edu.sc.seis.sod.subsetter.Subsetter;
  */
 public interface EventChannelSubsetter extends Subsetter {
 
-    public StringTree accept(EventAccessOperations event,
+    public StringTree accept(CacheEvent event,
                           Channel channel,
                           CookieJar cookieJar) throws Exception;
 }// EventChannelSubsetter

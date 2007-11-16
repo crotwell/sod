@@ -18,7 +18,7 @@ import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.sod.database.event.StatefulEvent;
+import edu.sc.seis.sod.hibernate.StatefulEvent;
 import edu.sc.seis.sod.hibernate.StatefulEventDB;
 import edu.sc.seis.sod.source.event.EventSource;
 import edu.sc.seis.sod.status.OutputScheduler;

@@ -1,10 +1,10 @@
 package edu.sc.seis.sod.subsetter.origin;
 
 import org.w3c.dom.Element;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.model.MicroSecondDate;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
@@ -64,7 +64,7 @@ public class OriginTimeRange implements OriginSubsetter, MicroSecondTimeRangeSup
         return range;
     }
 
-    public StringTree accept(EventAccessOperations event, EventAttr eventAttr, Origin origin) {
+    public StringTree accept(CacheEvent event, EventAttr eventAttr, Origin origin) {
         return new StringTreeLeaf(this, getMSTR().contains(new MicroSecondDate(origin.origin_time)));
     }
 

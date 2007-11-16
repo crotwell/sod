@@ -12,7 +12,8 @@ import edu.sc.seis.sod.Stage;
 import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
-import edu.sc.seis.sod.database.event.StatefulEvent;
+import edu.sc.seis.sod.hibernate.StatefulEvent;
+
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;

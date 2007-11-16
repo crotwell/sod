@@ -13,7 +13,8 @@ import edu.sc.seis.fissuresUtil.map.graphics.OMEvent;
 import edu.sc.seis.sod.Stage;
 import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Status;
-import edu.sc.seis.sod.database.event.StatefulEvent;
+import edu.sc.seis.sod.hibernate.StatefulEvent;
+
 import java.awt.Color;
 import java.util.Iterator;
 

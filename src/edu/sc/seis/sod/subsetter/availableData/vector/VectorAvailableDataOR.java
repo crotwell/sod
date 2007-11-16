@@ -6,8 +6,8 @@
 package edu.sc.seis.sod.subsetter.availableData.vector;
 
 import org.w3c.dom.Element;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
@@ -22,7 +22,7 @@ public class VectorAvailableDataOR extends VectorAvailableDataLogicalSubsetter
         super(config);
     }
 
-    public StringTree accept(EventAccessOperations event,
+    public StringTree accept(CacheEvent event,
                              ChannelGroup channel,
                              RequestFilter[][] original,
                              RequestFilter[][] available,

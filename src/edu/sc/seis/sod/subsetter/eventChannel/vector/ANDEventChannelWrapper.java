@@ -8,7 +8,8 @@ package edu.sc.seis.sod.subsetter.eventChannel.vector;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
+
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
@@ -36,7 +37,7 @@ public class ANDEventChannelWrapper implements EventVectorSubsetter {
         }
     }
 
-    public StringTree accept(EventAccessOperations event,
+    public StringTree accept(CacheEvent event,
                           ChannelGroup channelGroup,
                           CookieJar cookieJar) throws Exception {
         StringTree[] results = new StringTree[channelGroup.getChannels().length];

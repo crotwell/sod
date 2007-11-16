@@ -1,9 +1,9 @@
 package edu.sc.seis.sod.subsetter.eventStation;
 
 import org.w3c.dom.Element;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.fissuresUtil.bag.DistAz;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
@@ -17,7 +17,7 @@ public class AzimuthRange extends RangeSubsetter implements
         super(config);
     }
 
-    public StringTree accept(EventAccessOperations ev,
+    public StringTree accept(CacheEvent ev,
                              Station sta,
                              CookieJar cookieJar) {
         return new StringTreeLeaf(this,

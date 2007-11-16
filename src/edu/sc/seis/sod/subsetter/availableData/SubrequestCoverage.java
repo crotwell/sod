@@ -2,9 +2,9 @@ package edu.sc.seis.sod.subsetter.availableData;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
@@ -24,7 +24,7 @@ public class SubrequestCoverage implements AvailableDataSubsetter {
         }
     }
 
-    public StringTree accept(EventAccessOperations ev,
+    public StringTree accept(CacheEvent ev,
                              Channel chan,
                              RequestFilter[] original,
                              RequestFilter[] available,

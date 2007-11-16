@@ -2,7 +2,6 @@ package edu.sc.seis.sod.process.waveform;
 
 import org.w3c.dom.Element;
 import edu.iris.Fissures.Time;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
@@ -11,6 +10,7 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.bag.Transfer;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
@@ -36,7 +36,7 @@ public class TransferResponse implements WaveformProcess, Threadable {
         highCut = DOMHelper.extractFloat(config, "highCut", DEFAULT_HIGH_CUT);
     }
 
-    public WaveformResult process(EventAccessOperations event,
+    public WaveformResult process(CacheEvent event,
                                   Channel channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,

@@ -6,24 +6,23 @@
 
 package edu.sc.seis.sod.status.waveformArm;
 
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfNetwork.Station;
+import edu.iris.Fissures.network.StationImpl;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.Stage;
-import edu.sc.seis.sod.Standing;
-import edu.sc.seis.sod.Status;
-import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
+import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.status.AllTextTemplate;
 import edu.sc.seis.sod.status.StationTemplate;
 import edu.sc.seis.sod.status.Template;
 import edu.sc.seis.sod.status.eventArm.EventTemplate;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import org.w3c.dom.Element;
 
 public class EventStationGroupTemplate extends Template implements EventTemplate{
     public EventStationGroupTemplate(Element el) throws ConfigurationException{
@@ -59,23 +58,21 @@ public class EventStationGroupTemplate extends Template implements EventTemplate
         };
     }
 
-    public String getResult(EventAccessOperations ev) {
+    public String getResult(CacheEvent ev) {
         try {
-            Station[] stations;
-            synchronized(evStatus){
-                if(success){ stations = evStatus.getOfStatus(status, ev); }
-                else if(failure){ stations = evStatus.getNotOfStatus(status, ev); }
-                else{ stations = evStatus.getStations(ev); }
-            }
+            Iterator staIt ;
+                if(success){ staIt = evStatus.getSuccessfulStationsForEvent(ev).iterator(); }
+                else if(failure){ staIt = evStatus.getUnsuccessfulStationsForEvent(ev).iterator(); }
+                else{ staIt = evStatus.getStationsForEvent(ev).iterator(); }
             Iterator it = eventStationFormatters.iterator();
             while(it.hasNext()){
                 ((EventStationFormatter)it.next()).setEvent(ev);
             }
             StringBuffer buf = new StringBuffer();
-            for (int i = 0; i < stations.length; i++) {
+            while(staIt.hasNext()) {
                 Iterator templateIt = templates.iterator();
                 while(templateIt.hasNext()){
-                    buf.append(((StationTemplate)templateIt.next()).getResult(stations[i]));
+                    buf.append(((StationTemplate)templateIt.next()).getResult((StationImpl)staIt.next()));
                 }
             }
             return buf.toString();
@@ -87,18 +84,8 @@ public class EventStationGroupTemplate extends Template implements EventTemplate
 
     private List eventStationFormatters = new ArrayList();
     private boolean success = false, failure = false;
-    private static final Status status = Status.get(Stage.PROCESSOR,
-                                                    Standing.SUCCESS);
 
-    private static JDBCEventChannelStatus evStatus;
+    private static SodDB evStatus;
 
-    static{
-        try {
-            evStatus = new JDBCEventChannelStatus();
-        } catch (SQLException e) {
-            GlobalExceptionHandler.handle(e);
-        }
-
-    }
 }
 

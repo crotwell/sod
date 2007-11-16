@@ -7,8 +7,8 @@ package edu.sc.seis.sod.subsetter.requestGenerator.vector;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
@@ -34,7 +34,7 @@ public class RequestGeneratorWrapper implements VectorRequestGenerator {
         this.requestGenerator = rg;
     }
 
-    public RequestFilter[][] generateRequest(EventAccessOperations event,
+    public RequestFilter[][] generateRequest(CacheEvent event,
                                              ChannelGroup channelGroup,
                                              CookieJar cookieJar)
             throws Exception {

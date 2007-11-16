@@ -1,7 +1,5 @@
 package edu.sc.seis.sod.status;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
@@ -10,22 +8,20 @@ import java.util.TimeZone;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.Magnitude;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.event.MagnitudeUtil;
 import edu.iris.Fissures.model.MicroSecondDate;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.fissuresUtil.display.UnitDisplayUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.Stage;
 import edu.sc.seis.sod.Standing;
-import edu.sc.seis.sod.Status;
-import edu.sc.seis.sod.database.event.StatefulEvent;
-import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
+import edu.sc.seis.sod.hibernate.SodDB;
+import edu.sc.seis.sod.hibernate.StatefulEvent;
 import edu.sc.seis.sod.status.eventArm.EventTemplate;
 
 public class EventFormatter extends Template implements EventTemplate {
@@ -74,7 +70,7 @@ public class EventFormatter extends Template implements EventTemplate {
         return defaultFormatter;
     }
 
-    public static String getDefaultResult(EventAccessOperations event) {
+    public static String getDefaultResult(CacheEvent event) {
         return defaultFormatter.getResult(event);
     }
 
@@ -83,7 +79,7 @@ public class EventFormatter extends Template implements EventTemplate {
     protected Object textTemplate(final String text) {
         return new EventTemplate() {
 
-            public String getResult(EventAccessOperations ev) {
+            public String getResult(CacheEvent ev) {
                 return text;
             }
         };
@@ -95,28 +91,28 @@ public class EventFormatter extends Template implements EventTemplate {
         } else if(tag.equals("feRegionNumber")) {
             return new EventTemplate() {
 
-                public String getResult(EventAccessOperations ev) {
+                public String getResult(CacheEvent ev) {
                     return Integer.toString(ev.get_attributes().region.number);
                 }
             };
         } else if(tag.equals("depth")) {
             return new EventTemplate() {
 
-                public String getResult(EventAccessOperations ev) {
+                public String getResult(CacheEvent ev) {
                     return UnitDisplayUtil.formatQuantityImpl(getOrigin(ev).my_location.depth);
                 }
             };
         } else if(tag.equals("latitude")) {
             return new EventTemplate() {
 
-                public String getResult(EventAccessOperations ev) {
+                public String getResult(CacheEvent ev) {
                     return format(getOrigin(ev).my_location.latitude);
                 }
             };
         } else if(tag.equals("longitude")) {
             return new EventTemplate() {
 
-                public String getResult(EventAccessOperations ev) {
+                public String getResult(CacheEvent ev) {
                     return format(getOrigin(ev).my_location.longitude);
                 }
             };
@@ -125,7 +121,7 @@ public class EventFormatter extends Template implements EventTemplate {
         } else if(tag.equals("allMagnitudes")) {
             return new EventTemplate() {
 
-                public String getResult(EventAccessOperations ev) {
+                public String getResult(CacheEvent ev) {
                     return getMags(ev);
                 }
             };
@@ -150,53 +146,24 @@ public class EventFormatter extends Template implements EventTemplate {
     private class EventChannelQuery implements EventTemplate {
 
         public EventChannelQuery(String standing) throws NoSuchFieldException {
-            Standing s = Standing.getForName(standing);
+            s = Standing.getForName(standing);
+        }
+
+        public String getResult(CacheEvent ev) {
             if(s.equals(Standing.SUCCESS)) {
-                stmt = success;
+                return ""+evStatus.getNumSuccessful(ev);
             } else if(s.equals(Standing.REJECT)) {
-                stmt = failed;
+                return ""+evStatus.getNumFailed(ev);
             } else if(s.equals(Standing.RETRY)) {
-                stmt = retry;
+                return ""+evStatus.getNumRetry(ev);
             }
+            throw new RuntimeException("Should never happen: standing="+s);
         }
 
-        public String getResult(EventAccessOperations ev) {
-            int count = 0;
-            synchronized(evStatus) {
-                try {
-                    count = evStatus.getNum(stmt, ev);
-                } catch(Exception e) {
-                    GlobalExceptionHandler.handle(e);
-                }
-            }
-            return "" + count;
-        }
-
-        private PreparedStatement stmt;
+        private Standing s;
     }
 
-    private static JDBCEventChannelStatus evStatus;
-
-    private static PreparedStatement retry, failed, success;
-    static {
-        try {
-            evStatus = new JDBCEventChannelStatus();
-            String baseStatement = "SELECT COUNT(*) FROM eventchannelstatus WHERE "
-                    + "eventid = ?";
-            int pass = Status.get(Stage.PROCESSOR, Standing.SUCCESS)
-                    .getAsShort();
-            success = evStatus.prepareStatement(baseStatement
-                    + " AND status = " + pass);
-            String failReq = JDBCEventChannelStatus.getFailedStatusRequest();
-            failed = evStatus.prepareStatement(baseStatement + " AND "
-                    + failReq);
-            String retryReq = JDBCEventChannelStatus.getRetryStatusRequest();
-            retry = evStatus.prepareStatement(baseStatement + " AND "
-                    + retryReq);
-        } catch(SQLException e) {
-            GlobalExceptionHandler.handle(e);
-        }
-    }
+    private static SodDB evStatus;
 
     public static String format(double d) {
         return defaultDecimalFormat.format(d);
@@ -206,14 +173,14 @@ public class EventFormatter extends Template implements EventTemplate {
 
     private class MagnitudeTemplate implements EventTemplate {
 
-        public String getResult(EventAccessOperations ev) {
+        public String getResult(CacheEvent ev) {
             return getMag(ev);
         }
     };
 
     private class RegionName implements EventTemplate {
 
-        public String getResult(EventAccessOperations ev) {
+        public String getResult(CacheEvent ev) {
             return getRegionName(ev);
         }
     }
@@ -229,7 +196,7 @@ public class EventFormatter extends Template implements EventTemplate {
             sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
         }
 
-        public String getResult(EventAccessOperations ev) {
+        public String getResult(CacheEvent ev) {
             try {
                 return sdf.format(new MicroSecondDate(getOrigin(ev).origin_time));
             } catch(NumberFormatException e) {
@@ -243,7 +210,7 @@ public class EventFormatter extends Template implements EventTemplate {
 
     private class EventStatusFormatter implements EventTemplate {
 
-        public String getResult(EventAccessOperations e) {
+        public String getResult(CacheEvent e) {
             if(e instanceof StatefulEvent) {
                 return "" + ((StatefulEvent)e).getStatus();
             } else {
@@ -258,7 +225,7 @@ public class EventFormatter extends Template implements EventTemplate {
         templates.add(new Time());
     }
 
-    public synchronized String getResult(EventAccessOperations event) {
+    public synchronized String getResult(CacheEvent event) {
         StringBuffer name = new StringBuffer();
         Iterator it = templates.iterator();
         while(it.hasNext()) {
@@ -271,11 +238,11 @@ public class EventFormatter extends Template implements EventTemplate {
         }
     }
 
-    public String getFilizedName(EventAccessOperations event) {
+    public String getFilizedName(CacheEvent event) {
         return FissuresFormatter.filize(getResult(event));
     }
 
-    private String getMags(EventAccessOperations event) {
+    private String getMags(CacheEvent event) {
         Magnitude[] mags = getOrigin(event).magnitudes;
         String result = new String();
         for(int i = 0; i < mags.length; i++) {
@@ -284,7 +251,7 @@ public class EventFormatter extends Template implements EventTemplate {
         return result;
     }
 
-    public static String getMag(EventAccessOperations event) {
+    public static String getMag(CacheEvent event) {
         Magnitude[] mags = getOrigin(event).magnitudes;
         if(mags.length > 0) {
             return MagnitudeUtil.toString(mags[0]);
@@ -292,11 +259,11 @@ public class EventFormatter extends Template implements EventTemplate {
         throw new IllegalArgumentException("No magnitudes on event");
     }
 
-    public static Origin getOrigin(EventAccessOperations event) {
+    public static Origin getOrigin(CacheEvent event) {
         return EventUtil.extractOrigin(event);
     }
 
-    public static String getRegionName(EventAccessOperations event) {
+    public static String getRegionName(CacheEvent event) {
         return regions.getRegionName(event.get_attributes().region);
     }
 

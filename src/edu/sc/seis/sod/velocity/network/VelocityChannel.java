@@ -138,6 +138,6 @@ public class VelocityChannel extends Channel {
         if(chan instanceof VelocityChannel) {
             return (VelocityChannel)chan;
         }
-        return new VelocityChannel(chan);
+        return new VelocityChannel((ChannelImpl)chan);
     }
 }

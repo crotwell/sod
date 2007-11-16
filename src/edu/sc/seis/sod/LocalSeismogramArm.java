@@ -12,6 +12,7 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.NSSeismogramDC;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 import edu.sc.seis.fissuresUtil.time.SortTool;
@@ -75,7 +76,7 @@ public class LocalSeismogramArm implements Subsetter {
 
     public void processLocalSeismogramArm(EventChannelPair ecp) {
         StringTree passed;
-        EventAccessOperations eventAccess = ecp.getEvent();
+        CacheEvent eventAccess = ecp.getEvent();
         Channel channel = ecp.getChannel();
         synchronized(eventChannel) {
             try {

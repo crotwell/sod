@@ -1,9 +1,9 @@
 package edu.sc.seis.sod.subsetter.request;
 
 import org.w3c.dom.Element;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ChannelGroup;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.subsetter.request.vector.VectorRequest;
@@ -20,14 +20,14 @@ public class PassRequest implements Request, VectorRequest {
 
     public PassRequest(Element config) {}
 
-    public boolean accept(EventAccessOperations event,
+    public boolean accept(CacheEvent event,
                           Channel channel,
                           RequestFilter[] request,
                           CookieJar cookieJar) throws Exception {
         return true;
     }
 
-    public boolean accept(EventAccessOperations event,
+    public boolean accept(CacheEvent event,
                           ChannelGroup channel,
                           RequestFilter[][] request,
                           CookieJar cookieJar) throws Exception {

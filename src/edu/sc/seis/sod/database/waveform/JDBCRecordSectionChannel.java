@@ -10,13 +10,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
-import edu.sc.seis.fissuresUtil.database.DBUtil;
 import edu.sc.seis.fissuresUtil.database.JDBCTable;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.database.network.JDBCStation;
 import edu.sc.seis.fissuresUtil.database.util.TableSetup;
-import edu.sc.seis.sod.database.SodJDBC;
 import edu.sc.seis.sod.velocity.network.VelocityStation;
 
 public class JDBCRecordSectionChannel extends JDBCTable {
@@ -116,7 +116,7 @@ public class JDBCRecordSectionChannel extends JDBCTable {
         ResultSet rs = getStations.executeQuery();
         while(rs.next()) {
             int sta_dbId = rs.getInt("sta_id");
-            results.add(new VelocityStation(sta.get(sta_dbId), sta_dbId));
+            results.add(new VelocityStation((StationImpl)sta.get(sta_dbId)));
         }
         return results;
     }

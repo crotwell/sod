@@ -9,12 +9,12 @@ import javax.xml.transform.TransformerException;
 import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.database.event.JDBCEventAccess;
@@ -158,7 +158,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         return memDss;
     }
 
-    public WaveformResult process(EventAccessOperations event,
+    public WaveformResult process(CacheEvent event,
                                   Channel chan,
                                   RequestFilter[] original,
                                   RequestFilter[] available,
@@ -173,7 +173,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         return new WaveformResult(seismograms, new StringTreeLeaf(this, out));
     }
 
-    public boolean updateTable(EventAccessOperations event,
+    public boolean updateTable(CacheEvent event,
                                Channel chan,
                                RequestFilter[] original,
                                RequestFilter[] available,
@@ -223,7 +223,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         return channelIds;
     }
 
-    public DataSetSeismogram[] extractSeismograms(EventAccessOperations eao)
+    public DataSetSeismogram[] extractSeismograms(CacheEvent eao)
             throws Exception {
         DataSet ds = DataSetToXML.load(saveSeisToFile.getDSMLFile(eao)
                 .toURI()

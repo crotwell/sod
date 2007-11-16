@@ -11,10 +11,10 @@ import java.util.List;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
@@ -47,7 +47,7 @@ public class ForkProcess implements WaveformProcess, Threadable {
      * method is the original seismograms. This allows, for example to process
      * both a original and a filtered version of the seismograms independently.
      */
-    public WaveformResult process(EventAccessOperations event,
+    public WaveformResult process(CacheEvent event,
                                   Channel channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,
@@ -62,7 +62,7 @@ public class ForkProcess implements WaveformProcess, Threadable {
                                         cookieJar).getReason());
     }
 
-    protected WaveformResult doAND(EventAccessOperations event,
+    protected WaveformResult doAND(CacheEvent event,
                                    Channel channel,
                                    RequestFilter[] original,
                                    RequestFilter[] available,

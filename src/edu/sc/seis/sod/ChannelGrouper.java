@@ -11,7 +11,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
 import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -19,6 +21,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
@@ -33,7 +36,6 @@ import edu.sc.seis.fissuresUtil.bag.OrientationUtil;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.sod.database.NetworkDbObject;
 import edu.sc.seis.sod.subsetter.channel.ChannelSubsetter;
 import edu.sc.seis.sod.subsetter.network.NetworkSubsetter;
 import edu.sc.seis.sod.subsetter.station.StationSubsetter;
