@@ -1,24 +1,20 @@
 package edu.sc.seis.sod.process.waveform;
 
 import java.awt.Dimension;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.transform.TransformerException;
-import org.apache.xpath.XPathAPI;
+
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
+
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.NotFound;
-import edu.sc.seis.fissuresUtil.database.event.JDBCEventAccess;
-import edu.sc.seis.fissuresUtil.database.network.JDBCChannel;
 import edu.sc.seis.fissuresUtil.display.RecordSectionDisplay;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.display.configuration.SeismogramDisplayConfiguration;
@@ -32,35 +28,17 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.database.waveform.JDBCRecordSectionChannel;
+import edu.sc.seis.sod.hibernate.RecordSectionItem;
+import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.eventChannel.PassEventChannel;
 
 public class RSChannelInfoPopulator implements WaveformProcess {
 
     public RSChannelInfoPopulator(Element config) throws Exception {
-        this(config, ConnMgr.createConnection());
-    }
-
-    public RSChannelInfoPopulator(Element config, Connection conn)
-            throws Exception {
         initConfig(config);
         saveSeisToFile = getSaveSeismogramToFile(saveSeisId);
-        recordSectionChannel = new JDBCRecordSectionChannel(conn);
-        eventAccess = new JDBCEventAccess(recordSectionChannel.getConnection());
-        channel = new JDBCChannel();
-        internalId = find(config);
-    }
-
-    private static int find(Element config) throws TransformerException {
-        NodeList nl = XPathAPI.selectNodeList(config, GENS_POPS_XPATH);
-        for(int i = 0; i < nl.getLength(); i++) {
-            if(nl.item(i).equals(config)) {
-                return i;
-            }
-        }
-        throw new RuntimeException("This element doesn't match any nodes returned by "
-                + GENS_POPS_XPATH);
+        recordSectionChannel = new SodDB();
     }
 
     public static final String GENS_POPS_XPATH = "//recordSectionDisplayGenerator | //RSChannelInfoPopulator | //externalWaveformProcess[classname/text() = \"edu.sc.seis.rev.map.RecordSectionAndMapGenerator\"]";
@@ -117,10 +95,6 @@ public class RSChannelInfoPopulator implements WaveformProcess {
 
     public Dimension getRecSecDimension() {
         return recSecDim;
-    }
-
-    public JDBCRecordSectionChannel getRSChannel() {
-        return recordSectionChannel;
     }
 
     public SaveSeismogramToFile getSaveSeismogramToFile() throws Exception {
@@ -185,40 +159,31 @@ public class RSChannelInfoPopulator implements WaveformProcess {
                                    available,
                                    seismograms,
                                    cookieJar).isSuccess()) {
-            int eq_dbid = eventAccess.getDBId(event);
+            ChannelImpl channel = (ChannelImpl)chan;
             DataSetSeismogram[] dss = extractSeismograms(event);
-            if(recordSectionChannel.contains(id,
-                                             eq_dbid,
-                                             cookieJar.getEventChannelPair()
-                                                     .getChannelDbId(),
-                                             internalId)) {
+            if(recordSectionChannel.getRecordSectionItem(id, event, channel) == null) {
                 return false;
             }
-            recordSectionChannel.insert(id,
-                                        eq_dbid,
-                                        cookieJar.getEventChannelPair()
-                                                .getChannelDbId(),
-                                        new double[] {0, 0, 0, 0},
-                                        0,
-                                        internalId);
+            recordSectionChannel.put(new RecordSectionItem(id,
+                                                           event,
+                                                           channel,
+                                                           false));
             DataSetSeismogram[] bestSeismos = dss;
             if(spacer != null) {
                 bestSeismos = spacer.spaceOut(dss);
             }
-            return recordSectionChannel.updateChannels(id,
-                                                       eq_dbid,
-                                                       getChannelDBIds(bestSeismos),
-                                                       internalId);
+            return recordSectionChannel.updateBestForRecordSection(id,
+                                                            event,
+                                                            getChannelIds(bestSeismos));
         }
         return false;
     }
 
-    public int[] getChannelDBIds(DataSetSeismogram[] dss) throws SQLException,
-            NotFound {
-        int[] channelIds = new int[dss.length];
+    public ChannelId[] getChannelIds(DataSetSeismogram[] dss)
+            throws SQLException, NotFound {
+        ChannelId[] channelIds = new ChannelId[dss.length];
         for(int j = 0; j < dss.length; j++) {
-            ChannelId channel_id = dss[j].getRequestFilter().channel_id;
-            channelIds[j] = channel.getDBId(channel_id);
+            channelIds[j] = dss[j].getRequestFilter().channel_id;
         }
         return channelIds;
     }
@@ -308,11 +273,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
 
     private DistanceRange distRange;// = new DistanceRange(0, 180);
 
-    private JDBCRecordSectionChannel recordSectionChannel;
-
-    private JDBCEventAccess eventAccess;
-
-    private JDBCChannel channel;
+    private SodDB recordSectionChannel;
 
     private double percentSeisHeight = 10;
 
@@ -323,8 +284,6 @@ public class RSChannelInfoPopulator implements WaveformProcess {
     private SeismogramDisplayConfiguration displayCreator;
 
     private EmbeddedEventChannelProcessor channelAcceptor;
-
-    private int internalId;
 
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(RSChannelInfoPopulator.class);
 }

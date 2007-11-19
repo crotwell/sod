@@ -27,12 +27,7 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
 public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
 
     public RecordSectionDisplayGenerator(Element config) throws Exception {
-        this(config, ConnMgr.createConnection());
-    }
-
-    public RecordSectionDisplayGenerator(Element config, Connection conn)
-            throws Exception {
-        super(config, conn);
+        super(config);
         if(DOMHelper.hasElement(config, "fileNameBase")) {
             filename = SodUtil.getText(SodUtil.getElement(config,
                                                           "fileNameBase"))
