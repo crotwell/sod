@@ -6,21 +6,20 @@
 
 package edu.sc.seis.sod.subsetter.origin;
 
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.Stage;
-import edu.sc.seis.sod.Standing;
-import edu.sc.seis.sod.Status;
-import edu.sc.seis.sod.database.event.JDBCEventStatus;
-import edu.sc.seis.sod.hibernate.StatefulEvent;
-import edu.sc.seis.sod.hibernate.StatefulEventDB;
-
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.w3c.dom.Element;
+
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.Stage;
+import edu.sc.seis.sod.Standing;
+import edu.sc.seis.sod.Status;
+import edu.sc.seis.sod.hibernate.StatefulEventDB;
 
 public class EventSorter {
 	public EventSorter() {
