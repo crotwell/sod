@@ -1,6 +1,10 @@
 package edu.sc.seis.sod.subsetter.origin;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.w3c.dom.Element;
 import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
@@ -10,10 +14,13 @@ import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.bag.DistAz;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
+import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
+import edu.sc.seis.sod.hibernate.StatefulEvent;
+import edu.sc.seis.sod.hibernate.StatefulEventDB;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
@@ -44,9 +51,9 @@ public class RemoveEventDuplicate implements OriginSubsetter {
         
     }
 
-    public JDBCEventStatus getEventStatusTable() throws SQLException {
+    public StatefulEventDB getEventStatusTable() throws SQLException {
         if (eventTable == null) {
-            eventTable = new JDBCEventStatus();
+            eventTable = new StatefulEventDB();
         }
         return eventTable;
     }
@@ -56,10 +63,11 @@ public class RemoveEventDuplicate implements OriginSubsetter {
                           Origin preferred_origin)
         throws Exception {
         // first eliminate based on time and depth as these are easy and the database can do efficiently
-        CacheEvent[] matchingEvents = getEventsNearTimeAndDepth(preferred_origin);
-        for (int i = 0; i < matchingEvents.length; i++) {
-            if (!matchingEvents[i].equals(eventAccess)){
-                if (isDistanceClose(matchingEvents[i], preferred_origin)){
+        Iterator matchingEvents = getEventsNearTimeAndDepth(preferred_origin).iterator();
+        while( matchingEvents.hasNext()) {
+        	StatefulEvent e = (StatefulEvent)matchingEvents.next();
+            if (!e.equals(eventAccess)){
+                if (isDistanceClose(e, preferred_origin)){
                     return new StringTreeLeaf(this, false);
                 }
             }
@@ -73,7 +81,7 @@ public class RemoveEventDuplicate implements OriginSubsetter {
         return distAz.getDelta() < distanceVariance.value;
     }
     
-    public CacheEvent[] getEventsNearTimeAndDepth(Origin preferred_origin) throws SQLException {
+    public List getEventsNearTimeAndDepth(Origin preferred_origin) throws SQLException {
         MicroSecondDate originTime = new MicroSecondDate(preferred_origin.origin_time);
         MicroSecondDate minTime = originTime.subtract(new TimeInterval(timeVariance));
         MicroSecondDate maxTime = originTime.add(new TimeInterval(timeVariance));
@@ -82,12 +90,19 @@ public class RemoveEventDuplicate implements OriginSubsetter {
         QuantityImpl depthRangeImpl = QuantityImpl.createQuantityImpl(depthVariance);
         QuantityImpl minDepth = originDepth.subtract(depthRangeImpl);
         QuantityImpl maxDepth = originDepth.add(depthRangeImpl);
-
-        return
-            getEventStatusTable().getEventsByTimeAndDepthRanges(minTime,
-                                                                maxTime,
-                                                                minDepth.getValue(UnitImpl.KILOMETER),
-                                                                maxDepth.getValue(UnitImpl.KILOMETER));
+        List timeEvents = 
+            getEventStatusTable().getEventInTimeRange(new MicroSecondTimeRange(minTime,
+                                                                maxTime));
+        List out = new ArrayList();
+        Iterator it = timeEvents.iterator();
+        while(it.hasNext()) {
+        	StatefulEvent e = (StatefulEvent)it.next();
+        	QuantityImpl depth = (QuantityImpl)e.getOrigin().my_location.depth;
+        	if (depth.greaterThanEqual(minDepth) && depth.lessThanEqual(maxDepth)) {
+        		out.add(e);
+        	}
+        }
+        return out;
     }
 
     protected QuantityImpl timeVariance = new QuantityImpl(10, UnitImpl.SECOND);
@@ -96,6 +111,6 @@ public class RemoveEventDuplicate implements OriginSubsetter {
     
     protected QuantityImpl depthVariance = new QuantityImpl(100, UnitImpl.KILOMETER);
     
-    private JDBCEventStatus eventTable;
+    private StatefulEventDB eventTable;
 }
 

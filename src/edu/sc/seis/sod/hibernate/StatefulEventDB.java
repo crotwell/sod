@@ -79,6 +79,15 @@ public class StatefulEventDB {
     public StatefulEvent getIdenticalEvent(CacheEvent e) {
         return (StatefulEvent)trans.getIdenticalEvent(e);
     }
+    
+    public List get(String statii, String order, boolean ascending) {
+    	Query q = trans.getSession().createQuery("from "+StatefulEvent.class.getName()+" e "
+    			+" where e.status in :statii order by :order :direction");
+    	q.setString("statii", statii);
+    	q.setString("order", order);
+    	q.setString("direction", ascending ? "asc" : "desc");
+    	return q.list();
+    }
 
     public void flush() {
         trans.flush();
@@ -107,6 +116,9 @@ public class StatefulEventDB {
         int updates = query.executeUpdate();
         logger.info("Reopen " + updates + " events");
     }
+    
+    public static final String TIME_ORDER = "preferred_origin.origin_time.datetime";
+    
     
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(StatefulEventDB.class);
 }

@@ -2,6 +2,8 @@ package edu.sc.seis.sod.subsetter.origin;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+
 import org.w3c.dom.Element;
 import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
@@ -43,16 +45,17 @@ public class SimilarEvent extends RemoveEventDuplicate {
                           Origin preferred_origin)
         throws Exception {
         // first eliminate based on time and depth as these are easy and the database can do efficiently
-        CacheEvent[] matchingEvents = getEventsNearTimeAndDepth(preferred_origin);
-        for (int i = 0; i < matchingEvents.length; i++) {
-            if (matchingEvents[i].equals(eventAccess) || isDistanceClose(matchingEvents[i], preferred_origin)){
+        Iterator matchingEvents = getEventsNearTimeAndDepth(preferred_origin).iterator();
+        while( matchingEvents.hasNext()) {
+        	CacheEvent e = (CacheEvent)matchingEvents.next();
+            if (e.equals(eventAccess) || isDistanceClose(e, preferred_origin)){
                 return new Pass(this);
             }
         }
         return new Fail(this);
     }
 
-    public CacheEvent[] getEventsNearTimeAndDepth(Origin preferred_origin) {
+    public List getEventsNearTimeAndDepth(Origin preferred_origin) {
         ArrayList out = new ArrayList();
         Iterator it = eventList.iterator();
         while(it.hasNext()) {
@@ -62,7 +65,7 @@ public class SimilarEvent extends RemoveEventDuplicate {
                 out.add(event);
             }
         }
-        return (CacheEvent[])out.toArray(new CacheEvent[0]);
+        return out;
     }
     
     private boolean isTimeOK(CacheEvent event, Origin preferred_origin) {

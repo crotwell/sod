@@ -58,22 +58,18 @@ public class EventGroupTemplate extends Template implements GenericTemplate{
 
     public String getResult(){
         StringBuffer output = new StringBuffer();
-        try {
-            StatefulEvent[] events = sorter.getSortedEvents();
-            for (int i = 0; i < events.length; i++) {
-                StatefulEvent curEv = events[i];
-                Iterator e = templates.iterator();
-                while(e.hasNext()){
-                    Object cur = e.next();
-                    if(cur instanceof EventTemplate){
-                        output.append(((EventTemplate)cur).getResult(curEv));
-                    }else{
-                        output.append(cur);
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            GlobalExceptionHandler.handle("Sorting the events threw this", e);
+        Iterator it = sorter.getSortedEvents().iterator();
+        while(it.hasNext()) {
+        	StatefulEvent curEv = (StatefulEvent)it.next();
+        	Iterator e = templates.iterator();
+        	while(e.hasNext()){
+        		Object cur = e.next();
+        		if(cur instanceof EventTemplate){
+        			output.append(((EventTemplate)cur).getResult(curEv));
+        		}else{
+        			output.append(cur);
+        		}
+        	}
         }
         return output.substring(0, output.length());//don't include last newline
     }
