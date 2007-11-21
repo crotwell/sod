@@ -481,6 +481,24 @@ public class SodDB extends AbstractHibernateDB {
         }
         return null;
     }
+    
+    public List getStationsForRecordSection(String recordSectionId, CacheEvent event, boolean best) {
+    	Query q = getSession().createQuery("select distinct e.channel.site.station from "+RecordSectionItem.class.getName()
+    	+" where recordSectionId = :recsecid and event = :event and inBest = :best");
+        q.setEntity("event", event);
+        q.setString("recsecid", recordSectionId);
+        q.setBoolean("best", best);
+        return q.list();
+    }
+    
+    public List getChannelsForRecordSection(String recordSectionId, CacheEvent event, boolean best) {
+    	Query q = getSession().createQuery("select distict e.channel from "+RecordSectionItem.class.getName()
+    	+" where recordSectionId = :recsecid and event = :event and inBest = :best");
+        q.setEntity("event", event);
+        q.setString("recsecid", recordSectionId);
+        q.setBoolean("best", best);
+        return q.list();
+    }
 
     public List getBestForRecordSection(String recordSectionId, CacheEvent event) {
         Query q = getSession().createQuery("from "
