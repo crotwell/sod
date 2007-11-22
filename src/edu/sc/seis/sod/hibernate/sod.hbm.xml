@@ -5,7 +5,7 @@
 
 <hibernate-mapping>
 
-	<joined-subclass name="edu.sc.seis.sod.database.event.StatefulEvent"
+	<joined-subclass name="edu.sc.seis.sod.hibernate.StatefulEvent"
 		extends="edu.sc.seis.fissuresUtil.cache.CacheEvent"
 		table="eventStatus">
 		<key column="eventStatus_id" />
@@ -18,7 +18,7 @@
 			<generator class="native" />
 		</id>
 		<many-to-one name="event"
-			class="edu.sc.seis.sod.database.event.StatefulEvent" column="event"
+			class="edu.sc.seis.sod.hibernate.StatefulEvent" column="event"
 			foreign-key="FK_ecp_event" 
 			unique-key="event_chan_key" />
 		<many-to-one name="channel"
@@ -69,7 +69,7 @@
 			<generator class="native" />
 		</id>
 		<many-to-one name="event"
-			class="edu.sc.seis.sod.database.event.StatefulEvent" column="event"
+			class="edu.sc.seis.sod.hibernate.StatefulEvent" column="event"
 			foreign-key="FK_recsec_event" />
 		<many-to-one name="channel"
 			class="edu.iris.Fissures.network.ChannelImpl" column="channel"
