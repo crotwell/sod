@@ -7,6 +7,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.hibernate.StatefulEventDB;
 
 /**
  * This task runs immediately on instantiation and then once a week after that.
@@ -22,19 +23,10 @@ public class TotalLoserEventCleaner extends TimerTask {
     public TotalLoserEventCleaner() {
         Timer t = new Timer(true);
         t.schedule(this, 0, ONE_WEEK);
+        eventdb = new StatefulEventDB();
     }
 
     public void run() {
-        Connection conn;
-        Statement stmt;
-        try {
-            conn = ConnMgr.createConnection();
-            conn.setAutoCommit(false);
-            stmt = conn.createStatement();
-        } catch(SQLException e) {
-            GlobalExceptionHandler.handle(e);
-            return;
-        }
         try {
             logger.debug("Working");
             stmt.executeUpdate("DELETE FROM eventaccess WHERE event_id IN (SELECT eventid FROM eventstatus WHERE eventcondition = 258)");
@@ -61,6 +53,8 @@ public class TotalLoserEventCleaner extends TimerTask {
             }
         }
     }
+    
+    StatefulEventDB eventdb;
 
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(TotalLoserEventCleaner.class);
 
