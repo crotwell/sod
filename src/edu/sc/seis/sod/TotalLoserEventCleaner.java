@@ -1,12 +1,16 @@
 package edu.sc.seis.sod;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Timer;
 import java.util.TimerTask;
-import edu.sc.seis.fissuresUtil.database.ConnMgr;
+
+import org.hibernate.Query;
+
+import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.model.TimeInterval;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
+import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.hibernate.StatefulEvent;
 import edu.sc.seis.sod.hibernate.StatefulEventDB;
 
 /**
@@ -20,7 +24,8 @@ import edu.sc.seis.sod.hibernate.StatefulEventDB;
  */
 public class TotalLoserEventCleaner extends TimerTask {
 
-    public TotalLoserEventCleaner() {
+    public TotalLoserEventCleaner(TimeInterval lag) {
+        this.lagInterval = lag;
         Timer t = new Timer(true);
         t.schedule(this, 0, ONE_WEEK);
         eventdb = new StatefulEventDB();
@@ -29,31 +34,23 @@ public class TotalLoserEventCleaner extends TimerTask {
     public void run() {
         try {
             logger.debug("Working");
-            stmt.executeUpdate("DELETE FROM eventaccess WHERE event_id IN (SELECT eventid FROM eventstatus WHERE eventcondition = 258)");
-            stmt.executeUpdate("DELETE FROM eventstatus WHERE eventid NOT IN (SELECT event_id FROM eventaccess)");
-            stmt.executeUpdate("DELETE FROM eventattr WHERE eventattr_id NOT IN (SELECT eventattr_id FROM eventaccess)");
-            stmt.executeUpdate("DELETE FROM origin WHERE origin_event_id NOT IN (SELECT event_id FROM eventaccess)");
-            stmt.executeUpdate("DELETE FROM magnitude WHERE originid NOT IN (SELECT origin_id FROM origin)");
-            stmt.executeUpdate("DELETE FROM time WHERE time_id NOT IN (SELECT chan_begin_id FROM channel) AND time_id NOT IN (SELECT chan_end_id FROM channel) AND time_id NOT IN (SELECT sta_begin_id FROM station) AND time_id NOT IN (SELECT sta_end_id FROM station) AND time_id NOT IN (SELECT net_begin_id FROM network) AND time_id NOT IN (SELECT net_end_id FROM network) AND time_id NOT IN (SELECT site_begin_id FROM site) AND time_id NOT IN (SELECT site_end_id FROM site) AND time_id NOT IN (SELECT origin_time_id FROM origin)");
-            stmt.executeUpdate("DELETE FROM location WHERE loc_id NOT IN (SELECT loc_id FROM site) AND loc_id NOT IN (SELECT loc_id FROM station) AND loc_id NOT IN (SELECT origin_location_id FROM origin)");
-            conn.commit();
-            logger.debug("Done");
-        } catch(SQLException e) {
+            MicroSecondDate ageAgo = ClockUtil.now().subtract(lagInterval);
+            Query q = eventdb.getSession().createQuery("delete from "+StatefulEvent.class.getName()+" where statusAsShort = 258 and preferred.originTime.time < :ageAgo");
+            q.setTimestamp("ageAgo", ageAgo.getTimestamp());
+            int num = q.executeUpdate();
+            eventdb.commit();
+            logger.debug("Done, deleted "+num+" events.");
+        } catch(Throwable e) {
             try {
-                conn.rollback();
-            } catch(SQLException e1) {
+                eventdb.rollback();
+            } catch(Throwable e1) {
                 GlobalExceptionHandler.handle(e1);
             }
             GlobalExceptionHandler.handle(e);
-        } finally {
-            try {
-                conn.close();
-            } catch(SQLException e) {
-                GlobalExceptionHandler.handle(e);
-            }
         }
     }
     
+    TimeInterval lagInterval ;
     StatefulEventDB eventdb;
 
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(TotalLoserEventCleaner.class);
