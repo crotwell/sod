@@ -16,7 +16,7 @@ public class StatefulEvent extends CacheEvent{
     protected StatefulEvent() {}
     
     public StatefulEvent(CacheEvent e, Status stat) throws NoPreferredOrigin{
-        super(e.get_attributes(), e.get_origins(), e.get_preferred_origin());
+        super(e.get_attributes(), e.get_origins(), e.getPreferred());
         this.stat = stat;
     }
 

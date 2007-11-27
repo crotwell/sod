@@ -7,10 +7,9 @@
 
 	<joined-subclass name="edu.sc.seis.sod.hibernate.StatefulEvent"
 		extends="edu.sc.seis.fissuresUtil.cache.CacheEvent"
-		table="eventStatus">
+		table="statefulEvent">
 		<key column="eventStatus_id" />
-		<property name="statusAsShort" type="short"
-			column="eventcondition" />
+		<property name="statusAsShort" type="short" />
 	</joined-subclass>
 
 	<class name="edu.sc.seis.sod.EventChannelPair">
