@@ -35,7 +35,7 @@ public class StatefulEventDB {
     
     public List getEventInTimeRange(MicroSecondTimeRange range) {
         String q = "from "+StatefulEvent.class.getName()+" e where e.statusAsShort = 2310 "
-        + "AND e.preferred.origin_time.time between :minTime AND :maxTime  ";
+        + "AND e.preferred.originTime.time between :minTime AND :maxTime  ";
         Query query = trans.getSession().createQuery(q);
 
         query.setTimestamp("minTime", range.getBeginTime().getTimestamp());
@@ -101,6 +101,10 @@ public class StatefulEventDB {
         trans.rollback();
     }
 
+    public Session getSession() {
+        return trans.getSession();
+    }
+    
     EventToStatefulDBTranslater trans;
 
     public void restartCompletedEvents() {
@@ -117,8 +121,16 @@ public class StatefulEventDB {
         logger.info("Reopen " + updates + " events");
     }
     
-    public static final String TIME_ORDER = "preferred_origin.origin_time.datetime";
+    public static final String TIME_ORDER = "preferred.originTime.time";
     
+    private static StatefulEventDB singleton;
+    
+    public static StatefulEventDB getSingleton() {
+        if (singleton == null) {
+            singleton = new StatefulEventDB();
+        }
+        return singleton;
+    }
     
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(StatefulEventDB.class);
 }

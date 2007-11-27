@@ -716,6 +716,15 @@ public class SodDB extends AbstractHibernateDB {
                 + retryReq;
         totalSuccess = baseStatement + " AND status = " + pass;
     }
+    
+    public static SodDB getSingleton() {
+        if (singleton == null) {
+            singleton = new SodDB();
+        }
+        return singleton;
+    }
+    
+    private static SodDB singleton;
 
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(SodDB.class);
 }
