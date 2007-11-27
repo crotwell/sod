@@ -10,6 +10,8 @@ import edu.sc.seis.sod.subsetter.Subsetter;
  * 
  * @author <a href="mailto:">Philip Crotwell </a>
  * @version
+ * 
+ * @Deprecated 
  */
 public interface SiteSubsetter extends Subsetter {
 

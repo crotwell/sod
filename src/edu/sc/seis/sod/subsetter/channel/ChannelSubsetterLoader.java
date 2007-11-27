@@ -7,6 +7,9 @@ import edu.sc.seis.sod.subsetter.Subsetter;
 import edu.sc.seis.sod.subsetter.SubsetterLoader;
 import edu.sc.seis.sod.subsetter.site.SiteSubsetter;
 import edu.sc.seis.sod.subsetter.site.SiteSubsetterLoader;
+import edu.sc.seis.sod.subsetter.site.StationSubsetterWrapper;
+import edu.sc.seis.sod.subsetter.station.StationSubsetter;
+import edu.sc.seis.sod.subsetter.station.StationSubsetterLoader;
 
 
 /**
@@ -18,12 +21,12 @@ public class ChannelSubsetterLoader implements SubsetterLoader {
 
     public Subsetter load(Element el) throws ConfigurationException {
         try {
-            Object subsetter = SodUtil.load(el, new String[] {"channel"});
+            Object subsetter = SodUtil.load(el, new String[] {"channel", "site"});
             return (ChannelSubsetter)subsetter;
         } catch(ConfigurationException e) {
-            return new SiteSubsetterWrapper((SiteSubsetter)siteLoader.load(el));
+            return new StationSubsetterWrapper((StationSubsetter)stationLoader.load(el));
         }
     }
 
-    private SiteSubsetterLoader siteLoader = new SiteSubsetterLoader();
+    private StationSubsetterLoader stationLoader = new StationSubsetterLoader();
 }

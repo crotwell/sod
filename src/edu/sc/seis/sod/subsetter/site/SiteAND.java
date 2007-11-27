@@ -3,26 +3,13 @@ package edu.sc.seis.sod.subsetter.site;
 import org.w3c.dom.Element;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.subsetter.channel.ChannelAND;
 
-public final class SiteAND extends SiteLogicalSubsetter implements
-        SiteSubsetter {
+/** @Deprecated */
+public final class SiteAND extends ChannelAND  {
 
     public SiteAND(Element config) throws ConfigurationException {
         super(config);
-    }
-
-    public boolean shouldContinue(StringTree result) {
-        return result.isSuccess();
-    }
-
-
-    public boolean isSuccess(StringTree[] reasons) {
-        for(int i = 0; i < reasons.length; i++) {
-            if(!reasons[i].isSuccess()){
-                return false;
-            }
-        }
-        return true;
     }
     
 }// SiteAND

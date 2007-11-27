@@ -4,7 +4,7 @@ import org.w3c.dom.Element;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.status.StringTree;
 
-public final class ChannelXOR extends ChannelLogicalSubsetter implements
+public  class ChannelXOR extends ChannelLogicalSubsetter implements
         ChannelSubsetter {
 
     public ChannelXOR(Element config) throws ConfigurationException {
