@@ -5,7 +5,9 @@ import java.sql.SQLException;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.hibernate.Hibernate;
 import org.hibernate.LockMode;
+import org.hibernate.dialect.function.SQLFunctionTemplate;
 
 import edu.sc.seis.fissuresUtil.hibernate.HibernateUtil;
 import edu.sc.seis.fissuresUtil.simple.TimeOMatic;
@@ -17,7 +19,8 @@ public class Play extends edu.sc.seis.fissuresUtil.hibernate.Play {
     
     static {
         HibernateUtil.getConfiguration()
-        .addResource("edu/sc/seis/sod/hibernate/sod.hbm.xml");
+        .addResource("edu/sc/seis/sod/hibernate/sod.hbm.xml")
+        .addSqlFunction( "datediff", new SQLFunctionTemplate(Hibernate.LONG, "datediff(?1, ?2, ?3)" ) );
     }
 
     public static void main(String[] args) throws SQLException {
