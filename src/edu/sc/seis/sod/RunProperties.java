@@ -5,6 +5,9 @@
  */
 package edu.sc.seis.sod;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.w3c.dom.Element;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
@@ -84,6 +87,10 @@ public class RunProperties {
 					.hasElement(el, "allowNetworksOutsideEventRequestTime")) {
 				allowDeadNets = true;
 			}
+			Element hibernateExtraConfig = SodUtil.getElement(el, "hibernateConfig");
+			if (hibernateExtraConfig != null) {
+			    hibernateConfig.add(SodUtil.getText(hibernateExtraConfig));
+			}
 		}
 		CookieJar.getCommonContext().put("runName", runName);
 	}
@@ -159,6 +166,10 @@ public class RunProperties {
 	public boolean allowDeadNets() {
 		return allowDeadNets;
 	}
+	
+	public List getHibernateConfig() {
+	    return hibernateConfig;
+	}
 
 	public static final TimeInterval NO_TIME = new TimeInterval(0,
 			UnitImpl.SECOND);
@@ -210,4 +221,6 @@ public class RunProperties {
 	private boolean loserEventCleaner = false;
 
 	private boolean allowDeadNets;
+	
+	private List hibernateConfig = new ArrayList();
 }

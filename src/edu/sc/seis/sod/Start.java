@@ -169,13 +169,17 @@ public class Start {
         loadRunProps(getConfig());
         ConnMgr.installDbProperties(props, args.getInitialArgs());
         synchronized(HibernateUtil.class) {
-        HibernateUtil.getConfiguration()
-        .setProperty("hibernate.connection.url", ConnMgr.getURL())
-        .setProperty("hibernate.connection.username", ConnMgr.getUser())
-        .setProperty("hibernate.connection.password", ConnMgr.getPass())
-        .addResource("edu/sc/seis/sod/hibernate/sod.hbm.xml")
-        .addProperties(props)
-        .addSqlFunction( "datediff", new SQLFunctionTemplate(Hibernate.LONG, "datediff(?1, ?2, ?3)" ) );
+            HibernateUtil.getConfiguration()
+            .setProperty("hibernate.connection.url", ConnMgr.getURL())
+            .setProperty("hibernate.connection.username", ConnMgr.getUser())
+            .setProperty("hibernate.connection.password", ConnMgr.getPass())
+            .addResource("edu/sc/seis/sod/hibernate/sod.hbm.xml")
+            .addProperties(props)
+            .addSqlFunction( "datediff", new SQLFunctionTemplate(Hibernate.LONG, "datediff(?1, ?2, ?3)" ) );
+            Iterator it = getRunProps().getHibernateConfig().iterator();
+            while(it.hasNext()) {
+                HibernateUtil.getConfiguration().addResource((String)it.next());
+            }
         }
 
         SchemaUpdate update = new SchemaUpdate(HibernateUtil.getConfiguration());
@@ -287,6 +291,13 @@ public class Start {
     }
 
     public static RunProperties getRunProps() {
+        if (runProps == null) {
+            try {
+                runProps = new RunProperties();
+            } catch(ConfigurationException e) {
+                throw new RuntimeException(e);
+            }
+        }
         return runProps;
     }
 
@@ -357,7 +368,7 @@ public class Start {
                 new PeriodicCheckpointer();
             }
             if(runProps.loserEventCleaner()) {
-                new TotalLoserEventCleaner();
+                new TotalLoserEventCleaner(getRunProps().getEventLag());
             }
         }
     }
