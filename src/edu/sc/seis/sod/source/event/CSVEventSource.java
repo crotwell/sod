@@ -161,7 +161,7 @@ public class CSVEventSource extends SimpleEventSource {
                                               Float.parseFloat(magValues[i]),
                                               magContribs[i]);
             }
-            Origin origin = new OriginImpl("",
+            OriginImpl origin = new OriginImpl("",
                                            catalog,
                                            contributor,
                                            time,
