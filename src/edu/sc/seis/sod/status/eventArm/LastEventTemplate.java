@@ -13,7 +13,7 @@ public class LastEventTemplate extends AllTypeTemplate {
 
     public LastEventTemplate(Element el) throws ConfigurationException {
         ef = new EventFormatter(el);
-        evAcc = new EventDB();
+        evAcc =  EventDB.getSingleton();
     }
 
     public String getResult() {

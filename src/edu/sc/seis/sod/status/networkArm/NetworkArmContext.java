@@ -19,12 +19,12 @@ public class NetworkArmContext extends AbstractContext {
 
     public NetworkArmContext() throws SQLException {
         super();
-        netDb = new NetworkDB();
+        netDb =  NetworkDB.getSingleton();
     }
 
     public NetworkArmContext(Context context) throws SQLException {
         super(context);
-        netDb = new NetworkDB();
+        netDb =  NetworkDB.getSingleton();
     }
 
     public Object internalGet(String key) {
