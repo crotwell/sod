@@ -9,10 +9,14 @@ import org.hibernate.Hibernate;
 import org.hibernate.LockMode;
 import org.hibernate.dialect.function.SQLFunctionTemplate;
 
+import edu.iris.Fissures.model.TimeInterval;
+import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.hibernate.HibernateUtil;
 import edu.sc.seis.fissuresUtil.simple.TimeOMatic;
 import edu.sc.seis.sod.EventChannelPair;
+import edu.sc.seis.sod.TotalLoserEventCleaner;
 import edu.sc.seis.sod.mock.MockECP;
+import edu.sc.seis.sod.mock.MockStatefulEvent;
 
 
 public class Play extends edu.sc.seis.fissuresUtil.hibernate.Play {
@@ -45,6 +49,10 @@ public class Play extends edu.sc.seis.fissuresUtil.hibernate.Play {
         }
         if (todo.equals("storeecp")) {
             storeECP();
+        } else if (todo.equals("storeevent")) {
+            storeStatefulEvent();
+        } else if (todo.equals("delse")) {
+            new TotalLoserEventCleaner(new TimeInterval(1, UnitImpl.WEEK)).run();
         } else {
             return false;
         }
@@ -58,5 +66,12 @@ public class Play extends edu.sc.seis.fissuresUtil.hibernate.Play {
         sodDb.commit();
         sodDb.getSession().lock(ecp, LockMode.NONE);
     }
+    
+    protected void storeStatefulEvent() {
+        StatefulEvent s = MockStatefulEvent.create();
+        StatefulEventDB db = StatefulEventDB.getSingleton();
+        db.put(s);
+    }
+    
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(Play.class);
 }
