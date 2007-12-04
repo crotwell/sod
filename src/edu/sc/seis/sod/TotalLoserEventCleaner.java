@@ -1,10 +1,12 @@
 package edu.sc.seis.sod;
 
+import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import org.hibernate.Query;
 
+import edu.iris.Fissures.event.OriginImpl;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
@@ -26,20 +28,25 @@ public class TotalLoserEventCleaner extends TimerTask {
 
     public TotalLoserEventCleaner(TimeInterval lag) {
         this.lagInterval = lag;
-        Timer t = new Timer(true);
-        t.schedule(this, 0, ONE_WEEK);
         eventdb = new StatefulEventDB();
+       // Timer t = new Timer(true);
+       // t.schedule(this, 0, ONE_WEEK);
     }
 
     public void run() {
         try {
             logger.debug("Working");
             MicroSecondDate ageAgo = ClockUtil.now().subtract(lagInterval);
-            Query q = eventdb.getSession().createQuery("delete from "+StatefulEvent.class.getName()+" where statusAsShort = 258 and preferred.originTime.time < :ageAgo");
+            Query q = eventdb.getSession().createQuery(" from "+StatefulEvent.class.getName()+" e  where e.statusAsShort = 258 and e.preferred.originTime.time < :ageAgo");
             q.setTimestamp("ageAgo", ageAgo.getTimestamp());
-            int num = q.executeUpdate();
+            Iterator it = q.iterate();
+            int counter=0;
+            while(it.hasNext()) {
+                eventdb.getSession().delete(it.next());
+                counter++;
+            }
             eventdb.commit();
-            logger.debug("Done, deleted "+num+" events.");
+            logger.debug("Done, deleted "+counter+" events.");
         } catch(Throwable e) {
             try {
                 eventdb.rollback();
