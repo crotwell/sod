@@ -167,10 +167,12 @@ public class WaveformArm implements Arm {
             logger.debug("Work on event dbid="+ev.getDbid());
             ev.setStatus(Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                     Standing.IN_PROG));
+            eventDb.commit();
             numEvents++;
             if (ev.get_preferred_origin().origin_time == null) {throw new RuntimeException("otime is null "+ev.get_preferred_origin().my_location);}
             EventEffectiveTimeOverlap overlap = new EventEffectiveTimeOverlap(ev);
             CacheNetworkAccess[] networks = networkArm.getSuccessfulNetworks();
+            
             for(int i = 0; i < networks.length; i++) {
                 startNetwork(ev, overlap, networks[i]);
             }
@@ -178,6 +180,8 @@ public class WaveformArm implements Arm {
             // that all the network information for this particular event is
             // inserted
             // in the waveformDatabase.
+            // reattach ev so we can set status
+            eventDb.getSession().lock(ev, LockMode.NONE);
             ev.setStatus(Status.get(Stage.EVENT_CHANNEL_POPULATION,
                     Standing.SUCCESS));
             eventArm.change(ev);
@@ -248,7 +252,6 @@ public class WaveformArm implements Arm {
         }
         ChannelImpl[] overlapChans = (ChannelImpl[])overlapList.toArray(new ChannelImpl[0]);
         ChannelGroup[] chanGroups = groupChannels(overlapChans, ev);
-        int evDbId = ev.getDbid();
         Status eventStationInit = Status.get(Stage.EVENT_STATION_SUBSETTER,
                                              Standing.INIT);
         for(int i = 0; i < chanGroups.length; i++) {
