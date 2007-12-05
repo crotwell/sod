@@ -342,16 +342,16 @@ public class NetworkArm implements Arm {
      */
     private class NetworkPusher implements Runnable {
 
-        public NetworkPusher(CacheNetworkAccess netDb) {
-            this.netDb = netDb;
+        public NetworkPusher(CacheNetworkAccess net) {
+            this.net = net;
         }
 
         public void run() {
             if(!Start.isArmFailure()) {
-                logger.info("Starting work on " + netDb);
+                logger.info("Starting work on " + net);
                 // new thread, so need to attach net attr instance
                 NetworkDB ndb = getNetworkDB();
-                StationImpl[] staDbs = getSuccessfulStations(netDb);
+                StationImpl[] staDbs = getSuccessfulStations(net);
                 ndb.flush();
                 if(!(Start.getWaveformArm() == null
                         &&  chanSubsetters.size() == 0)) {
@@ -360,8 +360,8 @@ public class NetworkArm implements Arm {
                     for(int j = 0; j < staDbs.length; j++) {
                     	// commit for each station
                     	synchronized (NetworkArm.this) {
-                        ndb.getSession().lock(netDb.get_attributes(), LockMode.NONE);
-                        ChannelImpl[] chans = getSuccessfulChannels(netDb,
+                        ndb.getSession().lock(net.get_attributes(), LockMode.NONE);
+                        ChannelImpl[] chans = getSuccessfulChannels(net,
                                                                     staDbs[j]);
 						}
                     }
@@ -388,7 +388,7 @@ public class NetworkArm implements Arm {
 
         private boolean lastPusher = false, pusherFinished = false;
 
-        private CacheNetworkAccess netDb;
+        private CacheNetworkAccess net;
     }
 
     private void finish() {
@@ -445,8 +445,7 @@ public class NetworkArm implements Arm {
                         StringTree staResult = stationSubsetter.accept(stations[i],
                                                                        net);
                         if(staResult.isSuccess()) {
-                            int dbid;
-                            dbid = getNetworkDB().put((StationImpl)stations[i]);
+                            int dbid = getNetworkDB().put((StationImpl)stations[i]);
                             logger.info("Store "+stations[i].get_code()+" as "+dbid+" in "+getNetworkDB());
                             arrayList.add(stations[i]);
                             change(stations[i],
@@ -496,8 +495,8 @@ public class NetworkArm implements Arm {
         return getSuccessfulChannels(getNetwork(siteDbObject.my_network.get_id()), siteDbObject);
     }
     
-    public ChannelImpl[] getSuccessfulChannels(CacheNetworkAccess networkAccess, StationImpl siteDbObject) {
-        Integer staKey = new Integer(siteDbObject.getDbid());
+    public ChannelImpl[] getSuccessfulChannels(CacheNetworkAccess networkAccess, StationImpl station) {
+        Integer staKey = new Integer(station.getDbid());
         if (successfulChannels.containsKey(staKey)) {
             return (ChannelImpl[])successfulChannels.get(staKey);
         }
@@ -506,10 +505,10 @@ public class NetworkArm implements Arm {
             if (successfulChannels.containsKey(staKey)) {
                 return (ChannelImpl[])successfulChannels.get(staKey);
             }
-            statusChanged("Getting channels for " + siteDbObject);
+            statusChanged("Getting channels for " + station);
             List successes = new ArrayList();
             try {
-                Channel[] tmpChannels = networkAccess.retrieve_for_station(siteDbObject.get_id());
+                Channel[] tmpChannels = networkAccess.retrieve_for_station(station.get_id());
                 ChannelImpl[] channels = new ChannelImpl[tmpChannels.length];
                 System.arraycopy(tmpChannels, 0, channels, 0, channels.length);
                 Status inProg = Status.get(Stage.NETWORK_SUBSETTER,
@@ -544,7 +543,7 @@ public class NetworkArm implements Arm {
                             Integer dbidInt = new Integer(getNetworkDB().put(chan));
                             needCommit = true;
                             channelMap.put(dbidInt, chan);
-                            channelToSiteMap.put(dbidInt, siteDbObject);
+                            channelToSiteMap.put(dbidInt, station);
                             successes.add(chan);
                             change(chan, Status.get(Stage.NETWORK_SUBSETTER,
                                                     Standing.SUCCESS));
@@ -562,7 +561,7 @@ public class NetworkArm implements Arm {
                 }
             } catch(Throwable e) {
                 GlobalExceptionHandler.handle("Problem in method getSuccessfulChannels for "
-                                                      + StationIdUtil.toString(siteDbObject.get_id()),
+                                                      + StationIdUtil.toString(station.get_id()),
                                               e);
                 getNetworkDB().rollback();
             }
