@@ -1,10 +1,7 @@
 package edu.sc.seis.sod;
 
-import org.hibernate.LockMode;
-
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
