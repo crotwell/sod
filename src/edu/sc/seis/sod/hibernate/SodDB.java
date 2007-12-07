@@ -43,11 +43,6 @@ import edu.sc.seis.sod.Version;
 public class SodDB extends AbstractHibernateDB {
 
     public SodDB() {
-        this(HibernateUtil.getSessionFactory());
-    }
-
-    public SodDB(SessionFactory factory) {
-        super(factory);
     }
 
     public EventChannelPair[] getSuspendedEventChannelPairs(String processingRule)
@@ -94,7 +89,7 @@ public class SodDB extends AbstractHibernateDB {
                     reprocess.add(pair);
                 }
             }
-            getSession().flush();
+            flush();
             return (EventChannelPair[])reprocess.toArray(new EventChannelPair[0]);
         }
     }
@@ -576,6 +571,16 @@ public class SodDB extends AbstractHibernateDB {
         return q.list();
     }
         
+    public void putCookie(EcpCookie cookie) {
+        getSession().save(cookie);
+    }
+    
+    public EcpCookie getCookie(EventChannelPair ecp, String name) {
+        Query q = getSession().createQuery("from "+EcpCookie.class.getName()+" where ecp = :ecp and name = :name");
+        q.setEntity("ecp", ecp);
+        q.setString("name", name);
+        return (EcpCookie)q.uniqueResult();
+    }
 
     public int putConfig(SodConfig sodConfig) {
         Integer dbid = (Integer)getSession().save(sodConfig);

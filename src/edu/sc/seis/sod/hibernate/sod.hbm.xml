@@ -40,7 +40,17 @@
 		<many-to-one name="ecp3"
 			class="edu.sc.seis.sod.EventChannelPair" foreign-key="FK_evp_ecp3"
 			column="ecp3" cascade="save-update" />
-
+	</class>
+	
+	<class name="edu.sc.seis.sod.hibernate.EcpCookie">
+		<id name="id" type="long">
+			<generator class="native" />
+		</id>
+		<many-to-one name="ecp"
+			class="edu.sc.seis.sod.EventChannelPair" foreign-key="FK_cookie_ecp"
+			column="ecp" unique-key="ecp_cookie" />
+		<property name="name"  unique-key="ecp_cookie" />
+		<property name="value" type="serializable" />
 	</class>
 
 	<class name="edu.sc.seis.sod.RetryWaveformWorkUnit">

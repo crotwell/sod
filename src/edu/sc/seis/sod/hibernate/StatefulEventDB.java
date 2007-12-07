@@ -18,7 +18,7 @@ import edu.sc.seis.sod.Status;
 public class StatefulEventDB {
 
     public StatefulEventDB() {
-        trans = new EventToStatefulDBTranslater(HibernateUtil.getSessionFactory());
+        trans = new EventToStatefulDBTranslater();
     }
 
     public long put(StatefulEvent event) {
@@ -136,10 +136,6 @@ public class StatefulEventDB {
 }
 
 class EventToStatefulDBTranslater extends EventDB {
-
-    EventToStatefulDBTranslater(SessionFactory factory) {
-        super(factory);
-    }
 
     protected Class getEventClass() {
         return StatefulEvent.class;
