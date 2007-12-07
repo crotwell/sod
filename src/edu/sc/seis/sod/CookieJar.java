@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
+
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.context.Context;
@@ -13,11 +14,9 @@ import org.apache.velocity.tools.generic.IteratorTool;
 import org.apache.velocity.tools.generic.MathTool;
 import org.apache.velocity.tools.generic.NumberTool;
 import org.apache.velocity.tools.generic.RenderTool;
+
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkId;
-import edu.iris.Fissures.IfNetwork.Site;
-import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.NetworkIdUtil;
@@ -26,7 +25,6 @@ import edu.iris.Fissures.network.SiteImpl;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
-import edu.sc.seis.sod.database.waveform.JDBCEventChannelCookieJar;
 import edu.sc.seis.sod.database.waveform.JDBCVelocityContext;
 import edu.sc.seis.sod.status.FissuresFormatter;
 
@@ -44,14 +42,11 @@ public class CookieJar {
 
     public CookieJar(EventChannelPair ecp) throws SQLException {
         this.ecp = ecp;
-        if(jdbcCookie == null) {
-            jdbcCookie = new JDBCEventChannelCookieJar();
-        }
         memoryContext = getChannelContext(ecp.getEvent(), ecp.getChannel());
         memoryContext.put("sod_cookieJar", this); // needed for eval and recurse
         // velocity tool
         updateStatus();
-        context = new JDBCVelocityContext(ecp, jdbcCookie, memoryContext);
+        context = new JDBCVelocityContext(ecp, memoryContext);
         String chanId = ChannelIdUtil.toString(ecp.getChannel().get_id());
         Context siteContext = (Context)memoryContext.get("sod_site_context");
         siteContext.put(chanId, context);
@@ -91,8 +86,6 @@ public class CookieJar {
     VelocityContext memoryContext;
 
     EventChannelPair ecp;
-
-    static JDBCEventChannelCookieJar jdbcCookie = null;
 
     public static VelocityContext getChannelContext(EventAccessOperations event,
                                                     ChannelImpl channel) {

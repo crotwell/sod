@@ -18,12 +18,10 @@
 		</id>
 		<many-to-one name="event"
 			class="edu.sc.seis.sod.hibernate.StatefulEvent" column="event"
-			foreign-key="FK_ecp_event" 
-			unique-key="event_chan_key" />
+			foreign-key="FK_ecp_event" unique-key="event_chan_key" />
 		<many-to-one name="channel"
 			class="edu.iris.Fissures.network.ChannelImpl" column="channel"
-			foreign-key="FK_ecp_channel"
-			unique-key="event_chan_key" />
+			foreign-key="FK_ecp_channel" unique-key="event_chan_key" />
 		<property name="StatusAsShort" type="short" column="status" />
 	</class>
 
@@ -41,15 +39,16 @@
 			class="edu.sc.seis.sod.EventChannelPair" foreign-key="FK_evp_ecp3"
 			column="ecp3" cascade="save-update" />
 	</class>
-	
+
 	<class name="edu.sc.seis.sod.hibernate.EcpCookie">
-		<id name="id" type="long">
-			<generator class="native" />
-		</id>
-		<many-to-one name="ecp"
-			class="edu.sc.seis.sod.EventChannelPair" foreign-key="FK_cookie_ecp"
-			column="ecp" unique-key="ecp_cookie" />
-		<property name="name"  unique-key="ecp_cookie" />
+		<composite-id name="id"
+			class="edu.sc.seis.sod.hibernate.EcpCookieId">
+			<key-property name="name" />
+			<key-property name="ecp_id" />
+		</composite-id>
+		<many-to-one name="ecp" class="edu.sc.seis.sod.EventChannelPair"
+			foreign-key="FK_cookie_ecp" column="ecp_id" insert="false"
+			update="false" />
 		<property name="value" type="serializable" />
 	</class>
 
@@ -82,11 +81,11 @@
 			foreign-key="FK_recsec_event" />
 		<many-to-one name="channel"
 			class="edu.iris.Fissures.network.ChannelImpl" column="channel"
-			foreign-key="FK_recsec_channel"/>
+			foreign-key="FK_recsec_channel" />
 		<property name="recordSectionId" />
 		<property name="inBest" type="boolean" />
 	</class>
-	
+
 	<class name="edu.sc.seis.sod.SodConfig">
 		<id name="dbid" type="integer">
 			<generator class="native" />

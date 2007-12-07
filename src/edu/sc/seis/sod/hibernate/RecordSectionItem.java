@@ -15,6 +15,9 @@ public class RecordSectionItem {
         this.recordSectionId = recordSectionId;
         this.inBest = inBest;
     }
+    
+    /** for hibernate */
+    protected RecordSectionItem() {}
 
     int dbid;
 

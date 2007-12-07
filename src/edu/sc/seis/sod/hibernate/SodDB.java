@@ -581,6 +581,16 @@ public class SodDB extends AbstractHibernateDB {
         q.setString("name", name);
         return (EcpCookie)q.uniqueResult();
     }
+    
+    public List getCookieNames(EventChannelPair ecp) {
+        Query q = getSession().createQuery("select name from "+EcpCookie.class.getName()+" where ecp = :ecp");
+        q.setEntity("ecp", ecp);
+        return q.list();
+    }
+    
+    public void deleteCookie(EcpCookie cookie) {
+        getSession().delete(cookie);
+    }
 
     public int putConfig(SodConfig sodConfig) {
         Integer dbid = (Integer)getSession().save(sodConfig);

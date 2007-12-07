@@ -191,22 +191,21 @@ public class NetworkArm implements Arm {
                                   ClockUtil.now().getTimestamp());
             sodDb.putQueryTime(qtime);
         } else if(!qtime.needsRefresh(finder.getRefreshInterval())) {
-            if(netDbs == null) {
-                netDbs = getNetworkDB().getAllNets(getNetworkDC());
-                for(int i = 0; i < netDbs.length; i++) {
+            if(cacheNets == null) {
+                cacheNets = getNetworkDB().getAllNets(getNetworkDC());
+                for(int i = 0; i < cacheNets.length; i++) {
                     // this is for the side effect of creating
                     // networkInfoTemplate stuff
                     // avoids a null ptr later
-                    change(netDbs[i],
+                    change(cacheNets[i],
                            Status.get(Stage.NETWORK_SUBSETTER, Standing.SUCCESS));
                 }
             }
-            sodDb.commit();
-            return netDbs;
+            return cacheNets;
         }
         statusChanged("Getting networks");
         logger.info("Getting networks");
-        ArrayList networkDBs = new ArrayList();
+        ArrayList successes = new ArrayList();
         CacheNetworkAccess[] allNets;
         
         NetworkDCOperations netDC = finder.getNetworkDC();
@@ -254,10 +253,9 @@ public class NetworkArm implements Arm {
                     if(attrSubsetter.accept(attr).isSuccess()) {
                         NetworkDB ndb = getNetworkDB();
                         int dbid= ndb.put(attr);
-                        logger.debug("Session: "+getNetworkDB().getSession().getStatistics().toString());
-                        ndb.commit();
+                        NetworkDB.commit();
                         logger.info("store network: "+attr.getDbid()+" "+dbid);
-                        networkDBs.add(allNets[i]);
+                        successes.add(allNets[i]);
                         change(allNets[i], Status.get(Stage.NETWORK_SUBSETTER,
                                                       Standing.SUCCESS));
                         if(!(Start.getWaveformArm() == null
@@ -302,12 +300,11 @@ public class NetworkArm implements Arm {
         }
         // Set the time of the last check to now
         qtime.setTime(ClockUtil.now().getTimestamp());
-        sodDb.commit();
-        netDbs = new CacheNetworkAccess[networkDBs.size()];
-        networkDBs.toArray(netDbs);
-        logger.info(netDbs.length + " networks passed");
+        cacheNets = new CacheNetworkAccess[successes.size()];
+        successes.toArray(cacheNets);
+        logger.info(cacheNets.length + " networks passed");
         statusChanged("Waiting for a request");
-        return netDbs;
+        return cacheNets;
     }
 
     /**
@@ -352,7 +349,6 @@ public class NetworkArm implements Arm {
                 // new thread, so need to attach net attr instance
                 NetworkDB ndb = getNetworkDB();
                 StationImpl[] staDbs = getSuccessfulStations(net);
-                ndb.flush();
                 if(!(Start.getWaveformArm() == null
                         &&  chanSubsetters.size() == 0)) {
                     // only get channels if there are subsetters or a
@@ -487,12 +483,12 @@ public class NetworkArm implements Arm {
      * using the ChannelSubsetter and returns an array of those that pass
      * @throws NetworkNotFound 
      */
-    public ChannelImpl[] getSuccessfulChannels(StationImpl siteDbObject) throws NetworkNotFound {
-        Integer staKey = new Integer(siteDbObject.getDbid());
+    public ChannelImpl[] getSuccessfulChannels(StationImpl station) throws NetworkNotFound {
+        Integer staKey = new Integer(station.getDbid());
         if (successfulChannels.containsKey(staKey)) {
             return (ChannelImpl[])successfulChannels.get(staKey);
         }
-        return getSuccessfulChannels(getNetwork(siteDbObject.my_network.get_id()), siteDbObject);
+        return getSuccessfulChannels(getNetwork(station.my_network.get_id()), station);
     }
     
     public ChannelImpl[] getSuccessfulChannels(CacheNetworkAccess networkAccess, StationImpl station) {
@@ -557,13 +553,13 @@ public class NetworkArm implements Arm {
                     }
                 }
                 if (needCommit) {
-                    getNetworkDB().commit();
+                    NetworkDB.commit();
                 }
             } catch(Throwable e) {
                 GlobalExceptionHandler.handle("Problem in method getSuccessfulChannels for "
                                                       + StationIdUtil.toString(station.get_id()),
                                               e);
-                getNetworkDB().rollback();
+                NetworkDB.rollback();
             }
             ChannelImpl[] values = (ChannelImpl[])successes.toArray(new ChannelImpl[0]);
             successfulChannels.put(staKey, values);
@@ -691,7 +687,7 @@ public class NetworkArm implements Arm {
     
     private NetworkDB networkDB;
 
-    private CacheNetworkAccess[] netDbs;
+    private CacheNetworkAccess[] cacheNets;
 
     private List statusMonitors = new ArrayList();
 
