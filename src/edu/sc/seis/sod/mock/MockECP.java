@@ -5,38 +5,32 @@
  */
 
 package edu.sc.seis.sod.mock;
-import java.sql.SQLException;
-
 import edu.iris.Fissures.network.ChannelImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.fissuresUtil.mockFissures.IfEvent.MockEventAccessOperations;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannel;
 import edu.sc.seis.sod.EventChannelPair;
+import edu.sc.seis.sod.Stage;
+import edu.sc.seis.sod.Standing;
+import edu.sc.seis.sod.Status;
+import edu.sc.seis.sod.hibernate.StatefulEvent;
 
 
 
 public class MockECP{
     public static EventChannelPair getECP(){
-        return getECP(MockEventAccessOperations.createEvent());
+        return getECP(MockStatefulEvent.create());
     }
 
     public static EventChannelPair getECP(ChannelImpl chan){
-        return getECP(MockEventAccessOperations.createEvent(), chan);
+        return getECP(MockStatefulEvent.create(), chan);
     }
 
-    public static EventChannelPair getECP(CacheEvent event) {
+    public static EventChannelPair getECP(StatefulEvent event) {
         return getECP(event, MockChannel.createChannel());
     }
 
-    public static EventChannelPair getECP(CacheEvent ev, ChannelImpl chan){
-        try {
+    public static EventChannelPair getECP(StatefulEvent ev, ChannelImpl chan){
         return new EventChannelPair( ev,
-                                    chan, 0);
-        } catch (SQLException e) {
-            GlobalExceptionHandler.handle("Cannot create EventChannelPair", e);
-            return null;
-        }
+                                    chan, 0, Status.get(Stage.PROCESSOR, Standing.IN_PROG));
     }
 
 }

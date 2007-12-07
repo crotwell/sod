@@ -25,13 +25,15 @@ import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.Stage;
 import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Status;
+import edu.sc.seis.sod.hibernate.StatefulEvent;
+import edu.sc.seis.sod.mock.MockStatefulEvent;
 import edu.sc.seis.sod.status.waveformArm.LocalSeismogramTemplate;
 
 public class LocalSeismogramTemplateTest extends TestCase {
 
     public void testVelocity() throws Exception {
         BasicConfigurator.configure();
-        CacheEvent event = MockEventAccessOperations.createEvent();
+        StatefulEvent event = MockStatefulEvent.create();
         event.setDbid(7);
         ChannelImpl c = MockChannel.createChannel();
         ChannelImpl cdb = new ChannelImpl(c.get_id(),

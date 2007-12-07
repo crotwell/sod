@@ -12,19 +12,19 @@ import org.apache.log4j.Logger;
 
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.hibernate.StatefulEvent;
 
 public class EventChannelPair{
     
     /** for hibernate */
     protected EventChannelPair() {}
     
-    public EventChannelPair(CacheEvent event, ChannelImpl chan, int pairId) throws SQLException {
+    public EventChannelPair(StatefulEvent event, ChannelImpl chan, int pairId) {
         this(event, chan, pairId, null);
     }
 
-    public EventChannelPair(CacheEvent event, ChannelImpl chan, int pairId, Status status) throws SQLException {
+    public EventChannelPair(StatefulEvent event, ChannelImpl chan, int pairId, Status status) {
         this.event = event;
         this.chan = chan;
         this.pairId = pairId;
@@ -82,7 +82,7 @@ public class EventChannelPair{
 
     public ChannelImpl getChannel() { return chan; }
 
-    public CacheEvent getEvent(){ return event; }
+    public StatefulEvent getEvent(){ return event; }
 
     public CookieJar getCookieJar() {
         if (cookieJar == null) {
@@ -101,7 +101,7 @@ public class EventChannelPair{
     }
 
     /** for use by hibernate */
-    protected void setEvent(CacheEvent e) {
+    protected void setEvent(StatefulEvent e) {
         this.event = e;
     }
     /** for use by hibernate */
@@ -115,7 +115,7 @@ public class EventChannelPair{
     }
     
     private Status status;
-    private CacheEvent event;
+    private StatefulEvent event;
     private ChannelImpl chan;
     private int pairId;
     private CookieJar cookieJar;
