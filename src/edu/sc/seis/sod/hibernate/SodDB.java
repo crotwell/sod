@@ -572,7 +572,7 @@ public class SodDB extends AbstractHibernateDB {
     }
         
     public void putCookie(EcpCookie cookie) {
-        getSession().save(cookie);
+        getSession().saveOrUpdate(cookie);
     }
     
     public EcpCookie getCookie(EventChannelPair ecp, String name) {
