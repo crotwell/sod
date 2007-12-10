@@ -57,6 +57,9 @@
                 <optional>
                     <ref name="allowNetworksOutsideEventRequestTime"/>
                 </optional>
+                <optional>
+                    <ref name="hibernateConfig"/>
+                </optional>
             </interleave>
         </element>
     </start>
@@ -266,6 +269,21 @@
                     by the network arm.</description>
             </xsd:annotation>
             <ref name="trueOrFalse"/>
+        </element>
+    </define>
+    <define name="hibernateConfig">
+        <element name="hibernateConfig">
+            <xsd:annotation>
+                <summary>Adds additional hibernate table creation settings.</summary>
+                <description>The contents of this tag refre to a file containing any additional hibernate
+                mapping settings for additional tables, etc.</description>
+                <include/>
+            </xsd:annotation>
+            <text>
+                <xsd:annotation>
+                    <example>tables.hbm.xml</example>
+                </xsd:annotation>
+            </text>
         </element>
     </define>
 </grammar>
