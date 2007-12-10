@@ -27,7 +27,7 @@
                         are then sent through the EventArm for processing. See <a
                         href="http://www.seis.sc.edu/wily/GetAllServers?corbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService&amp;description=IRIS nameserver">Wily</a>
                         for a list of active EventDCs and their current status. A listing of known catalogs for the IRIS EventDC can be found
-                        <a href="http://www.seis.sc.edu/wily/EventCatalogs?corbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService&dns=edu/iris/dmc&serverObject=IRIS_EventDC">here</a>.</description>
+                        <a href="http://www.seis.sc.edu/wily/EventCatalogs?corbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService&amp;dns=edu/iris/dmc&amp;serverObject=IRIS_EventDC">here</a>.</description>
                 </xsd:documentation>
             </xsd:annotation>
             <ref name="name"/>
