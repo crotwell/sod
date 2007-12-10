@@ -67,8 +67,9 @@ public class CommonAccess {
             nsLoc = (String)System.getProperties()
                     .get(FissuresNamingService.CORBALOC_PROP);
         } else {
-            throw new UserConfigurationException(FissuresNamingService.CORBALOC_PROP
-                    + " must be set in the properties");
+        	// use DMC as this is most likely anyway
+        	logger.info("Using IRIS DMC Name service: "+DMC_NSLOC);
+        	nsLoc = DMC_NSLOC;
         }
         if(!nsLoc.startsWith(CORBALOC_DESC)
                 || !nsLoc.endsWith(NAME_SERVICE_ADDRESS)) {
@@ -87,6 +88,8 @@ public class CommonAccess {
 
     private static FissuresNamingService ns;
 
+    private static final String DMC_NSLOC = "corbaloc:iiop:dmc.iris.washington.edu:6371/NameService";
+    
     private static String nsLoc;
 
     private static Logger logger = Logger.getLogger(CommonAccess.class);
