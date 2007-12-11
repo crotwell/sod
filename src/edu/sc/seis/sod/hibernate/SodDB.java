@@ -251,7 +251,7 @@ public class SodDB extends AbstractHibernateDB {
         Query query = getSession().createQuery(COUNT + totalSuccess);
         query.setMaxResults(1);
         List result = query.list();
-        return ((Integer)result.get(0)).intValue();
+        return ((Long)result.get(0)).intValue();
     }
 
     public int getNumSuccessful(CacheEvent event) {
@@ -720,16 +720,16 @@ public class SodDB extends AbstractHibernateDB {
         failed = staBase + " AND statusAsShort in " + failReq;
         String retryReq = getRetryStatusRequest();
         retry = staBase + " AND statusAsShort in " + retryReq;
-        successPerEvent = eventBase + " AND status = "
+        successPerEvent = eventBase + " AND ecp.status = "
                 + Status.get(Stage.PROCESSOR, Standing.SUCCESS).getAsShort();
-        failedPerEvent = eventBase + "  AND statusAsShort in " + failReq;
-        retryPerEvent = eventBase + "  AND statusAsShort in " + retryReq;
+        failedPerEvent = eventBase + "  AND ecp.statusAsShort in " + failReq;
+        retryPerEvent = eventBase + "  AND ecp.statusAsShort in " + retryReq;
         successPerEventStation = staEventBase + "  AND status = " + pass;
         failedPerEventStation = baseStatement + "  AND statusAsShort in "
                 + failReq;
         retryPerEventStation = baseStatement + "  AND statusAsShort in "
                 + retryReq;
-        totalSuccess = baseStatement + " AND status = " + pass;
+        totalSuccess = baseStatement + "  status = " + pass;
     }
     
     public static SodDB getSingleton() {

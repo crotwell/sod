@@ -88,6 +88,9 @@ public class Play extends edu.sc.seis.fissuresUtil.hibernate.Play {
         sodDb.put(ecp);
         SodDB.commit();
         SodDB.getSession().lock(ecp, LockMode.NONE);
+        sodDb.getNumSuccessful();
+        sodDb.getNumSuccessful(ecp.getEvent());
+        sodDb.getNumFailed(ecp.getEvent());
     }
     
     protected void storeStatefulEvent() {
