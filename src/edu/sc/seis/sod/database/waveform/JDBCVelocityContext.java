@@ -44,6 +44,7 @@ public class JDBCVelocityContext extends AbstractContext {
         if (value instanceof Serializable) {
             EcpCookie cookie = new EcpCookie(ecp, name, (Serializable)value);
             soddb.putCookie(cookie);
+            SodDB.commit();
             return cookie;
         } else {
             throw new IllegalArgumentException("value must be a String or a Double or a Serializable: "+value.getClass().getName());
