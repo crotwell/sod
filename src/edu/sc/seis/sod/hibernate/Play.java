@@ -88,9 +88,26 @@ public class Play extends edu.sc.seis.fissuresUtil.hibernate.Play {
         sodDb.put(ecp);
         SodDB.commit();
         SodDB.getSession().lock(ecp, LockMode.NONE);
+        sodDb.getNumFailed(ecp.getEvent());
+        sodDb.getAll(ecp.getEvent());
+        sodDb.getAllRetries();
+        sodDb.getEventsForStation(ecp.getChannel().getSite().getStation());
+        sodDb.getFailed(ecp.getEvent());
+        sodDb.getFailed(ecp.getChannel().getSite().getStation());
+        sodDb.getFailed(ecp.getEvent(), ecp.getChannel().getSite().getStation());
+        sodDb.getNumFailed(ecp.getEvent());
+        sodDb.getNumFailed(ecp.getChannel().getSite().getStation());
+        sodDb.getNumFailed(ecp.getEvent(), ecp.getChannel().getSite().getStation());
+        sodDb.getNumRetry(ecp.getEvent());
+        sodDb.getNumRetry(ecp.getChannel().getSite().getStation());
+        sodDb.getNumRetry(ecp.getEvent(), ecp.getChannel().getSite().getStation());
         sodDb.getNumSuccessful();
         sodDb.getNumSuccessful(ecp.getEvent());
-        sodDb.getNumFailed(ecp.getEvent());
+        sodDb.getNumSuccessful(ecp.getEvent(), ecp.getChannel().getSite().getStation());
+        sodDb.getRetry(ecp.getEvent());
+        sodDb.getRetry(ecp.getChannel().getSite().getStation());
+        sodDb.getRetry(ecp.getEvent(), ecp.getChannel().getSite().getStation());
+        sodDb.getRetryWaveformWorkUnits(4);
     }
     
     protected void storeStatefulEvent() {

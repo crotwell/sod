@@ -22,7 +22,7 @@
 		<many-to-one name="channel"
 			class="edu.iris.Fissures.network.ChannelImpl" column="channel"
 			foreign-key="FK_ecp_channel" unique-key="event_chan_key" />
-		<property name="StatusAsShort" type="short" column="status" />
+		<property name="statusAsShort" type="short" column="status" />
 	</class>
 
 	<class name="edu.sc.seis.sod.EventVectorPair">

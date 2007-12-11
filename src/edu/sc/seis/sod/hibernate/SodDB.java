@@ -249,146 +249,126 @@ public class SodDB extends AbstractHibernateDB {
 
     public int getNumSuccessful() {
         Query query = getSession().createQuery(COUNT + totalSuccess);
-        query.setMaxResults(1);
-        List result = query.list();
-        return ((Long)result.get(0)).intValue();
+        return ((Long)query.uniqueResult()).intValue();
     }
 
     public int getNumSuccessful(CacheEvent event) {
         Query query = getSession().createQuery(COUNT + successPerEvent);
-        query.setEntity(":event", event);
-        query.setMaxResults(1);
-        List result = query.list();
-        return ((Integer)result.get(0)).intValue();
+        query.setEntity("event", event);
+        return ((Long)query.uniqueResult()).intValue();
     }
 
     public int getNumSuccessful(StationImpl station) {
         Query query = getSession().createQuery(COUNT + success);
-        query.setEntity(":sta", station);
-        query.setMaxResults(1);
-        List result = query.list();
-        return ((Integer)result.get(0)).intValue();
+        query.setEntity("sta", station);
+        return ((Long)query.uniqueResult()).intValue();
     }
 
     public int getNumSuccessful(CacheEvent event, StationImpl station) {
         Query query = getSession().createQuery(COUNT + successPerEventStation);
-        query.setEntity(":sta", station);
-        query.setEntity(":event", event);
-        query.setMaxResults(1);
-        List result = query.list();
-        return ((Integer)result.get(0)).intValue();
+        query.setEntity("sta", station);
+        query.setEntity("event", event);
+        return ((Long)query.uniqueResult()).intValue();
     }
 
     public int getNumFailed(StationImpl station) {
         Query query = getSession().createQuery(COUNT + failed);
-        query.setEntity(":sta", station);
-        query.setMaxResults(1);
-        List result = query.list();
-        return ((Integer)result.get(0)).intValue();
+        query.setEntity("sta", station);
+        return ((Long)query.uniqueResult()).intValue();
     }
 
     public int getNumFailed(CacheEvent event, StationImpl station) {
         Query query = getSession().createQuery(COUNT + failedPerEventStation);
-        query.setEntity(":sta", station);
-        query.setEntity(":event", event);
-        query.setMaxResults(1);
-        List result = query.list();
-        return ((Integer)result.get(0)).intValue();
+        query.setEntity("sta", station);
+        query.setEntity("event", event);
+        return ((Long)query.uniqueResult()).intValue();
     }
 
     public int getNumFailed(CacheEvent event) {
         Query query = getSession().createQuery(COUNT + failedPerEvent);
-        query.setEntity(":event", event);
-        query.setMaxResults(1);
-        List result = query.list();
-        return ((Integer)result.get(0)).intValue();
+        query.setEntity("event", event);
+        return ((Long)query.uniqueResult()).intValue();
     }
 
     public int getNumRetry(StationImpl station) {
         Query query = getSession().createQuery(COUNT + retry);
-        query.setEntity(":sta", station);
-        query.setMaxResults(1);
-        List result = query.list();
-        return ((Integer)result.get(0)).intValue();
+        query.setEntity("sta", station);
+        return ((Long)query.uniqueResult()).intValue();
     }
 
     public int getNumRetry(CacheEvent event) {
         Query query = getSession().createQuery(COUNT + retryPerEvent);
-        query.setEntity(":event", event);
-        query.setMaxResults(1);
-        List result = query.list();
-        return ((Integer)result.get(0)).intValue();
+        query.setEntity("event", event);
+        return ((Long)query.uniqueResult()).intValue();
     }
 
     public int getNumRetry(CacheEvent event, StationImpl station) {
         Query query = getSession().createQuery(COUNT + retryPerEventStation);
-        query.setEntity(":sta", station);
-        query.setEntity(":event", event);
-        query.setMaxResults(1);
-        List result = query.list();
-        return ((Integer)result.get(0)).intValue();
+        query.setEntity("sta", station);
+        query.setEntity("event", event);
+        return ((Long)query.uniqueResult()).intValue();
     }
 
     public List getAll(CacheEvent event) {
         Query query = getSession().createQuery(eventBase);
-        query.setEntity(":event", event);
+        query.setEntity("event", event);
         return query.list();
     }
 
     public List getSuccessful(CacheEvent event) {
         Query query = getSession().createQuery(successPerEvent);
-        query.setEntity(":event", event);
+        query.setEntity("event", event);
         return query.list();
     }
 
     public List getSuccessful(StationImpl station) {
         Query query = getSession().createQuery(success);
-        query.setEntity(":sta", station);
+        query.setEntity("sta", station);
         return query.list();
     }
 
     public List getSuccessful(CacheEvent event, StationImpl station) {
         Query query = getSession().createQuery(successPerEventStation);
-        query.setEntity(":sta", station);
-        query.setEntity(":event", event);
+        query.setEntity("sta", station);
+        query.setEntity("event", event);
         return query.list();
     }
 
     public List getFailed(StationImpl station) {
         Query query = getSession().createQuery(failed);
-        query.setEntity(":sta", station);
+        query.setEntity("sta", station);
         return query.list();
     }
 
     public List getFailed(CacheEvent event, StationImpl station) {
         Query query = getSession().createQuery(failedPerEventStation);
-        query.setEntity(":sta", station);
-        query.setEntity(":event", event);
+        query.setEntity("sta", station);
+        query.setEntity("event", event);
         return query.list();
     }
 
     public List getFailed(CacheEvent event) {
         Query query = getSession().createQuery(failedPerEvent);
-        query.setEntity(":event", event);
+        query.setEntity("event", event);
         return query.list();
     }
 
     public List getRetry(StationImpl station) {
         Query query = getSession().createQuery(retry);
-        query.setEntity(":sta", station);
+        query.setEntity("sta", station);
         return query.list();
     }
 
     public List getRetry(CacheEvent event) {
         Query query = getSession().createQuery(retryPerEvent);
-        query.setEntity(":event", event);
+        query.setEntity("event", event);
         return query.list();
     }
 
     public List getRetry(CacheEvent event, StationImpl station) {
         Query query = getSession().createQuery(retryPerEventStation);
-        query.setEntity(":sta", station);
-        query.setEntity(":event", event);
+        query.setEntity("sta", station);
+        query.setEntity("event", event);
         return query.list();
     }
 
@@ -427,7 +407,7 @@ public class SodDB extends AbstractHibernateDB {
     public List getEventsForStation(StationImpl sta) {
         String q = "select distinct ecp.event from "
                 + EventChannelPair.class.getName()
-                + " ecp.channel.site.station = :sta ";
+                + " ecp where ecp.channel.site.station = :sta ";
         Query query = getSession().createQuery(q);
         query.setEntity("sta", sta);
         return query.list();
@@ -436,7 +416,7 @@ public class SodDB extends AbstractHibernateDB {
     public List getSuccessfulEventsForStation(StationImpl sta) {
         String q = "select distinct ecp.event from "
                 + EventChannelPair.class.getName()
-                + " ecp.channel.site.station = :sta  and ecp.status = "
+                + " ecp where ecp.channel.site.station = :sta  and ecp.status = "
                 + Status.get(Stage.PROCESSOR, Standing.SUCCESS).getAsShort();
         Query query = getSession().createQuery(q);
         query.setEntity("sta", sta);
@@ -715,21 +695,21 @@ public class SodDB extends AbstractHibernateDB {
                 + " ecp.channel.site.station = :sta and ecp.event = :event ";
         eventBase = baseStatement + " ecp.event = :event ";
         int pass = Status.get(Stage.PROCESSOR, Standing.SUCCESS).getAsShort();
-        success = staBase + " AND status = " + pass;
+        success = staBase + " AND ecp.statusAsShort = " + pass;
         String failReq = getFailedStatusRequest();
-        failed = staBase + " AND statusAsShort in " + failReq;
+        failed = staBase + " AND ecp.statusAsShort in " + failReq;
         String retryReq = getRetryStatusRequest();
-        retry = staBase + " AND statusAsShort in " + retryReq;
-        successPerEvent = eventBase + " AND ecp.status = "
+        retry = staBase + " AND ecp.statusAsShort in " + retryReq;
+        successPerEvent = eventBase + " AND ecp.statusAsShort = "
                 + Status.get(Stage.PROCESSOR, Standing.SUCCESS).getAsShort();
         failedPerEvent = eventBase + "  AND ecp.statusAsShort in " + failReq;
         retryPerEvent = eventBase + "  AND ecp.statusAsShort in " + retryReq;
-        successPerEventStation = staEventBase + "  AND status = " + pass;
-        failedPerEventStation = baseStatement + "  AND statusAsShort in "
+        successPerEventStation = staEventBase + "  AND ecp.statusAsShort = " + pass;
+        failedPerEventStation = staEventBase + " AND ecp.statusAsShort in "
                 + failReq;
-        retryPerEventStation = baseStatement + "  AND statusAsShort in "
+        retryPerEventStation = staEventBase + "  AND ecp.statusAsShort in "
                 + retryReq;
-        totalSuccess = baseStatement + "  status = " + pass;
+        totalSuccess = baseStatement + " ecp.statusAsShort = " + pass;
     }
     
     public static SodDB getSingleton() {
