@@ -59,7 +59,7 @@ public class SodDB extends AbstractHibernateDB {
         Standing[] standings = {Standing.IN_PROG,
                                 Standing.INIT,
                                 Standing.SUCCESS};
-        String query = "FROM edu.sc.seis.sod.EventChannelPair e WHERE e.StatusAsShort in ( ";
+        String query = "FROM edu.sc.seis.sod.EventChannelPair e WHERE e.statusAsShort in ( ";
         for(int i = 0; i < stages.length; i++) {
             for(int j = 0; j < standings.length; j++) {
                 Status curStatus = Status.get(stages[i], standings[j]);
