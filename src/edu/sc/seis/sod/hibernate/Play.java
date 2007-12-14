@@ -22,16 +22,12 @@ import edu.sc.seis.sod.mock.MockStatefulEvent;
 
 public class Play extends edu.sc.seis.fissuresUtil.hibernate.Play {
     
-    static {
-        HibernateUtil.getConfiguration()
-        .addResource("edu/sc/seis/sod/hibernate/sod.hbm.xml")
-        .addSqlFunction( "datediff", new SQLFunctionTemplate(Hibernate.LONG, "datediff(?1, ?2, ?3)" ) );
-    }
 
     public static void main(String[] args) throws SQLException {
         try {
             BasicConfigurator.configure();
             Logger.getRootLogger().setLevel(Level.INFO);
+            HibernateUtil.setUpFromConnMgr(System.getProperties());
             Play mgr = new Play();
             TimeOMatic.start();
             String todo = args[2];
