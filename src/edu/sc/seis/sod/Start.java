@@ -42,6 +42,7 @@ import edu.sc.seis.fissuresUtil.exceptionHandler.Extractor;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.exceptionHandler.SystemOutReporter;
 import edu.sc.seis.fissuresUtil.exceptionHandler.WindowConnectionInterceptor;
+import edu.sc.seis.fissuresUtil.hibernate.AbstractHibernateDB;
 import edu.sc.seis.fissuresUtil.hibernate.HibernateUtil;
 import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockNetworkAttr;
@@ -169,26 +170,21 @@ public class Start {
         loadRunProps(getConfig());
         ConnMgr.installDbProperties(props, args.getInitialArgs());
         synchronized(HibernateUtil.class) {
-            HibernateUtil.getConfiguration()
-            .setProperty("hibernate.connection.url", ConnMgr.getURL())
-            .setProperty("hibernate.connection.username", ConnMgr.getUser())
-            .setProperty("hibernate.connection.password", ConnMgr.getPass())
-            .addResource("edu/sc/seis/sod/hibernate/sod.hbm.xml")
-            .addProperties(props)
-            .addSqlFunction( "datediff", new SQLFunctionTemplate(Hibernate.LONG, "datediff(?1, ?2, ?3)" ) );
+            HibernateUtil.setUpFromConnMgr(props);
             Iterator it = getRunProps().getHibernateConfig().iterator();
             while(it.hasNext()) {
                 HibernateUtil.getConfiguration().addResource((String)it.next());
             }
         }
-
         SchemaUpdate update = new SchemaUpdate(HibernateUtil.getConfiguration());
         update.execute(false, true);
         // check that hibernate is ok
         SodDB sodDb = new SodDB();
-        logger.debug("SodDB in init document:"+sodDb);
+        logger.debug("SodDB in init document:" + sodDb);
         Object s = sodDb.getSession();
-        if (s == null) {logger.warn("Session is null");}
+        if(s == null) {
+            logger.warn("Session is null");
+        }
         sodDb.rollback();
         CommonAccess.initialize(props, args.getInitialArgs());
     }
@@ -291,7 +287,7 @@ public class Start {
     }
 
     public static RunProperties getRunProps() {
-        if (runProps == null) {
+        if(runProps == null) {
             try {
                 runProps = new RunProperties();
             } catch(ConfigurationException e) {
@@ -339,9 +335,9 @@ public class Start {
     }
 
     private static ResultMailer mailer;
-    
+
     public void start() throws Exception {
-        //startTime = ClockUtil.now();
+        // startTime = ClockUtil.now();
         startTime = new MicroSecondDate();
         if(!commandLineToolRun) {
             new UpdateChecker(false);
@@ -418,7 +414,7 @@ public class Start {
                 } else if(el.getTagName().startsWith("waveform")
                         && args.doWaveformArm()) {
                     int poolSize = runProps.getNumWaveformWorkerThreads();
-                    waveform = new WaveformArm(el, event, network, poolSize);
+                    waveform = new WaveformArm(el, event, network, poolSize, runProps.reopenSuspended());
                 }
             }
         }
@@ -435,7 +431,6 @@ public class Start {
         for(Iterator iter = armListeners.iterator(); iter.hasNext();) {
             ((ArmListener)iter.next()).started();
         }
-
     }
 
     public static void add(ArmListener listener) {
@@ -482,31 +477,21 @@ public class Start {
         } else if(runProps.reopenEvents()) {
             StatefulEventDB eventDb = new StatefulEventDB();
             eventDb.restartCompletedEvents();
-        } else if(runProps.reopenSuspended()) {
-            SodDB sodDb = new SodDB();
-            try {
-                logger.debug("SodDB in reopen suspended events:"+sodDb);
-                suspendedPairs = sodDb.getSuspendedEventChannelPairs(runProps.getEventChannelPairProcessing());
-                logger.debug("Found " + suspendedPairs.length
-                        + " event channel pairs that were in process");
-                sodDb.commit();
-            } catch(Exception e) {
-                GlobalExceptionHandler.handle("Trouble updating status of "
-                        + "existing event-channel pairs", e);
-                sodDb.rollback();
-            }
         }
     }
 
     private void checkDBVersion() {
         SodDB sodDb = new SodDB();
         try {
-            logger.debug("SodDB in check DBVersion:"+sodDb);
+            logger.debug("SodDB in check DBVersion:" + sodDb);
             Version dbVersion = sodDb.getDBVersion();
             sodDb.commit();
-            if (dbVersion == null) {throw new RuntimeException("db version is null");}
+            if(dbVersion == null) {
+                throw new RuntimeException("db version is null");
+            }
             if(Version.hasSchemaChangedSince(dbVersion.getVersion())) {
-                System.err.println("SOD version: " + Version.current().getVersion());
+                System.err.println("SOD version: "
+                        + Version.current().getVersion());
                 System.err.println("Database version: "
                         + dbVersion.getVersion());
                 System.err.println("Your database was created with an older version "
@@ -516,8 +501,8 @@ public class Start {
                         + "Continuing this sod run is not advisable!");
             }
         } catch(Exception e) {
-        	logger.error(e);
-        	sodDb.rollback();
+            logger.error(e);
+            sodDb.rollback();
             GlobalExceptionHandler.handle("Trouble checking database version",
                                           e);
         }
@@ -527,22 +512,18 @@ public class Start {
         SodDB sodDb = new SodDB();
         try {
             Thread.sleep(1000);
-        } catch(InterruptedException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
+        } catch(InterruptedException e1) {}
         try {
             SodConfig conf = new SodConfig(new BufferedReader(is.getCharacterStream()));
-            SodConfig dbConfig =  sodDb.getCurrentConfig();
+            SodConfig dbConfig = sodDb.getCurrentConfig();
             if(dbConfig == null) {
                 sodDb.putConfig(conf);
-            } else if(dbConfig.getConfig().equals(conf.getConfig())) {
-            } else {
-                if( args.replaceDBConfig()) {
+            } else if(dbConfig.getConfig().equals(conf.getConfig())) {} else {
+                if(args.replaceDBConfig()) {
                     sodDb.putConfig(conf);
                 } else {
                     allHopeAbandon("Your config file has changed since your last run.  "
-                                   + "It may not be advisable to continue this SOD run.");
+                            + "It may not be advisable to continue this SOD run.");
                 }
             }
             sodDb.commit();
@@ -650,8 +631,6 @@ public class Start {
     public static final String DBURL_KEY = "fissuresUtil.database.url";
 
     public static boolean RUN_ARMS = true;
-
-    protected static EventChannelPair[] suspendedPairs = new EventChannelPair[0];
 
     private static List armListeners = new ArrayList();
 
