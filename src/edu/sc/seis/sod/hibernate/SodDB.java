@@ -8,10 +8,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.Hibernate;
 import org.hibernate.LockMode;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.dialect.function.SQLFunctionTemplate;
 
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.IfNetwork.Channel;
@@ -42,10 +44,17 @@ import edu.sc.seis.sod.Version;
 
 public class SodDB extends AbstractHibernateDB {
 
+    static {
+        HibernateUtil.getConfiguration().addResource("edu/sc/seis/sod/hibernate/sod.hbm.xml")
+        .addSqlFunction("datediff",
+                        new SQLFunctionTemplate(Hibernate.LONG,
+                                                "datediff(?1, ?2, ?3)"));
+    }
+    
     public SodDB() {
     }
 
-    public EventChannelPair[] getSuspendedEventChannelPairs(String processingRule)
+    public EventChannelPair[] getSuspendedEventChannelPairs(String processingRule, boolean vector)
             throws SQLException {
         Status eventStationInit = Status.get(Stage.EVENT_STATION_SUBSETTER,
                                              Standing.INIT);
@@ -59,7 +68,13 @@ public class SodDB extends AbstractHibernateDB {
         Standing[] standings = {Standing.IN_PROG,
                                 Standing.INIT,
                                 Standing.SUCCESS};
-        String query = "FROM edu.sc.seis.sod.EventChannelPair e WHERE e.statusAsShort in ( ";
+        String query;
+        if (! vector) {
+            query = "FROM edu.sc.seis.sod.EventChannelPair e WHERE e.statusAsShort in";
+        } else {
+            query = "select evp.ecp1 FROM "+EventVectorPair.class.getName()+" evp WHERE evp.ecp1.statusAsShort in";
+        }
+        query += "  ( ";
         for(int i = 0; i < stages.length; i++) {
             for(int j = 0; j < standings.length; j++) {
                 Status curStatus = Status.get(stages[i], standings[j]);
@@ -124,7 +139,7 @@ public class SodDB extends AbstractHibernateDB {
                 + " where ecp1 = :ecp or ecp2 = :ecp or ecp3 = :ecp";
         Session session = getSession();
         Query query = session.createQuery(q);
-        query.setEntity(":ecp", ecp);
+        query.setEntity("ecp", ecp);
         query.setMaxResults(1);
         List result = query.list();
         if(result.size() > 0) {
@@ -688,6 +703,7 @@ public class SodDB extends AbstractHibernateDB {
             eventBase;
 
     private static final String COUNT = "SELECT COUNT(*) ";
+    
     static {
         String baseStatement = "FROM edu.sc.seis.sod.EventChannelPair ecp WHERE ";
         String staBase = baseStatement + " ecp.channel.site.station = :sta ";
