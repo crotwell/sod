@@ -171,13 +171,15 @@ public class Start {
         ConnMgr.installDbProperties(props, args.getInitialArgs());
         synchronized(HibernateUtil.class) {
             HibernateUtil.setUpFromConnMgr(props);
+            SodDB.configHibernate(HibernateUtil.getConfiguration());
             Iterator it = getRunProps().getHibernateConfig().iterator();
             while(it.hasNext()) {
-                HibernateUtil.getConfiguration().addResource((String)it.next());
+                String res = (String)it.next();
+                logger.debug("Adding resource to HibernateUtil:  "+res);
+                HibernateUtil.getConfiguration().addResource(res);
             }
         }
-        SchemaUpdate update = new SchemaUpdate(HibernateUtil.getConfiguration());
-        update.execute(false, true);
+        AbstractHibernateDB.deploySchema();
         // check that hibernate is ok
         SodDB sodDb = new SodDB();
         logger.debug("SodDB in init document:" + sodDb);

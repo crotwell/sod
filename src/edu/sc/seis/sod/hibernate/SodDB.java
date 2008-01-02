@@ -12,7 +12,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.LockMode;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 import org.hibernate.dialect.function.SQLFunctionTemplate;
 
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
@@ -26,7 +26,6 @@ import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.hibernate.AbstractHibernateDB;
-import edu.sc.seis.fissuresUtil.hibernate.HibernateUtil;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.EventVectorPair;
 import edu.sc.seis.sod.LocalSeismogramWaveformWorkUnit;
@@ -44,9 +43,14 @@ import edu.sc.seis.sod.Version;
 
 public class SodDB extends AbstractHibernateDB {
 
-    static {
-        HibernateUtil.getConfiguration().addResource("edu/sc/seis/sod/hibernate/sod.hbm.xml")
-        .addSqlFunction("datediff",
+    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(SodDB.class);
+    
+    static String configFile = "edu/sc/seis/sod/hibernate/sod.hbm.xml";
+    
+    public static void configHibernate(Configuration config) {
+        logger.debug("adding to HibernateUtil   "+configFile);
+        config.addResource(configFile);
+        config.addSqlFunction("datediff",
                         new SQLFunctionTemplate(Hibernate.LONG,
                                                 "datediff(?1, ?2, ?3)"));
     }
@@ -737,5 +741,4 @@ public class SodDB extends AbstractHibernateDB {
     
     private static SodDB singleton;
 
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(SodDB.class);
 }
