@@ -4,13 +4,17 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 
+import edu.iris.Fissures.BoxArea;
+import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
+import edu.iris.Fissures.IfEvent.Origin;
+import edu.iris.Fissures.model.MicroSecondDate;
+import edu.sc.seis.fissuresUtil.bag.AreaUtil;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
+import edu.sc.seis.fissuresUtil.flow.querier.EventFinderQuery;
 import edu.sc.seis.fissuresUtil.hibernate.EventDB;
-import edu.sc.seis.fissuresUtil.hibernate.HibernateUtil;
 import edu.sc.seis.sod.Stage;
 import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Status;
@@ -41,6 +45,31 @@ public class StatefulEventDB {
         query.setTimestamp("minTime", range.getBeginTime().getTimestamp());
         query.setTimestamp("maxTime", range.getEndTime().getTimestamp());
         return query.list();
+    }
+
+    public StatefulEvent[] query(EventFinderQuery q) {
+        CacheEvent[] ans = trans.query(q);
+        StatefulEvent[] out = new StatefulEvent[ans.length];
+        for(int i = 0; i < out.length; i++) {
+            out[i] = (StatefulEvent)ans[i];
+        }
+        return out;
+    }
+
+    public StatefulEvent getLastEvent() throws NotFound {
+        return (StatefulEvent)trans.getLastEvent();
+    }
+    
+    public StatefulEvent[] getEventsByTimeAndDepthRanges(MicroSecondDate minTime,
+                                                      MicroSecondDate maxTime,
+                                                      double minDepth,
+                                                      double maxDepth) {
+        CacheEvent[] ans = trans.getEventsByTimeAndDepthRanges(minTime, maxTime, minDepth, maxDepth);
+        StatefulEvent[] out = new StatefulEvent[ans.length];
+        for(int i = 0; i < out.length; i++) {
+            out[i] = (StatefulEvent)ans[i];
+        }
+        return out;
     }
     
     public int getNumWaiting() {
