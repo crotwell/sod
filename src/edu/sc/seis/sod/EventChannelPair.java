@@ -70,7 +70,7 @@ public class EventChannelPair{
     }
 
     public String toString(){
-        return "EventChannelPair: " + getEvent() + " " +
+        return "EventChannelPair: ("+getPairId()+") " + getEvent() + " " +
             ChannelIdUtil.toString(getChannel().get_id()) + " " + getStatus();
     }
 
