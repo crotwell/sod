@@ -3,7 +3,7 @@
     <pomVersion>3</pomVersion>
     <id>sod</id>
     <name>sod</name>
-    <currentVersion>2.2.3internal</currentVersion>
+    <currentVersion>3.0.0alpha</currentVersion>
     <organization>
         <name>Seismology at the University of South Carolina</name>
         <url>http://www.seis.sc.edu</url>
