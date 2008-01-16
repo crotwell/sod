@@ -224,7 +224,7 @@ public class EventArm implements Arm {
         	eventStatus.put(storedEvent);
             change(storedEvent);
         }
-        if (storedEvent.getStatus() != IN_PROG && storedEvent.getStatus() != SUCCESS) {
+        if (storedEvent.getStatus() != ECPOP_INIT && storedEvent.getStatus() != SUCCESS) {
         	storedEvent.setStatus(EVENT_IN_PROG);
             change(storedEvent);
             Iterator it = subsetters.iterator();
@@ -238,7 +238,7 @@ public class EventArm implements Arm {
                     return;
                 }
             }
-            storedEvent.setStatus(IN_PROG);
+            storedEvent.setStatus(ECPOP_INIT);
             change(storedEvent);
             lastEvent = event;
         }
@@ -272,8 +272,8 @@ public class EventArm implements Arm {
         return (EventSource[])sources.toArray(new EventSource[0]);
     }
 
-    private static final Status IN_PROG = Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                                                     Standing.IN_PROG);
+    private static final Status ECPOP_INIT = Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                                     Standing.INIT);
 
     private static final Status SUCCESS = Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                                      Standing.SUCCESS);

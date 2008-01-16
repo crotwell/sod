@@ -32,6 +32,14 @@ public class StatefulEventDB {
     public List getAll() {
         return trans.getAll();
     }
+    
+    public List getAll(Status status) {
+        String q = "from "+StatefulEvent.class.getName()+" e where e.statusAsShort = :status ";
+        Query query = trans.getSession().createQuery(q);
+
+        query.setShort("status", status.getAsShort());
+        return query.list();
+    }
 
     public StatefulEvent getEvent(int dbid) throws NotFound {
         return (StatefulEvent)trans.getEvent(dbid);
@@ -79,7 +87,7 @@ public class StatefulEventDB {
         Session session = trans.getSession();
         Query query = session.createQuery(q);
         query.setShort("inProg", 
-                       Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.IN_PROG)
+                       Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.INIT)
                        .getAsShort());
         List result = query.list();
         if(result.size() > 0) {
@@ -87,16 +95,16 @@ public class StatefulEventDB {
         }
         return 0;
     }
-
+    
     /** next successful event to process. Returns null if no more events. */
-    public StatefulEvent getNext() {
+    public StatefulEvent getNext(Standing standing) {
         String q = "from "
                 + StatefulEvent.class.getName()
                 + " e where e.statusAsShort = :inProg";
         Session session = trans.getSession();
         Query query = session.createQuery(q);
         query.setShort("inProg", 
-                       Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.IN_PROG)
+                       Status.get(Stage.EVENT_CHANNEL_POPULATION, standing)
                        .getAsShort());
         List result = query.list();
         if(result.size() > 0) {
