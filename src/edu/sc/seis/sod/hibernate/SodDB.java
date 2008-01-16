@@ -113,18 +113,19 @@ public class SodDB extends AbstractHibernateDB {
         }
     }
 
-    static String getNextEventStr = "From "
-            + StatefulEvent.class.getName()
-            + " e WHERE StatusAsShort = :popInProgress"
-            + Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.IN_PROG)
-                    .getAsShort();
-
     public EventChannelPair put(EventChannelPair eventChannelPair) {
         Session session = getSession();
         session.lock(eventChannelPair.getChannel(), LockMode.NONE);
         session.lock(eventChannelPair.getEvent(), LockMode.NONE);
-        session.save(eventChannelPair);
+        session.saveOrUpdate(eventChannelPair);
         return eventChannelPair;
+    }
+    
+    public EventChannelPair getECP(CacheEvent event, ChannelImpl chan)  {
+        Query query = getSession().createQuery("from "+EventChannelPair.class.getName()+" where event = :event and channel = :channel");
+        query.setEntity("event", event);
+        query.setEntity("channel", chan);
+        return ((EventChannelPair)query.uniqueResult());
     }
 
     public EventVectorPair put(EventVectorPair eventVectorPair) {
@@ -134,7 +135,7 @@ public class SodDB extends AbstractHibernateDB {
         for(int i = 0; i < chan.length; i++) {
             session.lock(chan[i], LockMode.NONE);
         }
-        session.save(eventVectorPair);
+        session.saveOrUpdate(eventVectorPair);
         return eventVectorPair;
     }
 
