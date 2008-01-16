@@ -348,6 +348,7 @@ public class NetworkArm implements Arm {
                 logger.info("Starting work on " + net);
                 // new thread, so need to attach net attr instance
                 NetworkDB ndb = getNetworkDB();
+                ndb.getSession().lock(net.get_attributes(), LockMode.NONE);
                 StationImpl[] staDbs = getSuccessfulStations(net);
                 if(!(Start.getWaveformArm() == null
                         &&  chanSubsetters.size() == 0)) {
