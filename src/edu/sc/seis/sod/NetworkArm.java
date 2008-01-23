@@ -182,7 +182,6 @@ public class NetworkArm implements Arm {
      */
     public synchronized CacheNetworkAccess[] getSuccessfulNetworks() throws NetworkNotFound {
         SodDB sodDb = new SodDB();
-        logger.info("SodDB in NetworkArm:"+sodDb);
         QueryTime qtime = sodDb.getQueryTime(finder.getName(),
                                              finder.getDNS());
         if (qtime == null) {
