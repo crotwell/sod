@@ -44,14 +44,19 @@ public class StatefulEventDB {
     public StatefulEvent getEvent(int dbid) throws NotFound {
         return (StatefulEvent)trans.getEvent(dbid);
     }
-    
+
     public List getEventInTimeRange(MicroSecondTimeRange range) {
-        String q = "from "+StatefulEvent.class.getName()+" e where e.statusAsShort = 2310 "
+        return getEventInTimeRange(range, Status.getFromShort((short)2310));
+    }
+     
+    public List getEventInTimeRange(MicroSecondTimeRange range, Status status) {
+        String q = "from "+StatefulEvent.class.getName()+" e where e.statusAsShort = :status "
         + "AND e.preferred.originTime.time between :minTime AND :maxTime  ";
         Query query = trans.getSession().createQuery(q);
 
         query.setTimestamp("minTime", range.getBeginTime().getTimestamp());
         query.setTimestamp("maxTime", range.getEndTime().getTimestamp());
+        query.setShort("status", status.getAsShort());
         return query.list();
     }
 
