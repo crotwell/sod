@@ -463,6 +463,7 @@ public class NetworkArm implements Arm {
                                 + effResult);
                     }
                 }
+                NetworkDB.commit();
             } catch(Exception e) {
                 GlobalExceptionHandler.handle("Problem in method getSuccessfulStations for net "
                                                       + NetworkIdUtil.toString(net.get_attributes()
@@ -479,7 +480,7 @@ public class NetworkArm implements Arm {
     }
 
     /**
-     * Obtains the Channels corresponding to the siteDbObject, processes them
+     * Obtains the Channels corresponding to the station, processes them
      * using the ChannelSubsetter and returns an array of those that pass
      * @throws NetworkNotFound 
      */
