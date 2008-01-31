@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.hibernate.LockMode;
+import org.hibernate.NonUniqueObjectException;
 import org.omg.CORBA.BAD_PARAM;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -347,7 +348,12 @@ public class NetworkArm implements Arm {
                 logger.info("Starting work on " + net);
                 // new thread, so need to attach net attr instance
                 NetworkDB ndb = getNetworkDB();
-                ndb.getSession().lock(net.get_attributes(), LockMode.NONE);
+                try {
+                NetworkDB.getSession().lock(net.get_attributes(), LockMode.NONE);
+                }catch(NonUniqueObjectException e) {
+                    logger.error("Try to lock net="+NetworkIdUtil.toString(net.get_attributes())+" dbid="+((NetworkAttrImpl)net.get_attributes()).getDbid(), e);
+                    throw e;
+                }
                 StationImpl[] staDbs = getSuccessfulStations(net);
                 if(!(Start.getWaveformArm() == null
                         &&  chanSubsetters.size() == 0)) {
@@ -356,14 +362,16 @@ public class NetworkArm implements Arm {
                     for(int j = 0; j < staDbs.length; j++) {
                     	// commit for each station
                     	synchronized (NetworkArm.this) {
-                        ndb.getSession().lock(net.get_attributes(), LockMode.NONE);
-                        ChannelImpl[] chans = getSuccessfulChannels(net,
-                                                                    staDbs[j]);
+                    	    NetworkDB.getSession().lock(net.get_attributes(), LockMode.NONE);
+                    	    ChannelImpl[] chans = getSuccessfulChannels(net,
+                    	                                                staDbs[j]);
 						}
                     }
                 } else {
                     logger.info("Not getting channels as no subsetters or waveform arm");
                 }
+                //make sure everything is cleaned up in hibernate session
+                NetworkDB.commit();
             }
             synchronized(this) {
                 pusherFinished = true;
