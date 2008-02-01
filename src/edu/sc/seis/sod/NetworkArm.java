@@ -64,7 +64,6 @@ public class NetworkArm implements Arm {
 
     public NetworkArm(Element config) throws SQLException,
             ConfigurationException {
-        networkDB = new NetworkDB();
         processConfig(config);
     }
 
@@ -246,6 +245,7 @@ public class NetworkArm implements Arm {
                 continue;
             } catch(BAD_PARAM bp) {
                 // Must be a concrete, continue
+                logger.debug(allNets[i].get_attributes().name+" is concrete");
             }
             try {
                 NetworkAttrImpl attr = (NetworkAttrImpl)allNets[i].get_attributes();
@@ -514,8 +514,19 @@ public class NetworkArm implements Arm {
             List successes = new ArrayList();
             try {
                 Channel[] tmpChannels = networkAccess.retrieve_for_station(station.get_id());
-                ChannelImpl[] channels = new ChannelImpl[tmpChannels.length];
-                System.arraycopy(tmpChannels, 0, channels, 0, channels.length);
+                // dmc network server ignores date in station id in retrieve_for_station, so all channels for station code are
+                // returned. This checks to make sure the station is the same. ProxyNetworkAccess already interns stations in channels
+                // so as long as station ids are the same, they are object equal...we hope
+                ArrayList chansAtStation = new ArrayList();
+                for(int i = 0; i < tmpChannels.length; i++) {
+                    if (tmpChannels[i].my_site.my_station == station) {
+                        chansAtStation.add(tmpChannels[i]);
+                    } else {
+                        logger.info("Channel "+ChannelIdUtil.toString(tmpChannels[i].get_id())+" has a station that is not the same as the requested station: req="+StationIdUtil.toString(station.get_id())+"  chan sta="+StationIdUtil.toString(tmpChannels[i].my_site.my_station));
+                    }
+                }
+                
+                ChannelImpl[] channels = (ChannelImpl[])chansAtStation.toArray(new ChannelImpl[0]);
                 Status inProg = Status.get(Stage.NETWORK_SUBSETTER,
                                            Standing.IN_PROG);
                 boolean needCommit = false;
@@ -691,10 +702,8 @@ public class NetworkArm implements Arm {
     private Map successfulChannels = new HashMap();
     
     protected NetworkDB getNetworkDB() {
-        return networkDB;
+        return NetworkDB.getSingleton();
     }
-    
-    private NetworkDB networkDB;
 
     private CacheNetworkAccess[] cacheNets;
 
