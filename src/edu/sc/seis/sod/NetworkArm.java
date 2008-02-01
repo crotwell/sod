@@ -245,7 +245,6 @@ public class NetworkArm implements Arm {
                 continue;
             } catch(BAD_PARAM bp) {
                 // Must be a concrete, continue
-                logger.debug(allNets[i].get_attributes().name+" is concrete");
             }
             try {
                 NetworkAttrImpl attr = (NetworkAttrImpl)allNets[i].get_attributes();
