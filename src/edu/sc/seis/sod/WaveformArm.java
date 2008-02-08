@@ -413,7 +413,7 @@ public class WaveformArm implements Arm {
                 }
                 if(workUnit != null) {
                     logger.debug("Adding " + workUnit + " to pool");
-                    pool.invokeLater(workUnit);
+                    invokeLaterAsCapacityAllows(workUnit);
                 } else {
                     logger.debug("Unable to find work unit for pair "
                             + pairs[i].getPairId());
