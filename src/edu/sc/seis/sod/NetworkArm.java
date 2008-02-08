@@ -181,15 +181,19 @@ public class NetworkArm implements Arm {
      * @throws NetworkNotFound 
      */
     public synchronized CacheNetworkAccess[] getSuccessfulNetworks() throws NetworkNotFound {
-        SodDB sodDb = new SodDB();
-        QueryTime qtime = sodDb.getQueryTime(finder.getName(),
-                                             finder.getDNS());
-        if (qtime == null) {
-            qtime = new QueryTime(finder.getName(),
+        SodDB sodDb = SodDB.getSingleton();
+        if (lastQueryTime == null) {
+            // try from db
+            lastQueryTime = sodDb.getQueryTime(finder.getName(),
+                                               finder.getDNS());
+        }
+        if (lastQueryTime == null) {
+            //still null, must be first time
+            lastQueryTime = new QueryTime(finder.getName(),
                                   finder.getDNS(),
                                   ClockUtil.now().getTimestamp());
-            sodDb.putQueryTime(qtime);
-        } else if(!qtime.needsRefresh(finder.getRefreshInterval())) {
+            sodDb.putQueryTime(lastQueryTime);
+        } else if(!lastQueryTime.needsRefresh(finder.getRefreshInterval())) {
             if(cacheNets == null) {
                 cacheNets = getNetworkDB().getAllNets(getNetworkDC());
                 for(int i = 0; i < cacheNets.length; i++) {
@@ -230,22 +234,25 @@ public class NetworkArm implements Arm {
                 allNets = (CacheNetworkAccess[])constrainedNets.toArray(new CacheNetworkAccess[0]);
             } else {
                 NetworkAccess[] tmpNets = netDC.a_finder().retrieve_all();
-                allNets = new CacheNetworkAccess[tmpNets.length];
-                System.arraycopy(tmpNets, 0, allNets, 0, tmpNets.length);
+                ArrayList goodNets = new ArrayList();
+                for(int i = 0; i < tmpNets.length; i++) {
+                    try {
+                        VirtualNetworkHelper.narrow(tmpNets[i]);
+                        // Ignore any virtual nets returned here
+                        logger.debug("ignoring virtual network "
+                                + tmpNets[i].get_attributes().get_code());
+                        continue;
+                    } catch(BAD_PARAM bp) {
+                        // Must be a concrete, keep it
+                        goodNets.add(tmpNets[i]);
+                    }
+                }
+                allNets = (CacheNetworkAccess[])goodNets.toArray(new CacheNetworkAccess[0]);
             }
         }
         logger.info("Found " + allNets.length + " networks");
         NetworkPusher lastPusher = null;
         for(int i = 0; i < allNets.length; i++) {
-            try {
-                VirtualNetworkHelper.narrow(allNets[i]);
-                // Ignore any virtual nets returned here
-                logger.debug("ignoring virtual network "
-                        + allNets[i].get_attributes().get_code());
-                continue;
-            } catch(BAD_PARAM bp) {
-                // Must be a concrete, continue
-            }
             try {
                 NetworkAttrImpl attr = (NetworkAttrImpl)allNets[i].get_attributes();
                 if(netEffectiveSubsetter.accept(attr).isSuccess()) {
@@ -298,7 +305,7 @@ public class NetworkArm implements Arm {
             finish();
         }
         // Set the time of the last check to now
-        qtime.setTime(ClockUtil.now().getTimestamp());
+        lastQueryTime.setTime(ClockUtil.now().getTimestamp());
         cacheNets = new CacheNetworkAccess[successes.size()];
         successes.toArray(cacheNets);
         logger.info(cacheNets.length + " networks passed");
@@ -600,6 +607,8 @@ public class NetworkArm implements Arm {
         channelMap.put(new Integer(chanId), chan);
         return chan;
     }
+    
+    private QueryTime lastQueryTime = null;
 
     private Map channelMap = Collections.synchronizedMap(new HashMap());
 
