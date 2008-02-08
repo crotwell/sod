@@ -13,6 +13,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import org.apache.log4j.Logger;
+import org.python.modules.synchronize;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import edu.iris.Fissures.AuditInfo;
@@ -413,7 +414,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
         return ref.getPath();
     }
 
-    protected DataSet prepareDataset(EventAccessOperations event)
+    protected synchronized DataSet prepareDataset(EventAccessOperations event)
             throws IOException, UnsupportedFileTypeException,
             IncomprehensibleDSMLException, ParserConfigurationException,
             XMLStreamException {
@@ -422,23 +423,21 @@ public class SaveSeismogramToFile implements WaveformProcess {
         if(lastDataSet != null && lastDataSet.getEvent().equals(event)) {
             return lastDataSet;
         }
-        MemoryDataSet dataset = createDataSet(event);
         dataSetFile = makeDSMLFilename(event);
         if(dataSetFile.exists()) {
-            dataset = (MemoryDataSet)DataSetToXML.load(dataSetFile.toURI()
+            lastDataSet = (MemoryDataSet)DataSetToXML.load(dataSetFile.toURI()
                     .toURL());
         } else {
             logger.debug("creating new dataset " + getName(event));
-            dataset = new MemoryDataSet(EventUtil.extractOrigin(event).origin_time.date_time,
+            lastDataSet = new MemoryDataSet(EventUtil.extractOrigin(event).origin_time.date_time,
                                         getName(event),
                                         System.getProperty("user.name"),
                                         new AuditInfo[0]);
-            dataset.addParameter(DataSet.EVENT, event, new AuditInfo[0]);
-            writeDataSet(dataset);
+            lastDataSet.addParameter(DataSet.EVENT, event, new AuditInfo[0]);
+            writeDataSet(lastDataSet);
         }
-        lastDataSet = dataset;
         lastEvent = event;
-        return dataset;
+        return lastDataSet;
     }
 
     private void writeDataSet(DataSet dataset) throws IOException,
