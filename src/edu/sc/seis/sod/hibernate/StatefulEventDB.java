@@ -50,8 +50,9 @@ public class StatefulEventDB {
     }
      
     public List getEventInTimeRange(MicroSecondTimeRange range, Status status) {
-        String q = "from "+StatefulEvent.class.getName()+" e where e.statusAsShort = :status "
-        + "AND e.preferred.originTime.time between :minTime AND :maxTime  ";
+        String q = "from "+StatefulEvent.class.getName()+" e where ";
+        if (status != null) { q += "e.statusAsShort = :status AND ";}
+        q += " e.preferred.originTime.time between :minTime AND :maxTime  ";
         Query query = trans.getSession().createQuery(q);
 
         query.setTimestamp("minTime", range.getBeginTime().getTimestamp());
