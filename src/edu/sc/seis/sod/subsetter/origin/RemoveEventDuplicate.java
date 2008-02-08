@@ -19,6 +19,9 @@ import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.Stage;
+import edu.sc.seis.sod.Standing;
+import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.hibernate.StatefulEvent;
 import edu.sc.seis.sod.hibernate.StatefulEventDB;
 import edu.sc.seis.sod.status.StringTree;
@@ -90,17 +93,31 @@ public class RemoveEventDuplicate implements OriginSubsetter {
         QuantityImpl depthRangeImpl = QuantityImpl.createQuantityImpl(depthVariance);
         QuantityImpl minDepth = originDepth.subtract(depthRangeImpl);
         QuantityImpl maxDepth = originDepth.add(depthRangeImpl);
+        List inProgEvents = getEventStatusTable().getEventInTimeRange(new MicroSecondTimeRange(minTime,
+                                                                                               maxTime),
+                                                                                               Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                                                                                          Standing.INIT));
         List timeEvents = 
             getEventStatusTable().getEventInTimeRange(new MicroSecondTimeRange(minTime,
-                                                                maxTime));
+                                                                maxTime),
+                                                                Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                                                           Standing.SUCCESS));
         List out = new ArrayList();
-        Iterator it = timeEvents.iterator();
+        Iterator it = inProgEvents.iterator();
         while(it.hasNext()) {
         	StatefulEvent e = (StatefulEvent)it.next();
         	QuantityImpl depth = (QuantityImpl)e.getOrigin().my_location.depth;
         	if (depth.greaterThanEqual(minDepth) && depth.lessThanEqual(maxDepth)) {
         		out.add(e);
         	}
+        }
+        it = timeEvents.iterator();
+        while(it.hasNext()) {
+            StatefulEvent e = (StatefulEvent)it.next();
+            QuantityImpl depth = (QuantityImpl)e.getOrigin().my_location.depth;
+            if (depth.greaterThanEqual(minDepth) && depth.lessThanEqual(maxDepth)) {
+                out.add(e);
+            } 
         }
         return out;
     }
