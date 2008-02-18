@@ -192,6 +192,7 @@ public class WaveformArm implements Arm {
             eventDb.getSession().lock(ev, LockMode.NONE);
             ev.setStatus(Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                     Standing.SUCCESS));
+            eventDb.commit();
             eventArm.change(ev);
             int numWaiting = eventDb.getNumWaiting();
             if(numWaiting < EventArm.MIN_WAIT_EVENTS) {
