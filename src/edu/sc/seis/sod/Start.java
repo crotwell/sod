@@ -31,9 +31,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import sun.misc.Signal;
-import sun.misc.SignalHandler;
-
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
@@ -84,29 +81,6 @@ public class Start {
             }
         });
         GlobalExceptionHandler.registerWithAWTThread();
-        
-        // log INT (control-c) and TERM signal
-        SignalHandler logQuit = new SignalHandler() {
-
-            public void handle(Signal signal) {
-                armFailure = true;
-                logger.info("quitting due to "+signal+" signal (control-c), cleaning up first...");
-                Arm[] arms = new Arm[] {network, event, waveform};
-                for(int i = 0; i < arms.length; i++) {
-                    synchronized(arms[i]) {
-                        arms[i].notify();
-                    }
-                }
-                synchronized(OutputScheduler.getDefault()) {
-                    OutputScheduler.getDefault().notify();
-                }
-                logger.info("...done clean up, exiting.");
-            }
-        };
-        Signal sig = new Signal("INT");
-        Signal.handle(sig, logQuit);
-        sig = new Signal("TERM");
-        Signal.handle(sig, logQuit);
     }
 
     /**
