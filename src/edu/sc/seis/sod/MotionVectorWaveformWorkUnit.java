@@ -2,6 +2,7 @@ package edu.sc.seis.sod;
 
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
@@ -31,6 +32,7 @@ public class MotionVectorWaveformWorkUnit extends WaveformWorkUnit {
                 evp.update(e, Status.get(Stage.EVENT_STATION_SUBSETTER,
                                          Standing.SYSTEM_FAILURE));
                 failLogger.warn(evp, e);
+                SodDB.commit();
                 return;
             }
             if(accepted.isSuccess()) {
@@ -47,6 +49,7 @@ public class MotionVectorWaveformWorkUnit extends WaveformWorkUnit {
             } else if(stat.getStanding() == Standing.RETRY) {
                 sodDb.retry(this);
             }
+            SodDB.commit();
         } catch(Throwable t) {
             System.err.println(WaveformArm.BIG_ERROR_MSG);
             t.printStackTrace(System.err);
