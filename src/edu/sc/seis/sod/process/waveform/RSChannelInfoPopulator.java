@@ -161,7 +161,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
                                    cookieJar).isSuccess()) {
             ChannelImpl channel = (ChannelImpl)chan;
             DataSetSeismogram[] dss = extractSeismograms(event);
-            if(recordSectionChannel.getRecordSectionItem(id, event, channel) == null) {
+            if(recordSectionChannel.getRecordSectionItem(id, event, channel) != null) {
                 return false;
             }
             recordSectionChannel.put(new RecordSectionItem(id,
