@@ -48,7 +48,8 @@ public class EventChannelPair{
      * parent
      */
     public void update(Status status){
-        this.status = status;
+        // this is weird, but calling the setter allows hibernate to autodetect a modified object
+        setStatusAsShort(status.getAsShort());
         getCookieJar().updateStatus();
         Start.getWaveformArm().setStatus(this);
     }
