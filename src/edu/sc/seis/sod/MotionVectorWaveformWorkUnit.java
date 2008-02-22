@@ -18,6 +18,9 @@ public class MotionVectorWaveformWorkUnit extends WaveformWorkUnit {
 
     public void run() {
         try {
+            //reattach evp to this session
+            evp = (EventVectorPair)sodDb.getSession().load(EventVectorPair.class, new Integer(evp.getPairId()));
+            logger.debug("Begin work on EVP: "+evp.getEcp1());
             evp.update(Status.get(Stage.EVENT_STATION_SUBSETTER,
                                   Standing.IN_PROG));
             StringTree accepted = new StringTreeLeaf(this, false);
@@ -33,6 +36,7 @@ public class MotionVectorWaveformWorkUnit extends WaveformWorkUnit {
                                          Standing.SYSTEM_FAILURE));
                 failLogger.warn(evp, e);
                 SodDB.commit();
+                logger.debug("Finish (fail) EVP: "+evp.getEcp1());
                 return;
             }
             if(accepted.isSuccess()) {
@@ -49,11 +53,14 @@ public class MotionVectorWaveformWorkUnit extends WaveformWorkUnit {
             } else if(stat.getStanding() == Standing.RETRY) {
                 sodDb.retry(this);
             }
+            SodDB.getSession().saveOrUpdate(evp);
             SodDB.commit();
+            logger.debug("Finished with EVP: "+evp.getEcp1());
         } catch(Throwable t) {
             System.err.println(WaveformArm.BIG_ERROR_MSG);
             t.printStackTrace(System.err);
             GlobalExceptionHandler.handle(WaveformArm.BIG_ERROR_MSG, t);
+            SodDB.rollback();
         }
     }
 
@@ -76,4 +83,6 @@ public class MotionVectorWaveformWorkUnit extends WaveformWorkUnit {
     }
     
     EventVectorPair evp;
+    
+    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(MotionVectorWaveformWorkUnit.class);
 }
