@@ -349,23 +349,13 @@ public class MotionVectorArm implements Subsetter {
         while(it.hasNext() && result.isSuccess()) {
             processor = (WaveformVectorProcess)it.next();
             try {
-            	if (processor instanceof Threadable && ((Threadable)processor).isThreadSafe()) {
-        			result = processor.process(ecp.getEvent(),
-        					ecp.getChannelGroup(),
-        					infilters,
-        					outfilters,
-        					result.getSeismograms(),
-        					ecp.getCookieJar());
-            	} else {
-            		synchronized(processor) {
-            			result = processor.process(ecp.getEvent(),
-            					ecp.getChannelGroup(),
-            					infilters,
-            					outfilters,
-            					result.getSeismograms(),
-            					ecp.getCookieJar());
-            		}
-                }
+                result = runProcessorThreadCheck(processor, 
+                                                 ecp.getEvent(),
+                                                 ecp.getChannelGroup(),
+                                                 infilters,
+                                                 outfilters, 
+                                                 result.getSeismograms(), 
+                                                 ecp.getCookieJar());
                 if(!result.isSuccess()) {
                     logger.info("Processor reject: " + result.getReason());
                 }
@@ -382,6 +372,32 @@ public class MotionVectorArm implements Subsetter {
         } else {
             ecp.update(Status.get(Stage.PROCESSOR, Standing.REJECT));
             failLogger.info(ecp + " " + result.getReason());
+        }
+    }
+
+    public static WaveformVectorResult runProcessorThreadCheck(WaveformVectorProcess processor,
+                                                        CacheEvent event,
+                                                        ChannelGroup channel,
+                                                        RequestFilter[][] original,
+                                                        RequestFilter[][] available,
+                                                        LocalSeismogramImpl[][] seismograms,
+                                                        CookieJar cookieJar) throws Exception {
+        if (processor instanceof Threadable && ((Threadable)processor).isThreadSafe()) {
+            return processor.process(event,
+                                     channel,
+                                     original,
+                                     available,
+                                     seismograms,
+                                     cookieJar);
+        } else {
+            synchronized(processor) {
+                return processor.process(event,
+                                         channel,
+                                         original,
+                                         available,
+                                         seismograms,
+                                         cookieJar);
+            }
         }
     }
 
