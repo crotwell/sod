@@ -180,7 +180,8 @@ public class NetworkArm implements Arm {
      * NetworkDbObjects.
      * @throws NetworkNotFound 
      */
-    public synchronized CacheNetworkAccess[] getSuccessfulNetworks() throws NetworkNotFound {
+    public CacheNetworkAccess[] getSuccessfulNetworks() throws NetworkNotFound {
+        synchronized(netGetSync) {
         SodDB sodDb = SodDB.getSingleton();
         if (lastQueryTime == null) {
             // try from db
@@ -311,6 +312,7 @@ public class NetworkArm implements Arm {
         logger.info(cacheNets.length + " networks passed");
         statusChanged("Waiting for a request");
         return cacheNets;
+        }
     }
 
     /**
@@ -724,4 +726,9 @@ public class NetworkArm implements Arm {
     private static final org.apache.log4j.Logger failLogger = org.apache.log4j.Logger.getLogger("Fail.NetworkArm");
 
     private boolean armFinished = false;
+
+    private final Object netGetSync = new Object();
+    private final Object staGetSync = new Object();
+    private final Object chanGetSync = new Object();
+    
 }// NetworkArm
