@@ -20,6 +20,7 @@ public class LocalSeismogramWaveformWorkUnit extends WaveformWorkUnit {
         try {
             //reattach ecp to this session
             ecp = (EventChannelPair)sodDb.getSession().load(EventChannelPair.class, new Integer(ecp.getPairId()));
+            logger.debug("Begin ECP: "+ecp);
             ecp.update(Status.get(Stage.EVENT_STATION_SUBSETTER,
                                   Standing.IN_PROG));
             StringTree accepted = new StringTreeLeaf(this, false);
@@ -42,6 +43,7 @@ public class LocalSeismogramWaveformWorkUnit extends WaveformWorkUnit {
                     failLogger.warn(ecp, e);
                 }
                 SodDB.commit();
+                logger.debug("Finish (fail) ECP: "+ecp);
                 return;
             }
             if(accepted.isSuccess()) {
@@ -57,11 +59,14 @@ public class LocalSeismogramWaveformWorkUnit extends WaveformWorkUnit {
             } else if(stat.getStanding() == Standing.RETRY) {
                 sodDb.retry(this);
             }
+            SodDB.getSession().saveOrUpdate(ecp);
             SodDB.commit();
+            logger.debug("Finish ECP: "+ecp);
         } catch(Throwable t) {
             System.err.println(WaveformArm.BIG_ERROR_MSG);
             t.printStackTrace(System.err);
             GlobalExceptionHandler.handle(WaveformArm.BIG_ERROR_MSG, t);
+            SodDB.rollback();
         }
     }
 
