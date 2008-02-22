@@ -404,7 +404,7 @@ public class SodDB extends AbstractHibernateDB {
     public List getSuccessfulStationsForEvent(CacheEvent event) {
         String q = "select distinct ecp.channel.site.station from "
                 + EventChannelPair.class.getName()
-                + " ecp where ecp.event = :event and ecp.status = "
+                + " ecp where ecp.event = :event and ecp.statusAsShort = "
                 + Status.get(Stage.PROCESSOR, Standing.SUCCESS).getAsShort();
         Query query = getSession().createQuery(q);
         query.setEntity("event", event);
@@ -416,7 +416,7 @@ public class SodDB extends AbstractHibernateDB {
                 + " s where s not in ("
                 + "select distinct ecp.channel.site.station from "
                 + EventChannelPair.class.getName()
-                + " ecp where ecp.event = :event and ecp.status = "
+                + " ecp where ecp.event = :event and ecp.statusAsShort = "
                 + Status.get(Stage.PROCESSOR, Standing.SUCCESS).getAsShort()
                 + " )";
         Query query = getSession().createQuery(q);
@@ -436,7 +436,7 @@ public class SodDB extends AbstractHibernateDB {
     public List getSuccessfulEventsForStation(StationImpl sta) {
         String q = "select distinct ecp.event from "
                 + EventChannelPair.class.getName()
-                + " ecp where ecp.channel.site.station = :sta  and ecp.status = "
+                + " ecp where ecp.channel.site.station = :sta  and ecp.statusAsShort = "
                 + Status.get(Stage.PROCESSOR, Standing.SUCCESS).getAsShort();
         Query query = getSession().createQuery(q);
         query.setEntity("sta", sta);
@@ -447,7 +447,7 @@ public class SodDB extends AbstractHibernateDB {
         String q = "from " + StationImpl.class.getName()
                 + " s where s not in (" + "select distinct ecp.event from "
                 + EventChannelPair.class.getName()
-                + " ecp.channel.site.station = :sta  and ecp.status = "
+                + " ecp.channel.site.station = :sta  and ecp.statusAsShort = "
                 + Status.get(Stage.PROCESSOR, Standing.SUCCESS).getAsShort()
                 + " )";
         Query query = getSession().createQuery(q);
@@ -478,7 +478,7 @@ public class SodDB extends AbstractHibernateDB {
     }
     
     public List getStationsForRecordSection(String recordSectionId, CacheEvent event, boolean best) {
-    	Query q = getSession().createQuery("select distinct e.channel.site.station from "+RecordSectionItem.class.getName()
+    	Query q = getSession().createQuery("select distinct channel.site.station from "+RecordSectionItem.class.getName()
     	+" where recordSectionId = :recsecid and event = :event and inBest = :best");
         q.setEntity("event", event);
         q.setString("recsecid", recordSectionId);
