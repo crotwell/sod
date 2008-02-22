@@ -532,9 +532,8 @@ public class SodDB extends AbstractHibernateDB {
         }
         q = getSession().createQuery("update "
                 + RecordSectionItem.class.getName()
-                + " set inBest = false where event = :event and recordSectionId = :recsecid"
-                + " and channel.code = :chanCode and channel.site.siteCode = :siteCode and "
-                + "channel.site.station.staCode = :staCode and channel.site.station.network.netCode = :netCode");
+                + " set inBest = false where event = :event and recordSectionId = :recsecid and "
+                + MATCH_CHANNEL_CODES);
         it = removes.iterator();
         while(it.hasNext()) {
             ChannelId c = (ChannelId)it.next();
@@ -548,9 +547,8 @@ public class SodDB extends AbstractHibernateDB {
         }
         q = getSession().createQuery("update "
                 + RecordSectionItem.class.getName()
-                + " set inBest = true where event = :event and recordSectionId = :recsecid"
-                + " and channel.code = :chanCode and channel.site.siteCode = :siteCode "
-                + "and channel.site.station.staCode = :staCode and channel.site.station.network.netCode = :netCode");
+                + " set inBest = true where event = :event and recordSectionId = :recsecid and "
+                + MATCH_CHANNEL_CODES);
         it = adders.iterator();
         while(it.hasNext()) {
             ChannelId c = (ChannelId)it.next();
@@ -564,6 +562,9 @@ public class SodDB extends AbstractHibernateDB {
         }
         return true;
     }
+    
+    private static final String MATCH_CHANNEL_CODES = " channel.id.channel_code = :chanCode and channel.id.site_code = :siteCode and "
+        + "channel.id.station_code = :staCode and channel.site.station.networkAttr.netCode = :netCode";
     
     public List recordSectionsForEvent(CacheEvent event) {
         Query q = getSession().createQuery("select distinct recordSectionId from "+RecordSectionItem.class.getName()+" where event = :event");
