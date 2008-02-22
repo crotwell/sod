@@ -13,6 +13,7 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.MotionVectorArm;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.Threadable;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
@@ -24,7 +25,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class WaveformVectorFork implements WaveformVectorProcessWrapper {
+public class WaveformVectorFork implements WaveformVectorProcessWrapper, Threadable {
 
     public WaveformVectorFork(Element config) throws ConfigurationException {
         this.config = config;
@@ -53,14 +54,13 @@ public class WaveformVectorFork implements WaveformVectorProcessWrapper {
                                                                                   true));
         while(it.hasNext() && result.isSuccess()) {
             processor = (WaveformVectorProcess)it.next();
-            synchronized(processor) {
-                result = processor.process(event,
-                                           channelGroup,
-                                           original,
-                                           available,
-                                           result.getSeismograms(),
-                                           cookieJar);
-            }
+            result = MotionVectorArm.runProcessorThreadCheck(processor,
+                                                             event,
+                                                             channelGroup,
+                                                             original,
+                                                             available,
+                                                             copySeismograms(seismograms),
+                                                             cookieJar);
             reasons.addLast(result.getReason());
         } // end of while (it.hasNext())
         return new WaveformVectorResult(out,
@@ -89,5 +89,9 @@ public class WaveformVectorFork implements WaveformVectorProcessWrapper {
 
     public WaveformVectorProcess[] getWrappedProcessors() {
         return (WaveformVectorProcess[])cgProcessList.toArray(new WaveformVectorProcess[0]);
+    }
+
+    public boolean isThreadSafe() {
+        return true;
     }
 }

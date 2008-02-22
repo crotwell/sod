@@ -5,6 +5,8 @@
  */
 package edu.sc.seis.sod.process.waveform.vector;
 
+import java.util.Iterator;
+
 import org.w3c.dom.Element;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
@@ -13,10 +15,12 @@ import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.MotionVectorArm;
+import edu.sc.seis.sod.Threadable;
 import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
-public class WaveformVectorAlwaysSuccess extends VectorResultWrapper {
+public class WaveformVectorAlwaysSuccess extends VectorResultWrapper implements Threadable {
 
     public WaveformVectorAlwaysSuccess(Element config)
             throws ConfigurationException {
@@ -30,12 +34,13 @@ public class WaveformVectorAlwaysSuccess extends VectorResultWrapper {
                                         LocalSeismogramImpl[][] seismograms,
                                         CookieJar cookieJar) {
         try {
-            WaveformVectorResult result = subProcess.process(event,
-                                                             channel,
-                                                             original,
-                                                             available,
-                                                             seismograms,
-                                                             cookieJar);
+            WaveformVectorResult result = MotionVectorArm.runProcessorThreadCheck(subProcess,
+                                                                                  event,
+                                                                                  channel,
+                                                                                  original,
+                                                                                  available,
+                                                                                  seismograms,
+                                                                                  cookieJar);
             return new WaveformVectorResult(result.getSeismograms(),
                                             new StringTreeBranch(this,
                                                                  true,
@@ -50,6 +55,10 @@ public class WaveformVectorAlwaysSuccess extends VectorResultWrapper {
 
     public String toString() {
         return "AlwaysSuccess(" + subProcess.toString() + ")";
+    }
+
+    public boolean isThreadSafe() {
+        return true;
     }
 
 }

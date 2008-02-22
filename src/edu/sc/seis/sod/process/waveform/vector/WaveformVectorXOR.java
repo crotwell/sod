@@ -14,6 +14,7 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.MotionVectorArm;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
 
@@ -34,14 +35,20 @@ public class WaveformVectorXOR extends WaveformVectorFork {
         Iterator it = cgProcessList.iterator();
         processorA = (WaveformVectorProcess)it.next();
         processorB = (WaveformVectorProcess)it.next();
-        synchronized (processorA) {
-            resultA = processorA.process(event, channelGroup, original,
-                                         available, copySeismograms(seismograms), cookieJar);
-        }
-        synchronized (processorB) {
-            resultB = processorB.process(event, channelGroup, original,
-                                         available, copySeismograms(seismograms), cookieJar);
-        }
+        resultA = MotionVectorArm.runProcessorThreadCheck(processorA,
+                                                         event,
+                                                         channelGroup,
+                                                         original,
+                                                         available,
+                                                         copySeismograms(seismograms),
+                                                         cookieJar);
+        resultB = MotionVectorArm.runProcessorThreadCheck(processorB,
+                                                         event,
+                                                         channelGroup,
+                                                         original,
+                                                         available,
+                                                         copySeismograms(seismograms),
+                                                         cookieJar);
         boolean xorResult = resultA.isSuccess() != resultB.isSuccess();
         return new WaveformVectorResult(seismograms,
                                                      new StringTreeBranch(this,
@@ -50,5 +57,8 @@ public class WaveformVectorXOR extends WaveformVectorFork {
 
     }
 
+    public boolean isThreadSafe() {
+        return true;
+    }
 }
 

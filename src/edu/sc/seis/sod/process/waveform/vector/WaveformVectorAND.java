@@ -12,6 +12,8 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.MotionVectorArm;
+import edu.sc.seis.sod.Threadable;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.status.StringTreeLeaf;
@@ -19,7 +21,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import org.w3c.dom.Element;
 
-public class WaveformVectorAND extends WaveformVectorFork {
+public class WaveformVectorAND extends WaveformVectorFork  {
 
     public WaveformVectorAND(Element config) throws ConfigurationException {
         super(config);
@@ -40,14 +42,13 @@ public class WaveformVectorAND extends WaveformVectorFork {
         WaveformVectorResult result = new WaveformVectorResult(seismograms, new StringTreeLeaf(this, true));
         while (it.hasNext() && result.isSuccess()) {
             processor = (WaveformVectorProcess)it.next();
-            synchronized (processor) {
-                result = processor.process(event,
-                                           channelGroup,
-                                           original,
-                                           available,
-                                           copySeismograms(seismograms),
-                                           cookieJar);
-            }
+            result = MotionVectorArm.runProcessorThreadCheck(processor,
+                                                             event,
+                                                             channelGroup,
+                                                             original,
+                                                             available,
+                                                             copySeismograms(seismograms),
+                                                             cookieJar);
             reasons.addLast(result.getReason());
         } // end of while (it.hasNext())
         return new WaveformVectorResult(out,
@@ -55,6 +56,10 @@ public class WaveformVectorAND extends WaveformVectorFork {
                                                                           result.isSuccess(),
                                                                               (StringTree[])reasons.toArray(new StringTree[0])));
 
+    }
+
+    public boolean isThreadSafe() {
+        return true;
     }
 }
 

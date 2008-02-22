@@ -13,6 +13,7 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.MotionVectorArm;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.status.StringTreeLeaf;
@@ -37,17 +38,20 @@ public class WaveformVectorNOT extends WaveformVectorFork {
                                                                new StringTreeLeaf(this,
                                                                                   true));
         processor = (WaveformVectorProcess)it.next();
-        synchronized(processor) {
-            result = processor.process(event,
-                                       channelGroup,
-                                       original,
-                                       available,
-                                       copySeismograms(seismograms),
-                                       cookieJar);
-        }
+        result = MotionVectorArm.runProcessorThreadCheck(processor,
+                                                         event,
+                                                         channelGroup,
+                                                         original,
+                                                         available,
+                                                         copySeismograms(seismograms),
+                                                         cookieJar);
         return new WaveformVectorResult(out,
                                         new StringTreeBranch(this,
                                                              !result.isSuccess(),
                                                              new StringTree[] {result.getReason()}));
+    }
+
+    public boolean isThreadSafe() {
+        return true;
     }
 }
