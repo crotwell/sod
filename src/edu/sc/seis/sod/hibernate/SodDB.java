@@ -95,7 +95,7 @@ public class SodDB extends AbstractHibernateDB {
         if(processingRule.equals(RunProperties.AT_LEAST_ONCE)) {
             return (EventChannelPair[])out.toArray(new EventChannelPair[0]);
         } else {
-            ArrayList reprocess = new ArrayList();
+            ArrayList<EventChannelPair> reprocess = new ArrayList<EventChannelPair>();
             Iterator it = out.iterator();
             while(it.hasNext()) {
                 EventChannelPair pair = (EventChannelPair)it.next();
@@ -109,7 +109,7 @@ public class SodDB extends AbstractHibernateDB {
                 }
             }
             flush();
-            return (EventChannelPair[])reprocess.toArray(new EventChannelPair[0]);
+            return reprocess.toArray(new EventChannelPair[0]);
         }
     }
 
@@ -241,8 +241,8 @@ public class SodDB extends AbstractHibernateDB {
 
     float retryBase = 2;
 
-    public List getAllRetries() {
-        String q = "from edu.sc.seis.sod.RetryWaveformWorkUnit r ";
+    public List<RetryWaveformWorkUnit> getAllRetries() {
+        String q = "from "+RetryWaveformWorkUnit.class.getName()+" r ";
         Query query = getSession().createQuery(q);
         return query.list();
     }
@@ -255,11 +255,11 @@ public class SodDB extends AbstractHibernateDB {
         query.setFloat("minDelay", minRetryDelay);
         query.setFloat("maxDelay", maxRetryDelay);
         query.setMaxResults(limit);
-        List result = query.list();
+        List<RetryWaveformWorkUnit> result = query.list();
         if(result.size() != 0) {
             logger.debug("Got " + result.size() + " retries");
         }
-        RetryWaveformWorkUnit[] out = (RetryWaveformWorkUnit[])result.toArray(new RetryWaveformWorkUnit[0]);
+        RetryWaveformWorkUnit[] out = result.toArray(new RetryWaveformWorkUnit[0]);
         for(int i = 0; i < out.length; i++) {
             out[i].getEcp().update(Status.get(Stage.EVENT_STATION_SUBSETTER,
                                               Standing.INIT));
@@ -329,70 +329,70 @@ public class SodDB extends AbstractHibernateDB {
         return ((Long)query.uniqueResult()).intValue();
     }
 
-    public List getAll(CacheEvent event) {
+    public List<EventChannelPair> getAll(CacheEvent event) {
         Query query = getSession().createQuery(eventBase);
         query.setEntity("event", event);
         return query.list();
     }
 
-    public List getSuccessful(CacheEvent event) {
+    public List<EventChannelPair> getSuccessful(CacheEvent event) {
         Query query = getSession().createQuery(successPerEvent);
         query.setEntity("event", event);
         return query.list();
     }
 
-    public List getSuccessful(StationImpl station) {
+    public List<EventChannelPair> getSuccessful(StationImpl station) {
         Query query = getSession().createQuery(success);
         query.setEntity("sta", station);
         return query.list();
     }
 
-    public List getSuccessful(CacheEvent event, StationImpl station) {
+    public List<EventChannelPair> getSuccessful(CacheEvent event, StationImpl station) {
         Query query = getSession().createQuery(successPerEventStation);
         query.setEntity("sta", station);
         query.setEntity("event", event);
         return query.list();
     }
 
-    public List getFailed(StationImpl station) {
+    public List<EventChannelPair> getFailed(StationImpl station) {
         Query query = getSession().createQuery(failed);
         query.setEntity("sta", station);
         return query.list();
     }
 
-    public List getFailed(CacheEvent event, StationImpl station) {
+    public List<EventChannelPair> getFailed(CacheEvent event, StationImpl station) {
         Query query = getSession().createQuery(failedPerEventStation);
         query.setEntity("sta", station);
         query.setEntity("event", event);
         return query.list();
     }
 
-    public List getFailed(CacheEvent event) {
+    public List<EventChannelPair> getFailed(CacheEvent event) {
         Query query = getSession().createQuery(failedPerEvent);
         query.setEntity("event", event);
         return query.list();
     }
 
-    public List getRetry(StationImpl station) {
+    public List<EventChannelPair> getRetry(StationImpl station) {
         Query query = getSession().createQuery(retry);
         query.setEntity("sta", station);
         return query.list();
     }
 
-    public List getRetry(CacheEvent event) {
+    public List<EventChannelPair> getRetry(CacheEvent event) {
         Query query = getSession().createQuery(retryPerEvent);
         query.setEntity("event", event);
         return query.list();
     }
 
-    public List getRetry(CacheEvent event, StationImpl station) {
+    public List<EventChannelPair> getRetry(CacheEvent event, StationImpl station) {
         Query query = getSession().createQuery(retryPerEventStation);
         query.setEntity("sta", station);
         query.setEntity("event", event);
         return query.list();
     }
 
-    public List getStationsForEvent(CacheEvent event) {
+    public List<StationImpl> getStationsForEvent(CacheEvent event) {
         String q = "select distinct ecp.channel.site.station from "
                 + EventChannelPair.class.getName()
                 + " ecp where ecp.event = :event";
@@ -401,7 +401,7 @@ public class SodDB extends AbstractHibernateDB {
         return query.list();
     }
 
-    public List getSuccessfulStationsForEvent(CacheEvent event) {
+    public List<StationImpl> getSuccessfulStationsForEvent(CacheEvent event) {
         String q = "select distinct ecp.channel.site.station from "
                 + EventChannelPair.class.getName()
                 + " ecp where ecp.event = :event and ecp.statusAsShort = "
@@ -411,7 +411,7 @@ public class SodDB extends AbstractHibernateDB {
         return query.list();
     }
 
-    public List getUnsuccessfulStationsForEvent(CacheEvent event) {
+    public List<StationImpl> getUnsuccessfulStationsForEvent(CacheEvent event) {
         String q = "from " + StationImpl.class.getName()
                 + " s where s not in ("
                 + "select distinct ecp.channel.site.station from "
@@ -424,7 +424,7 @@ public class SodDB extends AbstractHibernateDB {
         return query.list();
     }
 
-    public List getEventsForStation(StationImpl sta) {
+    public List<CacheEvent> getEventsForStation(StationImpl sta) {
         String q = "select distinct ecp.event from "
                 + EventChannelPair.class.getName()
                 + " ecp where ecp.channel.site.station = :sta ";
@@ -433,7 +433,7 @@ public class SodDB extends AbstractHibernateDB {
         return query.list();
     }
 
-    public List getSuccessfulEventsForStation(StationImpl sta) {
+    public List<CacheEvent> getSuccessfulEventsForStation(StationImpl sta) {
         String q = "select distinct ecp.event from "
                 + EventChannelPair.class.getName()
                 + " ecp where ecp.channel.site.station = :sta  and ecp.statusAsShort = "
@@ -443,7 +443,7 @@ public class SodDB extends AbstractHibernateDB {
         return query.list();
     }
 
-    public List getUnsuccessfulEventsForStation(StationImpl sta) {
+    public List<CacheEvent> getUnsuccessfulEventsForStation(StationImpl sta) {
         String q = "from " + StationImpl.class.getName()
                 + " s where s not in (" + "select distinct ecp.event from "
                 + EventChannelPair.class.getName()
@@ -477,7 +477,7 @@ public class SodDB extends AbstractHibernateDB {
         return null;
     }
     
-    public List getStationsForRecordSection(String recordSectionId, CacheEvent event, boolean best) {
+    public List<StationImpl> getStationsForRecordSection(String recordSectionId, CacheEvent event, boolean best) {
     	Query q = getSession().createQuery("select distinct channel.site.station from "+RecordSectionItem.class.getName()
     	+" where recordSectionId = :recsecid and event = :event and inBest = :best");
         q.setEntity("event", event);
@@ -486,7 +486,7 @@ public class SodDB extends AbstractHibernateDB {
         return q.list();
     }
     
-    public List getChannelsForRecordSection(String recordSectionId, CacheEvent event, boolean best) {
+    public List<ChannelImpl> getChannelsForRecordSection(String recordSectionId, CacheEvent event, boolean best) {
     	Query q = getSession().createQuery("select distict e.channel from "+RecordSectionItem.class.getName()
     	+" where recordSectionId = :recsecid and event = :event and inBest = :best");
         q.setEntity("event", event);
@@ -495,7 +495,7 @@ public class SodDB extends AbstractHibernateDB {
         return q.list();
     }
 
-    public List getBestForRecordSection(String recordSectionId, CacheEvent event) {
+    public List<RecordSectionItem> getBestForRecordSection(String recordSectionId, CacheEvent event) {
         Query q = getSession().createQuery("from "
                 + RecordSectionItem.class.getName()
                 + " where inBest = true and event = :event and recordSectionId = :recsecid");
@@ -507,19 +507,19 @@ public class SodDB extends AbstractHibernateDB {
     public boolean updateBestForRecordSection(String recordSectionId,
                                               CacheEvent event,
                                               ChannelId[] channelIds) {
-        List best = getBestForRecordSection(recordSectionId, event);
-        Set removes = new HashSet();
-        Iterator it = best.iterator();
+        List<RecordSectionItem> best = getBestForRecordSection(recordSectionId, event);
+        Set<ChannelId> removes = new HashSet<ChannelId>();
+        Iterator<RecordSectionItem> it = best.iterator();
         while(it.hasNext()) {
-            removes.add(((RecordSectionItem)it.next()).channel.get_id());
+            removes.add(it.next().channel.get_id());
         }
-        Set adders = new HashSet();
+        Set<ChannelId> adders = new HashSet<ChannelId>();
         for(int i = 0; i < channelIds.length; i++) {
             adders.add(channelIds[i]);
         }
-        it = adders.iterator();
-        while(it.hasNext()) {
-            Object o = it.next();
+        Iterator<ChannelId> chanIt = adders.iterator();
+        while(chanIt.hasNext()) {
+            Object o = chanIt.next();
             if(removes.contains(o)) {
                 // in both, so no change
                 removes.remove(o);
@@ -534,9 +534,9 @@ public class SodDB extends AbstractHibernateDB {
                 + RecordSectionItem.class.getName()
                 + " set inBest = false where event = :event and recordSectionId = :recsecid and "
                 + MATCH_CHANNEL_CODES);
-        it = removes.iterator();
-        while(it.hasNext()) {
-            ChannelId c = (ChannelId)it.next();
+        chanIt = removes.iterator();
+        while(chanIt.hasNext()) {
+            ChannelId c = chanIt.next();
             q.setEntity("event", event);
             q.setString("recsecid", recordSectionId);
             q.setString("chanCode", c.channel_code);
@@ -549,9 +549,9 @@ public class SodDB extends AbstractHibernateDB {
                 + RecordSectionItem.class.getName()
                 + " set inBest = true where event = :event and recordSectionId = :recsecid and "
                 + MATCH_CHANNEL_CODES);
-        it = adders.iterator();
-        while(it.hasNext()) {
-            ChannelId c = (ChannelId)it.next();
+        chanIt = adders.iterator();
+        while(chanIt.hasNext()) {
+            ChannelId c = chanIt.next();
             q.setEntity("event", event);
             q.setString("recsecid", recordSectionId);
             q.setString("chanCode", c.channel_code);
@@ -564,9 +564,9 @@ public class SodDB extends AbstractHibernateDB {
     }
     
     private static final String MATCH_CHANNEL_CODES = " channel.id.channel_code = :chanCode and channel.id.site_code = :siteCode and "
-        + "channel.id.station_code = :staCode and channel.site.station.networkAttr.netCode = :netCode";
+        + "channel.id.station_code = :staCode and channel.site.station.networkAttr.id.network_code = :netCode";
     
-    public List recordSectionsForEvent(CacheEvent event) {
+    public List<String> recordSectionsForEvent(CacheEvent event) {
         Query q = getSession().createQuery("select distinct recordSectionId from "+RecordSectionItem.class.getName()+" where event = :event");
         q.setEntity("event", event);
         return q.list();
@@ -583,7 +583,7 @@ public class SodDB extends AbstractHibernateDB {
         return (EcpCookie)q.uniqueResult();
     }
     
-    public List getCookieNames(EventChannelPair ecp) {
+    public List<String> getCookieNames(EventChannelPair ecp) {
         Query q = getSession().createQuery("select name from "+EcpCookie.class.getName()+" where ecp = :ecp");
         q.setEntity("ecp", ecp);
         return q.list();
