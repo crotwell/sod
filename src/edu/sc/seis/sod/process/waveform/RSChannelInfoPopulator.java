@@ -38,7 +38,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
     public RSChannelInfoPopulator(Element config) throws Exception {
         initConfig(config);
         saveSeisToFile = getSaveSeismogramToFile(saveSeisId);
-        recordSectionChannel = new SodDB();
+        recordSectionChannel = SodDB.getSingleton();
     }
 
     public static final String GENS_POPS_XPATH = "//recordSectionDisplayGenerator | //RSChannelInfoPopulator | //externalWaveformProcess[classname/text() = \"edu.sc.seis.rev.map.RecordSectionAndMapGenerator\"]";
