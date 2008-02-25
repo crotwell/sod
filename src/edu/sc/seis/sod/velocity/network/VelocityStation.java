@@ -2,6 +2,7 @@ package edu.sc.seis.sod.velocity.network;
 
 import java.io.StringWriter;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
@@ -24,7 +25,7 @@ import edu.sc.seis.sod.velocity.event.VelocityEvent;
 /**
  * @author groves Created on Jan 7, 2005
  */
-public class VelocityStation extends Station {
+public class VelocityStation extends StationImpl {
 
     public VelocityStation(StationImpl sta) {
         this.sta = sta;
@@ -283,4 +284,17 @@ public class VelocityStation extends Station {
         }
         return out;
     }
+    
+    public static List<VelocityStation> wrapList(List<? extends Station> stations) {
+        List<VelocityStation> out = new ArrayList<VelocityStation>();
+        for(Station s : stations) {
+            if (s instanceof VelocityStation) {
+                out.add((VelocityStation)s);
+            } else {
+                out.add(new VelocityStation((StationImpl)s));
+            }
+        }
+        return out;
+    }
+    
 }
