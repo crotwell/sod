@@ -444,10 +444,10 @@ public class SodDB extends AbstractHibernateDB {
     }
 
     public List<CacheEvent> getUnsuccessfulEventsForStation(StationImpl sta) {
-        String q = "from " + StationImpl.class.getName()
-                + " s where s not in (" + "select distinct ecp.event from "
+        String q = "from " + CacheEvent.class.getName()
+                + " e where e not in (" + "select distinct ecp.event from "
                 + EventChannelPair.class.getName()
-                + " ecp.channel.site.station = :sta  and ecp.statusAsShort = "
+                + " ecp where ecp.channel.site.station = :sta  and ecp.statusAsShort = "
                 + Status.get(Stage.PROCESSOR, Standing.SUCCESS).getAsShort()
                 + " )";
         Query query = getSession().createQuery(q);
@@ -487,7 +487,7 @@ public class SodDB extends AbstractHibernateDB {
     }
     
     public List<ChannelImpl> getChannelsForRecordSection(String recordSectionId, CacheEvent event, boolean best) {
-    	Query q = getSession().createQuery("select distict e.channel from "+RecordSectionItem.class.getName()
+    	Query q = getSession().createQuery("select distinct channel from "+RecordSectionItem.class.getName()
     	+" where recordSectionId = :recsecid and event = :event and inBest = :best");
         q.setEntity("event", event);
         q.setString("recsecid", recordSectionId);
