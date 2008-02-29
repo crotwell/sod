@@ -1,4 +1,5 @@
 log4j.rootCategory=debug, everything, error, consoleError
+log4j.logger.org.hibernate=INFO
 log4j.logpath=logs
 
 log4j.appender.C=org.apache.log4j.ConsoleAppender
