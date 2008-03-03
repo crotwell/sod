@@ -217,16 +217,16 @@ public class NetworkArm implements Arm {
             String[] constrainingCodes = getConstrainingNetworkCodes(attrSubsetter);
             if(constrainingCodes.length > 0) {
                 edu.iris.Fissures.IfNetwork.NetworkFinder netFinder = netDC.a_finder();
-                List constrainedNets = new ArrayList(constrainingCodes.length);
+                List<CacheNetworkAccess> constrainedNets = new ArrayList<CacheNetworkAccess>(constrainingCodes.length);
                 for(int i = 0; i < constrainingCodes.length; i++) {
-                    NetworkAccess[] found;
+                    CacheNetworkAccess[] found;
                     // this is a bit of a hack as names could be one or two
                     // characters, but works with _US-TA style
                     // virtual networks at the DMC
                     if(constrainingCodes[i].length() > 2) {
-                        found = netFinder.retrieve_by_name(constrainingCodes[i]);
+                        found = (CacheNetworkAccess[])netFinder.retrieve_by_name(constrainingCodes[i]);
                     } else {
-                        found = netFinder.retrieve_by_code(constrainingCodes[i]);
+                        found = (CacheNetworkAccess[])netFinder.retrieve_by_code(constrainingCodes[i]);
                     }
                     for(int j = 0; j < found.length; j++) {
                         constrainedNets.add(found[j]);
