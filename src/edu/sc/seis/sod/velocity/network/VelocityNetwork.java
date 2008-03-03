@@ -29,8 +29,15 @@ public class VelocityNetwork extends NetworkAttr {
         this(net, dbid, null);
     }
 
-    public VelocityNetwork(List stations) {
-        this(((VelocityStation)stations.get(0)).my_network, stations);
+    public VelocityNetwork(List<VelocityStation> stations) {
+        this(getFirstStation(stations).getNet(), stations);
+    }
+    
+    private static final VelocityStation getFirstStation(List<VelocityStation> stations) {
+        if (stations.size() == 0) {
+            throw new IllegalArgumentException("station list cannot be of size 0");
+        }
+        return stations.get(0);
     }
 
     public VelocityNetwork(NetworkAttr net, List stations) {
