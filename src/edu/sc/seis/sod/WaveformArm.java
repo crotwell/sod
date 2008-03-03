@@ -26,6 +26,7 @@ import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
+import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.cache.WorkerThreadPool;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
@@ -170,7 +171,7 @@ public class WaveformArm implements Arm {
     private int populateEventChannelDb(Standing standing) throws Exception {
         int numEvents = 0;
         for(StatefulEvent ev = eventDb.getNext(standing); ev != null; ev = eventDb.getNext(standing)) {
-            logger.debug("Work on event dbid=" + ev.getDbid());
+            logger.debug("Work on event: " + ev.getDbid()+" "+EventUtil.getEventInfo(ev));
             ev.setStatus(Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                     Standing.IN_PROG));
             eventDb.commit();
@@ -216,7 +217,7 @@ public class WaveformArm implements Arm {
         if(!overlap.overlaps(net.get_attributes())) {
             failLogger.info(NetworkIdUtil.toString(net.get_attributes()
                     .get_id())
-                    + "  The networks effective time does not overlap the event time.");
+                    + "'s network effective time does not overlap the event time.");
             return;
         } // end of if ()
         StationImpl[] stations = networkArm.getSuccessfulStations(net);
@@ -231,32 +232,33 @@ public class WaveformArm implements Arm {
                               StatefulEvent ev, Standing standing) throws Exception {
         if(!overlap.overlaps(station)) {
             failLogger.debug(StationIdUtil.toString(station.get_id())
-                    + "  The stations effective time does not overlap the event time.");
+                    + "'s station effective time does not overlap the event time.");
             return;
         } // end of if ()
         ChannelImpl[] chans = networkArm.getSuccessfulChannels(net, station);
         if(motionVectorArm != null) {
-            startChannelGroups(overlap, ev, chans, standing);
+            startChannelGroups(overlap, net, ev, chans, standing);
         } else {
             // individual local seismograms
             for(int i = 0; i < chans.length; i++) {
-                startChannel(overlap, chans[i], ev, standing);
+                startChannel(overlap, net, chans[i], ev, standing);
             }
         }
     }
 
     private void startChannelGroups(EventEffectiveTimeOverlap overlap,
+                                    CacheNetworkAccess net,
                                     StatefulEvent ev,
                                     ChannelImpl[] chans, Standing standing) throws SQLException {
-        List overlapList = new ArrayList();
+        List<ChannelImpl> overlapList = new ArrayList<ChannelImpl>();
         for(int i = 0; i < chans.length; i++) {
             if(overlap.overlaps(chans[i])) {
                 overlapList.add(chans[i]);
             } else {
-                logger.debug("The channel effective time does not overlap the event time");
+                failLogger.info(ChannelIdUtil.toString(chans[i].get_id())+"'s channel effective time does not overlap the event time");
             }
         }
-        ChannelImpl[] overlapChans = (ChannelImpl[])overlapList.toArray(new ChannelImpl[0]);
+        ChannelImpl[] overlapChans = overlapList.toArray(new ChannelImpl[0]);
         ChannelGroup[] chanGroups = groupChannels(overlapChans, ev);
         Status eventStationInit = Status.get(Stage.EVENT_STATION_SUBSETTER,
                                              Standing.INIT);
@@ -286,9 +288,9 @@ public class WaveformArm implements Arm {
             }
             if (evp == null) {
                 evp = new EventVectorPair(ecpTmp);
-                sodDb.getSession().lock(ev, LockMode.NONE);
+                SodDB.getSession().lock(ev, LockMode.NONE);
                 sodDb.put(evp);
-                sodDb.commit();
+                SodDB.commit();
                 invokeLaterAsCapacityAllows(new MotionVectorWaveformWorkUnit(evp));
                 retryIfNeededAndAvailable();
             } // already in database so no need to add it
@@ -324,10 +326,11 @@ public class WaveformArm implements Arm {
     }
 
     private void startChannel(EventEffectiveTimeOverlap overlap,
+                              CacheNetworkAccess net,
                               ChannelImpl chan,
                               StatefulEvent ev, Standing standing) throws Exception {
         if(!overlap.overlaps(chan)) {
-            logger.debug("The channel effective time does not overlap the event time");
+            logger.debug(ChannelIdUtil.toString(chan.get_id())+"'s channel effective time does not overlap the event time");
             return;
         } // end of if ()
         // attach channel as it came from network arm thread, and hence separate
@@ -346,14 +349,15 @@ public class WaveformArm implements Arm {
             ecp = sodDb.getECP(ev, chan);
         }
         if (ecp == null) {
-            sodDb.put(new EventChannelPair(ev,
-                                           chan,
-                                           0,
-                                           Status.get(Stage.EVENT_STATION_SUBSETTER,
-                                                      Standing.INIT)));
+            ecp = new EventChannelPair(ev,
+                                       chan,
+                                       0,
+                                       Status.get(Stage.EVENT_STATION_SUBSETTER,
+                                                  Standing.INIT));
+            sodDb.put(ecp);
         }
         try {
-            sodDb.commit();
+            SodDB.commit();
         } catch(GenericJDBCException e) {
             logger.error(e);
             if(e.getCause() instanceof BatchUpdateException) {
@@ -390,7 +394,7 @@ public class WaveformArm implements Arm {
 
     private void addSuspendedPairsToQueue() throws SQLException {
         EventChannelPair[] pairs;
-        SodDB sodDb = new SodDB();
+        SodDB sodDb = SodDB.getSingleton();
         try {
             logger.debug("SodDB in reopen suspended events:" + sodDb);
             pairs = sodDb.getSuspendedEventChannelPairs(Start.getRunProps()
