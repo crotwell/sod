@@ -61,6 +61,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
             System.err.println();
             printDeprecationWarning = false;
         }
+        XMLUtil.registerExtractorWithExceptionHandler();
         String fileTypeStr = DOMHelper.extractText(config,
                                                    "fileType",
                                                    SeismogramFileTypes.MSEED.getValue());
