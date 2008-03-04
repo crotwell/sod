@@ -86,7 +86,7 @@
         <dependency>
            <artifactId>hibernate</artifactId>
            <groupId>hibernate</groupId>
-           <version>3.2.5</version>
+           <version>3.2.6</version>
         </dependency>
         <dependency>
            <artifactId>hibernate-tools</artifactId>
