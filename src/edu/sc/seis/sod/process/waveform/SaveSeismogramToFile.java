@@ -270,7 +270,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
                 int numRemoved = jdbcSeisFile.removeSeismogramFromDatabase(baseFile.toString());
                 if(numRemoved == 0) {
                     logger.warn("No seismograms removed from database, but they're being stored there and a file exists for the seismogram");
-                    throw new RuntimeException();
+                    throw new RuntimeException("No seismograms removed from database, but they're being stored there and a file exists for the seismogram");
                 }
             }
             baseFile = URLDataSetSeismogram.makeFile(seisFileDirectory,
