@@ -15,6 +15,7 @@ import edu.sc.seis.sod.status.FileWritingTemplate;
 import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.status.StationFormatter;
 import edu.sc.seis.sod.status.TemplateFileLoader;
+import edu.sc.seis.sod.velocity.event.VelocityEvent;
 
 /**
  * @author groves Created on Jan 10, 2005
@@ -91,6 +92,10 @@ public class SeismogramImageOutputLocator {
         chanFormatter = new ChannelFormatter(picName, true);
     }
 
+    public String getLocation(VelocityEvent event, Channel channel) {
+        return getLocation(event.getCacheEvent(), channel);
+    }
+    
     public String getLocation(CacheEvent event, Channel channel) {
         return getLocation(event, channel, configuredFileType);
     }
