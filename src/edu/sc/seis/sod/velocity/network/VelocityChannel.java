@@ -106,7 +106,7 @@ public class VelocityChannel extends Channel {
     }
 
     public boolean hasDbId() {
-        return getDbId() >= 0;
+        return chan.getDbid() >= 0;
     }
 
     public int getDbId() {
