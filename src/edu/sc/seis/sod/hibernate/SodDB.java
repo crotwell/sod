@@ -530,35 +530,45 @@ public class SodDB extends AbstractHibernateDB {
         if(removes.size() == 0 && adders.size() == 0) {
             return false;
         }
-        q = getSession().createQuery("update "
+        q = getSession().createQuery("from "
                 + RecordSectionItem.class.getName()
-                + " set inBest = false where event = :event and recordSectionId = :recsecid and "
+                + " where inBest = true and event = :event and recordSectionId = :recsecid and "
                 + MATCH_CHANNEL_CODES);
         chanIt = removes.iterator();
         while(chanIt.hasNext()) {
             ChannelId c = chanIt.next();
+            logger.debug("remove: "+q+"  "+event.getDbid()+"  "+recordSectionId+" "+c.channel_code+" "+c.site_code+" "+c.station_code+" "+c.network_id.network_code);
             q.setEntity("event", event);
             q.setString("recsecid", recordSectionId);
             q.setString("chanCode", c.channel_code);
             q.setString("siteCode", c.site_code);
             q.setString("staCode", c.station_code);
             q.setString("netCode", c.network_id.network_code);
-            q.executeUpdate();
+            Iterator dbit = q.iterate();
+            while(dbit.hasNext()) {
+                RecordSectionItem item = (RecordSectionItem)dbit.next();
+                item.setInBest(false);
+            }
         }
-        q = getSession().createQuery("update "
+        q = getSession().createQuery("from "
                 + RecordSectionItem.class.getName()
-                + " set inBest = true where event = :event and recordSectionId = :recsecid and "
+                + " where inBest = false and event = :event and recordSectionId = :recsecid and "
                 + MATCH_CHANNEL_CODES);
         chanIt = adders.iterator();
         while(chanIt.hasNext()) {
             ChannelId c = chanIt.next();
+            logger.debug("adds "+q+"  "+event.getDbid()+"  "+recordSectionId+" "+c.channel_code+" "+c.site_code+" "+c.station_code+" "+c.network_id.network_code);
             q.setEntity("event", event);
             q.setString("recsecid", recordSectionId);
             q.setString("chanCode", c.channel_code);
             q.setString("siteCode", c.site_code);
             q.setString("staCode", c.station_code);
             q.setString("netCode", c.network_id.network_code);
-            q.executeUpdate();
+            Iterator dbit = q.iterate();
+            while(dbit.hasNext()) {
+                RecordSectionItem item = (RecordSectionItem)dbit.next();
+                item.setInBest(true);
+            }
         }
         return true;
     }
