@@ -78,12 +78,12 @@
 		</id>
 		<many-to-one name="event"
 			class="edu.sc.seis.sod.hibernate.StatefulEvent" column="event"
-			foreign-key="FK_recsec_event" />
+			foreign-key="FK_recsec_event" index="rec_best_eq_index" />
 		<many-to-one name="channel"
 			class="edu.iris.Fissures.network.ChannelImpl" column="channel"
 			foreign-key="FK_recsec_channel" />
-		<property name="recordSectionId" />
-		<property name="inBest" type="boolean" />
+		<property name="recordSectionId"  index="rec_best_eq_index" />
+		<property name="inBest" type="boolean" index="rec_best_eq_index" />
 	</class>
 
 	<class name="edu.sc.seis.sod.SodConfig">
