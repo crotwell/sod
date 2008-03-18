@@ -15,10 +15,10 @@
                     of a site.</description>
                 <velocity>#networkArmPage()</velocity>
             </xsd:annotation>
-            <ref name="code"/>
-            <ref name="depthRange"/>
-            <ref name="effectiveTimeOverlap"/>
-            <ref name="area"/>
+            <ref name="siteCode"/>
+            <ref name="siteDepthRange"/>
+            <ref name="siteEffectiveTimeOverlap"/>
+            <ref name="siteArea"/>
             <ref name="siteBoxArea"/>
             <ref name="sitePolygonFile"/>
             <ref name="AND"/>
@@ -29,10 +29,10 @@
     </define>
     <define name="siteLogical">
         <choice>
-            <ref name="code"/>
-            <ref name="depthRange"/>
-            <ref name="effectiveTimeOverlap"/>
-            <ref name="area"/>
+            <ref name="siteCode"/>
+            <ref name="siteDepthRange"/>
+            <ref name="siteEffectiveTimeOverlap"/>
+            <ref name="siteArea"/>
             <ref name="siteBoxArea"/>
             <ref name="sitePolygonFile"/>
             <ref name="AND"/>
@@ -43,7 +43,7 @@
             <externalRef href="network.rng"/>
         </choice>
     </define>
-    <define name="code">
+    <define name="siteCode">
         <element name="siteCode">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
@@ -58,7 +58,7 @@
             </data>
         </element>
     </define>
-    <define name="depthRange">
+    <define name="siteDepthRange">
         <element name="siteDepthRange">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
@@ -77,7 +77,7 @@
             <ref name="range"/>
         </element>
     </define>
-    <define name="effectiveTimeOverlap">
+    <define name="siteEffectiveTimeOverlap">
         <element name="siteEffectiveTimeOverlap">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
@@ -92,7 +92,7 @@
             <ref name="timeRange"/>
         </element>
     </define>
-    <define name="area">
+    <define name="siteArea">
         <element name="siteArea">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
