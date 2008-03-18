@@ -19,9 +19,6 @@
             <optional>
                 <externalRef href="station.rng"/>
             </optional>
-            <optional>
-                <externalRef href="site.rng"/>
-            </optional>
             <zeroOrMore>
                 <externalRef href="channel.rng"/>
             </zeroOrMore>

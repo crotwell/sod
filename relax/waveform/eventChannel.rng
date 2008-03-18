@@ -8,7 +8,7 @@
     <define name="eventChannel">
         <choice>
             <xsd:annotation>
-                <summary>Tactics for selecting combinations of channels and events</summary>
+                <summary>Ingredients for selecting combinations of channels and events</summary>
                 <velocity>#waveformArmPage()</velocity>
             </xsd:annotation>
             <ref name="embeddedEventStation"/>
@@ -16,6 +16,7 @@
             <ref name="eventChannelAND"/>
             <ref name="eventChannelOR"/>
             <ref name="eventChannelNOT"/>
+            <ref name="jythonEventChannel"/>
             <ref name="external"/>
         </choice>
     </define>
@@ -142,6 +143,31 @@
                 </xsd:documentation>
             </xsd:annotation>
             <ref name="eventChannel"/>
+        </element>
+    </define>
+    <define name="jythonEventChannel">
+        <element name="jythonEventChannelSubsetter">
+            <xsd:annotation>
+                <summary>Runs an externally defined Jython event-channel subsetter</summary>
+                <description>$jythonWaveformProcessInfo.getRelaxHTML('../../../')</description>
+                <example>
+                    <jythonEventChannelSubsetter>
+                        <module>helloSod</module>
+                        <class>helloSod</class>
+                        <dataDirectory>PutItHere</dataDirectory>
+                        <extraParam>1.7</extraParam>
+                    </jythonEventChannelSubsetter>
+                </example>
+            </xsd:annotation>
+            <element name="module">
+                <data type="string"/>
+            </element>
+            <element name="class">
+                <data type="string"/>
+            </element>
+            <zeroOrMore>
+                <externalRef href="../base/externalRef/anyXML.rng"/>
+            </zeroOrMore>
         </element>
     </define>
     <define name="external">

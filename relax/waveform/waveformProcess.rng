@@ -623,7 +623,7 @@
                     <jythonWaveformProcess>
                         <module>helloSod</module>
                         <class>helloSod</class>
-                        <dataDirectory>POND_II</dataDirectory>
+                        <dataDirectory>PutItHere</dataDirectory>
                         <extraParam>1.7</extraParam>
                     </jythonWaveformProcess>
                 </example>

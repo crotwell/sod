@@ -5,17 +5,23 @@
         <ref name="channel"/>
     </start>
     <include href="../base/include/timeRange.rng"/>
+    <include href="../base/include/range.rng"/>
     <include href="../base/include/quantity.rng"/>
     <include href="../base/include/samplingRange.rng"/>
     <include href="../base/include/units.rng"/>
     <define name="channel">
         <choice>
             <xsd:annotation>
-                <summary>Tactics for selecting channels</summary>
+                <summary>Ingredients for selecting channels</summary>
                 <description>This collects all of the subsetters that make decisions on the contents of a channel.</description>
                 <velocity>#networkArmPage()</velocity>
             </xsd:annotation>
-            <ref name="hadDataLastWeek"/>
+            <ref name="siteCode"/>
+            <ref name="siteDepthRange"/>
+            <ref name="siteEffectiveTimeOverlap"/>
+            <ref name="siteArea"/>
+            <ref name="siteBoxArea"/>
+            <ref name="sitePolygonFile"/>
             <ref name="channelCode"/>
             <ref name="bandCode"/>
             <ref name="gainCode"/>
@@ -29,6 +35,7 @@
             <ref name="OR"/>
             <ref name="NOT"/>
             <ref name="externalChannelSubsetter"/>
+            <ref name="hadDataLastWeek"/>
             <ref name="printline"/>
             <ref name="responseWriter"/>
             <ref name="sacPoleZeroWriter"/>
@@ -60,10 +67,17 @@
             <ref name="hasNegativeSensitivity"/>
             <ref name="isFlipped"/>
             <ref name="isGroupable"/>
+            <ref name="jythonChannelSubsetter"/>
         </choice>
     </define>
     <define name="channelLogical">
         <choice>
+            <ref name="siteCode"/>
+            <ref name="siteDepthRange"/>
+            <ref name="siteEffectiveTimeOverlap"/>
+            <ref name="siteArea"/>
+            <ref name="siteBoxArea"/>
+            <ref name="sitePolygonFile"/>
             <ref name="channelCode"/>
             <ref name="bandCode"/>
             <ref name="gainCode"/>
@@ -77,17 +91,19 @@
             <ref name="OR"/>
             <ref name="NOT"/>
             <ref name="externalChannelSubsetter"/>
-            <externalRef href="site.rng"/>
-            <externalRef href="station.rng"/>
-            <externalRef href="network.rng"/>
             <ref name="hadDataLastWeek"/>
             <ref name="printline"/>
             <ref name="responseWriter"/>
+            <ref name="sacPoleZeroWriter"/>
             <ref name="stationHas"/>
             <ref name="alwaysSuccess"/>
             <ref name="hasResponse"/>
             <ref name="hasSensitivity"/>
             <ref name="repairSensitivity"/>
+            <ref name="responseFilterType"/>
+            <ref name="stageTransferType"/>
+            <ref name="stageInputUnit"/>
+            <ref name="stageOutputUnit"/>
             <ref name="clockId"/>
             <ref name="clockManufacturer"/>
             <ref name="clockModel"/>
@@ -106,7 +122,99 @@
             <ref name="sensorNominalLowFreq"/>
             <ref name="hasNegativeSensitivity"/>
             <ref name="isFlipped"/>
+            <ref name="isGroupable"/>
+            <ref name="jythonChannelSubsetter"/>
+            <externalRef href="site.rng"/>
+            <externalRef href="station.rng"/>
+            <externalRef href="network.rng"/>
         </choice>
+    </define>
+    <define name="siteCode">
+        <element name="siteCode">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Matches a site code</summary>
+                    <description>Matches a site code. This is a simple string match.</description>
+                </xsd:documentation>
+            </xsd:annotation>
+            <data type="string">
+                <xsd:annotation>
+                    <example>00</example>
+                </xsd:annotation>
+            </data>
+        </element>
+    </define>
+    <define name="siteDepthRange">
+        <element name="siteDepthRange">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Matches sites at a range of depths below the surface</summary>
+                    <description>Matches sites at a range of depths below the surface. This might be
+                        used to separate surface sites from borehole sites.</description>
+                    <example>
+                        <siteDepthRange>
+                            <unit>METER</unit>
+                            <min>100</min>
+                            <max>200</max>
+                        </siteDepthRange>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="range"/>
+        </element>
+    </define>
+    <define name="siteEffectiveTimeOverlap">
+        <element name="siteEffectiveTimeOverlap">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Matches if the site effective time overlaps the given time range</summary>
+                    <description>Matches if the site effective time overlaps the given time range.
+                        This is generally used to avoid processing sites that did not yet exist, or
+                        were deactivated before a time range of interest.  By default, SOD uses a siteEffectiveTimeOverlap configured with the event arm's time range.
+                          If all you want to do is make sure your sites are active during 
+                    your events, that's already done.</description>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="timeRange"/>
+        </element>
+    </define>
+    <define name="siteArea">
+        <element name="siteArea">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Matches sites that are within a given area</summary> 
+                    <deprecated>siteArea can be replaced by a tag for the area inside of it.  
+                    <a href="siteBoxArea.html">siteBoxArea</a> if it contains boxArea or <a href="sitePolygonFile.html">sitePolygonFile</a> if it contains polygonFile.</deprecated>
+                </xsd:documentation>
+            </xsd:annotation>
+            <externalRef href="../base/externalRef/area.rng"/>
+        </element>
+    </define>
+    <define name="siteBoxArea">
+        <element name="siteBoxArea">
+            <xsd:annotation>
+                <summary>Accepts sites that occur within a lat lon box </summary>
+                <description>Accepts sites that occur within the latitude longitude box defined
+                    here</description>
+            </xsd:annotation>
+            <externalRef href="../base/externalRef/latitudeRange.rng"/>
+            <externalRef href="../base/externalRef/longitudeRange.rng"/>
+        </element>
+    </define>
+    <define name="sitePolygonFile">
+        <element name="sitePolygonFile">
+            <xsd:annotation>
+                <summary>Reads in a file with lat long points and accepts any site that falls inside
+                    the shape they create</summary>
+                <description>Reads the file at the location given and parses out a shape based on
+                    the points listed in the file. The points should be given as a longitude value, 
+                    a space then a latitude value as in <a href="../../pentagon.txt">this example</a>.
+                    Longitude values range from -180 to 180 and latitudes range from -90 to 90.
+                    The file can contain as many points as
+                    necessary to create the shape. Any point landing inside the shape is accepted.</description>
+            </xsd:annotation>
+            <data type="string"/>
+        </element>
     </define>
     <define name="singleLetterOrNumber">
         <data type="string">
@@ -238,7 +346,7 @@
                 <description>The output is the logical NOT of the output of the enclosed channel subsetter. This means
                     that it will evaluate to false if the enclosed channel subsetter evaluates to true, and vice versa.</description>
             </xsd:annotation>
-            <ref name="channel"/>
+            <ref name="channelLogical"/>
         </element>
     </define>
     <define name="sampling">
@@ -769,6 +877,31 @@
                 <summary>Passes channels that can be grouped with other channels at the site to make 3 components of motion.</summary>
             </xsd:annotation>
             <empty/>
+        </element>
+    </define>
+    <define name="jythonChannelSubsetter">
+        <element name="jythonChannelSubsetter">
+            <xsd:annotation>
+                <summary>Runs an externally defined Jython channel subsetter</summary>
+                <description>$jythonWaveformProcessInfo.getRelaxHTML('../../../')</description>
+                <example>
+                    <jythonChannelSubsetter>
+                        <module>helloSod</module>
+                        <class>helloSod</class>
+                        <dataDirectory>PutItHere</dataDirectory>
+                        <extraParam>1.7</extraParam>
+                    </jythonChannelSubsetter>
+                </example>
+            </xsd:annotation>
+            <element name="module">
+                <data type="string"/>
+            </element>
+            <element name="class">
+                <data type="string"/>
+            </element>
+            <zeroOrMore>
+                <externalRef href="../base/externalRef/anyXML.rng"/>
+            </zeroOrMore>
         </element>
     </define>
 </grammar>

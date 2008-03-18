@@ -9,12 +9,13 @@
     <define name="requestGenerator">
         <choice>
             <xsd:annotation>
-                <summary>Tactics that generating requests to the seismogram servers</summary>
+                <summary>Ingredients that generating requests to the seismogram servers</summary>
                 <velocity>#waveformArmPage()</velocity>
             </xsd:annotation>
             <ref name="phaseRequest"/>
             <ref name="originOffsetRequest"/>
             <ref name="choiceRequest"/>
+            <ref name="jythonRequestGenerator"/>
         </choice>
     </define>
     <define name="phaseRequest">
@@ -75,6 +76,31 @@
                     <ref name="requestGenerator"/>
                 </element>
             </optional>
+        </element>
+    </define>
+    <define name="jythonRequestGenerator">
+        <element name="jythonRequestGenerator">
+            <xsd:annotation>
+                <summary>Runs an externally defined Jython request generator</summary>
+                <description>$jythonWaveformProcessInfo.getRelaxHTML('../../../')</description>
+                <example>
+                    <jythonRequestGenerator>
+                        <module>helloSod</module>
+                        <class>helloSod</class>
+                        <extraThing>True</extraThing>
+                        <extraParam>1.7</extraParam>
+                    </jythonRequestGenerator>
+                </example>
+            </xsd:annotation>
+            <element name="module">
+                <data type="string"/>
+            </element>
+            <element name="class">
+                <data type="string"/>
+            </element>
+            <zeroOrMore>
+                <externalRef href="../base/externalRef/anyXML.rng"/>
+            </zeroOrMore>
         </element>
     </define>
 </grammar>

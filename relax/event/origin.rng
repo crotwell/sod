@@ -10,7 +10,7 @@
     <define name="origin">
         <choice>
             <xsd:annotation>
-                <summary>Tactics for selecting events</summary>
+                <summary>Ingredients for selecting events</summary>
                 <description>This collects all of the subsetters that make decisions on the contents of an event.</description>
                 <velocity>#eventArmPage()</velocity>
             </xsd:annotation>
@@ -41,6 +41,7 @@
             <ref name="printline"/>
             <ref name="CSVEventPrinter"/>
             <ref name="similarEvent"/>
+            <ref name="jythonOriginSubsetter"/>
         </choice>
     </define>
     <define name="name">
@@ -377,6 +378,31 @@
                 <summary>Accepts events that are similar to one in the included event source.</summary>
             </xsd:annotation>
             <externalRef href="source.rng"/>
+        </element>
+    </define>
+    <define name="jythonOriginSubsetter">
+        <element name="jythonOriginSubsetter">
+            <xsd:annotation>
+                <summary>Runs an externally defined Jython origin subsetter</summary>
+                <description>$jythonWaveformProcessInfo.getRelaxHTML('../../../')</description>
+                <example>
+                    <jythonOriginSubsetter>
+                        <module>helloSod</module>
+                        <class>helloSod</class>
+                        <dataDirectory>PutItHere</dataDirectory>
+                        <extraParam>1.7</extraParam>
+                    </jythonOriginSubsetter>
+                </example>
+            </xsd:annotation>
+            <element name="module">
+                <data type="string"/>
+            </element>
+            <element name="class">
+                <data type="string"/>
+            </element>
+            <zeroOrMore>
+                <externalRef href="../base/externalRef/anyXML.rng"/>
+            </zeroOrMore>
         </element>
     </define>
 </grammar>

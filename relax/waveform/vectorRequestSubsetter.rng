@@ -16,6 +16,7 @@
             <ref name="vectorRequestAND"/>
             <ref name="vectorRequestOR"/>
             <ref name="vectorRequestNOT"/>
+            <ref name="jythonVectorRequest"/>
             <ref name="external"/>
             <externalRef href="requestSubsetter.rng"/>
         </choice>
@@ -93,6 +94,31 @@
                     true, and vice versa.</description>
             </xsd:annotation>
             <ref name="vectorRequest"/>
+        </element>
+    </define>
+    <define name="jythonVectorRequest">
+        <element name="jythonVectorRequest">
+            <xsd:annotation>
+                <summary>Runs an externally defined Jython vector request subsetter</summary>
+                <description>$jythonWaveformProcessInfo.getRelaxHTML('../../../')</description>
+                <example>
+                    <jythonVectorRequest>
+                        <module>helloSod</module>
+                        <class>helloSod</class>
+                        <dataDirectory>POND_II</dataDirectory>
+                        <extraParam>1.7</extraParam>
+                    </jythonVectorRequest>
+                </example>
+            </xsd:annotation>
+            <element name="module">
+                <data type="string"/>
+            </element>
+            <element name="class">
+                <data type="string"/>
+            </element>
+            <zeroOrMore>
+                <externalRef href="../base/externalRef/anyXML.rng"/>
+            </zeroOrMore>
         </element>
     </define>
     <define name="external">

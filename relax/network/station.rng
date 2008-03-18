@@ -11,7 +11,7 @@
     <define name="station">
         <choice>
             <xsd:annotation>
-                <summary>Tactics for selecting stations</summary>
+                <summary>Ingredients for selecting stations</summary>
                 <description>This collects all of the subsetters that make decisions on the contents
                     of a station.</description>
                 <velocity>#networkArmPage()</velocity>
@@ -34,6 +34,7 @@
             <ref name="NOT"/>
             <ref name="externalStationSubsetter"/>
             <ref name="belongsToVirtual"/>
+            <ref name="jythonStationSubsetter"/>
         </choice>
     </define>
     <define name="stationLogical">
@@ -56,6 +57,7 @@
             <ref name="NOT"/>
             <ref name="externalStationSubsetter"/>
             <ref name="belongsToVirtual"/>
+            <ref name="jythonStationSubsetter"/>
             <externalRef href="network.rng"/>
         </choice>
     </define>
@@ -341,6 +343,31 @@
                     </element>
                 </optional>
             </interleave>
+        </element>
+    </define>
+    <define name="jythonStationSubsetter">
+        <element name="jythonStationSubsetter">
+            <xsd:annotation>
+                <summary>Runs an externally defined Jython station subsetter</summary>
+                <description>$jythonWaveformProcessInfo.getRelaxHTML('../../../')</description>
+                <example>
+                    <jythonStationSubsetter>
+                        <module>helloSod</module>
+                        <class>helloSod</class>
+                        <dataDirectory>PutItHere</dataDirectory>
+                        <extraParam>1.7</extraParam>
+                    </jythonStationSubsetter>
+                </example>
+            </xsd:annotation>
+            <element name="module">
+                <data type="string"/>
+            </element>
+            <element name="class">
+                <data type="string"/>
+            </element>
+            <zeroOrMore>
+                <externalRef href="../base/externalRef/anyXML.rng"/>
+            </zeroOrMore>
         </element>
     </define>
 </grammar>

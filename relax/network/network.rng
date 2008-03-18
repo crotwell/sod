@@ -24,6 +24,7 @@
             <ref name="externalNetworkSubsetter"/>
             <ref name="temporaryNetwork"/>
             <ref name="printlineNetworkProcess"/>
+            <ref name="jythonNetworkSubsetter"/>
         </choice>
     </define>
     <define name="code">
@@ -188,6 +189,31 @@
                     to "Network: $net". If no filename is given, the output goes to standard out.</description>
             </xsd:annotation>
             <ref name="externalClass"/>
+        </element>
+    </define>
+    <define name="jythonNetworkSubsetter">
+        <element name="jythonNetworkSubsetter">
+            <xsd:annotation>
+                <summary>Runs an externally defined Jython network subsetter</summary>
+                <description>$jythonWaveformProcessInfo.getRelaxHTML('../../../')</description>
+                <example>
+                    <jythonNetworkSubsetter>
+                        <module>helloSod</module>
+                        <class>helloSod</class>
+                        <dataDirectory>PutItHere</dataDirectory>
+                        <extraParam>1.7</extraParam>
+                    </jythonNetworkSubsetter>
+                </example>
+            </xsd:annotation>
+            <element name="module">
+                <data type="string"/>
+            </element>
+            <element name="class">
+                <data type="string"/>
+            </element>
+            <zeroOrMore>
+                <externalRef href="../base/externalRef/anyXML.rng"/>
+            </zeroOrMore>
         </element>
     </define>
 </grammar>

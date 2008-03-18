@@ -1,4 +1,4 @@
-package edu.sc.seis.sod.subsetter.site;
+package edu.sc.seis.sod.subsetter.channel;
 
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
@@ -9,7 +9,6 @@ import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.AreaSubsetter;
-import edu.sc.seis.sod.subsetter.channel.ChannelSubsetter;
 
 import org.w3c.dom.Element;
 
@@ -18,7 +17,7 @@ import org.w3c.dom.Element;
  * 
  * @author <a href="mailto:">Philip Crotwell </a>
  * @version This class is used to represent the subsetter SiteArea. Site Area
- *          implements SiteSubsetter and can be any one of GlobalArea or BoxArea
+ *          implements ChannelSubsetter and can be any one of GlobalArea or BoxArea
  *          or PointDistanceArea or FlinneEngdahlArea.
  */
 public class SiteArea extends AreaSubsetter implements ChannelSubsetter, SodElement {

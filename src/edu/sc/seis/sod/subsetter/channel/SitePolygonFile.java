@@ -1,4 +1,4 @@
-package edu.sc.seis.sod.subsetter.site;
+package edu.sc.seis.sod.subsetter.channel;
 
 import org.w3c.dom.Element;
 import edu.iris.Fissures.Location;
@@ -12,7 +12,6 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.AreaSubsetter;
-import edu.sc.seis.sod.subsetter.channel.ChannelSubsetter;
 
 public class SitePolygonFile implements ChannelSubsetter {
 

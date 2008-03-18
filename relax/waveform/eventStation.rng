@@ -10,7 +10,7 @@
     <define name="eventStation">
         <choice>
             <xsd:annotation>
-                <summary>Tactics for selecting acceptable combinations of stations and events</summary>
+                <summary>Ingredients for selecting acceptable combinations of stations and events</summary>
                 <velocity>#waveformArmPage()</velocity>
             </xsd:annotation>
             <ref name="distanceRange"/>
@@ -24,6 +24,7 @@
             <ref name="NOT"/>
             <ref name="midPoint"/>
             <ref name="phaseExists"/>
+            <ref name="jythonEventStation"/>
             <ref name="external"/>
         </choice>
     </define>
@@ -225,6 +226,31 @@
                     the given area. Areas can be any valid area, including BoxArea, and GlobalArea.</description>
             </xsd:annotation>
             <externalRef href="../base/externalRef/area.rng"/>
+        </element>
+    </define>
+    <define name="jythonEventStation">
+        <element name="jythonEventStationSubsetter">
+            <xsd:annotation>
+                <summary>Runs an externally defined Jython event-station subsetter</summary>
+                <description>$jythonWaveformProcessInfo.getRelaxHTML('../../../')</description>
+                <example>
+                    <jythonEventStationSubsetter>
+                        <module>helloSod</module>
+                        <class>helloSod</class>
+                        <dataDirectory>PutItHere</dataDirectory>
+                        <extraParam>1.7</extraParam>
+                    </jythonEventStationSubsetter>
+                </example>
+            </xsd:annotation>
+            <element name="module">
+                <data type="string"/>
+            </element>
+            <element name="class">
+                <data type="string"/>
+            </element>
+            <zeroOrMore>
+                <externalRef href="../base/externalRef/anyXML.rng"/>
+            </zeroOrMore>
         </element>
     </define>
     <define name="external">

@@ -16,6 +16,7 @@
             <ref name="vectorAvailableDataAND"/>
             <ref name="vectorAvailableDataOR"/>
             <ref name="vectorAvailableDataNOT"/>
+            <ref name="jythonVectorAvailableData"/>
             <ref name="external"/>
             <externalRef href="availableData.rng"/>
         </choice>
@@ -120,6 +121,31 @@
                 </example>
             </xsd:annotation>
             <ref name="vectorAvailableData"/>
+        </element>
+    </define>
+    <define name="jythonVectorAvailableData">
+        <element name="jythonVectorAvailableDataSubsetter">
+            <xsd:annotation>
+                <summary>Runs an externally defined Jython available data processor</summary>
+                <description>$jythonWaveformProcessInfo.getRelaxHTML('../../../')</description>
+                <example>
+                    <jythonVectorAvailableDataSubsetter>
+                        <module>helloSod</module>
+                        <class>helloSod</class>
+                        <dataDirectory>POND_II</dataDirectory>
+                        <extraParam>1.7</extraParam>
+                    </jythonVectorAvailableDataSubsetter>
+                </example>
+            </xsd:annotation>
+            <element name="module">
+                <data type="string"/>
+            </element>
+            <element name="class">
+                <data type="string"/>
+            </element>
+            <zeroOrMore>
+                <externalRef href="../base/externalRef/anyXML.rng"/>
+            </zeroOrMore>
         </element>
     </define>
     <define name="external">

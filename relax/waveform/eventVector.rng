@@ -15,6 +15,7 @@
             <ref name="eventVectorAND"/>
             <ref name="eventVectorOR"/>
             <ref name="eventVectorNOT"/>
+            <ref name="jythonEventVector"/>
             <ref name="external"/>
         </choice>
     </define>
@@ -88,6 +89,31 @@
                     included subsetter must evaluate to false for this subsetter to evaluate to true, and vice versa.</description>
             </xsd:annotation>
             <ref name="eventVector"/>
+        </element>
+    </define>
+    <define name="jythonEventVector">
+        <element name="jythonEventVectorSubsetter">
+            <xsd:annotation>
+                <summary>Runs an externally defined Jython processor</summary>
+                <description>$jythonWaveformProcessInfo.getRelaxHTML('../../../')</description>
+                <example>
+                    <jythonEventVectorSubsetter>
+                        <module>helloSod</module>
+                        <class>helloSod</class>
+                        <dataDirectory>PutItHere</dataDirectory>
+                        <extraParam>1.7</extraParam>
+                    </jythonEventVectorSubsetter>
+                </example>
+            </xsd:annotation>
+            <element name="module">
+                <data type="string"/>
+            </element>
+            <element name="class">
+                <data type="string"/>
+            </element>
+            <zeroOrMore>
+                <externalRef href="../base/externalRef/anyXML.rng"/>
+            </zeroOrMore>
         </element>
     </define>
     <define name="external">

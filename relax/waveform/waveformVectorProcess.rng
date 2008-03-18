@@ -33,6 +33,7 @@
             <ref name="vectorTrim"/>
             <ref name="embeddedEventVector"/>
             <ref name="embeddedEventStation"/>
+            <ref name="jythonVectorProcess"/>
         </choice>
     </define>
     <define name="threeComponentData">
@@ -303,6 +304,31 @@
                     like rotateGCP which expect seismograms to be of the same length and time.</description>
             </xsd:annotation>
             <empty/>
+        </element>
+    </define>
+    <define name="jythonVectorProcess">
+        <element name="jythonWaveformVectorProcess">
+            <xsd:annotation>
+                <summary>Runs an externally defined Jython vector processor</summary>
+                <description>$jythonWaveformProcessInfo.getRelaxHTML('../../../')</description>
+                <example>
+                    <jythonWaveformVectorProcess>
+                        <module>helloSod</module>
+                        <class>helloSod</class>
+                        <dataDirectory>PutItHere</dataDirectory>
+                        <extraParam>1.7</extraParam>
+                    </jythonWaveformVectorProcess>
+                </example>
+            </xsd:annotation>
+            <element name="module">
+                <data type="string"/>
+            </element>
+            <element name="class">
+                <data type="string"/>
+            </element>
+            <zeroOrMore>
+                <externalRef href="../base/externalRef/anyXML.rng"/>
+            </zeroOrMore>
         </element>
     </define>
 </grammar>

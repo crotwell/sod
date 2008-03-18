@@ -1,4 +1,4 @@
-package edu.sc.seis.sod.subsetter.site;
+package edu.sc.seis.sod.subsetter.channel;
 
 import org.apache.log4j.Category;
 import org.w3c.dom.Element;
@@ -11,7 +11,6 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.EffectiveTimeOverlap;
-import edu.sc.seis.sod.subsetter.channel.ChannelSubsetter;
 
 public class SiteEffectiveTimeOverlap extends EffectiveTimeOverlap implements
         ChannelSubsetter {

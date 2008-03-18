@@ -8,7 +8,7 @@
     <define name="request">
         <choice>
             <xsd:annotation>
-                <summary>Tactics that work based on the generated request</summary>
+                <summary>Ingredients that work based on the generated request</summary>
                 <velocity>#waveformArmPage()</velocity>
             </xsd:annotation>
             <ref name="requestAND"/>
@@ -17,6 +17,7 @@
             <ref name="requestPrint"/>
             <ref name="breqFastRequest"/>
             <ref name="netDCRequest"/>
+            <ref name="jythonRequest"/>
             <ref name="external"/>
         </choice>
     </define>
@@ -392,6 +393,31 @@
                     </data>
                 </element>
             </optional>
+        </element>
+    </define>
+    <define name="jythonRequest">
+        <element name="jythonRequest">
+            <xsd:annotation>
+                <summary>Runs an externally defined Jython request subsetter</summary>
+                <description>$jythonWaveformProcessInfo.getRelaxHTML('../../../')</description>
+                <example>
+                    <jythonRequest>
+                        <module>helloSod</module>
+                        <class>helloSod</class>
+                        <dataDirectory>POND_II</dataDirectory>
+                        <extraParam>1.7</extraParam>
+                    </jythonRequest>
+                </example>
+            </xsd:annotation>
+            <element name="module">
+                <data type="string"/>
+            </element>
+            <element name="class">
+                <data type="string"/>
+            </element>
+            <zeroOrMore>
+                <externalRef href="../base/externalRef/anyXML.rng"/>
+            </zeroOrMore>
         </element>
     </define>
     <define name="external">
