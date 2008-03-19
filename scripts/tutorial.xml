@@ -24,17 +24,15 @@
             <dns>edu/iris/dmc</dns>
         </networkFinder>
         <networkCode>II</networkCode>
-        <siteOR>
+        <channelOR>
             <siteCode/>
             <siteCode>00</siteCode>
-        </siteOR>
-        <channelAND>
-            <bandCode>L</bandCode>
-            <channelNOT>
-                <!-- to prevent LOG channels -->
-                <gainCode>O</gainCode>
-            </channelNOT>
-        </channelAND>
+        </channelOR>
+        <bandCode>L</bandCode>
+        <channelNOT>
+            <!-- to prevent LOG channels -->
+            <gainCode>O</gainCode>
+        </channelNOT>
     </networkArm>
     <waveformArm>
         <distanceRange>

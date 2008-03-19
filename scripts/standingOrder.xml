@@ -40,14 +40,12 @@
             <networkCode>IC</networkCode>
             <networkCode>US</networkCode>
         </networkOR>
-        <siteOR>
+        <channelOR>
             <siteCode/>
             <siteCode>00</siteCode>
-        </siteOR>
-        <channelAND>
-            <bandCode>B</bandCode>
-            <gainCode>H</gainCode>
-        </channelAND>
+        </channelOR>
+        <bandCode>B</bandCode>
+        <gainCode>H</gainCode>
     </networkArm>
     <waveformVectorArm>
         <eventStationOR>

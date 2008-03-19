@@ -45,11 +45,11 @@
             </refreshInterval>
         </networkFinder>
         <networkCode>II</networkCode>
-        <siteOR>
-            <siteCode/>
-            <siteCode>00</siteCode>
-        </siteOR>
         <channelAND>
+            <channelOR>
+                <siteCode/>
+                <siteCode>00</siteCode>
+            </channelOR>
             <bandCode>L</bandCode>
             <channelNOT>
                 <!-- to prevent LOG channels -->

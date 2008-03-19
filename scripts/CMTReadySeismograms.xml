@@ -40,17 +40,17 @@
             <networkCode>IU</networkCode>
             <networkCode>G</networkCode>
         </networkOR>
-        <siteOR>
-            <siteCode/>
-            <siteCode>00</siteCode>
-            <siteAND>
-                <stationOR>
-                    <stationCode>ANMO</stationCode>
-                </stationOR>
-                <siteCode>10</siteCode>
-            </siteAND>
-        </siteOR>
         <channelAND>
+            <channelOR>
+                <siteCode/>
+                <siteCode>00</siteCode>
+                <channelAND>
+                    <stationOR>
+                        <stationCode>ANMO</stationCode>
+                    </stationOR>
+                    <siteCode>10</siteCode>
+                </channelAND>
+            </channelOR>
             <channelOR>
                 <bandCode>L</bandCode>
                 <bandCode>B</bandCode>
