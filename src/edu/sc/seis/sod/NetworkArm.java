@@ -33,7 +33,6 @@ import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
-import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
 import edu.sc.seis.fissuresUtil.cache.WorkerThreadPool;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
@@ -41,7 +40,6 @@ import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
-import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockNetworkAccess;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.source.event.EventSource;
 import edu.sc.seis.sod.source.network.NetworkFinder;
@@ -55,7 +53,6 @@ import edu.sc.seis.sod.subsetter.network.NetworkEffectiveTimeOverlap;
 import edu.sc.seis.sod.subsetter.network.NetworkOR;
 import edu.sc.seis.sod.subsetter.network.NetworkSubsetter;
 import edu.sc.seis.sod.subsetter.network.PassNetwork;
-import edu.sc.seis.sod.subsetter.site.SiteSubsetter;
 import edu.sc.seis.sod.subsetter.station.PassStation;
 import edu.sc.seis.sod.subsetter.station.StationEffectiveTimeOverlap;
 import edu.sc.seis.sod.subsetter.station.StationSubsetter;
@@ -141,15 +138,6 @@ public class NetworkArm implements Arm {
             attrSubsetter = (NetworkSubsetter)sodElement;
         } else if(sodElement instanceof StationSubsetter) {
             stationSubsetter = (StationSubsetter)sodElement;
-        } else if(sodElement instanceof SiteSubsetter) {
-            final SiteSubsetter siteSubsetter = (SiteSubsetter)sodElement;
-            chanSubsetters.add(new ChannelSubsetter() {
-                public StringTree accept(Channel channel,
-                                         ProxyNetworkAccess network)
-                        throws Exception {
-                    return siteSubsetter.accept(channel.my_site, network);
-                }
-            });
         } else if(sodElement instanceof ChannelSubsetter) {
             chanSubsetters.add(sodElement);
         } else {

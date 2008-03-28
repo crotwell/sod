@@ -1,14 +1,12 @@
 package edu.sc.seis.sod.subsetter.channel;
 
+import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
-import edu.iris.Fissures.IfNetwork.Site;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
-import edu.sc.seis.sod.subsetter.site.SiteSubsetter;
-import org.w3c.dom.Element;
 
 /**
  * @author Srinivasa Telukutla

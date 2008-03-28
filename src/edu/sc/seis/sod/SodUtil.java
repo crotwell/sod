@@ -100,6 +100,14 @@ public class SodUtil {
             String tagName = config.getTagName();
             // make sure first letter is upper case
             tagName = tagName.substring(0, 1).toUpperCase() + tagName.substring(1);
+            // Site is no longer separate, so replace site logicals with corresponding channels
+            if(tagName.equals("SiteAND")) {
+                tagName = "ChannelAND";
+            } else if(tagName.equals("SiteOR")) {
+                tagName = "ChannelOR";
+            } else if(tagName.equals("SiteNOT")) {
+                tagName = "ChannelNOT";
+            }
             // first check for things that are not SodElements
             if(tagName.equals("Unit")) {
                 return loadUnit(config);

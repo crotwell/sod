@@ -1,13 +1,11 @@
 package edu.sc.seis.sod.subsetter.channel;
 
 import org.w3c.dom.Element;
+
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.subsetter.Subsetter;
 import edu.sc.seis.sod.subsetter.SubsetterLoader;
-import edu.sc.seis.sod.subsetter.site.SiteSubsetter;
-import edu.sc.seis.sod.subsetter.site.SiteSubsetterLoader;
-import edu.sc.seis.sod.subsetter.site.StationSubsetterWrapper;
 import edu.sc.seis.sod.subsetter.station.StationSubsetter;
 import edu.sc.seis.sod.subsetter.station.StationSubsetterLoader;
 
