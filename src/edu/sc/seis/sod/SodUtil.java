@@ -154,6 +154,11 @@ public class SodUtil {
     }
 
     private static Class load(String tagName, String[] armNames) throws ClassNotFoundException {
+        if (tagName.equals("siteAND") ||tagName.equals("siteOR") || tagName.equals("siteNOT") || tagName.equals("siteXOR")) {
+            logger.warn(tagName +" has been removed and all site subsetters are now channel subsetters. "+
+                        "Please up date your recipe to use channelAND, channelOR and channelNOT instead.");
+            tagName = "channel"+tagName.substring("site".length());
+        }
         if(tagName.equals("beginOffset") || tagName.equals("endOffset")) {
             tagName = "interval";
         }
@@ -674,4 +679,6 @@ public class SodUtil {
                                                  UnitImpl.FORTNIGHT};
 
     public static final UnitImpl[] FREQ_UNITS = {UnitImpl.HERTZ};
+    
+    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(SodUtil.class);
 }// SubsetterUtil
