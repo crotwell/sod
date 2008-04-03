@@ -164,15 +164,10 @@ public class VelocityEvent extends ProxyEventAccessOperations {
     }
 
     public int getId() {
-        return getDbid();
+        return ((CacheEvent)event).getDbid();
     }
 
-    /** just because I can never remember if it is i or I */
     public int getDbId() {
-        return getDbid();
-    }
-
-    public int getDbid() {
         return ((CacheEvent)event).getDbid();
     }
 
