@@ -90,7 +90,7 @@
 		<id name="dbid" type="integer">
 			<generator class="native" />
 		</id>
-		<property name="config" type="string" />
+		<property name="config" type="text" />
 		<property name="time" type="timestamp" />
 	</class>
 
