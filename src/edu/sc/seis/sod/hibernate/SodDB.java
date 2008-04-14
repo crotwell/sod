@@ -25,6 +25,7 @@ import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
+import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.hibernate.AbstractHibernateDB;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.EventVectorPair;
@@ -50,9 +51,17 @@ public class SodDB extends AbstractHibernateDB {
     public static void configHibernate(Configuration config) {
         logger.debug("adding to HibernateUtil   "+configFile);
         config.addResource(configFile);
-        config.addSqlFunction("datediff",
-                        new SQLFunctionTemplate(Hibernate.LONG,
-                                                "datediff(?1, ?2, ?3)"));
+        if (ConnMgr.getURL().startsWith("jdbc:hsql")) {
+            config.addSqlFunction("datediff",
+                                  new SQLFunctionTemplate(Hibernate.LONG,
+                                                          "datediff(?1, ?2, ?3)"));
+            config.addSqlFunction( "milliseconds_between", new SQLFunctionTemplate(Hibernate.LONG, "datediff('millisecond', ?1, ?2)" ) );
+            config.addSqlFunction( "seconds_between", new SQLFunctionTemplate(Hibernate.LONG, "datediff('second', ?1, ?2)" ) );
+
+        } else if (ConnMgr.getURL().startsWith("jdbc:postgresql")) {
+            config.addSqlFunction( "milliseconds_between", new SQLFunctionTemplate(Hibernate.LONG, "extract(epoch from (?2 - ?1)) * 1000" ) );
+            config.addSqlFunction( "seconds_between", new SQLFunctionTemplate(Hibernate.LONG, "extract(epoch from (?2 - ?1))" ) );
+        }
     }
     
     public SodDB() {
@@ -248,9 +257,9 @@ public class SodDB extends AbstractHibernateDB {
     }
 
     public RetryWaveformWorkUnit[] getRetryWaveformWorkUnits(int limit) {
-        String q = "from edu.sc.seis.sod.RetryWaveformWorkUnit r where datediff('ss',:now, r.lastQuery) > :minDelay and (datediff('ss',:now, r.lastQuery) > :maxDelay or datediff('ss',:now, r.lastQuery) > power(:base, numRetries))  order by r.lastQuery desc";
+        String q = "from edu.sc.seis.sod.RetryWaveformWorkUnit r where seconds_between(:now, r.lastQuery) > :minDelay and (seconds_between(:now, r.lastQuery) > :maxDelay or seconds_between(:now, r.lastQuery) > power(:base, numRetries))  order by r.lastQuery desc";
         Query query = getSession().createQuery(q);
-        query.setTimestamp("now", ClockUtil.now());
+        query.setTimestamp("now", ClockUtil.now().getTimestamp());
         query.setFloat("base", retryBase);
         query.setFloat("minDelay", minRetryDelay);
         query.setFloat("maxDelay", maxRetryDelay);
