@@ -12,7 +12,9 @@ import javax.xml.stream.XMLStreamWriter;
 import edu.iris.Fissures.FlinnEngdahlRegion;
 import edu.iris.Fissures.FlinnEngdahlType;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.IfEvent.Origin;
+import edu.iris.Fissures.event.OriginImpl;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
@@ -174,6 +176,10 @@ public class VelocityEvent extends ProxyEventAccessOperations {
 
     public int getDbid() {
         return ((CacheEvent)event).getDbid();
+    }
+    
+    public OriginImpl getPreferred() throws NoPreferredOrigin {
+        return getCacheEvent().getPreferred();
     }
 
     public String getParam(String name) {
