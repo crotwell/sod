@@ -28,6 +28,9 @@ import edu.sc.seis.sod.velocity.event.VelocityEvent;
 public class VelocityStation extends StationImpl {
 
     public VelocityStation(StationImpl sta) {
+        if (sta == null) {
+            throw new IllegalArgumentException("StationImpl cannot be null");
+        }
         this.sta = sta;
         name = sta.name;
         my_location = sta.my_location;
