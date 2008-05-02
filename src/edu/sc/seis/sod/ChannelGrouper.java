@@ -36,6 +36,7 @@ import edu.sc.seis.fissuresUtil.bag.OrientationUtil;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.subsetter.channel.ChannelSubsetter;
 import edu.sc.seis.sod.subsetter.network.NetworkSubsetter;
 import edu.sc.seis.sod.subsetter.station.StationSubsetter;
