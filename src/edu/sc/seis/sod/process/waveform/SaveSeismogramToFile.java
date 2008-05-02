@@ -160,6 +160,10 @@ public class SaveSeismogramToFile implements WaveformProcess {
             masterDSNames.add(lastDataSet.getName());
             updateMasterDataSet(dataSetFile, lastDataSet.getName());
         }
+        logger.info("Finished save for " + seismograms.length + " seismograms for "
+                    + ChannelIdUtil.toString(channel.get_id()) + " for event in "
+                    + regions.getRegionName(event.get_attributes().region) + " at "
+                    + event.get_preferred_origin().origin_time.date_time+" url="+urls[0]);
         return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
     }
 
