@@ -32,4 +32,6 @@ public interface EventSource extends SodElement {
      *         the begin time or after the end time of this range.
      */
     public MicroSecondTimeRange getEventTimeRange();
+    
+    public String getDescription();
 }

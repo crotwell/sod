@@ -12,6 +12,11 @@ public class BackwardsEventFinder extends EventFinder {
         super(config);
     }
     
+    public String getDescription() {
+        return "Backwards "+super.getDescription();
+    }
+
+
     public boolean hasNext() {
         MicroSecondTimeRange currentQuery = getQueryTime();
         MicroSecondDate queryBegin = getEventTimeRange().getBeginTime();

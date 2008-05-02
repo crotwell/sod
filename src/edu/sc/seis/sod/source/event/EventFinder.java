@@ -41,7 +41,11 @@ public class EventFinder extends AbstractSource implements EventSource {
 				"eventArm", "origin" }));
 		querier = new EventDCQuerier(getName(), getDNS(), config);
 	}
-
+    
+    public String getDescription() {
+        return "EventFinder Source: "+getDNS()+" "+getName();
+    }
+    
 	public boolean hasNext() {
 		MicroSecondDate queryEnd = getEventTimeRange().getEndTime();
 		MicroSecondDate quitDate = queryEnd.add(lag);

@@ -52,6 +52,10 @@ public class CSVEventSource extends SimpleEventSource {
             throw new ConfigurationException("Unable to read " + csvFilename, e);
         }
     }
+    
+    public String getDescription() {
+        return "CSVEventSource: "+csvFilename;
+    }
 
     public CacheEvent[] getEvents() {
         return events;

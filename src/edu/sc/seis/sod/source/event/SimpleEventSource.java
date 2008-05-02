@@ -16,7 +16,9 @@ public abstract class SimpleEventSource implements EventSource {
 
     public CacheEvent[] next() {
         hasNextBeenCalled = true;
-        return getEvents();
+        CacheEvent[] out = getEvents();
+        logger.debug("returning "+out.length+" events");
+        return out;
     }
 
     public TimeInterval getWaitBeforeNext() {
@@ -43,4 +45,6 @@ public abstract class SimpleEventSource implements EventSource {
     }
 
     public boolean hasNextBeenCalled = false;
+    
+    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(SimpleEventSource.class);
 }
