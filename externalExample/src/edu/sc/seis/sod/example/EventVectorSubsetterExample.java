@@ -1,7 +1,7 @@
 package edu.sc.seis.sod.example;
 
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.sod.ChannelGroup;
+import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
