@@ -9,6 +9,8 @@ import java.util.StringTokenizer;
 import org.w3c.dom.Element;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.EventChannelPair;
+import edu.sc.seis.sod.EventNetworkPair;
+import edu.sc.seis.sod.EventStationPair;
 import edu.sc.seis.sod.Stage;
 import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Status;
@@ -22,7 +24,13 @@ public class WaveformCountProcessor implements WaveformMonitor {
     public WaveformCountProcessor(Element config) throws IOException {
 		waveformCounter = getNumWaveforms(WAVEFORM_FILE);
     }
-	
+
+    public void update(EventNetworkPair ecp) {
+    }
+
+    public void update(EventStationPair ecp) {
+    }
+    
     public void update(EventChannelPair ecp) {
 		Status processorSuccess = Status.get(Stage.PROCESSOR, Standing.SUCCESS);
 		if(ecp.getStatus() == processorSuccess) {
