@@ -12,6 +12,8 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventChannelPair;
+import edu.sc.seis.sod.EventNetworkPair;
+import edu.sc.seis.sod.EventStationPair;
 import edu.sc.seis.sod.Stage;
 import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Status;
@@ -60,6 +62,16 @@ public class WaveformEventTemplate extends Template implements WaveformMonitor {
             }
         }
         update(ev, outputDir, pageName);
+    }
+
+    public void update(EventNetworkPair ecp) {
+        String outputDir = getOutputDirectory(ecp.getEvent());
+        update(ecp.getEvent(), outputDir, pageName);
+    }
+
+    public void update(EventStationPair ecp) {
+        String outputDir = getOutputDirectory(ecp.getEvent());
+        update(ecp.getEvent(), outputDir, pageName);
     }
 
     public void update(EventChannelPair ecp) {

@@ -3,6 +3,8 @@ package edu.sc.seis.sod.status.eventArm;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventChannelPair;
+import edu.sc.seis.sod.EventNetworkPair;
+import edu.sc.seis.sod.EventStationPair;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Status;
@@ -80,6 +82,14 @@ public class EventStatusTemplate extends FileWritingTemplate implements
     }
 
     private static Map elementsToMaps = new HashMap();
+
+    public void update(EventNetworkPair ecp) {
+        write();
+    }
+
+    public void update(EventStationPair ecp) {
+        write();
+    }
 
     public void update(EventChannelPair ecp) {
         write();

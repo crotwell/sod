@@ -18,6 +18,8 @@ import edu.sc.seis.fissuresUtil.exceptionHandler.HTMLReporter;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventArm;
 import edu.sc.seis.sod.EventChannelPair;
+import edu.sc.seis.sod.EventNetworkPair;
+import edu.sc.seis.sod.EventStationPair;
 import edu.sc.seis.sod.NetworkArm;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Stage;
@@ -91,6 +93,14 @@ public class IndexTemplate extends FileWritingTemplate implements
         String fileName = configFileLoc.substring(0,
                                                   configFileLoc.indexOf(".xml"));
         return fileName += ".html";
+    }
+
+    public void update(EventNetworkPair ecp) {
+        write();
+    }
+
+    public void update(EventStationPair ecp) {
+        write();
     }
 
     public void update(EventChannelPair ecp) {

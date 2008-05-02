@@ -14,6 +14,8 @@ import edu.iris.Fissures.network.StationIdUtil;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.EventChannelPair;
+import edu.sc.seis.sod.EventNetworkPair;
+import edu.sc.seis.sod.EventStationPair;
 import edu.sc.seis.sod.Stage;
 import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Start;
@@ -42,6 +44,11 @@ public class WaveformStationStatus extends AbstractVelocityStatus implements Wav
 
     public int getNumDirDeep() { return 2; }
 
+    public void update(EventNetworkPair ecp) {
+    }
+
+    public void update(EventStationPair ecp) {
+    }
 
     public void update(EventChannelPair ecp) {
         Status status = ecp.getStatus();

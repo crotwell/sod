@@ -9,6 +9,8 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventChannelPair;
+import edu.sc.seis.sod.EventNetworkPair;
+import edu.sc.seis.sod.EventStationPair;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Status;
@@ -52,6 +54,14 @@ public class WaveformEventTemplateGenerator implements EventMonitor,
 
     public void setArmStatus(String status) {}
 
+    public void update(EventNetworkPair ecp) {
+        template.update(ecp);
+    }
+
+    public void update(EventStationPair ecp) {
+        template.update(ecp);
+    }
+    
     public void update(EventChannelPair ecp) {
         template.update(ecp);
     }

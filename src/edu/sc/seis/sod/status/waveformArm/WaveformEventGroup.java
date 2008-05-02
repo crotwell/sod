@@ -2,6 +2,8 @@ package edu.sc.seis.sod.status.waveformArm;
 
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventChannelPair;
+import edu.sc.seis.sod.EventNetworkPair;
+import edu.sc.seis.sod.EventStationPair;
 import edu.sc.seis.sod.status.eventArm.EventGroupTemplate;
 import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
 import java.util.ArrayList;
@@ -26,6 +28,16 @@ public class WaveformEventGroup extends EventGroupTemplate implements WaveformMo
             throw new RuntimeException("Problem getting template in WaveformEventGroup", e);
         }
         return super.getTemplate(tag, el);
+    }
+
+    public void update(EventNetworkPair ecp) {
+        Iterator it = ecpListeners.iterator();
+        while(it.hasNext())((WaveformMonitor)it.next()).update(ecp);
+    }
+
+    public void update(EventStationPair ecp) {
+        Iterator it = ecpListeners.iterator();
+        while(it.hasNext())((WaveformMonitor)it.next()).update(ecp);
     }
 
     public void update(EventChannelPair ecp) {
