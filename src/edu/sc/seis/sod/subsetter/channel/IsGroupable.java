@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.network.SiteIdUtil;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
-import edu.sc.seis.sod.ChannelGroup;
+import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.ChannelGrouper;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
