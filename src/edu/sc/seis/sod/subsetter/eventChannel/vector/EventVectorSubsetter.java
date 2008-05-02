@@ -6,7 +6,7 @@
 package edu.sc.seis.sod.subsetter.eventChannel.vector;
 
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.sod.ChannelGroup;
+import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.Subsetter;
