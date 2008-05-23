@@ -19,6 +19,7 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.EventNetworkPair;
 import edu.sc.seis.sod.EventStationPair;
+import edu.sc.seis.sod.EventVectorPair;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.FileWritingTemplate;
 import edu.sc.seis.sod.status.TemplateFileLoader;
@@ -65,6 +66,12 @@ public class WaveformStatusTemplate extends FileWritingTemplate implements Wavef
     }
 
     public void update(EventChannelPair ecp) {
+        Iterator it = eventTemplates.iterator();
+        while(it.hasNext()) ((WaveformMonitor)it.next()).update(ecp);
+        write();
+    }
+
+    public void update(EventVectorPair ecp) {
         Iterator it = eventTemplates.iterator();
         while(it.hasNext()) ((WaveformMonitor)it.next()).update(ecp);
         write();

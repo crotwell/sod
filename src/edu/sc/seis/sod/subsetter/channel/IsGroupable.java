@@ -1,9 +1,10 @@
 package edu.sc.seis.sod.subsetter.channel;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.List;
 
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.SiteIdUtil;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
@@ -17,15 +18,15 @@ public class IsGroupable implements ChannelSubsetter {
 	public StringTree accept(Channel channel, ProxyNetworkAccess network)
 			throws Exception {
         Channel[] allChans = network.retrieve_for_station(channel.my_site.my_station.get_id());
-        ArrayList siteChans = new ArrayList();
+        ArrayList<ChannelImpl> siteChans = new ArrayList<ChannelImpl>();
         for (int i = 0; i < allChans.length; i++) {
 			if (SiteIdUtil.areSameSite(allChans[i].get_id(), channel.get_id())) {
-				siteChans.add(allChans[i]);
+				siteChans.add((ChannelImpl)allChans[i]);
 			}
 		}
 
-        LinkedList failures = new LinkedList();
-        ChannelGroup[] chanGroups = channelGrouper.group(allChans, failures);
+        List<ChannelImpl> failures = new ArrayList<ChannelImpl>();
+        ChannelGroup[] chanGroups = channelGrouper.group((ChannelImpl[])siteChans.toArray(), failures);
         for (int i = 0; i < chanGroups.length; i++) {
         	if (chanGroups[i].contains(channel)) {
         		return new Pass(this);

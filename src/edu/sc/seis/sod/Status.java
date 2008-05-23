@@ -4,6 +4,10 @@ import java.io.Serializable;
 
 public class Status implements Serializable {
 
+    protected Status() {
+        // for hibernate
+    }
+    
     private Status(Stage stage, Standing standing){
         this.standing = standing;
         this.stage = stage;
@@ -31,6 +35,20 @@ public class Status implements Serializable {
 
     public static Status get(Stage stage, Standing standing){
         return ALL[stage.getVal()][standing.getVal()];
+    }
+    
+    // hibernate
+
+    public int getStandingInt(){ return standing.getVal(); }
+    
+    protected void setStandingInt(int val) {
+        standing = Standing.getFromInt(val);
+    }
+
+    public int getStageInt(){ return stage.getVal(); }
+    
+    protected void setStageInt(int val) {
+        stage = Stage.getFromInt(val);
     }
 
     public static final Status[][] ALL = new Status[Stage.ALL.length][Standing.ALL.length];

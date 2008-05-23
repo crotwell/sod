@@ -1,15 +1,17 @@
 package edu.sc.seis.sod.status.waveformArm;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.w3c.dom.Element;
+
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.EventNetworkPair;
 import edu.sc.seis.sod.EventStationPair;
+import edu.sc.seis.sod.EventVectorPair;
 import edu.sc.seis.sod.status.eventArm.EventGroupTemplate;
-import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import org.w3c.dom.Element;
 
 public class WaveformEventGroup extends EventGroupTemplate implements WaveformMonitor{
     public WaveformEventGroup(){ useDefaultConfig(); }
@@ -41,6 +43,11 @@ public class WaveformEventGroup extends EventGroupTemplate implements WaveformMo
     }
 
     public void update(EventChannelPair ecp) {
+        Iterator it = ecpListeners.iterator();
+        while(it.hasNext())((WaveformMonitor)it.next()).update(ecp);
+    }
+
+    public void update(EventVectorPair ecp) {
         Iterator it = ecpListeners.iterator();
         while(it.hasNext())((WaveformMonitor)it.next()).update(ecp);
     }

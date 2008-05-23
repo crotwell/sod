@@ -4,13 +4,16 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+
 import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
@@ -20,6 +23,7 @@ import edu.sc.seis.sod.EventArm;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.EventNetworkPair;
 import edu.sc.seis.sod.EventStationPair;
+import edu.sc.seis.sod.EventVectorPair;
 import edu.sc.seis.sod.NetworkArm;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Stage;
@@ -104,6 +108,10 @@ public class IndexTemplate extends FileWritingTemplate implements
     }
 
     public void update(EventChannelPair ecp) {
+        write();
+    }
+
+    public void update(EventVectorPair ecp) {
         write();
     }
 

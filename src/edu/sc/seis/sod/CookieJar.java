@@ -2,9 +2,12 @@ package edu.sc.seis.sod;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
@@ -38,168 +41,79 @@ import edu.sc.seis.sod.status.FissuresFormatter;
  * @author <a href="mailto:">Philip Crotwell </a>
  * @version
  */
-public class CookieJar {
+public class CookieJar implements Context {
 
-    public CookieJar(EventChannelPair ecp) throws SQLException {
-        this.ecp = ecp;
-        memoryContext = getChannelContext(ecp.getEvent(), ecp.getChannel());
-        memoryContext.put("sod_cookieJar", this); // needed for eval and recurse
-        // velocity tool
-        updateStatus();
-        context = new JDBCVelocityContext(ecp, memoryContext);
-        String chanId = ChannelIdUtil.toString(ecp.getChannel().get_id());
-        Context siteContext = (Context)memoryContext.get("sod_site_context");
-        siteContext.put(chanId, context);
+    Map<String, Serializable> stationCookies;
+
+    Map<String, Serializable> channelCookies = null;
+
+    public CookieJar(CookieEventPair pair,
+                     Map<String, Serializable> stationCookies) {
+        this.stationCookies = stationCookies;
+        this.pair = pair;
     }
 
-    public EventChannelPair getEventChannelPair() {
-        return ecp;
-    }
-
-    /**
-     * Returns the Velocity Context that stores the put data
-     * 
-     * @return a VelocityContext
-     */
-    public Context getContext() {
-        return context;
+    public CookieJar(CookieEventPair pair,
+                     Map<String, Serializable> stationCookies,
+                     Map<String, Serializable> channelCookies) {
+        this(pair, stationCookies);
+        this.channelCookies = channelCookies;
     }
 
     public Object get(String key) {
-        return context.get(key);
+        if(channelCookies != null && channelCookies.containsKey(key)) {
+            return channelCookies.get(key);
+        }
+        return stationCookies.get(key);
     }
 
     public void put(String key, Serializable value) {
-        context.put(key, value);
-    }
-
-    public void updateStatus() {
-        memoryContext.put("status", ecp.getStatus());
-    }
-
-    Context context;
-
-    /**
-     * this holds items that are not perisent and can be recreated from the
-     * EventChannelPair.
-     */
-    VelocityContext memoryContext;
-
-    EventChannelPair ecp;
-
-    public static VelocityContext getChannelContext(EventAccessOperations event,
-                                                    ChannelImpl channel) {
-        VelocityContext siteContext = getSiteContext(event, channel.getSite());
-        String chanIdStr = ChannelIdUtil.toString(channel.get_id());
-        if(!siteContext.containsKey(chanIdStr)) {
-            VelocityContext chanContext = new VelocityContext(siteContext);
-            chanContext.put("channel_code", channel.get_code());
-            chanContext.put("channel_id", channel.get_id());
-            chanContext.put("sod_channel", channel);
-            // I don't like putting this in the channel context,
-            // but it is needed to put the database backed context for the
-            // channel into the site context for use by other channels in the
-            // site
-            chanContext.put("sod_site_context", siteContext);
-            siteContext.put(chanIdStr + "_memory", chanContext);
-            //siteContext.put(chanIdStr, chanContext);
-            ((Collection)siteContext.get("allChanIds")).add(chanIdStr);
+        if(channelCookies != null) {
+            channelCookies.put(key, value);
+        } else {
+            stationCookies.put(key, value);
         }
-        return (VelocityContext)siteContext.get(chanIdStr + "_memory");
     }
 
-    public static VelocityContext getSiteContext(EventAccessOperations event,
-                                                 SiteImpl site) {
-        VelocityContext staContext = getStationContext(event, site.getStation());
-        String siteIdStr = SiteIdUtil.toString(site.get_id());
-        if(!staContext.containsKey(siteIdStr)) {
-            VelocityContext siteContext = new VelocityContext(staContext);
-            siteContext.put("site_code", site.get_code());
-            siteContext.put("site_id", site.get_id());
-            siteContext.put("allChanIds", new LinkedList());
-            staContext.put(siteIdStr, siteContext);
-            ((Collection)staContext.get("allSiteIds")).add(siteIdStr);
+    public CookieEventPair getPair() {
+        return pair;
+    }
+
+    protected CookieEventPair pair;
+
+    public Context getContext() {
+        return this;
+    }
+    
+    public boolean containsKey(Object key) {
+        if(stationCookies.containsKey(key)) {
+            return true;
         }
-        return (VelocityContext)staContext.get(siteIdStr);
-    }
-
-    public static VelocityContext getStationContext(EventAccessOperations event,
-                                                    StationImpl sta) {
-        VelocityContext nContext = getNetworkContext(event,
-                                                     sta.getNetworkAttr().get_id());
-        String staIdStr = StationIdUtil.toString(sta.get_id());
-        if(!nContext.containsKey(staIdStr)) {
-            VelocityContext staContext = new VelocityContext(nContext);
-            staContext.put("station_code", sta.get_code());
-            staContext.put("station_id", sta.get_id());
-            staContext.put("allSiteIds", new LinkedList());
-            nContext.put(staIdStr, staContext);
-            ((Collection)nContext.get("allStationIds")).add(staIdStr);
+        if(channelCookies != null && channelCookies.containsKey(key)) {
+            return true;
         }
-        return (VelocityContext)nContext.get(staIdStr);
+        return false;
     }
 
-    public static VelocityContext getNetworkContext(EventAccessOperations event,
-                                                    NetworkId netId) {
-        VelocityContext eContext = getEventContext(event);
-        String netIdStr = NetworkIdUtil.toString(netId);
-        if(!eContext.containsKey(netIdStr)) {
-            VelocityContext netContext = new VelocityContext(eContext);
-            netContext.put("network_code", netId.network_code);
-            netContext.put("network_id", netId);
-            netContext.put("allStationIds", new LinkedList());
-            eContext.put(netIdStr, netContext);
+    public Object[] getKeys() {
+        List out = new ArrayList(stationCookies.keySet());
+        if(channelCookies != null) {
+            out.addAll(channelCookies.keySet());
         }
-        return (VelocityContext)eContext.get(netIdStr);
+        return out.toArray();
     }
 
-    public synchronized static VelocityContext getEventContext(EventAccessOperations event) {
-        if(!eventContexts.containsKey(event)) {
-            // check size and kill oldest if too big
-            if(eventOrder.size() >= MAX_EVENTS) {
-                EventAccessOperations oldEvent = (EventAccessOperations)eventOrder.getLast();
-                cleanEvent(oldEvent);
-            }
-            VelocityContext eContext = new VelocityContext(commonContext);
-            eContext.put("sod_event", event);
-            eventContexts.put(event, eContext);
-            eventOrder.addFirst(event);
+    public Object put(String key, Object value) {
+        if(value instanceof Serializable) {
+            put(key, (Serializable)value);
+            return value;
+        } else {
+            throw new IllegalArgumentException("value must be Serializable: "
+                    + value.getClass());
         }
-        return (VelocityContext)eventContexts.get(event);
     }
 
-    /**
-     * removes storage for VelocityContexts associated with the given event.
-     * Should be called once there is no longer any chance of further processing
-     * for an event.
-     */
-    public static void cleanEvent(EventAccessOperations event) {
-        logger.debug("Cleaning event " + event);
-        eventOrder.remove(event);
-        eventContexts.remove(event);
+    public Object remove(Object key) {
+        throw new RuntimeException("Context is Read Only");
     }
-
-    public static VelocityContext getCommonContext() {
-        return commonContext;
-    }
-
-    private static int MAX_EVENTS = 3;
-
-    private static LinkedList eventOrder = new LinkedList();
-
-    private static HashMap eventContexts = new HashMap();
-
-    static VelocityContext commonContext = new VelocityContext();
-    static {
-        commonContext.put("FERegion", ParseRegions.getInstance());
-        commonContext.put("fissures", new FissuresFormatter());
-        commonContext.put("velocity_date", new DateTool());
-        commonContext.put("velocity_math", new MathTool());
-        commonContext.put("velocity_number", new NumberTool());
-        commonContext.put("velocity_iterator", new IteratorTool());
-        commonContext.put("velocity_render", new RenderTool());
-        commonContext.put("stdDateFormatStr", "yyyy-MM-dd HH:mm:ss ZZZ");
-    }
-
-    private static final Logger logger = Logger.getLogger(CookieJar.class);
 }// CookieJar

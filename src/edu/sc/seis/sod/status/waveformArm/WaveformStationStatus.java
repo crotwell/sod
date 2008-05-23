@@ -16,6 +16,7 @@ import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.EventNetworkPair;
 import edu.sc.seis.sod.EventStationPair;
+import edu.sc.seis.sod.EventVectorPair;
 import edu.sc.seis.sod.Stage;
 import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Start;
@@ -53,10 +54,23 @@ public class WaveformStationStatus extends AbstractVelocityStatus implements Wav
     public void update(EventChannelPair ecp) {
         Status status = ecp.getStatus();
         if (status.getStage().equals(Stage.PROCESSOR) && status.getStanding().equals(Standing.SUCCESS)) {
-            Station station = ecp.getChannel().my_site.my_station;
+            StationImpl station = (StationImpl)ecp.getChannel().getSite().getStation();
+            doUpdate(station);
+        }
+    }
+
+    public void update(EventVectorPair ecp) {
+        Status status = ecp.getStatus();
+        if (status.getStage().equals(Stage.PROCESSOR) && status.getStanding().equals(Standing.SUCCESS)) {
+            StationImpl station = ecp.getChannelGroup().getChannels()[0].getSite().getStation();
+            doUpdate(station);
+        }
+    }
+    
+    protected void doUpdate(StationImpl station) {
             try {
                 int stationDbid = ((StationImpl)station).getDbid();
-                VelocityContext context = new VelocityContext(new StationWaveformContext(networkArmContext, (StationImpl)station));
+                VelocityContext context = new VelocityContext(new StationWaveformContext((StationImpl)station));
                 context.put("station", station);
                 context.put("networkid", station.get_id().network_id);
                 context.put("network", station.my_network);
@@ -65,7 +79,7 @@ public class WaveformStationStatus extends AbstractVelocityStatus implements Wav
             } catch (SQLException e) {
                 GlobalExceptionHandler.handle(e);
             }
-        }
+        
     }
 
     public void setArmStatus(String status) throws Exception {

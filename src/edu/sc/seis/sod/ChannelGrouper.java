@@ -7,6 +7,7 @@
 package edu.sc.seis.sod;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -22,7 +23,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.IfNetwork.NetworkId;
@@ -31,6 +31,7 @@ import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.SamplingImpl;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.sc.seis.fissuresUtil.bag.OrientationUtil;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
@@ -53,7 +54,7 @@ public class ChannelGrouper {
         additionalRules = loadRules(configFileLoc);
     }
 
-    public ChannelGroup[] group(Channel[] channels, List failures) {
+    public ChannelGroup[] group(ChannelImpl[] channels, List<ChannelImpl> failures) {
         int ruleCount = defaultRules.length + additionalRules.length;
         Element[] allRules = new Element[ruleCount];
         for(int j = 0; j < additionalRules.length; j++) {
@@ -65,17 +66,17 @@ public class ChannelGrouper {
         return applyRules(channels, allRules, failures);
     }
 
-    private ChannelGroup[] applyRules(Channel[] channels,
+    private ChannelGroup[] applyRules(ChannelImpl[] channels,
                                       Element[] rules,
-                                      List failures) {
-        List groupableChannels = new LinkedList();
-        HashMap bandGain = groupByBandGain(channels);
-        Iterator iter = bandGain.keySet().iterator();
+                                      List<ChannelImpl> failures) {
+        List<ChannelGroup> groupableChannels = new LinkedList<ChannelGroup>();
+        HashMap<String, List<ChannelImpl>> bandGain = groupByBandGain(channels);
+        Iterator<String> iter = bandGain.keySet().iterator();
         while(iter.hasNext()) {
-            String key = (String)iter.next();
-            LinkedList chn = (LinkedList)bandGain.get(key);
-            LinkedList failedList = new LinkedList();
-            List channelList = getGroupableChannels(chn, rules, failedList);
+            String key = iter.next();
+            List<ChannelImpl> chn = bandGain.get(key);
+            List<ChannelImpl> failedList = new ArrayList<ChannelImpl>();
+            List<ChannelGroup> channelList = getGroupableChannels(chn, rules, failedList);
             failures.addAll(failedList);
             if(channelList.size() > 0) {
                 groupableChannels.addAll(channelList);
@@ -83,22 +84,21 @@ public class ChannelGrouper {
         }
         ChannelGroup[] channelGroups = new ChannelGroup[groupableChannels.size()];
         for(int k = 0; k < groupableChannels.size(); k++) {
-            channelGroups[k] = new ChannelGroup((Channel[])((List)(groupableChannels.get(k))).toArray(new Channel[0]));
+            channelGroups[k] = groupableChannels.get(k);
         }
         return (channelGroups);
     }
 
-    private List getGroupableChannels(LinkedList chn,
+    private List<ChannelGroup> getGroupableChannels(List<ChannelImpl> chn,
                                       Element[] rules,
-                                      List failedList) {
-        LinkedList groupableChannels = new LinkedList();
+                                      List<ChannelImpl> failedList) {
+        List<ChannelGroup> groupableChannels = new ArrayList<ChannelGroup>();
         try {
-            Channel[] channels = (Channel[])chn.toArray(new Channel[0]);
-            HashMap channelMap = new HashMap();
-            for(int chnCnt = 0; chnCnt < channels.length; chnCnt++) {
-                String key = ChannelIdUtil.toStringNoDates(channels[chnCnt].get_id());
+            HashMap<String, ChannelImpl> channelMap = new HashMap<String, ChannelImpl>();
+            for(ChannelImpl channelImpl : chn) {
+                String key = ChannelIdUtil.toStringNoDates(channelImpl.get_id());
                 key = key.substring(key.length() - 1, key.length());
-                channelMap.put(key, channels[chnCnt]);
+                channelMap.put(key, channelImpl);
             }
             if(rules != null) {
                 for(int ruleCnt = 0; ruleCnt < rules.length; ruleCnt++) {
@@ -113,7 +113,7 @@ public class ChannelGrouper {
                                     String orientationCodes = SodUtil.getNestedText(el);
                                     char[] codes = orientationCodes.trim()
                                             .toCharArray();
-                                    LinkedList channelGroup = new LinkedList();
+                                    List<ChannelImpl> channelGroup = new ArrayList<ChannelImpl>();
                                     for(int codeCount = 0; codeCount < codes.length; codeCount++) {
                                         if(channelMap.get("" + codes[codeCount]) != null) {
                                             channelGroup.add(channelMap.get(""
@@ -121,14 +121,15 @@ public class ChannelGrouper {
                                         }
                                     }
                                     if(channelGroup.size() == 3) {
-                                        Channel[] successfulChannels = (Channel[])channelGroup.toArray(new Channel[0]);
+                                        ChannelGroup successfulChannels = new ChannelGroup((ChannelImpl[])channelGroup.toArray());
                                         if(sanityCheck(successfulChannels)) {
-                                            groupableChannels.add(channelGroup);
+                                            groupableChannels.add(successfulChannels);
                                             // remove the channels that are
                                             // successfully grouped
-                                            for(int count = 0; count < successfulChannels.length; count++) {
-                                                chn.remove(successfulChannels[count]);
-                                                channelMap.remove(successfulChannels[count]);
+                                            ChannelImpl[] chans = successfulChannels.getChannels();
+                                            for(int count = 0; count < chans.length; count++) {
+                                                chn.remove(chans[count]);
+                                                channelMap.remove(chans[count]);
                                             }
                                         }
                                     }
@@ -136,7 +137,7 @@ public class ChannelGrouper {
                                     Object subsetter = SodUtil.load(el,
                                                                     NetworkArm.PACKAGES);
                                     if(subsetter instanceof NetworkSubsetter) {
-                                        NetworkId netId = channels[0].get_id().network_id;
+                                        NetworkId netId = chn.get(0).get_id().network_id;
                                         CacheNetworkAccess[] networks = Start.getNetworkArm()
                                                 .getSuccessfulNetworks();
                                         NetworkAttr netAttr = null;
@@ -157,8 +158,8 @@ public class ChannelGrouper {
                                         if(accept) {
                                             StationSubsetter stationSubsetter = (StationSubsetter)subsetter;
                                             NetworkAccess network = Start.getNetworkArm()
-                                                    .getNetwork(channels[0].my_site.my_station.get_id().network_id);
-                                            if(!stationSubsetter.accept(channels[0].my_site.my_station,
+                                                    .getNetwork(chn.get(0).my_site.my_station.get_id().network_id);
+                                            if(!stationSubsetter.accept(chn.get(0).my_site.my_station,
                                                                         network).isSuccess()) {
                                                 accept = false;
                                             }
@@ -166,10 +167,10 @@ public class ChannelGrouper {
                                     } else if(subsetter instanceof ChannelSubsetter) {
                                         if(accept) {
                                             ChannelSubsetter channelSubsetter = (ChannelSubsetter)subsetter;
-                                            for(int count = 0; count < channels.length; count++) {
+                                            for(ChannelImpl channelImpl : chn) {
                                                 ProxyNetworkAccess network = Start.getNetworkArm()
-                                                        .getNetwork(channels[count].get_id().network_id);
-                                                if(!channelSubsetter.accept(channels[count],
+                                                        .getNetwork(channelImpl.get_id().network_id);
+                                                if(!channelSubsetter.accept(channelImpl,
                                                                             network).isSuccess()) {
                                                     accept = false;
                                                 }
@@ -195,17 +196,18 @@ public class ChannelGrouper {
         return groupableChannels;
     }
 
-    public static boolean sanityCheck(Channel[] channelGroup) {
+    public static boolean sanityCheck(ChannelGroup channelGroup) {
         return haveSameSamplingRate(channelGroup)
                 && areOrthogonal(channelGroup);
     }
 
-    private static boolean areOrthogonal(Channel[] channelGroup) {
-        for(int i = 0; i < channelGroup.length; i++) {
-            for(int j = i + 1; j < channelGroup.length; j++) {
-                if(!OrientationUtil.areOrthogonal(channelGroup[i].an_orientation,
-                                                  channelGroup[j].an_orientation)) {
-                    logger.info("Fail areOrthogonal ("+i+","+j+"): "+ChannelIdUtil.toString(channelGroup[i].get_id())+" "+OrientationUtil.toString(channelGroup[i].an_orientation)+" "+ChannelIdUtil.toString(channelGroup[j].get_id())+" "+OrientationUtil.toString(channelGroup[j].an_orientation));
+    private static boolean areOrthogonal(ChannelGroup channelGroup) {
+        ChannelImpl[] chans = channelGroup.getChannels();
+        for(int i = 0; i < chans.length; i++) {
+            for(int j = i + 1; j < chans.length; j++) {
+                if(!OrientationUtil.areOrthogonal(chans[i].an_orientation,
+                                                  chans[j].an_orientation)) {
+                    logger.info("Fail areOrthogonal ("+i+","+j+"): "+ChannelIdUtil.toString(chans[i].get_id())+" "+OrientationUtil.toString(chans[i].an_orientation)+" "+ChannelIdUtil.toString(chans[j].get_id())+" "+OrientationUtil.toString(chans[j].an_orientation));
                     return false;
                 }
             }
@@ -213,33 +215,34 @@ public class ChannelGrouper {
         return true;
     }
 
-    private static boolean haveSameSamplingRate(Channel[] channelGroup) {
-        SamplingImpl sampl = (SamplingImpl)channelGroup[0].sampling_info;
+    private static boolean haveSameSamplingRate(ChannelGroup cg) {
+        ChannelImpl[] chans = cg.getChannels();
+        SamplingImpl sampl = (SamplingImpl)chans[0].sampling_info;
         QuantityImpl freq = sampl.getFrequency();
         UnitImpl baseUnit = freq.getUnit();
         double samplingRate0 = (freq.getValue()) * sampl.getNumPoints();
-        for(int i = 1; i < channelGroup.length; i++) {
-            SamplingImpl sample = (SamplingImpl)channelGroup[i].sampling_info;
+        for(int i = 1; i < chans.length; i++) {
+            SamplingImpl sample = (SamplingImpl)chans[i].sampling_info;
             double sampleRate = (sample.getFrequency().convertTo(baseUnit).getValue())
                     * sample.getNumPoints();
             if(sampleRate != samplingRate0) {
-                logger.info("Fail haveSameSamplingRate ("+i+"): "+ChannelIdUtil.toString(channelGroup[i].get_id())+" "+channelGroup[i].sampling_info+" "+ChannelIdUtil.toString(channelGroup[0].get_id())+" "+channelGroup[0].sampling_info);
+                logger.info("Fail haveSameSamplingRate ("+i+"): "+ChannelIdUtil.toString(chans[i].get_id())+" "+chans[i].sampling_info+" "+ChannelIdUtil.toString(chans[0].get_id())+" "+chans[0].sampling_info);
                 return false;
             }
         }
         return true;
     }
 
-    private HashMap groupByBandGain(Channel[] channels) {
-        HashMap bandGain = new HashMap();
+    private HashMap<String, List<ChannelImpl>> groupByBandGain(ChannelImpl[] channels) {
+        HashMap<String, List<ChannelImpl>> bandGain = new HashMap<String, List<ChannelImpl>>();
         for(int i = 0; i < channels.length; i++) {
             MicroSecondDate msd = new MicroSecondDate(channels[i].get_id().begin_time);
             String key = ChannelIdUtil.toStringNoDates(channels[i].get_id());
             key = key.substring(0, key.length() - 1);
             key = msd + key;
-            LinkedList chans = (LinkedList)bandGain.get(key);
+            List<ChannelImpl> chans = bandGain.get(key);
             if(chans == null) {
-                chans = new LinkedList();
+                chans = new LinkedList<ChannelImpl>();
                 bandGain.put(key, chans);
             }
             chans.add(channels[i]);

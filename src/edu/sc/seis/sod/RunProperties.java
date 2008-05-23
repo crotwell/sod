@@ -92,7 +92,6 @@ public class RunProperties {
 			    hibernateConfig.add(SodUtil.getText(hibernateExtraConfig));
 			}
 		}
-		CookieJar.getCommonContext().put("runName", runName);
 	}
 
 	public TimeInterval getMaxRetryDelay() {

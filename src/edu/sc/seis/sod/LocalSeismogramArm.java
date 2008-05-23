@@ -15,6 +15,7 @@ import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.NSSeismogramDC;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
+import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.time.SortTool;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.process.waveform.WaveformResult;
@@ -75,6 +76,9 @@ public class LocalSeismogramArm implements Subsetter {
     }
 
     public void processLocalSeismogramArm(EventChannelPair ecp) {
+        logger.debug("Begin ECP: "+toString());
+        ecp.update(Status.get(Stage.EVENT_CHANNEL_SUBSETTER,
+                              Standing.IN_PROG));
         StringTree passed;
         CacheEvent eventAccess = ecp.getEvent();
         Channel channel = ecp.getChannel();
@@ -82,7 +86,7 @@ public class LocalSeismogramArm implements Subsetter {
             try {
                 passed = eventChannel.accept(eventAccess,
                                              channel,
-                                             ecp.getCookieJar());
+                                             new CookieJar(ecp, ecp.getEsp().getCookies(), ecp.getCookies()));
             } catch(Throwable e) {
                 handle(ecp, Stage.EVENT_CHANNEL_SUBSETTER, e);
                 return;
@@ -354,8 +358,13 @@ public class LocalSeismogramArm implements Subsetter {
                                outfilters,
                                SortTool.byBeginTimeAscending(tempLocalSeismograms));
         } else {
-            ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
-                                  Standing.RETRY));
+            if (ClockUtil.now().subtract(Start.getRunProps().getSeismogramLatency()).after(ecp.getEvent().getOrigin().getTime())) {
+                ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
+                                      Standing.RETRY));
+            } else {
+                ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
+                                      Standing.REJECT));
+            }
             failLogger.info(ecp + ": " + passed.toString());
         }
     }

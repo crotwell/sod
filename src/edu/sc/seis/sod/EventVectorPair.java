@@ -5,119 +5,106 @@
  */
 package edu.sc.seis.sod;
 
-import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.network.ChannelIdUtil;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
+import edu.sc.seis.sod.hibernate.SodDB;
+import edu.sc.seis.sod.hibernate.StatefulEvent;
 
-public class EventVectorPair {
+public class EventVectorPair extends CookieEventPair {
 
     /** for hibernate */
     protected EventVectorPair() {}
-    
-    public EventVectorPair(EventChannelPair[] chanPairs) {
-        if(chanPairs == null || chanPairs.length != 3) {
-            throw new IllegalArgumentException("Number of EventChannelPairs must equal 3");
-        }
-        this.pairs = chanPairs;
-    }
 
-    public int getEventDbId() {
-        return pairs[0].getEventDbId();
-    }
-
-    public Status getStatus() {
-        return pairs[0].getStatus();
-    }
-
-    public CacheEvent getEvent() {
-        return pairs[0].getEvent();
-    }
-
-    public CookieJar getCookieJar() {
-        return pairs[0].getCookieJar();
+    public EventVectorPair(StatefulEvent event,
+                           ChannelGroup chans,
+                           Status status) {
+        super(event, status);
+        channels = chans;
     }
 
     public ChannelGroup getChannelGroup() {
-        if (channels == null) {
-            Channel[] chans = new Channel[pairs.length];
-            for(int i = 0; i < pairs.length; i++) {
-                chans[i] = pairs[i].getChannel();
-            }
-            this.channels = new ChannelGroup(chans);
-            for(int i = 0; i < pairs.length; i++) {
-                channels.addEventChannelPair(pairs[i]);
-            }
-        }
         return channels;
     }
-
-    public void update(Throwable e, Status status) {
-        for(int i = 0; i < pairs.length; i++) {
-            pairs[i].update(e, status);
-        }
+    
+    protected void setChannelGroup(ChannelGroup cg) {
+        channels = cg;
     }
 
+    /**
+     * sets the status on this event channel pair to be status and notifies its
+     * parent
+     */
     public void update(Status status) {
-        for(int i = 0; i < pairs.length; i++) {
-            pairs[i].update(status);
-        }
+        // this is weird, but calling the setter allows hibernate to autodetect
+        // a modified object
+        setStatus(status);
+        updateRetries();
+        getCookies().put("status", status);
+        Start.getWaveformArm().setStatus(this);
     }
 
-    public boolean equals(Object obj) {
-        if(obj instanceof EventVectorPair) {
-            EventVectorPair other = (EventVectorPair)obj;
-            for(int i = 0; i < pairs.length; i++) {
-                boolean found = false;
-                for(int j = i; j < pairs.length; j++) {
-                    if(pairs[i].equals(other.pairs[j])) {
-                        found = true;
-                        break;
-                    }
-                }
-                if(!found) {
-                    return false;
-                }
-            }
+    public void run() {
+        try {
+            Start.getWaveformArm().getMotionVectorArm().processMotionVectorArm(this);
+            SodDB.commit();
+            logger.debug("Finish ECP: "+this);
+        } catch(Throwable t) {
+            System.err.println(WaveformArm.BIG_ERROR_MSG);
+            t.printStackTrace(System.err);
+            GlobalExceptionHandler.handle(WaveformArm.BIG_ERROR_MSG, t);
+            SodDB.rollback();
+        }
+    }
+    
+    public boolean equals(Object o) {
+        if(!(o instanceof EventVectorPair))
+            return false;
+        EventVectorPair ecp = (EventVectorPair)o;
+        if(ecp.getEventDbId() == getEventDbId()
+                && ecp.getChannelGroup().getChannels()[0].getDbid() == getChannelGroup().getChannels()[0].getDbid()
+                && ecp.getChannelGroup().getChannels()[1].getDbid() == getChannelGroup().getChannels()[1].getDbid()
+                && ecp.getChannelGroup().getChannels()[2].getDbid() == getChannelGroup().getChannels()[2].getDbid()) {
             return true;
         }
         return false;
     }
 
     public int hashCode() {
-        int code = 1;
-        for(int i = 0; i < pairs.length; i++) {
-            code += 3 * pairs[i].hashCode();
-        }
+        int code = 47 * getChannelGroup().getChannels()[0].getDbid();
+        code += 17 * getChannelGroup().getChannels()[1].getDbid();
+        code += 19 * getChannelGroup().getChannels()[2].getDbid();
+        code += 23 * getEventDbId();
         return code;
     }
 
     public String toString() {
         String s = "ECGroup: " + getEvent() + " ";
-        for(int i = 0; i < pairs.length; i++) {
-            s += ChannelIdUtil.toString(pairs[i].getChannel().get_id()) + " , ";
-        }
+        s += ChannelIdUtil.toString(getChannelGroup().getChannels()[0].get_id()) + " , ";
+        s += ChannelIdUtil.toString(getChannelGroup().getChannels()[1].get_id()) + " , ";
+        s += ChannelIdUtil.toString(getChannelGroup().getChannels()[2].get_id()) + " , ";
         s += " " + getStatus();
         return s;
     }
+    
+    public CookieJar getCookieJar() {
+        if (cookieJar == null) {
+            cookieJar = new CookieJar(this, getEsp().getCookies(), getCookies());
+        }
+        return cookieJar;
+    }
 
     ChannelGroup channels;
+    private CookieJar cookieJar;
 
-    EventChannelPair[] pairs;
-	
-	// hibernate
-	protected int pairId;
-	protected void setPairId(int pairId) {this.pairId = pairId;}
-	public int getPairId() {return pairId;}
-	
-    protected  EventChannelPair getEcp1() { return pairs[0];}
-    protected EventChannelPair getEcp2() { return pairs[1];}
-    protected EventChannelPair getEcp3() { return pairs[2];}
-    private void checkPairs() {
-        if (pairs == null || pairs.length != 3) {
-            pairs = new EventChannelPair[3];
-        }
+    // hibernate
+    protected void setEsp(EventStationPair esp) {
+        this.esp = esp;
     }
-    protected void setEcp1(EventChannelPair ecp) {checkPairs();pairs[0] = ecp;}
-    protected void setEcp2(EventChannelPair ecp) {checkPairs();pairs[1] = ecp;}
-    protected void setEcp3(EventChannelPair ecp) {checkPairs();pairs[2] = ecp;}
+    public EventStationPair getEsp() {
+        return esp;
+    }
+    protected EventStationPair esp;
+    
+    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(EventVectorPair.class);
 }

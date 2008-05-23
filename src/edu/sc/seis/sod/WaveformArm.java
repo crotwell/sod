@@ -1,30 +1,22 @@
 package edu.sc.seis.sod;
 
-import java.sql.BatchUpdateException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.hibernate.LockMode;
-import org.hibernate.exception.GenericJDBCException;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.network.ChannelIdUtil;
-import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.NetworkIdUtil;
-import edu.iris.Fissures.network.StationIdUtil;
-import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.cache.WorkerThreadPool;
@@ -52,8 +44,10 @@ public class WaveformArm implements Arm {
         processConfig(config);
         this.networkArm = networkArm;
         this.eventArm = eventArm;
-        pool = new WorkerThreadPool("Waveform EventChannel Processor",
-                                    threadPoolSize);
+        pool = new Thread[threadPoolSize];
+        for(int i = 0; i < pool.length; i++) {
+            pool[i] = new WaveformProcessor();
+        }
         this.restartSuspended = restartSuspended;
     }
 
@@ -76,11 +70,14 @@ public class WaveformArm implements Arm {
     public void run() {
         try {
             if(restartSuspended) {
-                addSuspendedPairsToQueue();
+                sodDb.reopenSuspendedEventChannelPairs(Start.getRunProps()
+                                                                .getEventChannelPairProcessing(),
+                                                        localSeismogramArm == null);
             }
             // check for events that are "in progress" due to halt or reset
             populateEventChannelDb(Standing.IN_PROG);
-            while(pool.isEmployed()) {
+            while(WaveformProcessor.getProcessorsWorking() == pool.length) {
+                // all threads are working
                 try {
                     logger.debug("pool employed, sleeping for 100 sec");
                     Thread.sleep(100000);
@@ -94,24 +91,22 @@ public class WaveformArm implements Arm {
                     + " sec between each try to process successful events, log interval is "
                     + logInterval);
             lastEventStartLogTime = ClockUtil.now();
+            SodDB sodDB = SodDB.getSingleton();
             do {
                 int numEvents = populateEventChannelDb(Standing.INIT);
-                retryIfNeededAndAvailable();
                 sleepALittle(numEvents, sleepTime, logInterval);
-            } while(possibleToContinue());
+            } while(possibleToContinue() 
+                    && sodDB.getNumWorkUnits(Standing.INIT) != 0 
+                    && sodDB.getNumWorkUnits(Standing.IN_PROG) != 0 );
             logger.info("Main waveform arm done.  Retrying failures.");
-            List allRetries = sodDb.getAllRetries();
-            Iterator it = allRetries.iterator();
-            while(it.hasNext()) {
-                while(pool.getNumWaiting() > poolLineCapacity) {
-                    try {
-                        Thread.sleep(100);
-                    } catch(InterruptedException e) {}
-                }
-                WaveformWorkUnit retryUnit = (WaveformWorkUnit)it.next();
-                pool.invokeLater(retryUnit);
+            while(WaveformProcessor.getProcessorsWorking() == pool.length) {
+                // all threads are working
+                try {
+                    logger.debug("pool employed, sleeping for 100 sec");
+                    Thread.sleep(100000);
+                } catch(InterruptedException e) {}
             }
-            while(!Start.isArmFailure() && pool.isEmployed()) {
+            while(!Start.isArmFailure() && WaveformProcessor.getProcessorsWorking() > 0) {
                 try {
                     logger.debug("Sleeping while waiting for retries");
                     Thread.sleep(10000);
@@ -128,7 +123,7 @@ public class WaveformArm implements Arm {
         }
     }
 
-    private boolean possibleToContinue() {
+    boolean possibleToContinue() {
         return !Start.isArmFailure() && eventArm.isActive();
     }
 
@@ -183,17 +178,24 @@ public class WaveformArm implements Arm {
             EventEffectiveTimeOverlap overlap = new EventEffectiveTimeOverlap(ev);
             CacheNetworkAccess[] networks = networkArm.getSuccessfulNetworks();
             for(int i = 0; i < networks.length; i++) {
-                startNetwork(ev, overlap, networks[i], standing);
+                if (overlap.overlaps(networks[i].get_attributes())) {
+                    EventNetworkPair p = new EventNetworkPair(ev, networks[i], Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.INIT));
+                    sodDb.put(p);
+                } else {
+                    failLogger.info("Network "+NetworkIdUtil.toStringNoDates(networks[i].get_attributes())+" does not overlap event "+ev);
+                }
             }
             // set the status of the event to be SUCCESS implying that
             // that all the network information for this particular event is
             // inserted
             // in the waveformDatabase.
-            // reattach ev so we can set status
-            eventDb.getSession().lock(ev, LockMode.NONE);
             ev.setStatus(Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                     Standing.SUCCESS));
             eventDb.commit();
+            // wake up the workers in case they are asleep
+            for(int i = 0; i < pool.length; i++) {
+                pool[i].notifyAll();
+            }
             eventArm.change(ev);
             int numWaiting = eventDb.getNumWaiting();
             if(numWaiting < EventArm.MIN_WAIT_EVENTS) {
@@ -207,244 +209,6 @@ public class WaveformArm implements Arm {
         }
         eventDb.commit();
         return numEvents;
-    }
-
-    private void startNetwork(StatefulEvent ev,
-                              EventEffectiveTimeOverlap overlap,
-                              CacheNetworkAccess net, Standing standing) throws Exception {
-        // don't bother with network if effective time does no
-        // overlap event time
-        if(!overlap.overlaps(net.get_attributes())) {
-            failLogger.info(NetworkIdUtil.toString(net.get_attributes()
-                    .get_id())
-                    + "'s network effective time does not overlap the event time.");
-            return;
-        } // end of if ()
-        StationImpl[] stations = networkArm.getSuccessfulStations(net);
-        for(int i = 0; i < stations.length; i++) {
-            startStation(overlap, net, stations[i], ev, standing);
-        }
-    }
-
-    private void startStation(EventEffectiveTimeOverlap overlap,
-                              CacheNetworkAccess net,
-                              StationImpl station,
-                              StatefulEvent ev, Standing standing) throws Exception {
-        if(!overlap.overlaps(station)) {
-            failLogger.debug(StationIdUtil.toString(station.get_id())
-                    + "'s station effective time does not overlap the event time.");
-            return;
-        } // end of if ()
-        ChannelImpl[] chans = networkArm.getSuccessfulChannels(net, station);
-        if(motionVectorArm != null) {
-            startChannelGroups(overlap, net, ev, chans, standing);
-        } else {
-            // individual local seismograms
-            for(int i = 0; i < chans.length; i++) {
-                startChannel(overlap, net, chans[i], ev, standing);
-            }
-        }
-    }
-
-    private void startChannelGroups(EventEffectiveTimeOverlap overlap,
-                                    CacheNetworkAccess net,
-                                    StatefulEvent ev,
-                                    ChannelImpl[] chans, Standing standing) throws SQLException {
-        List<ChannelImpl> overlapList = new ArrayList<ChannelImpl>();
-        for(int i = 0; i < chans.length; i++) {
-            if(overlap.overlaps(chans[i])) {
-                overlapList.add(chans[i]);
-            } else {
-                failLogger.info(ChannelIdUtil.toString(chans[i].get_id())+"'s channel effective time does not overlap the event time");
-            }
-        }
-        ChannelImpl[] overlapChans = overlapList.toArray(new ChannelImpl[0]);
-        ChannelGroup[] chanGroups = groupChannels(overlapChans, ev);
-        Status eventStationInit = Status.get(Stage.EVENT_STATION_SUBSETTER,
-                                             Standing.INIT);
-        for(int i = 0; i < chanGroups.length; i++) {
-            int[] pairIds = new int[3];
-            EventChannelPair[] ecpTmp = new EventChannelPair[3];
-            for(int j = 0; j < pairIds.length; j++) {
-                for(int k = 0; k < overlapChans.length; k++) {
-                    if(ChannelIdUtil.areEqual(overlapChans[k].get_id(),
-                                              chanGroups[i].getChannels()[j].get_id())) {
-                        ecpTmp[j] = new EventChannelPair(ev,
-                                                         overlapChans[k],
-                                                         0,
-                                                         eventStationInit);
-                        break;
-                    }
-                }
-            }
-            EventVectorPair evp = null;
-            if (standing == Standing.IN_PROG) {
-                // might be some evps already added, check if in db first
-                // evp will be null if not in db
-                EventChannelPair ecp = sodDb.getECP(ev, chans[0]);
-                if (ecp != null) {
-                    evp = sodDb.getEventVectorPair(ecp);
-                }
-            }
-            if (evp == null) {
-                evp = new EventVectorPair(ecpTmp);
-                SodDB.getSession().lock(ev, LockMode.NONE);
-                sodDb.put(evp);
-                SodDB.commit();
-                invokeLaterAsCapacityAllows(new MotionVectorWaveformWorkUnit(evp));
-                retryIfNeededAndAvailable();
-            } // already in database so no need to add it
-        }
-    }
-
-    public ChannelGroup[] groupChannels(ChannelImpl[] chans, StatefulEvent ev)
-            throws SQLException {
-        Channel[] channels = new Channel[chans.length];
-        for(int i = 0; i < channels.length; i++) {
-            channels[i] = chans[i];
-        }
-        LinkedList failures = new LinkedList();
-        ChannelGroup[] chanGroups = channelGrouper.group(channels, failures);
-        Iterator it = failures.iterator();
-        Status eventStationReject = Status.get(Stage.EVENT_STATION_SUBSETTER,
-                                               Standing.REJECT);
-        while(it.hasNext()) {
-            Channel failchan = (Channel)it.next();
-            failLogger.info(ChannelIdUtil.toString(failchan.get_id())
-                    + "  Channel not grouped.");
-            for(int k = 0; k < chans.length; k++) {
-                if(ChannelIdUtil.areEqual(chans[k].get_id(), failchan.get_id())) {
-                    EventChannelPair ecp = sodDb.put(new EventChannelPair(ev,
-                                                       chans[k],
-                                                       0,
-                                                       eventStationReject));
-                    
-                }
-            }
-        }
-        return chanGroups;
-    }
-
-    private void startChannel(EventEffectiveTimeOverlap overlap,
-                              CacheNetworkAccess net,
-                              ChannelImpl chan,
-                              StatefulEvent ev, Standing standing) throws Exception {
-        if(!overlap.overlaps(chan)) {
-            logger.debug(ChannelIdUtil.toString(chan.get_id())+"'s channel effective time does not overlap the event time");
-            return;
-        } // end of if ()
-        // attach channel as it came from network arm thread, and hence separate
-        // session
-        chan = (ChannelImpl)sodDb.getSession()
-                .load(ChannelImpl.class, new Integer(chan.getDbid()));
-        StationImpl sta = chan.getSite().getStation();
-        ev = (StatefulEvent)sodDb.getSession().load(StatefulEvent.class,
-                                                    new Integer(ev.getDbid()));
-        // cache the channelInformation.
-
-        EventChannelPair ecp = null;
-        if (standing == Standing.IN_PROG) {
-            // might be some evps already added, check if in db first
-            // evp will be null if not in db
-            ecp = sodDb.getECP(ev, chan);
-        }
-        if (ecp == null) {
-            ecp = new EventChannelPair(ev,
-                                       chan,
-                                       0,
-                                       Status.get(Stage.EVENT_STATION_SUBSETTER,
-                                                  Standing.INIT));
-            sodDb.put(ecp);
-        }
-        try {
-            SodDB.commit();
-        } catch(GenericJDBCException e) {
-            logger.error(e);
-            if(e.getCause() instanceof BatchUpdateException) {
-                BatchUpdateException b = (BatchUpdateException)e.getCause();
-                logger.error(b);
-                SQLException s = b.getNextException();
-                logger.error(s);
-            }
-            throw e;
-        }
-        if(ecp != null) {
-            invokeLaterAsCapacityAllows(new LocalSeismogramWaveformWorkUnit(ecp));
-        }
-        retryIfNeededAndAvailable();
-    }
-
-    private void retryIfNeededAndAvailable() throws SQLException {
-        int numInPool = pool.getNumWaiting();
-        if(numInPool == 0
-                || getNumRetryWaiting() / (double)numInPool < retryPercentage) {
-            retryIfAvailable();
-        }
-    }
-
-    private void retryIfAvailable() throws SQLException {
-        WaveformWorkUnit[] retryUnit = sodDb.getRetryWaveformWorkUnits(10);
-        if(retryUnit != null) {
-            for(int i = 0; i < retryUnit.length; i++) {
-                logger.debug("retrying: " + retryUnit.toString());
-                invokeLaterAsCapacityAllows(retryUnit[i]);
-            }
-        }
-    }
-
-    private void addSuspendedPairsToQueue() throws SQLException {
-        EventChannelPair[] pairs;
-        SodDB sodDb = SodDB.getSingleton();
-        try {
-            logger.debug("SodDB in reopen suspended events:" + sodDb);
-            pairs = sodDb.getSuspendedEventChannelPairs(Start.getRunProps()
-                                                                .getEventChannelPairProcessing(),
-                                                        localSeismogramArm == null);
-            logger.debug("Found " + pairs.length
-                    + " event channel pairs that were in process");
-            for(int i = 0; i < pairs.length; i++) {
-                SodDB.getSession().lock(pairs[i], LockMode.NONE);
-                logger.debug("Starting suspended pair " + pairs[i]);
-                WaveformWorkUnit workUnit = null;
-                if(localSeismogramArm != null) {
-                    workUnit = new LocalSeismogramWaveformWorkUnit(pairs[i]);
-                } else {
-                    EventChannelPair ecp = pairs[i];
-                    EventVectorPair ecgp = sodDb.getEventVectorPair(ecp);
-                    if(ecgp != null && !usedPairGroups.contains(ecgp)) {
-                        usedPairGroups.add(ecgp);
-                        workUnit = new MotionVectorWaveformWorkUnit(ecgp);
-                    }
-                }
-                if(workUnit != null) {
-                    logger.debug("Adding " + workUnit + " to pool");
-                    invokeLaterAsCapacityAllows(workUnit);
-                } else {
-                    logger.debug("Unable to find work unit for pair "
-                            + pairs[i].getPairId());
-                }
-            }
-        } catch(Exception e) {
-            GlobalExceptionHandler.handle("Trouble updating status of "
-                    + "existing event-channel pairs", e);
-        }
-    }
-
-    private int getNumRetryWaiting() {
-        return retryNum;
-    }
-
-    /**
-     * This method blocks until there is space in the pool for wu to run, then
-     * starts its execution.
-     */
-    private void invokeLaterAsCapacityAllows(WaveformWorkUnit wu) {
-        while(pool.getNumWaiting() > poolLineCapacity) {
-            try {
-                Thread.sleep(1000);
-            } catch(InterruptedException e) {}
-        }
-        pool.invokeLater(wu);
     }
 
     private StatefulEvent waitForInitialEvent() throws SQLException {
@@ -473,7 +237,6 @@ public class WaveformArm implements Arm {
     protected void processConfig(Element config) throws ConfigurationException {
         if(config.getTagName().equals("waveformVectorArm")) {
             motionVectorArm = new MotionVectorArm();
-            channelGrouper = new ChannelGrouper();
         } else {
             localSeismogramArm = new LocalSeismogramArm();
         }
@@ -515,7 +278,27 @@ public class WaveformArm implements Arm {
         statusMonitors.add(monitor);
     }
 
-    public synchronized void setStatus(EventChannelPair ecp) {
+    public synchronized void setStatus(CookieEventPair ecp) {
+        synchronized(statusMonitors) {
+            Iterator it = statusMonitors.iterator();
+            while(it.hasNext()) {
+                try {
+                    if (ecp instanceof EventChannelPair) {
+                        ((WaveformMonitor)it.next()).update((EventChannelPair)ecp);
+                    } else if (ecp instanceof EventVectorPair) {
+                        ((WaveformMonitor)it.next()).update((EventVectorPair)ecp);
+                    } else if (ecp instanceof EventStationPair) {
+                        ((WaveformMonitor)it.next()).update((EventStationPair)ecp);
+                    }
+                } catch(Exception e) {
+                    // oh well, log it and go to next status processor
+                    GlobalExceptionHandler.handle("Problem in setStatus", e);
+                }
+            }
+        }
+    }
+
+    public synchronized void setStatus(EventNetworkPair ecp) {
         synchronized(statusMonitors) {
             Iterator it = statusMonitors.iterator();
             while(it.hasNext()) {
@@ -528,6 +311,10 @@ public class WaveformArm implements Arm {
             }
         }
     }
+    
+    public double getRetryPercentage() {
+        return retryPercentage;
+    }
 
     private MicroSecondDate lastEventStartLogTime;
 
@@ -537,7 +324,7 @@ public class WaveformArm implements Arm {
 
     private boolean restartSuspended;
 
-    private WorkerThreadPool pool;
+    private Thread[] pool;
 
     private EventStationSubsetter eventStationSubsetter = new PassEventStation();
 
@@ -552,8 +339,6 @@ public class WaveformArm implements Arm {
     private SodDB sodDb;
 
     private StatefulEventDB eventDb;
-
-    private ChannelGrouper channelGrouper;
 
     private List usedPairGroups = new ArrayList();
 

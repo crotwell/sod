@@ -15,6 +15,7 @@ import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.EventNetworkPair;
 import edu.sc.seis.sod.EventStationPair;
+import edu.sc.seis.sod.EventVectorPair;
 import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Status;
@@ -51,11 +52,16 @@ public class WaveformNetworkStatus extends AbstractVelocityStatus implements Wav
         change(ecp.getChannel().my_site.my_station, ecp.getStatus());
     }
 
+    public void update(EventVectorPair ecp) {
+        // update the page for num successes change
+        change(ecp.getChannelGroup().getChannels()[0].my_site.my_station, ecp.getStatus());
+    }
+
     public void setArmStatus(String status) throws Exception {}
 
     public void change(Station station, Status s) {
         try {
-            VelocityContext context = new VelocityContext(networkArmContext);
+            VelocityContext context = new VelocityContext();
             NetworkAccess networkAccess = Start.getNetworkArm().getNetwork(station.my_network.get_id());
             context.put("network", networkAccess);
             context.put("stations", new VelocityStationGetter(station.my_network.get_id()));
@@ -71,8 +77,10 @@ public class WaveformNetworkStatus extends AbstractVelocityStatus implements Wav
     public void change(NetworkAccess networkAccess, Status s) {
         if (s.getStanding().equals(Standing.SUCCESS)) {
             // update the index list
+            VelocityContext context = new VelocityContext();
+            context.put("network", networkAccess);
             scheduleOutput("waveformStations/waveformNetworks.html",
-                           networkArmContext,
+                           context,
                            networkListTemplate);
         }
     }

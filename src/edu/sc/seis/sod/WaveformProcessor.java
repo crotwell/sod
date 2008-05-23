@@ -5,57 +5,92 @@ import edu.sc.seis.sod.hibernate.SodDB;
 public class WaveformProcessor extends Thread {
 
     public WaveformProcessor() {
-        super("WaveformProcessor "+nextProcessorNum());
-        setDaemon(true);
+        super("WaveformProcessor " + nextProcessorNum());
     }
 
     public void run() {
         while(true) {
             AbstractEventPair next = getNext(Standing.INIT);
-            if(next == null) {
-                // nothing to do in db, sleep a bit
-                try {
-                    Thread.sleep(1000);
-                } catch(InterruptedException e) {}
-            } else {
+            while( next == null && ( Start.getWaveformArm().possibleToContinue()
+                    || SodDB.getSingleton().getNumWorkUnits(Standing.RETRY) != 0
+                    || SodDB.getSingleton().getNumWorkUnits(Standing.IN_PROG) != 0 )) {
+                    logger.debug("Processor waiting for work unit to show up");
+                    try {
+                        synchronized(this) {
+                            wait(100000);
+                        }
+                    } catch(InterruptedException e) {}
+                    next = getNext(Standing.INIT);
+            }
+            if(next != null) {
                 processorStartWork();
                 try {
-                next.run();
-                } catch (Throwable t) {
-                    next.update(t, Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.SYSTEM_FAILURE));
+                    next.run();
+                } catch(Throwable t) {
+                    next.update(t, Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                              Standing.SYSTEM_FAILURE));
                 }
                 SodDB.commit();
                 processorFinishWork();
+            } else {
+                // nothing to do in db, not possible to continue
+                logger.debug("No work to do, quiting processing");
+                return;
             }
         }
     }
 
     protected synchronized AbstractEventPair getNext(Standing standing) {
         AbstractEventPair out = null;
+        double retryRandom = Math.random();
         if(seisArm != null) {
-            EventChannelPair ecp = soddb.getNextECP(standing);
-            ecp.update(Status.get(Stage.EVENT_CHANNEL_SUBSETTER, Standing.INIT));
-            SodDB.commit();
-            out = ecp;
+            EventChannelPair ecp = null;
+            if (retryRandom < Start.getWaveformArm().getRetryPercentage()) {
+                // try a retry
+                ecp = soddb.getNextRetryECP();
+            } 
+            if (ecp == null) {
+                ecp = soddb.getNextECP(standing); 
+            }
+            
+            if(ecp != null) {
+                ecp.update(Status.get(Stage.EVENT_CHANNEL_SUBSETTER,
+                                      Standing.INIT));
+                SodDB.commit();
+                return ecp;
+            }
         } else {
-            EventVectorPair evp = soddb.getNextEVP(standing);
-            evp.update(Status.get(Stage.EVENT_CHANNEL_SUBSETTER, Standing.INIT));
-            SodDB.commit();
-            out = evp;
+            EventVectorPair evp = null;
+            if (retryRandom < Start.getWaveformArm().getRetryPercentage()) {
+                // try a retry
+                evp = soddb.getNextRetryEVP();
+            } 
+            if (evp == null) {
+                evp = soddb.getNextEVP(standing);
+            }
+            
+            if(evp != null) {
+                evp.update(Status.get(Stage.EVENT_CHANNEL_SUBSETTER,
+                                      Standing.INIT));
+                SodDB.commit();
+                return evp;
+            }
         }
-        if(out == null) {
-            EventStationPair ecp = soddb.getNextESP(standing);
-            ecp.update(Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.INIT));
+        // no ecp/evp try e-station
+        EventStationPair esp = soddb.getNextESP(standing);
+        if(esp != null) {
+            esp.update(Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.INIT));
             SodDB.commit();
-            out = ecp;
+            return esp;
         }
-        if(out == null) {
-            EventNetworkPair ecp = soddb.getNextENP(standing);
-            ecp.update(Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.INIT));
+        // no e-station try e-network
+        EventNetworkPair enp = soddb.getNextENP(standing);
+        if(enp != null) {
+            enp.update(Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.INIT));
             SodDB.commit();
-            out = ecp;
+            return enp;
         }
-        return out;
+        return null;
     }
 
     SodDB soddb = SodDB.getSingleton();
@@ -67,17 +102,22 @@ public class WaveformProcessor extends Thread {
     public static int getProcessorsWorking() {
         return processorsWorking;
     }
-    
+
     static int processorsWorking = 0;
+
     static void processorStartWork() {
         processorsWorking++;
     }
+
     static void processorFinishWork() {
         processorsWorking--;
     }
+
     static int usedProcessorNum = 0;
+
     static int nextProcessorNum() {
         return usedProcessorNum++;
     }
-    
+
+    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(WaveformProcessor.class);
 }

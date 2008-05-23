@@ -11,6 +11,7 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.EventNetworkPair;
 import edu.sc.seis.sod.EventStationPair;
+import edu.sc.seis.sod.EventVectorPair;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Status;
@@ -63,6 +64,10 @@ public class WaveformEventTemplateGenerator implements EventMonitor,
     }
     
     public void update(EventChannelPair ecp) {
+        template.update(ecp);
+    }
+    
+    public void update(EventVectorPair ecp) {
         template.update(ecp);
     }
 

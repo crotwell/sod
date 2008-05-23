@@ -39,13 +39,15 @@ public abstract class AbstractEventPair extends WaveformWorkUnit {
     public int getEventDbId() { return event.getDbid(); }
 
     public Status getStatus(){ return status; }
+    
+    public void setStatus(Status status) {
+        this.status = status;
+        updateRetries();
+    }
 
     public StatefulEvent getEvent(){ return event; }
     
     /** for use by hibernate */
-    protected short getStatusAsShort() {
-        return status.getAsShort();
-    }
 
     /** for use by hibernate */
     protected void setEvent(StatefulEvent e) {
@@ -54,9 +56,6 @@ public abstract class AbstractEventPair extends WaveformWorkUnit {
 
 
     /** for use by hibernate */
-    protected void setStatusAsShort(short status) {
-        this.status = Status.getFromShort(status);
-    }
     
     private Status status;
     private StatefulEvent event;

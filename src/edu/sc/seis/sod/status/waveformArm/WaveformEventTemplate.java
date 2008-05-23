@@ -14,6 +14,7 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.EventNetworkPair;
 import edu.sc.seis.sod.EventStationPair;
+import edu.sc.seis.sod.EventVectorPair;
 import edu.sc.seis.sod.Stage;
 import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Status;
@@ -75,6 +76,11 @@ public class WaveformEventTemplate extends Template implements WaveformMonitor {
     }
 
     public void update(EventChannelPair ecp) {
+        String outputDir = getOutputDirectory(ecp.getEvent());
+        update(ecp.getEvent(), outputDir, pageName);
+    }
+
+    public void update(EventVectorPair ecp) {
         String outputDir = getOutputDirectory(ecp.getEvent());
         update(ecp.getEvent(), outputDir, pageName);
     }

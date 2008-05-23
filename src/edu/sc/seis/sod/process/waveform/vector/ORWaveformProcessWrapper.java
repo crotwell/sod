@@ -63,14 +63,12 @@ public class ORWaveformProcessWrapper implements WaveformProcessWrapper {
         int i;
         for(i = 0; b == false && i < channelGroup.getChannels().length; i++) {
             Channel chan = channelGroup.getChannels()[i];
-            CookieJar chansCookies = channelGroup.getEventChannelPair(chan)
-                    .getCookieJar();
             WaveformResult result = subsetter.process(event,
                                                       chan,
                                                       original[i],
                                                       available[i],
                                                       ForkProcess.copySeismograms(seismograms[i]),
-                                                      chansCookies);
+                                                      cookieJar);
             out[i] = result.getSeismograms();
             b |= result.isSuccess();
             reason[i] = result.getReason();

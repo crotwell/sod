@@ -1,26 +1,29 @@
 package edu.sc.seis.sod.status.eventArm;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.apache.log4j.Logger;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
+
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.EventNetworkPair;
 import edu.sc.seis.sod.EventStationPair;
+import edu.sc.seis.sod.EventVectorPair;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.FileWritingTemplate;
 import edu.sc.seis.sod.status.GenericTemplate;
 import edu.sc.seis.sod.status.TemplateFileLoader;
-import edu.sc.seis.sod.status.eventArm.EventMonitor;
 import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import javax.xml.parsers.ParserConfigurationException;
-import org.apache.log4j.Logger;
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
 public class EventStatusTemplate extends FileWritingTemplate implements
         EventMonitor, WaveformMonitor {
@@ -92,6 +95,10 @@ public class EventStatusTemplate extends FileWritingTemplate implements
     }
 
     public void update(EventChannelPair ecp) {
+        write();
+    }
+
+    public void update(EventVectorPair ecp) {
         write();
     }
 

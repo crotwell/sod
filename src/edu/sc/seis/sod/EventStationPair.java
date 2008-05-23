@@ -1,14 +1,15 @@
 package edu.sc.seis.sod;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.IfNetwork.NetworkNotFound;
-import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
@@ -19,7 +20,7 @@ import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.EventEffectiveTimeOverlap;
 
-public class EventStationPair extends AbstractEventPair {
+public class EventStationPair extends CookieEventPair {
 
     /** for hibernate */
     protected EventStationPair() {}
@@ -41,13 +42,13 @@ public class EventStationPair extends AbstractEventPair {
         // overlap event time
         try {
             EventEffectiveTimeOverlap overlap = new EventEffectiveTimeOverlap(getEvent());
-
+            Map<String, Serializable> cookies = new HashMap<String, Serializable>();
             StringTree accepted = new StringTreeLeaf(this, false);
             try {
                 synchronized(Start.getWaveformArm().getEventStationSubsetter()) {
                     accepted = Start.getWaveformArm().getEventStationSubsetter().accept(getEvent(),
                                                                                         getStation(),
-                                                            getCookies());
+                                                            new CookieJar(this, cookies));
                 }
             } catch(Throwable e) {
                 if(e instanceof org.omg.CORBA.SystemException) {
@@ -70,6 +71,7 @@ public class EventStationPair extends AbstractEventPair {
                 failLogger.info(this + "  " + accepted.toString());
                 return;
             }
+            List<AbstractEventPair> chanPairs = new ArrayList<AbstractEventPair>();
             if(Start.getWaveformArm().getMotionVectorArm() != null) {
                 ChannelGroup[] chanGroups = Start.getNetworkArm().getSuccessfulChannelGroups(getStation());
                 List<ChannelGroup> overlapList = new ArrayList<ChannelGroup>();
@@ -81,10 +83,13 @@ public class EventStationPair extends AbstractEventPair {
                     }
                 }
                 for(int i = 0; i < chanGroups.length; i++) {
+                    // use Standing.IN_PROG as we are going to do event-channel processing here
+                    // don't want another thread to pull the ECP from the DB
                     EventVectorPair p = new EventVectorPair(getEvent(),
                                                               chanGroups[i],
                                                               Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                                                                         Standing.INIT));
+                                                                         Standing.IN_PROG));
+                    chanPairs.add(p);
                     sodDb.put(p);
                 }
             } else {
@@ -98,25 +103,37 @@ public class EventStationPair extends AbstractEventPair {
                     }
                 }
                 for(int i = 0; i < channels.length; i++) {
+                    // use Standing.IN_PROG as we are going to do event-channel processing here
+                    // don't want another thread to pull the ECP from the DB
                     EventChannelPair p = new EventChannelPair(getEvent(),
                                                               channels[i],
                                                               Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                                                                         Standing.INIT));
+                                                                         Standing.IN_PROG));
+                    chanPairs.add(p);
                     sodDb.put(p);
                 }
+            }
+            update(Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.SUCCESS));
+            SodDB.commit();
+            // run channel pairs now
+            for(AbstractEventPair pair : chanPairs) {
+                pair.run();
+                SodDB.commit();
             }
         } catch(NoPreferredOrigin e) {
             // should never happen
             GlobalExceptionHandler.handle(e);
             update(Status.get(Stage.EVENT_CHANNEL_POPULATION,
                               Standing.SYSTEM_FAILURE));
+            SodDB.commit();
+            return;
         } catch(NetworkNotFound e) {
             failLogger.info(StationIdUtil.toString(getStation().get_id())
                     + "'s network could not be found. This is possible, but very unusual.");
             update(Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.REJECT));
+            SodDB.commit();
+            return;
         }
-        update(Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.SUCCESS));
-        SodDB.commit();
     }
 
     /**
@@ -126,7 +143,7 @@ public class EventStationPair extends AbstractEventPair {
     public void update(Status status) {
         // this is weird, but calling the setter allows hibernate to autodetect
         // a modified object
-        setStatusAsShort(status.getAsShort());
+        setStatus(status);
         Start.getWaveformArm().setStatus(this);
     }
 

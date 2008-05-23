@@ -9,8 +9,43 @@
 		extends="edu.sc.seis.fissuresUtil.cache.CacheEvent"
 		table="statefulEvent">
 		<key column="eventStatus_id" />
-		<property name="statusAsShort" type="short" />
+		<component name="status">
+			<property name="stageInt" type="integer" />
+			<property name="standingInt" type="integer" />
+		</component>
 	</joined-subclass>
+
+	<class name="edu.sc.seis.sod.EventNetworkPair">
+		<id name="pairId" type="integer">
+			<generator class="native" />
+		</id>
+		<many-to-one name="event"
+			class="edu.sc.seis.sod.hibernate.StatefulEvent" column="event"
+			foreign-key="FK_enetp_event" unique-key="event_net_key" />
+		<many-to-one name="network"
+			class="edu.iris.Fissures.network.NetworkAttrImpl" column="network"
+			foreign-key="FK_enetp_network" unique-key="event_net_key" />
+		<component name="status">
+			<property name="stageInt" type="integer" />
+			<property name="standingInt" type="integer" />
+		</component>
+	</class>
+
+	<class name="edu.sc.seis.sod.EventStationPair">
+		<id name="pairId" type="integer">
+			<generator class="native" />
+		</id>
+		<many-to-one name="event"
+			class="edu.sc.seis.sod.hibernate.StatefulEvent" column="event"
+			foreign-key="FK_estap_event" unique-key="event_station_key" />
+		<many-to-one name="station"
+			class="edu.iris.Fissures.network.StationImpl" column="station"
+			foreign-key="FK_estap_station" unique-key="event_station_key" />
+		<component name="status">
+			<property name="stageInt" type="integer" />
+			<property name="standingInt" type="integer" />
+		</component>
+	</class>
 
 	<class name="edu.sc.seis.sod.EventChannelPair">
 		<id name="pairId" type="integer">
@@ -22,54 +57,43 @@
 		<many-to-one name="channel"
 			class="edu.iris.Fissures.network.ChannelImpl" column="channel"
 			foreign-key="FK_ecp_channel" unique-key="event_chan_key" />
-		<property name="statusAsShort" type="short" column="status" />
+		<component name="status">
+			<property name="stageInt" type="integer" />
+			<property name="standingInt" type="integer" />
+		</component>
+		<map name="cookies" table="ecpCookie"> 
+    		<key column="pairId"/> 
+    		<map-key column="cookieName" type="string"/> 
+    		<element type="serializable" column="value" not-null="true"/> 
+		</map> 
+		<many-to-one name="esp"
+			class="edu.sc.seis.sod.EventStationPair" column="esp"
+			foreign-key="FK_ecp_esp" />
+			
 	</class>
 
 	<class name="edu.sc.seis.sod.EventVectorPair">
 		<id name="pairId" type="integer">
 			<generator class="native" />
 		</id>
-		<many-to-one name="ecp1"
-			class="edu.sc.seis.sod.EventChannelPair" foreign-key="FK_evp_ecp1"
-			column="ecp1" cascade="save-update" />
-		<many-to-one name="ecp2"
-			class="edu.sc.seis.sod.EventChannelPair" foreign-key="FK_evp_ecp2"
-			column="ecp2" cascade="save-update" />
-		<many-to-one name="ecp3"
-			class="edu.sc.seis.sod.EventChannelPair" foreign-key="FK_evp_ecp3"
-			column="ecp3" cascade="save-update" />
-	</class>
-
-	<class name="edu.sc.seis.sod.hibernate.EcpCookie">
-		<composite-id name="id"
-			class="edu.sc.seis.sod.hibernate.EcpCookieId">
-			<key-property name="name" />
-			<key-property name="ecp_id" />
-		</composite-id>
-		<many-to-one name="ecp" class="edu.sc.seis.sod.EventChannelPair"
-			foreign-key="FK_cookie_ecp" column="ecp_id" insert="false"
-			update="false" />
-		<property name="value" type="serializable" />
-	</class>
-
-	<class name="edu.sc.seis.sod.RetryWaveformWorkUnit">
-		<id name="dbid" type="integer">
-			<generator class="native" />
-		</id>
-		<property name="numRetries" type="integer" />
-		<property name="lastQuery" type="timestamp" />
-		<many-to-one name="ecp" class="edu.sc.seis.sod.EventChannelPair"
-			foreign-key="FK_lswork_ecp" column="ecp" cascade="save-update" />
-	</class>
-
-	<class name="edu.sc.seis.sod.RetryMotionVectorWaveformWorkUnit">
-		<id name="dbid" type="integer">
-			<generator class="native" />
-		</id>
-		<property name="numRetries" type="integer" />
-		<property name="lastQuery" type="timestamp" />
-		<many-to-one name="evp" class="edu.sc.seis.sod.EventVectorPair"
-			foreign-key="FK_mvwork_evp" column="evp" cascade="save-update" />
+		<many-to-one name="event"
+			class="edu.sc.seis.sod.hibernate.StatefulEvent" column="event"
+			foreign-key="FK_evp_event" unique-key="evp_event_chan_key" />
+		<many-to-one name="channelGroup"
+			class="edu.sc.seis.fissuresUtil.hibernate.ChannelGroup" column="channelGroup"
+			foreign-key="FK_evp_channelGroup" unique-key="evp_event_changroup_key" />
+		<component name="status">
+			<property name="stageInt" type="integer" />
+			<property name="standingInt" type="integer" />
+		</component>
+		<map name="cookies" table="evpCookie"> 
+    		<key column="pairId"/> 
+    		<map-key column="cookieName" type="string"/> 
+    		<element type="serializable" column="value" not-null="true"/> 
+		</map> 
+		<many-to-one name="esp"
+			class="edu.sc.seis.sod.EventStationPair" column="esp"
+			foreign-key="FK_evp_esp" />
 	</class>
 
 	<class name="edu.sc.seis.sod.hibernate.RecordSectionItem">

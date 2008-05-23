@@ -30,7 +30,7 @@ public class MockECP{
 
     public static EventChannelPair getECP(StatefulEvent ev, ChannelImpl chan){
         return new EventChannelPair( ev,
-                                    chan, 0, Status.get(Stage.PROCESSOR, Standing.IN_PROG));
+                                    chan, Status.get(Stage.PROCESSOR, Standing.IN_PROG));
     }
 
 }

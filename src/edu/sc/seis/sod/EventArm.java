@@ -2,6 +2,7 @@ package edu.sc.seis.sod;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import org.w3c.dom.NodeList;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.Origin;
+import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
@@ -111,12 +113,18 @@ public class EventArm implements Arm {
     }
 
     private void getEvents() throws Exception {
+        HashMap<EventSource, MicroSecondDate> lastTime = new HashMap<EventSource, MicroSecondDate>();
+        
         while( !Start.isArmFailure() && atLeastOneSourceHasNext()) {
             Iterator it = sources.iterator();
             while(it.hasNext()) {
                 EventSource source = (EventSource)it.next();
-                if(source.hasNext()) {
-                    handle(source.next());
+                TimeInterval wait = source.getWaitBeforeNext();
+                if ((lastTime.get(source) == null || lastTime.get(source).add(wait).before(ClockUtil.now())) && source.hasNext()) {
+                    CacheEvent[] next = source.next();
+                    logger.debug("Handling " + next.length + " events from "+source.getDescription());
+                    handle(next);
+                    lastTime.put(source, ClockUtil.now());
                     waitForProcessing();
                     if (waitForWaveformProcessing && Start.isArmFailure()) {
                         // we are supposed to wait for the waveform arm to process, but
@@ -124,20 +132,35 @@ public class EventArm implements Arm {
                         logger.warn("Arm failure, "+getName()+" exiting early");
                         return;
                     }
-                    TimeInterval wait = source.getWaitBeforeNext();
-                    logger.debug("Wait before next getEvents: "+wait);
-                    long waitMillis = (long)wait.convertTo(UnitImpl.MILLISECOND)
-                            .get_value();
-                    if(waitMillis > 0) {
-                        try {
-                            setStatus("Waiting until "
-                                    + ClockUtil.now().add(wait)
-                                    + " to check for new events");
-                            Thread.sleep(waitMillis);
-                        } catch(InterruptedException e) {}
+                }
+                if (lastTime.get(source) == null) {
+                    lastTime.put(source, ClockUtil.now());
+                }
+            }
+            it = sources.iterator();
+            TimeInterval minWait = null;
+            while(it.hasNext()) {
+                EventSource source = (EventSource)it.next();
+                if (source.hasNext() && lastTime.get(source) != null) {
+                    TimeInterval tmpWait = lastTime.get(source).add(source.getWaitBeforeNext()).subtract(ClockUtil.now());
+                    if (minWait == null || tmpWait.lessThan(minWait)) {
+                        minWait = tmpWait;
                     }
                 }
             }
+            if (minWait != null) {
+                logger.debug("Wait before next getEvents: "+minWait);
+                long waitMillis = (long)minWait.convertTo(UnitImpl.MILLISECOND).get_value();
+                if(waitMillis > 0) {
+                    try {
+                        setStatus("Waiting until "
+                                  + ClockUtil.now().add(minWait)
+                                  + " to check for new events");
+                        Thread.sleep(waitMillis);
+                    } catch(InterruptedException e) {}
+                }
+            }
+            
         }
         logger.debug("Finished processing the event arm.");
     }
@@ -159,18 +182,16 @@ public class EventArm implements Arm {
     static int MIN_WAIT_EVENTS = 10;
     
     private void waitForProcessing() throws Exception {
-        int numWaiting;
-        numWaiting = eventStatus.getNumWaiting();
+        int numWaiting = eventStatus.getNumWaiting();
         if( !Start.isArmFailure() && waitForWaveformProcessing  &&  numWaiting > MIN_WAIT_EVENTS) {
             synchronized(this) {
-                setStatus("eventArm waiting until there are less than "+MIN_WAIT_EVENTS+" events waiting to be processed.");
+                setStatus("eventArm waiting until there are less than "+MIN_WAIT_EVENTS+" events waiting to be processed. "+numWaiting+" in queue now.");
                 wait();
             }
         }
     }
 
     public void handle(CacheEvent[] events) {
-        logger.debug("Handling " + events.length + " events");
         for(int i = 0; i < events.length; i++) {
             try {
                 handle(events[i]);

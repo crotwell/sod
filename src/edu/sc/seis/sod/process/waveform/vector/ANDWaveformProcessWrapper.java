@@ -60,14 +60,12 @@ public class ANDWaveformProcessWrapper implements WaveformProcessWrapper {
         for(i = 0; b && i < channelGroup.getChannels().length; i++) {
             LocalSeismogramImpl[] copies = ForkProcess.copySeismograms(seismograms[i]);
             Channel chan = channelGroup.getChannels()[i];
-            CookieJar chansCookies = channelGroup.getEventChannelPair(chan)
-                    .getCookieJar();
             WaveformResult result = process.process(event,
                                                     chan,
                                                     original[i],
                                                     available[i],
                                                     copies,
-                                                    chansCookies);
+                                                    cookieJar);
             out[i] = result.getSeismograms();
             reason[i] = result.getReason();
             b &= result.isSuccess();

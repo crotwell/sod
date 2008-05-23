@@ -8,7 +8,9 @@ import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.LocalSeismogramWaveformWorkUnit;
+import edu.sc.seis.sod.Stage;
+import edu.sc.seis.sod.Standing;
+import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.status.StringTreeBranch;
 
@@ -38,7 +40,8 @@ public class RetryAndContinue extends ResultWrapper {
                                                    seismograms,
                                                    cookieJar);
         if(!result.isSuccess()) {
-            sodDb.retry(new LocalSeismogramWaveformWorkUnit(cookieJar.getEventChannelPair()));
+            cookieJar.getPair().update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
+                                                  Standing.RETRY));
             return wrapResult(result);
         }
         return result;

@@ -39,7 +39,6 @@ public abstract class AbstractVelocityStatus implements WaveformMonitor,
             throws SQLException, IOException {
         this.fileDir = fileDir;
         this.templateName = templateName;
-        networkArmContext = new NetworkArmContext(CookieJar.getCommonContext());
         template = loadTemplate(templateName);
         try {
             Element menuEl = TemplateFileLoader.getTemplate(getClass().getClassLoader(),
@@ -171,8 +170,6 @@ public abstract class AbstractVelocityStatus implements WaveformMonitor,
             return filename.hashCode();
         }
     }
-
-    protected NetworkArmContext networkArmContext;
 
     private String renderedMenu, fileDir, templateName, template = "";
 }

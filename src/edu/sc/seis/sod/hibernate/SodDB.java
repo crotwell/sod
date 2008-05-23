@@ -1,6 +1,5 @@
 package edu.sc.seis.sod.hibernate;
 
-import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -15,10 +14,8 @@ import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.dialect.function.SQLFunctionTemplate;
 
-import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
-import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelImpl;
@@ -27,13 +24,12 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.hibernate.AbstractHibernateDB;
+import edu.sc.seis.sod.AbstractEventPair;
 import edu.sc.seis.sod.EventChannelPair;
+import edu.sc.seis.sod.EventNetworkPair;
+import edu.sc.seis.sod.EventStationPair;
 import edu.sc.seis.sod.EventVectorPair;
-import edu.sc.seis.sod.LocalSeismogramWaveformWorkUnit;
-import edu.sc.seis.sod.MotionVectorWaveformWorkUnit;
 import edu.sc.seis.sod.QueryTime;
-import edu.sc.seis.sod.RetryMotionVectorWaveformWorkUnit;
-import edu.sc.seis.sod.RetryWaveformWorkUnit;
 import edu.sc.seis.sod.RunProperties;
 import edu.sc.seis.sod.SodConfig;
 import edu.sc.seis.sod.Stage;
@@ -45,29 +41,36 @@ import edu.sc.seis.sod.Version;
 public class SodDB extends AbstractHibernateDB {
 
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(SodDB.class);
-    
+
     static String configFile = "edu/sc/seis/sod/hibernate/sod.hbm.xml";
-    
+
     public static void configHibernate(Configuration config) {
-        logger.debug("adding to HibernateUtil   "+configFile);
+        logger.debug("adding to HibernateUtil   " + configFile);
         config.addResource(configFile);
-        if (ConnMgr.getURL().startsWith("jdbc:hsql")) {
+        if(ConnMgr.getURL().startsWith("jdbc:hsql")) {
             config.addSqlFunction("datediff",
                                   new SQLFunctionTemplate(Hibernate.LONG,
                                                           "datediff(?1, ?2, ?3)"));
-            config.addSqlFunction( "milliseconds_between", new SQLFunctionTemplate(Hibernate.LONG, "datediff('millisecond', ?1, ?2)" ) );
-            config.addSqlFunction( "seconds_between", new SQLFunctionTemplate(Hibernate.LONG, "datediff('second', ?1, ?2)" ) );
-
-        } else if (ConnMgr.getURL().startsWith("jdbc:postgresql")) {
-            config.addSqlFunction( "milliseconds_between", new SQLFunctionTemplate(Hibernate.LONG, "extract(epoch from (?2 - ?1)) * 1000" ) );
-            config.addSqlFunction( "seconds_between", new SQLFunctionTemplate(Hibernate.LONG, "extract(epoch from (?2 - ?1))" ) );
+            config.addSqlFunction("milliseconds_between",
+                                  new SQLFunctionTemplate(Hibernate.LONG,
+                                                          "datediff('millisecond', ?1, ?2)"));
+            config.addSqlFunction("seconds_between",
+                                  new SQLFunctionTemplate(Hibernate.LONG,
+                                                          "datediff('second', ?1, ?2)"));
+        } else if(ConnMgr.getURL().startsWith("jdbc:postgresql")) {
+            config.addSqlFunction("milliseconds_between",
+                                  new SQLFunctionTemplate(Hibernate.LONG,
+                                                          "extract(epoch from (?2 - ?1)) * 1000"));
+            config.addSqlFunction("seconds_between",
+                                  new SQLFunctionTemplate(Hibernate.LONG,
+                                                          "extract(epoch from (?2 - ?1))"));
         }
     }
-    
-    public SodDB() {
-    }
 
-    public EventChannelPair[] getSuspendedEventChannelPairs(String processingRule, boolean vector)
+    public SodDB() {}
+
+    public EventChannelPair[] getSuspendedEventChannelPairs(String processingRule,
+                                                            boolean vector)
             throws SQLException {
         Status eventStationInit = Status.get(Stage.EVENT_STATION_SUBSETTER,
                                              Standing.INIT);
@@ -82,10 +85,11 @@ public class SodDB extends AbstractHibernateDB {
                                 Standing.INIT,
                                 Standing.SUCCESS};
         String query;
-        if (! vector) {
+        if(!vector) {
             query = "FROM edu.sc.seis.sod.EventChannelPair e WHERE e.statusAsShort in";
         } else {
-            query = "select evp.ecp1 FROM "+EventVectorPair.class.getName()+" evp WHERE evp.ecp1.statusAsShort in";
+            query = "select evp.ecp1 FROM " + EventVectorPair.class.getName()
+                    + " evp WHERE evp.ecp1.statusAsShort in";
         }
         query += "  ( ";
         for(int i = 0; i < stages.length; i++) {
@@ -122,6 +126,65 @@ public class SodDB extends AbstractHibernateDB {
         }
     }
 
+    public void reopenSuspendedEventChannelPairs(String processingRule, boolean vector) {
+        Stage[] stages = {Stage.EVENT_STATION_SUBSETTER,
+                          Stage.EVENT_CHANNEL_SUBSETTER,
+                          Stage.REQUEST_SUBSETTER,
+                          Stage.AVAILABLE_DATA_SUBSETTER,
+                          Stage.DATA_RETRIEVAL,
+                          Stage.PROCESSOR};
+        String stageList = " ( ";
+        for(int i = 0; i < stages.length; i++) {
+            stageList += stages[i].getVal()+", ";
+        }
+        stageList = stageList.substring(0, stageList.length() - 2);
+        stageList += " ) ";
+        Standing[] standings = {Standing.IN_PROG,
+                                Standing.INIT,
+                                Standing.SUCCESS};
+        String standingList = " ( ";
+        for(int i = 0; i < standings.length; i++) {
+            standingList += standings[i].getVal()+", ";
+        }
+        standingList = standingList.substring(0, standingList.length() - 2);
+        standingList += " ) ";
+        String query;
+        Class updateClass;
+        if(!vector) {
+            updateClass = EventChannelPair.class;
+        } else {
+            updateClass = EventVectorPair.class;
+        }
+        String setStmt;
+        if(processingRule.equals(RunProperties.AT_LEAST_ONCE)) {
+            setStmt = " stageInt = "+Stage.EVENT_CHANNEL_SUBSETTER.getVal()+", standing = "+Standing.INIT.getVal();
+        } else {
+            setStmt = " standing = "+Standing.SYSTEM_FAILURE.getVal();
+        }
+        query = "UPDATE "+updateClass.getName()+" set "+setStmt
+        +" WHERE stageInt in "+stageList+" AND stangingInt in "+standingList
+        +" AND NOT (stageInt = "+Stage.PROCESSOR.getVal()+" AND standingInt = "+Standing.SUCCESS.getVal()+" ) "
+        +" AND NOT (stageInt = "+Stage.EVENT_STATION_SUBSETTER.getVal()+" AND standingInt = "+Standing.INIT.getVal()+" ) ";
+        
+        List out = getSession().createQuery(query).list();
+    }
+
+    public EventNetworkPair put(EventNetworkPair eventNetworkPair) {
+        Session session = getSession();
+        session.lock(eventNetworkPair.getNetwork(), LockMode.NONE);
+        session.lock(eventNetworkPair.getEvent(), LockMode.NONE);
+        session.saveOrUpdate(eventNetworkPair);
+        return eventNetworkPair;
+    }
+
+    public EventStationPair put(EventStationPair eventStationPair) {
+        Session session = getSession();
+        session.lock(eventStationPair.getStation(), LockMode.NONE);
+        session.lock(eventStationPair.getEvent(), LockMode.NONE);
+        session.saveOrUpdate(eventStationPair);
+        return eventStationPair;
+    }
+
     public EventChannelPair put(EventChannelPair eventChannelPair) {
         Session session = getSession();
         session.lock(eventChannelPair.getChannel(), LockMode.NONE);
@@ -129,9 +192,125 @@ public class SodDB extends AbstractHibernateDB {
         session.saveOrUpdate(eventChannelPair);
         return eventChannelPair;
     }
-    
-    public EventChannelPair getECP(CacheEvent event, ChannelImpl chan)  {
-        Query query = getSession().createQuery("from "+EventChannelPair.class.getName()+" where event = :event and channel = :channel");
+
+    /** next successful event-network to process. Returns null if no more events. */
+    public EventNetworkPair getNextENP(Standing standing) {
+        String q = "from "
+                + EventNetworkPair.class.getName()
+                + " e where e.stageInt = Stage.EVENT_CHANNEL_POPULATION and e.standingInt = :inProg";
+        Query query = getSession().createQuery(q);
+        query.setInteger("inProg", standing.getVal());
+        query.setMaxResults(1);
+        List result = query.list();
+        if(result.size() > 0) {
+            return (EventNetworkPair)result.get(0);
+        }
+        return null;
+    }
+
+    /** next successful event-station to process. Returns null if no more events. */
+    public EventStationPair getNextESP(Standing standing) {
+        String q = "from "
+                + EventStationPair.class.getName()
+                + " e where e.stageInt = Stage.EVENT_CHANNEL_POPULATION and e.standingInt = :inProg";
+        Query query = getSession().createQuery(q);
+        query.setInteger("inProg", standing.getVal());
+        query.setMaxResults(1);
+        List result = query.list();
+        if(result.size() > 0) {
+            return (EventStationPair)result.get(0);
+        }
+        return null;
+    }
+
+    /** next successful event-channel to process. Returns null if no more events. */
+    public EventChannelPair getNextECP(Standing standing) {
+        String q = "from "
+                + EventChannelPair.class.getName()
+                + " e where e.stageInt = Stage.EVENT_CHANNEL_POPULATION and e.standingInt = :inProg";
+        Query query = getSession().createQuery(q);
+        query.setInteger("inProg", standing.getVal());
+        query.setMaxResults(1);
+        List result = query.list();
+        if(result.size() > 0) {
+            return (EventChannelPair)result.get(0);
+        }
+        return null;
+    }
+
+    public EventChannelPair getNextRetryECP() {
+        String q = "from "
+                + EventChannelPair.class.getName()
+                + "  where numRetries > 0 and (standingInt = "
+                + Standing.RETRY.getVal()
+                + " or standingInt = "
+                + Standing.CORBA_FAILURE.getVal()
+                + " )  and seconds_between(:now, lastQuery) > :minDelay "
+                + " and numRetries < "+maxRetries
+                +" and (seconds_between(:now, lastQuery) > :maxDelay or seconds_between(:now, lastQuery) > power(:base, numRetries))  order by lastQuery desc";
+        Query query = getSession().createQuery(q);
+        query.setTimestamp("now", ClockUtil.now().getTimestamp());
+        query.setFloat("base", retryBase);
+        query.setFloat("minDelay", minRetryDelay);
+        query.setFloat("maxDelay", maxRetryDelay);
+        query.setMaxResults(1);
+        EventChannelPair out = (EventChannelPair)query.uniqueResult();
+        return out;
+    }
+
+    /** next successful event-vector to process. Returns null if no more events. */
+    public EventVectorPair getNextEVP(Standing standing) {
+        String q = "from "
+                + EventVectorPair.class.getName()
+                + " e where e.stageInt = Stage.EVENT_CHANNEL_POPULATION and e.standingInt = :inProg";
+        Query query = getSession().createQuery(q);
+        query.setInteger("inProg", standing.getVal());
+        query.setMaxResults(1);
+        List result = query.list();
+        if(result.size() > 0) {
+            return (EventVectorPair)result.get(0);
+        }
+        return null;
+    }
+
+    public EventVectorPair getNextRetryEVP() {
+        String q = "from "
+                + EventVectorPair.class.getName()
+                + "  where numRetries > 0 and (standingInt = "
+                + Standing.RETRY.getVal()
+                + " or standingInt = "
+                + Standing.CORBA_FAILURE.getVal()
+                + " )  and seconds_between(:now, lastQuery) > :minDelay "
+                + " and numRetries < "+maxRetries
+                +" and (seconds_between(:now, lastQuery) > :maxDelay or seconds_between(:now, lastQuery) > power(:base, numRetries))  order by lastQuery desc";
+        Query query = getSession().createQuery(q);
+        query.setTimestamp("now", ClockUtil.now().getTimestamp());
+        query.setFloat("base", retryBase);
+        query.setFloat("minDelay", minRetryDelay);
+        query.setFloat("maxDelay", maxRetryDelay);
+        query.setMaxResults(1);
+        EventVectorPair out = (EventVectorPair)query.uniqueResult();
+        return out;
+    }
+
+    public int getNumWorkUnits(Standing standing) {
+        String q = "select count(*) from " + AbstractEventPair.class.getName()
+                + " e where e.statusAsShort = :inProg and e.numRetries ==  0";
+        Query query = getSession().createQuery(q);
+        query.setShort("inProg", Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                            standing).getAsShort());
+        query.setMaxResults(1);
+        List result = query.list();
+        if(result.size() > 0) {
+            return (Integer)result.get(0);
+        }
+        return 0;
+    }
+
+    public EventChannelPair getECP(CacheEvent event, ChannelImpl chan) {
+        Query query = getSession().createQuery("from "
+                + EventChannelPair.class.getName()
+                + " where event = :event and channel = :channel");
         query.setEntity("event", event);
         query.setEntity("channel", chan);
         return ((EventChannelPair)query.uniqueResult());
@@ -163,68 +342,6 @@ public class SodDB extends AbstractHibernateDB {
         return null;
     }
 
-    public void retry(LocalSeismogramWaveformWorkUnit unit) {
-        if(unit instanceof RetryWaveformWorkUnit) {
-            retry((RetryWaveformWorkUnit)unit);
-            return;
-        }
-        RetryWaveformWorkUnit retry = new RetryWaveformWorkUnit(unit.getEcp());
-        getSession().save(retry);
-        flush();
-    }
-
-    public void retry(MotionVectorWaveformWorkUnit unit) {
-        if(unit instanceof RetryMotionVectorWaveformWorkUnit) {
-            retry((RetryMotionVectorWaveformWorkUnit)unit);
-            return;
-        }
-        RetryMotionVectorWaveformWorkUnit retry = new RetryMotionVectorWaveformWorkUnit(unit.getEvp());
-        Serializable dbid = getSession().save(retry);
-        logger.debug("retry a new unit: dbid=" + retry.getDbid() + "  " + dbid);
-        flush();
-    }
-
-    public void retry(RetryWaveformWorkUnit unit) {
-        try {
-            if(unit.getNumRetries() < maxRetries
-                    && ClockUtil.now()
-                            .subtract(new MicroSecondDate(unit.getEcp()
-                                    .getEvent()
-                                    .get_preferred_origin().origin_time))
-                            .getValue(UnitImpl.SECOND) < seismogramLatency) {
-                logger.debug("retry a retry: dbid=" + unit.getDbid());
-                unit.updateRetries();
-                getSession().update(unit);
-            } else {
-                // already retried too many times
-                getSession().delete(unit);
-            }
-        } catch(NoPreferredOrigin e) {
-            // should never happen
-            throw new RuntimeException("Event has no preferred origin: " + e, e);
-        }
-    }
-
-    public void retry(RetryMotionVectorWaveformWorkUnit unit) {
-        try {
-            if(unit.getNumRetries() < maxRetries
-                    && ClockUtil.now()
-                            .subtract(new MicroSecondDate(unit.getEvp()
-                                    .getEvent()
-                                    .get_preferred_origin().origin_time))
-                            .getValue(UnitImpl.SECOND) < seismogramLatency) {
-                unit.updateRetries();
-                getSession().update(unit);
-            } else {
-                // already retried too many times
-                getSession().delete(unit);
-            }
-        } catch(NoPreferredOrigin e) {
-            // should never happen
-            throw new RuntimeException("Event has no preferred origin: " + e, e);
-        }
-    }
-
     /*
      * 
      * RunProperties runProps = Start.getRunProps(); SERVER_RETRY_DELAY =
@@ -250,31 +367,6 @@ public class SodDB extends AbstractHibernateDB {
 
     float retryBase = 2;
 
-    public List<RetryWaveformWorkUnit> getAllRetries() {
-        String q = "from "+RetryWaveformWorkUnit.class.getName()+" r ";
-        Query query = getSession().createQuery(q);
-        return query.list();
-    }
-
-    public RetryWaveformWorkUnit[] getRetryWaveformWorkUnits(int limit) {
-        String q = "from edu.sc.seis.sod.RetryWaveformWorkUnit r where seconds_between(:now, r.lastQuery) > :minDelay and (seconds_between(:now, r.lastQuery) > :maxDelay or seconds_between(:now, r.lastQuery) > power(:base, numRetries))  order by r.lastQuery desc";
-        Query query = getSession().createQuery(q);
-        query.setTimestamp("now", ClockUtil.now().getTimestamp());
-        query.setFloat("base", retryBase);
-        query.setFloat("minDelay", minRetryDelay);
-        query.setFloat("maxDelay", maxRetryDelay);
-        query.setMaxResults(limit);
-        List<RetryWaveformWorkUnit> result = query.list();
-        if(result.size() != 0) {
-            logger.debug("Got " + result.size() + " retries");
-        }
-        RetryWaveformWorkUnit[] out = result.toArray(new RetryWaveformWorkUnit[0]);
-        for(int i = 0; i < out.length; i++) {
-            out[i].getEcp().update(Status.get(Stage.EVENT_STATION_SUBSETTER,
-                                              Standing.INIT));
-        }
-        return out;
-    }
 
     public int getNumSuccessful() {
         Query query = getSession().createQuery(COUNT + totalSuccess);
@@ -356,7 +448,8 @@ public class SodDB extends AbstractHibernateDB {
         return query.list();
     }
 
-    public List<EventChannelPair> getSuccessful(CacheEvent event, StationImpl station) {
+    public List<EventChannelPair> getSuccessful(CacheEvent event,
+                                                StationImpl station) {
         Query query = getSession().createQuery(successPerEventStation);
         query.setEntity("sta", station);
         query.setEntity("event", event);
@@ -369,7 +462,8 @@ public class SodDB extends AbstractHibernateDB {
         return query.list();
     }
 
-    public List<EventChannelPair> getFailed(CacheEvent event, StationImpl station) {
+    public List<EventChannelPair> getFailed(CacheEvent event,
+                                            StationImpl station) {
         Query query = getSession().createQuery(failedPerEventStation);
         query.setEntity("sta", station);
         query.setEntity("event", event);
@@ -453,8 +547,10 @@ public class SodDB extends AbstractHibernateDB {
     }
 
     public List<CacheEvent> getUnsuccessfulEventsForStation(StationImpl sta) {
-        String q = "from " + CacheEvent.class.getName()
-                + " e where e not in (" + "select distinct ecp.event from "
+        String q = "from "
+                + CacheEvent.class.getName()
+                + " e where e not in ("
+                + "select distinct ecp.event from "
                 + EventChannelPair.class.getName()
                 + " ecp where ecp.channel.site.station = :sta  and ecp.statusAsShort = "
                 + Status.get(Stage.PROCESSOR, Standing.SUCCESS).getAsShort()
@@ -485,26 +581,33 @@ public class SodDB extends AbstractHibernateDB {
         }
         return null;
     }
-    
-    public List<StationImpl> getStationsForRecordSection(String recordSectionId, CacheEvent event, boolean best) {
-    	Query q = getSession().createQuery("select distinct channel.site.station from "+RecordSectionItem.class.getName()
-    	+" where recordSectionId = :recsecid and event = :event and inBest = :best");
-        q.setEntity("event", event);
-        q.setString("recsecid", recordSectionId);
-        q.setBoolean("best", best);
-        return q.list();
-    }
-    
-    public List<ChannelImpl> getChannelsForRecordSection(String recordSectionId, CacheEvent event, boolean best) {
-    	Query q = getSession().createQuery("select distinct channel from "+RecordSectionItem.class.getName()
-    	+" where recordSectionId = :recsecid and event = :event and inBest = :best");
+
+    public List<StationImpl> getStationsForRecordSection(String recordSectionId,
+                                                         CacheEvent event,
+                                                         boolean best) {
+        Query q = getSession().createQuery("select distinct channel.site.station from "
+                + RecordSectionItem.class.getName()
+                + " where recordSectionId = :recsecid and event = :event and inBest = :best");
         q.setEntity("event", event);
         q.setString("recsecid", recordSectionId);
         q.setBoolean("best", best);
         return q.list();
     }
 
-    public List<RecordSectionItem> getBestForRecordSection(String recordSectionId, CacheEvent event) {
+    public List<ChannelImpl> getChannelsForRecordSection(String recordSectionId,
+                                                         CacheEvent event,
+                                                         boolean best) {
+        Query q = getSession().createQuery("select distinct channel from "
+                + RecordSectionItem.class.getName()
+                + " where recordSectionId = :recsecid and event = :event and inBest = :best");
+        q.setEntity("event", event);
+        q.setString("recsecid", recordSectionId);
+        q.setBoolean("best", best);
+        return q.list();
+    }
+
+    public List<RecordSectionItem> getBestForRecordSection(String recordSectionId,
+                                                           CacheEvent event) {
         Query q = getSession().createQuery("from "
                 + RecordSectionItem.class.getName()
                 + " where inBest = true and event = :event and recordSectionId = :recsecid");
@@ -516,7 +619,8 @@ public class SodDB extends AbstractHibernateDB {
     public boolean updateBestForRecordSection(String recordSectionId,
                                               CacheEvent event,
                                               ChannelId[] channelIds) {
-        List<RecordSectionItem> best = getBestForRecordSection(recordSectionId, event);
+        List<RecordSectionItem> best = getBestForRecordSection(recordSectionId,
+                                                               event);
         Set<ChannelId> removes = new HashSet<ChannelId>();
         Iterator<RecordSectionItem> it = best.iterator();
         while(it.hasNext()) {
@@ -546,7 +650,10 @@ public class SodDB extends AbstractHibernateDB {
         chanIt = removes.iterator();
         while(chanIt.hasNext()) {
             ChannelId c = chanIt.next();
-            logger.debug("remove: "+q+"  "+event.getDbid()+"  "+recordSectionId+" "+c.channel_code+" "+c.site_code+" "+c.station_code+" "+c.network_id.network_code);
+            logger.debug("remove: " + q + "  " + event.getDbid() + "  "
+                    + recordSectionId + " " + c.channel_code + " "
+                    + c.site_code + " " + c.station_code + " "
+                    + c.network_id.network_code);
             q.setEntity("event", event);
             q.setString("recsecid", recordSectionId);
             q.setString("chanCode", c.channel_code);
@@ -566,7 +673,10 @@ public class SodDB extends AbstractHibernateDB {
         chanIt = adders.iterator();
         while(chanIt.hasNext()) {
             ChannelId c = chanIt.next();
-            logger.debug("adds "+q+"  "+event.getDbid()+"  "+recordSectionId+" "+c.channel_code+" "+c.site_code+" "+c.station_code+" "+c.network_id.network_code);
+            logger.debug("adds " + q + "  " + event.getDbid() + "  "
+                    + recordSectionId + " " + c.channel_code + " "
+                    + c.site_code + " " + c.station_code + " "
+                    + c.network_id.network_code);
             q.setEntity("event", event);
             q.setString("recsecid", recordSectionId);
             q.setString("chanCode", c.channel_code);
@@ -581,33 +691,36 @@ public class SodDB extends AbstractHibernateDB {
         }
         return true;
     }
-    
+
     private static final String MATCH_CHANNEL_CODES = " channel.id.channel_code = :chanCode and channel.id.site_code = :siteCode and "
-        + "channel.id.station_code = :staCode and channel.site.station.networkAttr.id.network_code = :netCode";
-    
+            + "channel.id.station_code = :staCode and channel.site.station.networkAttr.id.network_code = :netCode";
+
     public List<String> recordSectionsForEvent(CacheEvent event) {
-        Query q = getSession().createQuery("select distinct recordSectionId from "+RecordSectionItem.class.getName()+" where event = :event");
+        Query q = getSession().createQuery("select distinct recordSectionId from "
+                + RecordSectionItem.class.getName() + " where event = :event");
         q.setEntity("event", event);
         return q.list();
     }
-        
+
     public void putCookie(EcpCookie cookie) {
         getSession().saveOrUpdate(cookie);
     }
-    
+
     public EcpCookie getCookie(EventChannelPair ecp, String name) {
-        Query q = getSession().createQuery("from "+EcpCookie.class.getName()+" where ecp = :ecp and name = :name");
+        Query q = getSession().createQuery("from " + EcpCookie.class.getName()
+                + " where ecp = :ecp and name = :name");
         q.setEntity("ecp", ecp);
         q.setString("name", name);
         return (EcpCookie)q.uniqueResult();
     }
-    
+
     public List<String> getCookieNames(EventChannelPair ecp) {
-        Query q = getSession().createQuery("select name from "+EcpCookie.class.getName()+" where ecp = :ecp");
+        Query q = getSession().createQuery("select name from "
+                + EcpCookie.class.getName() + " where ecp = :ecp");
         q.setEntity("ecp", ecp);
         return q.list();
     }
-    
+
     public void deleteCookie(EcpCookie cookie) {
         getSession().delete(cookie);
     }
@@ -728,7 +841,6 @@ public class SodDB extends AbstractHibernateDB {
             eventBase;
 
     private static final String COUNT = "SELECT COUNT(*) ";
-    
     static {
         String baseStatement = "FROM edu.sc.seis.sod.EventChannelPair ecp WHERE ";
         String staBase = baseStatement + " ecp.channel.site.station = :sta ";
@@ -745,21 +857,21 @@ public class SodDB extends AbstractHibernateDB {
                 + Status.get(Stage.PROCESSOR, Standing.SUCCESS).getAsShort();
         failedPerEvent = eventBase + "  AND ecp.statusAsShort in " + failReq;
         retryPerEvent = eventBase + "  AND ecp.statusAsShort in " + retryReq;
-        successPerEventStation = staEventBase + "  AND ecp.statusAsShort = " + pass;
+        successPerEventStation = staEventBase + "  AND ecp.statusAsShort = "
+                + pass;
         failedPerEventStation = staEventBase + " AND ecp.statusAsShort in "
                 + failReq;
         retryPerEventStation = staEventBase + "  AND ecp.statusAsShort in "
                 + retryReq;
         totalSuccess = baseStatement + " ecp.statusAsShort = " + pass;
     }
-    
+
     public static SodDB getSingleton() {
-        if (singleton == null) {
+        if(singleton == null) {
             singleton = new SodDB();
         }
         return singleton;
     }
-    
-    private static SodDB singleton;
 
+    private static SodDB singleton;
 }
