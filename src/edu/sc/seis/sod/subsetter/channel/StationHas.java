@@ -21,7 +21,7 @@ public class StationHas extends CompositeChannelSubsetter {
     public StringTree accept(Channel channel, ProxyNetworkAccess network)
             throws Exception {
         Iterator it = subsetters.iterator();
-        Channel[] allChans = network.retrieve_for_station(channel.my_site.my_station.get_id());
+        Channel[] allChans = network.retrieve_for_station(channel.getSite().getStation().get_id());
         while(it.hasNext()) {
             if(!atLeastOneChannelPasses((ChannelSubsetter)it.next(),
                                         allChans,

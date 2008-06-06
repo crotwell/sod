@@ -5,26 +5,21 @@
  */
 package edu.sc.seis.sod.subsetter.eventStation;
 
+import org.w3c.dom.Element;
+
 import edu.iris.Fissures.Area;
-import edu.iris.Fissures.GlobalArea;
-import edu.iris.Fissures.IfEvent.Origin;
-import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.Location;
-import edu.iris.Fissures.PointDistanceArea;
+import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
+import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.TauP.SphericalCoords;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.AreaSubsetter;
-
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 public class MidPoint extends AreaSubsetter  implements EventStationSubsetter {
 
@@ -33,11 +28,11 @@ public class MidPoint extends AreaSubsetter  implements EventStationSubsetter {
     }
 
     public StringTree accept(CacheEvent eventAccess,
-                          Station station,
+                             StationImpl station,
                           CookieJar cookieJar) throws Exception {
         Origin origin = eventAccess.get_preferred_origin();
         Location originLoc = origin.my_location;
-        Location loc = station.my_location;
+        Location loc = station.getLocation();
         double azimuth = SphericalCoords.azimuth(originLoc.latitude,
                                                  originLoc.longitude,
                                                  loc.latitude,

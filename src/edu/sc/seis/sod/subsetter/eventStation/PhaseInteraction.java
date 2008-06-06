@@ -1,22 +1,27 @@
 package edu.sc.seis.sod.subsetter.eventStation;
 
-import edu.sc.seis.TauP.*;
+import java.util.ArrayList;
+
+import org.w3c.dom.Element;
 
 import edu.iris.Fissures.BoxArea;
 import edu.iris.Fissures.GlobalArea;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfEvent.Origin;
-import edu.iris.Fissures.IfNetwork.Station;
+import edu.iris.Fissures.event.OriginImpl;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
+import edu.iris.Fissures.network.StationImpl;
+import edu.sc.seis.TauP.Arrival;
+import edu.sc.seis.TauP.SphericalCoords;
+import edu.sc.seis.TauP.TauModelException;
+import edu.sc.seis.TauP.TauP_Path;
+import edu.sc.seis.TauP.TauP_Pierce;
+import edu.sc.seis.TauP.TimeDist;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
-import java.util.ArrayList;
-import org.w3c.dom.Element;
 
 public class PhaseInteraction implements EventStationSubsetter {
 
@@ -48,7 +53,7 @@ public class PhaseInteraction implements EventStationSubsetter {
     }
 
     public StringTree accept(CacheEvent event,
-                          Station station,
+                             StationImpl station,
                           CookieJar cookieJar) throws Exception {
         if(interactionStyle.equals("PATH")) {
             return new StringTreeLeaf(this, acceptPathInteraction(event,
@@ -58,22 +63,21 @@ public class PhaseInteraction implements EventStationSubsetter {
         }
     }
 
-    public boolean acceptPathInteraction(EventAccessOperations event,
-                                         Station station) throws Exception {
-        Origin origin = null;
+    public boolean acceptPathInteraction(CacheEvent event,
+                                         StationImpl station) throws Exception {
+        OriginImpl origin = event.getOrigin();
         double originDepth;
         double eventStationDistance;
-        origin = event.get_preferred_origin();
-        originDepth = ((QuantityImpl)origin.my_location.depth).convertTo(UnitImpl.KILOMETER).value;
+        originDepth = ((QuantityImpl)origin.getLocation().depth).convertTo(UnitImpl.KILOMETER).value;
         tauPPath.setSourceDepth(originDepth);
-        eventStationDistance = SphericalCoords.distance(origin.my_location.latitude,
-                                                        origin.my_location.longitude,
-                                                        station.my_location.latitude,
-                                                        station.my_location.longitude);
-        double azimuth = SphericalCoords.azimuth(origin.my_location.latitude,
-                                                 origin.my_location.longitude,
-                                                 station.my_location.latitude,
-                                                 station.my_location.longitude);
+        eventStationDistance = SphericalCoords.distance(origin.getLocation().latitude,
+                                                        origin.getLocation().longitude,
+                                                        station.getLocation().latitude,
+                                                        station.getLocation().longitude);
+        double azimuth = SphericalCoords.azimuth(origin.getLocation().latitude,
+                                                 origin.getLocation().longitude,
+                                                 station.getLocation().latitude,
+                                                 station.getLocation().longitude);
         tauPPath.calculate(eventStationDistance);
         Arrival[] arrivals = tauPPath.getArrivals();
         Arrival[] requiredArrivals = getRequiredArrival(arrivals);
@@ -89,21 +93,21 @@ public class PhaseInteraction implements EventStationSubsetter {
         }
     }
 
-    public boolean acceptPierceInteraction(EventAccessOperations event,
-                                           Station station) throws Exception {
+    public boolean acceptPierceInteraction(CacheEvent event,
+                                           StationImpl station) throws Exception {
         double originDepth;
         double eventStationDistance;
-        Origin origin = event.get_preferred_origin();
-        originDepth = ((QuantityImpl)origin.my_location.depth).convertTo(UnitImpl.KILOMETER).value;
+        OriginImpl origin = event.getOrigin();
+        originDepth = ((QuantityImpl)origin.getLocation().depth).convertTo(UnitImpl.KILOMETER).value;
         tauPPierce.setSourceDepth(originDepth);
-        eventStationDistance = SphericalCoords.distance(origin.my_location.latitude,
-                                                        origin.my_location.longitude,
-                                                        station.my_location.latitude,
-                                                        station.my_location.longitude);
-        double azimuth = SphericalCoords.azimuth(origin.my_location.latitude,
-                                                 origin.my_location.longitude,
-                                                 station.my_location.latitude,
-                                                 station.my_location.longitude);
+        eventStationDistance = SphericalCoords.distance(origin.getLocation().latitude,
+                                                        origin.getLocation().longitude,
+                                                        station.getLocation().latitude,
+                                                        station.getLocation().longitude);
+        double azimuth = SphericalCoords.azimuth(origin.getLocation().latitude,
+                                                 origin.getLocation().longitude,
+                                                 station.getLocation().latitude,
+                                                 station.getLocation().longitude);
         tauPPierce.calculate(eventStationDistance);
         Arrival[] arrivals = tauPPierce.getArrivals();
         Arrival[] requiredArrivals = getRequiredArrival(arrivals);
@@ -261,7 +265,7 @@ public class PhaseInteraction implements EventStationSubsetter {
 
     public boolean handleAbsolutePhaseInteraction(Arrival[] requiredArrivals,
                                                   double azimuth,
-                                                  Origin origin,
+                                                  OriginImpl origin,
                                                   String type) throws Exception {
         edu.iris.Fissures.Area area = ((Absolute)phaseInteractionType).getArea();
         for(int i = 0; i < requiredArrivals.length; i++) {
@@ -290,12 +294,12 @@ public class PhaseInteraction implements EventStationSubsetter {
                 if(minDepth.lessThanEqual(timeDistDepth)
                         && maxDepth.greaterThanEqual(timeDistDepth)) {
                     if(area == null || area instanceof GlobalArea) return true;
-                    double tLat = SphericalCoords.latFor(origin.my_location.latitude,
-                                                         origin.my_location.longitude,
+                    double tLat = SphericalCoords.latFor(origin.getLocation().latitude,
+                                                         origin.getLocation().longitude,
                                                          timeDist[counter].depth,
                                                          azimuth);
-                    double tLon = SphericalCoords.lonFor(origin.my_location.latitude,
-                                                         origin.my_location.longitude,
+                    double tLon = SphericalCoords.lonFor(origin.getLocation().latitude,
+                                                         origin.getLocation().longitude,
                                                          timeDist[counter].depth,
                                                          azimuth);
                     if(area instanceof BoxArea) {

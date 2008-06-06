@@ -5,19 +5,21 @@
  */
 package edu.sc.seis.sod.process.waveform;
 
-import edu.iris.Fissures.IfNetwork.Channel;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.bag.StreamPump;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.StringTreeLeaf;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.PrintWriter;
-import org.w3c.dom.Element;
-import java.io.IOException;
 
 public class LegacyExecute implements WaveformProcess {
 
@@ -49,7 +51,7 @@ public class LegacyExecute implements WaveformProcess {
      * Removes the mean from the seismograms.
      */
     public WaveformResult process(CacheEvent event,
-                                  Channel channel,
+                                  ChannelImpl channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,

@@ -28,7 +28,7 @@ public class StationName implements StationSubsetter {
     }
 
     public StringTree accept(Station e, NetworkAccess network) {
-        if(e.name.equals(SodUtil.getNestedText(config))) return new Pass(this);
+        if(e.getName().equals(SodUtil.getNestedText(config))) return new Pass(this);
         else return new Fail(this);
     }
 

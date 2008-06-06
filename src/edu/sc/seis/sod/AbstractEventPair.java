@@ -26,7 +26,12 @@ public abstract class AbstractEventPair extends WaveformWorkUnit {
     }
 
     public void update(Throwable e, Status status) {
-        GlobalExceptionHandler.handle(toString(), e);
+        String s = "";
+        try {
+            s=toString();
+        } catch(Throwable t) {
+        }
+        GlobalExceptionHandler.handle(s, e);
         update(status);
     }
 

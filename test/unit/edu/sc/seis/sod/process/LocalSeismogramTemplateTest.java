@@ -17,11 +17,13 @@ import junit.framework.TestCase;
 import org.apache.log4j.BasicConfigurator;
 
 import edu.iris.Fissures.network.ChannelImpl;
+import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.mockFissures.IfEvent.MockEventAccessOperations;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannel;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.EventChannelPair;
+import edu.sc.seis.sod.EventStationPair;
 import edu.sc.seis.sod.Stage;
 import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Status;
@@ -45,10 +47,13 @@ public class LocalSeismogramTemplateTest extends TestCase {
                                           3);
         EventChannelPair ecp = new EventChannelPair(event,
                                                     cdb,
-                                                    11,
                                                     Status.get(Stage.DATA_RETRIEVAL,
-                                                               Standing.SUCCESS));
-        CookieJar cookieJar = new CookieJar(ecp);
+                                                               Standing.SUCCESS),
+                                                    new EventStationPair(event, 
+                                                                         (StationImpl)cdb.getSite().getStation(), 
+                                                                         Status.get(Stage.EVENT_CHANNEL_POPULATION, 
+                                                                                    Standing.SUCCESS)));
+        CookieJar cookieJar = ecp.getCookieJar();
         BufferedReader in = new BufferedReader(new InputStreamReader(LocalSeismogramTemplate.class.getClassLoader()
                 .getResourceAsStream("edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml")));
         // BufferedReader in = new BufferedReader( new

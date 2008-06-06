@@ -16,7 +16,7 @@ public class StationDepthRange extends edu.sc.seis.sod.subsetter.DepthRange
     }
 
     public StringTree accept(Station station, NetworkAccess network) {
-        QuantityImpl actualDepth = (QuantityImpl)station.my_location.depth;
+        QuantityImpl actualDepth = (QuantityImpl)station.getLocation().depth;
         if(actualDepth.greaterThanEqual(getMinDepth())
                 && actualDepth.lessThanEqual(getMaxDepth())) {
             return new Pass(this);

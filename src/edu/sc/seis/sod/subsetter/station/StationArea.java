@@ -16,7 +16,7 @@ public class StationArea extends AreaSubsetter implements StationSubsetter, SodE
     }
 
     public StringTree accept(Station e, NetworkAccess network) {
-        return new StringTreeLeaf(this, super.accept(e.my_location));
+        return new StringTreeLeaf(this, super.accept(e.getLocation()));
     }
 
 }

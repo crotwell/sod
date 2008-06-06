@@ -7,12 +7,14 @@ import java.io.PipedWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Properties;
+
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.w3c.dom.Element;
-import edu.iris.Fissures.IfNetwork.Channel;
+
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.database.util.SQLLoader;
@@ -68,7 +70,7 @@ public class SacExecute implements WaveformProcess {
      * 
      */
     public WaveformResult process(CacheEvent event,
-                                  Channel channel,
+                                  ChannelImpl channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,

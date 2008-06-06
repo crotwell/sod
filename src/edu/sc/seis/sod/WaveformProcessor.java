@@ -16,8 +16,9 @@ public class WaveformProcessor extends Thread {
                     || SodDB.getSingleton().getNumWorkUnits(Standing.IN_PROG) != 0 )) {
                     logger.debug("Processor waiting for work unit to show up");
                     try {
-                        synchronized(this) {
-                            wait(100000);
+                        // sleep, but wake up if waveformArm does notifyAll()
+                        synchronized(Start.getWaveformArm()) {
+                            Start.getWaveformArm().wait(100000);
                         }
                     } catch(InterruptedException e) {}
                     next = getNext(Standing.INIT);
@@ -43,7 +44,7 @@ public class WaveformProcessor extends Thread {
     protected synchronized AbstractEventPair getNext(Standing standing) {
         AbstractEventPair out = null;
         double retryRandom = Math.random();
-        if(seisArm != null) {
+        if(Start.getWaveformArm().getLocalSeismogramArm() != null) {
             EventChannelPair ecp = null;
             if (retryRandom < Start.getWaveformArm().getRetryPercentage()) {
                 // try a retry
@@ -57,6 +58,7 @@ public class WaveformProcessor extends Thread {
                 ecp.update(Status.get(Stage.EVENT_CHANNEL_SUBSETTER,
                                       Standing.INIT));
                 SodDB.commit();
+                SodDB.getSession().refresh(ecp);
                 return ecp;
             }
         } else {
@@ -73,6 +75,7 @@ public class WaveformProcessor extends Thread {
                 evp.update(Status.get(Stage.EVENT_CHANNEL_SUBSETTER,
                                       Standing.INIT));
                 SodDB.commit();
+                SodDB.getSession().refresh(evp);
                 return evp;
             }
         }
@@ -81,6 +84,7 @@ public class WaveformProcessor extends Thread {
         if(esp != null) {
             esp.update(Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.INIT));
             SodDB.commit();
+            SodDB.getSession().refresh(esp);
             return esp;
         }
         // no e-station try e-network
@@ -88,16 +92,14 @@ public class WaveformProcessor extends Thread {
         if(enp != null) {
             enp.update(Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.INIT));
             SodDB.commit();
+            // reattach to new session
+            SodDB.getSession().refresh(enp);
             return enp;
         }
         return null;
     }
 
     SodDB soddb = SodDB.getSingleton();
-
-    LocalSeismogramArm seisArm = Start.getWaveformArm().getLocalSeismogramArm();
-
-    MotionVectorArm vectorArm = Start.getWaveformArm().getMotionVectorArm();
 
     public static int getProcessorsWorking() {
         return processorsWorking;

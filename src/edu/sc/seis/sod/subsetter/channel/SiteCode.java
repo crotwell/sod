@@ -24,7 +24,7 @@ public class SiteCode implements ChannelSubsetter {
     }
 
     public StringTree accept(Channel chan, ProxyNetworkAccess network) {
-        return new StringTreeLeaf(this, chan.my_site.get_id().site_code.equals(code));
+        return new StringTreeLeaf(this, chan.getSite().get_id().site_code.equals(code));
     }
 
     private String code;

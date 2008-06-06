@@ -1,10 +1,14 @@
 package edu.sc.seis.sod;
 
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
+import edu.iris.Fissures.IfNetwork.NetworkNotFound;
+import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
+import edu.sc.seis.fissuresUtil.cache.VestingNetworkDC;
+import edu.sc.seis.fissuresUtil.cache.VestingNetworkFinder;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.StatefulEvent;
@@ -17,14 +21,14 @@ public class EventNetworkPair extends AbstractEventPair {
 
     public EventNetworkPair(StatefulEvent event, CacheNetworkAccess net) {
         super(event);
-        setNetwork(net);
+        setNetworkAccess(net);
     }
 
     public EventNetworkPair(StatefulEvent event,
                             CacheNetworkAccess net,
                             Status status) {
         super(event, status);
-        setNetwork(net);
+        setNetworkAccess(net);
     }
 
     public void run() {
@@ -32,7 +36,8 @@ public class EventNetworkPair extends AbstractEventPair {
         // overlap event time
         try {
             EventEffectiveTimeOverlap overlap = new EventEffectiveTimeOverlap(getEvent());
-            StationImpl[] stations = Start.getNetworkArm().getSuccessfulStations(getNetwork());
+            StationImpl[] stations = Start.getNetworkArm()
+                    .getSuccessfulStations(getNetworkAccess());
             for(int i = 0; i < stations.length; i++) {
                 if(!overlap.overlaps(stations[i])) {
                     failLogger.info(StationIdUtil.toString(stations[i].get_id())
@@ -45,15 +50,19 @@ public class EventNetworkPair extends AbstractEventPair {
                     sodDb.put(p);
                 }
             }
+            update(Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.SUCCESS));
         } catch(NoPreferredOrigin e) {
             // should never happen
             GlobalExceptionHandler.handle(e);
             update(Status.get(Stage.EVENT_CHANNEL_POPULATION,
                               Standing.SYSTEM_FAILURE));
-            return;
+            failLogger.warn(this, e);
+        } catch(NetworkNotFound e) {
+            // can't get network access, so set it to retry
+            update(Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                              Standing.SYSTEM_FAILURE));
+            failLogger.warn(this, e);
         }
-        update(Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                          Standing.SUCCESS));
         SodDB.commit();
     }
 
@@ -87,22 +96,36 @@ public class EventNetworkPair extends AbstractEventPair {
 
     public String toString() {
         return "EventNetworkPair: (" + getPairId() + ") " + getEvent() + " "
-                + NetworkIdUtil.toString(getNetwork().get_attributes()) + " "
-                + getStatus();
+                + NetworkIdUtil.toString(getNetwork()) + " " + getStatus();
     }
 
     public int getNetworkDbId() {
         return network.get_attributes().getDbid();
     }
 
-    public CacheNetworkAccess getNetwork() {
+    public CacheNetworkAccess getNetworkAccess() throws NetworkNotFound {
+        System.out.println("getNetworkAccess("+getNetwork().getSourceServerDNS()+", "+
+                                                          getNetwork().getSourceServerName());
+        if (network == null) {
+            network = CacheNetworkAccess.create(getNetwork(), CommonAccess.getNameService());
+        }
         return network;
     }
 
-    /** for use by hibernate */
-    protected void setNetwork(CacheNetworkAccess net) {
+    public NetworkAttrImpl getNetwork() {
+        return networkAttr;
+    }
+
+    protected void setNetworkAccess(CacheNetworkAccess net) {
         this.network = net;
+        setNetwork(net.get_attributes());
+    }
+    /** for use by hibernate */
+    protected void setNetwork(NetworkAttrImpl attr) {
+        this.networkAttr = attr;
     }
 
     private CacheNetworkAccess network;
+    
+    private NetworkAttrImpl networkAttr;
 }

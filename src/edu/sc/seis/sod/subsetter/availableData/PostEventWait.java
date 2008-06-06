@@ -1,10 +1,11 @@
 package edu.sc.seis.sod.subsetter.availableData;
 
 import org.w3c.dom.Element;
-import edu.iris.Fissures.IfNetwork.Channel;
+
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
@@ -21,7 +22,7 @@ public class PostEventWait implements AvailableDataSubsetter {
     }
 
     public StringTree accept(CacheEvent ev,
-                          Channel chan,
+                             ChannelImpl chan,
                           RequestFilter[] orig,
                           RequestFilter[] avail,
                           CookieJar cookies) {

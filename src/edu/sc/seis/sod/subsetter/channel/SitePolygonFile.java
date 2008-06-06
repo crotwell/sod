@@ -23,6 +23,6 @@ public class SitePolygonFile implements ChannelSubsetter {
 
     public StringTree accept(Channel channel, ProxyNetworkAccess network)
             throws Exception {
-        return new StringTreeLeaf(this, AreaUtil.inArea(locs, channel.my_site.my_location));
+        return new StringTreeLeaf(this, AreaUtil.inArea(locs, channel.getSite().getLocation()));
     }
 }

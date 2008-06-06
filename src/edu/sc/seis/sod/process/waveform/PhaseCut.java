@@ -2,12 +2,14 @@ package edu.sc.seis.sod.process.waveform;
 
 import java.util.LinkedList;
 import java.util.List;
+
 import org.apache.log4j.Category;
 import org.w3c.dom.Element;
+
 import edu.iris.Fissures.FissuresException;
-import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.bag.Cut;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
@@ -20,7 +22,7 @@ import edu.sc.seis.sod.subsetter.requestGenerator.PhaseRequest;
  * Cuts seismograms relative to phases. Created: Wed Nov 6 17:58:10 2002
  * 
  * @author <a href="mailto:crotwell@seis.sc.edu">Philip Crotwell </a>
- * @version $Id: PhaseCut.java 19405 2007-11-16 21:31:29Z crotwell $
+ * @version $Id: PhaseCut.java 19806 2008-06-06 19:54:52Z crotwell $
  */
 public class PhaseCut implements WaveformProcess {
 
@@ -34,7 +36,7 @@ public class PhaseCut implements WaveformProcess {
      * Cuts the seismograms based on phase arrivals.
      */
     public WaveformResult process(CacheEvent event,
-                                  Channel channel,
+                                  ChannelImpl channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,

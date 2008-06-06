@@ -1,9 +1,13 @@
 package edu.sc.seis.sod.subsetter.eventStation;
 
+import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfEvent.Origin;
-import edu.iris.Fissures.IfNetwork.Station;
+import edu.iris.Fissures.event.OriginImpl;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
+import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.TauP.SphericalCoords;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
@@ -11,8 +15,6 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.DistanceRangeSubsetter;
-import org.apache.log4j.Logger;
-import org.w3c.dom.Element;
 
 public class DistanceRange extends DistanceRangeSubsetter implements
         EventStationSubsetter {
@@ -22,14 +24,13 @@ public class DistanceRange extends DistanceRangeSubsetter implements
     }
 
     public StringTree accept(CacheEvent eventAccess,
-                          Station station,
+                          StationImpl station,
                           CookieJar cookieJar) throws Exception {
-        Origin origin = null;
-        origin = eventAccess.get_preferred_origin();
-        double actualDistance = SphericalCoords.distance(origin.my_location.latitude,
-                                                         origin.my_location.longitude,
-                                                         station.my_location.latitude,
-                                                         station.my_location.longitude);
+        OriginImpl origin =  eventAccess.getOrigin();
+        double actualDistance = SphericalCoords.distance(origin.getLocation().latitude,
+                                                         origin.getLocation().longitude,
+                                                         station.getLocation().latitude,
+                                                         station.getLocation().longitude);
         QuantityImpl dist = new QuantityImpl(actualDistance, UnitImpl.DEGREE);
         if(dist.greaterThanEqual(getMin()) && dist.lessThanEqual(getMax())) {
             return new StringTreeLeaf(this, true, "DistanceRange("+getMin()+", "+getMax()+")");

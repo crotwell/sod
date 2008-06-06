@@ -34,7 +34,7 @@ public class StatefulEventDB {
     }
     
     public List getAll(Status status) {
-        String q = "from "+StatefulEvent.class.getName()+" e where e.statusAsShort = :status ";
+        String q = "from "+StatefulEvent.class.getName()+" e where e.stageInt = "+status.getStageInt()+" and e.standingInt = "+status.getStandingInt();
         Query query = trans.getSession().createQuery(q);
 
         query.setShort("status", status.getAsShort());
@@ -51,7 +51,7 @@ public class StatefulEventDB {
      
     public List getEventInTimeRange(MicroSecondTimeRange range, Status status) {
         String q = "from "+StatefulEvent.class.getName()+" e where ";
-        if (status != null) { q += "e.statusAsShort = :status AND ";}
+        if (status != null) { q += " e.stageInt = "+status.getStageInt()+" and e.standingInt = "+status.getStandingInt()+" AND ";}
         q += " e.preferred.originTime.time between :minTime AND :maxTime  ";
         Query query = trans.getSession().createQuery(q);
 
@@ -87,14 +87,13 @@ public class StatefulEventDB {
     }
     
     public int getNumWaiting() {
+        Status status = Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.INIT);
         String q = "select count(*) from "
                 + StatefulEvent.class.getName()
-                + " e where e.statusAsShort = :inProg";
+                + " e where e.status.stageInt = "+status.getStageInt()
+                + " and e.status.standingInt = "+status.getStandingInt();
         Session session = trans.getSession();
         Query query = session.createQuery(q);
-        query.setShort("inProg", 
-                       Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.INIT)
-                       .getAsShort());
         List result = query.list();
         if(result.size() > 0) {
             return ((Long)result.get(0)).intValue();
@@ -104,14 +103,12 @@ public class StatefulEventDB {
     
     /** next successful event to process. Returns null if no more events. */
     public StatefulEvent getNext(Standing standing) {
+        Status status = Status.get(Stage.EVENT_CHANNEL_POPULATION, standing);
         String q = "from "
                 + StatefulEvent.class.getName()
-                + " e where e.statusAsShort = :inProg";
+                + " e where e.status.stageInt = "+status.getStageInt()+" and e.status.standingInt = "+status.getStandingInt();
         Session session = trans.getSession();
         Query query = session.createQuery(q);
-        query.setShort("inProg", 
-                       Status.get(Stage.EVENT_CHANNEL_POPULATION, standing)
-                       .getAsShort());
         List result = query.list();
         if(result.size() > 0) {
             return (StatefulEvent)result.get(0);

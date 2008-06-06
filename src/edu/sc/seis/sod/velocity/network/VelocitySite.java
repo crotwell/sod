@@ -7,6 +7,7 @@ import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.network.SiteIdUtil;
 import edu.iris.Fissures.network.SiteImpl;
+import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
@@ -17,10 +18,10 @@ public class VelocitySite extends Site {
 
     public VelocitySite(SiteImpl s) {
         this.site = s;
-        my_location = s.my_location;
-        effective_time = s.effective_time;
-        my_station = s.my_station;
-        comment = s.comment;
+        my_location = s.getLocation();
+        effective_time = s.getEffectiveTime();
+        my_station = s.getStation();
+        comment = s.getComment();
     }
 
     public SiteId get_id() {
@@ -41,7 +42,7 @@ public class VelocitySite extends Site {
     }
 
     public VelocityStation getStation() {
-        return new VelocityStation(site.getStation());
+        return new VelocityStation((StationImpl)site.getStation());
     }
 
     public VelocityNetwork getNet() {
@@ -85,30 +86,30 @@ public class VelocitySite extends Site {
     }
 
     public String getLatitude() {
-        return VelocityStation.df.format(site.my_location.latitude);
+        return VelocityStation.df.format(site.getLocation().latitude);
     }
 
     public String getLongitude() {
-        return VelocityStation.df.format(site.my_location.longitude);
+        return VelocityStation.df.format(site.getLocation().longitude);
     }
 
     public String getOrientedLatitude() {
-        if(site.my_location.latitude < 0) {
-            return VelocityStation.df.format(-site.my_location.latitude) + " S";
+        if(site.getLocation().latitude < 0) {
+            return VelocityStation.df.format(-site.getLocation().latitude) + " S";
         }
-        return VelocityStation.df.format(site.my_location.latitude) + " N";
+        return VelocityStation.df.format(site.getLocation().latitude) + " N";
     }
 
     public String getOrientedLongitude() {
-        if(site.my_location.longitude < 0) {
-            return VelocityStation.df.format(-site.my_location.longitude)
+        if(site.getLocation().longitude < 0) {
+            return VelocityStation.df.format(-site.getLocation().longitude)
                     + " W";
         }
-        return VelocityStation.df.format(site.my_location.longitude) + " E";
+        return VelocityStation.df.format(site.getLocation().longitude) + " E";
     }
 
     public String getDepth() {
-        return FissuresFormatter.formatDepth(QuantityImpl.createQuantityImpl(site.my_location.depth));
+        return FissuresFormatter.formatDepth(QuantityImpl.createQuantityImpl(site.getLocation().depth));
     }
 
     public String toString() {

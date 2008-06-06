@@ -6,8 +6,9 @@
 package edu.sc.seis.sod.process.waveform;
 
 import org.w3c.dom.Element;
-import edu.iris.Fissures.IfNetwork.Channel;
+
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
@@ -22,7 +23,7 @@ public class AlwaysSuccess extends ResultWrapper {
     }
 
     public WaveformResult process(CacheEvent event,
-                                  Channel channel,
+                                  ChannelImpl channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,

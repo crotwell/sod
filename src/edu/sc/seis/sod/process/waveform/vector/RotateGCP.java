@@ -87,7 +87,7 @@ public class RotateGCP implements WaveformVectorProcess {
                                                                            + seismograms[yIndex][i].getNumPoints()));
             }
         }
-        Location staLoc = horizontal[0].my_site.my_location;
+        Location staLoc = horizontal[0].getSite().getLocation();
         Location eventLoc = EventUtil.extractOrigin(event).my_location;
         LocalSeismogramImpl[][] out = new LocalSeismogramImpl[seismograms.length][];
         for(int i = 0; i < out.length; i++) {
@@ -96,9 +96,9 @@ public class RotateGCP implements WaveformVectorProcess {
         }
         for(int i = 0; i < seismograms[xIndex].length; i++) {
             LocalSeismogramImpl[] rot = Rotate.rotateGCP(seismograms[xIndex][i],
-                                                         horizontal[0].an_orientation,
+                                                         horizontal[0].getOrientation(),
                                                          seismograms[yIndex][i],
-                                                         horizontal[1].an_orientation,
+                                                         horizontal[1].getOrientation(),
                                                          staLoc,
                                                          eventLoc,
                                                          transverseOrientationCode,

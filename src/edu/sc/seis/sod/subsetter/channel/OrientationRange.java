@@ -18,7 +18,7 @@ public class OrientationRange implements ChannelSubsetter {
     }
 
     public StringTree accept(Channel e, ProxyNetworkAccess network) throws Exception {
-        Orientation ori = e.an_orientation;
+        Orientation ori = e.getOrientation();
         double actualDistance = SphericalCoords.distance(ori.dip,
                                                          ori.azimuth,
                                                          dip,

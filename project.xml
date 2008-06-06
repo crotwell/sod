@@ -114,6 +114,11 @@
            <version>unknown_USC1</version>
         </dependency>
         <dependency>
+           <artifactId>ehcache</artifactId>
+           <groupId>ehcache</groupId>
+           <version>1.4.1</version>
+        </dependency>
+        <dependency>
            <artifactId>dom4j</artifactId>
            <groupId>dom4j</groupId>
            <version>1.6.1</version>
@@ -166,7 +171,7 @@
         </dependency>
         <dependency>
             <id>fissuresIDL</id>
-            <version>1.0</version>
+            <version>1.0_getset</version>
             <url>http://www.seis.sc.edu/software/fissuresIDL</url>
         </dependency>
         <dependency>

@@ -18,7 +18,7 @@ public class StationBoxArea implements StationSubsetter {
 
     public StringTree accept(Station station, NetworkAccess network) {
         return new StringTreeLeaf(this,
-                                  AreaUtil.inArea(ba, station.my_location));
+                                  AreaUtil.inArea(ba, station.getLocation()));
     }
 
     private BoxArea ba;

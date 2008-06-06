@@ -1,7 +1,9 @@
 package edu.sc.seis.sod.subsetter.eventStation;
 
+import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfEvent.Origin;
-import edu.iris.Fissures.IfNetwork.Station;
+import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
 import edu.sc.seis.fissuresUtil.bag.TauPUtil;
@@ -11,7 +13,6 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
-import org.w3c.dom.Element;
 
 /**
  * sample xml
@@ -45,7 +46,7 @@ public class PhaseExists implements EventStationSubsetter {
     }
 
     public StringTree accept(CacheEvent event,
-                          Station station,
+                             StationImpl station,
                           CookieJar cookieJar) throws Exception {
         Origin origin = event.get_preferred_origin();
         Arrival[] arrivals = tauPTime.calcTravelTimes(station,

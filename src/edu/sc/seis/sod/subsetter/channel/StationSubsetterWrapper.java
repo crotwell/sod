@@ -16,7 +16,7 @@ public class StationSubsetterWrapper implements ChannelSubsetter {
 
     public StringTree accept(Channel channel, ProxyNetworkAccess network)
             throws Exception {
-        return staSub.accept(channel.my_site.my_station, network);
+        return staSub.accept(channel.getSite().getStation(), network);
     }
     
     StationSubsetter staSub;

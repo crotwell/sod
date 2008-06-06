@@ -1,12 +1,13 @@
 package edu.sc.seis.sod.subsetter.eventStation;
 
-import edu.iris.Fissures.IfNetwork.Station;
+import org.w3c.dom.Element;
+
+import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
-import org.w3c.dom.Element;
 
 public final class EventStationXOR extends EventStationLogicalSubsetter
         implements EventStationSubsetter {
@@ -16,7 +17,7 @@ public final class EventStationXOR extends EventStationLogicalSubsetter
     }
 
     public StringTree accept(CacheEvent event,
-                          Station station,
+                             StationImpl station,
                           CookieJar cookieJar) throws Exception {
         EventStationSubsetter filterA = (EventStationSubsetter)filterList.get(0);
         EventStationSubsetter filterB = (EventStationSubsetter)filterList.get(1);

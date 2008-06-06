@@ -1,6 +1,8 @@
 package edu.sc.seis.sod.subsetter.eventChannel;
 
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.network.ChannelImpl;
+import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
@@ -35,9 +37,9 @@ public class EmbeddedEventStation  implements EventChannelSubsetter{
         }
     }
 
-    public StringTree accept(CacheEvent o, Channel channel, CookieJar cookieJar)
+    public StringTree accept(CacheEvent o, ChannelImpl channel, CookieJar cookieJar)
         throws Exception {
-        StringTree wrapped = eventStationSubsetter.accept(o, channel.my_site.my_station, cookieJar);
+        StringTree wrapped = eventStationSubsetter.accept(o, (StationImpl)channel.getSite().getStation(), cookieJar);
         return new StringTreeBranch(this, wrapped.isSuccess(), wrapped);
     }
 

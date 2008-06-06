@@ -50,8 +50,8 @@ public class ChannelsInSiteTemplate extends NetworkInfoTemplate{
     }
 
     public void change(Channel channel, Status status){
-        logger.debug("change(channel, status): " + site.my_station.my_network.get_code() + "."
-                         + site.my_station.my_network.get_code() + "." + site.my_station.get_code()
+        logger.debug("change(channel, status): " + site.getStation().getNetworkAttr().get_code() + "."
+                         + site.getStation().getNetworkAttr().get_code() + "." + site.getStation().get_code()
                          + "." + site.get_code() + "." + channel.get_code() + ", " + status.toString());
         Iterator it = channelListeners.iterator();
         while (it.hasNext()){

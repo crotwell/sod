@@ -2,11 +2,14 @@ package edu.sc.seis.sod.process.waveform;
 
 import java.io.File;
 import java.util.regex.Pattern;
+
 import org.apache.velocity.VelocityContext;
 import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
@@ -39,7 +42,7 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
     }
 
     public void removeExisting(EventAccessOperations event,
-                               Channel channel,
+                               ChannelImpl channel,
                                LocalSeismogramImpl representativeSeismogram) {
         for(int i = 0; true; i++) {
             File cur = new File(generate(event, channel, representativeSeismogram, i));
@@ -51,7 +54,7 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
     }
 
     public String generate(EventAccessOperations event,
-                           Channel channel,
+                           ChannelImpl channel,
                            LocalSeismogramImpl representativeSeismogram,
                            int index) {
         VelocityContext ctx = ContextWrangler.createContext(event);
@@ -65,7 +68,7 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
     }
 
     public WaveformResult process(CacheEvent event,
-                                  Channel channel,
+                                  ChannelImpl channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
@@ -97,7 +100,7 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
 
     public abstract void write(String loc,
                                LocalSeismogramImpl seis,
-                               Channel chan,
+                               ChannelImpl chan,
                                EventAccessOperations ev) throws Exception;
 
     private SimpleVelocitizer velocitizer = new SimpleVelocitizer();

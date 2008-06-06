@@ -4,11 +4,15 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
 import junit.framework.TestCase;
+
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.varia.NullAppender;
+
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.iris.dmc.seedcodec.CodecException;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
@@ -35,7 +39,7 @@ public class SacWriterTest extends TestCase {
                                                          seis.getName() + ".sac"},
                                                        {"/${event.catalog}",
                                                         "/" + EventUtil.extractOrigin(ev).catalog},
-                                                       {"${channel.name}", chan.name}};
+                                                       {"${channel.name}", chan.getName()}};
         for(int i = 0; i < templateAndResult.length; i++) {
             assertEquals(FissuresFormatter.filize(templateAndResult[i][1]),
                          new SacWriter("", templateAndResult[i][0]).generate(ev, chan, seis, 0));
@@ -91,7 +95,7 @@ public class SacWriterTest extends TestCase {
 
     EventAccessOperations ev = MockEventAccessOperations.createEvent();
 
-    Channel chan = MockChannel.createChannel();
+    ChannelImpl chan = MockChannel.createChannel();
 
     LocalSeismogramImpl seis = SimplePlotUtil.createSpike();
 

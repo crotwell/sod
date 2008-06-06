@@ -1,8 +1,9 @@
 package edu.sc.seis.sod.subsetter.availableData;
 
 import org.w3c.dom.Element;
-import edu.iris.Fissures.IfNetwork.Channel;
+
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.CookieJar;
@@ -24,7 +25,7 @@ public class PassAvailableData implements AvailableDataSubsetter,
     public PassAvailableData(Element config) {}
 
     public StringTree accept(CacheEvent event,
-                             Channel channel,
+                             ChannelImpl channel,
                              RequestFilter[] original,
                              RequestFilter[] available,
                              CookieJar cookieJar) {

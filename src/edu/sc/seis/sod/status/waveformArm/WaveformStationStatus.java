@@ -62,7 +62,7 @@ public class WaveformStationStatus extends AbstractVelocityStatus implements Wav
     public void update(EventVectorPair ecp) {
         Status status = ecp.getStatus();
         if (status.getStage().equals(Stage.PROCESSOR) && status.getStanding().equals(Standing.SUCCESS)) {
-            StationImpl station = ecp.getChannelGroup().getChannels()[0].getSite().getStation();
+            StationImpl station = (StationImpl)ecp.getChannelGroup().getChannels()[0].getSite().getStation();
             doUpdate(station);
         }
     }
@@ -73,7 +73,7 @@ public class WaveformStationStatus extends AbstractVelocityStatus implements Wav
                 VelocityContext context = new VelocityContext(new StationWaveformContext((StationImpl)station));
                 context.put("station", station);
                 context.put("networkid", station.get_id().network_id);
-                context.put("network", station.my_network);
+                context.put("network", station.getNetworkAttr());
                 scheduleOutput("waveformStations/"+NetworkIdUtil.toStringNoDates(station.get_id().network_id)+"/"+StationIdUtil.toStringNoDates(station.get_id())+".html",
                                context);
             } catch (SQLException e) {

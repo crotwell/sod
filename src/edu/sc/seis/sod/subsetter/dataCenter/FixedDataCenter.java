@@ -1,8 +1,9 @@
 package edu.sc.seis.sod.subsetter.dataCenter;
 
 import org.w3c.dom.Element;
-import edu.iris.Fissures.IfNetwork.Channel;
+
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.cache.BulletproofVestFactory;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
@@ -35,7 +36,7 @@ public class FixedDataCenter extends AbstractSource implements SodElement,
     }
 
     public ProxySeismogramDC getSeismogramDC(CacheEvent event,
-                                             Channel channel,
+                                             ChannelImpl channel,
                                              RequestFilter[] infilters,
                                              CookieJar cookieJar)
             throws Exception {

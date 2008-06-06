@@ -95,7 +95,7 @@ public class SiteFormatter extends Template implements SiteTemplate {
         else if (tag.equals("endTime")){
             return new SiteTemplate(){
                 public String getResult(Site site){
-                    return btt.getResult(site.effective_time.end_time);
+                    return btt.getResult(site.getEndTime());
                 }
                 TimeTemplate btt = new TimeTemplate(el, false);
             };
@@ -118,35 +118,35 @@ public class SiteFormatter extends Template implements SiteTemplate {
         else if (tag.equals("comment")){
             return new SiteTemplate(){
                 public String getResult(Site site){
-                    return site.comment;
+                    return site.getComment();
                 }
             };
         }
         else if (tag.equals("depth")){
             return new SiteTemplate(){
                 public String getResult(Site site){
-                    return Double.toString(site.my_location.depth.value);
+                    return Double.toString(site.getLocation().depth.value);
                 }
             };
         }
         else if (tag.equals("elevation")){
             return new SiteTemplate(){
                 public String getResult(Site site){
-                    return Double.toString(site.my_location.elevation.value);
+                    return Double.toString(site.getLocation().elevation.value);
                 }
             };
         }
         else if (tag.equals("lat")){
             return new SiteTemplate(){
                 public String getResult(Site site){
-                    return Float.toString(site.my_location.latitude);
+                    return Float.toString(site.getLocation().latitude);
                 }
             };
         }
         else if (tag.equals("lon")){
             return new SiteTemplate(){
                 public String getResult(Site site){
-                    return Float.toString(site.my_location.longitude);
+                    return Float.toString(site.getLocation().longitude);
                 }
             };
         }

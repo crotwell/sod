@@ -11,20 +11,17 @@ import org.w3c.dom.NodeList;
 
 import edu.iris.Fissures.FissuresException;
 import edu.iris.Fissures.Time;
-import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.DataCenterCallBack;
 import edu.iris.Fissures.IfSeismogramDC.DataCenterOperations;
 import edu.iris.Fissures.IfSeismogramDC.LocalSeismogram;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
-import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.status.StringTree;
-import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
 
 public class TryInOrderDataCenter implements SeismogramDCLocator {
 
@@ -45,7 +42,7 @@ public class TryInOrderDataCenter implements SeismogramDCLocator {
     }
 
     public ProxySeismogramDC getSeismogramDC(CacheEvent event,
-                                             Channel channel,
+                                             ChannelImpl channel,
                                              RequestFilter[] infilters,
                                              CookieJar cookieJar)
             throws Exception {

@@ -3,11 +3,13 @@ package edu.sc.seis.sod.subsetter.availableData;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.w3c.dom.Element;
-import edu.iris.Fissures.IfNetwork.Channel;
+
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
@@ -30,7 +32,7 @@ public class PercentCoverage implements AvailableDataSubsetter {
     }
 
     public StringTree accept(CacheEvent event,
-                             Channel channel,
+                             ChannelImpl channel,
                              RequestFilter[] original,
                              RequestFilter[] available,
                              CookieJar cookieJar) {

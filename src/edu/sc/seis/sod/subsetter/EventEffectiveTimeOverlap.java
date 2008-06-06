@@ -36,15 +36,15 @@ public class EventEffectiveTimeOverlap extends EffectiveTimeOverlap {
     }
 
     public boolean overlaps(Station station) {
-        return overlaps(station.effective_time);
+        return overlaps(station.getEffectiveTime());
     }
 
     public boolean overlaps(Site site) {
-        return overlaps(site.effective_time);
+        return overlaps(site.getEffectiveTime());
     }
 
     public boolean overlaps(Channel channel) {
-        return overlaps(channel.effective_time);
+        return overlaps(channel.getEffectiveTime());
     }
 
     static final TimeInterval DEFAULT_OFFSET = new TimeInterval(3, UnitImpl.DAY);

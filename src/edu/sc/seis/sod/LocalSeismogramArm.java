@@ -2,20 +2,23 @@ package edu.sc.seis.sod;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+
 import org.apache.log4j.Logger;
 import org.omg.CORBA.SystemException;
+
 import edu.iris.Fissures.FissuresException;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.LocalSeismogram;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.NSSeismogramDC;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.time.SortTool;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.process.waveform.WaveformResult;
@@ -76,12 +79,13 @@ public class LocalSeismogramArm implements Subsetter {
     }
 
     public void processLocalSeismogramArm(EventChannelPair ecp) {
-        logger.debug("Begin ECP: "+toString());
+        logger.debug("Begin ECP: "+ecp.toString());
+        logger.debug("      ESP: "+ecp.getEsp().toString());
         ecp.update(Status.get(Stage.EVENT_CHANNEL_SUBSETTER,
                               Standing.IN_PROG));
         StringTree passed;
         CacheEvent eventAccess = ecp.getEvent();
-        Channel channel = ecp.getChannel();
+        ChannelImpl channel = ecp.getChannel();
         synchronized(eventChannel) {
             try {
                 passed = eventChannel.accept(eventAccess,
@@ -417,6 +421,7 @@ public class LocalSeismogramArm implements Subsetter {
     }
      
     private static void handle(EventChannelPair ecp, Stage stage, Throwable t, ProxySeismogramDC server) {
+        try {
         if(t instanceof org.omg.CORBA.SystemException) {
             // don't log exception here, let RetryStragtegy do it
             ecp.update(Status.get(stage, Standing.CORBA_FAILURE));
@@ -437,6 +442,9 @@ public class LocalSeismogramArm implements Subsetter {
             logger.debug(ecp, t);
         } else {
             failLogger.warn(ecp, t);
+        }
+        } catch(Throwable tt) {
+            GlobalExceptionHandler.handle("Caught "+tt+" while handling "+t, t);
         }
     }
     

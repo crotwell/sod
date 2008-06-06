@@ -1,6 +1,6 @@
 package edu.sc.seis.sod.subsetter.eventStation;
 
-import edu.iris.Fissures.IfNetwork.Station;
+import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.StringTree;
@@ -15,6 +15,6 @@ import edu.sc.seis.sod.subsetter.Subsetter;
 public interface EventStationSubsetter extends Subsetter {
 
     public StringTree accept(CacheEvent event,
-                          Station station,
+                          StationImpl station,
                           CookieJar cookieJar) throws Exception;
 }// EventStationSubsetter

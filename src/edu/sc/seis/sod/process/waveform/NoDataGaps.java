@@ -1,7 +1,7 @@
 package edu.sc.seis.sod.process.waveform;
 
-import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.time.RangeTool;
@@ -14,7 +14,7 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
 public class NoDataGaps implements WaveformProcess {
 
     public WaveformResult process(CacheEvent event,
-                                  Channel channel,
+                                  ChannelImpl channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,

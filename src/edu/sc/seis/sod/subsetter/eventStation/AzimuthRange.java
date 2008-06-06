@@ -1,7 +1,8 @@
 package edu.sc.seis.sod.subsetter.eventStation;
 
 import org.w3c.dom.Element;
-import edu.iris.Fissures.IfNetwork.Station;
+
+import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.bag.DistAz;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.CookieJar;
@@ -18,7 +19,7 @@ public class AzimuthRange extends RangeSubsetter implements
     }
 
     public StringTree accept(CacheEvent ev,
-                             Station sta,
+                             StationImpl sta,
                              CookieJar cookieJar) {
         return new StringTreeLeaf(this,
                                   AzimuthUtils.isAzimuthBetween(new DistAz(sta,

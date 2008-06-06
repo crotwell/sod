@@ -5,8 +5,12 @@
  */
 package edu.sc.seis.sod.process.waveform.vector;
 
-import edu.iris.Fissures.IfNetwork.Channel;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
@@ -19,9 +23,6 @@ import edu.sc.seis.sod.process.waveform.WaveformResult;
 import edu.sc.seis.sod.status.ShortCircuit;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 public class ANDWaveformProcessWrapper implements WaveformProcessWrapper {
 
@@ -59,7 +60,7 @@ public class ANDWaveformProcessWrapper implements WaveformProcessWrapper {
         int i;
         for(i = 0; b && i < channelGroup.getChannels().length; i++) {
             LocalSeismogramImpl[] copies = ForkProcess.copySeismograms(seismograms[i]);
-            Channel chan = channelGroup.getChannels()[i];
+            ChannelImpl chan = channelGroup.getChannels()[i];
             WaveformResult result = process.process(event,
                                                     chan,
                                                     original[i],

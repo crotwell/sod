@@ -19,7 +19,7 @@ public class SiteDepthRange extends edu.sc.seis.sod.subsetter.DepthRange
 
     public StringTree accept(Channel channel, ProxyNetworkAccess network)
             throws Exception {
-        QuantityImpl actualDepth = (QuantityImpl)channel.my_site.my_location.depth;
+        QuantityImpl actualDepth = (QuantityImpl)channel.getSite().getLocation().depth;
         return new StringTreeLeaf(this, actualDepth.greaterThanEqual(getMinDepth())
                 && actualDepth.lessThanEqual(getMaxDepth()));
     }

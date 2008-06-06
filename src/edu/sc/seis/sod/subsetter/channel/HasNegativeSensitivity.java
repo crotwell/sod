@@ -12,6 +12,6 @@ public class HasNegativeSensitivity implements ChannelSubsetter {
             throws Exception {
         return new StringTreeLeaf(this,
                                   NegativeSensitivity.check(network.retrieve_sensitivity(channel.get_id(),
-                                                                                         channel.effective_time.start_time)));
+                                                                                         channel.getEffectiveTime().start_time)));
     }
 }

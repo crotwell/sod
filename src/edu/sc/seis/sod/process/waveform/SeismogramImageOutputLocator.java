@@ -121,7 +121,7 @@ public class SeismogramImageOutputLocator {
                                boolean useStatusDir) {
         String dir = useStatusDir ? fileDir : "";
         dir += '/' + eventFormatter.getResult(event) + '/'
-                + stationFormatter.getResult(chan.my_site.my_station) + '/';
+                + stationFormatter.getResult(chan.getSite().getStation()) + '/';
         return dir;
     }
 }

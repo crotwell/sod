@@ -1,9 +1,9 @@
 package edu.sc.seis.sod;
 
 import java.io.IOException;
+
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.sc.seis.fissuresUtil.database.NotFound;
-import edu.sc.seis.fissuresUtil.database.event.JDBCEventAccess;
 import edu.sc.seis.fissuresUtil.hibernate.EventDB;
 import edu.sc.seis.sod.process.waveform.ForkProcess;
 import edu.sc.seis.sod.process.waveform.RecordSectionDisplayGenerator;

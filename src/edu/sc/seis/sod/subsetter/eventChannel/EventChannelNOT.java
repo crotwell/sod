@@ -1,8 +1,10 @@
 package edu.sc.seis.sod.subsetter.eventChannel;
 
 import java.util.Iterator;
+
 import org.w3c.dom.Element;
-import edu.iris.Fissures.IfNetwork.Channel;
+
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
@@ -24,7 +26,7 @@ public final class EventChannelNOT extends EventChannelLogicalSubsetter
     }
 
     public StringTree accept(CacheEvent o,
-                          Channel channel,
+                             ChannelImpl channel,
                           CookieJar cookieJar) throws Exception {
         Iterator it = filterList.iterator();
         if(it.hasNext()) {

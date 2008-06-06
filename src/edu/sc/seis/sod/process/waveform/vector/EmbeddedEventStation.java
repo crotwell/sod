@@ -4,6 +4,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.network.StationImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
@@ -44,7 +45,7 @@ public class EmbeddedEventStation  implements WaveformVectorProcess {
                                         RequestFilter[][] available,
                                         LocalSeismogramImpl[][] seismograms,
                                         CookieJar cookieJar) throws Exception {
-        StringTree wrapped = eventStation.accept(event, channelGroup.getVertical().my_site.my_station, cookieJar);
+        StringTree wrapped = eventStation.accept(event, (StationImpl)channelGroup.getVertical().getSite().getStation(), cookieJar);
         WaveformVectorResult result = new WaveformVectorResult(seismograms,
                                                                new StringTreeBranch(this, wrapped.isSuccess(), wrapped));
         return result;

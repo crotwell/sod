@@ -431,24 +431,10 @@ public class NetworkArm implements Arm {
     public StationImpl[] getSuccessfulStations(CacheNetworkAccess net) {
         String netCode = net.get_attributes().get_code();
         logger.debug("getSuccessfulStations");
-        Integer netKey = new Integer(((NetworkAttrImpl)net.get_attributes()).getDbid());
-        if(successfulStations.get(netKey) != null) {
-            logger.debug("getSuccessfulStations " + netCode + " - from cache "
-                    + ((StationImpl[])successfulStations.get(netKey)).length);
-            return (StationImpl[])successfulStations.get(netKey);
-        }
         synchronized(this) {
-            // recheck in sync just in case something changed in the last
-            // nanosecond
-            if(successfulStations.get(netKey) != null) {
-                logger.debug("getSuccessfulStations " + netCode
-                        + " - from cache2");
-                return (StationImpl[])successfulStations.get(netKey);
-            }
-            // no dice, try db
+            // try db
             StationImpl[] sta = getNetworkDB().getStationForNet((NetworkAttrImpl)net.get_attributes());
             if(sta.length != 0) {
-                successfulStations.put(netKey, sta);
                 logger.debug("getSuccessfulStations " + netCode + " - from db "
                         + sta.length);
                 return sta;
@@ -496,7 +482,6 @@ public class NetworkArm implements Arm {
             }
             StationImpl[] rtnValues = new StationImpl[arrayList.size()];
             rtnValues = (StationImpl[])arrayList.toArray(rtnValues);
-            successfulStations.put(netKey, rtnValues);
             statusChanged("Waiting for a request");
             logger.debug("getSuccessfulStations " + netCode + " - from server "
                     + rtnValues.length);
@@ -512,30 +497,16 @@ public class NetworkArm implements Arm {
      */
     public ChannelImpl[] getSuccessfulChannels(StationImpl station)
             throws NetworkNotFound {
-        Integer staKey = new Integer(station.getDbid());
-        if(successfulChannels.containsKey(staKey)) {
-            return successfulChannels.get(staKey);
-        }
-        return getSuccessfulChannels(getNetwork(station.my_network.get_id()),
+        return getSuccessfulChannels(CacheNetworkAccess.create((NetworkAttrImpl)station.getNetworkAttr(), CommonAccess.getNameService()),
                                      station);
     }
 
     public ChannelImpl[] getSuccessfulChannels(CacheNetworkAccess networkAccess,
                                                StationImpl station) {
-        Integer staKey = new Integer(station.getDbid());
-        if(successfulChannels.containsKey(staKey)) {
-            return (ChannelImpl[])successfulChannels.get(staKey);
-        }
         synchronized(this) {
-            // check again inside sync in case something change in the last
-            // nanosecond
-            if(successfulChannels.containsKey(staKey)) {
-                return (ChannelImpl[])successfulChannels.get(staKey);
-            }
             // no dice, try db
             ChannelImpl[] sta = getNetworkDB().getChannelsForStation(station);
             if(sta.length != 0) {
-                successfulChannels.put(staKey, sta);
                 logger.debug("successfulChannels " + station.get_code() + " - from db "
                         + sta.length);
                 return sta;
@@ -553,7 +524,7 @@ public class NetworkArm implements Arm {
                 // equal...we hope
                 ArrayList chansAtStation = new ArrayList();
                 for(int i = 0; i < tmpChannels.length; i++) {
-                    if(tmpChannels[i].my_site.my_station == station) {
+                    if(tmpChannels[i].getSite().getStation() == station) {
                         chansAtStation.add(tmpChannels[i]);
                     } else {
                         logger.info("Channel "
@@ -561,7 +532,7 @@ public class NetworkArm implements Arm {
                                 + " has a station that is not the same as the requested station: req="
                                 + StationIdUtil.toString(station.get_id())
                                 + "  chan sta="
-                                + StationIdUtil.toString(tmpChannels[i].my_site.my_station));
+                                + StationIdUtil.toString(tmpChannels[i].getSite().getStation()));
                     }
                 }
                 ChannelImpl[] channels = (ChannelImpl[])chansAtStation.toArray(new ChannelImpl[0]);
@@ -620,38 +591,23 @@ public class NetworkArm implements Arm {
                 NetworkDB.rollback();
             }
             ChannelImpl[] values = (ChannelImpl[])successes.toArray(new ChannelImpl[0]);
-            successfulChannels.put(staKey, values);
             statusChanged("Waiting for a request");
             return values;
         }
     }
 
     public ChannelGroup[] getSuccessfulChannelGroups(StationImpl station) throws NetworkNotFound {
-        Integer staKey = new Integer(station.getDbid());
-        if(successfulChannelGroups.containsKey(staKey)) {
-            return successfulChannelGroups.get(staKey);
-        }
-        return getSuccessfulChannelGroups(getNetwork(station.my_network.get_id()),
+        return getSuccessfulChannelGroups(CacheNetworkAccess.create((NetworkAttrImpl)station.getNetworkAttr(), CommonAccess.getNameService()),
                                      station);
     }
 
     public ChannelGroup[] getSuccessfulChannelGroups(CacheNetworkAccess networkAccess,
                                                      StationImpl station) {
-        Integer staKey = new Integer(station.getDbid());
-        if(successfulChannelGroups.containsKey(staKey)) {
-            return successfulChannelGroups.get(staKey);
-        }
         synchronized(this) {
-            // check again inside sync in case something change in the last
-            // nanosecond
-            if(successfulChannelGroups.containsKey(staKey)) {
-                return successfulChannelGroups.get(staKey);
-            }
-            LinkedList failures = new LinkedList();
+            List<ChannelImpl> failures = new ArrayList<ChannelImpl>();
             ChannelGroup[] chanGroups = channelGrouper.group(getSuccessfulChannels(networkAccess,
                                                                                    station),
                                                              failures);
-            successfulChannelGroups.put(staKey, chanGroups);
             for(ChannelGroup cg : chanGroups) {
                 getNetworkDB().put(cg);
             }
@@ -774,15 +730,9 @@ public class NetworkArm implements Arm {
 
     private StationSubsetter staEffectiveSubsetter = new PassStation();
 
-    private Map successfulStations = new HashMap();
-
     private List chanSubsetters = new ArrayList();
 
     private ChannelSubsetter chanEffectiveSubsetter = new PassChannel();
-
-    private Map<Integer, ChannelImpl[]> successfulChannels = new HashMap<Integer, ChannelImpl[]>();
-
-    private Map<Integer, ChannelGroup[]> successfulChannelGroups = new HashMap<Integer, ChannelGroup[]>();
 
     private ChannelGrouper channelGrouper = new ChannelGrouper();
 

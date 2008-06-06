@@ -5,16 +5,16 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.sql.Connection;
+
 import org.apache.log4j.Category;
 import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
-import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.fissuresUtil.display.RecordSectionDisplay;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
@@ -39,7 +39,7 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
     }
 
     public WaveformResult process(CacheEvent event,
-                                  Channel chan,
+                                  ChannelImpl chan,
                                   RequestFilter[] original,
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,

@@ -15,6 +15,6 @@ public class OrientationDipRange extends RangeSubsetter implements
     }
 
     public StringTree accept(Channel e, ProxyNetworkAccess network) throws Exception {
-        return new StringTreeLeaf(this, accept(e.an_orientation.dip));
+        return new StringTreeLeaf(this, accept(e.getOrientation().dip));
     }
 }// OrientationDipRange

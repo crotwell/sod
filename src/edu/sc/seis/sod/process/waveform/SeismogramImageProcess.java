@@ -7,10 +7,13 @@ package edu.sc.seis.sod.process.waveform;
 
 import java.awt.Dimension;
 import java.io.File;
+
 import javax.swing.SwingUtilities;
+
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
 import edu.iris.Fissures.AuditInfo;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.Origin;
@@ -21,6 +24,7 @@ import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
@@ -95,7 +99,7 @@ public class SeismogramImageProcess implements WaveformProcess {
     }
 
     public WaveformResult process(CacheEvent event,
-                                  Channel channel,
+                                  ChannelImpl channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
@@ -158,7 +162,7 @@ public class SeismogramImageProcess implements WaveformProcess {
 
     protected Arrival[] getArrivals(Channel chan, Origin o, String[] phases)
             throws TauModelException {
-        Station sta = chan.my_site.my_station;
+        Station sta = chan.getSite().getStation();
         TimeInterval filterOffset = new TimeInterval(10, UnitImpl.SECOND);
         Arrival[] arrivals = PhasePhilter.filter(tauP.calcTravelTimes(sta,
                                                                       o,

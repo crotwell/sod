@@ -1,9 +1,11 @@
 package edu.sc.seis.sod.process.waveform;
 
 import java.io.File;
+
 import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.xml.URLDataSetSeismogram;
 import edu.sc.seis.sod.ConfigurationException;
@@ -20,7 +22,7 @@ public class MseedWriter extends AbstractSeismogramWriter {
 
     public void write(String loc,
                       LocalSeismogramImpl seis,
-                      Channel chan,
+                      ChannelImpl chan,
                       EventAccessOperations ev) throws Exception {
         SaveSeismogramToFile.addBytesWritten(URLDataSetSeismogram.writeMSeed(seis,
                                                                              new File(loc))

@@ -1,8 +1,9 @@
 package edu.sc.seis.sod.subsetter.availableData;
 
 import org.apache.log4j.Category;
-import edu.iris.Fissures.IfNetwork.Channel;
+
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.StringTree;
@@ -11,7 +12,7 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
 public class SomeCoverage implements AvailableDataSubsetter {
 
     public StringTree accept(CacheEvent event,
-                             Channel channel,
+                             ChannelImpl channel,
                              RequestFilter[] original,
                              RequestFilter[] available,
                              CookieJar cookieJar) {

@@ -20,14 +20,16 @@ public class EventChannelPair extends CookieEventPair {
     /** for hibernate */
     protected EventChannelPair() {}
     
-    public EventChannelPair(StatefulEvent event, ChannelImpl chan) {
+    public EventChannelPair(StatefulEvent event, ChannelImpl chan, EventStationPair esp) {
         super(event);
         setChannel(chan);
+        setEsp(esp);
     }
 
-    public EventChannelPair(StatefulEvent event, ChannelImpl chan, Status status) {
+    public EventChannelPair(StatefulEvent event, ChannelImpl chan, Status status, EventStationPair esp) {
         super(event, status);
         setChannel(chan);
+        setEsp(esp);
     }
 
     /**
@@ -73,7 +75,7 @@ public class EventChannelPair extends CookieEventPair {
 
     public String toString(){
         return "EventChannelPair: ("+getPairId()+") " + getEvent() + " " +
-            ChannelIdUtil.toString(getChannel().get_id()) + " " + getStatus();
+            ChannelIdUtil.toString(getChannel().getId()) + " " + getStatus();
     }
 
     public int getChannelDbId(){ return chan.getDbid(); }

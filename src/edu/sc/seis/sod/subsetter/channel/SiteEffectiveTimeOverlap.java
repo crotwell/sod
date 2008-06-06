@@ -28,6 +28,6 @@ public class SiteEffectiveTimeOverlap extends EffectiveTimeOverlap implements
 
     public StringTree accept(Channel channel, ProxyNetworkAccess network)
             throws Exception {
-        return new StringTreeLeaf(this, overlaps(channel.my_site.effective_time));
+        return new StringTreeLeaf(this, overlaps(channel.getSite().getEffectiveTime()));
     }
 }// SiteEffectiveTimeOverlap

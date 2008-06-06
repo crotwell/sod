@@ -37,3 +37,6 @@ edu.sc.seis.fissuresUtil.nameServiceCorbaLoc=corbaloc:iiop:dmc.iris.washington.e
 
 # default database url
 fissuresUtil.database.url=jdbc:hsqldb:SodDb/SodDb
+
+hibernate.cache.use_second_level_cache=true
+hibernate.cache.provider_class=org.hibernate.cache.EhCacheProvider

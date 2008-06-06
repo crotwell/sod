@@ -17,6 +17,6 @@ public class OrientationAzimuthRange extends RangeSubsetter implements
     }
 
     public StringTree accept(Channel e, ProxyNetworkAccess network) throws Exception {
-        return new StringTreeLeaf(this, accept(e.an_orientation.azimuth));
+        return new StringTreeLeaf(this, accept(e.getOrientation().azimuth));
     }
 }// OrientationAzimuthRange

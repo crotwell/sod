@@ -68,6 +68,9 @@ public class WaveformArm implements Arm {
     }
 
     public void run() {
+        for(int i = 0; i < pool.length; i++) {
+            pool[i].start();
+        }
         try {
             if(restartSuspended) {
                 sodDb.reopenSuspendedEventChannelPairs(Start.getRunProps()
@@ -193,8 +196,8 @@ public class WaveformArm implements Arm {
                                     Standing.SUCCESS));
             eventDb.commit();
             // wake up the workers in case they are asleep
-            for(int i = 0; i < pool.length; i++) {
-                pool[i].notifyAll();
+            synchronized(this) {
+                notifyAll();
             }
             eventArm.change(ev);
             int numWaiting = eventDb.getNumWaiting();

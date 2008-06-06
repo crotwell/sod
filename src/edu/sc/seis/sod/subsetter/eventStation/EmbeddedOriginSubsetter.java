@@ -1,17 +1,17 @@
 package edu.sc.seis.sod.subsetter.eventStation;
 
-import edu.iris.Fissures.IfNetwork.Station;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
-import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.origin.OriginSubsetter;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 public class EmbeddedOriginSubsetter implements EventStationSubsetter {
 
@@ -30,7 +30,7 @@ public class EmbeddedOriginSubsetter implements EventStationSubsetter {
     }
 
     public StringTree accept(CacheEvent eventAccess,
-                          Station station,
+                             StationImpl station,
                           CookieJar cookieJar) throws Exception {
         StringTree result = originSubsetter.accept(eventAccess,
                                                    eventAccess.get_attributes(),

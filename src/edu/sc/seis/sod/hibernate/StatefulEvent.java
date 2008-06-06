@@ -18,21 +18,14 @@ public class StatefulEvent extends CacheEvent{
     
     public StatefulEvent(CacheEvent e, Status stat) throws NoPreferredOrigin{
         super(e.get_attributes(), e.get_origins(), e.getPreferred());
-        this.stat = stat;
+        this.status = stat;
     }
 
-    public Status getStatus(){ return stat; }
+    public Status getStatus(){ return status; }
     
-    public void setStatus(Status stat){ setStatusAsShort(stat.getAsShort()); }
+    public void setStatus(Status stat){ this.status = stat; }
     
-    /** for use by hibernate */
-    protected short getStatusAsShort() {
-        return stat.getAsShort();
-    }
-    protected void setStatusAsShort(short status) {
-        stat = Status.getFromShort(status);
-    }
-    private Status stat;
+    private Status status;
 
     /** For use by hibernate */
     private Long id; 

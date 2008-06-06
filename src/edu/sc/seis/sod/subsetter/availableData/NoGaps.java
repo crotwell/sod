@@ -2,9 +2,10 @@ package edu.sc.seis.sod.subsetter.availableData;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
-import edu.iris.Fissures.IfNetwork.Channel;
+
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodElement;
@@ -16,7 +17,7 @@ public class NoGaps implements AvailableDataSubsetter, SodElement {
     public NoGaps(Element config) {}
 
     public StringTree accept(CacheEvent event,
-                          Channel channel,
+                             ChannelImpl channel,
                           RequestFilter[] original,
                           RequestFilter[] available,
                           CookieJar cookieJar) {

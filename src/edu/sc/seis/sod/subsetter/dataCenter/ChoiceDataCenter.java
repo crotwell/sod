@@ -3,11 +3,14 @@ package edu.sc.seis.sod.subsetter.dataCenter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
@@ -33,7 +36,7 @@ public class ChoiceDataCenter implements SeismogramDCLocator {
     }
 
     public ProxySeismogramDC getSeismogramDC(CacheEvent event,
-                                             Channel channel,
+                                             ChannelImpl channel,
                                              RequestFilter[] infilters,
                                              CookieJar cookieJar)
             throws Exception {
@@ -68,7 +71,7 @@ public class ChoiceDataCenter implements SeismogramDCLocator {
         }
 
         public ProxySeismogramDC getSeismogramDC(CacheEvent event,
-                                                 Channel channel,
+                                                 ChannelImpl channel,
                                                  RequestFilter[] infilters,
                                                  CookieJar cookieJar)
                 throws Exception {
@@ -76,7 +79,7 @@ public class ChoiceDataCenter implements SeismogramDCLocator {
         }
 
         public StringTree accept(CacheEvent event,
-                                 Channel channel,
+                                 ChannelImpl channel,
                                  CookieJar cookieJar) throws Exception {
             return eventChannelSubsetter.accept(event, channel, cookieJar);
         }

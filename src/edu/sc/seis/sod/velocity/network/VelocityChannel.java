@@ -1,27 +1,27 @@
 package edu.sc.seis.sod.velocity.network;
 
 import org.apache.velocity.VelocityContext;
+
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.SiteImpl;
-import edu.sc.seis.fissuresUtil.database.network.DBChannel;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
 /**
  * @author groves Created on Jan 7, 2005
  */
-public class VelocityChannel extends Channel {
+public class VelocityChannel extends ChannelImpl {
 
     public VelocityChannel(ChannelImpl chan) {
         this.chan = chan;
-        my_site = chan.my_site;
-        an_orientation = chan.an_orientation;
-        sampling_info = chan.sampling_info;
-        effective_time = chan.effective_time;
-        name = chan.name;
+        my_site = chan.getSite();
+        an_orientation = chan.getOrientation();
+        sampling_info = chan.getSamplingInfo();
+        effective_time = chan.getEffectiveTime();
+        name = chan.getName();
     }
 
     public ChannelId get_id() {

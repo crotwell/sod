@@ -69,63 +69,6 @@ public class SodDB extends AbstractHibernateDB {
 
     public SodDB() {}
 
-    public EventChannelPair[] getSuspendedEventChannelPairs(String processingRule,
-                                                            boolean vector)
-            throws SQLException {
-        Status eventStationInit = Status.get(Stage.EVENT_STATION_SUBSETTER,
-                                             Standing.INIT);
-        Status processorSuccess = Status.get(Stage.PROCESSOR, Standing.SUCCESS);
-        Stage[] stages = {Stage.EVENT_STATION_SUBSETTER,
-                          Stage.EVENT_CHANNEL_SUBSETTER,
-                          Stage.REQUEST_SUBSETTER,
-                          Stage.AVAILABLE_DATA_SUBSETTER,
-                          Stage.DATA_RETRIEVAL,
-                          Stage.PROCESSOR};
-        Standing[] standings = {Standing.IN_PROG,
-                                Standing.INIT,
-                                Standing.SUCCESS};
-        String query;
-        if(!vector) {
-            query = "FROM edu.sc.seis.sod.EventChannelPair e WHERE e.statusAsShort in";
-        } else {
-            query = "select evp.ecp1 FROM " + EventVectorPair.class.getName()
-                    + " evp WHERE evp.ecp1.statusAsShort in";
-        }
-        query += "  ( ";
-        for(int i = 0; i < stages.length; i++) {
-            for(int j = 0; j < standings.length; j++) {
-                Status curStatus = Status.get(stages[i], standings[j]);
-                if(!curStatus.equals(processorSuccess)) {
-                    query += curStatus.getAsShort();
-                    query += ", ";
-                }
-            }
-        }
-        // get rid of last comma
-        query = query.substring(0, query.length() - 2);
-        query += ')';
-        List out = getSession().createQuery(query).list();
-        if(processingRule.equals(RunProperties.AT_LEAST_ONCE)) {
-            return (EventChannelPair[])out.toArray(new EventChannelPair[0]);
-        } else {
-            ArrayList<EventChannelPair> reprocess = new ArrayList<EventChannelPair>();
-            Iterator it = out.iterator();
-            while(it.hasNext()) {
-                EventChannelPair pair = (EventChannelPair)it.next();
-                Status curStatus = pair.getStatus();
-                Stage currentStage = curStatus.getStage();
-                if(!curStatus.equals(eventStationInit)) {
-                    pair.update(Status.get(currentStage,
-                                           Standing.SYSTEM_FAILURE));
-                } else {
-                    reprocess.add(pair);
-                }
-            }
-            flush();
-            return reprocess.toArray(new EventChannelPair[0]);
-        }
-    }
-
     public void reopenSuspendedEventChannelPairs(String processingRule, boolean vector) {
         Stage[] stages = {Stage.EVENT_STATION_SUBSETTER,
                           Stage.EVENT_CHANNEL_SUBSETTER,
@@ -157,16 +100,16 @@ public class SodDB extends AbstractHibernateDB {
         }
         String setStmt;
         if(processingRule.equals(RunProperties.AT_LEAST_ONCE)) {
-            setStmt = " stageInt = "+Stage.EVENT_CHANNEL_SUBSETTER.getVal()+", standing = "+Standing.INIT.getVal();
+            setStmt = " stageInt = "+Stage.EVENT_CHANNEL_SUBSETTER.getVal()+", standingInt = "+Standing.INIT.getVal();
         } else {
-            setStmt = " standing = "+Standing.SYSTEM_FAILURE.getVal();
+            setStmt = " standingInt = "+Standing.SYSTEM_FAILURE.getVal();
         }
         query = "UPDATE "+updateClass.getName()+" set "+setStmt
-        +" WHERE stageInt in "+stageList+" AND stangingInt in "+standingList
-        +" AND NOT (stageInt = "+Stage.PROCESSOR.getVal()+" AND standingInt = "+Standing.SUCCESS.getVal()+" ) "
-        +" AND NOT (stageInt = "+Stage.EVENT_STATION_SUBSETTER.getVal()+" AND standingInt = "+Standing.INIT.getVal()+" ) ";
+        +" WHERE status.stageInt in "+stageList+" AND status.standingInt in "+standingList
+        +" AND NOT (status.stageInt = "+Stage.PROCESSOR.getVal()+" AND status.standingInt = "+Standing.SUCCESS.getVal()+" ) "
+        +" AND NOT (status.stageInt = "+Stage.EVENT_STATION_SUBSETTER.getVal()+" AND status.standingInt = "+Standing.INIT.getVal()+" ) ";
         
-        List out = getSession().createQuery(query).list();
+        int out = getSession().createQuery(query).executeUpdate();
     }
 
     public EventNetworkPair put(EventNetworkPair eventNetworkPair) {
@@ -197,9 +140,10 @@ public class SodDB extends AbstractHibernateDB {
     public EventNetworkPair getNextENP(Standing standing) {
         String q = "from "
                 + EventNetworkPair.class.getName()
-                + " e where e.stageInt = Stage.EVENT_CHANNEL_POPULATION and e.standingInt = :inProg";
+                + " e where e.status.stageInt = "+Stage.EVENT_CHANNEL_POPULATION.getVal()
+                +" and e.status.standingInt = :standing";
         Query query = getSession().createQuery(q);
-        query.setInteger("inProg", standing.getVal());
+        query.setInteger("standing", standing.getVal());
         query.setMaxResults(1);
         List result = query.list();
         if(result.size() > 0) {
@@ -212,7 +156,8 @@ public class SodDB extends AbstractHibernateDB {
     public EventStationPair getNextESP(Standing standing) {
         String q = "from "
                 + EventStationPair.class.getName()
-                + " e where e.stageInt = Stage.EVENT_CHANNEL_POPULATION and e.standingInt = :inProg";
+                + " e where e.status.stageInt = "+Stage.EVENT_CHANNEL_POPULATION.getVal()
+                + " and e.status.standingInt = :inProg";
         Query query = getSession().createQuery(q);
         query.setInteger("inProg", standing.getVal());
         query.setMaxResults(1);
@@ -227,7 +172,8 @@ public class SodDB extends AbstractHibernateDB {
     public EventChannelPair getNextECP(Standing standing) {
         String q = "from "
                 + EventChannelPair.class.getName()
-                + " e where e.stageInt = Stage.EVENT_CHANNEL_POPULATION and e.standingInt = :inProg";
+                + " e where e.status.stageInt = "+Stage.EVENT_CHANNEL_POPULATION.getVal()
+                + " and e.status.standingInt = :inProg";
         Query query = getSession().createQuery(q);
         query.setInteger("inProg", standing.getVal());
         query.setMaxResults(1);
@@ -241,9 +187,9 @@ public class SodDB extends AbstractHibernateDB {
     public EventChannelPair getNextRetryECP() {
         String q = "from "
                 + EventChannelPair.class.getName()
-                + "  where numRetries > 0 and (standingInt = "
+                + "  where numRetries > 0 and (status.standingInt = "
                 + Standing.RETRY.getVal()
-                + " or standingInt = "
+                + " or status.standingInt = "
                 + Standing.CORBA_FAILURE.getVal()
                 + " )  and seconds_between(:now, lastQuery) > :minDelay "
                 + " and numRetries < "+maxRetries
@@ -262,7 +208,8 @@ public class SodDB extends AbstractHibernateDB {
     public EventVectorPair getNextEVP(Standing standing) {
         String q = "from "
                 + EventVectorPair.class.getName()
-                + " e where e.stageInt = Stage.EVENT_CHANNEL_POPULATION and e.standingInt = :inProg";
+                + " e where e.status.stageInt = "+Stage.EVENT_CHANNEL_POPULATION.getVal()
+                + " and e.status.standingInt = :inProg";
         Query query = getSession().createQuery(q);
         query.setInteger("inProg", standing.getVal());
         query.setMaxResults(1);
@@ -276,9 +223,9 @@ public class SodDB extends AbstractHibernateDB {
     public EventVectorPair getNextRetryEVP() {
         String q = "from "
                 + EventVectorPair.class.getName()
-                + "  where numRetries > 0 and (standingInt = "
+                + "  where numRetries > 0 and (status.standingInt = "
                 + Standing.RETRY.getVal()
-                + " or standingInt = "
+                + " or status.standingInt = "
                 + Standing.CORBA_FAILURE.getVal()
                 + " )  and seconds_between(:now, lastQuery) > :minDelay "
                 + " and numRetries < "+maxRetries
@@ -295,10 +242,10 @@ public class SodDB extends AbstractHibernateDB {
 
     public int getNumWorkUnits(Standing standing) {
         String q = "select count(*) from " + AbstractEventPair.class.getName()
-                + " e where e.statusAsShort = :inProg and e.numRetries ==  0";
+        + " e where e.status.stageInt = "+Stage.EVENT_CHANNEL_POPULATION.getVal()
+        + " and e.status.standingInt = "+standing.getVal()
+        + " and e.numRetries =  0";
         Query query = getSession().createQuery(q);
-        query.setShort("inProg", Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                                            standing).getAsShort());
         query.setMaxResults(1);
         List result = query.list();
         if(result.size() > 0) {
@@ -325,21 +272,6 @@ public class SodDB extends AbstractHibernateDB {
         }
         session.saveOrUpdate(eventVectorPair);
         return eventVectorPair;
-    }
-
-    public EventVectorPair getEventVectorPair(EventChannelPair ecp) {
-        String q = "from " + EventVectorPair.class.getName()
-                + " where ecp1 = :ecp or ecp2 = :ecp or ecp3 = :ecp";
-        Session session = getSession();
-        Query query = session.createQuery(q);
-        query.setEntity("ecp", ecp);
-        query.setMaxResults(1);
-        List result = query.list();
-        if(result.size() > 0) {
-            EventVectorPair out = (EventVectorPair)result.get(0);
-            return out;
-        }
-        return null;
     }
 
     /*
@@ -539,8 +471,8 @@ public class SodDB extends AbstractHibernateDB {
     public List<CacheEvent> getSuccessfulEventsForStation(StationImpl sta) {
         String q = "select distinct ecp.event from "
                 + EventChannelPair.class.getName()
-                + " ecp where ecp.channel.site.station = :sta  and ecp.statusAsShort = "
-                + Status.get(Stage.PROCESSOR, Standing.SUCCESS).getAsShort();
+                + " ecp where ecp.channel.site.station = :sta  and ecp.status.stageInt = "
+                + Stage.PROCESSOR.getVal()+" and ecp.status.standingInt = "+ Standing.SUCCESS.getVal();
         Query query = getSession().createQuery(q);
         query.setEntity("sta", sta);
         return query.list();
@@ -552,8 +484,8 @@ public class SodDB extends AbstractHibernateDB {
                 + " e where e not in ("
                 + "select distinct ecp.event from "
                 + EventChannelPair.class.getName()
-                + " ecp where ecp.channel.site.station = :sta  and ecp.statusAsShort = "
-                + Status.get(Stage.PROCESSOR, Standing.SUCCESS).getAsShort()
+                + " ecp where ecp.channel.site.station = :sta  and ecp.status.stageInt = "
+                + Stage.PROCESSOR.getVal()+" and ecp.status.standingInt = "+ Standing.SUCCESS.getVal()
                 + " )";
         Query query = getSession().createQuery(q);
         query.setEntity("sta", sta);
@@ -714,13 +646,6 @@ public class SodDB extends AbstractHibernateDB {
         return (EcpCookie)q.uniqueResult();
     }
 
-    public List<String> getCookieNames(EventChannelPair ecp) {
-        Query q = getSession().createQuery("select name from "
-                + EcpCookie.class.getName() + " where ecp = :ecp");
-        q.setEntity("ecp", ecp);
-        return q.list();
-    }
-
     public void deleteCookie(EcpCookie cookie) {
         getSession().delete(cookie);
     }
@@ -784,57 +709,6 @@ public class SodDB extends AbstractHibernateDB {
         return current;
     }
 
-    public static String getRetryStatusRequest() {
-        return getStatusRequest(RETRY_STATUS);
-    }
-
-    public static String getFailedStatusRequest() {
-        return getStatusRequest(FAILED_STATUS);
-    }
-
-    public static String getStatusRequest(Status[] statii) {
-        String request = "( " + statii[0].getAsShort();
-        for(int i = 1; i < statii.length; i++) {
-            request += ", " + statii[i].getAsShort();
-        }
-        request += ")";
-        return request;
-    }
-
-    public static final Status[] FAILED_STATUS = new Status[] {Status.get(Stage.EVENT_STATION_SUBSETTER,
-                                                                          Standing.REJECT),
-                                                               Status.get(Stage.EVENT_STATION_SUBSETTER,
-                                                                          Standing.SYSTEM_FAILURE),
-                                                               Status.get(Stage.EVENT_CHANNEL_SUBSETTER,
-                                                                          Standing.REJECT),
-                                                               Status.get(Stage.EVENT_CHANNEL_SUBSETTER,
-                                                                          Standing.SYSTEM_FAILURE),
-                                                               Status.get(Stage.REQUEST_SUBSETTER,
-                                                                          Standing.REJECT),
-                                                               Status.get(Stage.REQUEST_SUBSETTER,
-                                                                          Standing.SYSTEM_FAILURE),
-                                                               Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
-                                                                          Standing.SYSTEM_FAILURE),
-                                                               Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
-                                                                          Standing.REJECT),
-                                                               Status.get(Stage.DATA_RETRIEVAL,
-                                                                          Standing.SYSTEM_FAILURE),
-                                                               Status.get(Stage.DATA_RETRIEVAL,
-                                                                          Standing.REJECT),
-                                                               Status.get(Stage.PROCESSOR,
-                                                                          Standing.SYSTEM_FAILURE),
-                                                               Status.get(Stage.PROCESSOR,
-                                                                          Standing.REJECT)};
-
-    public static final Status[] RETRY_STATUS = new Status[] {Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
-                                                                         Standing.RETRY),
-                                                              Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
-                                                                         Standing.CORBA_FAILURE),
-                                                              Status.get(Stage.DATA_RETRIEVAL,
-                                                                         Standing.CORBA_FAILURE),
-                                                              Status.get(Stage.PROCESSOR,
-                                                                         Standing.CORBA_FAILURE)};
-
     private static String retry, failed, success, successPerEvent,
             failedPerEvent, retryPerEvent, successPerEventStation,
             failedPerEventStation, retryPerEventStation, totalSuccess,
@@ -847,23 +721,23 @@ public class SodDB extends AbstractHibernateDB {
         String staEventBase = baseStatement
                 + " ecp.channel.site.station = :sta and ecp.event = :event ";
         eventBase = baseStatement + " ecp.event = :event ";
-        int pass = Status.get(Stage.PROCESSOR, Standing.SUCCESS).getAsShort();
-        success = staBase + " AND ecp.statusAsShort = " + pass;
-        String failReq = getFailedStatusRequest();
-        failed = staBase + " AND ecp.statusAsShort in " + failReq;
-        String retryReq = getRetryStatusRequest();
-        retry = staBase + " AND ecp.statusAsShort in " + retryReq;
+        Status pass = Status.get(Stage.PROCESSOR, Standing.SUCCESS);
+        success = staBase + " AND ecp.status.standingInt = " + pass.getStandingInt() 
+        +" AND ecp.status.stageInt = "+pass.getStageInt();
+        String failReq = " AND ecp.status.standingInt in (" + Standing.REJECT.getVal() + " , "+Standing.SYSTEM_FAILURE.getVal()+")";
+        failed = staBase +  failReq;
+        String retryReq = " AND ecp.status.standingInt in (" + Standing.RETRY.getVal() + " , "+Standing.CORBA_FAILURE.getVal()+")";
+        retry = staBase + retryReq ;
         successPerEvent = eventBase + " AND ecp.statusAsShort = "
                 + Status.get(Stage.PROCESSOR, Standing.SUCCESS).getAsShort();
-        failedPerEvent = eventBase + "  AND ecp.statusAsShort in " + failReq;
-        retryPerEvent = eventBase + "  AND ecp.statusAsShort in " + retryReq;
-        successPerEventStation = staEventBase + "  AND ecp.statusAsShort = "
-                + pass;
-        failedPerEventStation = staEventBase + " AND ecp.statusAsShort in "
-                + failReq;
-        retryPerEventStation = staEventBase + "  AND ecp.statusAsShort in "
-                + retryReq;
-        totalSuccess = baseStatement + " ecp.statusAsShort = " + pass;
+        failedPerEvent = eventBase + failReq;
+        retryPerEvent = eventBase +  retryReq;
+        successPerEventStation = staEventBase + "  AND ecp.status.stage = "
+                + pass.getStageInt()+" AND ecp.status.standing = "+pass.getStandingInt();
+        failedPerEventStation = staEventBase + failReq;
+        retryPerEventStation = staEventBase + retryReq;
+        totalSuccess = baseStatement + "  AND ecp.status.stage = "
+        + pass.getStageInt()+" AND ecp.status.standing = "+pass.getStandingInt();
     }
 
     public static SodDB getSingleton() {

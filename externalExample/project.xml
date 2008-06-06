@@ -26,7 +26,7 @@
     <dependency>
       <artifactId>seisFile</artifactId>
       <groupId>seisFile</groupId>
-      <version>1.0.2</version>
+      <version>1.0.4beta</version>
     </dependency>
         <dependency>
             <id>itext</id>
@@ -87,7 +87,7 @@
         </dependency>
         <dependency>
             <id>fissuresUtil</id>
-            <version>1.0.19internal</version>
+            <version>1.1.0internal</version>
             <url>http://www.seis.sc.edu/software/fissuresUtil</url>
         </dependency>
         <dependency>
@@ -97,7 +97,7 @@
         </dependency>
         <dependency>
             <id>fissuresIDL</id>
-            <version>1.0</version>
+            <version>1.0_getset</version>
             <url>http://www.seis.sc.edu/software/fissuresIDL</url>
         </dependency>
         <dependency>

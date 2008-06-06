@@ -2,12 +2,15 @@ package edu.sc.seis.sod.subsetter.requestGenerator;
 
 import java.util.LinkedList;
 import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
@@ -33,7 +36,7 @@ public class ChoiceRequest implements RequestGenerator {
     }
 
     public RequestFilter[] generateRequest(CacheEvent event,
-                                           Channel channel,
+                                           ChannelImpl channel,
                                            CookieJar cookieJar)
             throws Exception {
         for(int i = 0; i < choices.size(); i++) {
@@ -79,14 +82,14 @@ public class ChoiceRequest implements RequestGenerator {
         }
 
         public RequestFilter[] generateRequest(CacheEvent event,
-                                               Channel channel,
+                                               ChannelImpl channel,
                                                CookieJar cookieJar)
                 throws Exception {
             return requestGenerator.generateRequest(event, channel, cookieJar);
         }
 
         public StringTree accept(CacheEvent event,
-                                 Channel channel,
+                                 ChannelImpl channel,
                                  CookieJar cookieJar) throws Exception {
             return eventChannelSubsetter.accept(event, channel, cookieJar);
         }

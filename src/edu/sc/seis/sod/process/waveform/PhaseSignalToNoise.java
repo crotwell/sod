@@ -10,12 +10,14 @@ package edu.sc.seis.sod.process.waveform;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 import edu.iris.Fissures.FissuresException;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.TimeInterval;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.TauP.TauModelException;
 import edu.sc.seis.fissuresUtil.bag.LongShortTrigger;
@@ -80,7 +82,7 @@ public class PhaseSignalToNoise  implements WaveformProcess, Threadable {
     }
 
     public WaveformResult process(CacheEvent event,
-                                         Channel channel,
+                                         ChannelImpl channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
                                          LocalSeismogramImpl[] seismograms,
@@ -120,7 +122,7 @@ public class PhaseSignalToNoise  implements WaveformProcess, Threadable {
         // that overlaps the timewindow, and return it.
         for (int i = 0; i < seismograms.length; i++) {
            LongShortTrigger trigger =
-                phaseStoN.process(channel.my_site.my_location, event.get_preferred_origin(), seismograms[i]);
+                phaseStoN.process(channel.getSite().getLocation(), event.get_preferred_origin(), seismograms[i]);
             if (trigger != null) { return trigger; }
         }
         return null;

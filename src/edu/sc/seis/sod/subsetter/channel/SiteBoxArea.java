@@ -19,7 +19,7 @@ public class SiteBoxArea implements ChannelSubsetter {
     }
 
     public StringTree accept(Channel chan, ProxyNetworkAccess network) {
-        return new StringTreeLeaf(this, AreaUtil.inArea(ba, chan.my_site.my_location));
+        return new StringTreeLeaf(this, AreaUtil.inArea(ba, chan.getSite().getLocation()));
     }
 
     private BoxArea ba;

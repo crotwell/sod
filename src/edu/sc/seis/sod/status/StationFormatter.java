@@ -72,14 +72,14 @@ public class StationFormatter extends Template implements StationTemplate {
             return new StationTemplate() {
 
                 public String getResult(Station sta) {
-                    return sta.name;
+                    return sta.getName();
                 }
             };
         } else if(tag.equals("networkCode")) {
             return new StationTemplate() {
 
                 public String getResult(Station sta) {
-                    return sta.my_network.get_code();
+                    return sta.getNetworkAttr().get_code();
                 }
             };
         } else if(tag.equals("stationCode")) {
@@ -93,49 +93,49 @@ public class StationFormatter extends Template implements StationTemplate {
             return new StationTemplate() {
 
                 public String getResult(Station sta) {
-                    return FissuresFormatter.getLongitudeString(sta.my_location);
+                    return FissuresFormatter.getLongitudeString(sta.getLocation());
                 }
             };
         } else if(tag.equals("lat")) {
             return new StationTemplate() {
 
                 public String getResult(Station sta) {
-                    return FissuresFormatter.getLatitudeString(sta.my_location);
+                    return FissuresFormatter.getLatitudeString(sta.getLocation());
                 }
             };
         } else if(tag.equals("depth")) {
             return new StationTemplate() {
 
                 public String getResult(Station sta) {
-                    return Double.toString(sta.my_location.depth.value);
+                    return Double.toString(sta.getLocation().depth.value);
                 }
             };
         } else if(tag.equals("elevation")) {
             return new StationTemplate() {
 
                 public String getResult(Station sta) {
-                    return Double.toString(sta.my_location.elevation.value);
+                    return Double.toString(sta.getLocation().elevation.value);
                 }
             };
         } else if(tag.equals("comment")) {
             return new StationTemplate() {
 
                 public String getResult(Station sta) {
-                    return sta.comment;
+                    return sta.getComment();
                 }
             };
         } else if(tag.equals("description")) {
             return new StationTemplate() {
 
                 public String getResult(Station sta) {
-                    return sta.description;
+                    return sta.getDescription();
                 }
             };
         } else if(tag.equals("operator")) {
             return new StationTemplate() {
 
                 public String getResult(Station sta) {
-                    return sta.operator;
+                    return sta.getOperator();
                 }
             };
         } else if(tag.equals("beginTime")) {
@@ -151,7 +151,7 @@ public class StationFormatter extends Template implements StationTemplate {
             return new StationTemplate() {
 
                 public String getResult(Station sta) {
-                    return btt.getResult(sta.effective_time.end_time);
+                    return btt.getResult(sta.getEndTime());
                 }
 
                 TimeTemplate btt = new TimeTemplate(el, false);

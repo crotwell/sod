@@ -23,12 +23,14 @@
 			class="edu.sc.seis.sod.hibernate.StatefulEvent" column="event"
 			foreign-key="FK_enetp_event" unique-key="event_net_key" />
 		<many-to-one name="network"
-			class="edu.iris.Fissures.network.NetworkAttrImpl" column="network"
+			class="edu.iris.Fissures.network.NetworkAttrImpl" column="networkAttr"
 			foreign-key="FK_enetp_network" unique-key="event_net_key" />
 		<component name="status">
 			<property name="stageInt" type="integer" />
 			<property name="standingInt" type="integer" />
 		</component>
+		<property name="numRetries"  type="integer"/>
+		<property name="lastQuery"  type="timestamp"/>
 	</class>
 
 	<class name="edu.sc.seis.sod.EventStationPair">
@@ -45,6 +47,8 @@
 			<property name="stageInt" type="integer" />
 			<property name="standingInt" type="integer" />
 		</component>
+		<property name="numRetries"  type="integer"/>
+		<property name="lastQuery"  type="timestamp"/>
 	</class>
 
 	<class name="edu.sc.seis.sod.EventChannelPair">
@@ -61,6 +65,8 @@
 			<property name="stageInt" type="integer" />
 			<property name="standingInt" type="integer" />
 		</component>
+		<property name="numRetries"  type="integer"/>
+		<property name="lastQuery"  type="timestamp"/>
 		<map name="cookies" table="ecpCookie"> 
     		<key column="pairId"/> 
     		<map-key column="cookieName" type="string"/> 
@@ -86,6 +92,8 @@
 			<property name="stageInt" type="integer" />
 			<property name="standingInt" type="integer" />
 		</component>
+		<property name="numRetries"  type="integer"/>
+		<property name="lastQuery"  type="timestamp"/>
 		<map name="cookies" table="evpCookie"> 
     		<key column="pairId"/> 
     		<map-key column="cookieName" type="string"/> 

@@ -133,7 +133,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
     }
 
     public WaveformResult process(CacheEvent event,
-                                  Channel chan,
+                                  ChannelImpl chan,
                                   RequestFilter[] original,
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
@@ -148,18 +148,17 @@ public class RSChannelInfoPopulator implements WaveformProcess {
     }
 
     public boolean updateTable(CacheEvent event,
-                               Channel chan,
+                               ChannelImpl channel,
                                RequestFilter[] original,
                                RequestFilter[] available,
                                LocalSeismogramImpl[] seismograms,
                                CookieJar cookieJar) throws Exception {
         if(channelAcceptor.process(event,
-                                   chan,
+                                   channel,
                                    original,
                                    available,
                                    seismograms,
                                    cookieJar).isSuccess()) {
-            ChannelImpl channel = (ChannelImpl)chan;
             DataSetSeismogram[] dss = extractSeismograms(event);
             if(recordSectionChannel.getRecordSectionItem(id, event, channel) != null) {
                 return false;
@@ -205,7 +204,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
                         + " even though seismogram is in dataset. Skipping this seismogram.");
                 continue;
             }
-            Channel chan = ds.getChannel(chanId);
+            ChannelImpl chan = (ChannelImpl)ds.getChannel(chanId);
             if(channelAcceptor.eventChannelSubsetter.accept(eao, chan, null)
                     .isSuccess()) {
                 dss.add(seis);

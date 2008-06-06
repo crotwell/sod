@@ -107,7 +107,7 @@ public class ChannelFormatter extends Template implements ChannelTemplate {
             return new ChannelTemplate() {
 
                 public String getResult(Channel chan) {
-                    return btt.getResult(chan.effective_time.end_time);
+                    return btt.getResult(chan.getEndTime());
                 }
 
                 TimeTemplate btt = new TimeTemplate(el, false);
@@ -123,42 +123,42 @@ public class ChannelFormatter extends Template implements ChannelTemplate {
             return new ChannelTemplate() {
 
                 public String getResult(Channel chan) {
-                    return format(chan.an_orientation.dip);
+                    return format(chan.getOrientation().dip);
                 }
             };
         } else if(tag.equals("azimuth")) {
             return new ChannelTemplate() {
 
                 public String getResult(Channel chan) {
-                    return format(chan.an_orientation.azimuth);
+                    return format(chan.getOrientation().azimuth);
                 }
             };
         } else if(tag.equals("name")) {
             return new ChannelTemplate() {
 
                 public String getResult(Channel chan) {
-                    return chan.name;
+                    return chan.getName();
                 }
             };
         } else if(tag.equals("lat")) {
             return new ChannelTemplate() {
 
                 public String getResult(Channel chan) {
-                    return format(chan.my_site.my_location.latitude);
+                    return format(chan.getSite().getLocation().latitude);
                 }
             };
         } else if(tag.equals("lon")) {
             return new ChannelTemplate() {
 
                 public String getResult(Channel chan) {
-                    return format(chan.my_site.my_location.longitude);
+                    return format(chan.getSite().getLocation().longitude);
                 }
             };
         } else if(tag.equals("lon")) {
             return new ChannelTemplate() {
 
                 public String getResult(Channel chan) {
-                    return format(chan.my_site.my_location.longitude);
+                    return format(chan.getSite().getLocation().longitude);
                 }
             };
         } else if(tag.equals("status") && cgt != null) {

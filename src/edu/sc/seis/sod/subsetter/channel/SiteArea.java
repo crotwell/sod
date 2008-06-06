@@ -27,6 +27,6 @@ public class SiteArea extends AreaSubsetter implements ChannelSubsetter, SodElem
     }
 
     public StringTree accept(Channel channel, ProxyNetworkAccess network) {
-    return new StringTreeLeaf(this, super.accept(channel.my_site.my_location));
+    return new StringTreeLeaf(this, super.accept(channel.getSite().getLocation()));
     }
 }

@@ -11,6 +11,7 @@ import org.hibernate.dialect.function.SQLFunctionTemplate;
 
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
+import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.hibernate.HibernateUtil;
 import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
 import edu.sc.seis.fissuresUtil.simple.TimeOMatic;
@@ -86,22 +87,22 @@ public class Play extends edu.sc.seis.fissuresUtil.hibernate.Play {
         SodDB.getSession().lock(ecp, LockMode.NONE);
         sodDb.getNumFailed(ecp.getEvent());
         sodDb.getAll(ecp.getEvent());
-        sodDb.getEventsForStation(ecp.getChannel().getSite().getStation());
+        sodDb.getEventsForStation((StationImpl)ecp.getChannel().getSite().getStation());
         sodDb.getFailed(ecp.getEvent());
-        sodDb.getFailed(ecp.getChannel().getSite().getStation());
-        sodDb.getFailed(ecp.getEvent(), ecp.getChannel().getSite().getStation());
+        sodDb.getFailed((StationImpl)ecp.getChannel().getSite().getStation());
+        sodDb.getFailed(ecp.getEvent(), (StationImpl)ecp.getChannel().getSite().getStation());
         sodDb.getNumFailed(ecp.getEvent());
-        sodDb.getNumFailed(ecp.getChannel().getSite().getStation());
-        sodDb.getNumFailed(ecp.getEvent(), ecp.getChannel().getSite().getStation());
+        sodDb.getNumFailed((StationImpl)ecp.getChannel().getSite().getStation());
+        sodDb.getNumFailed(ecp.getEvent(), (StationImpl)ecp.getChannel().getSite().getStation());
         sodDb.getNumRetry(ecp.getEvent());
-        sodDb.getNumRetry(ecp.getChannel().getSite().getStation());
-        sodDb.getNumRetry(ecp.getEvent(), ecp.getChannel().getSite().getStation());
+        sodDb.getNumRetry((StationImpl)ecp.getChannel().getSite().getStation());
+        sodDb.getNumRetry(ecp.getEvent(), (StationImpl)ecp.getChannel().getSite().getStation());
         sodDb.getNumSuccessful();
         sodDb.getNumSuccessful(ecp.getEvent());
-        sodDb.getNumSuccessful(ecp.getEvent(), ecp.getChannel().getSite().getStation());
+        sodDb.getNumSuccessful(ecp.getEvent(), (StationImpl)ecp.getChannel().getSite().getStation());
         sodDb.getRetry(ecp.getEvent());
-        sodDb.getRetry(ecp.getChannel().getSite().getStation());
-        sodDb.getRetry(ecp.getEvent(), ecp.getChannel().getSite().getStation());
+        sodDb.getRetry((StationImpl)ecp.getChannel().getSite().getStation());
+        sodDb.getRetry(ecp.getEvent(), (StationImpl)ecp.getChannel().getSite().getStation());
     }
     
     protected void storeStatefulEvent() {

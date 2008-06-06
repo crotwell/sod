@@ -23,7 +23,7 @@ public class ChannelEffectiveTimeOverlap extends EffectiveTimeOverlap implements
     }
 
     public StringTree accept(Channel channel, ProxyNetworkAccess network) {
-        return new StringTreeLeaf(this, overlaps(channel.effective_time));
+        return new StringTreeLeaf(this, overlaps(channel.getEffectiveTime()));
     }
 
     static Category logger = Category.getInstance(ChannelEffectiveTimeOverlap.class.getName());

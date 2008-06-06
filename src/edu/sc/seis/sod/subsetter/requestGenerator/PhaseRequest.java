@@ -6,6 +6,7 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.TimeInterval;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.TauP.TauModelException;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
@@ -89,7 +90,7 @@ public class PhaseRequest implements RequestGenerator {
     }
 
     public RequestFilter[] generateRequest(CacheEvent event,
-                                           Channel channel,
+                                           ChannelImpl channel,
                                            CookieJar jar) throws Exception {
         RequestFilter rf =  generateRequest(event, channel);
         if(rf == null) {

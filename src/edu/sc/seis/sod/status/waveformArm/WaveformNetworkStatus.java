@@ -49,12 +49,12 @@ public class WaveformNetworkStatus extends AbstractVelocityStatus implements Wav
 
     public void update(EventChannelPair ecp) {
         // update the page for num successes change
-        change(ecp.getChannel().my_site.my_station, ecp.getStatus());
+        change(ecp.getChannel().getSite().getStation(), ecp.getStatus());
     }
 
     public void update(EventVectorPair ecp) {
         // update the page for num successes change
-        change(ecp.getChannelGroup().getChannels()[0].my_site.my_station, ecp.getStatus());
+        change(ecp.getChannelGroup().getChannels()[0].getSite().getStation(), ecp.getStatus());
     }
 
     public void setArmStatus(String status) throws Exception {}
@@ -62,10 +62,10 @@ public class WaveformNetworkStatus extends AbstractVelocityStatus implements Wav
     public void change(Station station, Status s) {
         try {
             VelocityContext context = new VelocityContext();
-            NetworkAccess networkAccess = Start.getNetworkArm().getNetwork(station.my_network.get_id());
+            NetworkAccess networkAccess = Start.getNetworkArm().getNetwork(station.getNetworkAttr().get_id());
             context.put("network", networkAccess);
-            context.put("stations", new VelocityStationGetter(station.my_network.get_id()));
-            String id = NetworkIdUtil.toStringNoDates(station.my_network.get_id());
+            context.put("stations", new VelocityStationGetter(station.getNetworkAttr().get_id()));
+            String id = NetworkIdUtil.toStringNoDates(station.getNetworkAttr().get_id());
             scheduleOutput("waveformStations/"+ id +".html", context);
         } catch (Throwable e) {
             GlobalExceptionHandler.handle("Can't set status("+s+") for "+StationIdUtil.toString(station.get_id()), e);

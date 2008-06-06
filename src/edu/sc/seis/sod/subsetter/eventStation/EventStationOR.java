@@ -1,7 +1,8 @@
 package edu.sc.seis.sod.subsetter.eventStation;
 
 import org.w3c.dom.Element;
-import edu.iris.Fissures.IfNetwork.Station;
+
+import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
@@ -17,7 +18,7 @@ public final class EventStationOR extends EventStationLogicalSubsetter
     }
 
     public StringTree accept(CacheEvent o,
-                             Station station,
+                             StationImpl station,
                              CookieJar cookieJar) throws Exception {
         StringTree[] result = new StringTree[filterList.size()];
         for(int i = 0; i < filterList.size(); i++) {

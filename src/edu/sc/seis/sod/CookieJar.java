@@ -1,35 +1,11 @@
 package edu.sc.seis.sod;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-import org.apache.velocity.VelocityContext;
 import org.apache.velocity.context.Context;
-import org.apache.velocity.tools.generic.DateTool;
-import org.apache.velocity.tools.generic.IteratorTool;
-import org.apache.velocity.tools.generic.MathTool;
-import org.apache.velocity.tools.generic.NumberTool;
-import org.apache.velocity.tools.generic.RenderTool;
-
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfNetwork.NetworkId;
-import edu.iris.Fissures.network.ChannelIdUtil;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.network.NetworkIdUtil;
-import edu.iris.Fissures.network.SiteIdUtil;
-import edu.iris.Fissures.network.SiteImpl;
-import edu.iris.Fissures.network.StationIdUtil;
-import edu.iris.Fissures.network.StationImpl;
-import edu.sc.seis.fissuresUtil.display.ParseRegions;
-import edu.sc.seis.sod.database.waveform.JDBCVelocityContext;
-import edu.sc.seis.sod.status.FissuresFormatter;
 
 /**
  * CookieJar exists as a way for various subsetters and processors in the

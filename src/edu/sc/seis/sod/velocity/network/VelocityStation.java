@@ -32,13 +32,13 @@ public class VelocityStation extends StationImpl {
             throw new IllegalArgumentException("StationImpl cannot be null");
         }
         this.sta = sta;
-        name = sta.name;
-        my_location = sta.my_location;
-        effective_time = sta.effective_time;
-        operator = sta.operator;
-        description = sta.description;
-        comment = sta.comment;
-        my_network = sta.my_network;
+        name = sta.getName();
+        my_location = sta.getLocation();
+        effective_time = sta.getEffectiveTime();
+        operator = sta.getOperator();
+        description = sta.getDescription();
+        comment = sta.getComment();
+        my_network = sta.getNetworkAttr();
     }
 
     public int getDbId() {
@@ -125,52 +125,52 @@ public class VelocityStation extends StationImpl {
     }
 
     public String getLatitude() {
-        return df.format(sta.my_location.latitude);
+        return df.format(sta.getLocation().latitude);
     }
 
     public String getLatitude(String format) {
-        return new DecimalFormat(format).format(sta.my_location.latitude);
+        return new DecimalFormat(format).format(sta.getLocation().latitude);
     }
 
     public String getLongitude() {
-        return df.format(sta.my_location.longitude);
+        return df.format(sta.getLocation().longitude);
     }
 
     public String getLongitude(String format) {
-        return new DecimalFormat(format).format(sta.my_location.longitude);
+        return new DecimalFormat(format).format(sta.getLocation().longitude);
     }
 
 
     public String getOrientedLatitude() {
-        if(sta.my_location.latitude < 0) {
-            return df.format(-sta.my_location.latitude) + " S";
+        if(sta.getLocation().latitude < 0) {
+            return df.format(-sta.getLocation().latitude) + " S";
         }
-        return df.format(sta.my_location.latitude) + " N";
+        return df.format(sta.getLocation().latitude) + " N";
     }
 
     public String getOrientedLongitude() {
-        if(sta.my_location.longitude < 0) {
-            return df.format(-sta.my_location.longitude) + " W";
+        if(sta.getLocation().longitude < 0) {
+            return df.format(-sta.getLocation().longitude) + " W";
         }
-        return df.format(sta.my_location.longitude) + " E";
+        return df.format(sta.getLocation().longitude) + " E";
     }
 
     public String getDepth() {
-        return FissuresFormatter.formatDepth(QuantityImpl.createQuantityImpl(sta.my_location.depth));
+        return FissuresFormatter.formatDepth(QuantityImpl.createQuantityImpl(sta.getLocation().depth));
     }
 
     public String getDepth(String format) {
-        double depthInKM = QuantityImpl.createQuantityImpl(sta.my_location.depth)
+        double depthInKM = QuantityImpl.createQuantityImpl(sta.getLocation().depth)
                 .convertTo(UnitImpl.KILOMETER).value;
         return new DecimalFormat(format).format(depthInKM);
     }
 
     public String getElevation() {
-        return FissuresFormatter.formatDepth(QuantityImpl.createQuantityImpl(sta.my_location.elevation));
+        return FissuresFormatter.formatDepth(QuantityImpl.createQuantityImpl(sta.getLocation().elevation));
     }
 
     public String getElevation(String format) {
-        double elevInMeters = QuantityImpl.createQuantityImpl(sta.my_location.elevation)
+        double elevInMeters = QuantityImpl.createQuantityImpl(sta.getLocation().elevation)
                 .convertTo(UnitImpl.METER).value;
         return new DecimalFormat(format).format(elevInMeters);
     }

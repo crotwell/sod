@@ -7,8 +7,10 @@ import java.io.IOException;
 import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
+
 import org.apache.velocity.VelocityContext;
 import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.IfNetwork.Channel;
@@ -132,11 +134,11 @@ public class BreqFastRequest implements Request {
                                  int i) throws IOException {
         MicroSecondDate start = new MicroSecondDate(request[i].start_time);
         MicroSecondDate end = new MicroSecondDate(request[i].end_time);
-        out.write(channel.my_site.my_station.get_code() + " "
-                + channel.my_site.my_station.my_network.get_code() + " "
+        out.write(channel.getSite().getStation().get_code() + " "
+                + channel.getSite().getStation().getNetworkAttr().get_code() + " "
                 + format.format(start) + tenths.format(start).substring(0, 1)
                 + " " + format.format(end) + tenths.format(end).substring(0, 1)
-                + " 1 " + channel.get_code() + " " + channel.my_site.get_code()
+                + " 1 " + channel.get_code() + " " + channel.getSite().get_code()
                 + nl);
     }
 

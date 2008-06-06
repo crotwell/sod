@@ -35,7 +35,7 @@ public class PhaseHeaderProcess implements SacProcess {
                         Channel channel) {
         try {
             Arrival[] arrivals = TauPUtil.getTauPUtil(model)
-                    .calcTravelTimes(channel.my_site.my_location,
+                    .calcTravelTimes(channel.getSite().getLocation(),
                                      EventUtil.extractOrigin(event),
                                      new String[] {phaseName});
             if(arrivals.length != 0) {

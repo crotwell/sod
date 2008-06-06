@@ -158,8 +158,8 @@ public class ChannelGrouper {
                                         if(accept) {
                                             StationSubsetter stationSubsetter = (StationSubsetter)subsetter;
                                             NetworkAccess network = Start.getNetworkArm()
-                                                    .getNetwork(chn.get(0).my_site.my_station.get_id().network_id);
-                                            if(!stationSubsetter.accept(chn.get(0).my_site.my_station,
+                                                    .getNetwork(chn.get(0).getSite().getStation().get_id().network_id);
+                                            if(!stationSubsetter.accept(chn.get(0).getSite().getStation(),
                                                                         network).isSuccess()) {
                                                 accept = false;
                                             }
@@ -205,9 +205,9 @@ public class ChannelGrouper {
         ChannelImpl[] chans = channelGroup.getChannels();
         for(int i = 0; i < chans.length; i++) {
             for(int j = i + 1; j < chans.length; j++) {
-                if(!OrientationUtil.areOrthogonal(chans[i].an_orientation,
-                                                  chans[j].an_orientation)) {
-                    logger.info("Fail areOrthogonal ("+i+","+j+"): "+ChannelIdUtil.toString(chans[i].get_id())+" "+OrientationUtil.toString(chans[i].an_orientation)+" "+ChannelIdUtil.toString(chans[j].get_id())+" "+OrientationUtil.toString(chans[j].an_orientation));
+                if(!OrientationUtil.areOrthogonal(chans[i].getOrientation(),
+                                                  chans[j].getOrientation())) {
+                    logger.info("Fail areOrthogonal ("+i+","+j+"): "+ChannelIdUtil.toString(chans[i].get_id())+" "+OrientationUtil.toString(chans[i].getOrientation())+" "+ChannelIdUtil.toString(chans[j].get_id())+" "+OrientationUtil.toString(chans[j].getOrientation()));
                     return false;
                 }
             }
@@ -217,16 +217,16 @@ public class ChannelGrouper {
 
     private static boolean haveSameSamplingRate(ChannelGroup cg) {
         ChannelImpl[] chans = cg.getChannels();
-        SamplingImpl sampl = (SamplingImpl)chans[0].sampling_info;
+        SamplingImpl sampl = (SamplingImpl)chans[0].getSamplingInfo();
         QuantityImpl freq = sampl.getFrequency();
         UnitImpl baseUnit = freq.getUnit();
         double samplingRate0 = (freq.getValue()) * sampl.getNumPoints();
         for(int i = 1; i < chans.length; i++) {
-            SamplingImpl sample = (SamplingImpl)chans[i].sampling_info;
+            SamplingImpl sample = (SamplingImpl)chans[i].getSamplingInfo();
             double sampleRate = (sample.getFrequency().convertTo(baseUnit).getValue())
                     * sample.getNumPoints();
             if(sampleRate != samplingRate0) {
-                logger.info("Fail haveSameSamplingRate ("+i+"): "+ChannelIdUtil.toString(chans[i].get_id())+" "+chans[i].sampling_info+" "+ChannelIdUtil.toString(chans[0].get_id())+" "+chans[0].sampling_info);
+                logger.info("Fail haveSameSamplingRate ("+i+"): "+ChannelIdUtil.toString(chans[i].get_id())+" "+chans[i].getSamplingInfo()+" "+ChannelIdUtil.toString(chans[0].get_id())+" "+chans[0].getSamplingInfo());
                 return false;
             }
         }

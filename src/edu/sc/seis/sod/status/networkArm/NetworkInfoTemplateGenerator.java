@@ -122,7 +122,7 @@ public class NetworkInfoTemplateGenerator implements NetworkMonitor {
 
     public void change(Site site, Status status) {
         try {
-            ChannelsInStationTemplate cst = getChannelsInStationTemplate(site.my_station);
+            ChannelsInStationTemplate cst = getChannelsInStationTemplate(site.getStation());
             cst.change(site, status);
         } catch(IOException e) {
             String msg = "Got an IOException changing channel status: ";
@@ -180,7 +180,7 @@ public class NetworkInfoTemplateGenerator implements NetworkMonitor {
 
     public StationsInNetworkTemplate getStationsInNetworkTemplate(Station station)
             throws ConfigurationException {
-        return getStationsInNetworkTemplate(station.my_network);
+        return getStationsInNetworkTemplate(station.getNetworkAttr());
     }
 
     public synchronized ChannelsInStationTemplate getChannelsInStationTemplate(Station station)
@@ -189,7 +189,7 @@ public class NetworkInfoTemplateGenerator implements NetworkMonitor {
             channelTemplates.put(getIDString(station),
                                  new ChannelsInStationTemplate(chanConfig,
                                                                fileDir,
-                                                               netFormatter.getResult(station.my_network)
+                                                               netFormatter.getResult(station.getNetworkAttr())
                                                                        + '/'
                                                                        + staFormatter.getResult(station)
                                                                        + '/'
@@ -202,7 +202,7 @@ public class NetworkInfoTemplateGenerator implements NetworkMonitor {
 
     public ChannelsInStationTemplate getChannelsInStationTemplate(Channel chan)
             throws IOException, ConfigurationException {
-        return getChannelsInStationTemplate(chan.my_site.my_station);
+        return getChannelsInStationTemplate(chan.getSite().getStation());
     }
 
     public boolean contains(NetworkAttr net) {

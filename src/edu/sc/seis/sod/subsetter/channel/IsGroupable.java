@@ -17,7 +17,7 @@ public class IsGroupable implements ChannelSubsetter {
 
 	public StringTree accept(Channel channel, ProxyNetworkAccess network)
 			throws Exception {
-        Channel[] allChans = network.retrieve_for_station(channel.my_site.my_station.get_id());
+        Channel[] allChans = network.retrieve_for_station(channel.getSite().getStation().get_id());
         ArrayList<ChannelImpl> siteChans = new ArrayList<ChannelImpl>();
         for (int i = 0; i < allChans.length; i++) {
 			if (SiteIdUtil.areSameSite(allChans[i].get_id(), channel.get_id())) {
