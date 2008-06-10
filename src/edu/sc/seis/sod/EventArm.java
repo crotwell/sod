@@ -84,8 +84,8 @@ public class EventArm implements Arm {
     private void notifyWaveformArm() {
         WaveformArm waveformArm = Start.getWaveformArm();
         if(waveformArm != null){
-            synchronized(waveformArm) {
-                waveformArm.notify();
+            synchronized(getWaveformArmSync()) {
+                getWaveformArmSync().notify();
             }
         }
     }
@@ -184,9 +184,9 @@ public class EventArm implements Arm {
     private void waitForProcessing() throws Exception {
         int numWaiting = eventStatus.getNumWaiting();
         if( !Start.isArmFailure() && waitForWaveformProcessing  &&  numWaiting > MIN_WAIT_EVENTS) {
-            synchronized(this) {
+            synchronized(getWaveformArmSync()) {
                 setStatus("eventArm waiting until there are less than "+MIN_WAIT_EVENTS+" events waiting to be processed. "+numWaiting+" in queue now.");
-                wait();
+                getWaveformArmSync().wait();
             }
         }
     }
@@ -293,12 +293,18 @@ public class EventArm implements Arm {
         return (EventSource[])sources.toArray(new EventSource[0]);
     }
 
+    public Object getWaveformArmSync() {
+        return waveformArmSync;
+    }
+    
     private static final Status ECPOP_INIT = Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                                      Standing.INIT);
 
     private static final Status SUCCESS = Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                                      Standing.SUCCESS);
 
+    private final Object waveformArmSync = new Object();
+    
     private List sources = new ArrayList();
 
     private List subsetters = new ArrayList();
@@ -316,4 +322,6 @@ public class EventArm implements Arm {
     private static Logger logger = Logger.getLogger(EventArm.class);
 
     private static final org.apache.log4j.Logger failLogger = org.apache.log4j.Logger.getLogger("Fail.EventArm");
+
+    
 }// EventArm

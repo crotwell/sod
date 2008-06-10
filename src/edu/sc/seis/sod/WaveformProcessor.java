@@ -17,8 +17,8 @@ public class WaveformProcessor extends Thread {
                     logger.debug("Processor waiting for work unit to show up");
                     try {
                         // sleep, but wake up if waveformArm does notifyAll()
-                        synchronized(Start.getWaveformArm()) {
-                            Start.getWaveformArm().wait(100000);
+                        synchronized(Start.getWaveformArm().getWaveformProcessorSync()) {
+                            Start.getWaveformArm().getWaveformProcessorSync().wait(100000);
                         }
                     } catch(InterruptedException e) {}
                     next = getNext(Standing.INIT);

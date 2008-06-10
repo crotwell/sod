@@ -99,8 +99,8 @@ public class WaveformArm implements Arm {
                 int numEvents = populateEventChannelDb(Standing.INIT);
                 sleepALittle(numEvents, sleepTime, logInterval);
             } while(possibleToContinue() 
-                    && sodDB.getNumWorkUnits(Standing.INIT) != 0 
-                    && sodDB.getNumWorkUnits(Standing.IN_PROG) != 0 );
+                    || sodDB.getNumWorkUnits(Standing.INIT) != 0 
+                    || sodDB.getNumWorkUnits(Standing.IN_PROG) != 0 );
             logger.info("Main waveform arm done.  Retrying failures.");
             while(WaveformProcessor.getProcessorsWorking() == pool.length) {
                 // all threads are working
@@ -142,9 +142,11 @@ public class WaveformArm implements Arm {
             logger.debug("no successful events found in last " + logInterval);
             lastEventStartLogTime = ClockUtil.now();
         }
-        try {
-            Thread.sleep(sleepTime * 1000);
-        } catch(InterruptedException e) {}
+        synchronized(eventArm.getWaveformArmSync()) {
+            try {
+                eventArm.getWaveformArmSync().wait(sleepTime * 1000);
+            } catch(InterruptedException e) {}
+        }
     }
 
     public LocalSeismogramArm getLocalSeismogramArm() {
@@ -196,8 +198,8 @@ public class WaveformArm implements Arm {
                                     Standing.SUCCESS));
             eventDb.commit();
             // wake up the workers in case they are asleep
-            synchronized(this) {
-                notifyAll();
+            synchronized(getWaveformProcessorSync()) {
+                getWaveformProcessorSync().notifyAll();
             }
             eventArm.change(ev);
             int numWaiting = eventDb.getNumWaiting();
@@ -205,8 +207,8 @@ public class WaveformArm implements Arm {
                 logger.debug("There are less than "
                         + EventArm.MIN_WAIT_EVENTS
                         + " waiting events.  Telling the eventArm to start up again");
-                synchronized(Start.getEventArm()) {
-                    Start.getEventArm().notify();
+                synchronized(Start.getEventArm().getWaveformArmSync()) {
+                    Start.getEventArm().getWaveformArmSync().notify();
                 }
             }
         }
@@ -220,10 +222,11 @@ public class WaveformArm implements Arm {
         while(possibleToContinue() && next == null) {
             logger.debug("Waiting for the first exciting event to show up");
             try {
-                synchronized(this) {
-                    wait();
+                synchronized(Start.getEventArm().getWaveformArmSync()) {
+                    Start.getEventArm().getWaveformArmSync().wait();
                 }
             } catch(InterruptedException e) {}
+            logger.debug("first event has shown up, because the event arm tells us so");
             next = eventDb.getNext(Standing.INIT);
         }
         return next;
@@ -359,5 +362,12 @@ public class WaveformArm implements Arm {
 
     private int poolLineCapacity = 100;
 
+    private final Object waveformProcessorSync = new Object();
+    
     int retryNum;
+
+    
+    public Object getWaveformProcessorSync() {
+        return waveformProcessorSync;
+    }
 }
