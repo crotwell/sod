@@ -1,0 +1,35 @@
+
+<ehcache>
+
+    <diskStore path="java.io.tmpdir"/>
+
+    <defaultCache
+        maxElementsInMemory="10000"
+        eternal="false"
+        timeToIdleSeconds="120"
+        timeToLiveSeconds="120"
+        overflowToDisk="true"
+        diskPersistent="false"
+        diskExpiryThreadIntervalSeconds="120"
+        memoryStoreEvictionPolicy="LRU"
+        />
+        
+    <cache name="edu.iris.Fissures.network.NetworkAttrImpl"
+        maxElementsInMemory="300"
+        eternal="true"
+        overflowToDisk="false"
+        />
+        
+    <cache name="edu.iris.Fissures.network.StationImpl"
+        maxElementsInMemory="3000"
+        eternal="true"
+        overflowToDisk="false"
+        />
+        
+    <cache name="edu.iris.Fissures.network.ChannelImpl"
+        maxElementsInMemory="9000"
+        eternal="true"
+        overflowToDisk="false"
+        />
+
+</ehcache>
