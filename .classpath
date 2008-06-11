@@ -21,5 +21,6 @@
 	<classpathentry exported="true" kind="var" path="MAVEN_REPO/hibernate/jars/hibernate-3.2.5.jar"/>
 	<classpathentry exported="true" kind="var" path="MAVEN_REPO/hibernate/jars/hibernate-tools-3.2.0beta9a.jar"/>
 	<classpathentry exported="true" kind="var" path="MAVEN_REPO/hibernate/jars/jta-unknown_USC1.jar"/>
+	<classpathentry exported="true" kind="var" path="MAVEN_REPO/ehcache/jars/ehcache-1.4.1.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

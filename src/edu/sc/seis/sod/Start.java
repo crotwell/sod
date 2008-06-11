@@ -19,22 +19,19 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import net.sf.ehcache.CacheManager;
+
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-import org.hibernate.Hibernate;
-import org.hibernate.dialect.function.SQLFunctionTemplate;
-import org.hibernate.tool.hbm2ddl.SchemaUpdate;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
-import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.RetryStrategy;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
@@ -44,8 +41,6 @@ import edu.sc.seis.fissuresUtil.exceptionHandler.SystemOutReporter;
 import edu.sc.seis.fissuresUtil.exceptionHandler.WindowConnectionInterceptor;
 import edu.sc.seis.fissuresUtil.hibernate.AbstractHibernateDB;
 import edu.sc.seis.fissuresUtil.hibernate.HibernateUtil;
-import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
-import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockNetworkAttr;
 import edu.sc.seis.fissuresUtil.simple.Initializer;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.StatefulEventDB;
@@ -170,6 +165,10 @@ public class Start {
         loadRunProps(getConfig());
         ConnMgr.installDbProperties(props, args.getInitialArgs());
         synchronized(HibernateUtil.class) {
+            // configure EhCache
+            InputStream ehconfigStream = (Start.class).getClassLoader().getResourceAsStream(EHCACHE_CONFIG);
+            CacheManager singletonManager = CacheManager.create(ehconfigStream);
+            
             HibernateUtil.setUpFromConnMgr(props);
             SodDB.configHibernate(HibernateUtil.getConfiguration());
             Iterator it = getRunProps().getHibernateConfig().iterator();
@@ -639,4 +638,6 @@ public class Start {
     public static final String TUTORIAL_LOC = "jar:edu/sc/seis/sod/data/configFiles/demo.xml";
 
     public static final String DEFAULT_PROPS = "edu/sc/seis/sod/data/sod.prop";
+    
+    private static final String EHCACHE_CONFIG = "edu/sc/seis/sod/data/ehcache.xml";
 }// Start
