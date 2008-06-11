@@ -33,6 +33,7 @@ import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.seismogram.JDBCSeismogramFiles;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
+import edu.sc.seis.fissuresUtil.hibernate.SeismogramFileRefDB;
 import edu.sc.seis.fissuresUtil.sac.FissuresToSac;
 import edu.sc.seis.fissuresUtil.xml.DataSet;
 import edu.sc.seis.fissuresUtil.xml.DataSetSeismogram;
@@ -99,12 +100,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
         masterFileName = DOMHelper.extractText(config, "masterFileName", "");
         preserveRequest = DOMHelper.hasElement(config, "preserveRequest");
         if(DOMHelper.hasElement(config, "storeSeismogramsInDB")) {
-            try {
-                jdbcSeisFile = new JDBCSeismogramFiles(ConnMgr.createConnection());
-            } catch(SQLException e) {
-                throw new ConfigurationException("Trouble creating database connection",
-                                                 e);
-            }
+            jdbcSeisFile = SeismogramFileRefDB.getSingleton();
             storeSeismogramsInDB = true;
         }
         eventDirTemplate = DOMHelper.extractText(config,
@@ -233,7 +229,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
     }
 
     protected URLDataSetSeismogram saveInDataSet(EventAccessOperations event,
-                                                 Channel channel,
+                                                 ChannelImpl channel,
                                                  LocalSeismogramImpl[] seismograms,
                                                  SeismogramFileTypes type)
             throws Exception {
@@ -242,7 +238,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
 
     // Used to save a seismogram locally.
     protected URLDataSetSeismogram saveInDataSet(EventAccessOperations event,
-                                                 Channel channel,
+                                                 ChannelImpl channel,
                                                  LocalSeismogramImpl[] seismograms,
                                                  SeismogramFileTypes type,
                                                  RequestFilter request,
@@ -593,5 +589,5 @@ public class SaveSeismogramToFile implements WaveformProcess {
 
     private static final Logger logger = Logger.getLogger(SaveSeismogramToFile.class);
 
-    private JDBCSeismogramFiles jdbcSeisFile;
+    private SeismogramFileRefDB jdbcSeisFile;
 }
