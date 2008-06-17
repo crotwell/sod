@@ -90,7 +90,7 @@ public class FissuresFormatter {
     }
 
     public static QuantityImpl getDepth(Origin origin) {
-        return getDepth(origin.my_location);
+        return getDepth(origin.getLocation());
     }
 
     public static QuantityImpl getDepth(Location loc) {
@@ -106,7 +106,7 @@ public class FissuresFormatter {
     }
 
     public static float getLatitude(Origin origin) {
-        return getLatitude(origin.my_location);
+        return getLatitude(origin.getLocation());
     }
 
     public static float getLatitude(Location loc) {
@@ -126,7 +126,7 @@ public class FissuresFormatter {
     }
 
     public static float getLongitude(Origin origin) {
-        return getLongitude(origin.my_location);
+        return getLongitude(origin.getLocation());
     }
 
     public static float getLongitude(Location loc) {
@@ -182,10 +182,10 @@ public class FissuresFormatter {
         if(origin == null) {
             throw new NullPointerException("origin is null");
         }
-        if(origin.my_location == null) {
+        if(origin.getLocation() == null) {
             throw new NullPointerException("origin.my_location is null");
         }
-        return getDistance(station.getLocation(), origin.my_location);
+        return getDistance(station.getLocation(), origin.getLocation());
     }
 
     public static QuantityImpl getDistance(Location from, Location to) {
@@ -200,7 +200,7 @@ public class FissuresFormatter {
     }
 
     public static QuantityImpl getAzimuth(Station station, Origin origin) {
-        return getAzimuth(station.getLocation(), origin.my_location);
+        return getAzimuth(station.getLocation(), origin.getLocation());
     }
 
     public static QuantityImpl getAzimuth(Location from, Location to) {
@@ -209,7 +209,7 @@ public class FissuresFormatter {
     }
 
     public static QuantityImpl getBackAzimuth(Station station, Origin origin) {
-        return getBackAzimuth(station.getLocation(), origin.my_location);
+        return getBackAzimuth(station.getLocation(), origin.getLocation());
     }
 
     public static QuantityImpl getBackAzimuth(Location from, Location to) {
@@ -238,7 +238,7 @@ public class FissuresFormatter {
     }
 
     public static String formatDateForFile(Origin origin) {
-        return formatDateForFile(new MicroSecondDate(origin.origin_time));
+        return formatDateForFile(new MicroSecondDate(origin.getOriginTime()));
     }
 
     public static String fancyFormat(Date d) {

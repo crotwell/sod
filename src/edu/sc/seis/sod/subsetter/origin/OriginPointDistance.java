@@ -25,8 +25,8 @@ public class OriginPointDistance extends AbstractOriginPoint implements OriginSu
      * given lat and lon.
      */
     public StringTree accept(CacheEvent event, EventAttr eventAttr, Origin origin) {
-        double oLat = origin.my_location.latitude;
-        double oLon = origin.my_location.longitude;
+        double oLat = origin.getLocation().latitude;
+        double oLon = origin.getLocation().longitude;
         DistAz distaz = new DistAz(latitude, longitude, oLat, oLon);
         double delta = distaz.getDelta();
         return new StringTreeLeaf(this, min <= delta && max >= delta);

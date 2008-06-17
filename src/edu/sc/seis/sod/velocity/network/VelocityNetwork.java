@@ -5,6 +5,7 @@ import org.apache.velocity.VelocityContext;
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
@@ -17,7 +18,7 @@ public class VelocityNetwork extends NetworkAttr {
      * Creates a VelocityNetwork with no stations. Will throw
      * UnsupportedOperationException if getStations is called
      */
-    public VelocityNetwork(NetworkAttr net) {
+    public VelocityNetwork(NetworkAttrImpl net) {
         this(net, -1);
     }
 
@@ -25,12 +26,13 @@ public class VelocityNetwork extends NetworkAttr {
      * Creates a VelocityNetwork with no stations. Will throw
      * UnsupportedOperationException if getStations is called
      */
-    public VelocityNetwork(NetworkAttr net, int dbid) {
+    public VelocityNetwork(NetworkAttrImpl net, int dbid) {
         this(net, dbid, null);
     }
 
     public VelocityNetwork(List<VelocityStation> stations) {
-        this(getFirstStation(stations).getNet(), stations);
+        this((NetworkAttrImpl)getFirstStation(stations).getWrapped().getNetworkAttr(),
+             stations);
     }
     
     private static final VelocityStation getFirstStation(List<VelocityStation> stations) {
@@ -40,11 +42,11 @@ public class VelocityNetwork extends NetworkAttr {
         return stations.get(0);
     }
 
-    public VelocityNetwork(NetworkAttr net, List stations) {
+    public VelocityNetwork(NetworkAttrImpl net, List stations) {
         this(net, -1, stations);
     }
 
-    private VelocityNetwork(NetworkAttr net, int dbid, List stations) {
+    private VelocityNetwork(NetworkAttrImpl net, int dbid, List stations) {
         this.net = net;
         this.stations = stations;
         this.name = net.name;
@@ -52,6 +54,10 @@ public class VelocityNetwork extends NetworkAttr {
         this.owner = net.owner;
         this.effective_time = net.effective_time;
         this.dbid = dbid;
+    }
+    
+    public NetworkAttrImpl getWrapped() {
+        return net;
     }
 
     public NetworkId get_id() {
@@ -157,7 +163,7 @@ public class VelocityNetwork extends NetworkAttr {
 
     private List stations;
 
-    private NetworkAttr net;
+    private NetworkAttrImpl net;
 
     public void insertIntoContext(VelocityContext ctx) {
         ctx.put("network", this);
@@ -168,6 +174,6 @@ public class VelocityNetwork extends NetworkAttr {
         if(net instanceof VelocityNetwork) {
             return (VelocityNetwork)net;
         }
-        return new VelocityNetwork(net);
+        return new VelocityNetwork((NetworkAttrImpl)net);
     }
 }

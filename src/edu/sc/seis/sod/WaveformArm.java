@@ -176,9 +176,9 @@ public class WaveformArm implements Arm {
                                     Standing.IN_PROG));
             eventDb.commit();
             numEvents++;
-            if(ev.get_preferred_origin().origin_time == null) {
+            if(ev.get_preferred_origin().getOriginTime() == null) {
                 throw new RuntimeException("otime is null "
-                        + ev.get_preferred_origin().my_location);
+                        + ev.get_preferred_origin().getLocation());
             }
             EventEffectiveTimeOverlap overlap = new EventEffectiveTimeOverlap(ev);
             CacheNetworkAccess[] networks = networkArm.getSuccessfulNetworks();

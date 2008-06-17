@@ -38,7 +38,7 @@ public class LinearDistanceMagnitudeRange extends DistanceRangeSubsetter
                           double stationLat,
                           double stationLon) {
         Origin origin = EventUtil.extractOrigin(eventAccess);
-        Location originLoc = origin.my_location;
+        Location originLoc = origin.getLocation();
         double actualDistance = SphericalCoords.distance(originLoc.latitude,
                                                          originLoc.longitude,
                                                          stationLat,
@@ -48,14 +48,14 @@ public class LinearDistanceMagnitudeRange extends DistanceRangeSubsetter
                     + (actualDistance - getMin().value)
                     * (double)(magnitudeRange.getMaxValue() - magnitudeRange.getMinValue())
                     / (getMin().value - getMax().value);
-            for(int i = 0; i < origin.magnitudes.length; i++) {
-                if(origin.magnitudes[i].value >= resultantMagnitude) {
+            for(int i = 0; i < origin.getMagnitudes().length; i++) {
+                if(origin.getMagnitudes()[i].value >= resultantMagnitude) {
                     if(magnitudeRange.getSearchTypes().length == 0) {
                         // don't care about search types
                         return true;
                     }
                     for(int j = 0; j < magnitudeRange.getSearchTypes().length; j++) {
-                        if(origin.magnitudes[i].type.equals(magnitudeRange.getSearchTypes())) { return true; }
+                        if(origin.getMagnitudes()[i].type.equals(magnitudeRange.getSearchTypes())) { return true; }
                     }
                 }
             }

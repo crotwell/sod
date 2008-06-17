@@ -34,7 +34,7 @@ public class OriginOffsetRequest implements RequestGenerator {
                                            CookieJar cookieJar)
             throws Exception {
         Origin origin = EventUtil.extractOrigin(event);
-        MicroSecondDate originDate = new MicroSecondDate(origin.origin_time);
+        MicroSecondDate originDate = new MicroSecondDate(origin.getOriginTime());
         MicroSecondDate bDate = originDate.add(beginOffset);
         MicroSecondDate eDate = originDate.add(endOffset);
         RequestFilter[] filters = {new RequestFilter(channel.get_id(),

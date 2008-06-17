@@ -24,7 +24,7 @@ public class Contributor implements OriginSubsetter{
      * contributor specified in the configuration file.
      */
     public StringTree accept(CacheEvent event, EventAttr eventAttr, Origin origin) {
-        if(origin.contributor.equals(getContributor())) return new StringTreeLeaf(this, true);
+        if(origin.getContributor().equals(getContributor())) return new StringTreeLeaf(this, true);
         return new StringTreeLeaf(this, false);
     }
 

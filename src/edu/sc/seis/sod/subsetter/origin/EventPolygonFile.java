@@ -23,7 +23,7 @@ public class EventPolygonFile implements OriginSubsetter {
                              Origin preferred_origin) {
         return new StringTreeLeaf(this,
                                   AreaUtil.inArea(locations,
-                                                  preferred_origin.my_location));
+                                                  preferred_origin.getLocation()));
     }
 
     private Location[] locations;

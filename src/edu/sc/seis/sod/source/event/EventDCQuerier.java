@@ -114,8 +114,8 @@ public class EventDCQuerier {
         Arrays.sort(cached, new Comparator() {
 
             public int compare(Object first, Object second) {
-                MicroSecondDate firstOrigin = new MicroSecondDate(((CacheEvent)first).getOrigin().origin_time);
-                MicroSecondDate secondOrigin = new MicroSecondDate(((CacheEvent)second).getOrigin().origin_time);
+                MicroSecondDate firstOrigin = new MicroSecondDate(((CacheEvent)first).getOrigin().getOriginTime());
+                MicroSecondDate secondOrigin = new MicroSecondDate(((CacheEvent)second).getOrigin().getOriginTime());
                 return firstOrigin.compareTo(secondOrigin);
             }
         });
@@ -166,13 +166,13 @@ public class EventDCQuerier {
      * @return - True if a magnitude is found and moved into the 0th position
      */
     public static boolean putPassingMagFirst(Origin o, MagnitudeRange magRange) {
-        Magnitude[] acceptable = magRange.getAcceptable(o.magnitudes);
+        Magnitude[] acceptable = magRange.getAcceptable(o.getMagnitudes());
         if(acceptable.length > 0) {
-            Magnitude zeroth = o.magnitudes[0];
-            for(int i = 0; i < o.magnitudes.length; i++) {
-                if(o.magnitudes[i].equals(acceptable[0])) {
-                    o.magnitudes[0] = acceptable[0];
-                    o.magnitudes[i] = zeroth;
+            Magnitude zeroth = o.getMagnitudes()[0];
+            for(int i = 0; i < o.getMagnitudes().length; i++) {
+                if(o.getMagnitudes()[i].equals(acceptable[0])) {
+                    o.getMagnitudes()[0] = acceptable[0];
+                    o.getMagnitudes()[i] = zeroth;
                     return true;
                 }
             }

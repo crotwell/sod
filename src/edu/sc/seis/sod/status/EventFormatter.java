@@ -99,21 +99,21 @@ public class EventFormatter extends Template implements EventTemplate {
             return new EventTemplate() {
 
                 public String getResult(CacheEvent ev) {
-                    return UnitDisplayUtil.formatQuantityImpl(getOrigin(ev).my_location.depth);
+                    return UnitDisplayUtil.formatQuantityImpl(getOrigin(ev).getLocation().depth);
                 }
             };
         } else if(tag.equals("latitude")) {
             return new EventTemplate() {
 
                 public String getResult(CacheEvent ev) {
-                    return format(getOrigin(ev).my_location.latitude);
+                    return format(getOrigin(ev).getLocation().latitude);
                 }
             };
         } else if(tag.equals("longitude")) {
             return new EventTemplate() {
 
                 public String getResult(CacheEvent ev) {
-                    return format(getOrigin(ev).my_location.longitude);
+                    return format(getOrigin(ev).getLocation().longitude);
                 }
             };
         } else if(tag.equals("magnitude")) {
@@ -198,10 +198,10 @@ public class EventFormatter extends Template implements EventTemplate {
 
         public String getResult(CacheEvent ev) {
             try {
-                return sdf.format(new MicroSecondDate(getOrigin(ev).origin_time));
+                return sdf.format(new MicroSecondDate(getOrigin(ev).getOriginTime()));
             } catch(NumberFormatException e) {
                 throw new RuntimeException("Offending date_time: "
-                        + getOrigin(ev).origin_time.date_time, e);
+                        + getOrigin(ev).getOriginTime().date_time, e);
             }
         }
 
@@ -243,7 +243,7 @@ public class EventFormatter extends Template implements EventTemplate {
     }
 
     private String getMags(CacheEvent event) {
-        Magnitude[] mags = getOrigin(event).magnitudes;
+        Magnitude[] mags = getOrigin(event).getMagnitudes();
         String result = new String();
         for(int i = 0; i < mags.length; i++) {
             result += MagnitudeUtil.toString(mags[i]) + " ";
@@ -252,7 +252,7 @@ public class EventFormatter extends Template implements EventTemplate {
     }
 
     public static String getMag(CacheEvent event) {
-        Magnitude[] mags = getOrigin(event).magnitudes;
+        Magnitude[] mags = getOrigin(event).getMagnitudes();
         if(mags.length > 0) {
             return MagnitudeUtil.toString(mags[0]);
         }

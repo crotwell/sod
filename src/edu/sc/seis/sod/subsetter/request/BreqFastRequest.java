@@ -155,26 +155,26 @@ public class BreqFastRequest implements Request {
         insert(out, "altmedia1", "ALTERNATIVE MEDIA");
         insert(out, "altmedia2", "ALTERNATIVE MEDIA");
         Origin o = EventUtil.extractOrigin(event);
-        out.write(".SOURCE " + "~" + o.catalog + " " + o.contributor
+        out.write(".SOURCE " + "~" + o.getCatalog() + " " + o.getContributor()
                 + "~unknown~unknown~" + nl);
-        MicroSecondDate oTime = new MicroSecondDate(o.origin_time);
+        MicroSecondDate oTime = new MicroSecondDate(o.getOriginTime());
         out.write(".HYPO "
                 + "~"
                 + format.format(oTime)
                 + tenths.format(oTime)
                 + "~"
-                + o.my_location.latitude
+                + o.getLocation().latitude
                 + "~"
-                + o.my_location.longitude
+                + o.getLocation().longitude
                 + "~"
-                + ((QuantityImpl)o.my_location.depth).convertTo(UnitImpl.KILOMETER)
+                + ((QuantityImpl)o.getLocation().depth).convertTo(UnitImpl.KILOMETER)
                         .getValue() + "~" + "0" + "~"
                 + event.get_attributes().region.number + "~"
                 + regions.getRegionName(event.get_attributes().region) + "~"
                 + nl);
-        for(int j = 0; j < o.magnitudes.length; j++) {
-            out.write(".MAGNITUDE ~" + o.magnitudes[j].value + "~"
-                    + o.magnitudes[j].type + "~" + nl);
+        for(int j = 0; j < o.getMagnitudes().length; j++) {
+            out.write(".MAGNITUDE ~" + o.getMagnitudes()[j].value + "~"
+                    + o.getMagnitudes()[j].type + "~" + nl);
         } // end of for (int j=0; j<o.magnitude.length; j++)
         insert(out, "quality");
         out.write(".LABEL " + label + nl);

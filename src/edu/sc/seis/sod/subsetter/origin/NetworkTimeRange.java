@@ -52,7 +52,7 @@ public class NetworkTimeRange implements OriginSubsetter, ArmListener,
                              EventAttr eventAttr,
                              Origin origin) {
         return new StringTreeLeaf(this,
-                                  getMSTR().contains(new MicroSecondDate(origin.origin_time)));
+                                  getMSTR().contains(new MicroSecondDate(origin.getOriginTime())));
     }
 
     public synchronized MicroSecondTimeRange getMSTR() {

@@ -22,7 +22,7 @@ public class MagnitudeRangeTest extends TestCase {
         mag.type = "mb";
         mag.value = 5.0f;
         Origin origin = MockOrigin.create();
-        origin.magnitudes = new Magnitude[] {mag};
+        origin.setMagnitudes(new Magnitude[] {mag});
         EventAttr eventAttr = new EventAttrImpl("test",
                                                 ParseRegions.getInstance()
                                                         .getGeographicRegion(7));
@@ -69,7 +69,7 @@ public class MagnitudeRangeTest extends TestCase {
                 + "<min>5.0</min>" + "<max>6.0</max>" + "</magnitudeRange>");
         range = new MagnitudeRange(element);
         Magnitude mag2 = new Magnitude("Ms", 6.1f, "FAKE");
-        origin.magnitudes = new Magnitude[] {mag, mag2};
+        origin.setMagnitudes(new Magnitude[] {mag, mag2});
         assertFalse(mag.value + " " + mag.type + "  " + range.getMinValue()
                             + "<" + range.getMaxValue() + " " + contributors,
                     range.accept(null, eventAttr, origin).isSuccess());

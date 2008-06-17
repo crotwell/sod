@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -29,8 +28,6 @@ import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.bag.LongShortTrigger;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
-import edu.sc.seis.fissuresUtil.database.ConnMgr;
-import edu.sc.seis.fissuresUtil.database.seismogram.JDBCSeismogramFiles;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.hibernate.SeismogramFileRefDB;
@@ -122,7 +119,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
         logger.info("Got " + seismograms.length + " seismograms for "
                 + ChannelIdUtil.toString(channel.get_id()) + " for event in "
                 + regions.getRegionName(event.get_attributes().region) + " at "
-                + event.get_preferred_origin().origin_time.date_time);
+                + event.get_preferred_origin().getOriginTime().date_time);
         if(seismograms.length == 0) {
             return new WaveformResult(seismograms, new StringTreeLeaf(this,
                                                                       true));
@@ -162,7 +159,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
         logger.info("Finished save for " + seismograms.length + " seismograms for "
                     + ChannelIdUtil.toString(channel.get_id()) + " for event in "
                     + regions.getRegionName(event.get_attributes().region) + " at "
-                    + event.get_preferred_origin().origin_time.date_time+" url="+urls[0]);
+                    + event.get_preferred_origin().getOriginTime().date_time+" url="+urls[0]);
         return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
     }
 
@@ -433,7 +430,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
                     .toURL());
         } else {
             logger.debug("creating new dataset " + getName(event));
-            lastDataSet = new MemoryDataSet(EventUtil.extractOrigin(event).origin_time.date_time,
+            lastDataSet = new MemoryDataSet(EventUtil.extractOrigin(event).getOriginTime().date_time,
                                         getName(event),
                                         System.getProperty("user.name"),
                                         new AuditInfo[0]);
@@ -505,7 +502,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
     }
 
     private MemoryDataSet createDataSet(EventAccessOperations event) {
-        return new MemoryDataSet(EventUtil.extractOrigin(event).origin_time.date_time,
+        return new MemoryDataSet(EventUtil.extractOrigin(event).getOriginTime().date_time,
                                  getName(event),
                                  System.getProperty("user.name"),
                                  new AuditInfo[0]);
@@ -522,7 +519,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
                 return eventDS.getDataSet(dsNames[i]);
             }
         }
-        MemoryDataSet dataset = new MemoryDataSet(EventUtil.extractOrigin(event).origin_time.date_time
+        MemoryDataSet dataset = new MemoryDataSet(EventUtil.extractOrigin(event).getOriginTime().date_time
                                                           + "/" + subDSName,
                                                   subDSName,
                                                   System.getProperty("user.name"),

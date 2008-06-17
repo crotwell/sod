@@ -31,7 +31,7 @@ public class MidPoint extends AreaSubsetter  implements EventStationSubsetter {
                              StationImpl station,
                           CookieJar cookieJar) throws Exception {
         Origin origin = eventAccess.get_preferred_origin();
-        Location originLoc = origin.my_location;
+        Location originLoc = origin.getLocation();
         Location loc = station.getLocation();
         double azimuth = SphericalCoords.azimuth(originLoc.latitude,
                                                  originLoc.longitude,

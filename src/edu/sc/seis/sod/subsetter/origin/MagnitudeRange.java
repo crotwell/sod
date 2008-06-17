@@ -33,7 +33,7 @@ public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter {
     public StringTree accept(CacheEvent event,
                              EventAttr eventAttr,
                              Origin origin) {
-        return new StringTreeLeaf(this, getAcceptable(origin.magnitudes).length > 0);
+        return new StringTreeLeaf(this, getAcceptable(origin.getMagnitudes()).length > 0);
     }
 
     public String[] getSearchTypes() {

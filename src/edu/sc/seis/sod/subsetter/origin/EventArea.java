@@ -32,6 +32,6 @@ public class EventArea extends AreaSubsetter implements OriginSubsetter,
     public StringTree accept(CacheEvent event,
                           EventAttr eventAttr,
                           Origin e) throws Exception {
-        return new StringTreeLeaf(this, super.accept(e.my_location));
+        return new StringTreeLeaf(this, super.accept(e.getLocation()));
     }
 }

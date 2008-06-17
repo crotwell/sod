@@ -38,7 +38,7 @@ public class SacWriterTest extends TestCase {
         String[][] templateAndResult = new String[][] { {"${seismogram.name}.sac",
                                                          seis.getName() + ".sac"},
                                                        {"/${event.catalog}",
-                                                        "/" + EventUtil.extractOrigin(ev).catalog},
+                                                        "/" + EventUtil.extractOrigin(ev).getCatalog()},
                                                        {"${channel.name}", chan.getName()}};
         for(int i = 0; i < templateAndResult.length; i++) {
             assertEquals(FissuresFormatter.filize(templateAndResult[i][1]),

@@ -80,16 +80,16 @@ public class RemoveEventDuplicate implements OriginSubsetter {
     
     public boolean isDistanceClose(CacheEvent eventA, Origin originB) {
         Origin curOrig = eventA.getOrigin();
-        DistAz distAz = new DistAz(curOrig.my_location, originB.my_location);
+        DistAz distAz = new DistAz(curOrig.getLocation(), originB.getLocation());
         return distAz.getDelta() < distanceVariance.value;
     }
     
     public List getEventsNearTimeAndDepth(Origin preferred_origin) throws SQLException {
-        MicroSecondDate originTime = new MicroSecondDate(preferred_origin.origin_time);
+        MicroSecondDate originTime = new MicroSecondDate(preferred_origin.getOriginTime());
         MicroSecondDate minTime = originTime.subtract(new TimeInterval(timeVariance));
         MicroSecondDate maxTime = originTime.add(new TimeInterval(timeVariance));
 
-        QuantityImpl originDepth = QuantityImpl.createQuantityImpl(preferred_origin.my_location.depth);
+        QuantityImpl originDepth = QuantityImpl.createQuantityImpl(preferred_origin.getLocation().depth);
         QuantityImpl depthRangeImpl = QuantityImpl.createQuantityImpl(depthVariance);
         QuantityImpl minDepth = originDepth.subtract(depthRangeImpl);
         QuantityImpl maxDepth = originDepth.add(depthRangeImpl);
@@ -106,7 +106,7 @@ public class RemoveEventDuplicate implements OriginSubsetter {
         Iterator it = inProgEvents.iterator();
         while(it.hasNext()) {
         	StatefulEvent e = (StatefulEvent)it.next();
-        	QuantityImpl depth = (QuantityImpl)e.getOrigin().my_location.depth;
+        	QuantityImpl depth = (QuantityImpl)e.getOrigin().getLocation().depth;
         	if (depth.greaterThanEqual(minDepth) && depth.lessThanEqual(maxDepth)) {
         		out.add(e);
         	}
@@ -114,7 +114,7 @@ public class RemoveEventDuplicate implements OriginSubsetter {
         it = timeEvents.iterator();
         while(it.hasNext()) {
             StatefulEvent e = (StatefulEvent)it.next();
-            QuantityImpl depth = (QuantityImpl)e.getOrigin().my_location.depth;
+            QuantityImpl depth = (QuantityImpl)e.getOrigin().getLocation().depth;
             if (depth.greaterThanEqual(minDepth) && depth.lessThanEqual(maxDepth)) {
                 out.add(e);
             } 

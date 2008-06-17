@@ -63,7 +63,7 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
         try {
             DataSetSeismogram[] dss = extractSeismograms(event);
             String regionName = PR.getRegionName(event.get_attributes().region);
-            String dateTime = event.get_preferred_origin().origin_time.date_time;
+            String dateTime = event.get_preferred_origin().getOriginTime().date_time;
             String msg = "Got " + dss.length
                     + " DataSetSeismograms from DSML file for event in "
                     + regionName + " at " + dateTime;

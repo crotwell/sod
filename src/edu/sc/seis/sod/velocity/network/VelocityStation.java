@@ -33,12 +33,12 @@ public class VelocityStation extends StationImpl {
         }
         this.sta = sta;
         name = sta.getName();
-        my_location = sta.getLocation();
+        setLocation(sta.getLocation());
         effective_time = sta.getEffectiveTime();
         operator = sta.getOperator();
         description = sta.getDescription();
         comment = sta.getComment();
-        my_network = sta.getNetworkAttr();
+        setNetworkAttr(sta.getNetworkAttr());
     }
 
     public int getDbId() {
@@ -67,7 +67,7 @@ public class VelocityStation extends StationImpl {
 
     public VelocityNetwork getNet() {
         if(velocityNet == null) {
-            velocityNet = new VelocityNetwork(my_network);
+            velocityNet = new VelocityNetwork(getNetworkAttr());
         }
         return velocityNet;
     }

@@ -41,7 +41,7 @@ public abstract class SimpleEventSource implements EventSource {
     }
 
     public MicroSecondDate extractBeginTime(CacheEvent ev) {
-        return new MicroSecondDate(ev.getOrigin().origin_time);
+        return new MicroSecondDate(ev.getOrigin().getOriginTime());
     }
 
     public boolean hasNextBeenCalled = false;

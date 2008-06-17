@@ -13,7 +13,7 @@ public class SouthOMatic implements OriginSubsetter {
     public StringTree accept(CacheEvent eventAccess,
                              EventAttr eventAttr,
                              Origin preferred_origin) {
-        if(preferred_origin.my_location.latitude > 0) {
+        if(preferred_origin.getLocation().latitude > 0) {
             return new Fail(this, "origin not in the southern hemisphere");
         }
         return new Pass(this);

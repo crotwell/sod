@@ -18,7 +18,7 @@ public class Catalog implements OriginSubsetter{
     public Catalog (Element config){ this.config = config; }
 
     public StringTree accept(CacheEvent event, EventAttr eventAttr, Origin origin) {
-        if(origin.catalog.equals(getCatalog())) return new StringTreeLeaf(this, true);
+        if(origin.getCatalog().equals(getCatalog())) return new StringTreeLeaf(this, true);
         return new StringTreeLeaf(this, false);
     }
 

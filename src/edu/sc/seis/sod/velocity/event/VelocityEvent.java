@@ -48,10 +48,10 @@ public class VelocityEvent extends ProxyEventAccessOperations {
     }
 
     public String getMagnitude() {
-        if(origin.magnitudes.length == 0) {
+        if(origin.getMagnitudes().length == 0) {
             return "-";
         }
-        return FissuresFormatter.formatMagnitude(origin.magnitudes[0]);
+        return FissuresFormatter.formatMagnitude(origin.getMagnitudes()[0]);
     }
 
     public String getAllMagnitudes() {
@@ -60,9 +60,9 @@ public class VelocityEvent extends ProxyEventAccessOperations {
 
     public String getAllMagnitudes(String seperator) {
         String s = "";
-        for(int i = 0; i < origin.magnitudes.length; i++) {
-            s += FissuresFormatter.formatMagnitude(origin.magnitudes[i]);
-            if(i != origin.magnitudes.length - 1) {
+        for(int i = 0; i < origin.getMagnitudes().length; i++) {
+            s += FissuresFormatter.formatMagnitude(origin.getMagnitudes()[i]);
+            if(i != origin.getMagnitudes().length - 1) {
                 s += seperator;
             }
         }
@@ -70,50 +70,50 @@ public class VelocityEvent extends ProxyEventAccessOperations {
     }
 
     public String getMagnitudeValue() {
-        return "" + origin.magnitudes[0].value;
+        return "" + origin.getMagnitudes()[0].value;
     }
 
     public String getMagnitudeType() {
-        return origin.magnitudes[0].type;
+        return origin.getMagnitudes()[0].type;
     }
 
     public String getLatitude() {
-        return df.format(origin.my_location.latitude);
+        return df.format(origin.getLocation().latitude);
     }
 
     public String getLongitude() {
-        return df.format(origin.my_location.longitude);
+        return df.format(origin.getLocation().longitude);
     }
 
     public String getLatitude(String format) {
-        return new DecimalFormat(format).format(origin.my_location.latitude);
+        return new DecimalFormat(format).format(origin.getLocation().latitude);
     }
 
     public String getLongitude(String format) {
-        return new DecimalFormat(format).format(origin.my_location.longitude);
+        return new DecimalFormat(format).format(origin.getLocation().longitude);
     }
 
 
     public Float getFloatLatitude() {
-        return new Float(origin.my_location.latitude);
+        return new Float(origin.getLocation().latitude);
     }
 
     public Float getFloatLongitude() {
-        return new Float(origin.my_location.longitude);
+        return new Float(origin.getLocation().longitude);
     }
 
     public String getOrientedLatitude() {
-        if(origin.my_location.latitude < 0) {
-            return df.format(-origin.my_location.latitude) + " S";
+        if(origin.getLocation().latitude < 0) {
+            return df.format(-origin.getLocation().latitude) + " S";
         }
-        return df.format(origin.my_location.latitude) + " N";
+        return df.format(origin.getLocation().latitude) + " N";
     }
 
     public String getOrientedLongitude() {
-        if(origin.my_location.longitude < 0) {
-            return df.format(-origin.my_location.longitude) + " W";
+        if(origin.getLocation().longitude < 0) {
+            return df.format(-origin.getLocation().longitude) + " W";
         }
-        return df.format(origin.my_location.longitude) + " E";
+        return df.format(origin.getLocation().longitude) + " E";
     }
 
     public String getDepth() {
@@ -125,17 +125,17 @@ public class VelocityEvent extends ProxyEventAccessOperations {
     }
 
     public String getDepth(String format) {
-        double depthInKM = QuantityImpl.createQuantityImpl(origin.my_location.depth)
+        double depthInKM = QuantityImpl.createQuantityImpl(origin.getLocation().depth)
                 .convertTo(UnitImpl.KILOMETER).value;
         return new DecimalFormat(format).format(depthInKM);
     }
 
     public String getElevation() {
-        return FissuresFormatter.formatDepth(QuantityImpl.createQuantityImpl(origin.my_location.elevation));
+        return FissuresFormatter.formatDepth(QuantityImpl.createQuantityImpl(origin.getLocation().elevation));
     }
 
     public String getElevation(String format) {
-        double elevInMeters = QuantityImpl.createQuantityImpl(origin.my_location.elevation)
+        double elevInMeters = QuantityImpl.createQuantityImpl(origin.getLocation().elevation)
                 .convertTo(UnitImpl.METER).value;
         return new DecimalFormat(format).format(elevInMeters);
     }
@@ -153,16 +153,16 @@ public class VelocityEvent extends ProxyEventAccessOperations {
     }
 
     public String getTime(String format) {
-        return SimpleVelocitizer.format(new MicroSecondDate(origin.origin_time),
+        return SimpleVelocitizer.format(new MicroSecondDate(origin.getOriginTime()),
                                         format);
     }
 
     public String getCatalog() {
-        return origin.catalog;
+        return origin.getCatalog();
     }
 
     public String getContributor() {
-        return origin.contributor;
+        return origin.getContributor();
     }
 
     public int getId() {
@@ -183,9 +183,9 @@ public class VelocityEvent extends ProxyEventAccessOperations {
     }
 
     public String getParam(String name) {
-        for(int i = 0; i < origin.parm_ids.length; i++) {
-            if(origin.parm_ids[i].a_id.equals(name)) {
-                return origin.parm_ids[i].creator;
+        for(int i = 0; i < origin.getParmIds().length; i++) {
+            if(origin.getParmIds()[i].a_id.equals(name)) {
+                return origin.getParmIds()[i].creator;
             }
         }
         return null;
@@ -235,7 +235,7 @@ public class VelocityEvent extends ProxyEventAccessOperations {
     }
 
     public static String makeDateIdentifier(VelocityEvent event) {
-        return fullDateIdentifier.format(new MicroSecondDate(event.getOrigin().origin_time));
+        return fullDateIdentifier.format(new MicroSecondDate(event.getOrigin().getOriginTime()));
     }
 
     public static MicroSecondDate parseDateIdentifier(String eqIdentifier)

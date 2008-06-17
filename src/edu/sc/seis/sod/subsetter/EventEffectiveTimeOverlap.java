@@ -24,7 +24,7 @@ public class EventEffectiveTimeOverlap extends EffectiveTimeOverlap {
 
     static TimeRange createTimeRange(StatefulEvent event)
             throws NoPreferredOrigin {
-        Time otime = event.getOrigin().origin_time;
+        Time otime = event.getOrigin().getOriginTime();
         if (otime == null) {throw new RuntimeException("origin time is null");}
         MicroSecondDate originTime = new MicroSecondDate(otime);
         return new TimeRange(originTime.getFissuresTime(),

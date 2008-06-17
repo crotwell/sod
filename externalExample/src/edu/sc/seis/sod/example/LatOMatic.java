@@ -19,7 +19,7 @@ public class LatOMatic implements OriginSubsetter {
     public StringTree accept(CacheEvent eventAccess,
                              EventAttr eventAttr,
                              Origin preferred_origin) throws Exception {
-        if(preferred_origin.my_location.latitude > maxLat) {
+        if(preferred_origin.getLocation().latitude > maxLat) {
             return new Fail(this, "origin not below " + maxLat + " latitude");
         }
         return new Pass(this);

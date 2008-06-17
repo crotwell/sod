@@ -18,7 +18,7 @@ public class OriginDepthRange extends edu.sc.seis.sod.subsetter.DepthRange
     public StringTree accept(CacheEvent event,
                              EventAttr eventAttr,
                              Origin origin) {
-        QuantityImpl actualDepth = (QuantityImpl)origin.my_location.depth;
+        QuantityImpl actualDepth = (QuantityImpl)origin.getLocation().depth;
         if(actualDepth.greaterThanEqual(getMinDepth())
                 && actualDepth.lessThanEqual(getMaxDepth())) {
             return new StringTreeLeaf(this, true);

@@ -17,11 +17,11 @@ public class VelocityChannel extends ChannelImpl {
 
     public VelocityChannel(ChannelImpl chan) {
         this.chan = chan;
-        my_site = chan.getSite();
-        an_orientation = chan.getOrientation();
-        sampling_info = chan.getSamplingInfo();
-        effective_time = chan.getEffectiveTime();
-        name = chan.getName();
+        setSite(chan.getSite());
+        setOrientation(chan.getOrientation());
+        setSamplingInfo(chan.getSamplingInfo());
+        setEffectiveTime(chan.getEffectiveTime());
+        setName(chan.getName());
     }
 
     public ChannelId get_id() {
@@ -33,11 +33,11 @@ public class VelocityChannel extends ChannelImpl {
     }
 
     public float getAzimuth() {
-        return an_orientation.azimuth;
+        return getOrientation().azimuth;
     }
 
     public float getDip() {
-        return an_orientation.dip;
+        return getOrientation().dip;
     }
 
     public String getCode() {
@@ -78,7 +78,7 @@ public class VelocityChannel extends ChannelImpl {
     }
 
     public MicroSecondDate getStart() {
-        return new MicroSecondDate(effective_time.start_time);
+        return new MicroSecondDate(getEffectiveTime().start_time);
     }
 
     public String getStart(String format) {
@@ -86,7 +86,7 @@ public class VelocityChannel extends ChannelImpl {
     }
 
     public MicroSecondDate getEnd() {
-        return new MicroSecondDate(effective_time.end_time);
+        return new MicroSecondDate(getEffectiveTime().end_time);
     }
 
     public String getEnd(String format) {
@@ -94,7 +94,7 @@ public class VelocityChannel extends ChannelImpl {
     }
 
     public VelocitySampling getSampling() {
-        return new VelocitySampling(sampling_info);
+        return new VelocitySampling(getSamplingInfo());
     }
 
     public String compactToString() {

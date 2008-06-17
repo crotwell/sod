@@ -24,7 +24,7 @@ public class YoungerThan implements OriginSubsetter {
     public StringTree accept(CacheEvent ev,
                           EventAttr eventAttr,
                           Origin preferred_origin) throws Exception {
-        MicroSecondDate originTime = new MicroSecondDate(preferred_origin.origin_time);
+        MicroSecondDate originTime = new MicroSecondDate(preferred_origin.getOriginTime());
         MicroSecondDate expirationDate = originTime.add(expirationAge);
         return new StringTreeLeaf(this, expirationDate.after(ClockUtil.now()));
     }

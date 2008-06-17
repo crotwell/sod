@@ -223,9 +223,9 @@ public class EventArm implements Arm {
         String s = "";
         try {
             Origin o = event.get_preferred_origin();
-            s = " otime=" + o.origin_time.date_time;
-            s += " loc=" + o.my_location.latitude + ", "
-                    + o.my_location.longitude;
+            s = " otime=" + o.getOriginTime().date_time;
+            s += " loc=" + o.getLocation().latitude + ", "
+                    + o.getLocation().longitude;
         } catch(Throwable e) {
             s += e;
         }
@@ -244,6 +244,9 @@ public class EventArm implements Arm {
         	storedEvent = new StatefulEvent(event,  EVENT_IN_PROG);
         	eventStatus.put(storedEvent);
             change(storedEvent);
+        } else {
+            // already in database, so don't need to try it again
+            return;
         }
         if (storedEvent.getStatus() != ECPOP_INIT && storedEvent.getStatus() != SUCCESS) {
         	storedEvent.setStatus(EVENT_IN_PROG);

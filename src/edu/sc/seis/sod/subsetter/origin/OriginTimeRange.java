@@ -65,7 +65,7 @@ public class OriginTimeRange implements OriginSubsetter, MicroSecondTimeRangeSup
     }
 
     public StringTree accept(CacheEvent event, EventAttr eventAttr, Origin origin) {
-        return new StringTreeLeaf(this, getMSTR().contains(new MicroSecondDate(origin.origin_time)));
+        return new StringTreeLeaf(this, getMSTR().contains(new MicroSecondDate(origin.getOriginTime())));
     }
 
     public interface MicroSecondDateLoader {

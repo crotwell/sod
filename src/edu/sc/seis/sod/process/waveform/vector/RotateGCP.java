@@ -88,7 +88,7 @@ public class RotateGCP implements WaveformVectorProcess {
             }
         }
         Location staLoc = horizontal[0].getSite().getLocation();
-        Location eventLoc = EventUtil.extractOrigin(event).my_location;
+        Location eventLoc = EventUtil.extractOrigin(event).getLocation();
         LocalSeismogramImpl[][] out = new LocalSeismogramImpl[seismograms.length][];
         for(int i = 0; i < out.length; i++) {
             out[i] = new LocalSeismogramImpl[seismograms[i].length];

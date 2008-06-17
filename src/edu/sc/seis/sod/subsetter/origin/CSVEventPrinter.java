@@ -39,8 +39,8 @@ public class CSVEventPrinter implements OriginSubsetter {
                              EventAttr eventAttr,
                              Origin preferred_origin) throws Exception {
         StringBuffer buff = new StringBuffer();
-        buff.append(preferred_origin.origin_time.date_time + COM);
-        Location loc = preferred_origin.my_location;
+        buff.append(preferred_origin.getOriginTime().date_time + COM);
+        Location loc = preferred_origin.getLocation();
         buff.append(loc.latitude + COM);
         buff.append(loc.longitude + COM);
         Quantity q = loc.depth;
@@ -49,7 +49,7 @@ public class CSVEventPrinter implements OriginSubsetter {
         StringBuffer magValBuf = new StringBuffer();
         StringBuffer magTypeBuf = new StringBuffer();
         StringBuffer magContribBuf = new StringBuffer();
-        Magnitude[] mags = preferred_origin.magnitudes;
+        Magnitude[] mags = preferred_origin.getMagnitudes();
         for(int i = 0; i < mags.length; i++) {
             magValBuf.append(mags[i].value);
             if(mags[i].type == null || mags[i].type.equals("")) {
@@ -71,8 +71,8 @@ public class CSVEventPrinter implements OriginSubsetter {
         buff.append(magValBuf + COM);
         buff.append(magTypeBuf + COM);
         buff.append(magContribBuf + COM);
-        buff.append(preferred_origin.catalog + COM);
-        buff.append(preferred_origin.contributor + COM);
+        buff.append(preferred_origin.getCatalog() + COM);
+        buff.append(preferred_origin.getContributor() + COM);
         buff.append(eventAttr.name + COM);
         FlinnEngdahlRegion region = eventAttr.region;
         buff.append(region.number + COM);

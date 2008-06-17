@@ -26,7 +26,7 @@ public class PostEventWait implements AvailableDataSubsetter {
                           RequestFilter[] orig,
                           RequestFilter[] avail,
                           CookieJar cookies) {
-        MicroSecondDate originTime = new MicroSecondDate(EventUtil.extractOrigin(ev).origin_time);
+        MicroSecondDate originTime = new MicroSecondDate(EventUtil.extractOrigin(ev).getOriginTime());
         MicroSecondDate waitTime = originTime.add(postOriginTime);
         if ( ! waitTime.after(ClockUtil.now())) {
         return new StringTreeLeaf(this, false, "Wait until: "+waitTime);

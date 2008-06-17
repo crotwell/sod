@@ -20,7 +20,7 @@ public class VelocitySite extends Site {
         this.site = s;
         my_location = s.getLocation();
         effective_time = s.getEffectiveTime();
-        my_station = s.getStation();
+        setStation(s.getStation());
         comment = s.getComment();
     }
 

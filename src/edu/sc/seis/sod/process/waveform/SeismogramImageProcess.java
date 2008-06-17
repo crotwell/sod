@@ -178,7 +178,7 @@ public class SeismogramImageProcess implements WaveformProcess {
                             Origin o,
                             SeismogramDisplay bsd,
                             DataSetSeismogram seis) {
-        MicroSecondDate originTime = new MicroSecondDate(o.origin_time);
+        MicroSecondDate originTime = new MicroSecondDate(o.getOriginTime());
         for(int i = 0; i < arrivals.length; i++) {
             MicroSecondDate flagTime = originTime.add(new TimeInterval(arrivals[i].getTime(),
                                                                        UnitImpl.SECOND));

@@ -90,7 +90,7 @@ public class MapWaveformStatus implements Runnable {
                 map.getMapBean()
                         .center(new CenterEvent(this,
                                                 0.0f,
-                                                orig.my_location.longitude));
+                                                orig.getLocation().longitude));
                 dl.eqSelectionChanged(selEvent);
                 final String fileLoc = fileLocs[i];
                 SwingUtilities.invokeAndWait(new Runnable() {

@@ -20,8 +20,8 @@ public class OriginPointAzimuth extends AbstractOriginPoint implements OriginSub
     }
 
     public StringTree accept(CacheEvent event, EventAttr eventAttr, Origin origin) {
-        double oLat = origin.my_location.latitude;
-        double oLon = origin.my_location.longitude;
+        double oLat = origin.getLocation().latitude;
+        double oLon = origin.getLocation().longitude;
         DistAz distaz = new DistAz(latitude, longitude, oLat, oLon);
         if(AzimuthUtils.isAzimuthBetween(distaz, min, max)) {
             return new StringTreeLeaf(this, true);
