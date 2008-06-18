@@ -433,11 +433,11 @@ public class NetworkArm implements Arm {
         logger.debug("getSuccessfulStations");
         synchronized(this) {
             // try db
-            StationImpl[] sta = getNetworkDB().getStationForNet((NetworkAttrImpl)net.get_attributes());
-            if(sta.length != 0) {
+            List<StationImpl> sta = getNetworkDB().getStationForNet((NetworkAttrImpl)net.get_attributes());
+            if(sta.size() != 0) {
                 logger.debug("getSuccessfulStations " + netCode + " - from db "
-                        + sta.length);
-                return sta;
+                        + sta.size());
+                return sta.toArray(new StationImpl[0]);
             }
             // really no dice, go to server
             statusChanged("Getting stations for " + net.get_attributes().name);

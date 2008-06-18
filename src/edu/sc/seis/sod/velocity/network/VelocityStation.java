@@ -13,6 +13,7 @@ import edu.iris.Fissures.IfNetwork.StationId;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
+import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.bag.DistAz;
@@ -67,7 +68,7 @@ public class VelocityStation extends StationImpl {
 
     public VelocityNetwork getNet() {
         if(velocityNet == null) {
-            velocityNet = new VelocityNetwork(getNetworkAttr());
+            velocityNet = new VelocityNetwork((NetworkAttrImpl)getNetworkAttr());
         }
         return velocityNet;
     }

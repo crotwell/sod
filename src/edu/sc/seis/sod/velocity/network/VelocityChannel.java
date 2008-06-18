@@ -61,10 +61,6 @@ public class VelocityChannel extends ChannelImpl {
                 + getSite().getCode() + "." + getCode();
     }
 
-    public String getName() {
-        return name;
-    }
-
     public VelocityNetwork getNet() {
         return getStation().getNet();
     }
@@ -74,7 +70,7 @@ public class VelocityChannel extends ChannelImpl {
     }
 
     public VelocitySite getSite() {
-        return new VelocitySite((SiteImpl)my_site);
+        return new VelocitySite((SiteImpl)super.getSite());
     }
 
     public MicroSecondDate getStart() {

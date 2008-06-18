@@ -659,12 +659,14 @@ public class SodDB extends AbstractHibernateDB {
         String q = "From edu.sc.seis.sod.SodConfig c ORDER BY c.time desc";
         Query query = getSession().createQuery(q);
         query.setMaxResults(1);
-        List result = query.list();
-        if(result.size() > 0) {
-            SodConfig out = (SodConfig)result.get(0);
-            return out;
-        }
-        return null;
+        return (SodConfig)query.uniqueResult();
+    }
+
+    public SodConfig getConfig(int configid) {
+        String q = "From edu.sc.seis.sod.SodConfig c where dbid = "+configid;
+        Query query = getSession().createQuery(q);
+        query.setMaxResults(1);
+        return (SodConfig)query.uniqueResult();
     }
 
     public QueryTime getQueryTime(String serverName, String serverDNS) {
