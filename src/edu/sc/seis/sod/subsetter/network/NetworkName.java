@@ -27,7 +27,7 @@ public class NetworkName implements NetworkSubsetter {
     }
 
     public StringTree accept(NetworkAttr net) {
-        return new StringTreeLeaf(this, net.name.equals(SodUtil.getNestedText(config)));
+        return new StringTreeLeaf(this, net.getName().equals(SodUtil.getNestedText(config)));
     }
 
     private Element config;

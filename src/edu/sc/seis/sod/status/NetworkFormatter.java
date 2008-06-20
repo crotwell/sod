@@ -83,7 +83,7 @@ public class NetworkFormatter extends Template implements NetworkTemplate {
             return new NetworkTemplate() {
 
                 public String getResult(NetworkAttr net) {
-                    return btt.getResult(net.effective_time.end_time);
+                    return btt.getResult(net.getEffectiveTime().end_time);
                 }
 
                 TimeTemplate btt = new TimeTemplate(el, false);
@@ -99,17 +99,17 @@ public class NetworkFormatter extends Template implements NetworkTemplate {
             return new NetworkTemplate() {
 
                 public String getResult(NetworkAttr net) {
-                    return net.name;
+                    return net.getName();
                 }
             };
         } else if(tag.equals("firstWord")) {
             return new NetworkTemplate() {
 
                 public String getResult(NetworkAttr net) {
-                    if(net.name == null || net.name.equals("")){
+                    if(net.getName() == null || net.getName().equals("")){
                         return "";
                     }
-                    StringTokenizer tok = new StringTokenizer(net.name, " /,.-");
+                    StringTokenizer tok = new StringTokenizer(net.getName(), " /,.-");
                     return tok.nextToken();
                 }
             };
@@ -117,14 +117,14 @@ public class NetworkFormatter extends Template implements NetworkTemplate {
             return new NetworkTemplate() {
 
                 public String getResult(NetworkAttr net) {
-                    return net.description;
+                    return net.getDescription();
                 }
             };
         } else if(tag.equals("owner")) {
             return new NetworkTemplate() {
 
                 public String getResult(NetworkAttr net) {
-                    return net.owner;
+                    return net.getOwner();
                 }
             };
         } else if(tag.equals("status") && ngt != null) {

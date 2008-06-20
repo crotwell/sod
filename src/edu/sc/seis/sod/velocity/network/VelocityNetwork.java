@@ -49,10 +49,10 @@ public class VelocityNetwork extends NetworkAttr {
     private VelocityNetwork(NetworkAttrImpl net, int dbid, List stations) {
         this.net = net;
         this.stations = stations;
-        this.name = net.name;
-        this.description = net.description;
-        this.owner = net.owner;
-        this.effective_time = net.effective_time;
+        this.setName(net.getName());
+        this.setDescription(net.getDescription());
+        this.setOwner(net.getOwner());
+        this.setEffectiveTime(net.getEffectiveTime());
         this.dbid = dbid;
     }
     
@@ -85,7 +85,7 @@ public class VelocityNetwork extends NetworkAttr {
     }
 
     public MicroSecondDate getStart() {
-        return new MicroSecondDate(effective_time.start_time);
+        return new MicroSecondDate(getEffectiveTime().start_time);
     }
     
     public String getStart(String format){
@@ -100,7 +100,7 @@ public class VelocityNetwork extends NetworkAttr {
     }
 
     public MicroSecondDate getEnd() {
-        return new MicroSecondDate(effective_time.end_time);
+        return new MicroSecondDate(getEffectiveTime().end_time);
     }
     
     public String getEnd(String format){

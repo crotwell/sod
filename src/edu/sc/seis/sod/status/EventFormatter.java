@@ -46,6 +46,15 @@ public class EventFormatter extends Template implements EventTemplate {
         }
     }
 
+    public static EventFormatter makeFilizer() {
+        try {
+            return new EventFormatter(null, true);
+        } catch(ConfigurationException e) {
+            throw new RuntimeException("Shouldn't blow up with a default formatter",
+                                       e);
+        }
+    }
+
     public EventFormatter(Element config, boolean filize)
             throws ConfigurationException {
         if(config == null || config.hasChildNodes() == false)

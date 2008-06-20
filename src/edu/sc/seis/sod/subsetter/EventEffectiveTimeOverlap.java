@@ -32,7 +32,7 @@ public class EventEffectiveTimeOverlap extends EffectiveTimeOverlap {
     }
 
     public boolean overlaps(NetworkAttr net) {
-        return overlaps(net.effective_time);
+        return overlaps(net.getEffectiveTime());
     }
 
     public boolean overlaps(Station station) {

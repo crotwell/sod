@@ -92,7 +92,7 @@ public class NetworkArm implements Arm {
         for(int i = 0; i < netDbs.length; i++) {
             NetworkAttr attr = netDbs[i].get_attributes();
             if(netCode.equals(attr.get_code())
-                    && new MicroSecondTimeRange(attr.effective_time).contains(beginTime)) {
+                    && new MicroSecondTimeRange(attr.getEffectiveTime()).contains(beginTime)) {
                 return netDbs[i];
             }
         }
@@ -440,7 +440,7 @@ public class NetworkArm implements Arm {
                 return sta.toArray(new StationImpl[0]);
             }
             // really no dice, go to server
-            statusChanged("Getting stations for " + net.get_attributes().name);
+            statusChanged("Getting stations for " + net.get_attributes().getName());
             ArrayList arrayList = new ArrayList();
             try {
                 Station[] stations = net.retrieve_stations();

@@ -82,7 +82,7 @@ public class FissuresFormatter {
     }
 
     public static String networkName(NetworkAttr net) {
-        return net.name;
+        return net.getName();
     }
 
     public static String stationName(Station station) {

@@ -26,7 +26,7 @@ public class NetworkOwner implements NetworkSubsetter {
     }
 
     public StringTree accept(NetworkAttr net) {
-        return new StringTreeLeaf(this, net.owner.equals(SodUtil.getNestedText(config)));
+        return new StringTreeLeaf(this, net.getOwner().equals(SodUtil.getNestedText(config)));
     }
 
     private Element config;

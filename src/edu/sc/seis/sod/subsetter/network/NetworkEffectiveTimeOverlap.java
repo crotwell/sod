@@ -22,7 +22,7 @@ public class NetworkEffectiveTimeOverlap extends EffectiveTimeOverlap implements
     }
 
     public StringTree accept(NetworkAttr network) {
-        return new StringTreeLeaf(this, overlaps(network.effective_time));
+        return new StringTreeLeaf(this, overlaps(network.getEffectiveTime()));
     }
 
     static Category logger = Category.getInstance(NetworkEffectiveTimeOverlap.class.getName());
