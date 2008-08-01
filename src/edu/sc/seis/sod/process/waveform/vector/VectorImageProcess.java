@@ -11,6 +11,7 @@ import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
@@ -30,6 +31,7 @@ import edu.sc.seis.fissuresUtil.xml.MemoryDataSetSeismogram;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.process.waveform.SeismogramImageProcess;
 import edu.sc.seis.sod.status.StringTreeLeaf;
+import edu.sc.seis.sod.velocity.network.VelocityChannel;
 
 /**
  * @author groves Created on Feb 15, 2005
@@ -67,8 +69,12 @@ public class VectorImageProcess extends SeismogramImageProcess implements
                                                             original,
                                                             available,
                                                             seismograms);
+        List<VelocityChannel> chanList = new ArrayList<VelocityChannel>();
+        chanList.add(new VelocityChannel((ChannelImpl)channelGroup.getChannel1()));
+        chanList.add(new VelocityChannel((ChannelImpl)channelGroup.getChannel2()));
+        chanList.add(new VelocityChannel((ChannelImpl)channelGroup.getChannel3()));
         ComponentSortedSeismogramDisplay sd = createPopulatedDisplay(event,
-                                                                     channelGroup.getChannels(),
+                                                                     chanList,
                                                                      seis);
         String picFileName = locator.getLocation(event,
                                                  channelGroup.getChannels()[0]);
@@ -106,13 +112,13 @@ public class VectorImageProcess extends SeismogramImageProcess implements
     }
 
     public ComponentSortedSeismogramDisplay createPopulatedDisplay(EventAccessOperations event,
-                                                                   Channel[] chans,
+                                                                   List<VelocityChannel> channels,
                                                                    DataSetSeismogram[] seis)
             throws Exception {
         MicroSecondTimeRange timeWindow = null;
         if(seis.length > 0) {
             timeWindow = getTimeWindow(phaseWindow, seis[0]);
-            updateTitles(event, chans[0], timeWindow);
+            updateTitles(event, channels.iterator().next(), timeWindow);
         }
         ComponentSortedSeismogramDisplay sd = new ComponentSortedSeismogramDisplay(false);
         BasicSeismogramDisplay vert = (BasicSeismogramDisplay)vdc.createDisplay();
@@ -121,7 +127,7 @@ public class VectorImageProcess extends SeismogramImageProcess implements
         sd.setZ(vert);
         sd.setNorth((BasicSeismogramDisplay)ndc.createDisplay());
         sd.setEast((BasicSeismogramDisplay)edc.createDisplay());
-        populateDisplay(sd, event, chans, seis);
+        populateDisplay(sd, event, channels, seis);
         if(timeWindow != null) {
             setTimeWindow(tc, timeWindow, tc.getTime(seis[0]));
         }
@@ -130,10 +136,10 @@ public class VectorImageProcess extends SeismogramImageProcess implements
 
     private void populateDisplay(ComponentSortedSeismogramDisplay sd,
                                  EventAccessOperations event,
-                                 Channel[] chans,
+                                 List<VelocityChannel> channels,
                                  DataSetSeismogram[] seis) throws Exception {
         Origin o = EventUtil.extractOrigin(event);
-        Arrival[] arrivals = getArrivals(chans[0], o, phaseFlagNames);
+        Arrival[] arrivals = getArrivals(channels.iterator().next(), o, phaseFlagNames);
         AmpConfig globalAC = null;
         if(globalACConf != null) {
             globalAC = globalACConf.createAmpConfig();

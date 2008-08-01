@@ -35,7 +35,7 @@ public class VelocityStation extends StationImpl {
         this.sta = sta;
         name = sta.getName();
         setLocation(sta.getLocation());
-        effective_time = sta.getEffectiveTime();
+        setEffectiveTime(sta.getEffectiveTime());
         operator = sta.getOperator();
         description = sta.getDescription();
         comment = sta.getComment();
@@ -74,34 +74,34 @@ public class VelocityStation extends StationImpl {
     }
 
     public MicroSecondDate getStartDate() {
-        return new MicroSecondDate(effective_time.start_time);
+        return new MicroSecondDate(getEffectiveTime().start_time);
     }
 
     public MicroSecondDate getEndDate() {
-        return new MicroSecondDate(effective_time.end_time);
+        return new MicroSecondDate(getEffectiveTime().end_time);
     }
 
     public String getStart() {
-        return FissuresFormatter.formatDate(effective_time.start_time);
+        return FissuresFormatter.formatDate(getEffectiveTime().start_time);
     }
 
     public String getStart(String dateFormat) {
         if(dateFormat.equals("longfile")) {
-            return FissuresFormatter.formatDateForFile(effective_time.start_time);
+            return FissuresFormatter.formatDateForFile(getEffectiveTime().start_time);
         }
-        return SimpleVelocitizer.format(new MicroSecondDate(effective_time.start_time),
+        return SimpleVelocitizer.format(new MicroSecondDate(getEffectiveTime().start_time),
                                         dateFormat);
     }
 
     public String getEnd() {
-        return FissuresFormatter.formatDate(effective_time.end_time);
+        return FissuresFormatter.formatDate(getEffectiveTime().end_time);
     }
 
     public String getEnd(String dateFormat) {
         if(dateFormat.equals("longfile")) {
-            return FissuresFormatter.formatDateForFile(effective_time.end_time);
+            return FissuresFormatter.formatDateForFile(getEffectiveTime().end_time);
         }
-        return SimpleVelocitizer.format(new MicroSecondDate(effective_time.end_time),
+        return SimpleVelocitizer.format(new MicroSecondDate(getEffectiveTime().end_time),
                                         dateFormat);
     }
 

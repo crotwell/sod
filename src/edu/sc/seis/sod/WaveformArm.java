@@ -52,8 +52,6 @@ public class WaveformArm implements Arm {
     }
 
     private void initDb() throws SQLException {
-        RunProperties runProps = Start.getRunProps();
-        SERVER_RETRY_DELAY = runProps.getServerRetryDelay();
         sodDb = new SodDB();
         logger.info("SodDB in WaveformArm:" + sodDb);
         eventDb = new StatefulEventDB();
@@ -74,13 +72,13 @@ public class WaveformArm implements Arm {
         try {
             if(restartSuspended) {
                 sodDb.reopenSuspendedEventChannelPairs(Start.getRunProps()
-                                                                .getEventChannelPairProcessing(),
-                                                        localSeismogramArm == null);
+                                                               .getEventChannelPairProcessing(),
+                                                       localSeismogramArm == null);
             }
             // check for events that are "in progress" due to halt or reset
             populateEventChannelDb(Standing.IN_PROG);
             while(WaveformProcessor.getProcessorsWorking() == pool.length) {
-                // all threads are working
+                logger.debug("all threads are working");
                 try {
                     logger.debug("pool employed, sleeping for 100 sec");
                     Thread.sleep(100000);
@@ -98,9 +96,9 @@ public class WaveformArm implements Arm {
             do {
                 int numEvents = populateEventChannelDb(Standing.INIT);
                 sleepALittle(numEvents, sleepTime, logInterval);
-            } while(possibleToContinue() 
-                    || sodDB.getNumWorkUnits(Standing.INIT) != 0 
-                    || sodDB.getNumWorkUnits(Standing.IN_PROG) != 0 );
+            } while(possibleToContinue()
+                    || sodDB.getNumWorkUnits(Standing.INIT) != 0
+                    || sodDB.getNumWorkUnits(Standing.IN_PROG) != 0);
             logger.info("Main waveform arm done.  Retrying failures.");
             while(WaveformProcessor.getProcessorsWorking() == pool.length) {
                 // all threads are working
@@ -109,7 +107,8 @@ public class WaveformArm implements Arm {
                     Thread.sleep(100000);
                 } catch(InterruptedException e) {}
             }
-            while(!Start.isArmFailure() && WaveformProcessor.getProcessorsWorking() > 0) {
+            while(!Start.isArmFailure()
+                    && WaveformProcessor.getProcessorsWorking() > 0) {
                 try {
                     logger.debug("Sleeping while waiting for retries");
                     Thread.sleep(10000);
@@ -142,10 +141,35 @@ public class WaveformArm implements Arm {
             logger.debug("no successful events found in last " + logInterval);
             lastEventStartLogTime = ClockUtil.now();
         }
-        synchronized(eventArm.getWaveformArmSync()) {
-            try {
-                eventArm.getWaveformArmSync().wait(sleepTime * 1000);
-            } catch(InterruptedException e) {}
+        while(true) {
+            int numWorkUnits = sodDb.getNumWorkUnits(Standing.INIT);
+            if(numWorkUnits > WaveformArm.MIN_WORK_UNIT_FOR_SLEEP) {
+                // plenty of work, so sleep,
+                // but wake if processors run out
+                synchronized(getWaveformProcessorSync()) {
+                    try {
+                        getWaveformProcessorSync().wait(sleepTime * 1000);
+                    } catch(InterruptedException e) {}
+                }
+            } else if(numEvents == 0) {
+                // not enough work, but there were also no new events, wait on
+                // event arm
+                synchronized(getWaveformProcessorSync()) {
+                    synchronized(eventArm.getWaveformArmSync()) {
+                        try {
+                            logger.debug("sleeping for eventarm");
+                            eventArm.getWaveformArmSync()
+                                    .wait(sleepTime * 1000);
+                            logger.debug("done sleeping for eventarm");
+                        } catch(InterruptedException e) {}
+                    }
+                    getWaveformProcessorSync().notifyAll();
+                }
+            } else {
+                // not enough work, but events worth processing, so go back to
+                // work
+                return;
+            }
         }
     }
 
@@ -171,7 +195,8 @@ public class WaveformArm implements Arm {
     private int populateEventChannelDb(Standing standing) throws Exception {
         int numEvents = 0;
         for(StatefulEvent ev = eventDb.getNext(standing); ev != null; ev = eventDb.getNext(standing)) {
-            logger.debug("Work on event: " + ev.getDbid()+" "+EventUtil.getEventInfo(ev));
+            logger.debug("Work on event: " + ev.getDbid() + " "
+                    + EventUtil.getEventInfo(ev));
             ev.setStatus(Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                     Standing.IN_PROG));
             eventDb.commit();
@@ -183,11 +208,16 @@ public class WaveformArm implements Arm {
             EventEffectiveTimeOverlap overlap = new EventEffectiveTimeOverlap(ev);
             CacheNetworkAccess[] networks = networkArm.getSuccessfulNetworks();
             for(int i = 0; i < networks.length; i++) {
-                if (overlap.overlaps(networks[i].get_attributes())) {
-                    EventNetworkPair p = new EventNetworkPair(ev, networks[i], Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.INIT));
+                if(overlap.overlaps(networks[i].get_attributes())) {
+                    EventNetworkPair p = new EventNetworkPair(ev,
+                                                              networks[i],
+                                                              Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                                                         Standing.INIT));
                     sodDb.put(p);
                 } else {
-                    failLogger.info("Network "+NetworkIdUtil.toStringNoDates(networks[i].get_attributes())+" does not overlap event "+ev);
+                    failLogger.info("Network "
+                            + NetworkIdUtil.toStringNoDates(networks[i].get_attributes())
+                            + " does not overlap event " + ev);
                 }
             }
             // set the status of the event to be SUCCESS implying that
@@ -222,8 +252,11 @@ public class WaveformArm implements Arm {
         while(possibleToContinue() && next == null) {
             logger.debug("Waiting for the first exciting event to show up");
             try {
-                synchronized(Start.getEventArm().getWaveformArmSync()) {
-                    Start.getEventArm().getWaveformArmSync().wait();
+                synchronized(getWaveformProcessorSync()) {
+                    synchronized(Start.getEventArm().getWaveformArmSync()) {
+                        Start.getEventArm().getWaveformArmSync().wait();
+                    }
+                    getWaveformProcessorSync().notifyAll();
                 }
             } catch(InterruptedException e) {}
             logger.debug("first event has shown up, because the event arm tells us so");
@@ -289,11 +322,11 @@ public class WaveformArm implements Arm {
             Iterator it = statusMonitors.iterator();
             while(it.hasNext()) {
                 try {
-                    if (ecp instanceof EventChannelPair) {
+                    if(ecp instanceof EventChannelPair) {
                         ((WaveformMonitor)it.next()).update((EventChannelPair)ecp);
-                    } else if (ecp instanceof EventVectorPair) {
+                    } else if(ecp instanceof EventVectorPair) {
                         ((WaveformMonitor)it.next()).update((EventVectorPair)ecp);
-                    } else if (ecp instanceof EventStationPair) {
+                    } else if(ecp instanceof EventStationPair) {
                         ((WaveformMonitor)it.next()).update((EventStationPair)ecp);
                     }
                 } catch(Exception e) {
@@ -317,7 +350,7 @@ public class WaveformArm implements Arm {
             }
         }
     }
-    
+
     public double getRetryPercentage() {
         return retryPercentage;
     }
@@ -346,13 +379,9 @@ public class WaveformArm implements Arm {
 
     private StatefulEventDB eventDb;
 
-    private List usedPairGroups = new ArrayList();
-
     private double retryPercentage = .02;// 2 percent of the pool will be
 
-    // Amount of time after the run has ended that we retry Server based
-    // failures
-    private TimeInterval SERVER_RETRY_DELAY;
+    private static int MIN_WORK_UNIT_FOR_SLEEP = 1000;
 
     private static Logger logger = Logger.getLogger(WaveformArm.class);
 
@@ -360,13 +389,10 @@ public class WaveformArm implements Arm {
 
     private Set statusMonitors = Collections.synchronizedSet(new HashSet());
 
-    private int poolLineCapacity = 100;
-
     private final Object waveformProcessorSync = new Object();
-    
+
     int retryNum;
 
-    
     public Object getWaveformProcessorSync() {
         return waveformProcessorSync;
     }

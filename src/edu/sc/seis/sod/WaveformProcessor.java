@@ -17,10 +17,12 @@ public class WaveformProcessor extends Thread {
                     logger.debug("Processor waiting for work unit to show up");
                     try {
                         // sleep, but wake up if waveformArm does notifyAll()
+                        logger.debug("waiting on waveform arm");
                         synchronized(Start.getWaveformArm().getWaveformProcessorSync()) {
                             Start.getWaveformArm().getWaveformProcessorSync().wait(100000);
                         }
                     } catch(InterruptedException e) {}
+                    logger.debug("done waiting on waveform arm");
                     next = getNext(Standing.INIT);
             }
             if(next != null) {
@@ -41,17 +43,17 @@ public class WaveformProcessor extends Thread {
         }
     }
 
-    protected synchronized AbstractEventPair getNext(Standing standing) {
+    protected static synchronized AbstractEventPair getNext(Standing standing) {
         AbstractEventPair out = null;
         double retryRandom = Math.random();
         if(Start.getWaveformArm().getLocalSeismogramArm() != null) {
             EventChannelPair ecp = null;
             if (retryRandom < Start.getWaveformArm().getRetryPercentage()) {
                 // try a retry
-                ecp = soddb.getNextRetryECP();
+                ecp = SodDB.getSingleton().getNextRetryECP();
             } 
             if (ecp == null) {
-                ecp = soddb.getNextECP(standing); 
+                ecp = SodDB.getSingleton().getNextECP(standing); 
             }
             
             if(ecp != null) {
@@ -65,10 +67,10 @@ public class WaveformProcessor extends Thread {
             EventVectorPair evp = null;
             if (retryRandom < Start.getWaveformArm().getRetryPercentage()) {
                 // try a retry
-                evp = soddb.getNextRetryEVP();
+                evp = SodDB.getSingleton().getNextRetryEVP();
             } 
             if (evp == null) {
-                evp = soddb.getNextEVP(standing);
+                evp = SodDB.getSingleton().getNextEVP(standing);
             }
             
             if(evp != null) {
@@ -80,7 +82,7 @@ public class WaveformProcessor extends Thread {
             }
         }
         // no ecp/evp try e-station
-        EventStationPair esp = soddb.getNextESP(standing);
+        EventStationPair esp = SodDB.getSingleton().getNextESP(standing);
         if(esp != null) {
             esp.update(Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.INIT));
             SodDB.commit();
@@ -88,7 +90,7 @@ public class WaveformProcessor extends Thread {
             return esp;
         }
         // no e-station try e-network
-        EventNetworkPair enp = soddb.getNextENP(standing);
+        EventNetworkPair enp = SodDB.getSingleton().getNextENP(standing);
         if(enp != null) {
             enp.update(Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.INIT));
             SodDB.commit();
@@ -98,8 +100,6 @@ public class WaveformProcessor extends Thread {
         }
         return null;
     }
-
-    SodDB soddb = SodDB.getSingleton();
 
     public static int getProcessorsWorking() {
         return processorsWorking;

@@ -77,10 +77,9 @@ public class EventDCQuerier {
 
     public ProxyEventDC getEventDC() {
         if(eventDC == null) {
-            FissuresNamingService fissName = CommonAccess.getNameService();
             eventDC = new VestingEventDC(serverName,
                                          serverDNS,
-                                         fissName,
+                                         CommonAccess.getNameService(),
                                          -1,
                                          Start.createRetryStrategy());
         }

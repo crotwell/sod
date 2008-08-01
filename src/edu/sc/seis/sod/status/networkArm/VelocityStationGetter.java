@@ -31,7 +31,7 @@ public class VelocityStationGetter {
         CacheNetworkAccess[] nets = Start.getNetworkArm().getSuccessfulNetworks();
         for (int i = 0; i < nets.length; i++) {
             if (NetworkIdUtil.areEqual(nets[i].get_attributes().get_id(), net)) {
-                StationImpl[] sta = Start.getNetworkArm().getSuccessfulStations(nets[i]);
+                StationImpl[] sta = Start.getNetworkArm().getSuccessfulStations(nets[i].get_attributes());
                 for (int j = 0; j < sta.length; j++) {
                     out.add(sta[j]);
                 }

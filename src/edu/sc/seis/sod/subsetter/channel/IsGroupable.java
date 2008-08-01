@@ -26,9 +26,9 @@ public class IsGroupable implements ChannelSubsetter {
 		}
 
         List<ChannelImpl> failures = new ArrayList<ChannelImpl>();
-        ChannelGroup[] chanGroups = channelGrouper.group((ChannelImpl[])siteChans.toArray(), failures);
-        for (int i = 0; i < chanGroups.length; i++) {
-        	if (chanGroups[i].contains(channel)) {
+        List<ChannelGroup> chanGroups = channelGrouper.group(siteChans, failures);
+        for(ChannelGroup cg : chanGroups) {
+        	if (cg.contains(channel)) {
         		return new Pass(this);
         	}
 		}

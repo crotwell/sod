@@ -44,10 +44,10 @@
 			class="edu.iris.Fissures.network.StationImpl" column="station"
 			foreign-key="FK_estap_station" unique-key="event_station_key" />
 		<component name="status">
-			<property name="stageInt" type="integer" />
-			<property name="standingInt" type="integer" />
+			<property name="stageInt" type="integer"  index="esp_get_next_index"/>
+			<property name="standingInt" type="integer" index="esp_get_next_index"/>
 		</component>
-		<property name="numRetries"  type="integer"/>
+		<property name="numRetries"  type="integer" index="esp_get_next_index"/>
 		<property name="lastQuery"  type="timestamp"/>
 	</class>
 
@@ -84,7 +84,7 @@
 		</id>
 		<many-to-one name="event"
 			class="edu.sc.seis.sod.hibernate.StatefulEvent" column="event"
-			foreign-key="FK_evp_event" unique-key="evp_event_chan_key" />
+			foreign-key="FK_evp_event" unique-key="evp_event_changroup_key" />
 		<many-to-one name="channelGroup"
 			class="edu.sc.seis.fissuresUtil.hibernate.ChannelGroup" column="channelGroup"
 			foreign-key="FK_evp_channelGroup" unique-key="evp_event_changroup_key" />

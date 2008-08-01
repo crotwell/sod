@@ -7,8 +7,7 @@ import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
-import edu.sc.seis.fissuresUtil.cache.VestingNetworkDC;
-import edu.sc.seis.fissuresUtil.cache.VestingNetworkFinder;
+import edu.sc.seis.fissuresUtil.cache.DBCacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.StatefulEvent;
@@ -32,12 +31,16 @@ public class EventNetworkPair extends AbstractEventPair {
     }
 
     public void run() {
-        // don't bother with network if effective time does not
+        // don't bother with station if effective time does not
         // overlap event time
         try {
             EventEffectiveTimeOverlap overlap = new EventEffectiveTimeOverlap(getEvent());
             StationImpl[] stations = Start.getNetworkArm()
-                    .getSuccessfulStations(getNetworkAccess());
+                    .getSuccessfulStations(getNetwork());
+            logger.debug("Begin EventNetworkPair ("+getEvent().getDbid()+",s "+getNetworkDbId()+") "+this);
+            for(int i = 0; i < stations.length; i++) {
+                logger.debug("Station successful ("+stations[i].getDbid()+") "+StationIdUtil.toString(stations[i]));
+            }
             for(int i = 0; i < stations.length; i++) {
                 if(!overlap.overlaps(stations[i])) {
                     failLogger.info(StationIdUtil.toString(stations[i].get_id())
@@ -57,12 +60,8 @@ public class EventNetworkPair extends AbstractEventPair {
             update(Status.get(Stage.EVENT_CHANNEL_POPULATION,
                               Standing.SYSTEM_FAILURE));
             failLogger.warn(this, e);
-        } catch(NetworkNotFound e) {
-            // can't get network access, so set it to retry
-            update(Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                              Standing.SYSTEM_FAILURE));
-            failLogger.warn(this, e);
         }
+        logger.debug("End EventNetworkPair ("+getEvent().getDbid()+",s "+getNetworkDbId()+") "+this);
         SodDB.commit();
     }
 
@@ -100,14 +99,12 @@ public class EventNetworkPair extends AbstractEventPair {
     }
 
     public int getNetworkDbId() {
-        return network.get_attributes().getDbid();
+        return getNetwork().getDbid();
     }
 
     public CacheNetworkAccess getNetworkAccess() throws NetworkNotFound {
-        System.out.println("getNetworkAccess("+getNetwork().getSourceServerDNS()+", "+
-                                                          getNetwork().getSourceServerName());
         if (network == null) {
-            network = CacheNetworkAccess.create(getNetwork(), CommonAccess.getNameService());
+            network = new DBCacheNetworkAccess(getNetwork(), CommonAccess.getNameService());
         }
         return network;
     }
@@ -128,4 +125,6 @@ public class EventNetworkPair extends AbstractEventPair {
     private CacheNetworkAccess network;
     
     private NetworkAttrImpl networkAttr;
+    
+    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(EventNetworkPair.class);
 }

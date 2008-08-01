@@ -18,8 +18,9 @@ public class EventVectorPair extends CookieEventPair {
 
     public EventVectorPair(StatefulEvent event,
                            ChannelGroup chans,
-                           Status status) {
+                           Status status, EventStationPair esp) {
         super(event, status);
+        setEsp(esp);
         channels = chans;
     }
 

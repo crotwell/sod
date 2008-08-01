@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.hibernate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -29,15 +30,18 @@ public class StatefulEventDB {
         return trans.put(event);
     }
     
-    public List getAll() {
-        return trans.getAll();
+    public List<StatefulEvent> getAll() {
+        ArrayList<StatefulEvent> out = new ArrayList<StatefulEvent>();
+        List<CacheEvent> l = trans.getAll();
+        for(CacheEvent e : l) {
+            out.add((StatefulEvent)e);
+        }
+        return out;
     }
     
-    public List getAll(Status status) {
-        String q = "from "+StatefulEvent.class.getName()+" e where e.stageInt = "+status.getStageInt()+" and e.standingInt = "+status.getStandingInt();
+    public List<StatefulEvent> getAll(Status status) {
+        String q = "from "+StatefulEvent.class.getName()+" e where e.status.stageInt = "+status.getStageInt()+" and e.status.standingInt = "+status.getStandingInt();
         Query query = trans.getSession().createQuery(q);
-
-        query.setShort("status", status.getAsShort());
         return query.list();
     }
 
@@ -45,27 +49,26 @@ public class StatefulEventDB {
         return (StatefulEvent)trans.getEvent(dbid);
     }
 
-    public List getEventInTimeRange(MicroSecondTimeRange range) {
+    public List<StatefulEvent> getEventInTimeRange(MicroSecondTimeRange range) {
         return getEventInTimeRange(range, Status.getFromShort((short)2310));
     }
      
-    public List getEventInTimeRange(MicroSecondTimeRange range, Status status) {
+    public List<StatefulEvent> getEventInTimeRange(MicroSecondTimeRange range, Status status) {
         String q = "from "+StatefulEvent.class.getName()+" e where ";
-        if (status != null) { q += " e.stageInt = "+status.getStageInt()+" and e.standingInt = "+status.getStandingInt()+" AND ";}
+        if (status != null) { q += " e.status.stageInt = "+status.getStageInt()+" and e.status.standingInt = "+status.getStandingInt()+" AND ";}
         q += " e.preferred.originTime.time between :minTime AND :maxTime  ";
         Query query = trans.getSession().createQuery(q);
 
         query.setTimestamp("minTime", range.getBeginTime().getTimestamp());
         query.setTimestamp("maxTime", range.getEndTime().getTimestamp());
-        query.setShort("status", status.getAsShort());
         return query.list();
     }
 
-    public StatefulEvent[] query(EventFinderQuery q) {
-        CacheEvent[] ans = trans.query(q);
-        StatefulEvent[] out = new StatefulEvent[ans.length];
-        for(int i = 0; i < out.length; i++) {
-            out[i] = (StatefulEvent)ans[i];
+    public List<StatefulEvent> query(EventFinderQuery q) {
+        List<CacheEvent> ans = trans.query(q);
+        List<StatefulEvent> out = new ArrayList<StatefulEvent>(ans.size());
+        for(CacheEvent e : ans) {
+            out.add((StatefulEvent)e);
         }
         return out;
     }
@@ -153,10 +156,10 @@ public class StatefulEventDB {
         Status inProg = Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                    Standing.IN_PROG);
         String q = "update " + StatefulEvent.class.getName()
-                + " e set e.statusAsShort = :inProg where status = :success";
+                + " e set e.status.standingInt = :inProg where e.status.stageInt = "+success.getStageInt()
+                +" and e.status.standingInt = "+success.getStandingInt();
         Query query = trans.getSession().createQuery(q);
         query.setShort("inProg", inProg.getAsShort());
-        query.setShort("success", success.getAsShort());
         int updates = query.executeUpdate();
         logger.info("Reopen " + updates + " events");
     }

@@ -114,10 +114,6 @@ public class VelocityNetwork extends NetworkAttr {
         return getEnd();
     }
 
-    public String getName() {
-        return name;
-    }
-
     /**
      * just like getName except special characters for xml are made into entity
      * references. This just replaces the main ones: amp, lt, gt, apos, quot.
@@ -130,14 +126,6 @@ public class VelocityNetwork extends NetworkAttr {
         s = s.replaceAll("'", "&apos;");
         s = s.replaceAll("\"", "&quote;");
         return s;
-    }
-
-    public String getOwner() {
-        return owner;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     public List getStations() {

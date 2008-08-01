@@ -1,5 +1,7 @@
 package edu.sc.seis.sod.subsetter.origin;
 
+import java.util.List;
+
 import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.model.MicroSecondDate;
@@ -75,12 +77,11 @@ public class NetworkTimeRange implements OriginSubsetter, ArmListener,
             throw new RuntimeException(e);
         }
         for(int i = 0; i < nets.length; i++) {
-            StationImpl[] stas = arm.getSuccessfulStations(nets[i]);
+            StationImpl[] stas = arm.getSuccessfulStations(nets[i].get_attributes());
             for(int j = 0; j < stas.length; j++) {
-                ChannelImpl[] chans = arm.getSuccessfulChannels(nets[i],
-                                                                stas[j]);
-                for(int l = 0; l < chans.length; l++) {
-                    MicroSecondTimeRange chanRange = new MicroSecondTimeRange(chans[l].getEffectiveTime());
+                List<ChannelImpl> chans = arm.getSuccessfulChannels(stas[j]);
+                for(ChannelImpl c : chans) {
+                    MicroSecondTimeRange chanRange = new MicroSecondTimeRange(c.getEffectiveTime());
                     if(range == null) {
                         range = chanRange;
                     } else {

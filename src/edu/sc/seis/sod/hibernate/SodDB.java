@@ -113,6 +113,7 @@ public class SodDB extends AbstractHibernateDB {
     }
 
     public EventNetworkPair put(EventNetworkPair eventNetworkPair) {
+        logger.debug("Put "+eventNetworkPair);
         Session session = getSession();
         session.lock(eventNetworkPair.getNetwork(), LockMode.NONE);
         session.lock(eventNetworkPair.getEvent(), LockMode.NONE);
@@ -121,6 +122,7 @@ public class SodDB extends AbstractHibernateDB {
     }
 
     public EventStationPair put(EventStationPair eventStationPair) {
+        logger.debug("Put ("+eventStationPair.getEventDbId()+",s "+eventStationPair.getStationDbId()+") "+eventStationPair);
         Session session = getSession();
         session.lock(eventStationPair.getStation(), LockMode.NONE);
         session.lock(eventStationPair.getEvent(), LockMode.NONE);
@@ -129,6 +131,7 @@ public class SodDB extends AbstractHibernateDB {
     }
 
     public EventChannelPair put(EventChannelPair eventChannelPair) {
+        logger.debug("Put "+eventChannelPair);
         Session session = getSession();
         session.lock(eventChannelPair.getChannel(), LockMode.NONE);
         session.lock(eventChannelPair.getEvent(), LockMode.NONE);

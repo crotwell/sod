@@ -156,7 +156,9 @@ public class EventArm implements Arm {
                         setStatus("Waiting until "
                                   + ClockUtil.now().add(minWait)
                                   + " to check for new events");
-                        Thread.sleep(waitMillis);
+                        synchronized(getWaveformArmSync()) {
+                            getWaveformArmSync().wait(waitMillis);
+                        }
                     } catch(InterruptedException e) {}
                 }
             }

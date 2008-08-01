@@ -1,5 +1,8 @@
 package edu.sc.seis.sod.velocity.network;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.velocity.VelocityContext;
 
 import edu.iris.Fissures.IfNetwork.Channel;
@@ -120,6 +123,14 @@ public class VelocityChannel extends ChannelImpl {
         VelocityChannel[] velChans = new VelocityChannel[chans.length];
         for(int i = 0; i < velChans.length; i++) {
             velChans[i] = wrap(chans[i]);
+        }
+        return velChans;
+    }
+    
+    public static List<VelocityChannel> wrap(List<ChannelImpl> chans) {
+        List<VelocityChannel> velChans = new ArrayList<VelocityChannel>();
+        for(ChannelImpl c : chans) {
+            velChans.add(wrap(c));
         }
         return velChans;
     }

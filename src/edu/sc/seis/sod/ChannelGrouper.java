@@ -54,7 +54,7 @@ public class ChannelGrouper {
         additionalRules = loadRules(configFileLoc);
     }
 
-    public ChannelGroup[] group(ChannelImpl[] channels, List<ChannelImpl> failures) {
+    public List<ChannelGroup> group(List<ChannelImpl> channels, List<ChannelImpl> failures) {
         int ruleCount = defaultRules.length + additionalRules.length;
         Element[] allRules = new Element[ruleCount];
         for(int j = 0; j < additionalRules.length; j++) {
@@ -66,7 +66,7 @@ public class ChannelGrouper {
         return applyRules(channels, allRules, failures);
     }
 
-    private ChannelGroup[] applyRules(ChannelImpl[] channels,
+    private List<ChannelGroup> applyRules(List<ChannelImpl> channels,
                                       Element[] rules,
                                       List<ChannelImpl> failures) {
         List<ChannelGroup> groupableChannels = new LinkedList<ChannelGroup>();
@@ -82,11 +82,7 @@ public class ChannelGrouper {
                 groupableChannels.addAll(channelList);
             }
         }
-        ChannelGroup[] channelGroups = new ChannelGroup[groupableChannels.size()];
-        for(int k = 0; k < groupableChannels.size(); k++) {
-            channelGroups[k] = groupableChannels.get(k);
-        }
-        return (channelGroups);
+        return groupableChannels;
     }
 
     private List<ChannelGroup> getGroupableChannels(List<ChannelImpl> chn,
@@ -121,7 +117,7 @@ public class ChannelGrouper {
                                         }
                                     }
                                     if(channelGroup.size() == 3) {
-                                        ChannelGroup successfulChannels = new ChannelGroup((ChannelImpl[])channelGroup.toArray());
+                                        ChannelGroup successfulChannels = new ChannelGroup((ChannelImpl[])channelGroup.toArray(new ChannelImpl[0]));
                                         if(sanityCheck(successfulChannels)) {
                                             groupableChannels.add(successfulChannels);
                                             // remove the channels that are
@@ -233,11 +229,11 @@ public class ChannelGrouper {
         return true;
     }
 
-    private HashMap<String, List<ChannelImpl>> groupByBandGain(ChannelImpl[] channels) {
+    private HashMap<String, List<ChannelImpl>> groupByBandGain(List<ChannelImpl> channels) {
         HashMap<String, List<ChannelImpl>> bandGain = new HashMap<String, List<ChannelImpl>>();
-        for(int i = 0; i < channels.length; i++) {
-            MicroSecondDate msd = new MicroSecondDate(channels[i].get_id().begin_time);
-            String key = ChannelIdUtil.toStringNoDates(channels[i].get_id());
+        for(ChannelImpl c : channels) {
+            MicroSecondDate msd = new MicroSecondDate(c.get_id().begin_time);
+            String key = ChannelIdUtil.toStringNoDates(c.get_id());
             key = key.substring(0, key.length() - 1);
             key = msd + key;
             List<ChannelImpl> chans = bandGain.get(key);
@@ -245,7 +241,7 @@ public class ChannelGrouper {
                 chans = new LinkedList<ChannelImpl>();
                 bandGain.put(key, chans);
             }
-            chans.add(channels[i]);
+            chans.add(c);
         }
         return bandGain;
     }
