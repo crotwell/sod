@@ -18,12 +18,6 @@ public abstract class AbstractEventPair extends WaveformWorkUnit {
         this.status = status;
     }
 
-    public int getPairId(){ return pairId; }
-    
-    // for hibernate
-    protected void setPairId(int pairId) {
-        this.pairId = pairId;
-    }
 
     public void update(Throwable e, Status status) {
         String s = "";
@@ -43,6 +37,7 @@ public abstract class AbstractEventPair extends WaveformWorkUnit {
     
     public int getEventDbId() { return event.getDbid(); }
 
+    // for hibernate
     public Status getStatus(){ return status; }
     
     protected void setStatus(Status status) {

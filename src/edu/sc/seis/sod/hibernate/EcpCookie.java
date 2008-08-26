@@ -15,7 +15,7 @@ public class EcpCookie {
 
     public EcpCookie(EventChannelPair ecp, String name, Serializable value) {
         super();
-        this.id = new EcpCookieId(ecp.getPairId(), name);
+        this.id = new EcpCookieId(ecp.getDbid(), name);
         this.value = value;
         this.ecp = ecp;
     }

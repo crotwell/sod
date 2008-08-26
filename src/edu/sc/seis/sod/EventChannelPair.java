@@ -74,7 +74,7 @@ public class EventChannelPair extends CookieEventPair {
     }
 
     public String toString(){
-        return "EventChannelPair: ("+getPairId()+") " + getEvent() + " " +
+        return "EventChannelPair: ("+getDbid()+") " + getEvent() + " " +
             ChannelIdUtil.toString(getChannel().getId()) + " " + getStatus();
     }
 

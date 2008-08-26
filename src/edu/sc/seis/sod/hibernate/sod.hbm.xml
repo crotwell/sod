@@ -16,7 +16,7 @@
 	</joined-subclass>
 
 	<class name="edu.sc.seis.sod.EventNetworkPair">
-		<id name="pairId" type="integer">
+		<id name="dbid" type="integer">
 			<generator class="native" />
 		</id>
 		<many-to-one name="event"
@@ -34,7 +34,7 @@
 	</class>
 
 	<class name="edu.sc.seis.sod.EventStationPair">
-		<id name="pairId" type="integer">
+		<id name="dbid" type="integer">
 			<generator class="native" />
 		</id>
 		<many-to-one name="event"
@@ -52,7 +52,7 @@
 	</class>
 
 	<class name="edu.sc.seis.sod.EventChannelPair">
-		<id name="pairId" type="integer">
+		<id name="dbid" type="integer">
 			<generator class="native" />
 		</id>
 		<many-to-one name="event"
@@ -79,7 +79,7 @@
 	</class>
 
 	<class name="edu.sc.seis.sod.EventVectorPair">
-		<id name="pairId" type="integer">
+		<id name="dbid" type="integer">
 			<generator class="native" />
 		</id>
 		<many-to-one name="event"
