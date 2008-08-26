@@ -56,7 +56,6 @@ public class WaveformProcessor extends Thread {
     }
 
     protected static synchronized AbstractEventPair getNext(Standing standing) {
-        AbstractEventPair out = null;
         double retryRandom = Math.random();
         if(Start.getWaveformArm().getLocalSeismogramArm() != null) {
             EventChannelPair ecp = null;
