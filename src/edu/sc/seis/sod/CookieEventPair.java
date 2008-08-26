@@ -20,10 +20,8 @@ public abstract class CookieEventPair extends AbstractEventPair {
         super(event);
     }
 
-    public void setStatus(Status status) {
+    protected void setStatus(Status status) {
         super.setStatus(status);
-        getCookies().put("status", status);
-        Start.getWaveformArm().setStatus(this);
     }
     // hibernate
     protected void setCookies(Map<String, Serializable> cookies) {

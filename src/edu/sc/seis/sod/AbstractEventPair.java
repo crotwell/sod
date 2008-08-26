@@ -45,7 +45,7 @@ public abstract class AbstractEventPair extends WaveformWorkUnit {
 
     public Status getStatus(){ return status; }
     
-    public void setStatus(Status status) {
+    protected void setStatus(Status status) {
         this.status = status;
         updateRetries();
     }
