@@ -157,6 +157,7 @@ public class WaveformArm implements Arm {
                 synchronized(getWaveformProcessorSync()) {
                     synchronized(eventArm.getWaveformArmSync()) {
                         try {
+                            eventArm.getWaveformArmSync().notifyAll();
                             logger.debug("sleeping for eventarm");
                             eventArm.getWaveformArmSync()
                                     .wait(sleepTime * 1000);
