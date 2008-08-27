@@ -610,9 +610,6 @@ public class NetworkArm implements Arm {
                             }
                         }
                         if(accepted) {
-                            logger.debug("Station dbid="+station.getDbid()+"  chan station dbid = "+((StationImpl)chansAtStation.get(0).getSite().getStation()).getDbid()
-                                                   +"\n  "+StationIdUtil.toString(station)+"\n  "+StationIdUtil.toString(chansAtStation.get(0).getSite().getStation()));
-                        
                             Integer dbidInt = new Integer(getNetworkDB().put(chan));
                             needCommit = true;
                             channelMap.put(dbidInt, chan);
@@ -664,6 +661,9 @@ public class NetworkArm implements Arm {
                                                              failures);
             for(ChannelGroup cg : chanGroups) {
                 getNetworkDB().put(cg);
+            }
+            if (chanGroups.size() != 0) {
+                getNetworkDB().commit();
             }
             Iterator it = failures.iterator();
             Status chanReject = Status.get(Stage.NETWORK_SUBSETTER,
