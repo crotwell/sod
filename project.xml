@@ -62,6 +62,10 @@
             <groupId>bag</groupId>
             <version>0.1</version>
         </dependency>
+         <dependency>
+            <id>jline</id>
+            <version>0.9.91</version>
+        </dependency>
         <dependency>
             <artifactId>seisFile</artifactId>
             <groupId>seisFile</groupId>
@@ -176,7 +180,7 @@
         </dependency>
         <dependency>
             <id>SeedCodec</id>
-            <version>1.0.3</version>
+            <version>1.0.4</version>
             <url>http://www.seis.sc.edu/software/SeedCodec</url>
         </dependency>
         <dependency>
