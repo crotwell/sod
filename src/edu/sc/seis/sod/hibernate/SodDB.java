@@ -46,7 +46,7 @@ public class SodDB extends AbstractHibernateDB {
 
     public static void configHibernate(Configuration config) {
         logger.debug("adding to HibernateUtil   " + configFile);
-        config.addResource(configFile);
+        config.addResource(configFile, SodDB.class.getClassLoader());
         if(ConnMgr.getURL().startsWith("jdbc:hsql")) {
             config.addSqlFunction("datediff",
                                   new SQLFunctionTemplate(Hibernate.LONG,
@@ -203,8 +203,11 @@ public class SodDB extends AbstractHibernateDB {
         query.setFloat("minDelay", minRetryDelay);
         query.setFloat("maxDelay", maxRetryDelay);
         query.setMaxResults(1);
-        EventChannelPair out = (EventChannelPair)query.uniqueResult();
-        return out;
+        List<EventChannelPair> result = query.list();
+        if(result.size() > 0) {
+            return result.get(0);
+        }
+        return null;
     }
 
     /** next successful event-vector to process. Returns null if no more events. */
@@ -216,9 +219,9 @@ public class SodDB extends AbstractHibernateDB {
         Query query = getSession().createQuery(q);
         query.setInteger("inProg", standing.getVal());
         query.setMaxResults(1);
-        List result = query.list();
+        List<EventVectorPair> result = query.list();
         if(result.size() > 0) {
-            return (EventVectorPair)result.get(0);
+            return result.get(0);
         }
         return null;
     }
@@ -239,8 +242,11 @@ public class SodDB extends AbstractHibernateDB {
         query.setFloat("minDelay", minRetryDelay);
         query.setFloat("maxDelay", maxRetryDelay);
         query.setMaxResults(1);
-        EventVectorPair out = (EventVectorPair)query.uniqueResult();
-        return out;
+        List<EventVectorPair> result = query.list();
+        if(result.size() > 0) {
+            return result.get(0);
+        }
+        return null;
     }
 
     public int getNumWorkUnits(Standing standing) {
@@ -263,7 +269,12 @@ public class SodDB extends AbstractHibernateDB {
                 + " where event = :event and channel = :channel");
         query.setEntity("event", event);
         query.setEntity("channel", chan);
-        return ((EventChannelPair)query.uniqueResult());
+        query.setMaxResults(1);
+        List<EventChannelPair> result = query.list();
+        if(result.size() > 0) {
+            return result.get(0);
+        }
+        return null;
     }
 
     public EventVectorPair put(EventVectorPair eventVectorPair) {
@@ -442,8 +453,8 @@ public class SodDB extends AbstractHibernateDB {
     public List<StationImpl> getSuccessfulStationsForEvent(CacheEvent event) {
         String q = "select distinct ecp.channel.site.station from "
                 + EventChannelPair.class.getName()
-                + " ecp where ecp.event = :event and ecp.statusAsShort = "
-                + Status.get(Stage.PROCESSOR, Standing.SUCCESS).getAsShort();
+                + " ecp where ecp.event = :event and ecp.status.stageInt = "
+                + Stage.PROCESSOR.getVal()+" and ecp.status.standingInt = "+ Standing.SUCCESS.getVal();
         Query query = getSession().createQuery(q);
         query.setEntity("event", event);
         return query.list();
@@ -454,8 +465,8 @@ public class SodDB extends AbstractHibernateDB {
                 + " s where s not in ("
                 + "select distinct ecp.channel.site.station from "
                 + EventChannelPair.class.getName()
-                + " ecp where ecp.event = :event and ecp.statusAsShort = "
-                + Status.get(Stage.PROCESSOR, Standing.SUCCESS).getAsShort()
+                + " ecp where ecp.event = :event and ecp.status.stageInt = "
+                + Stage.PROCESSOR.getVal()+" and ecp.status.standingInt = "+ Standing.SUCCESS.getVal()
                 + " )";
         Query query = getSession().createQuery(q);
         query.setEntity("event", event);
@@ -509,7 +520,6 @@ public class SodDB extends AbstractHibernateDB {
         query.setEntity("event", event);
         query.setEntity("channel", channel);
         query.setString("recsecid", recordSectionId);
-        query.uniqueResult();
         Iterator it = query.iterate();
         if(it.hasNext()) {
             return (RecordSectionItem)it.next();
@@ -646,7 +656,12 @@ public class SodDB extends AbstractHibernateDB {
                 + " where ecp = :ecp and name = :name");
         q.setEntity("ecp", ecp);
         q.setString("name", name);
-        return (EcpCookie)q.uniqueResult();
+        q.setMaxResults(1);
+        List<EcpCookie> result = q.list();
+        if(result.size() > 0) {
+            return result.get(0);
+        }
+        return null;
     }
 
     public void deleteCookie(EcpCookie cookie) {
@@ -662,14 +677,15 @@ public class SodDB extends AbstractHibernateDB {
         String q = "From edu.sc.seis.sod.SodConfig c ORDER BY c.time desc";
         Query query = getSession().createQuery(q);
         query.setMaxResults(1);
-        return (SodConfig)query.uniqueResult();
+        List<SodConfig> result = query.list();
+        if(result.size() > 0) {
+            return result.get(0);
+        }
+        return null;
     }
 
     public SodConfig getConfig(int configid) {
-        String q = "From edu.sc.seis.sod.SodConfig c where dbid = "+configid;
-        Query query = getSession().createQuery(q);
-        query.setMaxResults(1);
-        return (SodConfig)query.uniqueResult();
+        return (SodConfig)getSession().get(edu.sc.seis.sod.SodConfig.class, configid);
     }
 
     public QueryTime getQueryTime(String serverName, String serverDNS) {
@@ -677,10 +693,10 @@ public class SodDB extends AbstractHibernateDB {
         Query query = getSession().createQuery(q);
         query.setString("serverName", serverName);
         query.setString("serverDNS", serverDNS);
-        List result = query.list();
+        query.setMaxResults(1);
+        List<QueryTime> result = query.list();
         if(result.size() > 0) {
-            QueryTime out = (QueryTime)result.get(0);
-            return out;
+            return result.get(0);
         }
         return null;
     }
@@ -725,24 +741,22 @@ public class SodDB extends AbstractHibernateDB {
         String staBase = baseStatement + " ecp.channel.site.station = :sta ";
         String staEventBase = baseStatement
                 + " ecp.channel.site.station = :sta and ecp.event = :event ";
-        eventBase = baseStatement + " ecp.event = :event ";
         Status pass = Status.get(Stage.PROCESSOR, Standing.SUCCESS);
-        success = staBase + " AND ecp.status.standingInt = " + pass.getStandingInt() 
-        +" AND ecp.status.stageInt = "+pass.getStageInt();
+        String PROCESS_SUCCESS = " ecp.status.stageInt = "
+                + pass.getStageInt()+" AND ecp.status.standingInt = "+pass.getStandingInt();
+        eventBase = baseStatement + " ecp.event = :event ";
+        success = staBase + " AND "+PROCESS_SUCCESS;
         String failReq = " AND ecp.status.standingInt in (" + Standing.REJECT.getVal() + " , "+Standing.SYSTEM_FAILURE.getVal()+")";
         failed = staBase +  failReq;
         String retryReq = " AND ecp.status.standingInt in (" + Standing.RETRY.getVal() + " , "+Standing.CORBA_FAILURE.getVal()+")";
         retry = staBase + retryReq ;
-        successPerEvent = eventBase + " AND ecp.statusAsShort = "
-                + Status.get(Stage.PROCESSOR, Standing.SUCCESS).getAsShort();
+        successPerEvent = eventBase + " AND "+PROCESS_SUCCESS;
         failedPerEvent = eventBase + failReq;
         retryPerEvent = eventBase +  retryReq;
-        successPerEventStation = staEventBase + "  AND ecp.status.stage = "
-                + pass.getStageInt()+" AND ecp.status.standing = "+pass.getStandingInt();
+        successPerEventStation = staEventBase + "  AND "+PROCESS_SUCCESS;
         failedPerEventStation = staEventBase + failReq;
         retryPerEventStation = staEventBase + retryReq;
-        totalSuccess = baseStatement + "  AND ecp.status.stage = "
-        + pass.getStageInt()+" AND ecp.status.standing = "+pass.getStandingInt();
+        totalSuccess = baseStatement + " "+PROCESS_SUCCESS;
     }
 
     public static SodDB getSingleton() {
