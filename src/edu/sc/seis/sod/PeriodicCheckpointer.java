@@ -1,5 +1,6 @@
 package edu.sc.seis.sod;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Timer;
@@ -26,10 +27,12 @@ public class PeriodicCheckpointer extends TimerTask {
 
     public void run() {
         try {
-            Statement stmt = ConnMgr.createConnection().createStatement();
+            Connection conn = ConnMgr.createConnection();
+            Statement stmt = conn.createStatement();
             logger.info("Checkpointing db");
             stmt.executeUpdate("CHECKPOINT");
             logger.info("Done checkpointing db");
+            conn.close();
         } catch(SQLException e) {
             GlobalExceptionHandler.handle(e);
         }
