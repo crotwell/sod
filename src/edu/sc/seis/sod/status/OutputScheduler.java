@@ -83,6 +83,7 @@ public class OutputScheduler extends Thread implements ArmListener {
                     try {
                         Connection conn = ConnMgr.createConnection();
                         conn.createStatement().execute("shutdown");
+                        conn.close();
                     } catch(SQLException e) {
                         GlobalExceptionHandler.handle(e);
                     }
