@@ -51,6 +51,8 @@ public class IndexTemplate extends FileWritingTemplate implements
         super(dirName, "index.html");
         try {
             initExceptionHandler();
+            String configFileLoc = Start.getConfigFileName();
+            configFile = new File(configFileLoc).getName();
             Element template = TemplateFileLoader.getTemplate(getClass().getClassLoader(),
                                                               indexLoc);
             parse(template);
@@ -71,9 +73,6 @@ public class IndexTemplate extends FileWritingTemplate implements
             SodUtil.copyFile(key, dirName + "/images/mapkey.gif");
             SodUtil.copyFile(individualKey, dirName
                     + "/images/individualEventMapKey.gif");
-            String configFileLoc = Start.getConfigFileName();
-            String configFileName = new File(configFileLoc).getName();
-            configFile = configFileName;
             SodUtil.copyFile(Start.getConfigFileName(),
                              FileWritingTemplate.getBaseDirectoryName() + "/"
                                      + configFile);
