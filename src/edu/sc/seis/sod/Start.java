@@ -639,5 +639,5 @@ public class Start {
 
     public static final String DEFAULT_PROPS = "edu/sc/seis/sod/data/sod.prop";
     
-    private static final String EHCACHE_CONFIG = "edu/sc/seis/sod/data/ehcache.xml";
+    public static final String EHCACHE_CONFIG = "edu/sc/seis/sod/data/ehcache.xml";
 }// Start
