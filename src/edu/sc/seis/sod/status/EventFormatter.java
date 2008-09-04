@@ -172,7 +172,7 @@ public class EventFormatter extends Template implements EventTemplate {
         private Standing s;
     }
 
-    private static SodDB evStatus;
+    private static SodDB evStatus = SodDB.getSingleton();
 
     public static String format(double d) {
         return defaultDecimalFormat.format(d);

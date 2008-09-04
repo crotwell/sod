@@ -85,7 +85,7 @@ public class EventStationGroupTemplate extends Template implements EventTemplate
     private List eventStationFormatters = new ArrayList();
     private boolean success = false, failure = false;
 
-    private static SodDB evStatus;
+    private static SodDB evStatus = SodDB.getSingleton();
 
 }
 
