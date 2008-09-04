@@ -102,7 +102,7 @@
         </dependency>
         <dependency>
             <id>SeedCodec</id>
-            <version>1.0.3</version>
+            <version>1.0.4</version>
             <url>http://www.seis.sc.edu/software/SeedCodec</url>
         </dependency>
         <dependency>
