@@ -47,7 +47,7 @@ public class MapEventStatus implements SodElement, EventMonitor, Runnable {
         OpenMap map = pool.getMap(new FreshnessEventColorizer());
         try {
             EventLayer el = map.getEventLayer();
-            el.eventDataChanged(new EQDataEvent(events.getAll()));
+            el.eventDataChanged(new EQDataEvent(StatefulEventDB.getSingleton().getAll()));
             map.writeMapToPNG(fileLoc);
         } catch(IOException e) {
             throw new RuntimeException("Trouble writing map", e);
@@ -59,8 +59,6 @@ public class MapEventStatus implements SodElement, EventMonitor, Runnable {
     public void setArmStatus(String status) {}// noImpl
 
     private static MapPool pool = MapPool.getDefaultPool();
-
-    private StatefulEventDB events;
 
     private static Logger logger = Logger.getLogger(MapEventStatus.class);
 }
