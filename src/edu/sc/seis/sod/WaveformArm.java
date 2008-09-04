@@ -52,9 +52,9 @@ public class WaveformArm implements Arm {
     }
 
     private void initDb() throws SQLException {
-        sodDb = new SodDB();
+        sodDb = SodDB.getSingleton();
         logger.info("SodDB in WaveformArm:" + sodDb);
-        eventDb = new StatefulEventDB();
+        eventDb = StatefulEventDB.getSingleton();
     }
 
     public boolean isActive() {
@@ -201,6 +201,8 @@ public class WaveformArm implements Arm {
             ev.setStatus(Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                     Standing.IN_PROG));
             eventDb.commit();
+            // refresh event to put back in new session
+            eventDb.getSession().load(ev, ev.getDbid());
             numEvents++;
             if(ev.get_preferred_origin().getOriginTime() == null) {
                 throw new RuntimeException("otime is null "
@@ -227,6 +229,7 @@ public class WaveformArm implements Arm {
             // in the waveformDatabase.
             ev.setStatus(Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                     Standing.SUCCESS));
+            eventDb.getSession().saveOrUpdate(ev);
             eventDb.commit();
             // wake up the workers in case they are asleep
             synchronized(getWaveformProcessorSync()) {
@@ -382,7 +385,7 @@ public class WaveformArm implements Arm {
 
     private double retryPercentage = .02;// 2 percent of the pool will be
 
-    private static int MIN_WORK_UNIT_FOR_SLEEP = 1000;
+    private static int MIN_WORK_UNIT_FOR_SLEEP = 100;
 
     private static Logger logger = Logger.getLogger(WaveformArm.class);
 
