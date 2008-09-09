@@ -185,11 +185,13 @@ public class EventArm implements Arm {
     
     private void waitForProcessing() throws Exception {
         int numWaiting = eventStatus.getNumWaiting();
-        if( !Start.isArmFailure() && waitForWaveformProcessing  &&  numWaiting > MIN_WAIT_EVENTS) {
+        logger.debug("Event wait: numWaiting = "+numWaiting+" should be < "+MIN_WAIT_EVENTS);
+        while( !Start.isArmFailure() && waitForWaveformProcessing  &&  numWaiting > MIN_WAIT_EVENTS) {
             synchronized(getWaveformArmSync()) {
                 setStatus("eventArm waiting until there are less than "+MIN_WAIT_EVENTS+" events waiting to be processed. "+numWaiting+" in queue now.");
                 getWaveformArmSync().wait();
             }
+            numWaiting = eventStatus.getNumWaiting();
         }
     }
 
