@@ -252,8 +252,9 @@ public class NetworkArm implements Arm {
             NetworkPusher lastPusher = null;
             for(int i = 0; i < allNets.length; i++) {
                 allNets[i] = new DBCacheNetworkAccess(allNets[i]);
+                NetworkAttrImpl attr = null;
                 try {
-                    NetworkAttrImpl attr = (NetworkAttrImpl)allNets[i].get_attributes();
+                    attr = (NetworkAttrImpl)allNets[i].get_attributes();
                     if(netEffectiveSubsetter.accept(attr).isSuccess()) {
                         if(attrSubsetter.accept(attr).isSuccess()) {
                             NetworkDB ndb = getNetworkDB();
@@ -298,7 +299,8 @@ public class NetworkArm implements Arm {
                 } catch(Throwable th) {
                     GlobalExceptionHandler.handle("Got an exception while trying getSuccessfulNetworks for the "
                                                           + i
-                                                          + "th networkAccess",
+                                                          + "th networkAccess ("
+                                                          +(attr==null?"null":NetworkIdUtil.toStringNoDates(((NetworkAttrImpl)allNets[i].get_attributes()))),
                                                   th);
                 }
             }
