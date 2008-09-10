@@ -8,7 +8,6 @@ package edu.sc.seis.sod.hibernate;
 
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.sod.Stage;
 import edu.sc.seis.sod.Status;
 
 public class StatefulEvent extends CacheEvent{
@@ -26,16 +25,6 @@ public class StatefulEvent extends CacheEvent{
     public void setStatus(Status stat){ this.status = stat; }
     
     private Status status;
-
-    /** For use by hibernate */
-    private Long id; 
-
-    public Long getId() { 
-        return this.id; 
-    } 
-    private void setId(Long id) { 
-        this.id = id; 
-    } 
 
 }
 
