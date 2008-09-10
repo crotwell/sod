@@ -203,6 +203,18 @@ public class NetworkArm implements Arm {
                                           Standing.SUCCESS));
                     }
                 }
+                if(Start.getWaveformArm() == null
+                        && (! stationSubsetter.getClass().equals(PassStation.class) 
+                        || chanSubsetters.size() != 0 )) {
+                    // only do netpushers if there are more subsetters downstream
+                    // and the waveform arm does not exist, otherwise there is no point
+                    // or we can let the waveform processors handle via EventNetworkPair
+                    NetworkPusher pusher = new NetworkPusher(cacheNets[0].get_attributes());
+                    for(int j = 0; j < cacheNets.length; j++) {
+                        pusher.addNetwork(cacheNets[j].get_attributes());
+                    }
+                    pusher.run();
+                }
                 return cacheNets;
             }
             statusChanged("Getting networks");
