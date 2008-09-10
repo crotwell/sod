@@ -37,6 +37,7 @@ import edu.iris.Fissures.network.StationIdUtil;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.DBCacheNetworkAccess;
+import edu.sc.seis.fissuresUtil.cache.LazyNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
 import edu.sc.seis.fissuresUtil.cache.WorkerThreadPool;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
@@ -48,6 +49,7 @@ import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.source.event.EventSource;
 import edu.sc.seis.sod.source.network.NetworkFinder;
+import edu.sc.seis.sod.status.OutputScheduler;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.networkArm.NetworkMonitor;
 import edu.sc.seis.sod.subsetter.channel.ChannelEffectiveTimeOverlap;
@@ -73,8 +75,8 @@ public class NetworkArm implements Arm {
         try {
             getSuccessfulNetworks();
         } catch(Throwable e) {
-            Start.armFailure(this, e);
             armFinished = true;
+            Start.armFailure(this, e);
         }
     }
 
@@ -209,10 +211,13 @@ public class NetworkArm implements Arm {
                     // only do netpushers if there are more subsetters downstream
                     // and the waveform arm does not exist, otherwise there is no point
                     // or we can let the waveform processors handle via EventNetworkPair
+                    // also do this "in thread" instead of spawning a NetPusher thread
+                    // as we are the only arm and no need of quick return of networks
                     NetworkPusher pusher = new NetworkPusher(cacheNets[0].get_attributes());
                     for(int j = 0; j < cacheNets.length; j++) {
                         pusher.addNetwork(cacheNets[j].get_attributes());
                     }
+                    pusher.setLastPusher();
                     pusher.run();
                 }
                 return cacheNets;
@@ -491,8 +496,8 @@ public class NetworkArm implements Arm {
                     + net.getName());
             ArrayList<Station> arrayList = new ArrayList<Station>();
             try {
-                CacheNetworkAccess netAccess = CacheNetworkAccess.create((NetworkAttrImpl)net,
-                                                                         CommonAccess.getNameService());
+                CacheNetworkAccess netAccess = new LazyNetworkAccess((NetworkAttrImpl)net,
+                                                                     finder.getNetworkDC());
                 Station[] stations = netAccess.retrieve_stations();
                 for(int i = 0; i < stations.length; i++) {
                     logger.debug("Station in NetworkArm: "
@@ -570,8 +575,8 @@ public class NetworkArm implements Arm {
             statusChanged("Getting channels for " + station);
             List<ChannelImpl> successes = new ArrayList<ChannelImpl>();
             try {
-                CacheNetworkAccess networkAccess = CacheNetworkAccess.create((NetworkAttrImpl)station.getNetworkAttr(),
-                                                                             CommonAccess.getNameService());
+                CacheNetworkAccess networkAccess = new LazyNetworkAccess((NetworkAttrImpl)station.getNetworkAttr(),
+                                                                             finder.getNetworkDC());
                 Channel[] tmpChannels = networkAccess.retrieve_for_station(station.get_id());
                 MicroSecondDate stationBegin = new MicroSecondDate(station.getBeginTime());
                 // dmc network server ignores date in station id in
