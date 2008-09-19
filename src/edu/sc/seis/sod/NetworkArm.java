@@ -631,8 +631,6 @@ public class NetworkArm implements Arm {
                         if(accepted) {
                             Integer dbidInt = new Integer(getNetworkDB().put(chan));
                             needCommit = true;
-                            channelMap.put(dbidInt, chan);
-                            channelToSiteMap.put(dbidInt, station);
                             successes.add(chan);
                             change(chan, Status.get(Stage.NETWORK_SUBSETTER,
                                                     Standing.SUCCESS));
@@ -696,25 +694,7 @@ public class NetworkArm implements Arm {
         }
     }
 
-    // This is a HACK. Since we're already storing the channels whole hog, it
-    // isn't much of a stretch to cache them by dbid, and this allows
-    // JDBCEventChannelStatus to quickly pull them out instead of going to the
-    // Net database
-    public Channel getChannel(int chanId) throws NotFound, SQLException {
-        ChannelImpl chan = (ChannelImpl)channelMap.get(new Integer(chanId));
-        if(chan != null) {
-            return chan;
-        }
-        chan = getNetworkDB().getChannel(chanId);
-        channelMap.put(new Integer(chanId), chan);
-        return chan;
-    }
-
     private QueryTime lastQueryTime = null;
-
-    private Map channelMap = Collections.synchronizedMap(new HashMap());
-
-    private Map channelToSiteMap = Collections.synchronizedMap(new HashMap());
 
     private void statusChanged(String newStatus) {
         synchronized(statusMonitors) {
