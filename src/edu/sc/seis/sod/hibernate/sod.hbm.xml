@@ -75,7 +75,6 @@
 		<many-to-one name="esp"
 			class="edu.sc.seis.sod.EventStationPair" column="esp"
 			foreign-key="FK_ecp_esp" />
-			
 	</class>
 
 	<class name="edu.sc.seis.sod.EventVectorPair">
