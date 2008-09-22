@@ -80,9 +80,12 @@ public class EventStationPair extends CookieEventPair {
             if(!accepted.isSuccess()) {
                 update(Status.get(Stage.EVENT_STATION_SUBSETTER,
                                   Standing.REJECT));
+                SodDB.commit();
                 failLogger.info(this + "  " + accepted.toString());
                 return;
             }
+            SodDB.commit();
+            SodDB.getSession().update(this);
             // need to evict station so station that comes with channels is ok
             NetworkDB.getSession().evict(station);
             NetworkDB.getSession().evict(station.getNetworkAttr());
