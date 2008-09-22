@@ -605,6 +605,8 @@ public class NetworkArm implements Arm {
                 boolean needCommit = false;
                 for(int i = 0; i < channels.length; i++) {
                     ChannelImpl chan = channels[i];
+                    // make the assumption that the station in the channel is the same as the station retrieved earlier
+                    chan.getSite().setStation(station);
                     change(chan, inProg);
                     StringTree effectiveTimeResult = chanEffectiveSubsetter.accept(chan,
                                                                                    networkAccess);
@@ -680,7 +682,7 @@ public class NetworkArm implements Arm {
                 getNetworkDB().put(cg);
             }
             if (chanGroups.size() != 0) {
-                getNetworkDB().commit();
+                NetworkDB.commit();
             }
             Iterator it = failures.iterator();
             Status chanReject = Status.get(Stage.NETWORK_SUBSETTER,
