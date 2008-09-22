@@ -148,7 +148,8 @@ public class WaveformArm implements Arm {
                 // but wake if processors run out
                 synchronized(getWaveformProcessorSync()) {
                     try {
-                        getWaveformProcessorSync().wait(sleepTime * 1000);
+                        getWaveformProcessorSync().notifyAll();
+                        getWaveformProcessorSync().wait();
                     } catch(InterruptedException e) {}
                 }
             } else if(numEvents == 0) {
@@ -160,12 +161,13 @@ public class WaveformArm implements Arm {
                             eventArm.getWaveformArmSync().notifyAll();
                             logger.debug("sleeping for eventarm");
                             eventArm.getWaveformArmSync()
-                                    .wait(sleepTime * 1000);
+                                    .wait();
                             logger.debug("done sleeping for eventarm");
                         } catch(InterruptedException e) {}
                     }
                     getWaveformProcessorSync().notifyAll();
                 }
+                return;
             } else {
                 // not enough work, but events worth processing, so go back to
                 // work
@@ -200,6 +202,7 @@ public class WaveformArm implements Arm {
                     + EventUtil.getEventInfo(ev));
             ev.setStatus(Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                     Standing.IN_PROG));
+            eventDb.getSession().saveOrUpdate(ev);
             eventDb.commit();
             // refresh event to put back in new session
             eventDb.getSession().load(ev, ev.getDbid());
@@ -229,7 +232,6 @@ public class WaveformArm implements Arm {
             // in the waveformDatabase.
             ev.setStatus(Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                     Standing.SUCCESS));
-            eventDb.getSession().saveOrUpdate(ev);
             eventDb.commit();
             // wake up the workers in case they are asleep
             synchronized(getWaveformProcessorSync()) {
