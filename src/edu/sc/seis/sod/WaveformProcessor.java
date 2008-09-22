@@ -24,9 +24,8 @@ public class WaveformProcessor extends Thread {
                         logger.debug("waiting on waveform arm");
                         synchronized(Start.getWaveformArm()
                                 .getWaveformProcessorSync()) {
-                            Start.getWaveformArm()
-                                    .getWaveformProcessorSync()
-                                    .wait(100000);
+                            Start.getWaveformArm().getWaveformProcessorSync().notifyAll();
+                            Start.getWaveformArm().getWaveformProcessorSync().wait(100000);
                         }
                     } catch(InterruptedException e) {}
                     logger.debug("done waiting on waveform arm");
