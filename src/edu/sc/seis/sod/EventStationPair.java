@@ -86,9 +86,6 @@ public class EventStationPair extends CookieEventPair {
             }
             SodDB.commit();
             SodDB.getSession().update(this);
-            // need to evict station so station that comes with channels is ok
-            NetworkDB.getSession().evict(station);
-            NetworkDB.getSession().evict(station.getNetworkAttr());
             List<AbstractEventPair> chanPairs = new ArrayList<AbstractEventPair>();
             if(Start.getWaveformArm().getMotionVectorArm() != null) {
                 List<ChannelGroup> chanGroups = Start.getNetworkArm()
