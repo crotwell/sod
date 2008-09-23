@@ -19,7 +19,7 @@ public class RecordSectionItem {
     /** for hibernate */
     protected RecordSectionItem() {}
 
-    int dbid;
+    long dbid;
 
     CacheEvent event;
 
@@ -29,11 +29,11 @@ public class RecordSectionItem {
 
     boolean inBest;
 
-    public int getDbid() {
+    public long getDbid() {
         return dbid;
     }
 
-    protected void setDbid(int dbid) {
+    protected void setDbid(long dbid) {
         this.dbid = dbid;
     }
 

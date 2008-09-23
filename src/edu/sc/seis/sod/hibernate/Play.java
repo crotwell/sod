@@ -67,12 +67,7 @@ public class Play extends edu.sc.seis.fissuresUtil.hibernate.Play {
         StatefulEventDB evtdb = StatefulEventDB.getSingleton();
         evtdb.put(ecp.getEvent());
         sodDb.put(ecp);
-        EcpCookie cookie = new EcpCookie(ecp, "test1", "bla bla");
-        sodDb.putCookie(cookie);
         SodDB.commit();
-        logger.info("Cookie put");
-        cookie = sodDb.getCookie(ecp, "test1");
-        logger.info("cookie grabbed and eaten!");
     }
     
     protected void storeECP() {

@@ -11,7 +11,7 @@ import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.StatefulEvent;
 
-public class EventVectorPair extends CookieEventPair {
+public class EventVectorPair extends AbstractEventChannelPair {
 
     /** for hibernate */
     protected EventVectorPair() {}
@@ -19,8 +19,7 @@ public class EventVectorPair extends CookieEventPair {
     public EventVectorPair(StatefulEvent event,
                            ChannelGroup chans,
                            Status status, EventStationPair esp) {
-        super(event, status);
-        setEsp(esp);
+        super(event, status, esp);
         channels = chans;
     }
 
@@ -30,19 +29,6 @@ public class EventVectorPair extends CookieEventPair {
     
     protected void setChannelGroup(ChannelGroup cg) {
         channels = cg;
-    }
-
-    /**
-     * sets the status on this event channel pair to be status and notifies its
-     * parent
-     */
-    public void update(Status status) {
-        // this is weird, but calling the setter allows hibernate to autodetect
-        // a modified object
-        setStatus(status);
-        updateRetries();
-        getCookies().put("status", status);
-        Start.getWaveformArm().setStatus(this);
     }
 
     public void run() {
@@ -88,24 +74,8 @@ public class EventVectorPair extends CookieEventPair {
         return s;
     }
     
-    public CookieJar getCookieJar() {
-        if (cookieJar == null) {
-            cookieJar = new CookieJar(this, getEsp().getCookies(), getCookies());
-        }
-        return cookieJar;
-    }
 
     ChannelGroup channels;
-    private CookieJar cookieJar;
-
-    // hibernate
-    protected void setEsp(EventStationPair esp) {
-        this.esp = esp;
-    }
-    public EventStationPair getEsp() {
-        return esp;
-    }
-    protected EventStationPair esp;
     
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(EventVectorPair.class);
 }

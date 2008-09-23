@@ -16,7 +16,7 @@
 	</joined-subclass>
 
 	<class name="edu.sc.seis.sod.EventNetworkPair">
-		<id name="dbid" type="integer">
+		<id name="dbid" type="long">
 			<generator class="native" />
 		</id>
 		<many-to-one name="event"
@@ -34,7 +34,7 @@
 	</class>
 
 	<class name="edu.sc.seis.sod.EventStationPair">
-		<id name="dbid" type="integer">
+		<id name="dbid" type="long">
 			<generator class="native" />
 		</id>
 		<many-to-one name="event"
@@ -50,61 +50,51 @@
 		<property name="numRetries"  type="integer" index="esp_get_next_index"/>
 		<property name="lastQuery"  type="timestamp"/>
 	</class>
-
-	<class name="edu.sc.seis.sod.EventChannelPair">
-		<id name="dbid" type="integer">
-			<generator class="native" />
+	
+	<class name="edu.sc.seis.sod.AbstractEventChannelPair" abstract="true">
+		<id name="dbid" type="long">
+			<generator class="sequence" >
+				<param name="sequence">aecp_seq</param> 
+		    </generator> 
 		</id>
+		<!-- we would like to have unique keys (event, channel) for ecp and (event, channelgroup)
+		     for evp, but hibernate doesn't seem to allow a unique key with superclass and subclass
+		     properties. -->
 		<many-to-one name="event"
 			class="edu.sc.seis.sod.hibernate.StatefulEvent" column="event"
-			foreign-key="FK_ecp_event" unique-key="event_chan_key" />
-		<many-to-one name="channel"
-			class="edu.iris.Fissures.network.ChannelImpl" column="channel"
-			foreign-key="FK_ecp_channel" unique-key="event_chan_key" />
+			foreign-key="FK_ecp_event"  />
 		<component name="status">
 			<property name="stageInt" type="integer" />
 			<property name="standingInt" type="integer" />
 		</component>
 		<property name="numRetries"  type="integer"/>
 		<property name="lastQuery"  type="timestamp"/>
-		<map name="cookies" table="ecpCookie"> 
-    		<key column="pairId"/> 
+		<map name="cookies" table="cookieJar"> 
+    		<key column="dbid"/> 
     		<map-key column="cookieName" type="string"/> 
     		<element type="serializable" column="value" not-null="true"/> 
 		</map> 
 		<many-to-one name="esp"
 			class="edu.sc.seis.sod.EventStationPair" column="esp"
 			foreign-key="FK_ecp_esp" />
+
+
+		<union-subclass name="edu.sc.seis.sod.EventChannelPair">
+			<many-to-one name="channel"
+				class="edu.iris.Fissures.network.ChannelImpl" column="channel"
+				foreign-key="FK_ecp_channel"  />
+		</union-subclass>
+
+		<union-subclass name="edu.sc.seis.sod.EventVectorPair">
+			<many-to-one name="channelGroup"
+				class="edu.sc.seis.fissuresUtil.hibernate.ChannelGroup"
+				column="channelGroup" foreign-key="FK_evp_channelGroup" />
+		</union-subclass>
 	</class>
 
-	<class name="edu.sc.seis.sod.EventVectorPair">
-		<id name="dbid" type="integer">
-			<generator class="native" />
-		</id>
-		<many-to-one name="event"
-			class="edu.sc.seis.sod.hibernate.StatefulEvent" column="event"
-			foreign-key="FK_evp_event" unique-key="evp_event_changroup_key" />
-		<many-to-one name="channelGroup"
-			class="edu.sc.seis.fissuresUtil.hibernate.ChannelGroup" column="channelGroup"
-			foreign-key="FK_evp_channelGroup" unique-key="evp_event_changroup_key" />
-		<component name="status">
-			<property name="stageInt" type="integer" />
-			<property name="standingInt" type="integer" />
-		</component>
-		<property name="numRetries"  type="integer"/>
-		<property name="lastQuery"  type="timestamp"/>
-		<map name="cookies" table="evpCookie"> 
-    		<key column="pairId"/> 
-    		<map-key column="cookieName" type="string"/> 
-    		<element type="serializable" column="value" not-null="true"/> 
-		</map> 
-		<many-to-one name="esp"
-			class="edu.sc.seis.sod.EventStationPair" column="esp"
-			foreign-key="FK_evp_esp" />
-	</class>
 
 	<class name="edu.sc.seis.sod.hibernate.RecordSectionItem">
-		<id name="dbid" type="integer">
+		<id name="dbid" type="long">
 			<generator class="native" />
 		</id>
 		<many-to-one name="event"

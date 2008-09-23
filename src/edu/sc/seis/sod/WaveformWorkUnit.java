@@ -13,7 +13,7 @@ public abstract class WaveformWorkUnit implements Runnable {
         lastQuery = ClockUtil.now().getTimestamp();
     }
     
-    protected int dbid;
+    protected long dbid;
     protected int numRetries;
     protected Timestamp lastQuery;
     
@@ -27,12 +27,12 @@ public abstract class WaveformWorkUnit implements Runnable {
         setLastQuery(ClockUtil.now().getTimestamp());
     }
     
-    public int getDbid() {
+    public long getDbid() {
         return dbid;
     }
 
     
-    protected void setDbid(int dbid) {
+    protected void setDbid(long dbid) {
         this.dbid = dbid;
     }
 
@@ -65,6 +65,6 @@ public abstract class WaveformWorkUnit implements Runnable {
     }
     
     public int hashCode() {
-        return 89+17*dbid+41*numRetries+17*lastQuery.hashCode();
+        return 89+17*(int)dbid+41*numRetries+17*lastQuery.hashCode();
     }
 }

@@ -15,33 +15,19 @@ import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.StatefulEvent;
 
-public class EventChannelPair extends CookieEventPair {
+public class EventChannelPair extends AbstractEventChannelPair {
     
     /** for hibernate */
     protected EventChannelPair() {}
     
     public EventChannelPair(StatefulEvent event, ChannelImpl chan, EventStationPair esp) {
-        super(event);
+        super(event, esp);
         setChannel(chan);
-        setEsp(esp);
     }
 
     public EventChannelPair(StatefulEvent event, ChannelImpl chan, Status status, EventStationPair esp) {
-        super(event, status);
+        super(event, status, esp);
         setChannel(chan);
-        setEsp(esp);
-    }
-
-    /**
-     * sets the status on this event channel pair to be status and notifies its
-     * parent
-     */
-    public void update(Status status){
-        // this is weird, but calling the setter allows hibernate to autodetect a modified object
-        setStatus(status);
-        updateRetries();
-        getCookies().put("status", status);
-        Start.getWaveformArm().setStatus(this);
     }
 
     public void run() {
@@ -86,22 +72,8 @@ public class EventChannelPair extends CookieEventPair {
     protected void setChannel(ChannelImpl chan) {
         this.chan = chan;
     }
-    protected void setEsp(EventStationPair esp) {
-        this.esp = esp;
-    }
-    public EventStationPair getEsp() {
-        return esp;
-    }
-    protected EventStationPair esp;
 
-    public CookieJar getCookieJar() {
-        if (cookieJar == null) {
-            cookieJar = new CookieJar(this, getEsp().getCookies(), getCookies());
-        }
-        return cookieJar;
-    }
-    
     private ChannelImpl chan;
-    private CookieJar cookieJar;
+
     private static Logger logger = Logger.getLogger(EventChannelPair.class);
 }

@@ -59,5 +59,4 @@ public abstract class AbstractEventPair extends WaveformWorkUnit {
     
     private Status status;
     private StatefulEvent event;
-    private int pairId;
 }

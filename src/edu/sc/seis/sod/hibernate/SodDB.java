@@ -1,7 +1,5 @@
 package edu.sc.seis.sod.hibernate;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -24,6 +22,7 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.hibernate.AbstractHibernateDB;
+import edu.sc.seis.sod.AbstractEventChannelPair;
 import edu.sc.seis.sod.AbstractEventPair;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.EventNetworkPair;
@@ -92,24 +91,20 @@ public class SodDB extends AbstractHibernateDB {
         standingList = standingList.substring(0, standingList.length() - 2);
         standingList += " ) ";
         String query;
-        Class updateClass;
-        if(!vector) {
-            updateClass = EventChannelPair.class;
-        } else {
-            updateClass = EventVectorPair.class;
-        }
         String setStmt;
         if(processingRule.equals(RunProperties.AT_LEAST_ONCE)) {
             setStmt = " stageInt = "+Stage.EVENT_CHANNEL_SUBSETTER.getVal()+", standingInt = "+Standing.INIT.getVal();
         } else {
             setStmt = " standingInt = "+Standing.SYSTEM_FAILURE.getVal();
         }
-        query = "UPDATE "+updateClass.getName()+" set "+setStmt
+        String queryEnd = " set "+setStmt
         +" WHERE status.stageInt in "+stageList+" AND status.standingInt in "+standingList
         +" AND NOT (status.stageInt = "+Stage.PROCESSOR.getVal()+" AND status.standingInt = "+Standing.SUCCESS.getVal()+" ) "
         +" AND NOT (status.stageInt = "+Stage.EVENT_STATION_SUBSETTER.getVal()+" AND status.standingInt = "+Standing.INIT.getVal()+" ) ";
-        
+        query = "UPDATE "+EventChannelPair.class.getName()+queryEnd;
         int out = getSession().createQuery(query).executeUpdate();
+        query = "UPDATE "+EventVectorPair.class.getName()+queryEnd;
+        out += getSession().createQuery(query).executeUpdate();
     }
 
     public EventNetworkPair put(EventNetworkPair eventNetworkPair) {
@@ -172,9 +167,9 @@ public class SodDB extends AbstractHibernateDB {
     }
 
     /** next successful event-channel to process. Returns null if no more events. */
-    public EventChannelPair getNextECP(Standing standing) {
+    public AbstractEventChannelPair getNextECP(Standing standing) {
         String q = "from "
-                + EventChannelPair.class.getName()
+                + AbstractEventChannelPair.class.getName()
                 + " e where e.status.stageInt = "+Stage.EVENT_CHANNEL_POPULATION.getVal()
                 + " and e.status.standingInt = :inProg";
         Query query = getSession().createQuery(q);
@@ -187,9 +182,9 @@ public class SodDB extends AbstractHibernateDB {
         return null;
     }
 
-    public EventChannelPair getNextRetryECP() {
+    public AbstractEventChannelPair getNextRetryECP() {
         String q = "from "
-                + EventChannelPair.class.getName()
+                + AbstractEventChannelPair.class.getName()
                 + "  where numRetries > 0 and (status.standingInt = "
                 + Standing.RETRY.getVal()
                 + " or status.standingInt = "
@@ -204,45 +199,6 @@ public class SodDB extends AbstractHibernateDB {
         query.setFloat("maxDelay", maxRetryDelay);
         query.setMaxResults(1);
         List<EventChannelPair> result = query.list();
-        if(result.size() > 0) {
-            return result.get(0);
-        }
-        return null;
-    }
-
-    /** next successful event-vector to process. Returns null if no more events. */
-    public EventVectorPair getNextEVP(Standing standing) {
-        String q = "from "
-                + EventVectorPair.class.getName()
-                + " e where e.status.stageInt = "+Stage.EVENT_CHANNEL_POPULATION.getVal()
-                + " and e.status.standingInt = :inProg";
-        Query query = getSession().createQuery(q);
-        query.setInteger("inProg", standing.getVal());
-        query.setMaxResults(1);
-        List<EventVectorPair> result = query.list();
-        if(result.size() > 0) {
-            return result.get(0);
-        }
-        return null;
-    }
-
-    public EventVectorPair getNextRetryEVP() {
-        String q = "from "
-                + EventVectorPair.class.getName()
-                + "  where numRetries > 0 and (status.standingInt = "
-                + Standing.RETRY.getVal()
-                + " or status.standingInt = "
-                + Standing.CORBA_FAILURE.getVal()
-                + " )  and seconds_between(:now, lastQuery) > :minDelay "
-                + " and numRetries < "+maxRetries
-                +" and (seconds_between(:now, lastQuery) > :maxDelay or seconds_between(:now, lastQuery) > power(:base, numRetries))  order by lastQuery desc";
-        Query query = getSession().createQuery(q);
-        query.setTimestamp("now", ClockUtil.now().getTimestamp());
-        query.setFloat("base", retryBase);
-        query.setFloat("minDelay", minRetryDelay);
-        query.setFloat("maxDelay", maxRetryDelay);
-        query.setMaxResults(1);
-        List<EventVectorPair> result = query.list();
         if(result.size() > 0) {
             return result.get(0);
         }
@@ -442,8 +398,8 @@ public class SodDB extends AbstractHibernateDB {
     }
 
     public List<StationImpl> getStationsForEvent(CacheEvent event) {
-        String q = "select distinct ecp.channel.site.station from "
-                + EventChannelPair.class.getName()
+        String q = "select distinct ecp.esp.station from "
+                + AbstractEventChannelPair.class.getName()
                 + " ecp where ecp.event = :event";
         Query query = getSession().createQuery(q);
         query.setEntity("event", event);
@@ -451,8 +407,8 @@ public class SodDB extends AbstractHibernateDB {
     }
 
     public List<StationImpl> getSuccessfulStationsForEvent(CacheEvent event) {
-        String q = "select distinct ecp.channel.site.station from "
-                + EventChannelPair.class.getName()
+        String q = "select distinct ecp.esp.station from "
+                + AbstractEventChannelPair.class.getName()
                 + " ecp where ecp.event = :event and ecp.status.stageInt = "
                 + Stage.PROCESSOR.getVal()+" and ecp.status.standingInt = "+ Standing.SUCCESS.getVal();
         Query query = getSession().createQuery(q);
@@ -463,8 +419,8 @@ public class SodDB extends AbstractHibernateDB {
     public List<StationImpl> getUnsuccessfulStationsForEvent(CacheEvent event) {
         String q = "from " + StationImpl.class.getName()
                 + " s where s not in ("
-                + "select distinct ecp.channel.site.station from "
-                + EventChannelPair.class.getName()
+                + "select distinct ecp.esp.station from "
+                + AbstractEventChannelPair.class.getName()
                 + " ecp where ecp.event = :event and ecp.status.stageInt = "
                 + Stage.PROCESSOR.getVal()+" and ecp.status.standingInt = "+ Standing.SUCCESS.getVal()
                 + " )";
@@ -475,8 +431,8 @@ public class SodDB extends AbstractHibernateDB {
 
     public List<CacheEvent> getEventsForStation(StationImpl sta) {
         String q = "select distinct ecp.event from "
-                + EventChannelPair.class.getName()
-                + " ecp where ecp.channel.site.station = :sta ";
+                + AbstractEventChannelPair.class.getName()
+                + " ecp where ecp.esp.station = :sta ";
         Query query = getSession().createQuery(q);
         query.setEntity("sta", sta);
         return query.list();
@@ -484,8 +440,8 @@ public class SodDB extends AbstractHibernateDB {
 
     public List<CacheEvent> getSuccessfulEventsForStation(StationImpl sta) {
         String q = "select distinct ecp.event from "
-                + EventChannelPair.class.getName()
-                + " ecp where ecp.channel.site.station = :sta  and ecp.status.stageInt = "
+                + AbstractEventChannelPair.class.getName()
+                + " ecp where ecp.esp.station = :sta  and ecp.status.stageInt = "
                 + Stage.PROCESSOR.getVal()+" and ecp.status.standingInt = "+ Standing.SUCCESS.getVal();
         Query query = getSession().createQuery(q);
         query.setEntity("sta", sta);
@@ -497,8 +453,8 @@ public class SodDB extends AbstractHibernateDB {
                 + CacheEvent.class.getName()
                 + " e where e not in ("
                 + "select distinct ecp.event from "
-                + EventChannelPair.class.getName()
-                + " ecp where ecp.channel.site.station = :sta  and ecp.status.stageInt = "
+                + AbstractEventChannelPair.class.getName()
+                + " ecp where ecp.esp.station = :sta  and ecp.status.stageInt = "
                 + Stage.PROCESSOR.getVal()+" and ecp.status.standingInt = "+ Standing.SUCCESS.getVal()
                 + " )";
         Query query = getSession().createQuery(q);
@@ -506,8 +462,8 @@ public class SodDB extends AbstractHibernateDB {
         return query.list();
     }
 
-    public int put(RecordSectionItem item) {
-        return ((Integer)getSession().save(item)).intValue();
+    public long put(RecordSectionItem item) {
+        return ((Long)getSession().save(item)).longValue();
     }
 
     public RecordSectionItem getRecordSectionItem(String recordSectionId,
@@ -647,27 +603,6 @@ public class SodDB extends AbstractHibernateDB {
         return q.list();
     }
 
-    public void putCookie(EcpCookie cookie) {
-        getSession().saveOrUpdate(cookie);
-    }
-
-    public EcpCookie getCookie(EventChannelPair ecp, String name) {
-        Query q = getSession().createQuery("from " + EcpCookie.class.getName()
-                + " where ecp = :ecp and name = :name");
-        q.setEntity("ecp", ecp);
-        q.setString("name", name);
-        q.setMaxResults(1);
-        List<EcpCookie> result = q.list();
-        if(result.size() > 0) {
-            return result.get(0);
-        }
-        return null;
-    }
-
-    public void deleteCookie(EcpCookie cookie) {
-        getSession().delete(cookie);
-    }
-
     public int putConfig(SodConfig sodConfig) {
         Integer dbid = (Integer)getSession().save(sodConfig);
         return dbid.intValue();
@@ -737,10 +672,10 @@ public class SodDB extends AbstractHibernateDB {
 
     private static final String COUNT = "SELECT COUNT(*) ";
     static {
-        String baseStatement = "FROM edu.sc.seis.sod.EventChannelPair ecp WHERE ";
-        String staBase = baseStatement + " ecp.channel.site.station = :sta ";
+        String baseStatement = "FROM "+AbstractEventChannelPair.class.getName()+" ecp WHERE ";
+        String staBase = baseStatement + " ecp.esp.station = :sta ";
         String staEventBase = baseStatement
-                + " ecp.channel.site.station = :sta and ecp.event = :event ";
+                + " ecp.esp.station = :sta and ecp.event = :event ";
         Status pass = Status.get(Stage.PROCESSOR, Standing.SUCCESS);
         String PROCESS_SUCCESS = " ecp.status.stageInt = "
                 + pass.getStageInt()+" AND ecp.status.standingInt = "+pass.getStandingInt();
