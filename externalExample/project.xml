@@ -209,7 +209,7 @@
         <dependency>
             <groupId>velocity</groupId>
             <artifactId>velocity</artifactId>
-            <version>1.4</version>
+            <version>1.5</version>
             <url>http://jakarta.apache.org/velocity</url>
         </dependency>
         <dependency>
@@ -221,7 +221,7 @@
         <dependency>
             <groupId>velocity-tools</groupId>
             <artifactId>velocity-tools-generic</artifactId>
-            <version>1.1-rc1</version>
+            <version>1.4</version>
             <url>http://jakarta.apache.org/velocity</url>
         </dependency>
         <dependency>
