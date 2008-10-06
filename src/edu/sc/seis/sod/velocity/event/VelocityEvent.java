@@ -33,6 +33,7 @@ import edu.sc.seis.sod.velocity.network.VelocityStation;
 public class VelocityEvent extends ProxyEventAccessOperations {
 
     public VelocityEvent(CacheEvent event) {
+        if (event == null) {throw new NullPointerException("event cannot be null");}
         this.event = event;
         this.origin = getOrigin();
     }
