@@ -19,15 +19,7 @@ public class VelocityNetwork extends NetworkAttr {
      * UnsupportedOperationException if getStations is called
      */
     public VelocityNetwork(NetworkAttrImpl net) {
-        this(net, -1);
-    }
-
-    /**
-     * Creates a VelocityNetwork with no stations. Will throw
-     * UnsupportedOperationException if getStations is called
-     */
-    public VelocityNetwork(NetworkAttrImpl net, int dbid) {
-        this(net, dbid, null);
+        this(net, null);
     }
 
     public VelocityNetwork(List<VelocityStation> stations) {
@@ -42,18 +34,13 @@ public class VelocityNetwork extends NetworkAttr {
         return stations.get(0);
     }
 
-    public VelocityNetwork(NetworkAttrImpl net, List stations) {
-        this(net, -1, stations);
-    }
-
-    private VelocityNetwork(NetworkAttrImpl net, int dbid, List stations) {
+    private VelocityNetwork(NetworkAttrImpl net, List stations) {
         this.net = net;
         this.stations = stations;
         this.setName(net.getName());
         this.setDescription(net.getDescription());
         this.setOwner(net.getOwner());
         this.setEffectiveTime(net.getEffectiveTime());
-        this.dbid = dbid;
     }
     
     public NetworkAttrImpl getWrapped() {
@@ -134,20 +121,18 @@ public class VelocityNetwork extends NetworkAttr {
         }
         return stations;
     }
-
-    public void setDbId(int dbid) {
-        this.dbid = dbid;
+    
+    public int getDbid() {
+        return getWrapped().getDbid();
     }
-
+    
     public int getDbId() {
-        return dbid;
+        return getDbid();
     }
     
     public String toString(){
         return NetworkIdUtil.toString(get_id());
     }
-
-    private int dbid = -1;
 
     private List stations;
 
