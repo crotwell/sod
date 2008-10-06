@@ -34,7 +34,7 @@ public class VelocityNetwork extends NetworkAttr {
         return stations.get(0);
     }
 
-    private VelocityNetwork(NetworkAttrImpl net, List stations) {
+    public VelocityNetwork(NetworkAttrImpl net, List stations) {
         this.net = net;
         this.stations = stations;
         this.setName(net.getName());
