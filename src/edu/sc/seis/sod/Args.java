@@ -25,7 +25,7 @@ public class Args {
 
     public Args(String[] args) throws JSAPException {
         this.args = args;
-        List toParse = new ArrayList(args.length);
+        List<String> toParse = new ArrayList<String>(args.length);
         for(int i = 0; i < args.length; i++) {
             if(args[i].equals("-conf")) {
                 args[i] = "-f";
@@ -99,6 +99,7 @@ public class Args {
         if(!result.success()) {
             Start.exit(makeError(COMMAND_NAME, parameters, result));
         }
+        logger.info("Recipe: "+result.getString("recipe"));
     }
 
     public static String makeUsage(String command, List params) {
@@ -262,4 +263,6 @@ public class Args {
             return f;
         }
     }
+    
+    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(Args.class);
 }
