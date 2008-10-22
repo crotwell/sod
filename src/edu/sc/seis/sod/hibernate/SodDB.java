@@ -206,7 +206,15 @@ public class SodDB extends AbstractHibernateDB {
     }
 
     public int getNumWorkUnits(Standing standing) {
-        String q = "select count(*) from " + AbstractEventPair.class.getName()
+        return getNumWorkUnits(standing, AbstractEventPair.class);
+    }
+
+    public int getNumEventNetworkWorkUnits(Standing standing) {
+        return getNumWorkUnits(standing, EventNetworkPair.class);
+    }
+    
+    private int getNumWorkUnits(Standing standing, Class EventPairClass) {
+        String q = "select count(*) from " + EventPairClass.getName()
         + " e where e.status.stageInt = "+Stage.EVENT_CHANNEL_POPULATION.getVal()
         + " and e.status.standingInt = "+standing.getVal()
         + " and e.numRetries =  0";
