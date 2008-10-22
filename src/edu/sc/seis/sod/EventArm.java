@@ -20,6 +20,7 @@ import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.StatefulEvent;
 import edu.sc.seis.sod.hibernate.StatefulEventDB;
 import edu.sc.seis.sod.source.event.EventSource;
@@ -69,7 +70,11 @@ public class EventArm implements Arm {
                 logger.debug(source + " covers events from "
                         + source.getEventTimeRange());
             }
-            getEvents();
+            
+            while( !Start.isArmFailure() && atLeastOneSourceHasNext()) {
+                getEvents();
+            }
+            logger.debug("Finished processing the event arm.");
         } catch(Throwable e) {
             Start.armFailure(this, e);
         }
@@ -104,18 +109,15 @@ public class EventArm implements Arm {
                                                                    "origin",
                                                                    "event"});
                 if(sodElement instanceof EventSource) {
-                    sources.add(sodElement);
+                    sources.add((EventSource)sodElement);
                 } else if(sodElement instanceof OriginSubsetter) {
-                    subsetters.add(sodElement);
+                    subsetters.add((OriginSubsetter)sodElement);
                 }
             } // end of if (node instanceof Element)
         } // end of for (int i=0; i<children.getSize(); i++)
     }
 
     private void getEvents() throws Exception {
-        HashMap<EventSource, MicroSecondDate> lastTime = new HashMap<EventSource, MicroSecondDate>();
-        
-        while( !Start.isArmFailure() && atLeastOneSourceHasNext()) {
             Iterator it = sources.iterator();
             while(it.hasNext()) {
                 EventSource source = (EventSource)it.next();
@@ -163,8 +165,6 @@ public class EventArm implements Arm {
                 }
             }
             
-        }
-        logger.debug("Finished processing the event arm.");
     }
 
     private boolean atLeastOneSourceHasNext() {
@@ -186,13 +186,24 @@ public class EventArm implements Arm {
     private void waitForProcessing() throws Exception {
         int numWaiting = eventStatus.getNumWaiting();
         logger.debug("Event wait: numWaiting = "+numWaiting+" should be < "+MIN_WAIT_EVENTS);
-        while( !Start.isArmFailure() && waitForWaveformProcessing  &&  numWaiting > MIN_WAIT_EVENTS) {
+        while( !Start.isArmFailure() && waitForWaveformProcessing  &&  numWaiting > MIN_WAIT_EVENTS ) {
             synchronized(getWaveformArmSync()) {
                 setStatus("eventArm waiting until there are less than "+MIN_WAIT_EVENTS+" events waiting to be processed. "+numWaiting+" in queue now.");
                 getWaveformArmSync().wait();
             }
             numWaiting = eventStatus.getNumWaiting();
         }
+        // less events, but maybe lots of event-network pairs
+        int numENPWaiting = SodDB.getSingleton().getNumEventNetworkWorkUnits(Standing.INIT);
+        while( !Start.isArmFailure() && waitForWaveformProcessing  &&  numWaiting+numENPWaiting > MIN_WAIT_EVENTS ) {
+            synchronized(getWaveformArmSync()) {
+                setStatus("eventArm waiting until there are less than "+MIN_WAIT_EVENTS
+                          +" events and event-network pairs waiting to be processed, "+(numWaiting+numENPWaiting)+" in queue now.");
+                getWaveformArmSync().wait();
+            }
+            numENPWaiting = SodDB.getSingleton().getNumEventNetworkWorkUnits(Standing.INIT);
+        }
+        logger.debug("event arm getting more events, numWaiting:"+numWaiting+" numENPWaiting:"+numENPWaiting);
     }
 
     public void handle(CacheEvent[] events) {
@@ -312,9 +323,11 @@ public class EventArm implements Arm {
 
     private final Object waveformArmSync = new Object();
     
-    private List sources = new ArrayList();
+    private HashMap<EventSource, MicroSecondDate> lastTime = new HashMap<EventSource, MicroSecondDate>();
+    
+    private List<EventSource> sources = new ArrayList<EventSource>();
 
-    private List subsetters = new ArrayList();
+    private List<OriginSubsetter> subsetters = new ArrayList<OriginSubsetter>();
 
     private List statusMonitors = Collections.synchronizedList(new ArrayList());
 
