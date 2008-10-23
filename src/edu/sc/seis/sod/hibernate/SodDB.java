@@ -222,7 +222,7 @@ public class SodDB extends AbstractHibernateDB {
         query.setMaxResults(1);
         List result = query.list();
         if(result.size() > 0) {
-            return (Integer)result.get(0);
+            return ((Long)result.get(0)).intValue();
         }
         return 0;
     }
