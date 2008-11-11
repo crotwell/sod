@@ -117,6 +117,7 @@ public class Start {
         } else {
             Start.props = props;
         }
+        logger.info("Recipe: "+configFileName);
         initDocument();
     }
 
@@ -166,7 +167,7 @@ public class Start {
         ConnMgr.installDbProperties(props, args.getInitialArgs());
         synchronized(HibernateUtil.class) {
             
-            HibernateUtil.setUpFromConnMgr(props, EHCACHE_CONFIG);
+            HibernateUtil.setUpFromConnMgr(props, getClass().getResource("/edu/sc/seis/sod/data/ehcache.xml"));
             SodDB.configHibernate(HibernateUtil.getConfiguration());
             Iterator it = getRunProps().getHibernateConfig().iterator();
             while(it.hasNext()) {
@@ -636,5 +637,4 @@ public class Start {
 
     public static final String DEFAULT_PROPS = "edu/sc/seis/sod/data/sod.prop";
     
-    public static final String EHCACHE_CONFIG = "edu/sc/seis/sod/data/ehcache.xml";
 }// Start
