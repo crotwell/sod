@@ -165,11 +165,8 @@ public class Start {
         loadRunProps(getConfig());
         ConnMgr.installDbProperties(props, args.getInitialArgs());
         synchronized(HibernateUtil.class) {
-            // configure EhCache
-            InputStream ehconfigStream = (Start.class).getClassLoader().getResourceAsStream(EHCACHE_CONFIG);
-            CacheManager singletonManager = CacheManager.create(ehconfigStream);
             
-            HibernateUtil.setUpFromConnMgr(props);
+            HibernateUtil.setUpFromConnMgr(props, EHCACHE_CONFIG);
             SodDB.configHibernate(HibernateUtil.getConfiguration());
             Iterator it = getRunProps().getHibernateConfig().iterator();
             while(it.hasNext()) {
