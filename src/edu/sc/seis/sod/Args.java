@@ -99,7 +99,6 @@ public class Args {
         if(!result.success()) {
             Start.exit(makeError(COMMAND_NAME, parameters, result));
         }
-        logger.info("Recipe: "+result.getString("recipe"));
     }
 
     public static String makeUsage(String command, List params) {
