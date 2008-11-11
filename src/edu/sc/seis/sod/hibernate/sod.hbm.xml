@@ -16,6 +16,7 @@
 	</joined-subclass>
 
 	<class name="edu.sc.seis.sod.EventNetworkPair">
+		<cache usage="read-write"/>
 		<id name="dbid" type="long">
 			<generator class="native" />
 		</id>
@@ -34,6 +35,7 @@
 	</class>
 
 	<class name="edu.sc.seis.sod.EventStationPair">
+		<cache usage="read-write"/>
 		<id name="dbid" type="long">
 			<generator class="native" />
 		</id>
@@ -52,6 +54,7 @@
 	</class>
 	
 	<class name="edu.sc.seis.sod.AbstractEventChannelPair" abstract="true">
+		<cache usage="read-write"/>
 		<id name="dbid" type="long">
 			<generator class="sequence" >
 				<param name="sequence">aecp_seq</param> 
@@ -116,6 +119,7 @@
 	</class>
 
 	<class name="edu.sc.seis.sod.QueryTime">
+		<cache usage="read-write"/>
 		<id name="dbid" type="integer">
 			<generator class="native" />
 		</id>
