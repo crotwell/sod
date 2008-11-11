@@ -3,7 +3,7 @@
     <diskStore path="java.io.tmpdir"/>
 
     <defaultCache
-        maxElementsInMemory="10000"
+        maxElementsInMemory="1000"
         eternal="false"
         timeToIdleSeconds="120"
         timeToLiveSeconds="120"
@@ -11,6 +11,12 @@
         diskPersistent="false"
         diskExpiryThreadIntervalSeconds="120"
         memoryStoreEvictionPolicy="LRU"
+        />
+        
+    <cache name="edu.iris.Fissures.model.UnitImpl"
+        maxElementsInMemory="10"
+        eternal="true"
+        overflowToDisk="false"
         />
         
     <cache name="edu.iris.Fissures.network.NetworkAttrImpl"
@@ -26,7 +32,19 @@
         />
         
     <cache name="edu.iris.Fissures.network.ChannelImpl"
-        maxElementsInMemory="9000"
+        maxElementsInMemory="12000"
+        eternal="true"
+        overflowToDisk="false"
+        />
+        
+    <cache name="edu.sc.seis.fissuresUtil.cache.CacheEvent"
+        maxElementsInMemory="100"
+        eternal="true"
+        overflowToDisk="false"
+        />
+        
+    <cache name="edu.iris.Fissures.event.OriginImpl"
+        maxElementsInMemory="100"
         eternal="true"
         overflowToDisk="false"
         />
