@@ -40,6 +40,7 @@ public class WaveformProcessor extends Thread {
                     try {
                         next.run();
                     } catch(Throwable t) {
+                        SodDB.rollback();
                         next.update(t,
                                     Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                                Standing.SYSTEM_FAILURE));
