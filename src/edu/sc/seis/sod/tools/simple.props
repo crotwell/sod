@@ -5,4 +5,5 @@ log4j.appender.C.layout.ConversionPattern=%d{ISO8601} - %m%n
 
 edu.sc.seis.fissuresUtil.nameServiceCorbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService
 
-fissuresUtil.database.url=jdbc:hsqldb:.
+# use totally in memory database for command line tools
+fissuresUtil.database.url=jdbc:hsqldb:mem:SodDB
