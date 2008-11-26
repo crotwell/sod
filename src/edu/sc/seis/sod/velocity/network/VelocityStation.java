@@ -8,6 +8,8 @@ import java.util.List;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import org.apache.velocity.VelocityContext;
+
+import edu.iris.Fissures.Location;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.IfNetwork.StationId;
 import edu.iris.Fissures.model.MicroSecondDate;
@@ -143,17 +145,25 @@ public class VelocityStation extends StationImpl {
 
 
     public String getOrientedLatitude() {
-        if(sta.getLocation().latitude < 0) {
-            return df.format(-sta.getLocation().latitude) + " S";
+        return getOrientedLatitude(sta.getLocation().latitude);
+    }
+    
+    public static String getOrientedLatitude(float latitude) {
+        if(latitude < 0) {
+            return df.format(-latitude) + " S";
         }
-        return df.format(sta.getLocation().latitude) + " N";
+        return df.format(latitude) + " N";
     }
 
     public String getOrientedLongitude() {
-        if(sta.getLocation().longitude < 0) {
-            return df.format(-sta.getLocation().longitude) + " W";
+        return getOrientedLongitude(sta.getLocation().longitude);
+    }
+
+    public static String getOrientedLongitude(float longitude) {
+        if(longitude < 0) {
+            return df.format(-longitude) + " W";
         }
-        return df.format(sta.getLocation().longitude) + " E";
+        return df.format(longitude) + " E";
     }
 
     public String getDepth() {
