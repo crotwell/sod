@@ -10,8 +10,12 @@ import edu.sc.seis.sod.SodUtil;
 
 public abstract class EffectiveTimeOverlap implements Subsetter{
     public EffectiveTimeOverlap(edu.iris.Fissures.TimeRange range) {
-        start = new MicroSecondDate(range.start_time);
-        end = new MicroSecondDate(range.end_time);
+        this(new MicroSecondDate(range.start_time), new MicroSecondDate(range.end_time));
+    }
+
+    public EffectiveTimeOverlap(MicroSecondDate start, MicroSecondDate end) {
+        this.start = start;
+        this.end = end;
     }
 
     public EffectiveTimeOverlap(Element config) throws ConfigurationException{
@@ -28,6 +32,10 @@ public abstract class EffectiveTimeOverlap implements Subsetter{
         } else {
             otherEnd = new MicroSecondDate(otherRange.end_time);
         } // end of else
+        return overlaps(otherStart, otherEnd);
+    }
+    
+    public boolean overlaps(MicroSecondDate otherStart, MicroSecondDate otherEnd) {
         if (end == null && start == null) {
             return true;
         } else if (end == null && start.before(otherEnd)) {
