@@ -82,7 +82,7 @@ public class EventArm implements Arm {
         alive = false;
         notifyWaveformArm();
         synchronized(OutputScheduler.getDefault()) {
-            OutputScheduler.getDefault().notify();
+            OutputScheduler.getDefault().notifyAll();
         }
     }
 
@@ -90,7 +90,7 @@ public class EventArm implements Arm {
         WaveformArm waveformArm = Start.getWaveformArm();
         if(waveformArm != null){
             synchronized(getWaveformArmSync()) {
-                getWaveformArmSync().notify();
+                getWaveformArmSync().notifyAll();
             }
         }
     }
@@ -189,6 +189,7 @@ public class EventArm implements Arm {
         while( !Start.isArmFailure() && waitForWaveformProcessing  &&  numWaiting > MIN_WAIT_EVENTS ) {
             synchronized(getWaveformArmSync()) {
                 setStatus("eventArm waiting until there are less than "+MIN_WAIT_EVENTS+" events waiting to be processed. "+numWaiting+" in queue now.");
+                getWaveformArmSync().notifyAll();
                 getWaveformArmSync().wait();
             }
             numWaiting = eventStatus.getNumWaiting();
@@ -199,6 +200,7 @@ public class EventArm implements Arm {
             synchronized(getWaveformArmSync()) {
                 setStatus("eventArm waiting until there are less than "+MIN_WAIT_EVENTS
                           +" events and event-network pairs waiting to be processed, "+(numWaiting+numENPWaiting)+" in queue now.");
+                getWaveformArmSync().notifyAll();
                 getWaveformArmSync().wait();
             }
             numENPWaiting = SodDB.getSingleton().getNumEventNetworkWorkUnits(Standing.INIT);
