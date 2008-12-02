@@ -77,14 +77,6 @@ public class WaveformArm implements Arm {
             }
             // check for events that are "in progress" due to halt or reset
             populateEventChannelDb(Standing.IN_PROG);
-            while(WaveformProcessor.getProcessorsWorking() == pool.length) {
-                logger.debug("all threads are working");
-                try {
-                    logger.debug("pool employed, sleeping for 100 sec");
-                    Thread.sleep(100000);
-                } catch(InterruptedException e) {}
-            }
-            waitForInitialEvent();
             int sleepTime = 5;
             TimeInterval logInterval = new TimeInterval(10, UnitImpl.MINUTE);
             logger.debug("will populateEventChannelDb, then sleep "
@@ -126,7 +118,7 @@ public class WaveformArm implements Arm {
     }
 
     boolean possibleToContinue() {
-        return (eventArm.isActive() || isActive()) && !Start.isArmFailure() ;
+        return (eventArm.isActive() || isActive()) && !Start.isArmFailure();
     }
 
     private void sleepALittle(int numEvents,
@@ -144,6 +136,7 @@ public class WaveformArm implements Arm {
         while(true) {
             int numWorkUnits = sodDb.getNumWorkUnits(Standing.INIT);
             if(numWorkUnits > WaveformArm.MIN_WORK_UNIT_FOR_SLEEP) {
+                logger.debug("ASDF numWorkUnits > min for sleep, waiting on processors");
                 // plenty of work, so sleep,
                 // but wake if processors run out
                 synchronized(getWaveformProcessorSync()) {
@@ -153,18 +146,18 @@ public class WaveformArm implements Arm {
                     } catch(InterruptedException e) {}
                 }
             } else if(numEvents == 0) {
+                logger.debug("ASDF no events, wait on event arm");
                 // not enough work, but there were also no new events, wait on
                 // event arm
+                synchronized(eventArm.getWaveformArmSync()) {
+                    try {
+                        eventArm.getWaveformArmSync().notifyAll();
+                        logger.debug("sleeping for eventarm");
+                        eventArm.getWaveformArmSync().wait();
+                        logger.debug("done sleeping for eventarm");
+                    } catch(InterruptedException e) {}
+                }
                 synchronized(getWaveformProcessorSync()) {
-                    synchronized(eventArm.getWaveformArmSync()) {
-                        try {
-                            eventArm.getWaveformArmSync().notifyAll();
-                            logger.debug("sleeping for eventarm");
-                            eventArm.getWaveformArmSync()
-                                    .wait();
-                            logger.debug("done sleeping for eventarm");
-                        } catch(InterruptedException e) {}
-                    }
                     getWaveformProcessorSync().notifyAll();
                 }
                 return;
@@ -244,31 +237,12 @@ public class WaveformArm implements Arm {
                         + EventArm.MIN_WAIT_EVENTS
                         + " waiting events.  Telling the eventArm to start up again");
                 synchronized(Start.getEventArm().getWaveformArmSync()) {
-                    Start.getEventArm().getWaveformArmSync().notify();
+                    Start.getEventArm().getWaveformArmSync().notifyAll();
                 }
             }
         }
         eventDb.commit();
         return numEvents;
-    }
-
-    private StatefulEvent waitForInitialEvent() throws SQLException {
-        StatefulEvent next;
-        next = eventDb.getNext(Standing.INIT);
-        while(possibleToContinue() && next == null) {
-            logger.debug("Waiting for the first exciting event to show up");
-            try {
-                synchronized(getWaveformProcessorSync()) {
-                    synchronized(Start.getEventArm().getWaveformArmSync()) {
-                        Start.getEventArm().getWaveformArmSync().wait();
-                    }
-                    getWaveformProcessorSync().notifyAll();
-                }
-            } catch(InterruptedException e) {}
-            logger.debug("first event has shown up, because the event arm tells us so");
-            next = eventDb.getNext(Standing.INIT);
-        }
-        return next;
     }
 
     public void add(WaveformProcess proc) {
