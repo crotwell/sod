@@ -126,7 +126,7 @@ public class WaveformArm implements Arm {
     }
 
     boolean possibleToContinue() {
-        return !Start.isArmFailure() && eventArm.isActive();
+        return (eventArm.isActive() || isActive()) && !Start.isArmFailure() ;
     }
 
     private void sleepALittle(int numEvents,

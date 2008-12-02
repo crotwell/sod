@@ -49,7 +49,9 @@ public class WaveformProcessor extends Thread {
                     processorFinishWork();
                 } else {
                     // nothing to do in db, not possible to continue
-                    logger.debug("No work to do, quiting processing");
+                    logger.debug("No work to do, quiting processing: "+Start.getWaveformArm().possibleToContinue()
+                                 +" "+ (SodDB.getSingleton().getNumWorkUnits(Standing.RETRY) != 0) +" "+ 
+                                 (SodDB.getSingleton().getNumWorkUnits(Standing.IN_PROG) != 0));
                     return;
                 }
             }
