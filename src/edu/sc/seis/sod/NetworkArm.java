@@ -179,7 +179,7 @@ public class NetworkArm implements Arm {
      * 
      * @throws NetworkNotFound
      */
-    public CacheNetworkAccess[] getSuccessfulNetworks() throws NetworkNotFound {
+    public CacheNetworkAccess[] getSuccessfulNetworks() {
         synchronized(netGetSync) {
             SodDB sodDb = SodDB.getSingleton();
             if(lastQueryTime == null) {
@@ -233,14 +233,20 @@ public class NetworkArm implements Arm {
                     edu.iris.Fissures.IfNetwork.NetworkFinder netFinder = netDC.a_finder();
                     List<CacheNetworkAccess> constrainedNets = new ArrayList<CacheNetworkAccess>(constrainingCodes.length);
                     for(int i = 0; i < constrainingCodes.length; i++) {
-                        CacheNetworkAccess[] found;
+                        CacheNetworkAccess[] found = null;
                         // this is a bit of a hack as names could be one or two
                         // characters, but works with _US-TA style
                         // virtual networks at the DMC
+                        try {
                         if(constrainingCodes[i].length() > 2) {
                             found = (CacheNetworkAccess[])netFinder.retrieve_by_name(constrainingCodes[i]);
                         } else {
                             found = (CacheNetworkAccess[])netFinder.retrieve_by_code(constrainingCodes[i]);
+                        }
+
+                        } catch(NetworkNotFound e) {
+                            // this probably indicates a bad conf file, warn and exit
+                            Start.informUserOfBadNetworkAndExit(constrainingCodes[i], e);
                         }
                         for(int j = 0; j < found.length; j++) {
                             constrainedNets.add(found[j]);
