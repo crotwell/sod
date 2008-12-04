@@ -285,8 +285,7 @@ public class EventArm implements Arm {
         }
     }
 
-    public void change(StatefulEvent event)
-            throws Exception {
+    public void change(StatefulEvent event) {
         Iterator it = statusMonitors.iterator();
         synchronized(statusMonitors) {
             while(it.hasNext()) {
