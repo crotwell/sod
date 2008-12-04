@@ -30,6 +30,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.sc.seis.fissuresUtil.cache.RetryStrategy;
@@ -148,6 +149,14 @@ public class Start {
             System.err.println("SOD could find no such file.  Make sure the file exists");
         }
         System.exit(0);
+    }
+
+    protected static void informUserOfBadNetworkAndExit(String networkCode, NetworkNotFound nnf) {
+        logger.fatal("Can't find "+networkCode+" network from server", nnf);
+        System.err.println("You told SOD to use the '"
+                + networkCode + "' network, but the server does not think it exists. SOD is now cowardly quitting.");
+        armFailure = true;
+        wakeUpAllArms();
     }
 
     public static MicroSecondDate getStartTime() {
@@ -587,6 +596,10 @@ public class Start {
                                       t);
         logger.fatal("Arm " + arm.getName()
                 + " failed. Sod is giving up and quiting", t);
+        wakeUpAllArms();
+    }
+     
+    public static void wakeUpAllArms() {
         // wake up any sleeping arms
         Arm[] arms = new Arm[] {network, event, waveform};
         for(int i = 0; i < arms.length; i++) {
@@ -594,6 +607,8 @@ public class Start {
                 arms[i].notify();
             }
         }
+        event.getWaveformArmSync().notifyAll();
+        waveform.getWaveformProcessorSync().notifyAll();
         synchronized(OutputScheduler.getDefault()) {
             OutputScheduler.getDefault().notify();
         }
