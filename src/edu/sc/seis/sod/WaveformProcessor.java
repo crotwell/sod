@@ -15,21 +15,17 @@ public class WaveformProcessor extends Thread {
                 AbstractEventPair next = getNext(Standing.INIT);
                 while(next == null
                         && (Start.getWaveformArm().possibleToContinue()
-                                || SodDB.getSingleton()
-                                        .getNumWorkUnits(Standing.RETRY) != 0 || SodDB.getSingleton()
+                                || SodDB.getSingleton().getNumWorkUnits(Standing.RETRY) != 0 || SodDB.getSingleton()
                                 .getNumWorkUnits(Standing.IN_PROG) != 0)) {
                     logger.debug("Processor waiting for work unit to show up");
                     try {
                         // sleep, but wake up if waveformArm does notifyAll()
                         logger.debug("waiting on waveform arm");
-                        synchronized(Start.getWaveformArm()
-                                .getWaveformProcessorSync()) {
-                            Start.getWaveformArm()
-                                    .getWaveformProcessorSync()
-                                    .notifyAll();
-                            Start.getWaveformArm()
-                                    .getWaveformProcessorSync()
-                                    .wait();
+                        synchronized(Start.getWaveformArm().getWaveformProcessorSync()) {
+                            Start.getWaveformArm().getWaveformProcessorSync().notifyAll();
+                            if(Start.getWaveformArm().possibleToContinue()) {
+                                Start.getWaveformArm().getWaveformProcessorSync().wait();
+                            }
                         }
                     } catch(InterruptedException e) {}
                     logger.debug("done waiting on waveform arm");
@@ -41,17 +37,15 @@ public class WaveformProcessor extends Thread {
                         next.run();
                     } catch(Throwable t) {
                         SodDB.rollback();
-                        next.update(t,
-                                    Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                                               Standing.SYSTEM_FAILURE));
+                        next.update(t, Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.SYSTEM_FAILURE));
                     }
                     SodDB.commit();
                     processorFinishWork();
                 } else {
                     // nothing to do in db, not possible to continue
-                    logger.debug("No work to do, quiting processing: "+Start.getWaveformArm().possibleToContinue()
-                                 +" "+ (SodDB.getSingleton().getNumWorkUnits(Standing.RETRY) != 0) +" "+ 
-                                 (SodDB.getSingleton().getNumWorkUnits(Standing.IN_PROG) != 0));
+                    logger.debug("No work to do, quiting processing: " + Start.getWaveformArm().possibleToContinue()
+                            + " " + (SodDB.getSingleton().getNumWorkUnits(Standing.RETRY) != 0) + " "
+                            + (SodDB.getSingleton().getNumWorkUnits(Standing.IN_PROG) != 0));
                     return;
                 }
             }
@@ -94,7 +88,20 @@ public class WaveformProcessor extends Thread {
             SodDB.getSession().update(enp);
             return enp;
         }
-        return null;
+        // go get more events to make e-net pairs
+        int numEvents = Start.getWaveformArm().populateEventChannelDb(Standing.INIT);
+        if(numEvents != 0) {
+            enp = SodDB.getSingleton().getNextENP(standing);
+            if(enp != null) {
+                enp.update(Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.INIT));
+                SodDB.commit();
+                // reattach to new session
+                SodDB.getSession().update(enp);
+                return enp;
+            }
+        }
+        // really nothing doing, might as well work on a retry?
+        return SodDB.getSingleton().getNextRetryECP();
     }
 
     public static int getProcessorsWorking() {

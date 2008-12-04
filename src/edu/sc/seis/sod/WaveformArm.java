@@ -13,6 +13,8 @@ import org.hibernate.LockMode;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
+import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
@@ -84,26 +86,11 @@ public class WaveformArm implements Arm {
                     + " sec between each try to process successful events, log interval is "
                     + logInterval);
             lastEventStartLogTime = ClockUtil.now();
-            SodDB sodDB = SodDB.getSingleton();
-            do {
-                int numEvents = populateEventChannelDb(Standing.INIT);
-                sleepALittle(numEvents, sleepTime, logInterval);
-            } while(possibleToContinue()
-                    || sodDB.getNumWorkUnits(Standing.INIT) != 0
-                    || sodDB.getNumWorkUnits(Standing.IN_PROG) != 0);
-            logger.info("Main waveform arm done.  Retrying failures.");
-            while(WaveformProcessor.getProcessorsWorking() == pool.length) {
-                // all threads are working
-                try {
-                    logger.debug("pool employed, sleeping for 100 sec");
-                    Thread.sleep(100000);
-                } catch(InterruptedException e) {}
-            }
             while(!Start.isArmFailure()
                     && WaveformProcessor.getProcessorsWorking() > 0) {
                 try {
-                    logger.debug("Sleeping while waiting for retries");
-                    Thread.sleep(10000);
+                    logger.debug("Sleeping while waiting for waveform processors.");
+                    getWaveformProcessorSync().wait();
                 } catch(InterruptedException e) {}
             }
             logger.info("Lo!  I am weary of my wisdom, like the bee that hath gathered too much\n"
@@ -112,6 +99,9 @@ public class WaveformArm implements Arm {
             Start.armFailure(this, e);
         }
         finished = true;
+        if (Start.getRunProps().checkpointPeriodically()) {
+            new PeriodicCheckpointer().run();
+        }
         synchronized(OutputScheduler.getDefault()) {
             OutputScheduler.getDefault().notify();
         }
@@ -145,20 +135,19 @@ public class WaveformArm implements Arm {
                         getWaveformProcessorSync().wait();
                     } catch(InterruptedException e) {}
                 }
-            } else if(numEvents == 0) {
+            } else if(numEvents == 0 && eventArm.isActive()) {
                 logger.debug("ASDF no events, wait on event arm");
                 // not enough work, but there were also no new events, wait on
                 // event arm
                 synchronized(eventArm.getWaveformArmSync()) {
                     try {
                         eventArm.getWaveformArmSync().notifyAll();
-                        logger.debug("sleeping for eventarm");
-                        eventArm.getWaveformArmSync().wait();
+                        if (eventArm.isActive()) {
+                            logger.debug("sleeping for eventarm");
+                            eventArm.getWaveformArmSync().wait();
+                        }
                         logger.debug("done sleeping for eventarm");
                     } catch(InterruptedException e) {}
-                }
-                synchronized(getWaveformProcessorSync()) {
-                    getWaveformProcessorSync().notifyAll();
                 }
                 return;
             } else {
@@ -188,7 +177,7 @@ public class WaveformArm implements Arm {
     // fills the eventchannel db with all available events and starts
     // WaveformWorkerUnits on all inserted event channel pairs
     // If there are no waiting events, this just returns
-    private int populateEventChannelDb(Standing standing) throws Exception {
+    protected int populateEventChannelDb(Standing standing)  {
         int numEvents = 0;
         for(StatefulEvent ev = eventDb.getNext(standing); ev != null; ev = eventDb.getNext(standing)) {
             logger.debug("Work on event: " + ev.getDbid() + " "
@@ -200,12 +189,18 @@ public class WaveformArm implements Arm {
             // refresh event to put back in new session
             eventDb.getSession().load(ev, ev.getDbid());
             numEvents++;
-            if(ev.get_preferred_origin().getOriginTime() == null) {
-                throw new RuntimeException("otime is null "
-                        + ev.get_preferred_origin().getLocation());
+            EventEffectiveTimeOverlap overlap;
+            try {
+                if(ev.get_preferred_origin().getOriginTime() == null) {
+                    throw new RuntimeException("otime is null "
+                            + ev.get_preferred_origin().getLocation());
+                }
+                overlap = new EventEffectiveTimeOverlap(ev);
+            } catch(NoPreferredOrigin e) {
+                throw new RuntimeException("Should never happen...", e);
             }
-            EventEffectiveTimeOverlap overlap = new EventEffectiveTimeOverlap(ev);
-            CacheNetworkAccess[] networks = networkArm.getSuccessfulNetworks();
+            CacheNetworkAccess[] networks;
+            networks = networkArm.getSuccessfulNetworks();
             for(int i = 0; i < networks.length; i++) {
                 if(overlap.overlaps(networks[i].get_attributes())) {
                     EventNetworkPair p = new EventNetworkPair(ev,
