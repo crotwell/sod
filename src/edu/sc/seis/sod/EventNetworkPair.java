@@ -73,7 +73,7 @@ public class EventNetworkPair extends AbstractEventPair {
         // this is weird, but calling the setter allows hibernate to autodetect
         // a modified object
         setStatus(status);
-        Start.getWaveformArm().setStatus(this);
+        Start.getWaveformRecipe().setStatus(this);
     }
 
     public boolean equals(Object o) {

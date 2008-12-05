@@ -24,6 +24,7 @@ import edu.sc.seis.sod.hibernate.StatefulEvent;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.EventEffectiveTimeOverlap;
+import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
 
 public class EventStationPair extends CookieEventPair {
 
@@ -35,9 +36,7 @@ public class EventStationPair extends CookieEventPair {
         setStation(station);
     }
 
-    public EventStationPair(StatefulEvent event,
-                            StationImpl station,
-                            Status status) {
+    public EventStationPair(StatefulEvent event, StationImpl station, Status status) {
         super(event, status);
         setStation(station);
     }
@@ -53,24 +52,19 @@ public class EventStationPair extends CookieEventPair {
             Map<String, Serializable> cookies = new HashMap<String, Serializable>();
             StringTree accepted = new StringTreeLeaf(this, false);
             try {
-                synchronized(Start.getWaveformArm().getEventStationSubsetter()) {
-                    accepted = Start.getWaveformArm()
-                            .getEventStationSubsetter()
-                            .accept(getEvent(),
-                                    getStation(),
-                                    new CookieJar(this, cookies));
+                EventStationSubsetter esSub = Start.getWaveformRecipe().getEventStationSubsetter();
+                synchronized(esSub) {
+                    accepted = esSub.accept(getEvent(), getStation(), new CookieJar(this, cookies));
                 }
             } catch(Throwable e) {
                 if(e instanceof org.omg.CORBA.SystemException) {
-                    update(e, Status.get(Stage.EVENT_STATION_SUBSETTER,
-                                         Standing.CORBA_FAILURE));
+                    update(e, Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.CORBA_FAILURE));
                     updateRetries();
                     failLogger.info("Network or server problem, SOD will continue to retry this item periodically: ("
                             + e.getClass().getName() + ") " + this);
                     logger.debug(this, e);
                 } else {
-                    update(e, Status.get(Stage.EVENT_STATION_SUBSETTER,
-                                         Standing.SYSTEM_FAILURE));
+                    update(e, Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.SYSTEM_FAILURE));
                     failLogger.warn(this, e);
                 }
                 SodDB.commit();
@@ -78,8 +72,7 @@ public class EventStationPair extends CookieEventPair {
                 return;
             }
             if(!accepted.isSuccess()) {
-                update(Status.get(Stage.EVENT_STATION_SUBSETTER,
-                                  Standing.REJECT));
+                update(Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.REJECT));
                 SodDB.commit();
                 failLogger.info(this + "  " + accepted.toString());
                 return;
@@ -87,11 +80,10 @@ public class EventStationPair extends CookieEventPair {
             SodDB.commit();
             SodDB.getSession().update(this);
             List<AbstractEventPair> chanPairs = new ArrayList<AbstractEventPair>();
-            if(Start.getWaveformArm().getMotionVectorArm() != null) {
-                List<ChannelGroup> chanGroups = Start.getNetworkArm()
-                        .getSuccessfulChannelGroups(getStation());
+            if(Start.getWaveformRecipe() instanceof MotionVectorArm) {
+                List<ChannelGroup> chanGroups = Start.getNetworkArm().getSuccessfulChannelGroups(getStation());
                 if(chanGroups.size() == 0) {
-                    logger.info("No successful channel groups for "+this);
+                    logger.info("No successful channel groups for " + this);
                 }
                 List<ChannelGroup> overlapList = new ArrayList<ChannelGroup>();
                 for(ChannelGroup cg : chanGroups) {
@@ -106,29 +98,19 @@ public class EventStationPair extends CookieEventPair {
                     // use Standing.IN_PROG as we are going to do event-channel
                     // processing here
                     // don't want another thread to pull the ECP from the DB
-                    logger.debug("Put EventVectorPair ("
-                            + getEventDbId()
-                            + ", cg "
-                            + cg.getDbid()
-                            + " ("
-                            + ((ChannelImpl)cg.getChannel1()).getDbid()
-                            + " "
-                            + ((ChannelImpl)cg.getChannel2()).getDbid()
-                            + " "
+                    logger.debug("Put EventVectorPair (" + getEventDbId() + ", cg " + cg.getDbid() + " ("
+                            + ((ChannelImpl)cg.getChannel1()).getDbid() + " "
+                            + ((ChannelImpl)cg.getChannel2()).getDbid() + " "
                             + ((ChannelImpl)cg.getChannel3()).getDbid());
-                    EventVectorPair p = new EventVectorPair(getEvent(),
-                                                            cg,
-                                                            Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                                                                       Standing.IN_PROG),
-                                                            this);
+                    EventVectorPair p = new EventVectorPair(getEvent(), cg, Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                                                                       Standing.IN_PROG), this);
                     chanPairs.add(p);
                     sodDb.put(p);
                 }
             } else {
-                List<ChannelImpl> channels = Start.getNetworkArm()
-                        .getSuccessfulChannels(getStation());
+                List<ChannelImpl> channels = Start.getNetworkArm().getSuccessfulChannels(getStation());
                 if(channels.size() == 0) {
-                    logger.info("No successful channels for "+this);
+                    logger.info("No successful channels for " + this);
                 }
                 List<ChannelImpl> overlapList = new ArrayList<ChannelImpl>();
                 for(ChannelImpl c : channels) {
@@ -144,11 +126,8 @@ public class EventStationPair extends CookieEventPair {
                     // use Standing.IN_PROG as we are going to do event-channel
                     // processing here
                     // don't want another thread to pull the ECP from the DB
-                    EventChannelPair p = new EventChannelPair(getEvent(),
-                                                              c,
-                                                              Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                                                                         Standing.IN_PROG),
-                                                              this);
+                    EventChannelPair p = new EventChannelPair(getEvent(), c, Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                                                                        Standing.IN_PROG), this);
                     chanPairs.add(p);
                     sodDb.put(p);
                 }
@@ -166,8 +145,7 @@ public class EventStationPair extends CookieEventPair {
             // should never happen
             GlobalExceptionHandler.handle(e);
             SodDB.getSession().update(this);
-            update(Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                              Standing.SYSTEM_FAILURE));
+            update(Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.SYSTEM_FAILURE));
             SodDB.commit();
             return;
         }
@@ -182,15 +160,14 @@ public class EventStationPair extends CookieEventPair {
         // a modified object
         setStatus(status);
         getCookies().put("status", status);
-        Start.getWaveformArm().setStatus(this);
+        Start.getWaveformRecipe().setStatus(this);
     }
 
     public boolean equals(Object o) {
         if(!(o instanceof EventStationPair))
             return false;
         EventStationPair ecp = (EventStationPair)o;
-        if(ecp.getEventDbId() == getEventDbId()
-                && ecp.getStationDbId() == getStationDbId()) {
+        if(ecp.getEventDbId() == getEventDbId() && ecp.getStationDbId() == getStationDbId()) {
             return true;
         }
         return false;
@@ -203,8 +180,8 @@ public class EventStationPair extends CookieEventPair {
     }
 
     public String toString() {
-        return "EventStationPair: (" + getDbid() + ") " + getEvent() + " "
-                + StationIdUtil.toString(getStation()) + " " + getStatus();
+        return "EventStationPair: (" + getDbid() + ") " + getEvent() + " " + StationIdUtil.toString(getStation()) + " "
+                + getStatus();
     }
 
     public int getStationDbId() {

@@ -45,8 +45,8 @@ public class WaveformEventTemplateGenerator implements EventMonitor,
 
     public void change(CacheEvent event, Status status) {
         if(!added) {
-            if(Start.getWaveformArm() != null) {
-                Start.getWaveformArm().addStatusMonitor(template);
+            if(Start.getWaveformRecipe() != null) {
+                Start.getWaveformRecipe().addStatusMonitor(template);
                 added = true;
             }
         }

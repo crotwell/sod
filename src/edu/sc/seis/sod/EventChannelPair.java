@@ -32,13 +32,13 @@ public class EventChannelPair extends AbstractEventChannelPair {
 
     public void run() {
         try {
-            Start.getWaveformArm().getLocalSeismogramArm().processLocalSeismogramArm(this);
+            ((LocalSeismogramArm)Start.getWaveformRecipe()).processLocalSeismogramArm(this);
             SodDB.commit();
             logger.debug("Finish ECP: "+this);
         } catch(Throwable t) {
-            System.err.println(WaveformArm.BIG_ERROR_MSG);
+            System.err.println(EventChannelPair.BIG_ERROR_MSG);
             t.printStackTrace(System.err);
-            GlobalExceptionHandler.handle(WaveformArm.BIG_ERROR_MSG, t);
+            GlobalExceptionHandler.handle(EventChannelPair.BIG_ERROR_MSG, t);
             SodDB.rollback();
         }
     }
@@ -74,6 +74,8 @@ public class EventChannelPair extends AbstractEventChannelPair {
     }
 
     private ChannelImpl chan;
+
+    public static final String BIG_ERROR_MSG = "An exception occured that would've croaked a waveform worker thread!  These types of exceptions are certainly possible, but they shouldn't be allowed to percolate this far up the stack.  If you are one of those esteemed few working on SOD, it behooves you to attempt to trudge down the stack trace following this message and make certain that whatever threw this exception is no longer allowed to throw beyond its scope.  If on the other hand, you are a user of SOD it would be most appreciated if you would send an email containing the text immediately following this mesage to sod@seis.sc.edu";
 
     private static Logger logger = Logger.getLogger(EventChannelPair.class);
 }

@@ -27,7 +27,7 @@ public abstract class AbstractEventChannelPair extends CookieEventPair {
         setStatus(status);
         updateRetries();
         getCookies().put("status", status);
-        Start.getWaveformArm().setStatus(this);
+        Start.getWaveformRecipe().setStatus(this);
     }
 
     protected void setEsp(EventStationPair esp) {

@@ -16,8 +16,8 @@ public class ProcessorTestHarness {
     public static void main(String[] args) throws NoPreferredOrigin, IOException, NotFound, Exception {
         Start.RUN_ARMS = false;
         Start.main(args);
-        WaveformArm arm = Start.getWaveformArm();
-        WaveformVectorAlwaysSuccess alwaysSuccess = (WaveformVectorAlwaysSuccess)arm.getMotionVectorArm().getProcesses()[20];
+        AbstractWaveformRecipe arm = Start.getWaveformRecipe();
+        WaveformVectorAlwaysSuccess alwaysSuccess = (WaveformVectorAlwaysSuccess)((MotionVectorArm)arm).getProcesses()[20];
         VectorForkProcess fork = (VectorForkProcess)alwaysSuccess.getWrappedProcessors()[0];
         WaveformVectorAlwaysSuccess internalSuccess = (WaveformVectorAlwaysSuccess)fork.getWrappedProcessors()[1];
         ORWaveformProcessWrapper orWrapper = (ORWaveformProcessWrapper)internalSuccess.getWrappedProcessors()[0];

@@ -33,13 +33,13 @@ public class EventVectorPair extends AbstractEventChannelPair {
 
     public void run() {
         try {
-            Start.getWaveformArm().getMotionVectorArm().processMotionVectorArm(this);
+            ((MotionVectorArm)Start.getWaveformRecipe()).processMotionVectorArm(this);
             SodDB.commit();
             logger.debug("Finish ECP: "+this);
         } catch(Throwable t) {
-            System.err.println(WaveformArm.BIG_ERROR_MSG);
+            System.err.println(EventChannelPair.BIG_ERROR_MSG);
             t.printStackTrace(System.err);
-            GlobalExceptionHandler.handle(WaveformArm.BIG_ERROR_MSG, t);
+            GlobalExceptionHandler.handle(EventChannelPair.BIG_ERROR_MSG, t);
             SodDB.rollback();
         }
     }

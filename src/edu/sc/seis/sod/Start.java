@@ -45,6 +45,7 @@ import edu.sc.seis.fissuresUtil.hibernate.HibernateUtil;
 import edu.sc.seis.fissuresUtil.simple.Initializer;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.StatefulEventDB;
+import edu.sc.seis.sod.process.waveform.WaveformResult;
 import edu.sc.seis.sod.status.IndexTemplate;
 import edu.sc.seis.sod.status.OutputScheduler;
 import edu.sc.seis.sod.status.TemplateFileLoader;
@@ -119,7 +120,7 @@ public class Start {
             Start.props = props;
         }
         logger.info("Recipe: "+configFileName);
-        initDocument();
+        initDatabase();
     }
 
     private void validate(InputSourceCreator sourceMaker) {
@@ -171,7 +172,7 @@ public class Start {
         return configFileName;
     }
 
-    protected void initDocument() throws Exception {
+    protected void initDatabase() throws Exception {
         loadRunProps(getConfig());
         ConnMgr.installDbProperties(props, args.getInitialArgs());
         synchronized(HibernateUtil.class) {
@@ -229,11 +230,6 @@ public class Start {
         }
     }
 
-    public static InputSource createInputSource(ClassLoader cl)
-            throws IOException {
-        return createInputSource(cl, getConfigFileName());
-    }
-
     public static InputSource createInputSource(ClassLoader cl, String loc)
             throws IOException {
         return new InputSource(new InputStreamReader(createInputStream(cl, loc)));
@@ -282,10 +278,10 @@ public class Start {
         Start.config = config;
     }
 
-    public static WaveformArm getWaveformArm() {
-        return waveform;
+    public static AbstractWaveformRecipe getWaveformRecipe() {
+        return waveformRecipe;
     }
-
+    
     public static EventArm getEventArm() {
         return event;
     }
@@ -421,12 +417,28 @@ public class Start {
                     network = new NetworkArm(el);
                 } else if(el.getTagName().startsWith("waveform")
                         && args.doWaveformArm()) {
+                    if(config.getTagName().equals("waveformVectorArm")) {
+                        waveformRecipe = new MotionVectorArm(el);
+                    } else {
+                        waveformRecipe = new LocalSeismogramArm(el);
+                    }
+                    if(runProps.reopenSuspended()) {
+                        SodDB.getSingleton().reopenSuspendedEventChannelPairs(Start.getRunProps()
+                                                                       .getEventChannelPairProcessing(),
+                                                                       (waveformRecipe instanceof LocalSeismogramArm));
+                    }
+                    // check for events that are "in progress" due to halt or reset
+                    WaveformArm.populateEventChannelDb(Standing.IN_PROG);
+                    
                     int poolSize = runProps.getNumWaveformWorkerThreads();
-                    waveform = new WaveformArm(el, event, network, poolSize, runProps.reopenSuspended());
+                    waveforms = new WaveformArm[poolSize];
+                    for(int j = 0; j < waveforms.length; j++) {
+                        waveforms[j] = new WaveformArm(j, waveformRecipe);
+                    }
                 }
             }
         }
-        if(waveform == null && event != null) {
+        if(waveformRecipe == null && event != null) {
             event.setWaitForWaveformProcessing(false);
         }
         if(RUN_ARMS) {
@@ -434,7 +446,9 @@ public class Start {
             OutputScheduler.getDefault();
             startArm(network, "NetworkArm");
             startArm(event, "EventArm");
-            startArm(waveform, "WaveformArm");
+            for(int i = 0; i < waveforms.length; i++) {
+                startArm(waveforms[i], waveforms[i].getName());
+            }
         }
         for(Iterator iter = armListeners.iterator(); iter.hasNext();) {
             ((ArmListener)iter.next()).started();
@@ -601,14 +615,12 @@ public class Start {
      
     public static void wakeUpAllArms() {
         // wake up any sleeping arms
-        Arm[] arms = new Arm[] {network, event, waveform};
+        Arm[] arms = new Arm[] {network, event};
         for(int i = 0; i < arms.length; i++) {
             synchronized(arms[i]) {
-                arms[i].notify();
+                arms[i].notifyAll();
             }
         }
-        event.getWaveformArmSync().notifyAll();
-        waveform.getWaveformProcessorSync().notifyAll();
         synchronized(OutputScheduler.getDefault()) {
             OutputScheduler.getDefault().notify();
         }
@@ -625,8 +637,10 @@ public class Start {
     private static Element config;
 
     private static Logger logger = Logger.getLogger(Start.class);
-
-    private static WaveformArm waveform;
+    
+    private static WaveformArm[] waveforms;
+    
+    private static AbstractWaveformRecipe waveformRecipe;
 
     private static Properties props = System.getProperties();
 

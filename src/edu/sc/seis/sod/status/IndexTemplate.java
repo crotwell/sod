@@ -18,6 +18,7 @@ import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.exceptionHandler.HTMLReporter;
+import edu.sc.seis.sod.AbstractWaveformRecipe;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventArm;
 import edu.sc.seis.sod.EventChannelPair;
@@ -30,7 +31,6 @@ import edu.sc.seis.sod.Stage;
 import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Status;
-import edu.sc.seis.sod.WaveformArm;
 import edu.sc.seis.sod.process.waveform.LocalSeismogramTemplateGenerator;
 import edu.sc.seis.sod.status.eventArm.EventStatusTemplate;
 import edu.sc.seis.sod.status.eventArm.MapEventStatus;
@@ -123,8 +123,8 @@ public class IndexTemplate extends FileWritingTemplate implements
             Start.getEventArm().add(mapEventStatus);
         }
         loadStatusTemplates();
-        if(Start.getWaveformArm() != null) {
-            Start.getWaveformArm().addStatusMonitor(this);
+        if(Start.getWaveformRecipe() != null) {
+            Start.getWaveformRecipe().addStatusMonitor(this);
         }
     }
 
@@ -144,7 +144,7 @@ public class IndexTemplate extends FileWritingTemplate implements
                                                          "networkInfoTemplateGenerator");
             net.add(new NetworkInfoTemplateGenerator(netInfoEl));
         }
-        WaveformArm waveformArm = Start.getWaveformArm();
+        AbstractWaveformRecipe waveformArm = Start.getWaveformRecipe();
         if(waveformArm != null) {
             Element seisTempEl = DOMHelper.extractElement(statusConfig,
                                                           "localSeismogramTemplateGenerator");

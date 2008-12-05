@@ -5,6 +5,7 @@ import java.util.LinkedList;
 
 import org.apache.log4j.Logger;
 import org.omg.CORBA.SystemException;
+import org.w3c.dom.Element;
 
 import edu.iris.Fissures.FissuresException;
 import edu.iris.Fissures.IfNetwork.Channel;
@@ -23,35 +24,53 @@ import edu.sc.seis.fissuresUtil.time.SortTool;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.process.waveform.WaveformResult;
 import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
 import edu.sc.seis.sod.subsetter.Subsetter;
 import edu.sc.seis.sod.subsetter.availableData.AvailableDataSubsetter;
 import edu.sc.seis.sod.subsetter.availableData.PassAvailableData;
 import edu.sc.seis.sod.subsetter.dataCenter.SeismogramDCLocator;
 import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
 import edu.sc.seis.sod.subsetter.eventChannel.PassEventChannel;
+import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
+import edu.sc.seis.sod.subsetter.eventStation.PassEventStation;
 import edu.sc.seis.sod.subsetter.request.PassRequest;
 import edu.sc.seis.sod.subsetter.request.Request;
 import edu.sc.seis.sod.subsetter.requestGenerator.RequestGenerator;
 
-public class LocalSeismogramArm implements Subsetter {
+public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subsetter {
 
-    public void handle(Object sodElement) {
-        if(sodElement instanceof EventChannelSubsetter) {
-            eventChannel = (EventChannelSubsetter)sodElement;
-        } else if(sodElement instanceof RequestGenerator) {
-            requestGenerator = (RequestGenerator)sodElement;
-        } else if(sodElement instanceof Request) {
-            request = (Request)sodElement;
-        } else if(sodElement instanceof SeismogramDCLocator) {
-            dcLocator = (SeismogramDCLocator)sodElement;
-        } else if(sodElement instanceof AvailableDataSubsetter) {
-            availData = (AvailableDataSubsetter)sodElement;
-        } else if(sodElement instanceof WaveformProcess) {
-            processes.add(sodElement);
+    public LocalSeismogramArm(Element config) throws ConfigurationException {
+        super(config);    
+    }
+    
+    public void handle(Element el) throws ConfigurationException {
+        Object sodObject = SodUtil.load(el, PACKAGES);
+        if(sodObject instanceof EventStationSubsetter) {
+            eventStation = (EventStationSubsetter)sodObject;
+        } else if(sodObject instanceof WaveformMonitor) {
+            addStatusMonitor((WaveformMonitor)sodObject);
+        } else if(sodObject instanceof EventChannelSubsetter) {
+            eventChannel = (EventChannelSubsetter)sodObject;
+        } else if(sodObject instanceof RequestGenerator) {
+            requestGenerator = (RequestGenerator)sodObject;
+        } else if(sodObject instanceof Request) {
+            request = (Request)sodObject;
+        } else if(sodObject instanceof SeismogramDCLocator) {
+            dcLocator = (SeismogramDCLocator)sodObject;
+        } else if(sodObject instanceof AvailableDataSubsetter) {
+            availData = (AvailableDataSubsetter)sodObject;
+            System.out.println("should be somecoverage: "+availData);
+        } else if(sodObject instanceof WaveformProcess) {
+            add((WaveformProcess)sodObject);
         } else {
-            logger.warn("Unknown tag in LocalSeismogramArm config. "
-                    + sodElement);
+            throw new ConfigurationException("Unknown tag in LocalSeismogramArm config. "
+                    + el.getLocalName());
         } // end of else
+    }
+
+    @Override
+    public EventStationSubsetter getEventStationSubsetter() {
+        return eventStation;
     }
 
     public EventChannelSubsetter getEventChannelSubsetter() {
@@ -76,6 +95,16 @@ public class LocalSeismogramArm implements Subsetter {
 
     public WaveformProcess[] getProcesses() {
         return (WaveformProcess[])processes.toArray(new WaveformProcess[0]);
+    }
+    
+    public void add(WaveformProcess proc) {
+        if (proc == null) {
+            throw new IllegalArgumentException("WaveformProcess cannot be null");
+        }
+        if (processes == null) {
+            processes = new LinkedList<WaveformProcess>();
+        }
+        processes.add(proc);
     }
 
     public void processLocalSeismogramArm(EventChannelPair ecp) {
@@ -452,6 +481,8 @@ public class LocalSeismogramArm implements Subsetter {
         Start.createRetryStrategy().serverRecovered(dataCenter);
     }
 
+    private EventStationSubsetter eventStation = new PassEventStation();
+    
     private EventChannelSubsetter eventChannel = new PassEventChannel();
 
     private RequestGenerator requestGenerator;
@@ -460,10 +491,10 @@ public class LocalSeismogramArm implements Subsetter {
 
     private AvailableDataSubsetter availData = new PassAvailableData();
 
-    private LinkedList processes = new LinkedList();
+    private LinkedList<WaveformProcess> processes;
 
     private SeismogramDCLocator dcLocator;
-
+    
     public static final String NO_DATA = "no_data";
 
     public static final String DATA_RETRIEVED = "Finished";
@@ -474,7 +505,4 @@ public class LocalSeismogramArm implements Subsetter {
 
     private static final org.apache.log4j.Logger failLogger = org.apache.log4j.Logger.getLogger("Fail.Waveform");
 
-    public void add(WaveformProcess proc) {
-        processes.add(proc);
-    }
 }// LocalSeismogramArm

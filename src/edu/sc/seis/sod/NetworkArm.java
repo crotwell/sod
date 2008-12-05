@@ -205,7 +205,7 @@ public class NetworkArm implements Arm {
                                           Standing.SUCCESS));
                     }
                 }
-                if(Start.getWaveformArm() == null
+                if(Start.getWaveformRecipe() == null
                         && (! stationSubsetter.getClass().equals(PassStation.class) 
                         || chanSubsetters.size() != 0 )) {
                     // only do netpushers if there are more subsetters downstream
@@ -289,7 +289,7 @@ public class NetworkArm implements Arm {
                             change(allNets[i],
                                    Status.get(Stage.NETWORK_SUBSETTER,
                                               Standing.SUCCESS));
-                            if(Start.getWaveformArm() == null
+                            if(Start.getWaveformRecipe() == null
                                     && (! stationSubsetter.getClass().equals(PassStation.class) 
                                     || chanSubsetters.size() != 0 )) {
                                 // only do netpushers if there are more subsetters downstream
@@ -424,7 +424,7 @@ public class NetworkArm implements Arm {
                     throw e;
                 }
                 StationImpl[] staDbs = getSuccessfulStations(net);
-                if(!(Start.getWaveformArm() == null && chanSubsetters.size() == 0)) {
+                if(!(Start.getWaveformRecipe() == null && chanSubsetters.size() == 0)) {
                     // only get channels if there are subsetters or a
                     // waveform arm
                     for(int j = 0; j < staDbs.length; j++) {

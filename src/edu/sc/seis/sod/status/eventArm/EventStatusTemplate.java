@@ -103,8 +103,8 @@ public class EventStatusTemplate extends FileWritingTemplate implements
     }
 
     public void change(CacheEvent event, Status status) {
-        if(!addedToWaveformArm && Start.getWaveformArm() != null) {
-            Start.getWaveformArm().addStatusMonitor(this);
+        if(!addedToWaveformArm && Start.getWaveformRecipe() != null) {
+            Start.getWaveformRecipe().addStatusMonitor(this);
             addedToWaveformArm = true;
         }
         write();

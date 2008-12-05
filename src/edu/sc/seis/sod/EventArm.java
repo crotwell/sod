@@ -80,20 +80,14 @@ public class EventArm implements Arm {
         }
         logger.info("Event arm finished");
         alive = false;
-        notifyWaveformArm();
+        synchronized(this) {
+            notifyAll();
+        }
         synchronized(OutputScheduler.getDefault()) {
             OutputScheduler.getDefault().notifyAll();
         }
     }
 
-    private void notifyWaveformArm() {
-        WaveformArm waveformArm = Start.getWaveformArm();
-        if(waveformArm != null){
-            synchronized(getWaveformArmSync()) {
-                getWaveformArmSync().notifyAll();
-            }
-        }
-    }
 
     public void add(EventMonitor monitor) {
         statusMonitors.add(monitor);
@@ -187,21 +181,21 @@ public class EventArm implements Arm {
         int numWaiting = eventStatus.getNumWaiting();
         logger.debug("Event wait: numWaiting = "+numWaiting+" should be < "+MIN_WAIT_EVENTS);
         while( !Start.isArmFailure() && waitForWaveformProcessing  &&  numWaiting > MIN_WAIT_EVENTS ) {
-            synchronized(getWaveformArmSync()) {
+            synchronized(this) {
                 setStatus("eventArm waiting until there are less than "+MIN_WAIT_EVENTS+" events waiting to be processed. "+numWaiting+" in queue now.");
-                getWaveformArmSync().notifyAll();
-                getWaveformArmSync().wait();
+                notifyAll();
+                wait();
             }
             numWaiting = eventStatus.getNumWaiting();
         }
         // less events, but maybe lots of event-network pairs
         int numENPWaiting = SodDB.getSingleton().getNumEventNetworkWorkUnits(Standing.INIT);
         while( !Start.isArmFailure() && waitForWaveformProcessing  &&  numWaiting+numENPWaiting > MIN_WAIT_EVENTS ) {
-            synchronized(getWaveformArmSync()) {
+            synchronized(this) {
                 setStatus("eventArm waiting until there are less than "+MIN_WAIT_EVENTS
                           +" events and event-network pairs waiting to be processed, "+(numWaiting+numENPWaiting)+" in queue now.");
-                getWaveformArmSync().notifyAll();
-                getWaveformArmSync().wait();
+                notifyAll();
+                wait();
             }
             numENPWaiting = SodDB.getSingleton().getNumEventNetworkWorkUnits(Standing.INIT);
         }
@@ -213,7 +207,9 @@ public class EventArm implements Arm {
             try {
                 handle(events[i]);
                 eventStatus.commit();
-                notifyWaveformArm();
+                synchronized(this) {
+                    notifyAll();
+                }
             } catch(HibernateException e) {
                 eventStatus.rollback();
                 handleException(e, events[i], i);
