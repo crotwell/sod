@@ -39,10 +39,11 @@ public class TotalLoserEventCleaner extends TimerTask {
             MicroSecondDate ageAgo = ClockUtil.now().subtract(lagInterval);
             Query q = eventdb.getSession().createQuery(" from "+StatefulEvent.class.getName()+" e  where e.statusAsShort = 258 and e.preferred.originTime.time < :ageAgo");
             q.setTimestamp("ageAgo", ageAgo.getTimestamp());
-            Iterator it = q.iterate();
+            Iterator<StatefulEvent> it = q.iterate();
             int counter=0;
             while(it.hasNext()) {
-                eventdb.getSession().delete(it.next());
+                StatefulEvent se = it.next();
+                eventdb.getSession().delete(se);
                 counter++;
             }
             eventdb.commit();
