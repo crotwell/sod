@@ -77,6 +77,11 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
     }
 
     public void add(WaveformVectorProcess process) {
+        synchronized(this) {
+            if(processes == null) {
+                processes = new LinkedList<WaveformVectorProcess>();
+            }
+        }
         processes.add(process);
     }
 

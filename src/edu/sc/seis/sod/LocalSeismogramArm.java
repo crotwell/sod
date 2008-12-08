@@ -117,8 +117,10 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
         if(proc == null) {
             throw new IllegalArgumentException("WaveformProcess cannot be null");
         }
-        if(processes == null) {
-            processes = new LinkedList<WaveformProcess>();
+        synchronized(this) {
+            if(processes == null) {
+                processes = new LinkedList<WaveformProcess>();
+            }
         }
         processes.add(proc);
     }
