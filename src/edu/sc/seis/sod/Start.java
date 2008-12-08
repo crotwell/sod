@@ -356,7 +356,6 @@ public class Start {
         if(runProps.doStatusPages()) {
             indexTemplate = new IndexTemplate();
         }
-        // make sure database tables are created cleanly
         startArms(getConfig().getChildNodes());
         if(runProps.doStatusPages()) {
             indexTemplate.performRegistration();
@@ -417,10 +416,12 @@ public class Start {
                     network = new NetworkArm(el);
                 } else if(el.getTagName().startsWith("waveform")
                         && args.doWaveformArm()) {
-                    if(config.getTagName().equals("waveformVectorArm")) {
+                    if(el.getTagName().equals("waveformVectorArm")) {
                         waveformRecipe = new MotionVectorArm(el);
-                    } else {
+                    } else if(el.getTagName().equals("waveformArm")) {
                         waveformRecipe = new LocalSeismogramArm(el);
+                    } else {
+                        throw new ConfigurationException("unknown waveform arm type: "+el.getTagName());
                     }
                     if(runProps.reopenSuspended()) {
                         SodDB.getSingleton().reopenSuspendedEventChannelPairs(Start.getRunProps()
