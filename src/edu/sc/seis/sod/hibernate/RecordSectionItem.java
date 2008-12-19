@@ -5,7 +5,8 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 
 public class RecordSectionItem {
 
-    public RecordSectionItem(String recordSectionId,
+    public RecordSectionItem(String orientationId,
+                             String recordSectionId,
                              CacheEvent event,
                              Channel channel,
                              boolean inBest) {
@@ -13,9 +14,10 @@ public class RecordSectionItem {
         this.event = event;
         this.channel = channel;
         this.recordSectionId = recordSectionId;
+        this.orientationId = orientationId;
         this.inBest = inBest;
     }
-    
+
     /** for hibernate */
     protected RecordSectionItem() {}
 
@@ -26,6 +28,8 @@ public class RecordSectionItem {
     Channel channel;
 
     String recordSectionId;
+
+    String orientationId;
 
     boolean inBest;
 
@@ -59,6 +63,14 @@ public class RecordSectionItem {
 
     public void setRecordSectionId(String recordSectionId) {
         this.recordSectionId = recordSectionId;
+    }
+
+    public String getOrientationId() {
+        return orientationId;
+    }
+
+    public void setOrientationId(String orientationId) {
+        this.orientationId = orientationId;
     }
 
     public boolean isInBest() {

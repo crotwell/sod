@@ -106,7 +106,8 @@
 		<many-to-one name="channel"
 			class="edu.iris.Fissures.network.ChannelImpl" column="channel"
 			foreign-key="FK_recsec_channel" />
-		<property name="recordSectionId"  index="rec_best_eq_index" />
+		<property name="orientationId"  index="rec_best_eq_index" />
+		<property name="recordSectionId"/>
 		<property name="inBest" type="boolean" index="rec_best_eq_index" />
 	</class>
 

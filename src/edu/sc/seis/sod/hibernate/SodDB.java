@@ -573,6 +573,7 @@ public class SodDB extends AbstractHibernateDB {
             while(dbit.hasNext()) {
                 RecordSectionItem item = (RecordSectionItem)dbit.next();
                 item.setInBest(false);
+                getSession().update(item);
             }
         }
         q = getSession().createQuery("from "
@@ -596,6 +597,7 @@ public class SodDB extends AbstractHibernateDB {
             while(dbit.hasNext()) {
                 RecordSectionItem item = (RecordSectionItem)dbit.next();
                 item.setInBest(true);
+                getSession().update(item);
             }
         }
         return true;
@@ -604,8 +606,8 @@ public class SodDB extends AbstractHibernateDB {
     private static final String MATCH_CHANNEL_CODES = " channel.id.channel_code = :chanCode and channel.id.site_code = :siteCode and "
             + "channel.id.station_code = :staCode and channel.site.station.networkAttr.id.network_code = :netCode";
 
-    public List<String> recordSectionsForEvent(CacheEvent event) {
-        Query q = getSession().createQuery("select distinct recordSectionId from "
+    public List<RecordSectionItem> recordSectionsForEvent(CacheEvent event) {
+        Query q = getSession().createQuery("from "
                 + RecordSectionItem.class.getName() + " where event = :event");
         q.setEntity("event", event);
         return q.list();
