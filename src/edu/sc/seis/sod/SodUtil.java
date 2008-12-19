@@ -517,6 +517,7 @@ public class SodUtil {
      * returns the first text child within the node.
      */
     public static String getText(Element config) {
+        if (config == null) { throw new IllegalArgumentException("config cannot be null");}
         NodeList children = config.getChildNodes();
         for(int i = 0; i < children.getLength(); i++) {
             if(children.item(i) instanceof Text) {
