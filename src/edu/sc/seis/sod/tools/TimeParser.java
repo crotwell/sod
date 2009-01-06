@@ -9,6 +9,8 @@ import java.util.regex.Pattern;
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.ParseException;
 import com.martiansoftware.jsap.StringParser;
+
+import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
@@ -39,6 +41,19 @@ public class TimeParser extends StringParser {
     }
     
     public String parseDate(String arg) throws ParseException {
+        return format(getMicroSecondDate(arg));
+    }
+    
+    public static String format(MicroSecondDate d) {
+        DateFormat passcalFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        passcalFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        return passcalFormat.format(d);
+    }
+    
+    public MicroSecondDate getMicroSecondDate(String arg) throws ParseException {
+        if (arg.equals("now")) {
+            return ClockUtil.now();
+        }
         Matcher m = datePattern.matcher(arg);
         if(!m.matches()) {
             throw new ParseException("A time must be formatted as YYYY[[[[[-MM]-DD]-hh]-mm]-ss] like 2006-11-19, not '"
@@ -51,9 +66,7 @@ public class TimeParser extends StringParser {
                                               extract(m, 5),
                                               extract(m, 6),
                                               ceiling);
-        DateFormat passcalFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        passcalFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return passcalFormat.format(cal.getTime());
+        return new MicroSecondDate(cal.getTime());
     }
 
     private int extract(Matcher m, int i) {
