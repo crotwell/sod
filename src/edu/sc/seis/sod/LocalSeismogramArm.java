@@ -76,7 +76,6 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
             dcLocator = (SeismogramDCLocator)sodObject;
         } else if(sodObject instanceof AvailableDataSubsetter) {
             availData = (AvailableDataSubsetter)sodObject;
-            System.out.println("should be somecoverage: " + availData);
         } else if(sodObject instanceof WaveformProcess) {
             add((WaveformProcess)sodObject);
         } else {
