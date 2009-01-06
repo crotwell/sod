@@ -38,6 +38,9 @@ import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.exceptionHandler.Extractor;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.fissuresUtil.exceptionHandler.MailExceptionReporter;
+import edu.sc.seis.fissuresUtil.exceptionHandler.MissingPropertyException;
+import edu.sc.seis.fissuresUtil.exceptionHandler.ResultMailer;
 import edu.sc.seis.fissuresUtil.exceptionHandler.SystemOutReporter;
 import edu.sc.seis.fissuresUtil.exceptionHandler.WindowConnectionInterceptor;
 import edu.sc.seis.fissuresUtil.hibernate.AbstractHibernateDB;
@@ -315,7 +318,7 @@ public class Start {
         if(mailProps.containsKey("mail.smtp.host")) {
             try {
                 GlobalExceptionHandler.add(new MailExceptionReporter(mailProps));
-            } catch(ConfigurationException e) {
+            } catch(MissingPropertyException e) {
                 logger.debug("Not able to add a mail reporter.  This is only a problem if you specified one",
                              e);
             }
@@ -332,7 +335,7 @@ public class Start {
     }
 
     public static void addResultMailer(Properties mailProps)
-            throws ConfigurationException {
+            throws MissingPropertyException {
         if(mailer == null && mailProps.containsKey("mail.smtp.host")) {
             mailer = new ResultMailer(mailProps);
         }
