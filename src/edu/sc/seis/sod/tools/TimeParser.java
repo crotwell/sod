@@ -50,6 +50,12 @@ public class TimeParser extends StringParser {
         return passcalFormat.format(d);
     }
     
+    public static String formatForParsing(MicroSecondDate d) {
+        DateFormat passcalFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+        passcalFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        return passcalFormat.format(d);
+    }
+    
     public MicroSecondDate getMicroSecondDate(String arg) throws ParseException {
         if (arg.equals("now")) {
             return ClockUtil.now();
