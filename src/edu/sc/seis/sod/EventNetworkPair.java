@@ -44,7 +44,7 @@ public class EventNetworkPair extends AbstractEventPair {
             for(int i = 0; i < stations.length; i++) {
                 if(!overlap.overlaps(stations[i])) {
                     failLogger.info(StationIdUtil.toString(stations[i].get_id())
-                            + "'s network effective time does not overlap the event time.");
+                            + "'s station effective time does not overlap the event time.");
                 } else {
                     EventStationPair p = new EventStationPair(getEvent(),
                                                               stations[i],
