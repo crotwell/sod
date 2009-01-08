@@ -40,24 +40,7 @@ import edu.sc.seis.sod.subsetter.requestGenerator.RequestGenerator;
 public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subsetter {
 
     public LocalSeismogramArm(Element config) throws ConfigurationException {
-        super(config);
-        // have to check for null here and set default values as handle() is
-        // called via super() and hence before field initialization happens
-        if(eventStation == null) {
-            eventStation = new PassEventStation();
-        }
-        if(eventChannel == null) {
-            eventChannel = new PassEventChannel();
-        }
-        if(request == null) {
-            request = new PassRequest();
-        }
-        if(availData == null) {
-            availData = new PassAvailableData();
-        }
-        if(processes == null) {
-            processes = new LinkedList<WaveformProcess>();
-        }
+        processConfig(config);
     }
 
     public void handle(Element el) throws ConfigurationException {
@@ -454,17 +437,17 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
         Start.createRetryStrategy().serverRecovered(dataCenter);
     }
 
-    private EventStationSubsetter eventStation;
+    private EventStationSubsetter eventStation = new PassEventStation();;
 
-    private EventChannelSubsetter eventChannel;
+    private EventChannelSubsetter eventChannel = new PassEventChannel();
 
     private RequestGenerator requestGenerator;
 
-    private Request request;
+    private Request request = new PassRequest();
 
-    private AvailableDataSubsetter availData;
+    private AvailableDataSubsetter availData = new PassAvailableData();
 
-    private LinkedList<WaveformProcess> processes;
+    private LinkedList<WaveformProcess> processes = new LinkedList<WaveformProcess>();
 
     private SeismogramDCLocator dcLocator;
 

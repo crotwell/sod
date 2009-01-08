@@ -1,8 +1,3 @@
-/**
- * MotionVectorArm.java
- * 
- * @author Created by Omnicore CodeGuide
- */
 package edu.sc.seis.sod;
 
 import java.util.ArrayList;
@@ -56,32 +51,10 @@ import edu.sc.seis.sod.subsetter.requestGenerator.vector.VectorRequestGenerator;
 public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter {
 
     public MotionVectorArm(Element config) throws ConfigurationException {
-        super(config);
-        // have to check for null here and set default values as handle() is
-        // called via super() and hence before field initialization happens
-        if (eventStationSubsetter == null) {
-            eventStationSubsetter = new PassEventStation();
-        }
-        if (eventChannelGroup == null) {
-            eventChannelGroup = new PassEventChannel();
-        }
-        if (request == null) {
-            request = new PassRequest();
-        }
-        if (availData == null) {
-            availData = new PassAvailableData();
-        }
-        if (processes == null) {
-            processes = new LinkedList<WaveformVectorProcess>();
-        }
+        processConfig(config);
     }
 
     public void add(WaveformVectorProcess process) {
-        synchronized(this) {
-            if(processes == null) {
-                processes = new LinkedList<WaveformVectorProcess>();
-            }
-        }
         processes.add(process);
     }
 

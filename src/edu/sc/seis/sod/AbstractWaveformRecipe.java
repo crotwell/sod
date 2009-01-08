@@ -15,10 +15,6 @@ import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
 
 
 public abstract class AbstractWaveformRecipe  {
-
-    public AbstractWaveformRecipe(Element config) throws ConfigurationException {
-        processConfig(config);
-    }
     
     public void addStatusMonitor(WaveformMonitor monitor) {
         statusMonitors.add(monitor);
