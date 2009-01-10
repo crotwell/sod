@@ -1,8 +1,10 @@
 package edu.sc.seis.sod.hibernate;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.Hibernate;
@@ -16,6 +18,7 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
+import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
@@ -515,55 +518,64 @@ public class SodDB extends AbstractHibernateDB {
         return q.list();
     }
 
-    public List<RecordSectionItem> getBestForRecordSection(String recordSectionId,
+    public List<RecordSectionItem> getBestForRecordSection(String orientationId,
+                                                           String recordSectionId,
                                                            CacheEvent event) {
         Query q = getSession().createQuery("from "
                 + RecordSectionItem.class.getName()
-                + " where inBest = true and event = :event and recordSectionId = :recsecid");
+                + " where inBest = true and event = :event and orientationid = :orientationid and recordSectionId = :recsecid");
         q.setEntity("event", event);
+        q.setString("orientationid", orientationId);
         q.setString("recsecid", recordSectionId);
         return q.list();
     }
 
-    public boolean updateBestForRecordSection(String recordSectionId,
+    public boolean updateBestForRecordSection(String orientationId,
+                                              String recordSectionId,
                                               CacheEvent event,
                                               ChannelId[] channelIds) {
-        List<RecordSectionItem> best = getBestForRecordSection(recordSectionId,
+        List<RecordSectionItem> best = getBestForRecordSection(orientationId,
+                                                               recordSectionId,
                                                                event);
-        Set<ChannelId> removes = new HashSet<ChannelId>();
+        HashMap<String, ChannelId> removes = new HashMap<String, ChannelId>();
         Iterator<RecordSectionItem> it = best.iterator();
         while(it.hasNext()) {
-            removes.add(it.next().channel.get_id());
+            ChannelId cId = it.next().channel.get_id();
+            removes.put(ChannelIdUtil.toString(cId), cId);
         }
-        Set<ChannelId> adders = new HashSet<ChannelId>();
+        HashMap<String, ChannelId> adders = new HashMap<String, ChannelId>();
+        logger.debug("updating "+channelIds.length+" recordSectionItems for "+recordSectionId+" for event "+event);
         for(int i = 0; i < channelIds.length; i++) {
-            adders.add(channelIds[i]);
+            logger.debug("channelid: "+ChannelIdUtil.toString(channelIds[i]));
+            adders.put(ChannelIdUtil.toString(channelIds[i]), channelIds[i]);
         }
-        Iterator<ChannelId> chanIt = adders.iterator();
+        Iterator<String> chanIt = adders.keySet().iterator();
         while(chanIt.hasNext()) {
-            Object o = chanIt.next();
-            if(removes.contains(o)) {
+            String cId = chanIt.next();
+            if(removes.containsKey(cId)) {
                 // in both, so no change
-                removes.remove(o);
-                adders.remove(o);
+                removes.remove(cId);
+                chanIt.remove();
             }
         }
         Query q;
         if(removes.size() == 0 && adders.size() == 0) {
+            logger.debug("No adds and no removes");
             return false;
         }
         q = getSession().createQuery("from "
                 + RecordSectionItem.class.getName()
-                + " where inBest = true and event = :event and recordSectionId = :recsecid and "
+                + " where inBest = true and event = :event and recordSectionId = :recsecid and orientationid = :orientationid and "
                 + MATCH_CHANNEL_CODES);
-        chanIt = removes.iterator();
+        chanIt = removes.keySet().iterator();
         while(chanIt.hasNext()) {
-            ChannelId c = chanIt.next();
+            ChannelId c = removes.get(chanIt.next());
             logger.debug("remove: " + q + "  " + event.getDbid() + "  "
                     + recordSectionId + " " + c.channel_code + " "
                     + c.site_code + " " + c.station_code + " "
                     + c.network_id.network_code);
             q.setEntity("event", event);
+            q.setString("orientationid", orientationId);
             q.setString("recsecid", recordSectionId);
             q.setString("chanCode", c.channel_code);
             q.setString("siteCode", c.site_code);
@@ -572,22 +584,24 @@ public class SodDB extends AbstractHibernateDB {
             Iterator dbit = q.iterate();
             while(dbit.hasNext()) {
                 RecordSectionItem item = (RecordSectionItem)dbit.next();
+                logger.debug("update false for "+ChannelIdUtil.toString(item.channel.get_id()));
                 item.setInBest(false);
                 getSession().update(item);
             }
         }
         q = getSession().createQuery("from "
                 + RecordSectionItem.class.getName()
-                + " where inBest = false and event = :event and recordSectionId = :recsecid and "
+                + " where inBest = false and event = :event and recordSectionId = :recsecid and orientationid = :orientationid and "
                 + MATCH_CHANNEL_CODES);
-        chanIt = adders.iterator();
+        chanIt = adders.keySet().iterator();
         while(chanIt.hasNext()) {
-            ChannelId c = chanIt.next();
+            ChannelId c = adders.get(chanIt.next());
             logger.debug("adds " + q + "  " + event.getDbid() + "  "
                     + recordSectionId + " " + c.channel_code + " "
                     + c.site_code + " " + c.station_code + " "
                     + c.network_id.network_code);
             q.setEntity("event", event);
+            q.setString("orientationid", orientationId);
             q.setString("recsecid", recordSectionId);
             q.setString("chanCode", c.channel_code);
             q.setString("siteCode", c.site_code);
@@ -596,6 +610,7 @@ public class SodDB extends AbstractHibernateDB {
             Iterator dbit = q.iterate();
             while(dbit.hasNext()) {
                 RecordSectionItem item = (RecordSectionItem)dbit.next();
+                logger.debug("update true for "+ChannelIdUtil.toString(item.channel.get_id()));
                 item.setInBest(true);
                 getSession().update(item);
             }
