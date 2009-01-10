@@ -19,6 +19,7 @@ public class UpdateChecker  {
                                                     updateURL,
                                                     gui,
                                                     forceCheck);
+        job.setUsePreferencesForStorage(false); // sod doesn't ask, so check on each startup
         JobTracker.getTracker().add(job);
         WorkerThreadPool.getDefaultPool().invokeLater(job);
     }
