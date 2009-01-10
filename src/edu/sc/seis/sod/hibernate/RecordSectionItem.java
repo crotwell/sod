@@ -21,17 +21,17 @@ public class RecordSectionItem {
     /** for hibernate */
     protected RecordSectionItem() {}
 
-    long dbid;
+    protected long dbid;
 
-    CacheEvent event;
+    protected CacheEvent event;
 
-    Channel channel;
+    protected Channel channel;
 
-    String recordSectionId;
+    protected String recordSectionId;
 
-    String orientationId;
+    protected String orientationId;
 
-    boolean inBest;
+    protected boolean inBest;
 
     public long getDbid() {
         return dbid;

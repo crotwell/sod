@@ -584,7 +584,7 @@ public class SodDB extends AbstractHibernateDB {
             Iterator dbit = q.iterate();
             while(dbit.hasNext()) {
                 RecordSectionItem item = (RecordSectionItem)dbit.next();
-                logger.debug("update false for "+ChannelIdUtil.toString(item.channel.get_id()));
+                logger.debug("update false for "+ChannelIdUtil.toString(item.getChannel().get_id()));
                 item.setInBest(false);
                 getSession().update(item);
             }
@@ -610,7 +610,7 @@ public class SodDB extends AbstractHibernateDB {
             Iterator dbit = q.iterate();
             while(dbit.hasNext()) {
                 RecordSectionItem item = (RecordSectionItem)dbit.next();
-                logger.debug("update true for "+ChannelIdUtil.toString(item.channel.get_id()));
+                logger.debug("update true for "+ChannelIdUtil.toString(item.getChannel().get_id()));
                 item.setInBest(true);
                 getSession().update(item);
             }
