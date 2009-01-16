@@ -409,6 +409,7 @@ public class Start {
     }
 
     private void startArms(NodeList armNodes) throws Exception {
+        waveforms = new WaveformArm[0]; // just in case a non-waveform run
         for(int i = 0; i < armNodes.getLength(); i++) {
             if(armNodes.item(i) instanceof Element) {
                 Element el = (Element)armNodes.item(i);
@@ -603,6 +604,15 @@ public class Start {
 
     public static void add(Properties newProps) {
         props.putAll(newProps);
+    }
+    
+    public static void cataclysmicFailureOfUnbelievableProportions() {
+        try {
+            System.err.println("Oh boy, this is really bad. No, it is even worse then that.");
+            logger.fatal("horror of horrors...");
+        } catch(Throwable t) {
+            System.exit(1);
+        }
     }
 
     public static void armFailure(Arm arm, Throwable t) {
