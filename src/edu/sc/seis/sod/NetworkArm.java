@@ -332,7 +332,9 @@ public class NetworkArm implements Arm {
             } else {
                 // no pushers
                 if(allNets.length == 0) {
+                    // hard to imagine a network arm that can't find a single good network is useful, so just fail
                     logger.warn("Found no networks.  Make sure the network codes you entered are valid");
+                    Start.armFailure(this, new NotFound("Found no networks. Make sure the network codes you entered in your recipe are valid"));
                 }
                 finish();
             }
