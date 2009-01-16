@@ -39,7 +39,14 @@ public class EventChannelPair extends AbstractEventChannelPair {
             System.err.println(EventChannelPair.BIG_ERROR_MSG);
             t.printStackTrace(System.err);
             GlobalExceptionHandler.handle(EventChannelPair.BIG_ERROR_MSG, t);
-            SodDB.rollback();
+            try {
+                SodDB.rollback();
+                update(t, Status.get(Stage.PROCESSOR, Standing.SYSTEM_FAILURE));
+                SodDB.commit();
+            } catch(Throwable tt) {
+                System.err.println("SOD cannot update status of ecp, this indicates a significant problem with the database. SOD is now exiting with shame and dispair");
+                Start.cataclysmicFailureOfUnbelievableProportions();
+            }
         }
     }
 
