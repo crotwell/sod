@@ -42,7 +42,7 @@ public class WaveformArm extends Thread implements Arm {
                             }
                         }
                     } catch(InterruptedException e) {}
-                    logger.debug("done waiting on waveform arm");
+                    logger.debug("done waiting on event arm");
                     next = getNext(Standing.INIT);
                 }
                 if(next != null) {
