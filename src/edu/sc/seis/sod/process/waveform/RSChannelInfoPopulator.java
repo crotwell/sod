@@ -38,7 +38,6 @@ public class RSChannelInfoPopulator implements WaveformProcess {
     public RSChannelInfoPopulator(Element config) throws Exception {
         initConfig(config);
         saveSeisToFile = getSaveSeismogramToFile(saveSeisId);
-        recordSectionChannel = SodDB.getSingleton();
     }
 
     public static final String GENS_POPS_XPATH = "//recordSectionDisplayGenerator | //RSChannelInfoPopulator | //externalWaveformProcess[classname/text() = \"edu.sc.seis.rev.map.RecordSectionAndMapGenerator\"]";
@@ -154,17 +153,21 @@ public class RSChannelInfoPopulator implements WaveformProcess {
                                RequestFilter[] available,
                                LocalSeismogramImpl[] seismograms,
                                CookieJar cookieJar) throws Exception {
-        if(channelAcceptor.process(event,
+        if( ! channelAcceptor.process(event,
                                    channel,
                                    original,
                                    available,
                                    seismograms,
                                    cookieJar).isSuccess()) {
+            return false;
+        }
             DataSetSeismogram[] dss = extractSeismograms(event);
-            if(recordSectionChannel.getRecordSectionItem(orientationId, event, channel) != null) {
+            SodDB soddb = SodDB.getSingleton();
+            if(soddb.getRecordSectionItem(orientationId,
+                                          recordSectionId, event, channel) != null) {
                 return false;
             }
-            recordSectionChannel.put(new RecordSectionItem(orientationId,
+            soddb.put(new RecordSectionItem(orientationId,
                                                            recordSectionId,
                                                            event,
                                                            channel,
@@ -173,11 +176,12 @@ public class RSChannelInfoPopulator implements WaveformProcess {
             if(spacer != null) {
                 bestSeismos = spacer.spaceOut(dss);
             }
-            return recordSectionChannel.updateBestForRecordSection(orientationId,
+            ChannelId[] bestChans = getChannelIds(bestSeismos);
+            soddb.updateBestForRecordSection(orientationId,
+                                                            recordSectionId,
                                                             event,
-                                                            getChannelIds(bestSeismos));
-        }
-        return false;
+                                                            bestChans);
+            return true;
     }
 
     public ChannelId[] getChannelIds(DataSetSeismogram[] dss)
@@ -277,8 +281,6 @@ public class RSChannelInfoPopulator implements WaveformProcess {
     private String orientationId, saveSeisId, recordSectionId;
 
     private DistanceRange distRange;// = new DistanceRange(0, 180);
-
-    private SodDB recordSectionChannel;
 
     private double percentSeisHeight = 10;
 
