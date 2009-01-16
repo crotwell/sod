@@ -477,15 +477,32 @@ public class SodDB extends AbstractHibernateDB {
         return ((Long)getSession().save(item)).longValue();
     }
 
-    public RecordSectionItem getRecordSectionItem(String recordSectionId,
+    public RecordSectionItem getRecordSectionItemForEvent(CacheEvent event,
+                                                  ChannelImpl channel) {
+        String q = "from "
+                + RecordSectionItem.class.getName()
+                + " where event = :event and channel = :channel";
+        Query query = getSession().createQuery(q);
+        query.setEntity("event", event);
+        query.setEntity("channel", channel);
+        Iterator it = query.iterate();
+        if(it.hasNext()) {
+            return (RecordSectionItem)it.next();
+        }
+        return null;
+    }
+
+    public RecordSectionItem getRecordSectionItem(String orientationId,
+                                                  String recordSectionId,
                                                   CacheEvent event,
                                                   ChannelImpl channel) {
         String q = "from "
                 + RecordSectionItem.class.getName()
-                + " where event = :event and channel = :channel and recordSectionId = :recsecid";
+                + " where event = :event and channel = :channel and orientationId = :orientationId and recordSectionId = :recsecid";
         Query query = getSession().createQuery(q);
         query.setEntity("event", event);
         query.setEntity("channel", channel);
+        query.setString("orientationId", orientationId);
         query.setString("recsecid", recordSectionId);
         Iterator it = query.iterate();
         if(it.hasNext()) {
@@ -494,26 +511,42 @@ public class SodDB extends AbstractHibernateDB {
         return null;
     }
 
-    public List<StationImpl> getStationsForRecordSection(String recordSectionId,
+    public List<StationImpl> getStationsForRecordSection(String orientationId,
                                                          CacheEvent event,
                                                          boolean best) {
+        logger.debug("getStationsForRecordSection("+orientationId+", "+best);
         Query q = getSession().createQuery("select distinct channel.site.station from "
                 + RecordSectionItem.class.getName()
-                + " where recordSectionId = :recsecid and event = :event and inBest = :best");
+                + " where orientationId = :orientationId and event = :event and inBest = :best");
         q.setEntity("event", event);
-        q.setString("recsecid", recordSectionId);
+        q.setString("orientationId", orientationId);
         q.setBoolean("best", best);
         return q.list();
     }
 
-    public List<ChannelImpl> getChannelsForRecordSection(String recordSectionId,
+    public List<StationImpl> getStationsForRecordSection(String orientationId,
+                                                         String recordSectionId,
+                                                         CacheEvent event,
+                                                         boolean best) {
+        logger.debug("getStationsForRecordSection("+orientationId+", "+recordSectionId+", "+best);
+        Query q = getSession().createQuery("select distinct channel.site.station from "
+                + RecordSectionItem.class.getName()
+                + " where recordSectionId = :recsecid and orientationId = :orientationId and event = :event and inBest = :best");
+        q.setEntity("event", event);
+        q.setString("recsecid", recordSectionId);
+        q.setString("orientationId", orientationId);
+        q.setBoolean("best", best);
+        return q.list();
+    }
+
+    public List<ChannelImpl> getChannelsForRecordSection(String orientationId,
                                                          CacheEvent event,
                                                          boolean best) {
         Query q = getSession().createQuery("select distinct channel from "
                 + RecordSectionItem.class.getName()
-                + " where recordSectionId = :recsecid and event = :event and inBest = :best");
+                + " where orientationId = :orientationId and event = :event and inBest = :best");
         q.setEntity("event", event);
-        q.setString("recsecid", recordSectionId);
+        q.setString("orientationId", orientationId);
         q.setBoolean("best", best);
         return q.list();
     }
