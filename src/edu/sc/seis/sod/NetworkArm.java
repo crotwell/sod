@@ -412,18 +412,20 @@ public class NetworkArm implements Arm {
         protected void runNetwork(NetworkAttrImpl net) {
             if(!Start.isArmFailure()) {
                 logger.info("NetworkPusher Starting work on " + net.get_code());
-                // new thread, so need to attach net attr instance
                 NetworkDB ndb = getNetworkDB();
-                try {
-                    NetworkDB.getSession().lock(net,
-                                                LockMode.NONE);
-                } catch(NonUniqueObjectException e) {
-                    logger.error("Try to lock net="
-                                         + NetworkIdUtil.toString(net)
-                                         + " dbid="
-                                         + ((NetworkAttrImpl)net).getDbid(),
-                                 e);
-                    throw e;
+                if (! NetworkDB.getSession().contains(net)) {
+                    // new thread, so need to attach net attr instance
+                	try {
+                		NetworkDB.getSession().lock(net,
+                		                            LockMode.NONE);
+                	} catch(NonUniqueObjectException e) {
+                		logger.error("Try to lock net="
+                		             + NetworkIdUtil.toString(net)
+                		             + " dbid="
+                		             + ((NetworkAttrImpl)net).getDbid(),
+                		             e);
+                		throw e;
+                	}
                 }
                 StationImpl[] staDbs = getSuccessfulStations(net);
                 if(!(Start.getWaveformRecipe() == null && chanSubsetters.size() == 0)) {
@@ -432,8 +434,10 @@ public class NetworkArm implements Arm {
                     for(int j = 0; j < staDbs.length; j++) {
                         // commit for each station
                         synchronized(NetworkArm.this) {
-                            NetworkDB.getSession().lock(net,
-                                                        LockMode.NONE);
+                            if (! NetworkDB.getSession().contains(net)) {
+                                NetworkDB.getSession().lock(net,
+                                                            LockMode.NONE);
+                            }
                             List<ChannelImpl> chans = getSuccessfulChannels(staDbs[j]);
                         }
                     }
