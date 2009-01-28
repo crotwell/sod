@@ -220,7 +220,7 @@ public class NetworkArm implements Arm {
             }
             statusChanged("Getting networks");
             logger.info("Getting networks");
-            ArrayList successes = new ArrayList();
+            ArrayList<CacheNetworkAccess> successes = new ArrayList<CacheNetworkAccess>();
             CacheNetworkAccess[] allNets;
             NetworkDCOperations netDC = finder.getNetworkDC();
             synchronized(netDC) {
@@ -251,7 +251,7 @@ public class NetworkArm implements Arm {
                     allNets = (CacheNetworkAccess[])constrainedNets.toArray(new CacheNetworkAccess[0]);
                 } else {
                     NetworkAccess[] tmpNets = netDC.a_finder().retrieve_all();
-                    ArrayList goodNets = new ArrayList();
+                    ArrayList<NetworkAccess> goodNets = new ArrayList<NetworkAccess>();
                     for(int i = 0; i < tmpNets.length; i++) {
                         try {
                             VirtualNetworkHelper.narrow(tmpNets[i]);
