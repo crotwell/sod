@@ -13,7 +13,9 @@
                             such as yyyy-mm-ddThh:mm:ss.ddddZTD, yyyy-mm-ddThhmmss.ddddZTD, yyyymmddThh:mm:ss.ddddZTD,
                             or yyyymmddThhmmss.ddddZTD. You can also use similar julian day formats such as
                             yyyyjjjThh:mm:ss.ddddZTD and yyyyjjjThhmmss.ddddZTD. The time zone, ZTD, is either Z for
-                            zulu, ie UTC, or a offset from UTC in the form of +hh:mm or -hh:mm.</description>
+                            zulu, ie UTC, or a offset from UTC in the form of +hh:mm or -hh:mm. The earlier and later format
+                            takes a time range to offset from now. The simple now and future elements are for the current
+                            time and a point far into the future.</description>
                         <example>20010101T00:00:00Z</example>
                     </xsd:documentation>
                 </xsd:annotation>
@@ -25,6 +27,9 @@
                 <externalRef href="../externalRef/timeInterval.rng"/>
             </element>
             <element name="now">
+                <empty/>
+            </element>
+            <element name="future">
                 <empty/>
             </element>
             <group>

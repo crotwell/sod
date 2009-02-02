@@ -276,6 +276,8 @@ public class SodUtil {
                     return loadRelativeTime(element);
                 } else if(tagName.equals("now")) {
                     return ClockUtil.now().getFissuresTime();
+                } else if(tagName.equals("future")) {
+                    return ClockUtil.future().getFissuresTime();
                 } else {
                     return loadSplitupTime(el, endOfDay);
                 }
