@@ -17,6 +17,7 @@
             <ref name="requestPrint"/>
             <ref name="breqFastRequest"/>
             <ref name="netDCRequest"/>
+            <ref name="plottableRequest"/>
             <ref name="jythonRequest"/>
             <ref name="external"/>
         </choice>
@@ -393,6 +394,25 @@
                     </data>
                 </element>
             </optional>
+        </element>
+    </define>
+    <define name="plottableRequest">
+        <element name="plottableRequest">
+            <xsd:annotation>
+                <summary>Retrieves plottables for the given request.</summary>
+                <description>Retrieves plottables for the given request.</description>
+            </xsd:annotation>
+            <element name="name">
+            	<data type="string"/>
+            </element>
+            <element name="dns">
+            	<data type="string"/>
+            </element>
+            <oneOrMore>
+                <element name="pixelsPerDay">
+                    <data type="int"/>
+                </element>
+            </oneOrMore>
         </element>
     </define>
     <define name="jythonRequest">
