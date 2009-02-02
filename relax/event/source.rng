@@ -3,6 +3,7 @@
     <include href="../base/include/timeRange.rng"/>
     <!--area includes base/include/range.rng so it isn't included here-->
     <include href="../base/include/area.rng"/>
+    <include href="../base/include/quantity.rng"/>
     <start combine="choice">
         <ref name="eventSource"/>
     </start>
@@ -15,6 +16,7 @@
             <ref name="eventFinder"/>
             <ref name="backwardsEventFinder"/>
             <ref name="CSVEventSource"/>
+            <ref name="periodicFakeEventSource"/>
         </choice>
     </define>
     <define name="eventFinder">
@@ -148,6 +150,27 @@
                     <xsd:annotation>
                         <example>csvEvents.txt</example>
                     </xsd:annotation>
+                </data>
+            </element>
+        </element>
+    </define>
+    <define name="periodicFakeEventSource">
+        <element name="periodicFakeEventSource">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Fake events from on a repeating schedule</summary>
+                    <description>Fake events are generated starting at the startTime and at the step interval thereafter until.
+                    If numEvents is -1, then events continue to be generated forever, otherwise the number given will be generated.</description>
+                </xsd:documentation>
+            </xsd:annotation>
+            <element name="startTime">
+            	<ref name="time"/>
+            </element>
+            <element name="interval">
+                <ref name="quantity"/>
+            </element>
+            <element name="numEvents">
+                <data type="int">
                 </data>
             </element>
         </element>
