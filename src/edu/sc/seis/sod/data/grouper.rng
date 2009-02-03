@@ -1824,6 +1824,9 @@
             <element name="now">
                 <empty/>
             </element>
+            <element name="future">
+                <empty/>
+            </element>
             <group>
                 <optional>
                     <element name="year">
@@ -1893,6 +1896,9 @@
                 </element>
             </element>
             <element name="now">
+                <empty/>
+            </element>
+            <element name="future">
                 <empty/>
             </element>
             <group>
@@ -1966,6 +1972,9 @@
             <element name="now">
                 <empty/>
             </element>
+            <element name="future">
+                <empty/>
+            </element>
             <group>
                 <optional>
                     <element name="year">
@@ -2035,6 +2044,9 @@
                 </element>
             </element>
             <element name="now">
+                <empty/>
+            </element>
+            <element name="future">
                 <empty/>
             </element>
             <group>
@@ -2108,6 +2120,9 @@
             <element name="now">
                 <empty/>
             </element>
+            <element name="future">
+                <empty/>
+            </element>
             <group>
                 <optional>
                     <element name="year">
@@ -2177,6 +2192,9 @@
                 </element>
             </element>
             <element name="now">
+                <empty/>
+            </element>
+            <element name="future">
                 <empty/>
             </element>
             <group>
@@ -2250,6 +2268,9 @@
             <element name="now">
                 <empty/>
             </element>
+            <element name="future">
+                <empty/>
+            </element>
             <group>
                 <optional>
                     <element name="year">
@@ -2319,6 +2340,9 @@
                 </element>
             </element>
             <element name="now">
+                <empty/>
+            </element>
+            <element name="future">
                 <empty/>
             </element>
             <group>
@@ -2392,6 +2416,9 @@
             <element name="now">
                 <empty/>
             </element>
+            <element name="future">
+                <empty/>
+            </element>
             <group>
                 <optional>
                     <element name="year">
@@ -2461,6 +2488,9 @@
                 </element>
             </element>
             <element name="now">
+                <empty/>
+            </element>
+            <element name="future">
                 <empty/>
             </element>
             <group>
@@ -2578,6 +2608,9 @@
             <element name="now">
                 <empty/>
             </element>
+            <element name="future">
+                <empty/>
+            </element>
             <group>
                 <optional>
                     <element name="year">
@@ -2647,6 +2680,9 @@
                 </element>
             </element>
             <element name="now">
+                <empty/>
+            </element>
+            <element name="future">
                 <empty/>
             </element>
             <group>
