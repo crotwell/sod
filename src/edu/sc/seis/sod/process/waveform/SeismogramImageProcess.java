@@ -335,15 +335,17 @@ public class SeismogramImageProcess implements WaveformProcess {
         public void run() {
             logger.debug("writing " + picFileName);
             try {
+                File outFile = new File(picFileName);
+                outFile.getParentFile().mkdirs();
                 if(fileType.equals(PDF)) {
                     if(titleBorder != null) {
-                        bsd.outputToPDF(new File(picFileName),
+                        bsd.outputToPDF(outFile,
                                         (TitleBorder)titleBorder.createBorder(bsd));
                     } else {
-                        bsd.outputToPDF(new File(picFileName));
+                        bsd.outputToPDF(outFile);
                     }
                 } else if(fileType.equals(PNG)) {
-                    bsd.outputToPNG(new File(picFileName), dims);
+                    bsd.outputToPNG(outFile, dims);
                 } else {
                     // should never happen
                     throw new RuntimeException("Unknown fileType:" + fileType);
