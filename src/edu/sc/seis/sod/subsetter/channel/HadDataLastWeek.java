@@ -28,6 +28,12 @@ public class HadDataLastWeek implements ChannelSubsetter {
 
     public StringTree accept(Channel channel, ProxyNetworkAccess network)
             throws Exception {
+        MicroSecondDate now = ClockUtil.now();
+        ChannelEffectiveTimeOverlap overlap = new ChannelEffectiveTimeOverlap(now.subtract(makeDayInterval(7)), now);
+        if ( ! overlap.accept(channel, network).isSuccess()) {
+            // fail expired channels quickly
+            return new StringTreeLeaf(this, false, "Channel Ended");
+        }
         String key = ChannelIdUtil.toStringNoDates(channel);
         if (recentRequests.containsKey(key)) {
             RecentRequest r = recentRequests.get(key);
@@ -39,7 +45,6 @@ public class HadDataLastWeek implements ChannelSubsetter {
         }
         // Make 7 requests for a day as the BUD likes it that way
         RequestFilter[] reqs = new RequestFilter[7];
-        MicroSecondDate now = new MicroSecondDate();
         for(int i = 0; i < reqs.length; i++) {
             reqs[i] = new RequestFilter(channel.get_id(),
                                         now.subtract(makeDayInterval(i + 1))
