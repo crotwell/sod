@@ -4,6 +4,7 @@ import org.apache.log4j.Category;
 import org.w3c.dom.Element;
 import edu.iris.Fissures.TimeRange;
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.model.MicroSecondDate;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.status.StringTree;
@@ -20,6 +21,10 @@ public class ChannelEffectiveTimeOverlap extends EffectiveTimeOverlap implements
 
     public ChannelEffectiveTimeOverlap(TimeRange tr) {
         super(tr);
+    }
+
+    public ChannelEffectiveTimeOverlap(MicroSecondDate start, MicroSecondDate end) {
+        super(start, end);
     }
 
     public StringTree accept(Channel channel, ProxyNetworkAccess network) {
