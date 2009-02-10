@@ -37,10 +37,12 @@ public class WaveformArm extends Thread implements Arm {
                         logger.debug("waiting on event arm");
                         synchronized(Start.getEventArm()) {
                             Start.getEventArm().notifyAll();
-                            if(possibleToContinue()) {
-                                Start.getEventArm().wait();
-                            }
                         }
+                            if(possibleToContinue()) {
+                                synchronized(Start.getEventArm().getWaveformArmSync()) {
+                                    Start.getEventArm().getWaveformArmSync().wait();
+                                }
+                            }
                     } catch(InterruptedException e) {}
                     logger.debug("done waiting on event arm");
                     next = getNext(Standing.INIT);
