@@ -166,6 +166,14 @@ public class VelocityStation extends StationImpl {
         return df.format(longitude) + " E";
     }
 
+    public Float getFloatLatitude() {
+        return new Float(getLocation().latitude);
+    }
+
+    public Float getFloatLongitude() {
+        return new Float(getLocation().longitude);
+    }
+    
     public String getDepth() {
         return FissuresFormatter.formatDepth(QuantityImpl.createQuantityImpl(sta.getLocation().depth));
     }
