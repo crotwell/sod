@@ -40,7 +40,8 @@ public class WaveformArm extends Thread implements Arm {
                         }
                             if(possibleToContinue()) {
                                 synchronized(Start.getEventArm().getWaveformArmSync()) {
-                                    Start.getEventArm().getWaveformArmSync().wait();
+                                    // wake up every 2 minutes in case there is retrys to process
+                                    Start.getEventArm().getWaveformArmSync().wait(2*60*1000);
                                 }
                             }
                     } catch(InterruptedException e) {}
@@ -96,7 +97,7 @@ public class WaveformArm extends Thread implements Arm {
         if(ecp != null) {
             ecp.update(Status.get(Stage.EVENT_CHANNEL_SUBSETTER, Standing.INIT));
             SodDB.commit();
-            SodDB.getSession().update(ecp);
+            ecp = (AbstractEventChannelPair)SodDB.getSession().get(ecp.getClass(), ecp.getDbid());
             return ecp;
         }
         // no ecp/evp try e-station
