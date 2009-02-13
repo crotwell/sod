@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.LazyInitializationException;
 import org.omg.CORBA.SystemException;
 import org.w3c.dom.Element;
 
@@ -576,6 +577,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
     }
 
     private static void handle(EventVectorPair ecp, Stage stage, Throwable t, ProxySeismogramDC server) {
+        try {
         if (t instanceof org.omg.CORBA.SystemException) {
             // don't log exception here, let RetryStragtegy do it
             ecp.update(Status.get(stage, Standing.CORBA_FAILURE));
@@ -596,6 +598,9 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
             logger.debug(ecp, t);
         } else {
             failLogger.warn(ecp, t);
+        }
+        } catch (LazyInitializationException lazy) {
+            logger.error("LazyInitializationException after exception, so I can't print the evp", t);
         }
     }
 
