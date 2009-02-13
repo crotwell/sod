@@ -178,9 +178,9 @@ public class SodDB extends AbstractHibernateDB {
         Query query = getSession().createQuery(q);
         query.setInteger("inProg", standing.getVal());
         query.setMaxResults(1);
-        List result = query.list();
+        List<AbstractEventChannelPair> result = query.list();
         if(result.size() > 0) {
-            return (EventChannelPair)result.get(0);
+            return result.get(0);
         }
         return null;
     }
@@ -194,14 +194,14 @@ public class SodDB extends AbstractHibernateDB {
                 + Standing.CORBA_FAILURE.getVal()
                 + " )  and seconds_between(:now, lastQuery) > :minDelay "
                 + " and numRetries < "+maxRetries
-                +" and (seconds_between(:now, lastQuery) > :maxDelay or seconds_between(:now, lastQuery) > power(:base, numRetries))  order by lastQuery desc";
+                +" and (seconds_between(:now, lastQuery) > :maxDelay or seconds_between(:now, lastQuery) > power(:base, numRetries))  order by numRetries";
         Query query = getSession().createQuery(q);
         query.setTimestamp("now", ClockUtil.now().getTimestamp());
         query.setFloat("base", retryBase);
         query.setFloat("minDelay", minRetryDelay);
         query.setFloat("maxDelay", maxRetryDelay);
         query.setMaxResults(1);
-        List<EventChannelPair> result = query.list();
+        List<AbstractEventChannelPair> result = query.list();
         if(result.size() > 0) {
             return result.get(0);
         }
@@ -343,25 +343,25 @@ public class SodDB extends AbstractHibernateDB {
         return ((Long)query.uniqueResult()).intValue();
     }
 
-    public List<EventChannelPair> getAll(CacheEvent event) {
+    public List<AbstractEventChannelPair> getAll(CacheEvent event) {
         Query query = getSession().createQuery(eventBase);
         query.setEntity("event", event);
         return query.list();
     }
 
-    public List<EventChannelPair> getSuccessful(CacheEvent event) {
+    public List<AbstractEventChannelPair> getSuccessful(CacheEvent event) {
         Query query = getSession().createQuery(successPerEvent);
         query.setEntity("event", event);
         return query.list();
     }
 
-    public List<EventChannelPair> getSuccessful(StationImpl station) {
+    public List<AbstractEventChannelPair> getSuccessful(StationImpl station) {
         Query query = getSession().createQuery(success);
         query.setEntity("sta", station);
         return query.list();
     }
 
-    public List<EventChannelPair> getSuccessful(CacheEvent event,
+    public List<AbstractEventChannelPair> getSuccessful(CacheEvent event,
                                                 StationImpl station) {
         Query query = getSession().createQuery(successPerEventStation);
         query.setEntity("sta", station);
@@ -369,13 +369,13 @@ public class SodDB extends AbstractHibernateDB {
         return query.list();
     }
 
-    public List<EventChannelPair> getFailed(StationImpl station) {
+    public List<AbstractEventChannelPair> getFailed(StationImpl station) {
         Query query = getSession().createQuery(failed);
         query.setEntity("sta", station);
         return query.list();
     }
 
-    public List<EventChannelPair> getFailed(CacheEvent event,
+    public List<AbstractEventChannelPair> getFailed(CacheEvent event,
                                             StationImpl station) {
         Query query = getSession().createQuery(failedPerEventStation);
         query.setEntity("sta", station);
@@ -383,25 +383,25 @@ public class SodDB extends AbstractHibernateDB {
         return query.list();
     }
 
-    public List<EventChannelPair> getFailed(CacheEvent event) {
+    public List<AbstractEventChannelPair> getFailed(CacheEvent event) {
         Query query = getSession().createQuery(failedPerEvent);
         query.setEntity("event", event);
         return query.list();
     }
 
-    public List<EventChannelPair> getRetry(StationImpl station) {
+    public List<AbstractEventChannelPair> getRetry(StationImpl station) {
         Query query = getSession().createQuery(retry);
         query.setEntity("sta", station);
         return query.list();
     }
 
-    public List<EventChannelPair> getRetry(CacheEvent event) {
+    public List<AbstractEventChannelPair> getRetry(CacheEvent event) {
         Query query = getSession().createQuery(retryPerEvent);
         query.setEntity("event", event);
         return query.list();
     }
 
-    public List<EventChannelPair> getRetry(CacheEvent event, StationImpl station) {
+    public List<AbstractEventChannelPair> getRetry(CacheEvent event, StationImpl station) {
         Query query = getSession().createQuery(retryPerEventStation);
         query.setEntity("sta", station);
         query.setEntity("event", event);
