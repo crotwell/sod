@@ -44,7 +44,7 @@ public class TimeTemplate implements GenericTemplate {
     }
 
     public String getResult() {
-        if(!representTimeInFuture && time.after(ClockUtil.future())) return "-";
+        if(!representTimeInFuture && time.after(ClockUtil.tomorrow())) return "-";
         return sdf.format(time);
     }
 
