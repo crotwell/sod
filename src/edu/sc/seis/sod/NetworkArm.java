@@ -462,7 +462,7 @@ public class NetworkArm implements Arm {
                 && allChannelFailureStations.contains(StationIdUtil.toStringNoDates(station))) {
             return new ArrayList<ChannelImpl>(0);
         }
-        synchronized(this) {
+        synchronized(refresh) {
             while(refresh.isNetworkBeingReloaded(((NetworkAttrImpl)station.getNetworkAttr()).getDbid())) {
                 try {
                     refresh.wait();
@@ -573,10 +573,16 @@ public class NetworkArm implements Arm {
     }
 
     public List<ChannelGroup> getSuccessfulChannelGroups(StationImpl station) {
-        if(allChannelFailureStations.contains(StationIdUtil.toStringNoDates(station))) {
+        if(! refresh.isNetworkBeingReloaded(((NetworkAttrImpl)station.getNetworkAttr()).getDbid())
+                && allChannelFailureStations.contains(StationIdUtil.toStringNoDates(station))) {
             return new ArrayList<ChannelGroup>(0);
         }
-        synchronized(this) {
+        synchronized(refresh) {
+            while(refresh.isNetworkBeingReloaded(((NetworkAttrImpl)station.getNetworkAttr()).getDbid())) {
+                try {
+                    refresh.wait();
+                } catch(InterruptedException e) {}
+            }
             // no dice, try db
             List<ChannelGroup> sta = getNetworkDB().getChannelGroupsForStation(station);
             if(sta.size() != 0) {
@@ -592,7 +598,7 @@ public class NetworkArm implements Arm {
     List<ChannelGroup> getSuccessfulChannelGroupsFromServer(StationImpl station) {
         synchronized(this) {
             List<ChannelImpl> failures = new ArrayList<ChannelImpl>();
-            List<ChannelGroup> chanGroups = channelGrouper.group(getSuccessfulChannels(station),
+            List<ChannelGroup> chanGroups = channelGrouper.group(getSuccessfulChannelsFromServer(station),
                                                              failures);
             for(ChannelGroup cg : chanGroups) {
                 getNetworkDB().put(cg);
