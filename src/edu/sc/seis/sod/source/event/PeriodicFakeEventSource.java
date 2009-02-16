@@ -32,7 +32,7 @@ public class PeriodicFakeEventSource implements EventSource {
         if (numEvents != -1) {
             return new MicroSecondTimeRange(startTime, (TimeInterval)interval.multiplyBy(numEvents-1));
         }
-        return new MicroSecondTimeRange(startTime, ClockUtil.future());
+        return new MicroSecondTimeRange(startTime, ClockUtil.wayFuture());
     }
 
     public TimeInterval getWaitBeforeNext() {
