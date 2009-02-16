@@ -1,16 +1,12 @@
 package edu.sc.seis.sod;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
+import java.util.Timer;
 
 import org.apache.log4j.Logger;
-import org.hibernate.LockMode;
-import org.hibernate.NonUniqueObjectException;
 import org.omg.CORBA.BAD_PARAM;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -26,6 +22,7 @@ import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.IfNetwork.VirtualNetworkHelper;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
+import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.NetworkAttrImpl;
@@ -62,14 +59,30 @@ import edu.sc.seis.sod.subsetter.station.StationSubsetter;
 
 public class NetworkArm implements Arm {
 
-    public NetworkArm(Element config) throws SQLException,
-            ConfigurationException {
+    public NetworkArm(Element config) throws ConfigurationException {
         processConfig(config);
     }
 
     public void run() {
         try {
-            getSuccessfulNetworks();
+            SodDB sodDb = SodDB.getSingleton();
+            lastQueryTime = sodDb.getQueryTime(getNetworkFinderSource().getName(), getNetworkFinderSource().getDNS());
+            if (lastQueryTime == null) {
+                // still null, must be first time
+                lastQueryTime = new QueryTime(getNetworkFinderSource().getName(), getNetworkFinderSource().getDNS(), ClockUtil.wayPast().getTimestamp());
+                sodDb.putQueryTime(lastQueryTime);
+            }
+            refresh = new RefreshNetworkArm(this);
+            // only do timer if positive interval and waveform arm exists, otherwise run in thread
+            if (getRefreshInterval().value > 0 && Start.getWaveformRecipe() != null) {
+            Timer timer = new Timer(true);
+            long period = (long)finder.getRefreshInterval().getValue(UnitImpl.MILLISECOND);
+            long firstDelay = lastQueryTime.delayUntilNextRefresh(getRefreshInterval());
+            timer.schedule(refresh, firstDelay, period);
+            } else {
+                // no refresh, so do net arm in this thread once
+                refresh.run();
+            }
         } catch(Throwable e) {
             armFinished = true;
             Start.armFailure(this, e);
@@ -144,7 +157,7 @@ public class NetworkArm implements Arm {
         } else if(sodElement instanceof StationSubsetter) {
             stationSubsetter = (StationSubsetter)sodElement;
         } else if(sodElement instanceof ChannelSubsetter) {
-            chanSubsetters.add(sodElement);
+            chanSubsetters.add((ChannelSubsetter)sodElement);
         } else {
             throw new ConfigurationException("Unknown configuration object: "
                     + sodElement);
@@ -173,51 +186,31 @@ public class NetworkArm implements Arm {
      * NetworkSubsetter and returns the successful networks as an array of
      * NetworkDbObjects.
      * 
-     * @throws NetworkNotFound
      */
     public CacheNetworkAccess[] getSuccessfulNetworks() {
+        synchronized(refresh) {
+            if(cacheNets == null) {
+                cacheNets = loadNetworksFromDB();
+            }
+            return cacheNets;
+        }
+    }
+    
+    CacheNetworkAccess[] loadNetworksFromDB() {
+        cacheNets = getNetworkDB().getAllNets(getNetworkDC());
+        for(int i = 0; i < cacheNets.length; i++) {
+            // this is for the side effect of creating
+            // networkInfoTemplate stuff
+            // avoids a null ptr later
+            change(cacheNets[i],
+                   Status.get(Stage.NETWORK_SUBSETTER,
+                              Standing.SUCCESS));
+        }
+        return cacheNets;
+    }
+
+    CacheNetworkAccess[] getSuccessfulNetworksFromServer() {
         synchronized(netGetSync) {
-            SodDB sodDb = SodDB.getSingleton();
-            if(lastQueryTime == null) {
-                // try from db
-                lastQueryTime = sodDb.getQueryTime(finder.getName(),
-                                                   finder.getDNS());
-            }
-            if(lastQueryTime == null) {
-                // still null, must be first time
-                lastQueryTime = new QueryTime(finder.getName(),
-                                              finder.getDNS(),
-                                              ClockUtil.now().getTimestamp());
-                sodDb.putQueryTime(lastQueryTime);
-            } else if(!lastQueryTime.needsRefresh(finder.getRefreshInterval())) {
-                if(cacheNets == null) {
-                    cacheNets = getNetworkDB().getAllNets(getNetworkDC());
-                    for(int i = 0; i < cacheNets.length; i++) {
-                        // this is for the side effect of creating
-                        // networkInfoTemplate stuff
-                        // avoids a null ptr later
-                        change(cacheNets[i],
-                               Status.get(Stage.NETWORK_SUBSETTER,
-                                          Standing.SUCCESS));
-                    }
-                }
-                if(Start.getWaveformRecipe() == null
-                        && (! stationSubsetter.getClass().equals(PassStation.class) 
-                        || chanSubsetters.size() != 0 )) {
-                    // only do netpushers if there are more subsetters downstream
-                    // and the waveform arm does not exist, otherwise there is no point
-                    // or we can let the waveform processors handle via EventNetworkPair
-                    // also do this "in thread" instead of spawning a NetPusher thread
-                    // as we are the only arm and no need of quick return of networks
-                    NetworkPusher pusher = new NetworkPusher(cacheNets[0].get_attributes());
-                    for(int j = 0; j < cacheNets.length; j++) {
-                        pusher.addNetwork(cacheNets[j].get_attributes());
-                    }
-                    pusher.setLastPusher();
-                    pusher.run();
-                }
-                return cacheNets;
-            }
             statusChanged("Getting networks");
             logger.info("Getting networks");
             ArrayList<CacheNetworkAccess> successes = new ArrayList<CacheNetworkAccess>();
@@ -268,7 +261,6 @@ public class NetworkArm implements Arm {
                 }
             }
             logger.info("Found " + allNets.length + " networks");
-            NetworkPusher lastPusher = null;
             for(int i = 0; i < allNets.length; i++) {
                 allNets[i] = new DBCacheNetworkAccess(allNets[i]);
                 NetworkAttrImpl attr = null;
@@ -285,21 +277,6 @@ public class NetworkArm implements Arm {
                             change(allNets[i],
                                    Status.get(Stage.NETWORK_SUBSETTER,
                                               Standing.SUCCESS));
-                            if(Start.getWaveformRecipe() == null
-                                    && (! stationSubsetter.getClass().equals(PassStation.class) 
-                                    || chanSubsetters.size() != 0 )) {
-                                // only do netpushers if there are more subsetters downstream
-                                // and the waveform arm does not exist, otherwise there is no point
-                                // or we can let the waveform processors handle via EventNetworkPair
-                                if (lastPusher == null) {
-                                    lastPusher = new NetworkPusher(allNets[i].get_attributes());
-                                    netPopulators.invokeLater(lastPusher);
-                                } else {
-                                    lastPusher.addNetwork(allNets[i].get_attributes());
-                                }
-                                logger.debug("running network");
-                                //lastPusher.runNetwork(allNets[i].get_attributes());
-                            }
                         } else {
                             change(allNets[i],
                                    Status.get(Stage.NETWORK_SUBSETTER,
@@ -323,19 +300,11 @@ public class NetworkArm implements Arm {
                                                   th);
                 }
             }
-            if(lastPusher != null) {
-                lastPusher.setLastPusher();
-            } else {
-                // no pushers
                 if(allNets.length == 0) {
                     // hard to imagine a network arm that can't find a single good network is useful, so just fail
                     logger.warn("Found no networks.  Make sure the network codes you entered are valid");
                     Start.armFailure(this, new NotFound("Found no networks. Make sure the network codes you entered in your recipe are valid"));
                 }
-                finish();
-            }
-            // Set the time of the last check to now
-            lastQueryTime.setTime(ClockUtil.now().getTimestamp());
             cacheNets = new CacheNetworkAccess[successes.size()];
             successes.toArray(cacheNets);
             logger.info(cacheNets.length + " networks passed");
@@ -370,98 +339,7 @@ public class NetworkArm implements Arm {
         }
     }
 
-    /**
-     * retrieves all the stations, sites and channels for a network to populate
-     * the db and cache
-     */
-    private class NetworkPusher implements Runnable {
-
-        public NetworkPusher(NetworkAttrImpl net) {
-            netList.add(net);
-        }
-
-        public void run() {
-            logger.debug("Start NetworkPusher");
-            NetworkAttrImpl n = netList.poll();
-            while ( ! lastPusher || n != null) {
-                if (n != null) {
-                    runNetwork(n);
-                } else {
-                    try {
-                        Thread.sleep(100);
-                    } catch(InterruptedException e) {}
-                }
-                n = netList.poll();
-            }
-            logger.debug("Finish NetworkPusher");
-            synchronized(this) {
-                pusherFinished = true;
-                finishArm();
-            }
-        }
-        
-        void addNetwork(NetworkAttrImpl net) {
-            logger.debug("Add to NetworkPusher "+net.get_code());
-            netList.offer(net);
-        }
-        
-        protected void runNetwork(NetworkAttrImpl net) {
-            if(!Start.isArmFailure()) {
-                logger.info("NetworkPusher Starting work on " + net.get_code());
-                NetworkDB ndb = getNetworkDB();
-                if (! NetworkDB.getSession().contains(net)) {
-                    // new thread, so need to attach net attr instance
-                	try {
-                		NetworkDB.getSession().lock(net,
-                		                            LockMode.NONE);
-                	} catch(NonUniqueObjectException e) {
-                		logger.error("Try to lock net="
-                		             + NetworkIdUtil.toString(net)
-                		             + " dbid="
-                		             + ((NetworkAttrImpl)net).getDbid(),
-                		             e);
-                		throw e;
-                	}
-                }
-                StationImpl[] staDbs = getSuccessfulStations(net);
-                if(!(Start.getWaveformRecipe() == null && chanSubsetters.size() == 0)) {
-                    // only get channels if there are subsetters or a
-                    // waveform arm
-                    for(int j = 0; j < staDbs.length; j++) {
-                        // commit for each station
-                        synchronized(NetworkArm.this) {
-                            if (! NetworkDB.getSession().contains(net)) {
-                                NetworkDB.getSession().lock(net,
-                                                            LockMode.NONE);
-                            }
-                            List<ChannelImpl> chans = getSuccessfulChannels(staDbs[j]);
-                        }
-                    }
-                } else {
-                    logger.info("Not getting channels as no subsetters or waveform arm");
-                }
-                // make sure everything is cleaned up in hibernate session
-                NetworkDB.commit();
-            }
-        }
-
-        private void finishArm() {
-            if(lastPusher && pusherFinished) {
-                finish();
-            }
-        }
-
-        public synchronized void setLastPusher() {
-            lastPusher = true;
-            finishArm();
-        }
-
-        private boolean lastPusher = false, pusherFinished = false;
-        
-        private Queue<NetworkAttrImpl> netList = new LinkedList<NetworkAttrImpl>();
-    }
-
-    private void finish() {
+    void finish() {
         armFinished = true;
         logger.info("Network arm finished.");
         for(Iterator iter = armListeners.iterator(); iter.hasNext();) {
@@ -491,7 +369,12 @@ public class NetworkArm implements Arm {
         if(allStationFailureNets.contains(NetworkIdUtil.toStringNoDates(net))) {
             return new StationImpl[0];
         }
-        synchronized(this) {
+        synchronized(refresh) {
+            while(refresh.isNetworkBeingReloaded(net.getDbid())) {
+                try {
+                    refresh.wait();
+                } catch(InterruptedException e) {}
+            }
             // try db
             List<StationImpl> sta = getNetworkDB().getStationForNet((NetworkAttrImpl)net);
             if(sta.size() != 0) {
@@ -499,7 +382,14 @@ public class NetworkArm implements Arm {
                         + sta.size());
                 return sta.toArray(new StationImpl[0]);
             }
-            // really no dice, go to server
+
+            // this is probably an error condition...
+            throw new RuntimeException("Should not happen, likely indicates a race condition between NetworkArm method and RefreshNetworkArm.");
+        }
+    }
+    
+    StationImpl[] getSuccessfulStationsFromServer(NetworkAttrImpl net) {
+        synchronized(this) {
             statusChanged("Getting stations for "
                     + net.getName());
             ArrayList<Station> arrayList = new ArrayList<Station>();
@@ -552,7 +442,7 @@ public class NetworkArm implements Arm {
             StationImpl[] rtnValues = new StationImpl[arrayList.size()];
             rtnValues = (StationImpl[])arrayList.toArray(rtnValues);
             statusChanged("Waiting for a request");
-            logger.debug("getSuccessfulStations " + netCode + " - from server "
+            logger.debug("getSuccessfulStations " + NetworkIdUtil.toStringNoDates(net) + " - from server "
                     + rtnValues.length);
             if(rtnValues.length == 0) {
                 allStationFailureNets.add(NetworkIdUtil.toStringNoDates(net));
@@ -568,10 +458,16 @@ public class NetworkArm implements Arm {
      * @throws NetworkNotFound
      */
     public List<ChannelImpl> getSuccessfulChannels(StationImpl station) {
-        if(allChannelFailureStations.contains(StationIdUtil.toStringNoDates(station))) {
+        if(! refresh.isNetworkBeingReloaded(((NetworkAttrImpl)station.getNetworkAttr()).getDbid())
+                && allChannelFailureStations.contains(StationIdUtil.toStringNoDates(station))) {
             return new ArrayList<ChannelImpl>(0);
         }
         synchronized(this) {
+            while(refresh.isNetworkBeingReloaded(((NetworkAttrImpl)station.getNetworkAttr()).getDbid())) {
+                try {
+                    refresh.wait();
+                } catch(InterruptedException e) {}
+            }
             // no dice, try db
             List<ChannelImpl> sta = getNetworkDB().getChannelsForStation(station);
             if(sta.size() != 0) {
@@ -579,7 +475,13 @@ public class NetworkArm implements Arm {
                         + " - from db " + sta.size());
                 return sta;
             }
-            // really no dice, go to server
+            // this is probably an error condition...
+            throw new RuntimeException("Should not happen, likely indicates a race condition between NetworkArm method and RefreshNetworkArm.");
+        }
+    }
+    
+    List<ChannelImpl> getSuccessfulChannelsFromServer(StationImpl station) {
+        synchronized(this) {
             statusChanged("Getting channels for " + station);
             List<ChannelImpl> successes = new ArrayList<ChannelImpl>();
             try {
@@ -682,7 +584,13 @@ public class NetworkArm implements Arm {
                         + " - from db " + sta.size());
                 return sta;
             }
-            // really no dice, go to server
+            // this is probably an error condition...
+            throw new RuntimeException("Should not happen, likely indicates a race condition between NetworkArm method and RefreshNetworkArm.");
+        }
+    }
+    
+    List<ChannelGroup> getSuccessfulChannelGroupsFromServer(StationImpl station) {
+        synchronized(this) {
             List<ChannelImpl> failures = new ArrayList<ChannelImpl>();
             List<ChannelGroup> chanGroups = channelGrouper.group(getSuccessfulChannels(station),
                                                              failures);
@@ -703,8 +611,6 @@ public class NetworkArm implements Arm {
             return chanGroups;
         }
     }
-
-    private QueryTime lastQueryTime = null;
 
     private void statusChanged(String newStatus) {
         synchronized(statusMonitors) {
@@ -793,16 +699,22 @@ public class NetworkArm implements Arm {
 
     private StationSubsetter staEffectiveSubsetter = new PassStation();
 
-    private List chanSubsetters = new ArrayList();
+    private List<ChannelSubsetter> chanSubsetters = new ArrayList<ChannelSubsetter>();
 
     private ChannelSubsetter chanEffectiveSubsetter = new PassChannel();
 
     private ChannelGrouper channelGrouper = new ChannelGrouper();
+    
 
+    protected NetworkFinder getNetworkFinderSource() {
+        return finder;
+    }
+    
     protected NetworkDB getNetworkDB() {
         return NetworkDB.getSingleton();
     }
 
+    /** null means that we have not yet gotten nets from the server, so wait. */
     private CacheNetworkAccess[] cacheNets;
 
     private HashSet<String> allStationFailureNets = new HashSet<String>();
@@ -818,10 +730,14 @@ public class NetworkArm implements Arm {
     private static final org.apache.log4j.Logger failLogger = org.apache.log4j.Logger.getLogger("Fail.NetworkArm");
 
     private boolean armFinished = false;
+    
+    RefreshNetworkArm refresh;
+    
+    private QueryTime lastQueryTime = null;
+    
+    final Object netGetSync = new Object();
 
-    private final Object netGetSync = new Object();
+    final Object staGetSync = new Object();
 
-    private final Object staGetSync = new Object();
-
-    private final Object chanGetSync = new Object();
+    final Object chanGetSync = new Object();
 }// NetworkArm

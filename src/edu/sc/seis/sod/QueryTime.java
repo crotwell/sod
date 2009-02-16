@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
+import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 
 
@@ -80,5 +81,14 @@ public class QueryTime {
     
     public int hashCode() {
         return 89+17*getDbid()+17*getServerDNS().hashCode()+getServerName().hashCode()+17*getTime().hashCode();   
+    }
+
+    public long delayUntilNextRefresh(TimeInterval refreshInterval) {
+        MicroSecondDate now = ClockUtil.now();
+        MicroSecondDate nextRefresh = new MicroSecondDate(getTime()).add(refreshInterval);
+        if (nextRefresh.before(now)) {
+            return 0l;
+        }
+        return (long)nextRefresh.subtract(now).getValue(UnitImpl.MILLISECOND);  
     }
 }
