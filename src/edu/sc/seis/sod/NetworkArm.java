@@ -366,14 +366,14 @@ public class NetworkArm implements Arm {
     public StationImpl[] getSuccessfulStations(NetworkAttrImpl net) {
         String netCode = net.get_code();
         logger.debug("getSuccessfulStations");
-        if(allStationFailureNets.contains(NetworkIdUtil.toStringNoDates(net))) {
-            return new StationImpl[0];
-        }
         synchronized(refresh) {
             while(refresh.isNetworkBeingReloaded(net.getDbid())) {
                 try {
                     refresh.wait();
                 } catch(InterruptedException e) {}
+            }
+            if(allStationFailureNets.contains(NetworkIdUtil.toStringNoDates(net))) {
+                return new StationImpl[0];
             }
             // try db
             List<StationImpl> sta = getNetworkDB().getStationForNet((NetworkAttrImpl)net);
@@ -458,15 +458,14 @@ public class NetworkArm implements Arm {
      * @throws NetworkNotFound
      */
     public List<ChannelImpl> getSuccessfulChannels(StationImpl station) {
-        if(! refresh.isNetworkBeingReloaded(((NetworkAttrImpl)station.getNetworkAttr()).getDbid())
-                && allChannelFailureStations.contains(StationIdUtil.toStringNoDates(station))) {
-            return new ArrayList<ChannelImpl>(0);
-        }
         synchronized(refresh) {
             while(refresh.isNetworkBeingReloaded(((NetworkAttrImpl)station.getNetworkAttr()).getDbid())) {
                 try {
                     refresh.wait();
                 } catch(InterruptedException e) {}
+            }
+            if(allChannelFailureStations.contains(StationIdUtil.toStringNoDates(station))) {
+                return new ArrayList<ChannelImpl>(0);
             }
             // no dice, try db
             List<ChannelImpl> sta = getNetworkDB().getChannelsForStation(station);
