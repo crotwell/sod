@@ -384,7 +384,7 @@ public class NetworkArm implements Arm {
             }
 
             // this is probably an error condition...
-            throw new RuntimeException("Should not happen, likely indicates a race condition between NetworkArm method and RefreshNetworkArm.");
+            throw new RuntimeException("Should not happen, likely indicates a race condition between NetworkArm method and RefreshNetworkArm. "+NetworkIdUtil.toString(net));
         }
     }
     
@@ -475,7 +475,7 @@ public class NetworkArm implements Arm {
                 return sta;
             }
             // this is probably an error condition...
-            throw new RuntimeException("Should not happen, likely indicates a race condition between NetworkArm method and RefreshNetworkArm.");
+            throw new RuntimeException("Should not happen, likely indicates a race condition between NetworkArm method and RefreshNetworkArm. "+StationIdUtil.toString(station));
         }
     }
     
