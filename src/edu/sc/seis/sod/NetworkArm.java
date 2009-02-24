@@ -373,7 +373,6 @@ public class NetworkArm implements Arm {
                 } catch(InterruptedException e) {}
             }
             if(allStationFailureNets.contains(NetworkIdUtil.toStringNoDates(net))) {
-                refresh.notifyAll();
                 return new StationImpl[0];
             }
             // try db
@@ -381,7 +380,6 @@ public class NetworkArm implements Arm {
             if(sta.size() != 0) {
                 logger.debug("getSuccessfulStations " + netCode + " - from db "
                         + sta.size());
-                refresh.notifyAll();
                 return sta.toArray(new StationImpl[0]);
             }
 
@@ -467,7 +465,6 @@ public class NetworkArm implements Arm {
                 } catch(InterruptedException e) {}
             }
             if(allChannelFailureStations.contains(StationIdUtil.toStringNoDates(station))) {
-                refresh.notifyAll();
                 return new ArrayList<ChannelImpl>(0);
             }
             // no dice, try db
@@ -475,7 +472,6 @@ public class NetworkArm implements Arm {
             if(sta.size() != 0) {
                 logger.debug("successfulChannels " + station.get_code()
                         + " - from db " + sta.size());
-                refresh.notifyAll();
                 return sta;
             }
             // this is probably an error condition...
@@ -587,7 +583,6 @@ public class NetworkArm implements Arm {
                 } catch(InterruptedException e) {}
             }
             if(allChannelGroupFailureStations.contains(StationIdUtil.toStringNoDates(station))) {
-                refresh.notifyAll();
                 return new ArrayList<ChannelGroup>(0);
             }
             // no dice, try db
@@ -595,7 +590,6 @@ public class NetworkArm implements Arm {
             if(sta.size() != 0) {
                 logger.debug("successfulChannelGroups " + station.get_code()
                         + " - from db " + sta.size());
-                refresh.notifyAll();
                 return sta;
             }
             // this is probably an error condition...
