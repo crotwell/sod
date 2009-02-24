@@ -373,6 +373,7 @@ public class NetworkArm implements Arm {
                 } catch(InterruptedException e) {}
             }
             if(allStationFailureNets.contains(NetworkIdUtil.toStringNoDates(net))) {
+                refresh.notifyAll();
                 return new StationImpl[0];
             }
             // try db
@@ -380,6 +381,7 @@ public class NetworkArm implements Arm {
             if(sta.size() != 0) {
                 logger.debug("getSuccessfulStations " + netCode + " - from db "
                         + sta.size());
+                refresh.notifyAll();
                 return sta.toArray(new StationImpl[0]);
             }
 
@@ -465,6 +467,7 @@ public class NetworkArm implements Arm {
                 } catch(InterruptedException e) {}
             }
             if(allChannelFailureStations.contains(StationIdUtil.toStringNoDates(station))) {
+                refresh.notifyAll();
                 return new ArrayList<ChannelImpl>(0);
             }
             // no dice, try db
@@ -472,6 +475,7 @@ public class NetworkArm implements Arm {
             if(sta.size() != 0) {
                 logger.debug("successfulChannels " + station.get_code()
                         + " - from db " + sta.size());
+                refresh.notifyAll();
                 return sta;
             }
             // this is probably an error condition...
@@ -573,7 +577,7 @@ public class NetworkArm implements Arm {
 
     public List<ChannelGroup> getSuccessfulChannelGroups(StationImpl station) {
         if(! refresh.isNetworkBeingReloaded(((NetworkAttrImpl)station.getNetworkAttr()).getDbid())
-                && allChannelFailureStations.contains(StationIdUtil.toStringNoDates(station))) {
+                && allChannelGroupFailureStations.contains(StationIdUtil.toStringNoDates(station))) {
             return new ArrayList<ChannelGroup>(0);
         }
         synchronized(refresh) {
@@ -582,11 +586,16 @@ public class NetworkArm implements Arm {
                     refresh.wait();
                 } catch(InterruptedException e) {}
             }
+            if(allChannelGroupFailureStations.contains(StationIdUtil.toStringNoDates(station))) {
+                refresh.notifyAll();
+                return new ArrayList<ChannelGroup>(0);
+            }
             // no dice, try db
             List<ChannelGroup> sta = getNetworkDB().getChannelGroupsForStation(station);
             if(sta.size() != 0) {
                 logger.debug("successfulChannelGroups " + station.get_code()
                         + " - from db " + sta.size());
+                refresh.notifyAll();
                 return sta;
             }
             // this is probably an error condition...
@@ -604,6 +613,8 @@ public class NetworkArm implements Arm {
             }
             if (chanGroups.size() != 0) {
                 NetworkDB.commit();
+            } else {
+                allChannelGroupFailureStations.add(StationIdUtil.toStringNoDates(station));
             }
             Iterator it = failures.iterator();
             Status chanReject = Status.get(Stage.NETWORK_SUBSETTER,
@@ -725,6 +736,8 @@ public class NetworkArm implements Arm {
     private HashSet<String> allStationFailureNets = new HashSet<String>();
 
     private HashSet<String> allChannelFailureStations = new HashSet<String>();
+    
+    private HashSet<String> allChannelGroupFailureStations = new HashSet<String>();
 
     private List statusMonitors = new ArrayList();
 

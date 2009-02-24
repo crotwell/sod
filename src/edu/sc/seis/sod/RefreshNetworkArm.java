@@ -23,10 +23,8 @@ public class RefreshNetworkArm extends TimerTask {
             CacheNetworkAccess[] nets;
             synchronized(this) {
                 nets = netArm.getSuccessfulNetworksFromServer();
-                if (networksBeingReloaded.size() > 0) {
-                    // previous update has not yet finished, only reload nets
-                    // not already in list???
-                }
+                // maybe previous update has not yet finished, only reload nets
+                // not already in list???
                 for (int i = 0; i < nets.length; i++) {
                     if (!isNetworkBeingReloaded(nets[i].get_attributes().getDbid())) {
                         networksBeingReloaded.add(new Integer(nets[i].get_attributes().getDbid()));
@@ -36,6 +34,7 @@ public class RefreshNetworkArm extends TimerTask {
                     }
                 }
             }
+            
             for (int i = 0; i < nets.length; i++) {
                 if (nets[i] == null) {
                     continue;
@@ -77,6 +76,9 @@ public class RefreshNetworkArm extends TimerTask {
     }
 
     public synchronized boolean isNetworkBeingReloaded(int dbid) {
+        if (dbid == 0) {
+            throw new IllegalArgumentException("dbid = 0 is not legal, Network must not be in db yet");
+        }
         return networksBeingReloaded.contains(new Integer(dbid));
     }
 
