@@ -21,6 +21,7 @@ import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.NSSeismogramDC;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
+import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.process.waveform.vector.ANDWaveformProcessWrapper;
@@ -319,7 +320,13 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
             }
             processSeismograms(ecp, infilters, outfilters, tempLocalSeismograms);
         } else {
-            ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.RETRY));
+            if(ClockUtil.now().subtract(Start.getRunProps().getSeismogramLatency()).after(ecp.getEvent()
+                                                                                          .getOrigin()
+                                                                                          .getTime())) {
+                ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.REJECT));
+            } else {
+                ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.RETRY));
+            }
             failLogger.info(ecp + " " + result + " on server " + dataCenter);
         }
     }
