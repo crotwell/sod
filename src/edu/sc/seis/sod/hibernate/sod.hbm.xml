@@ -27,8 +27,8 @@
 			class="edu.iris.Fissures.network.NetworkAttrImpl" column="networkAttr"
 			foreign-key="FK_enetp_network" unique-key="event_net_key" />
 		<component name="status">
-			<property name="stageInt" type="integer" />
-			<property name="standingInt" type="integer" />
+			<property name="stageInt" type="integer"  index="enp_stage_index"/>
+			<property name="standingInt" type="integer"  index="enp_standing_index" />
 		</component>
 		<property name="numRetries"  type="integer"/>
 		<property name="lastQuery"  type="timestamp"/>
@@ -46,8 +46,8 @@
 			class="edu.iris.Fissures.network.StationImpl" column="station"
 			foreign-key="FK_estap_station" unique-key="event_station_key" />
 		<component name="status">
-			<property name="stageInt" type="integer"  index="esp_get_next_stage_index"/>
-			<property name="standingInt" type="integer" index="esp_get_next_standing_index"/>
+			<property name="stageInt" type="integer"  index="esp_stage_index" />
+			<property name="standingInt" type="integer" index="esp_standing_index" />
 		</component>
 		<property name="numRetries"  type="integer"/>
 		<property name="lastQuery"  type="timestamp"/>
@@ -67,8 +67,8 @@
 			class="edu.sc.seis.sod.hibernate.StatefulEvent" column="event"
 			foreign-key="FK_ecp_event"  />
 		<component name="status">
-			<property name="stageInt" type="integer" />
-			<property name="standingInt" type="integer" />
+			<property name="stageInt" type="integer"  index="aecp_stage_index"/>
+			<property name="standingInt" type="integer"  index="aecp_standing_index" />
 		</component>
 		<property name="numRetries"  type="integer"/>
 		<property name="lastQuery"  type="timestamp"/>
