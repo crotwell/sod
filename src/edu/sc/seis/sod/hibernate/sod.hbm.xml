@@ -46,10 +46,10 @@
 			class="edu.iris.Fissures.network.StationImpl" column="station"
 			foreign-key="FK_estap_station" unique-key="event_station_key" />
 		<component name="status">
-			<property name="stageInt" type="integer"  index="esp_get_next_index"/>
-			<property name="standingInt" type="integer" index="esp_get_next_index"/>
+			<property name="stageInt" type="integer"  index="esp_get_next_stage_index"/>
+			<property name="standingInt" type="integer" index="esp_get_next_standing_index"/>
 		</component>
-		<property name="numRetries"  type="integer" index="esp_get_next_index"/>
+		<property name="numRetries"  type="integer"/>
 		<property name="lastQuery"  type="timestamp"/>
 	</class>
 	
