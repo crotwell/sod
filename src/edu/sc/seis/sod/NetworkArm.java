@@ -215,7 +215,9 @@ public class NetworkArm implements Arm {
             logger.info("Getting networks");
             ArrayList<CacheNetworkAccess> successes = new ArrayList<CacheNetworkAccess>();
             CacheNetworkAccess[] allNets;
-            NetworkDCOperations netDC = finder.getNetworkDC();
+            ProxyNetworkDC netDC = finder.getNetworkDC();
+            // purge cache before loading from server
+            netDC.reset();
             synchronized(netDC) {
                 String[] constrainingCodes = getConstrainingNetworkCodes(attrSubsetter);
                 if(constrainingCodes.length > 0) {
