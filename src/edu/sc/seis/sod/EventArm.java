@@ -145,7 +145,7 @@ public class EventArm implements Arm {
                 }
             }
             if (minWait != null) {
-                logger.debug("Wait before next getEvents: "+minWait);
+                logger.debug("Wait before next getEvents: "+minWait.convertTo(UnitImpl.SECOND));
                 long waitMillis = (long)minWait.convertTo(UnitImpl.MILLISECOND).get_value();
                 if(waitMillis > 0) {
                     try {
