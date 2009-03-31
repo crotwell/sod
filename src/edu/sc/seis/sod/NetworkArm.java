@@ -61,6 +61,7 @@ public class NetworkArm implements Arm {
 
     public NetworkArm(Element config) throws ConfigurationException {
         processConfig(config);
+        refresh = new RefreshNetworkArm(this);
     }
 
     public void run() {
@@ -72,7 +73,6 @@ public class NetworkArm implements Arm {
                 lastQueryTime = new QueryTime(getNetworkFinderSource().getName(), getNetworkFinderSource().getDNS(), ClockUtil.wayPast().getTimestamp());
                 sodDb.putQueryTime(lastQueryTime);
             }
-            refresh = new RefreshNetworkArm(this);
             // only do timer if positive interval and waveform arm exists, otherwise run in thread
             if (getRefreshInterval().value > 0 && Start.getWaveformRecipe() != null) {
             Timer timer = new Timer(true);
