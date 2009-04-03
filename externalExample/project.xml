@@ -35,7 +35,7 @@
         <dependency>
             <groupId>isti</groupId>
             <artifactId>isti.util</artifactId>
-            <version>1.0.1USC</version>
+            <version>1.0.3USC</version>
             <url>http://www.isti.com</url>
         </dependency>
         <dependency>
@@ -124,7 +124,7 @@
         </dependency>
         <dependency>
             <id>hsqldb</id>
-            <version>1.8.0.4_USC1</version>
+            <version>1.8.0.10</version>
             <url>http://hsqldb.sourceforge.net</url>
         </dependency>
         <dependency>
