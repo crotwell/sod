@@ -36,7 +36,7 @@ log4j.appender.C.Threshold=warn
 edu.sc.seis.fissuresUtil.nameServiceCorbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService
 
 # default database url
-fissuresUtil.database.url=jdbc:hsqldb:SodDb/SodDb
+fissuresUtil.database.url=jdbc:hsqldb:file:SodDb/SodDb
 # hibernate create cached tables by default
 hibernate.connection.hsqldb.default_table_type=cached
 
