@@ -1,7 +1,9 @@
 package edu.sc.seis.sod.subsetter;
 
 import java.io.File;
+
 import org.w3c.dom.Element;
+
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 
 public class VelocityFileElementParser {

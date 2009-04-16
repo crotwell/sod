@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import edu.sc.seis.sod.validator.documenter.SchemaDocumenter;
 import edu.sc.seis.sod.validator.model.Choice;
 import edu.sc.seis.sod.validator.model.Definition;

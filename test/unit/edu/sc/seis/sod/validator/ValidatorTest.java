@@ -1,10 +1,11 @@
 package edu.sc.seis.sod.validator;
 
+import java.io.IOException;
+
 import junit.framework.TestCase;
+
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import java.io.IOException;
-import edu.sc.seis.sod.validator.Validator;
 
 public class ValidatorTest extends TestCase{
     public ValidatorTest(String name){

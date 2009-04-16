@@ -5,9 +5,7 @@ import java.sql.SQLException;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.hibernate.Hibernate;
 import org.hibernate.LockMode;
-import org.hibernate.dialect.function.SQLFunctionTemplate;
 
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;

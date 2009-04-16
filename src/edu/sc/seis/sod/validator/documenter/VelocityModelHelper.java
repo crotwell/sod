@@ -7,9 +7,16 @@
 package edu.sc.seis.sod.validator.documenter;
 
 
-import edu.sc.seis.sod.validator.model.*;
-
 import java.io.File;
+
+import edu.sc.seis.sod.validator.model.Choice;
+import edu.sc.seis.sod.validator.model.Definition;
+import edu.sc.seis.sod.validator.model.Form;
+import edu.sc.seis.sod.validator.model.GenitorForm;
+import edu.sc.seis.sod.validator.model.Group;
+import edu.sc.seis.sod.validator.model.Interleave;
+import edu.sc.seis.sod.validator.model.MultigenitorForm;
+import edu.sc.seis.sod.validator.model.NamedElement;
 
 public class VelocityModelHelper {
     public String getClass(Form f){

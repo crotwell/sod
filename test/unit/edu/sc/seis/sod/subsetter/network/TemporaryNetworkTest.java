@@ -1,8 +1,8 @@
 package edu.sc.seis.sod.subsetter.network;
 
+import junit.framework.TestCase;
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockNetworkAttr;
-import junit.framework.TestCase;
 
 
 public class TemporaryNetworkTest extends TestCase {

@@ -8,6 +8,7 @@ package edu.sc.seis.sod.validator.example;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+
 import edu.sc.seis.sod.validator.ModelWalker;
 import edu.sc.seis.sod.validator.model.Annotation;
 import edu.sc.seis.sod.validator.model.Attribute;
@@ -18,7 +19,6 @@ import edu.sc.seis.sod.validator.model.Empty;
 import edu.sc.seis.sod.validator.model.Form;
 import edu.sc.seis.sod.validator.model.Group;
 import edu.sc.seis.sod.validator.model.Interleave;
-import edu.sc.seis.sod.validator.model.ModelUtil;
 import edu.sc.seis.sod.validator.model.MultigenitorForm;
 import edu.sc.seis.sod.validator.model.NamedElement;
 import edu.sc.seis.sod.validator.model.Text;

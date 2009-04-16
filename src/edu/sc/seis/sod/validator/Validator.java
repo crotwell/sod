@@ -1,14 +1,17 @@
 package edu.sc.seis.sod.validator;
 
 import java.io.IOException;
+
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+
 import com.thaiopensource.util.PropertyMap;
 import com.thaiopensource.util.SinglePropertyMap;
 import com.thaiopensource.validate.ValidateProperty;
 import com.thaiopensource.validate.ValidationDriver;
+
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 
 public class Validator {

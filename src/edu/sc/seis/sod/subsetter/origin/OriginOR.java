@@ -1,7 +1,9 @@
 package edu.sc.seis.sod.subsetter.origin;
 
 import java.util.Iterator;
+
 import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;

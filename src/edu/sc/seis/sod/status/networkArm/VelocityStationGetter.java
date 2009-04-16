@@ -10,9 +10,6 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.hibernate.Query;
-import org.hibernate.Session;
-
 import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationImpl;

@@ -1,5 +1,9 @@
 package edu.sc.seis.sod.subsetter.origin;
 
+import java.util.Iterator;
+
+import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
@@ -7,8 +11,6 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.status.ShortCircuit;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
-import java.util.Iterator;
-import org.w3c.dom.Element;
 /**
  * Contains a single OriginSubsetter. OriginArrayOR returns true when the contained originSubsetter is
  * true for any one of the origins.

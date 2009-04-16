@@ -9,10 +9,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.velocity.VelocityContext;
 import org.xml.sax.InputSource;
+
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
@@ -21,6 +23,7 @@ import com.martiansoftware.jsap.Option;
 import com.martiansoftware.jsap.Parameter;
 import com.martiansoftware.jsap.StringParser;
 import com.martiansoftware.jsap.Switch;
+
 import edu.sc.seis.fissuresUtil.simple.Initializer;
 import edu.sc.seis.sod.Args;
 import edu.sc.seis.sod.Start;

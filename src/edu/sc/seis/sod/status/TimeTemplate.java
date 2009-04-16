@@ -5,13 +5,15 @@
  */
 package edu.sc.seis.sod.status;
 
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
+
+import org.w3c.dom.Element;
+
 import edu.iris.Fissures.Time;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.sod.SodUtil;
-import java.text.SimpleDateFormat;
-import java.util.TimeZone;
-import org.w3c.dom.Element;
 
 public class TimeTemplate implements GenericTemplate {
 

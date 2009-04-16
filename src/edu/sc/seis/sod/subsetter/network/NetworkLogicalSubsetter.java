@@ -3,15 +3,14 @@ package edu.sc.seis.sod.subsetter.network;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.w3c.dom.Element;
-import edu.iris.Fissures.IfNetwork.Channel;
+
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
-import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.subsetter.LogicalSubsetter;
-import edu.sc.seis.sod.subsetter.channel.ChannelSubsetter;
 
 public abstract class NetworkLogicalSubsetter extends LogicalSubsetter {
 

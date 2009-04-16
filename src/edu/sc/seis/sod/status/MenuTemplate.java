@@ -6,12 +6,13 @@
 
 package edu.sc.seis.sod.status;
 
-import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.status.AllTypeTemplate;
 import java.util.Iterator;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.SodUtil;
 
 public class MenuTemplate extends Template implements GenericTemplate{
 

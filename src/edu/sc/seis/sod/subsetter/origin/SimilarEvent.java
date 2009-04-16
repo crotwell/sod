@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.model.MicroSecondDate;

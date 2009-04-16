@@ -1,18 +1,20 @@
 package edu.sc.seis.sod.status;
 
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
+
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Status;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Map;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import java.lang.reflect.Field;
 
 public class ChannelGroupTemplate extends Template implements GenericTemplate{
     Map channelMap = new HashMap();

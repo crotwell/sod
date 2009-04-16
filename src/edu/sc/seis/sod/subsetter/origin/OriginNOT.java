@@ -1,14 +1,15 @@
 package edu.sc.seis.sod.subsetter.origin;
 
+import java.util.Iterator;
+
+import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
-import edu.sc.seis.sod.status.StringTreeLeaf;
-import java.util.Iterator;
-import org.w3c.dom.Element;
 
 /**
  * This subsetter is used to specify a negation of OriginSubsetter. This subsetter is accepted only when the included

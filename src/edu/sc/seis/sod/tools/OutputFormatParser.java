@@ -2,6 +2,7 @@ package edu.sc.seis.sod.tools;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.ParseException;
 import com.martiansoftware.jsap.StringParser;

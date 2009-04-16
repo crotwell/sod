@@ -3,10 +3,13 @@ package edu.sc.seis.sod.tools;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import org.apache.velocity.VelocityContext;
+
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
+
 import edu.sc.seis.sod.subsetter.channel.ResponseWriter;
 import edu.sc.seis.sod.subsetter.channel.SacPoleZeroWriter;
 

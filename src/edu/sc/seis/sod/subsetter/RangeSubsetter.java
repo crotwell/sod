@@ -2,6 +2,7 @@ package edu.sc.seis.sod.subsetter;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
 import edu.sc.seis.sod.SodUtil;
 
 public class RangeSubsetter {

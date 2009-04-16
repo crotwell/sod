@@ -1,5 +1,9 @@
 package edu.sc.seis.sod.subsetter.origin;
 
+import java.util.Iterator;
+
+import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
@@ -7,8 +11,6 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.status.ShortCircuit;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
-import java.util.Iterator;
-import org.w3c.dom.Element;
 /**
  * This subsetter is used to specify a sequence of OriginANDSubsetters. This subsetter is accepted only when all the
  * subsetters forming the sequence are accepted.

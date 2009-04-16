@@ -6,6 +6,7 @@
 package edu.sc.seis.sod.subsetter.origin;
 
 import org.w3c.dom.Element;
+
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.UserConfigurationException;
 import edu.sc.seis.sod.subsetter.DistanceRangeSubsetter;

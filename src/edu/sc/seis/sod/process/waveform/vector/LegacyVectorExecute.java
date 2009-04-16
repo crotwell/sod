@@ -6,6 +6,8 @@
 
 package edu.sc.seis.sod.process.waveform.vector;
 
+import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
@@ -15,7 +17,6 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.process.waveform.LegacyExecute;
 import edu.sc.seis.sod.process.waveform.SaveSeismogramToFile;
 import edu.sc.seis.sod.status.StringTreeLeaf;
-import org.w3c.dom.Element;
 
 public class LegacyVectorExecute extends LegacyExecute implements WaveformVectorProcess {
 

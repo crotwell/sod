@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.process.waveform.vector;
 
 import org.w3c.dom.Element;
+
 import edu.iris.Fissures.Location;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;

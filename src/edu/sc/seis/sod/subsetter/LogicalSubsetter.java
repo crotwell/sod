@@ -1,11 +1,13 @@
 package edu.sc.seis.sod.subsetter;
-import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.SodUtil;
 import java.util.LinkedList;
 import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.SodUtil;
 
 public abstract class LogicalSubsetter implements Subsetter {
     public LogicalSubsetter (Element config) throws ConfigurationException {

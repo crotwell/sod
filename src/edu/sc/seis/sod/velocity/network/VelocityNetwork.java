@@ -1,7 +1,9 @@
 package edu.sc.seis.sod.velocity.network;
 
 import java.util.List;
+
 import org.apache.velocity.VelocityContext;
+
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.model.MicroSecondDate;

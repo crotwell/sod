@@ -1,7 +1,9 @@
 package edu.sc.seis.sod.source.network;
 
 import java.util.regex.Pattern;
+
 import org.w3c.dom.Element;
+
 import edu.sc.seis.fissuresUtil.cache.FilterNetworkDC;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
 import edu.sc.seis.fissuresUtil.cache.VestingNetworkDC;

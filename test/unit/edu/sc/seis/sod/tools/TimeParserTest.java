@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.tools;
 
 import junit.framework.TestCase;
+
 import com.martiansoftware.jsap.ParseException;
 
 public class TimeParserTest extends TestCase {

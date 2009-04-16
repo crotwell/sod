@@ -5,18 +5,20 @@
  */
 package edu.sc.seis.sod.status;
 
-import edu.iris.Fissures.IfNetwork.Station;
-import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.Standing;
-import edu.sc.seis.sod.Status;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import edu.iris.Fissures.IfNetwork.Station;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.Standing;
+import edu.sc.seis.sod.Status;
 
 public class StationGroupTemplate extends Template implements GenericTemplate {
 

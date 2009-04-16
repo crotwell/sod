@@ -1,10 +1,11 @@
 package edu.sc.seis.sod.status;
 
 
-import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
+
+import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 
 public class NowTemplate extends AllTypeTemplate{
     public NowTemplate(){ df.setTimeZone(TimeZone.getTimeZone("GMT")); }

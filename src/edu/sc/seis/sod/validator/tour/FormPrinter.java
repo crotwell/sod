@@ -6,7 +6,17 @@
 
 package edu.sc.seis.sod.validator.tour;
 
-import edu.sc.seis.sod.validator.model.*;
+import edu.sc.seis.sod.validator.model.Attribute;
+import edu.sc.seis.sod.validator.model.Choice;
+import edu.sc.seis.sod.validator.model.Data;
+import edu.sc.seis.sod.validator.model.Empty;
+import edu.sc.seis.sod.validator.model.Form;
+import edu.sc.seis.sod.validator.model.Group;
+import edu.sc.seis.sod.validator.model.Interleave;
+import edu.sc.seis.sod.validator.model.NamedElement;
+import edu.sc.seis.sod.validator.model.NotAllowed;
+import edu.sc.seis.sod.validator.model.Text;
+import edu.sc.seis.sod.validator.model.Value;
 
 public class FormPrinter implements Tourist{
     public FormPrinter(){ this(2); }

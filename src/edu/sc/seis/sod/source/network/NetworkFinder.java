@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.source.network;
 
 import org.w3c.dom.Element;
+
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
@@ -9,7 +10,6 @@ import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.subsetter.AbstractSource;
 
 public class NetworkFinder extends NetworkSource {
 

@@ -1,7 +1,9 @@
 package edu.sc.seis.sod.validator;
 
 import java.io.IOException;
+
 import javax.xml.stream.XMLStreamException;
+
 import junit.framework.TestCase;
 import edu.sc.seis.sod.validator.model.Choice;
 import edu.sc.seis.sod.validator.model.Form;

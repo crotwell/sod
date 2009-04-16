@@ -7,7 +7,9 @@ package edu.sc.seis.sod.status;
 
 import java.util.Iterator;
 import java.util.StringTokenizer;
+
 import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.sc.seis.sod.ConfigurationException;

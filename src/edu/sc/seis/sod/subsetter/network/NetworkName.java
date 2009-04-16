@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.subsetter.network;
 
 import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;

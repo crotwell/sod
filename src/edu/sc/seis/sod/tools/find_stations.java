@@ -3,7 +3,9 @@ package edu.sc.seis.sod.tools;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.apache.velocity.VelocityContext;
+
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAPException;
 

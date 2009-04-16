@@ -1,5 +1,7 @@
 package edu.sc.seis.sod.subsetter.station;
 
+import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.sod.ConfigurationException;
@@ -7,7 +9,6 @@ import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
-import org.w3c.dom.Element;
 
 /**
  * StationOperator.java

@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.subsetter.channel;
 
 import org.w3c.dom.Element;
+
 import edu.iris.Fissures.Unit;
 import edu.iris.Fissures.IfNetwork.Stage;
 import edu.iris.Fissures.model.UnitImpl;

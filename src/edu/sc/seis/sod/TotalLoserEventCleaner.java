@@ -1,15 +1,12 @@
 package edu.sc.seis.sod;
 
 import java.util.Iterator;
-import java.util.Timer;
 import java.util.TimerTask;
 
 import org.hibernate.Query;
 
-import edu.iris.Fissures.event.OriginImpl;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.hibernate.StatefulEvent;

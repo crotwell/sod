@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.subsetter;
 
 import org.w3c.dom.Element;
+
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.UserConfigurationException;
 

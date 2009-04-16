@@ -3,7 +3,9 @@ package edu.sc.seis.sod.status;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
+
 import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.sc.seis.sod.ConfigurationException;

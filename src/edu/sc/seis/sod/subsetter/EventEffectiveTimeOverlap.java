@@ -1,11 +1,14 @@
 package edu.sc.seis.sod.subsetter;
 
-import edu.iris.Fissures.IfEvent.*;
-import edu.iris.Fissures.IfNetwork.*;
 import edu.iris.Fissures.Time;
 import edu.iris.Fissures.TimeRange;
-import edu.iris.Fissures.model.TimeInterval;
+import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
+import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.NetworkAttr;
+import edu.iris.Fissures.IfNetwork.Site;
+import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.sod.hibernate.StatefulEvent;
 

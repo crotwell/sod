@@ -3,7 +3,6 @@ package edu.sc.seis.sod.subsetter.eventStation;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.event.OriginImpl;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;

@@ -14,8 +14,6 @@ import org.apache.velocity.context.AbstractContext;
 import org.apache.velocity.context.Context;
 
 import edu.iris.Fissures.network.StationImpl;
-import edu.sc.seis.sod.EventChannelPair;
-import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.hibernate.SodDB;
 
 public class StationWaveformContext  extends AbstractContext {

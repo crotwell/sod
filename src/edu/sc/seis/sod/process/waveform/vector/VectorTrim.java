@@ -2,6 +2,7 @@ package edu.sc.seis.sod.process.waveform.vector;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import edu.iris.Fissures.FissuresException;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;

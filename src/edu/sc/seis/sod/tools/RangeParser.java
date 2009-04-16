@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.tools;
 
 import java.util.Map;
+
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.ParseException;
 

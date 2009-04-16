@@ -1,10 +1,9 @@
 package edu.sc.seis.sod.status.eventArm;
-import java.sql.SQLException;
 import java.util.Iterator;
+
 import org.w3c.dom.Element;
 
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.hibernate.StatefulEvent;
 import edu.sc.seis.sod.status.EventFormatter;

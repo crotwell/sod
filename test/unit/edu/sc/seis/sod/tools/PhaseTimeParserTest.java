@@ -1,8 +1,10 @@
 package edu.sc.seis.sod.tools;
 
 import java.util.Map;
-import com.martiansoftware.jsap.ParseException;
+
 import junit.framework.TestCase;
+
+import com.martiansoftware.jsap.ParseException;
 
 public class PhaseTimeParserTest extends TestCase {
 

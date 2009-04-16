@@ -1,11 +1,11 @@
 package edu.sc.seis.sod.subsetter.availableData;
 
+import junit.framework.TestCase;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannelId;
-import junit.framework.TestCase;
 
 public class PercentCoverageTest extends TestCase {
 

@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
+
 import edu.iris.Fissures.Location;
 import edu.iris.Fissures.Time;
 import edu.iris.Fissures.TimeRange;

@@ -5,11 +5,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import javax.xml.parsers.ParserConfigurationException;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;

@@ -1,7 +1,9 @@
 package edu.sc.seis.sod.tools;
 
 import junit.framework.TestCase;
+
 import org.apache.velocity.VelocityContext;
+
 import com.martiansoftware.jsap.JSAPException;
 
 public class find_stationsTest extends TestCase {

@@ -2,7 +2,9 @@ package edu.sc.seis.sod.subsetter.network;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.sc.seis.sod.SodUtil;

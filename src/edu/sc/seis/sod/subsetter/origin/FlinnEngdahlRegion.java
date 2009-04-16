@@ -2,6 +2,7 @@ package edu.sc.seis.sod.subsetter.origin;
 
 import org.apache.log4j.Category;
 import org.w3c.dom.Element;
+
 import edu.iris.Fissures.FlinnEngdahlType;
 import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;

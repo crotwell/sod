@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import com.martiansoftware.jsap.Flagged;
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
@@ -17,6 +18,7 @@ import com.martiansoftware.jsap.Parameter;
 import com.martiansoftware.jsap.ParseException;
 import com.martiansoftware.jsap.StringParser;
 import com.martiansoftware.jsap.Switch;
+
 import edu.sc.seis.fissuresUtil.simple.Initializer;
 
 public class Args {

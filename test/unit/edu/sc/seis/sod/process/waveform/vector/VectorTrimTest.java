@@ -3,6 +3,7 @@ package edu.sc.seis.sod.process.waveform.vector;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
+
 import junit.framework.TestCase;
 import edu.iris.Fissures.FissuresException;
 import edu.iris.Fissures.model.MicroSecondDate;

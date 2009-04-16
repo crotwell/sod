@@ -6,8 +6,11 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.w3c.dom.Element;
+
 import com.csvreader.CsvReader;
+
 import edu.iris.Fissures.FlinnEngdahlRegion;
 import edu.iris.Fissures.FlinnEngdahlType;
 import edu.iris.Fissures.Location;
@@ -15,7 +18,6 @@ import edu.iris.Fissures.LocationType;
 import edu.iris.Fissures.Time;
 import edu.iris.Fissures.Unit;
 import edu.iris.Fissures.IfEvent.Magnitude;
-import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.IfParameterMgr.ParameterRef;
 import edu.iris.Fissures.event.EventAttrImpl;
 import edu.iris.Fissures.event.OriginImpl;

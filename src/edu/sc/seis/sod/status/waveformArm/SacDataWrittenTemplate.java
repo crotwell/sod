@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.status.waveformArm;
 
 import java.text.DecimalFormat;
+
 import edu.sc.seis.sod.process.waveform.SaveSeismogramToFile;
 import edu.sc.seis.sod.status.AllTypeTemplate;
 

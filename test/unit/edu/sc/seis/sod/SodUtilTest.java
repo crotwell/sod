@@ -1,11 +1,15 @@
 package edu.sc.seis.sod;
 
 import java.io.IOException;
+
 import javax.xml.parsers.ParserConfigurationException;
+
+import junit.framework.TestCase;
+
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
+
 import edu.iris.Fissures.Time;
-import junit.framework.TestCase;
 
 
 public class SodUtilTest extends TestCase {

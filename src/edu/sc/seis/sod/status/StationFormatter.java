@@ -7,7 +7,9 @@ package edu.sc.seis.sod.status;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+
 import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.Status;

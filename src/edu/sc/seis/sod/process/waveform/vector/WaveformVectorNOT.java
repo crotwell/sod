@@ -6,7 +6,9 @@
 package edu.sc.seis.sod.process.waveform.vector;
 
 import java.util.Iterator;
+
 import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;

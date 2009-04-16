@@ -6,6 +6,7 @@ package edu.sc.seis.sod.validator.model.datatype;
 import org.relaxng.datatype.DatatypeException;
 import org.relaxng.datatype.DatatypeStreamingValidator;
 import org.relaxng.datatype.ValidationContext;
+
 import edu.sc.seis.sod.validator.model.ModelDatatype;
 
 /**

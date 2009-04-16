@@ -3,17 +3,15 @@ package edu.sc.seis.sod.subsetter.station;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
-import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
-import edu.sc.seis.sod.subsetter.LogicalLoaderSubsetter;
 import edu.sc.seis.sod.subsetter.LogicalSubsetter;
-import edu.sc.seis.sod.subsetter.SubsetterLoader;
-import edu.sc.seis.sod.subsetter.network.NetworkSubsetter;
 
 /**
  * @author groves Created on Aug 30, 2004

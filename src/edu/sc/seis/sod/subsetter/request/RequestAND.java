@@ -1,8 +1,10 @@
 package edu.sc.seis.sod.subsetter.request;
 
 import java.util.Iterator;
+
 import org.apache.log4j.Category;
 import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;

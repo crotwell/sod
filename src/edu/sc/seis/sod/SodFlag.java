@@ -1,6 +1,7 @@
 package edu.sc.seis.sod;
 
 import java.awt.Dimension;
+
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.display.SeismogramDisplay;

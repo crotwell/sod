@@ -4,7 +4,16 @@
 package edu.sc.seis.sod.validator.tour;
 
 import edu.sc.seis.sod.validator.ModelWalker;
-import edu.sc.seis.sod.validator.model.*;
+import edu.sc.seis.sod.validator.model.Attribute;
+import edu.sc.seis.sod.validator.model.Choice;
+import edu.sc.seis.sod.validator.model.Data;
+import edu.sc.seis.sod.validator.model.Form;
+import edu.sc.seis.sod.validator.model.Group;
+import edu.sc.seis.sod.validator.model.Interleave;
+import edu.sc.seis.sod.validator.model.MultigenitorForm;
+import edu.sc.seis.sod.validator.model.NamedElement;
+import edu.sc.seis.sod.validator.model.Text;
+import edu.sc.seis.sod.validator.model.Value;
 
 /**
  * @author Charlie Groves

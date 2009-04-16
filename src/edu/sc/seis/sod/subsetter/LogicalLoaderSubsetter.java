@@ -2,8 +2,10 @@ package edu.sc.seis.sod.subsetter;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
 import edu.sc.seis.sod.ConfigurationException;
 
 /**

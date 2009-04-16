@@ -1,10 +1,9 @@
 package edu.sc.seis.sod;
 
-import java.io.IOException;
-import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.Properties;
+
 import org.apache.log4j.Logger;
+
 import edu.iris.Fissures.model.AllVTFactory;
 import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
 

@@ -4,7 +4,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+
 import org.w3c.dom.Element;
+
 import edu.iris.Fissures.FlinnEngdahlRegion;
 import edu.iris.Fissures.Location;
 import edu.iris.Fissures.Quantity;

@@ -9,9 +9,8 @@ import java.io.IOException;
 
 import javax.xml.stream.XMLStreamException;
 
-import edu.sc.seis.sod.validator.tour.FormPrinter;
-
 import junit.framework.TestCase;
+import edu.sc.seis.sod.validator.tour.FormPrinter;
 
 public class ExternalEvProcTest extends TestCase{
     public void testExternalRef() throws XMLStreamException, IOException{

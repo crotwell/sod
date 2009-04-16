@@ -1,9 +1,10 @@
 package edu.sc.seis.sod.subsetter;
 
+import org.w3c.dom.Element;
+
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.SodUtil;
-import org.w3c.dom.Element;
 
 /**
  * Unit.java

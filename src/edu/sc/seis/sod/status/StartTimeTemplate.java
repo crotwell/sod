@@ -7,10 +7,11 @@
 package edu.sc.seis.sod.status;
 
 
-import edu.sc.seis.sod.Start;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
+
+import edu.sc.seis.sod.Start;
 
 public class StartTimeTemplate extends AllTypeTemplate{
     public StartTimeTemplate(){ df.setTimeZone(TimeZone.getTimeZone("GMT")); }

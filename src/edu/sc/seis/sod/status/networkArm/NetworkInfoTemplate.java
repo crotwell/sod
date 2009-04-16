@@ -6,9 +6,11 @@
 
 package edu.sc.seis.sod.status.networkArm;
 
-import edu.sc.seis.sod.status.FileWritingTemplate;
 import java.io.IOException;
+
 import org.apache.log4j.Logger;
+
+import edu.sc.seis.sod.status.FileWritingTemplate;
 
 public abstract class NetworkInfoTemplate extends FileWritingTemplate{
     private Logger logger = Logger.getLogger(NetworkInfoTemplate.class);

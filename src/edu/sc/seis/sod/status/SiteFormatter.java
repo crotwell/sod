@@ -7,11 +7,13 @@
 package edu.sc.seis.sod.status;
 
 
+import java.util.Iterator;
+
+import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfNetwork.Site;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.Status;
-import java.util.Iterator;
-import org.w3c.dom.Element;
 
 
 

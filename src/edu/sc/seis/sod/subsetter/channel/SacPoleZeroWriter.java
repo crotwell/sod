@@ -1,7 +1,9 @@
 package edu.sc.seis.sod.subsetter.channel;
 
 import java.io.FileNotFoundException;
+
 import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;

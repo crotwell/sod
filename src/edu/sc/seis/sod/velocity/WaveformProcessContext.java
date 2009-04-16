@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.velocity;
 
 import org.apache.velocity.VelocityContext;
+
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;

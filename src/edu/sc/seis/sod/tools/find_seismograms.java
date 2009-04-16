@@ -2,9 +2,11 @@ package edu.sc.seis.sod.tools;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
+
 import edu.sc.seis.sod.process.waveform.AbstractSeismogramWriter;
 import edu.sc.seis.sod.process.waveform.PrintlineSeismogramProcess;
 import edu.sc.seis.sod.process.waveform.SacWriter;

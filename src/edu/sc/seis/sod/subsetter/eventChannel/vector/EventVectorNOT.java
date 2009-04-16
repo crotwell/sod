@@ -6,6 +6,7 @@
 package edu.sc.seis.sod.subsetter.eventChannel.vector;
 
 import java.util.Iterator;
+
 import org.w3c.dom.Element;
 
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;

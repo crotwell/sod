@@ -15,8 +15,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
+
 import javax.xml.stream.XMLStreamException;
+
 import org.xml.sax.InputSource;
+
 import edu.sc.seis.sod.validator.Validator;
 import edu.sc.seis.sod.validator.model.Annotation;
 import edu.sc.seis.sod.validator.model.Form;

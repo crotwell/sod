@@ -6,13 +6,14 @@
 
 package edu.sc.seis.sod.status;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public abstract class PeriodicAction{
     public abstract void act();

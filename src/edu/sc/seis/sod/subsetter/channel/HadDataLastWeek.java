@@ -3,6 +3,7 @@ package edu.sc.seis.sod.subsetter.channel;
 import java.util.HashMap;
 
 import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;

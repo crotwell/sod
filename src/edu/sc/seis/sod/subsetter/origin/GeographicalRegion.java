@@ -3,6 +3,7 @@ package edu.sc.seis.sod.subsetter.origin;
 
 
 import org.w3c.dom.Element;
+
 import edu.iris.Fissures.FlinnEngdahlType;
 
 /**

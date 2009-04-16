@@ -11,8 +11,10 @@ import java.io.FileWriter;
 import java.io.Writer;
 import java.util.Collection;
 import java.util.Iterator;
+
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.validator.ModelWalker;
 import edu.sc.seis.sod.validator.model.Definition;

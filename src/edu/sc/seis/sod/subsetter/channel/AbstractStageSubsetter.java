@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.subsetter.channel;
 
 import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfNetwork.Response;
 import edu.iris.Fissures.IfNetwork.Stage;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;

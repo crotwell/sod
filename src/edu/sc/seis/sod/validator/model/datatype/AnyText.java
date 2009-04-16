@@ -7,10 +7,11 @@
 package edu.sc.seis.sod.validator.model.datatype;
 
 
-import edu.sc.seis.sod.validator.model.ModelDatatype;
 import org.relaxng.datatype.DatatypeException;
 import org.relaxng.datatype.DatatypeStreamingValidator;
 import org.relaxng.datatype.ValidationContext;
+
+import edu.sc.seis.sod.validator.model.ModelDatatype;
 
 public class AnyText implements ModelDatatype{
     public boolean isValid(String p1, ValidationContext p2) {

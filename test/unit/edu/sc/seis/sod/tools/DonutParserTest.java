@@ -1,9 +1,11 @@
 package edu.sc.seis.sod.tools;
 
 import java.util.Map;
+
+import junit.framework.TestCase;
+
 import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.ParseException;
-import junit.framework.TestCase;
 
 public class DonutParserTest extends TestCase {
 

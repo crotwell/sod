@@ -3,6 +3,7 @@ package edu.sc.seis.sod.process.waveform.vector;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.MotionVectorArm;
 

@@ -5,10 +5,11 @@
  */
 package edu.sc.seis.sod.validator.model;
 
-import edu.sc.seis.sod.validator.ModelWalker;
-import edu.sc.seis.sod.validator.tour.Tourist;
 import java.util.ArrayList;
 import java.util.List;
+
+import edu.sc.seis.sod.validator.ModelWalker;
+import edu.sc.seis.sod.validator.tour.Tourist;
 
 public abstract class AbstractMultigenitorForm extends AbstractForm implements
         MultigenitorForm {

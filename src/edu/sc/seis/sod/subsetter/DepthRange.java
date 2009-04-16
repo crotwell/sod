@@ -1,7 +1,8 @@
 package edu.sc.seis.sod.subsetter;
 
-import edu.iris.Fissures.model.QuantityImpl;
 import org.w3c.dom.Element;
+
+import edu.iris.Fissures.model.QuantityImpl;
 
 /**
  * DepthRange.java Utility class for Depth Range. Created: Tue Apr 2 13:34:59

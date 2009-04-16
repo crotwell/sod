@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.process.waveform;
 
 import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.sc.seis.TauP.Arrival;

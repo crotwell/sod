@@ -2,6 +2,7 @@ package edu.sc.seis.sod.subsetter.station;
 
 import org.apache.log4j.Category;
 import org.w3c.dom.Element;
+
 import edu.iris.Fissures.TimeRange;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Station;

@@ -2,7 +2,9 @@ package edu.sc.seis.sod.subsetter.station;
 
 import java.io.IOException;
 import java.util.regex.Pattern;
+
 import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.fissuresUtil.cache.FilterNetworkAccess;

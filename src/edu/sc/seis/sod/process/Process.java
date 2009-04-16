@@ -1,5 +1,5 @@
 package edu.sc.seis.sod.process;
-import edu.sc.seis.sod.*;
+import edu.sc.seis.sod.SodElement;
 
 /**
  * Process.java

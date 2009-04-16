@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.subsetter.channel;
 
 import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
