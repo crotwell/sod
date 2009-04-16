@@ -21,7 +21,7 @@ import java.util.TimeZone;
 import javax.xml.transform.TransformerException;
 
 import org.apache.xpath.XPathAPI;
-import org.python.core.PyJavaInstance;
+import org.python.core.PyJavaType;
 import org.python.core.PyObject;
 import org.python.util.PythonInterpreter;
 import org.w3c.dom.DOMException;
@@ -197,7 +197,7 @@ public class SodUtil {
         }
         interpreter.exec("from "+moduleName+" import "+className);
         PyObject jyWaveformProcessClass = interpreter.get(className);
-        PyObject pyWaveformProcessObj = jyWaveformProcessClass.__call__(new PyJavaInstance(config));
+        PyObject pyWaveformProcessObj = jyWaveformProcessClass.__call__( PyJavaType.wrapJavaObject(config));
         Class mustImplement = load(tagName.substring("jython".length()), armNames);
         return pyWaveformProcessObj.__tojava__(mustImplement);
     }
