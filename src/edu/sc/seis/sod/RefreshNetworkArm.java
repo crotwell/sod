@@ -57,6 +57,7 @@ public class RefreshNetworkArm extends TimerTask {
             logger.info("process "+NetworkIdUtil.toString(net.get_attributes()));
             StationImpl[] stas = netArm.getSuccessfulStationsFromServer(net.get_attributes());
             logger.info("found "+stas.length+" stations in "+NetworkIdUtil.toString(net.get_attributes()));
+            if (Start.getWaveformRecipe() != null || netArm.getChannelSubsetters().size() != 0) {
             if (Start.getWaveformRecipe() instanceof MotionVectorArm) {
                 for (int s = 0; s < stas.length; s++) {
                     List<ChannelGroup> cg = netArm.getSuccessfulChannelGroupsFromServer(stas[s]);
@@ -65,6 +66,7 @@ public class RefreshNetworkArm extends TimerTask {
                 for (int s = 0; s < stas.length; s++) {
                     List<ChannelImpl> chans = netArm.getSuccessfulChannelsFromServer(stas[s]);
                 }
+            }
             }
         } catch(Throwable t) {
             String netstr = "unknown";
