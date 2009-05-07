@@ -177,6 +177,9 @@ public class NetworkArm implements Arm {
         return finder.getRefreshInterval();
     }
 
+    public List<ChannelSubsetter> getChannelSubsetters() {
+        return chanSubsetters;
+    }
     /**
      * returns an array of SuccessfulNetworks. if the refreshInterval is valid
      * it gets the networks from the database(may be embedded or external). if
