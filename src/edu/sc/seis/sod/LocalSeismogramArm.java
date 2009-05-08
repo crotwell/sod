@@ -20,9 +20,12 @@ import edu.sc.seis.fissuresUtil.cache.NSSeismogramDC;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.fissuresUtil.time.SortTool;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.process.waveform.WaveformResult;
+import edu.sc.seis.sod.process.waveform.vector.WaveformVectorProcess;
+import edu.sc.seis.sod.process.waveform.vector.WaveformVectorResult;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
 import edu.sc.seis.sod.subsetter.Subsetter;
@@ -372,23 +375,13 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
         while(it.hasNext() && result.isSuccess()) {
             processor = (WaveformProcess)it.next();
             try {
-                if(processor instanceof Threadable && ((Threadable)processor).isThreadSafe()) {
-                    result = processor.process(ecp.getEvent(),
-                                               ecp.getChannel(),
-                                               infilters,
-                                               outfilters,
-                                               result.getSeismograms(),
-                                               ecp.getCookieJar());
-                } else {
-                    synchronized(processor) {
-                        result = processor.process(ecp.getEvent(),
-                                                   ecp.getChannel(),
-                                                   infilters,
-                                                   outfilters,
-                                                   result.getSeismograms(),
-                                                   ecp.getCookieJar());
-                    }
-                }
+                result = runProcessorThreadCheck(processor,
+                                                 ecp.getEvent(),
+                                                 ecp.getChannel(),
+                                                 infilters,
+                                                 outfilters,
+                                                 result.getSeismograms(),
+                                                 ecp.getCookieJar());
             } catch(Throwable e) {
                 handle(ecp, Stage.PROCESSOR, e);
                 return;
@@ -404,6 +397,22 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
         }
     }
 
+    public static WaveformResult runProcessorThreadCheck(WaveformProcess processor,
+                                                               CacheEvent event,
+                                                               ChannelImpl channel,
+                                                               RequestFilter[] original,
+                                                               RequestFilter[] available,
+                                                               LocalSeismogramImpl[] seismograms,
+                                                               CookieJar cookieJar) throws Exception {
+        if (processor instanceof Threadable && ((Threadable)processor).isThreadSafe()) {
+            return processor.process(event, channel, original, available, seismograms, cookieJar);
+        } else {
+            synchronized(processor) {
+                return processor.process(event, channel, original, available, seismograms, cookieJar);
+            }
+        }
+    }
+    
     private static void handle(EventChannelPair ecp, Stage stage, Throwable t) {
         handle(ecp, stage, t, null);
     }

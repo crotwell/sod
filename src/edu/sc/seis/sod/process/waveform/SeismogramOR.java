@@ -17,6 +17,7 @@ import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.LocalSeismogramArm;
 import edu.sc.seis.sod.Threadable;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
@@ -38,24 +39,13 @@ public class SeismogramOR extends ForkProcess {
         WaveformResult result = new WaveformResult(false, seismograms, this);
         while(it.hasNext() && !result.isSuccess()) {
             WaveformProcess processor = (WaveformProcess)it.next();
-            if(processor instanceof Threadable
-                    && ((Threadable)processor).isThreadSafe()) {
-                result = processor.process(event,
-                                           channel,
-                                           original,
-                                           available,
-                                           result.getSeismograms(),
-                                           cookieJar);
-            } else {
-                synchronized(processor) {
-                    result = processor.process(event,
-                                               channel,
-                                               original,
-                                               available,
-                                               result.getSeismograms(),
-                                               cookieJar);
-                }
-            }
+            result = LocalSeismogramArm.runProcessorThreadCheck(process, 
+                                                                event,
+                                                                channel,
+                                                                original,
+                                                                available,
+                                                                result.getSeismograms(),
+                                                                cookieJar);
             reasons.add(result.getReason());
         } // end of while (it.hasNext())
         return new WaveformResult(result.getSeismograms(),

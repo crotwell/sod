@@ -16,6 +16,7 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.LocalSeismogramArm;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.process.waveform.ForkProcess;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
@@ -64,12 +65,13 @@ public class ORWaveformProcessWrapper implements WaveformProcessWrapper {
         int i;
         for(i = 0; b == false && i < channelGroup.getChannels().length; i++) {
             ChannelImpl chan = channelGroup.getChannels()[i];
-            WaveformResult result = subsetter.process(event,
-                                                      chan,
-                                                      original[i],
-                                                      available[i],
-                                                      ForkProcess.copySeismograms(seismograms[i]),
-                                                      cookieJar);
+            WaveformResult result = LocalSeismogramArm.runProcessorThreadCheck(subsetter,
+                                                                               event,
+                                                                               chan,
+                                                                               original[i],
+                                                                               available[i],
+                                                                               ForkProcess.copySeismograms(seismograms[i]),
+                                                                               cookieJar);
             out[i] = result.getSeismograms();
             b |= result.isSuccess();
             reason[i] = result.getReason();
@@ -95,5 +97,9 @@ public class ORWaveformProcessWrapper implements WaveformProcessWrapper {
 
     public WaveformProcess getWrappedProcess() {
         return subsetter;
+    }
+
+    public boolean isThreadSafe() {
+        return true;
     }
 }

@@ -16,6 +16,7 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.LocalSeismogramArm;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.process.waveform.ForkProcess;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
@@ -61,7 +62,7 @@ public class ANDWaveformProcessWrapper implements WaveformProcessWrapper {
         for(i = 0; b && i < channelGroup.getChannels().length; i++) {
             LocalSeismogramImpl[] copies = ForkProcess.copySeismograms(seismograms[i]);
             ChannelImpl chan = channelGroup.getChannels()[i];
-            WaveformResult result = process.process(event,
+            WaveformResult result = LocalSeismogramArm.runProcessorThreadCheck(process,event,
                                                     chan,
                                                     original[i],
                                                     available[i],
@@ -91,5 +92,9 @@ public class ANDWaveformProcessWrapper implements WaveformProcessWrapper {
 
     public WaveformProcess getWrappedProcess() {
         return process;
+    }
+
+    public boolean isThreadSafe() {
+        return true;
     }
 }
