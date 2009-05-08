@@ -185,7 +185,7 @@ public class SodDB extends AbstractHibernateDB {
     public AbstractEventChannelPair getNextRetryECP() {
         String q = "from "
                 + AbstractEventChannelPair.class.getName()
-                + "  where numRetries > 0 and (status.standingInt = "
+                + "  where (status.standingInt = "
                 + Standing.RETRY.getVal()
                 + " or status.standingInt = "
                 + Standing.CORBA_FAILURE.getVal()
