@@ -16,6 +16,13 @@ import edu.sc.seis.sod.SodUtil;
 
 
 public class PeriodicFakeEventSource implements EventSource {
+    
+    protected PeriodicFakeEventSource(MicroSecondDate startTime, TimeInterval interval, int numEvents) {
+        this.startTime = startTime;
+        this.interval = interval;
+        this.numEvents = numEvents;
+        nextEventTime = startTime;
+    }
 
     public PeriodicFakeEventSource(Element config) throws ConfigurationException {
         startTime = new MicroSecondDate(SodUtil.loadTime(SodUtil.getElement(config, "startTime")));
@@ -47,12 +54,13 @@ public class PeriodicFakeEventSource implements EventSource {
     }
 
     public CacheEvent[] next() {
-        nextEventTime = startTime.add((TimeInterval)interval.multiplyBy(eventCounter));
         if (nextEventTime.before(ClockUtil.now())) {
             eventCounter++;
+            prevEventTime = nextEventTime;
+            nextEventTime = startTime.add((TimeInterval)interval.multiplyBy(eventCounter));
             return new CacheEvent[] {
                                      new CacheEvent(MockEventAttr.create(-1),
-                                                    MockOrigin.create(nextEventTime, mags))
+                                                    MockOrigin.create(prevEventTime, mags))
             };
         }
         return new CacheEvent[0];
@@ -63,6 +71,8 @@ public class PeriodicFakeEventSource implements EventSource {
     TimeInterval interval;
 
     MicroSecondDate nextEventTime;
+    
+    MicroSecondDate prevEventTime = null;
     
     int numEvents = -1;
     
