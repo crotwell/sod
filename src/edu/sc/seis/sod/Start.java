@@ -77,6 +77,64 @@ public class Start {
                 return null;
             }
         });
+        GlobalExceptionHandler.add(new Extractor() {
+
+            public boolean canExtract(Throwable throwable) {
+                return (throwable instanceof org.hibernate.exception.NestableRuntimeException);
+            }
+
+            public String extract(Throwable throwable) {
+                String out = "";
+                if(throwable instanceof org.hibernate.exception.NestableRuntimeException) {
+                    org.hibernate.exception.NestableRuntimeException mie = (org.hibernate.exception.NestableRuntimeException)throwable;
+                    out += mie.getMessage();
+                    String[] messages = mie.getMessages();
+                    Throwable[] throwables = mie.getThrowables();
+                    for (int i = 0; i < mie.getThrowableCount(); i++) {
+                        out += "Throwable "+i+"\n"+mie.getMessage(i)+"\n";
+                    }
+                }
+                return out;
+            }
+
+            public Throwable getSubThrowable(Throwable throwable) {
+                if(throwable instanceof org.hibernate.exception.NestableRuntimeException) {
+                    Throwable sub = ((org.hibernate.exception.NestableRuntimeException)throwable).getThrowable(0);
+                    if (sub != throwable) {
+                        return sub;
+                    }
+                }
+                return null;
+            }
+        });
+        GlobalExceptionHandler.add(new Extractor() {
+
+            public boolean canExtract(Throwable throwable) {
+                return (throwable instanceof org.hibernate.JDBCException);
+            }
+
+            public String extract(Throwable throwable) {
+                String out = "";
+                if(throwable instanceof org.hibernate.JDBCException) {
+                    org.hibernate.JDBCException mie = (org.hibernate.JDBCException)throwable;
+                    out += mie.getMessage();
+                    out += "\nSQL: "+mie.getSQL();
+                    out += "\nSQLState: "+mie.getSQLState();
+                    out += "\n\nSession:\n"+AbstractHibernateDB.getSession().toString();
+                }
+                return out;
+            }
+
+            public Throwable getSubThrowable(Throwable throwable) {
+                if(throwable instanceof org.hibernate.JDBCException) {
+                    Throwable sub = ((org.hibernate.JDBCException)throwable).getSQLException();
+                    if (sub != throwable) {
+                        return sub;
+                    }
+                }
+                return null;
+            }
+        });
         GlobalExceptionHandler.registerWithAWTThread();
     }
 
