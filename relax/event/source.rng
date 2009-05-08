@@ -17,6 +17,7 @@
             <ref name="backwardsEventFinder"/>
             <ref name="CSVEventSource"/>
             <ref name="periodicFakeEventSource"/>
+            <ref name="nowFakeEventSource"/>
         </choice>
     </define>
     <define name="eventFinder">
@@ -158,9 +159,9 @@
         <element name="periodicFakeEventSource">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary>Fake events from on a repeating schedule</summary>
+                    <summary>Fake events on a repeating schedule</summary>
                     <description>Fake events are generated starting at the startTime and at the step interval thereafter until.
-                    If numEvents is -1, then events continue to be generated forever, otherwise the number given will be generated.</description>
+                    If numEvents is not provided, then events continue to be generated forever, otherwise the number given will be generated.</description>
                 </xsd:documentation>
             </xsd:annotation>
             <element name="startTime">
@@ -169,10 +170,34 @@
             <element name="interval">
                 <ref name="quantity"/>
             </element>
-            <element name="numEvents">
-                <data type="int">
-                </data>
+            <optional>
+            	<element name="numEvents">
+                	<data type="int"/>
+            	</element>
+            </optional>
+        </element>
+    </define>
+    <define name="nowFakeEventSource">
+        <element name="nowFakeEventSource">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Fake events from on a repeating schedule</summary>
+                    <description>Fake events are generated starting at the startTime and at the step interval thereafter until.
+                    If numEvents is not provided, then events continue to be generated forever, otherwise the number given will be generated.
+                    This is similar to PeridicFakeEventSource except that the event time is always the now at request time. This means
+                    that the interval between events may be less than the interval under high load conditions. This is useful cases where
+                    it is more important to
+                    be current than to proceed in uniform time steps.</description>
+                </xsd:documentation>
+            </xsd:annotation>
+            <element name="interval">
+                <ref name="quantity"/>
             </element>
+            <optional>
+            	<element name="numEvents">
+                	<data type="int"/>
+            	</element>
+            </optional>
         </element>
     </define>
 </grammar>
