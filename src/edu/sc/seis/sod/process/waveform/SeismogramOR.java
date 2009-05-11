@@ -39,7 +39,7 @@ public class SeismogramOR extends ForkProcess {
         WaveformResult result = new WaveformResult(false, seismograms, this);
         while(it.hasNext() && !result.isSuccess()) {
             WaveformProcess processor = (WaveformProcess)it.next();
-            result = LocalSeismogramArm.runProcessorThreadCheck(process, 
+            result = LocalSeismogramArm.runProcessorThreadCheck(processor, 
                                                                 event,
                                                                 channel,
                                                                 original,
