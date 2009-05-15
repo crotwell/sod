@@ -26,7 +26,6 @@ public abstract class AbstractEventChannelPair extends CookieEventPair {
         // this is weird, but calling the setter allows hibernate to autodetect a modified object
         setStatus(status);
         updateRetries();
-        getCookies().put("status", status);
         Start.getWaveformRecipe().setStatus(this);
     }
 

@@ -154,7 +154,6 @@ public class EventStationPair extends CookieEventPair {
         // this is weird, but calling the setter allows hibernate to autodetect
         // a modified object
         setStatus(status);
-        getCookies().put("status", status);
         Start.getWaveformRecipe().setStatus(this);
     }
 
