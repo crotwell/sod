@@ -1,14 +1,19 @@
 package edu.sc.seis.sod;
 
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
+import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.model.TimeInterval;
+import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
+import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.StatefulEvent;
 import edu.sc.seis.sod.hibernate.StatefulEventDB;
 import edu.sc.seis.sod.status.OutputScheduler;
+import edu.sc.seis.sod.status.eventArm.LastEventTemplate;
 import edu.sc.seis.sod.subsetter.EventEffectiveTimeOverlap;
 
 public class WaveformArm extends Thread implements Arm {
@@ -91,14 +96,20 @@ public class WaveformArm extends Thread implements Arm {
             // try a retry
             ecp = SodDB.getSingleton().getNextRetryECP();
         }
-        if(ecp == null) {
+        // normal operation is to get esp from the db, then process all ecp within the station
+        // instead of going to the database for each ecp. So only need to check for ecps occassionally
+        // mainly to pick up orphans in the event of a crash
+        // we do this  by trying if the random is less than the ecpPercentage or if we have
+        // have found an ecp in the db within the last ECP_WINDOW
+        // this cuts down on useless db acccesses
+        if(ecp == null && (retryRandom < ecpPercentage || (ClockUtil.now().subtract(lastECP).lessThan(ECP_WINDOW))) ) {
             ecp = SodDB.getSingleton().getNextECP(standing);
-        }
-        if(ecp != null) {
-            ecp.update(Status.get(Stage.EVENT_CHANNEL_SUBSETTER, Standing.INIT));
-            SodDB.commit();
-            ecp = (AbstractEventChannelPair)SodDB.getSession().get(ecp.getClass(), ecp.getDbid());
-            return ecp;
+            if(ecp != null) {
+                ecp.update(Status.get(Stage.EVENT_CHANNEL_SUBSETTER, Standing.INIT));
+                SodDB.commit();
+                ecp = (AbstractEventChannelPair)SodDB.getSession().get(ecp.getClass(), ecp.getDbid());
+                return ecp;
+            }
         }
         // no ecp/evp try e-station
         EventStationPair esp = SodDB.getSingleton().getNextESP(standing);
@@ -132,7 +143,8 @@ public class WaveformArm extends Thread implements Arm {
         // really nothing doing, might as well work on a retry?
         return SodDB.getSingleton().getNextRetryECP();
     }
-
+    
+    protected static MicroSecondDate lastECP = ClockUtil.now(); 
 
     protected static int populateEventChannelDb(Standing standing)  {
         int numEvents = 0;
@@ -217,8 +229,12 @@ public class WaveformArm extends Thread implements Arm {
         return usedProcessorNum++;
     }
 
-    private static double retryPercentage = .02;// 2 percent of the pool will be
+    private static double retryPercentage = .02;// 2 percent of the pool will be retries
+    
+    private static double ecpPercentage = .02; // most processing uses esp from db, only use ecp if crash
 
+    private static TimeInterval ECP_WINDOW = new TimeInterval(1, UnitImpl.MINUTE);
+    
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(WaveformArm.class);
     
     private static final org.apache.log4j.Logger failLogger = org.apache.log4j.Logger.getLogger("Fail.WaveformArm");
