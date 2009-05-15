@@ -138,7 +138,10 @@ public class SodDB extends AbstractHibernateDB {
     public EventNetworkPair getNextENP(Standing standing) {
         String q = "from "
                 + EventNetworkPair.class.getName()
-                + " e where e.status.stageInt = "+Stage.EVENT_CHANNEL_POPULATION.getVal()
+                + " e "
+                + " left join fetch e.event "
+                + " left join fetch e.network "
+                + " where e.status.stageInt = "+Stage.EVENT_CHANNEL_POPULATION.getVal()
                 +" and e.status.standingInt = :standing";
         Query query = getSession().createQuery(q);
         query.setInteger("standing", standing.getVal());
@@ -154,8 +157,12 @@ public class SodDB extends AbstractHibernateDB {
     public EventStationPair getNextESP(Standing standing) {
         String q = "from "
                 + EventStationPair.class.getName()
-                + " e where e.status.stageInt = "+Stage.EVENT_CHANNEL_POPULATION.getVal()
-                + " and e.status.standingInt = :inProg";
+                + " e "
+                + " left join fetch e.event "
+                + " left join fetch e.station "
+                + " left join fetch e.station.networkAttr "
+                + " where e.status.stageInt = "+Stage.EVENT_CHANNEL_POPULATION.getVal()
+                + " and e.status.standingInt = :inProg ";
         Query query = getSession().createQuery(q);
         query.setInteger("inProg", standing.getVal());
         query.setMaxResults(1);
@@ -170,7 +177,9 @@ public class SodDB extends AbstractHibernateDB {
     public AbstractEventChannelPair getNextECP(Standing standing) {
         String q = "from "
                 + AbstractEventChannelPair.class.getName()
-                + " e where e.status.stageInt = "+Stage.EVENT_CHANNEL_POPULATION.getVal()
+                + " e "
+                + " left join fetch e.event "
+                + " where e.status.stageInt = "+Stage.EVENT_CHANNEL_POPULATION.getVal()
                 + " and e.status.standingInt = :inProg";
         Query query = getSession().createQuery(q);
         query.setInteger("inProg", standing.getVal());
