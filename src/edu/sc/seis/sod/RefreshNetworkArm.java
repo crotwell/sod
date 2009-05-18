@@ -44,6 +44,7 @@ public class RefreshNetworkArm extends TimerTask {
                     networksBeingReloaded.remove(new Integer(nets[i].get_attributes().getDbid()));
                     // in case networkArm methods are waiting on this network to be refreshed 
                     notifyAll();
+                    wait();
                 }
             }
             netArm.finish();

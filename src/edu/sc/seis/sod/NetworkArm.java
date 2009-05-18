@@ -374,6 +374,7 @@ public class NetworkArm implements Arm {
         synchronized(refresh) {
             while(refresh.isNetworkBeingReloaded(net.getDbid())) {
                 try {
+                    refresh.notifyAll();
                     refresh.wait();
                 } catch(InterruptedException e) {}
             }
@@ -466,6 +467,7 @@ public class NetworkArm implements Arm {
         synchronized(refresh) {
             while(refresh.isNetworkBeingReloaded(((NetworkAttrImpl)station.getNetworkAttr()).getDbid())) {
                 try {
+                    refresh.notifyAll();
                     refresh.wait();
                 } catch(InterruptedException e) {}
             }
@@ -584,6 +586,7 @@ public class NetworkArm implements Arm {
         synchronized(refresh) {
             while(refresh.isNetworkBeingReloaded(((NetworkAttrImpl)station.getNetworkAttr()).getDbid())) {
                 try {
+                    refresh.notifyAll();
                     refresh.wait();
                 } catch(InterruptedException e) {}
             }
