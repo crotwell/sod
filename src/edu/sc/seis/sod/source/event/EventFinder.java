@@ -168,14 +168,15 @@ public class EventFinder extends AbstractSource implements EventSource {
 	 * sets the latest time queried
 	 */
 	protected void setQueryEdge(MicroSecondDate edge) {
-        SodDB sdb = new SodDB();
+        SodDB sdb = SodDB.getSingleton();
 	    QueryTime qt = sdb.getQueryTime(getUniqueName(), getDNS());
 	    if (qt != null) {
 	        qt.setTime( edge.getTimestamp());
+	        SodDB.getSession().saveOrUpdate(qt);
 	    } else {
 	        sdb.putQueryTime(new QueryTime(getUniqueName(), getDNS(), edge.getTimestamp()));
 	    }
-	    sdb.commit();
+	    SodDB.commit();
 	}
 
 	private String getUniqueName() {
