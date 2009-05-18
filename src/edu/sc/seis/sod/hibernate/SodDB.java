@@ -2,7 +2,9 @@ package edu.sc.seis.sod.hibernate;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import org.hibernate.Hibernate;
 import org.hibernate.LockMode;
@@ -113,6 +115,7 @@ public class SodDB extends AbstractHibernateDB {
         session.lock(eventNetworkPair.getNetwork(), LockMode.NONE);
         session.lock(eventNetworkPair.getEvent(), LockMode.NONE);
         session.saveOrUpdate(eventNetworkPair);
+        enpToDo.offer(eventNetworkPair);
         return eventNetworkPair;
     }
 
@@ -122,6 +125,7 @@ public class SodDB extends AbstractHibernateDB {
         session.lock(eventStationPair.getStation(), LockMode.NONE);
         session.lock(eventStationPair.getEvent(), LockMode.NONE);
         session.saveOrUpdate(eventStationPair);
+        espToDo.offer(eventStationPair);
         return eventStationPair;
     }
 
@@ -136,6 +140,13 @@ public class SodDB extends AbstractHibernateDB {
 
     /** next successful event-network to process. Returns null if no more events. */
     public EventNetworkPair getNextENP(Standing standing) {
+        EventNetworkPair enp = enpToDo.poll();
+        if (enp != null) {
+            // might be new thread
+            // ok to use even though might not be committed as hibernate flushes
+            // due to native generator for id
+            return (EventNetworkPair)getSession().get(EventNetworkPair.class, new Long(enp.getDbid()));
+        }
         String q = "from "
                 + EventNetworkPair.class.getName()
                 + " e "
@@ -155,6 +166,13 @@ public class SodDB extends AbstractHibernateDB {
 
     /** next successful event-station to process. Returns null if no more events. */
     public EventStationPair getNextESP(Standing standing) {
+        EventStationPair esp = espToDo.poll();
+        if (esp != null) {
+            // might be new thread
+            // ok to use even though might not be committed as hibernate flushes
+            // due to native generator for id
+            return (EventStationPair)getSession().get(EventStationPair.class, new Long(esp.getDbid()));
+        }
         String q = "from "
                 + EventStationPair.class.getName()
                 + " e "
@@ -728,6 +746,10 @@ public class SodDB extends AbstractHibernateDB {
         commit();
         return current;
     }
+
+    private Queue<EventNetworkPair> enpToDo = new LinkedList<EventNetworkPair>();
+    
+    private Queue<EventStationPair> espToDo = new LinkedList<EventStationPair>();
 
     private static String retry, failed, success, successPerEvent,
             failedPerEvent, retryPerEvent, successPerEventStation,
