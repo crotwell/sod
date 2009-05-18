@@ -71,6 +71,7 @@ public class NetworkArm implements Arm {
                 // still null, must be first time
                 lastQueryTime = new QueryTime(getNetworkFinderSource().getName(), getNetworkFinderSource().getDNS(), ClockUtil.wayPast().getTimestamp());
                 sodDb.putQueryTime(lastQueryTime);
+                SodDB.commit();
             }
             // only do timer if positive interval and waveform arm exists, otherwise run in thread
             if (getRefreshInterval().value > 0 && Start.getWaveformRecipe() != null) {
@@ -597,7 +598,7 @@ public class NetworkArm implements Arm {
                 return sta;
             }
             // this is probably an error condition...
-            throw new RuntimeException("Should not happen, likely indicates a race condition between NetworkArm method and RefreshNetworkArm.");
+            throw new RuntimeException("Should not happen, likely indicates a race condition between NetworkArm method and RefreshNetworkArm. Station="+StationIdUtil.toString(station)+" NetworkDbId="+((NetworkAttrImpl)station.getNetworkAttr()).getDbid());
         }
     }
     
