@@ -146,6 +146,12 @@ public class SodDB extends AbstractHibernateDB {
         return ! enpToDo.isEmpty();
     }
 
+    /** next successful event-network to process from cache. 
+     * Returns null if no more events in cache. */
+    public EventNetworkPair getNextENPFromCache(Standing standing) {
+        return enpToDo.poll();
+    }
+
     /** next successful event-network to process. Returns null if no more events. */
     public EventNetworkPair getNextENP(Standing standing) {
         EventNetworkPair enp = enpToDo.poll();
@@ -172,9 +178,15 @@ public class SodDB extends AbstractHibernateDB {
         return null;
     }
 
+    /** next successful event-station to process from memory cache. 
+     * Returns null if no more esp in memory. */
+    public EventStationPair getNextESPFromCache(Standing standing) {
+        return espToDo.poll();
+    }
+    
     /** next successful event-station to process. Returns null if no more events. */
     public EventStationPair getNextESP(Standing standing) {
-        EventStationPair esp = espToDo.poll();
+        EventStationPair esp = getNextESPFromCache(standing);
         if (esp != null) {
             // might be new thread
             // ok to use even though might not be committed as hibernate flushes

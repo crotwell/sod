@@ -99,7 +99,7 @@ public class WaveformArm extends Thread implements Arm {
         if (ecp == null && retryRandom > ecpPercentage) {
             // random not in small, so try memory esp or enp first
             if (SodDB.getSingleton().isESPTodo()) {
-                EventStationPair esp = SodDB.getSingleton().getNextESP(standing);
+                EventStationPair esp = SodDB.getSingleton().getNextESPFromCache(standing);
                 if(esp != null) {
                     esp.update(Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.INIT));
                     SodDB.commit();
@@ -109,7 +109,7 @@ public class WaveformArm extends Thread implements Arm {
             }
             // no e-station try e-network
             if (SodDB.getSingleton().isENPTodo()) {
-                EventNetworkPair enp = SodDB.getSingleton().getNextENP(standing);
+                EventNetworkPair enp = SodDB.getSingleton().getNextENPFromCache(standing);
                 if(enp != null) {
                     enp.update(Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.INIT));
                     SodDB.commit();
@@ -254,7 +254,7 @@ public class WaveformArm extends Thread implements Arm {
 
     private static double retryPercentage = .02;// 2 percent of the pool will be retries
     
-    private static double ecpPercentage = .01; // most processing uses esp from db, only use ecp if crash
+    private static double ecpPercentage = .001; // most processing uses esp from db, only use ecp if crash
 
     private static TimeInterval ECP_WINDOW = new TimeInterval(1, UnitImpl.MINUTE);
     
