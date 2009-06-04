@@ -148,19 +148,27 @@ public class SodDB extends AbstractHibernateDB {
 
     /** next successful event-network to process from cache. 
      * Returns null if no more events in cache. */
-    public EventNetworkPair getNextENPFromCache(Standing standing) {
-        return enpToDo.poll();
-    }
-
-    /** next successful event-network to process. Returns null if no more events. */
-    public EventNetworkPair getNextENP(Standing standing) {
-        EventNetworkPair enp = enpToDo.poll();
+    public EventNetworkPair getNextENPFromCache() {
+        EventNetworkPair enp =  enpToDo.poll();
         if (enp != null) {
             // might be new thread
             // ok to use even though might not be committed as hibernate flushes
             // due to native generator for id
-            return (EventNetworkPair)getSession().get(EventNetworkPair.class, new Long(enp.getDbid()));
+            return (EventNetworkPair)getSession().get(EventNetworkPair.class, 
+                                                      new Long(enp.getDbid()));
         }
+        return null;
+    }
+
+    /** next successful event-network to process. Returns null if no more events. */
+    public EventNetworkPair getNextENP() {
+        if ( ! isENPTodo()) {
+            populateENPToDo();
+        }
+        return getNextENPFromCache();
+    }
+    
+    public void populateENPToDo() {
         String q = "from "
                 + EventNetworkPair.class.getName()
                 + " e "
@@ -169,30 +177,37 @@ public class SodDB extends AbstractHibernateDB {
                 + " where e.status.stageInt = "+Stage.EVENT_CHANNEL_POPULATION.getVal()
                 +" and e.status.standingInt = :standing";
         Query query = getSession().createQuery(q);
-        query.setInteger("standing", standing.getVal());
-        query.setMaxResults(1);
-        List result = query.list();
-        if(result.size() > 0) {
-            return (EventNetworkPair)result.get(0);
+        query.setInteger("standing", Standing.INIT.getVal());
+        query.setMaxResults(100);
+        List<EventNetworkPair> result = query.list();
+        for (EventNetworkPair enpResult : result) {
+            enpToDo.offer(enpResult);
         }
-        return null;
     }
 
     /** next successful event-station to process from memory cache. 
      * Returns null if no more esp in memory. */
-    public EventStationPair getNextESPFromCache(Standing standing) {
-        return espToDo.poll();
-    }
-    
-    /** next successful event-station to process. Returns null if no more events. */
-    public EventStationPair getNextESP(Standing standing) {
-        EventStationPair esp = getNextESPFromCache(standing);
+    public EventStationPair getNextESPFromCache() {
+        EventStationPair esp = espToDo.poll();
         if (esp != null) {
             // might be new thread
             // ok to use even though might not be committed as hibernate flushes
             // due to native generator for id
-            return (EventStationPair)getSession().get(EventStationPair.class, new Long(esp.getDbid()));
+            return (EventStationPair)getSession().get(EventStationPair.class, 
+                                                      new Long(esp.getDbid()));
         }
+        return null;
+    }
+    
+    /** next successful event-station to process. Returns null if no more events. */
+    public EventStationPair getNextESP() {
+        if (! isESPTodo()) {
+            populateESPToDo();
+        }
+        return getNextESPFromCache();
+    }
+    
+    public void populateESPToDo() {
         String q = "from "
                 + EventStationPair.class.getName()
                 + " e "
@@ -202,17 +217,16 @@ public class SodDB extends AbstractHibernateDB {
                 + " where e.status.stageInt = "+Stage.EVENT_CHANNEL_POPULATION.getVal()
                 + " and e.status.standingInt = :inProg ";
         Query query = getSession().createQuery(q);
-        query.setInteger("inProg", standing.getVal());
-        query.setMaxResults(1);
-        List result = query.list();
-        if(result.size() > 0) {
-            return (EventStationPair)result.get(0);
+        query.setInteger("inProg", Standing.INIT.getVal());
+        query.setMaxResults(1000);
+        List<EventStationPair> result = query.list();
+        for (EventStationPair eventStationPair : result) {
+            espToDo.offer(eventStationPair);
         }
-        return null;
     }
 
     /** next successful event-channel to process. Returns null if no more events. */
-    public AbstractEventChannelPair getNextECP(Standing standing) {
+    public AbstractEventChannelPair getNextECP() {
         String q = "from "
                 + AbstractEventChannelPair.class.getName()
                 + " e "
@@ -220,7 +234,7 @@ public class SodDB extends AbstractHibernateDB {
                 + " where e.status.stageInt = "+Stage.EVENT_CHANNEL_POPULATION.getVal()
                 + " and e.status.standingInt = :inProg";
         Query query = getSession().createQuery(q);
-        query.setInteger("inProg", standing.getVal());
+        query.setInteger("inProg", Standing.INIT.getVal());
         query.setMaxResults(1);
         List<AbstractEventChannelPair> result = query.list();
         if(result.size() > 0) {
@@ -229,7 +243,19 @@ public class SodDB extends AbstractHibernateDB {
         return null;
     }
 
+    public AbstractEventChannelPair getNextRetryECPFromCache() {
+        AbstractEventChannelPair ecp = retryToDo.poll();
+        if (ecp != null) {
+            return (AbstractEventChannelPair)getSession().get(AbstractEventChannelPair.class, 
+                                                             new Long(ecp.getDbid()));
+        }
+        return null;
+    }
+
     public AbstractEventChannelPair getNextRetryECP() {
+        if (! retryToDo.isEmpty()) {
+            return getNextRetryECPFromCache();
+        }
         String q = "from "
                 + AbstractEventChannelPair.class.getName()
                 + "  where (status.standingInt = "
@@ -244,12 +270,12 @@ public class SodDB extends AbstractHibernateDB {
         query.setFloat("base", retryBase);
         query.setFloat("minDelay", minRetryDelay);
         query.setFloat("maxDelay", maxRetryDelay);
-        query.setMaxResults(1);
+        query.setMaxResults(10);
         List<AbstractEventChannelPair> result = query.list();
-        if(result.size() > 0) {
-            return result.get(0);
+        for (AbstractEventChannelPair abstractEventChannelPair : result) {
+            retryToDo.offer(abstractEventChannelPair);
         }
-        return null;
+        return getNextRetryECPFromCache();
     }
 
     public int getNumWorkUnits(Standing standing) {
@@ -766,6 +792,8 @@ public class SodDB extends AbstractHibernateDB {
         commit();
         return current;
     }
+
+    private Queue<AbstractEventChannelPair> retryToDo = new LinkedList<AbstractEventChannelPair>();
 
     private Queue<EventNetworkPair> enpToDo = new LinkedList<EventNetworkPair>();
     

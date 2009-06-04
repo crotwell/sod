@@ -480,6 +480,8 @@ public class NetworkArm implements Arm {
                 logger.debug("successfulChannels " + station.get_code()
                         + " - from db " + sta.size());
                 return sta;
+            } else {
+                allChannelFailureStations.add(StationIdUtil.toStringNoDates(station));
             }
             // this is probably an error condition...
             throw new RuntimeException("Should not happen, likely indicates a race condition between NetworkArm method and RefreshNetworkArm. "+StationIdUtil.toString(station));

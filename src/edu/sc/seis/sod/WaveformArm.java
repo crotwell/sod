@@ -30,8 +30,10 @@ public class WaveformArm extends Thread implements Arm {
     
     public void run() {
         try {
+            SodDB.getSingleton().populateENPToDo();
+            SodDB.getSingleton().populateESPToDo();
             while(true) {
-                AbstractEventPair next = getNext(Standing.INIT);
+                AbstractEventPair next = getNext();
                 while(next == null
                         && (possibleToContinue()
                                 || SodDB.getSingleton().getNumWorkUnits(Standing.RETRY) != 0 || SodDB.getSingleton()
@@ -51,7 +53,7 @@ public class WaveformArm extends Thread implements Arm {
                             }
                     } catch(InterruptedException e) {}
                     logger.debug("done waiting on event arm");
-                    next = getNext(Standing.INIT);
+                    next = getNext();
                 }
                 if(next != null) {
                     processorStartWork();
@@ -89,7 +91,7 @@ public class WaveformArm extends Thread implements Arm {
     
     boolean active = true;
     
-    protected static synchronized AbstractEventPair getNext(Standing standing) {
+    protected static synchronized AbstractEventPair getNext() {
         double retryRandom = Math.random();
         AbstractEventChannelPair ecp = null;
         if(retryRandom < retryPercentage) {
@@ -99,7 +101,7 @@ public class WaveformArm extends Thread implements Arm {
         if (ecp == null && retryRandom > ecpPercentage) {
             // random not in small, so try memory esp or enp first
             if (SodDB.getSingleton().isESPTodo()) {
-                EventStationPair esp = SodDB.getSingleton().getNextESPFromCache(standing);
+                EventStationPair esp = SodDB.getSingleton().getNextESPFromCache();
                 if(esp != null) {
                     esp.update(Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.INIT));
                     SodDB.commit();
@@ -109,7 +111,7 @@ public class WaveformArm extends Thread implements Arm {
             }
             // no e-station try e-network
             if (SodDB.getSingleton().isENPTodo()) {
-                EventNetworkPair enp = SodDB.getSingleton().getNextENPFromCache(standing);
+                EventNetworkPair enp = SodDB.getSingleton().getNextENPFromCache();
                 if(enp != null) {
                     enp.update(Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.INIT));
                     SodDB.commit();
@@ -126,7 +128,7 @@ public class WaveformArm extends Thread implements Arm {
         // have found an ecp in the db within the last ECP_WINDOW
         // this cuts down on useless db acccesses
         if(ecp == null && (retryRandom < ecpPercentage || (ClockUtil.now().subtract(lastECP).lessThan(ECP_WINDOW))) ) {
-            ecp = SodDB.getSingleton().getNextECP(standing);
+            ecp = SodDB.getSingleton().getNextECP();
             if(ecp != null) {
                 ecp.update(Status.get(Stage.EVENT_CHANNEL_SUBSETTER, Standing.INIT));
                 SodDB.commit();
@@ -135,7 +137,7 @@ public class WaveformArm extends Thread implements Arm {
             }
         }
         // no ecp/evp try e-station
-        EventStationPair esp = SodDB.getSingleton().getNextESP(standing);
+        EventStationPair esp = SodDB.getSingleton().getNextESP();
         if(esp != null) {
             esp.update(Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.INIT));
             SodDB.commit();
@@ -143,7 +145,7 @@ public class WaveformArm extends Thread implements Arm {
             return esp;
         }
         // no e-station try e-network
-        EventNetworkPair enp = SodDB.getSingleton().getNextENP(standing);
+        EventNetworkPair enp = SodDB.getSingleton().getNextENP();
         if(enp != null) {
             enp.update(Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.INIT));
             SodDB.commit();
@@ -154,7 +156,7 @@ public class WaveformArm extends Thread implements Arm {
         // go get more events to make e-net pairs
         int numEvents = populateEventChannelDb(Standing.INIT);
         if(numEvents != 0) {
-            enp = SodDB.getSingleton().getNextENP(standing);
+            enp = SodDB.getSingleton().getNextENP();
             if(enp != null) {
                 enp.update(Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.INIT));
                 SodDB.commit();
@@ -254,7 +256,7 @@ public class WaveformArm extends Thread implements Arm {
 
     private static double retryPercentage = .02;// 2 percent of the pool will be retries
     
-    private static double ecpPercentage = .001; // most processing uses esp from db, only use ecp if crash
+    private static double ecpPercentage = .00001; // most processing uses esp from db, only use ecp if crash
 
     private static TimeInterval ECP_WINDOW = new TimeInterval(1, UnitImpl.MINUTE);
     
