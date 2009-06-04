@@ -96,6 +96,29 @@ public class WaveformArm extends Thread implements Arm {
             // try a retry
             ecp = SodDB.getSingleton().getNextRetryECP();
         }
+        if (ecp == null && retryRandom > ecpPercentage) {
+            // random not in small, so try memory esp or enp first
+            if (SodDB.getSingleton().isESPTodo()) {
+                EventStationPair esp = SodDB.getSingleton().getNextESP(standing);
+                if(esp != null) {
+                    esp.update(Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.INIT));
+                    SodDB.commit();
+                    SodDB.getSession().update(esp);
+                    return esp;
+                }
+            }
+            // no e-station try e-network
+            if (SodDB.getSingleton().isENPTodo()) {
+                EventNetworkPair enp = SodDB.getSingleton().getNextENP(standing);
+                if(enp != null) {
+                    enp.update(Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.INIT));
+                    SodDB.commit();
+                    // reattach to new session
+                    SodDB.getSession().update(enp);
+                    return enp;
+                }
+            }
+        }
         // normal operation is to get esp from the db, then process all ecp within the station
         // instead of going to the database for each ecp. So only need to check for ecps occassionally
         // mainly to pick up orphans in the event of a crash
@@ -231,7 +254,7 @@ public class WaveformArm extends Thread implements Arm {
 
     private static double retryPercentage = .02;// 2 percent of the pool will be retries
     
-    private static double ecpPercentage = .02; // most processing uses esp from db, only use ecp if crash
+    private static double ecpPercentage = .01; // most processing uses esp from db, only use ecp if crash
 
     private static TimeInterval ECP_WINDOW = new TimeInterval(1, UnitImpl.MINUTE);
     
