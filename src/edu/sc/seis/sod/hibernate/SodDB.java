@@ -137,6 +137,14 @@ public class SodDB extends AbstractHibernateDB {
         session.saveOrUpdate(eventChannelPair);
         return eventChannelPair;
     }
+    
+    public boolean isESPTodo() {
+        return ! espToDo.isEmpty();
+    }
+    
+    public boolean isENPTodo() {
+        return ! enpToDo.isEmpty();
+    }
 
     /** next successful event-network to process. Returns null if no more events. */
     public EventNetworkPair getNextENP(Standing standing) {
