@@ -41,7 +41,7 @@ public class VelocityStationGetter {
 
     NetworkId net;
     
-    static SodDB sodDb = new SodDB();
+    static SodDB sodDb = SodDB.getSingleton();
 
     public int getNumSuccessful(StationImpl station) throws SQLException {
     	return sodDb.getNumSuccessful(station);

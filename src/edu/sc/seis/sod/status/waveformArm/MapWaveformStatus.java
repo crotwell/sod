@@ -45,7 +45,7 @@ public class MapWaveformStatus implements Runnable {
 
     public MapWaveformStatus(MapPool pool) throws SQLException {
         this.pool = pool;
-        soddb = new SodDB();
+        soddb = SodDB.getSingleton();
     }
 
     public void run() {

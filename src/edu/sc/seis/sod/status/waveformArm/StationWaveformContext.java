@@ -21,12 +21,12 @@ public class StationWaveformContext  extends AbstractContext {
     public StationWaveformContext(StationImpl station) throws SQLException {
         super();
         this.stationId = station;
-        jdbcECS = new SodDB();
+        jdbcECS = SodDB.getSingleton();
     }
     public StationWaveformContext(Context context, StationImpl station) throws SQLException {
         super(context);
         this.stationId = station;
-        jdbcECS = new SodDB();
+        jdbcECS = SodDB.getSingleton();
     }
 
 

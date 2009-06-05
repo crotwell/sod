@@ -157,9 +157,9 @@ public class EventFinder extends AbstractSource implements EventSource {
 	 * @return - latest time queried
 	 */
 	protected MicroSecondDate getQueryEdge() throws NotFound {
-        SodDB sdb = new SodDB();
+        SodDB sdb = SodDB.getSingleton();
 	    QueryTime t = sdb.getQueryTime(getUniqueName(), getDNS());
-	    sdb.commit();
+	    SodDB.commit();
 	    if (t == null) {throw new NotFound();}
 	    return new MicroSecondDate(t.getTime());
 	}

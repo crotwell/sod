@@ -58,7 +58,7 @@ public class Play extends edu.sc.seis.fissuresUtil.hibernate.Play {
     }
     
     public void testCookie() {
-        SodDB sodDb = new SodDB();
+        SodDB sodDb = SodDB.getSingleton();
         EventChannelPair ecp = MockECP.getECP();
         NetworkDB netdb = NetworkDB.getSingleton();
         netdb.put(ecp.getChannel());
@@ -69,7 +69,7 @@ public class Play extends edu.sc.seis.fissuresUtil.hibernate.Play {
     }
     
     protected void storeECP() {
-        SodDB sodDb = new SodDB();
+        SodDB sodDb = SodDB.getSingleton();
         EventChannelPair ecp = MockECP.getECP();
         NetworkDB netdb = NetworkDB.getSingleton();
         netdb.put(ecp.getChannel());

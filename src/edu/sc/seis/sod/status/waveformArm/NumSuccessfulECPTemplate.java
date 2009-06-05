@@ -7,7 +7,7 @@ import edu.sc.seis.sod.status.AllTypeTemplate;
 
 public class NumSuccessfulECPTemplate extends AllTypeTemplate{
     public NumSuccessfulECPTemplate() throws SQLException{
-        ecs = new SodDB();
+        ecs = SodDB.getSingleton();
     }
 
     public String getResult(){

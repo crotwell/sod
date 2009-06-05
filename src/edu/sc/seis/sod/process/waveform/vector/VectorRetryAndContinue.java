@@ -27,7 +27,7 @@ public class VectorRetryAndContinue extends VectorResultWrapper {
                                         LocalSeismogramImpl[][] seismograms,
                                         CookieJar cookieJar) throws Exception {
         if(sodDb == null) {
-            sodDb = new SodDB();
+            sodDb = SodDB.getSingleton();
         }
         WaveformVectorResult result = subProcess.process(event,
                                                          channelGroup,

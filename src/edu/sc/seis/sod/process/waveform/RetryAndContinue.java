@@ -31,7 +31,7 @@ public class RetryAndContinue extends ResultWrapper {
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) throws Exception {
         if(sodDb == null) {
-            sodDb = new SodDB();
+            sodDb = SodDB.getSingleton();
         }
         WaveformResult result = subprocess.process(event,
                                                    channel,

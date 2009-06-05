@@ -45,6 +45,8 @@ public class SodDB extends AbstractHibernateDB {
 
     static String configFile = "edu/sc/seis/sod/hibernate/sod.hbm.xml";
 
+    protected SodDB() {} // only for singleton
+    
     public static void configHibernate(Configuration config) {
         logger.debug("adding to HibernateUtil   " + configFile);
         config.addResource(configFile, SodDB.class.getClassLoader());
@@ -67,8 +69,6 @@ public class SodDB extends AbstractHibernateDB {
                                                           "extract(epoch from (?2 - ?1))"));
         }
     }
-
-    public SodDB() {}
 
     public void reopenSuspendedEventChannelPairs(String processingRule, boolean vector) {
         Stage[] stages = {Stage.EVENT_STATION_SUBSETTER,

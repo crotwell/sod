@@ -18,7 +18,7 @@ import edu.sc.seis.sod.Status;
 
 public class StatefulEventDB {
 
-    public StatefulEventDB() {
+    protected StatefulEventDB() {
         trans = new EventToStatefulDBTranslater();
     }
 

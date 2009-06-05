@@ -17,7 +17,7 @@ public abstract class WaveformWorkUnit implements Runnable {
     protected int numRetries;
     protected Timestamp lastQuery;
     
-    protected static SodDB sodDb = new SodDB();
+    protected static SodDB sodDb = SodDB.getSingleton();
 
     public static final org.apache.log4j.Logger failLogger = org.apache.log4j.Logger.getLogger("Fail.WaveformArm");
 

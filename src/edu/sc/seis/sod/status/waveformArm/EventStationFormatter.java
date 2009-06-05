@@ -73,7 +73,7 @@ public class EventStationFormatter extends StationFormatter{
     
     private CacheEvent ev;
 
-    private static SodDB evStatus = new SodDB();;
+    private static SodDB evStatus = SodDB.getSingleton();;
 
 }
 

@@ -246,13 +246,13 @@ public class Start {
         }
         AbstractHibernateDB.deploySchema();
         // check that hibernate is ok
-        SodDB sodDb = new SodDB();
+        SodDB sodDb = SodDB.getSingleton();
         logger.debug("SodDB in init document:" + sodDb);
-        Object s = sodDb.getSession();
+        Object s = SodDB.getSession();
         if(s == null) {
             logger.warn("Session is null");
         }
-        sodDb.rollback();
+        SodDB.rollback();
         CommonAccess.initialize(props, args.getInitialArgs());
     }
 
@@ -563,11 +563,11 @@ public class Start {
     }
 
     private void checkDBVersion() {
-        SodDB sodDb = new SodDB();
+        SodDB sodDb = SodDB.getSingleton();
         try {
             logger.debug("SodDB in check DBVersion:" + sodDb);
             Version dbVersion = sodDb.getDBVersion();
-            sodDb.commit();
+            SodDB.commit();
             if(dbVersion == null) {
                 throw new RuntimeException("db version is null");
             }
@@ -584,14 +584,14 @@ public class Start {
             }
         } catch(Exception e) {
             logger.error(e);
-            sodDb.rollback();
+            SodDB.rollback();
             GlobalExceptionHandler.handle("Trouble checking database version",
                                           e);
         }
     }
 
     private void checkConfig(InputSource is) {
-        SodDB sodDb = new SodDB();
+        SodDB sodDb = SodDB.getSingleton();
         try {
             Thread.sleep(1000);
         } catch(InterruptedException e1) {}
@@ -608,11 +608,11 @@ public class Start {
                             + "It may not be advisable to continue this SOD run.");
                 }
             }
-            sodDb.commit();
+            SodDB.commit();
         } catch(Exception e) {
             GlobalExceptionHandler.handle("Trouble checking stored config file",
                                           e);
-            sodDb.rollback();
+            SodDB.rollback();
         }
     }
 

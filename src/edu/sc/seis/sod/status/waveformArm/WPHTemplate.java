@@ -22,7 +22,7 @@ import edu.sc.seis.sod.status.AllTypeTemplate;
 public class WPHTemplate extends AllTypeTemplate {
 
     public WPHTemplate() throws SQLException {
-        ecs = new SodDB();
+        ecs = SodDB.getSingleton();
     }
 
     public String getResult() {
