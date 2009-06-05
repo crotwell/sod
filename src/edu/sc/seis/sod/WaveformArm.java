@@ -17,7 +17,7 @@ import edu.sc.seis.sod.status.eventArm.LastEventTemplate;
 import edu.sc.seis.sod.subsetter.EventEffectiveTimeOverlap;
 
 public class WaveformArm extends Thread implements Arm {
-
+    
     public WaveformArm(int nextProcessorNum, AbstractWaveformRecipe waveformRecipe) {
         super("WaveformArm " + nextProcessorNum);
         this.recipe = waveformRecipe;
@@ -30,8 +30,6 @@ public class WaveformArm extends Thread implements Arm {
     
     public void run() {
         try {
-            SodDB.getSingleton().populateENPToDo();
-            SodDB.getSingleton().populateESPToDo();
             while(true) {
                 AbstractEventPair next = getNext();
                 while(next == null
