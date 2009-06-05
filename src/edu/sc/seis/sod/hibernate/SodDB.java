@@ -148,7 +148,7 @@ public class SodDB extends AbstractHibernateDB {
 
     /** next successful event-network to process from cache. 
      * Returns null if no more events in cache. */
-    public EventNetworkPair getNextENPFromCache() {
+    public synchronized EventNetworkPair getNextENPFromCache() {
         EventNetworkPair enp =  enpToDo.poll();
         if (enp != null) {
             // might be new thread
@@ -161,14 +161,14 @@ public class SodDB extends AbstractHibernateDB {
     }
 
     /** next successful event-network to process. Returns null if no more events. */
-    public EventNetworkPair getNextENP() {
+    public synchronized EventNetworkPair getNextENP() {
         if ( ! isENPTodo()) {
             populateENPToDo();
         }
         return getNextENPFromCache();
     }
     
-    public void populateENPToDo() {
+    public synchronized void populateENPToDo() {
         String q = "from "
                 + EventNetworkPair.class.getName()
                 + " e "
@@ -187,7 +187,7 @@ public class SodDB extends AbstractHibernateDB {
 
     /** next successful event-station to process from memory cache. 
      * Returns null if no more esp in memory. */
-    public EventStationPair getNextESPFromCache() {
+    public synchronized EventStationPair getNextESPFromCache() {
         EventStationPair esp = espToDo.poll();
         if (esp != null) {
             // might be new thread
@@ -200,14 +200,14 @@ public class SodDB extends AbstractHibernateDB {
     }
     
     /** next successful event-station to process. Returns null if no more events. */
-    public EventStationPair getNextESP() {
+    public synchronized EventStationPair getNextESP() {
         if (! isESPTodo()) {
             populateESPToDo();
         }
         return getNextESPFromCache();
     }
     
-    public void populateESPToDo() {
+    public synchronized void populateESPToDo() {
         String q = "from "
                 + EventStationPair.class.getName()
                 + " e "
@@ -243,7 +243,7 @@ public class SodDB extends AbstractHibernateDB {
         return null;
     }
 
-    public AbstractEventChannelPair getNextRetryECPFromCache() {
+    public synchronized AbstractEventChannelPair getNextRetryECPFromCache() {
         AbstractEventChannelPair ecp = retryToDo.poll();
         if (ecp != null) {
             return (AbstractEventChannelPair)getSession().get(AbstractEventChannelPair.class, 
@@ -252,7 +252,7 @@ public class SodDB extends AbstractHibernateDB {
         return null;
     }
 
-    public AbstractEventChannelPair getNextRetryECP() {
+    public synchronized AbstractEventChannelPair getNextRetryECP() {
         if (! retryToDo.isEmpty()) {
             return getNextRetryECPFromCache();
         }
