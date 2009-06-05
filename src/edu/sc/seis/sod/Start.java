@@ -557,7 +557,7 @@ public class Start {
                 }
             }
         } else if(runProps.reopenEvents()) {
-            StatefulEventDB eventDb = new StatefulEventDB();
+            StatefulEventDB eventDb = StatefulEventDB.getSingleton();
             eventDb.restartCompletedEvents();
         }
     }
