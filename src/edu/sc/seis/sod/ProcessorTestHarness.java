@@ -24,7 +24,7 @@ public class ProcessorTestHarness {
         ForkProcess internalFork = (ForkProcess)orWrapper.getWrappedProcess();
         RecordSectionDisplayGenerator gen = (RecordSectionDisplayGenerator)internalFork.getWrappedProcessors()[1];
         System.out.println(gen);
-        EventDB events = new EventDB();
+        EventDB events = EventDB.getSingleton();
         gen.makeRecordSection(events.getEvent(67435));
     }
 }

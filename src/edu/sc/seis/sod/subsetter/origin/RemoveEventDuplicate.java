@@ -56,7 +56,7 @@ public class RemoveEventDuplicate implements OriginSubsetter {
 
     public StatefulEventDB getEventStatusTable() throws SQLException {
         if (eventTable == null) {
-            eventTable = new StatefulEventDB();
+            eventTable = StatefulEventDB.getSingleton();
         }
         return eventTable;
     }

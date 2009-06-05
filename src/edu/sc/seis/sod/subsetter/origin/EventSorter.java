@@ -28,7 +28,7 @@ public class EventSorter {
 
 	public EventSorter(Element config) {
 		try {
-			evStatus = new StatefulEventDB();
+			evStatus = StatefulEventDB.getSingleton();
 			setSorting(config);
 		} catch (SQLException e) {
 			GlobalExceptionHandler.handle(

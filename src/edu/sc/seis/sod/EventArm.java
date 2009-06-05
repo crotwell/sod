@@ -49,7 +49,7 @@ public class EventArm implements Arm {
     public EventArm(Element config, boolean waitForWaveformProcessing)
             throws ConfigurationException {
         this.waitForWaveformProcessing = waitForWaveformProcessing;
-        eventStatus = new StatefulEventDB();
+        eventStatus = StatefulEventDB.getSingleton();
         if (config != null) {
         processConfig(config);
         }

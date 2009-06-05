@@ -25,7 +25,7 @@ public class TotalLoserEventCleaner extends TimerTask {
 
     public TotalLoserEventCleaner(TimeInterval lag) {
         this.lagInterval = lag;
-        eventdb = new StatefulEventDB();
+        eventdb = StatefulEventDB.getSingleton();
        // Timer t = new Timer(true);
        // t.schedule(this, 0, ONE_WEEK);
     }
