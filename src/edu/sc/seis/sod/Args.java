@@ -58,6 +58,10 @@ public class Args {
                        'V',
                        "validate",
                        "Validate the recipe and exit"));
+        add(new Switch("quick",
+                       'q',
+                       "quick",
+                       "Run quick and dirty, the database is not saved to disk, hence no crash recovery"));
         add(new Switch("invalid",
                        'i',
                        "invalid",
@@ -217,6 +221,10 @@ public class Args {
 
     public String getRecipe() {
         return result.getString("recipe");
+    }
+
+    public boolean isQuickAndDirty() {
+        return result.getBoolean("quick");
     }
 
     public boolean onlyValidate() {

@@ -177,6 +177,9 @@ public class Start {
         } else {
             Start.props = props;
         }
+        if (args.isQuickAndDirty()) {
+            Start.props.put("fissuresUtil.database.url", "jdbc:hsqldb:mem:SodDB");
+        }
         logger.info("Recipe: "+configFileName);
         initDatabase();
     }
