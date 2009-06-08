@@ -146,13 +146,27 @@
                             href="../../csvEvents.html">look here</a>.</description>
                 </xsd:documentation>
             </xsd:annotation>
-            <element name="filename">
-                <data type="string">
-                    <xsd:annotation>
-                        <example>csvEvents.txt</example>
-                    </xsd:annotation>
-                </data>
-            </element>
+            <choice>
+                <element name="filename">
+                    <data type="string">
+                        <xsd:annotation>
+                            <example>csvEvents.txt</example>
+                        </xsd:annotation>
+                    </data>
+                </element>
+                <element name="events">
+                    <data type="string">
+                        <xsd:annotation>
+                            <example>
+time, magnitude, latitude, longitude, depth
+2006-05-09T13:15:00.000Z, 7.0, -20.21, -173.90, 16
+2006-05-09T14:57:14.000Z, 5.5, -19.70, -172.53, 40
+2006-05-10T06:03:30.000Z, 5.2, -20.75, -173.10, 38
+                            </example>
+                        </xsd:annotation>
+                    </data>
+                </element>
+            </choice>
         </element>
     </define>
     <define name="periodicFakeEventSource">

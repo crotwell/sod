@@ -3,6 +3,7 @@ package edu.sc.seis.sod.source.event;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,10 +41,24 @@ import edu.sc.seis.sod.subsetter.AreaSubsetter;
 public class CSVEventSource extends SimpleEventSource {
 
     public CSVEventSource(Element config) throws ConfigurationException {
-        this(DOMHelper.extractText(config, "filename"));
+        if (DOMHelper.hasElement(config, "filename")) {
+            initFromFile(DOMHelper.extractText(config, "filename"));
+        } else if (DOMHelper.hasElement(config, "events")) {
+            try {
+                events = getEventsFromReader(new StringReader(DOMHelper.extractText(config, "events").trim()));
+            } catch(IOException e) {
+                throw new ConfigurationException("Unable to read events from:" + DOMHelper.extractText(config, "events"), e);
+            }
+        } else {
+            throw new ConfigurationException("Can't find filename or events in configuration.");
+        }
     }
     
     public CSVEventSource(String filename) throws ConfigurationException {
+        initFromFile(filename);
+    }
+    
+    protected void initFromFile(String filename) throws ConfigurationException {
         this.csvFilename = filename;
         try {
             events = getEventsFromCSVFile(csvFilename);
