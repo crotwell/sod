@@ -74,7 +74,7 @@ public class find_stations extends CommandLineTool {
 
     private List needsStationAndIfSpecified;
 
-    private FlaggedOption outputFormatFlag;
+    protected FlaggedOption outputFormatFlag;
 
     public static void main(String[] args) throws Exception {
         CommandLineTool.run(new find_stations(args));
