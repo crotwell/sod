@@ -214,7 +214,6 @@ public class SodDB extends AbstractHibernateDB {
                 + " left join fetch e.event "
                 + " left join fetch e.station "
                 + " left join fetch e.station.networkAttr "
-                + " left join fetch e.station.location "
                 + " where e.status.stageInt = "+Stage.EVENT_CHANNEL_POPULATION.getVal()
                 + " and e.status.standingInt = :inProg ";
         Query query = getSession().createQuery(q);
@@ -247,7 +246,7 @@ public class SodDB extends AbstractHibernateDB {
     public synchronized AbstractEventChannelPair getNextRetryECPFromCache() {
         AbstractEventChannelPair ecp = retryToDo.poll();
         if (ecp != null) {
-            return (AbstractEventChannelPair)getSession().get(AbstractEventChannelPair.class, 
+            return (AbstractEventChannelPair)getSession().get(ecp.getClass(), 
                                                              new Long(ecp.getDbid()));
         }
         return null;
