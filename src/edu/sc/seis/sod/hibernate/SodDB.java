@@ -214,6 +214,7 @@ public class SodDB extends AbstractHibernateDB {
                 + " left join fetch e.event "
                 + " left join fetch e.station "
                 + " left join fetch e.station.networkAttr "
+                + " left join fetch e.station.location "
                 + " where e.status.stageInt = "+Stage.EVENT_CHANNEL_POPULATION.getVal()
                 + " and e.status.standingInt = :inProg ";
         Query query = getSession().createQuery(q);
@@ -270,7 +271,7 @@ public class SodDB extends AbstractHibernateDB {
         query.setFloat("base", retryBase);
         query.setFloat("minDelay", minRetryDelay);
         query.setFloat("maxDelay", maxRetryDelay);
-        query.setMaxResults(10);
+        query.setMaxResults(1000);
         List<AbstractEventChannelPair> result = query.list();
         for (AbstractEventChannelPair abstractEventChannelPair : result) {
             retryToDo.offer(abstractEventChannelPair);
