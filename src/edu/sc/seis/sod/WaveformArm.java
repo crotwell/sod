@@ -92,9 +92,14 @@ public class WaveformArm extends Thread implements Arm {
     protected static synchronized AbstractEventPair getNext() {
         double retryRandom = Math.random();
         AbstractEventChannelPair ecp = null;
-        if(retryRandom < retryPercentage) {
+        if(retryRandom < getRetryPercentage()) {
             // try a retry
             ecp = SodDB.getSingleton().getNextRetryECP();
+            if (ecp != null) {
+                retryFoundLastTime = true;
+                return ecp;
+            }
+            retryFoundLastTime = false;
         }
         if (ecp == null && retryRandom > ecpPercentage) {
             // random not in small, so try memory esp or enp first
@@ -163,8 +168,8 @@ public class WaveformArm extends Thread implements Arm {
                 return enp;
             }
         }
-        // really nothing doing, might as well work on a retry?
-        return SodDB.getSingleton().getNextRetryECP();
+        // really nothing doing, might as well work on a retry if one is ready?
+        return SodDB.getSingleton().getNextRetryECPFromCache();
     }
     
     protected static MicroSecondDate lastECP = ClockUtil.now(); 
@@ -252,7 +257,16 @@ public class WaveformArm extends Thread implements Arm {
         return usedProcessorNum++;
     }
 
-    private static double retryPercentage = .02;// 2 percent of the pool will be retries
+    private static double getRetryPercentage() {
+        // weight retry percentage if we found one last time
+        return retryPercentage * ( retryFoundLastTime ? 1 : 1000 );
+    }
+    
+    /** percent of the pool that will be retries, 
+        unless we found one last time through, in which case it will be 1000 times the percent */
+    private static double retryPercentage = .0001; 
+    
+    private static boolean retryFoundLastTime = true;
     
     private static double ecpPercentage = .00001; // most processing uses esp from db, only use ecp if crash
 
