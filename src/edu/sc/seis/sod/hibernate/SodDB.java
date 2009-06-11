@@ -1,5 +1,7 @@
 package edu.sc.seis.sod.hibernate;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -115,7 +117,9 @@ public class SodDB extends AbstractHibernateDB {
         session.lock(eventNetworkPair.getNetwork(), LockMode.NONE);
         session.lock(eventNetworkPair.getEvent(), LockMode.NONE);
         session.saveOrUpdate(eventNetworkPair);
-        enpToDo.offer(eventNetworkPair);
+        synchronized(enpToDo) {
+            enpToDo.offer(eventNetworkPair);
+        }
         return eventNetworkPair;
     }
 
@@ -125,7 +129,9 @@ public class SodDB extends AbstractHibernateDB {
         session.lock(eventStationPair.getStation(), LockMode.NONE);
         session.lock(eventStationPair.getEvent(), LockMode.NONE);
         session.saveOrUpdate(eventStationPair);
-        espToDo.offer(eventStationPair);
+        synchronized(espToDo) {
+            espToDo.offer(eventStationPair);
+        }
         return eventStationPair;
     }
 
@@ -139,17 +145,24 @@ public class SodDB extends AbstractHibernateDB {
     }
     
     public boolean isESPTodo() {
-        return ! espToDo.isEmpty();
+        synchronized(espToDo) {
+            return ! espToDo.isEmpty();
+        }
     }
     
     public boolean isENPTodo() {
-        return ! enpToDo.isEmpty();
+        synchronized(enpToDo) {
+            return ! enpToDo.isEmpty();
+        }
     }
 
     /** next successful event-network to process from cache. 
      * Returns null if no more events in cache. */
     public synchronized EventNetworkPair getNextENPFromCache() {
-        EventNetworkPair enp =  enpToDo.poll();
+        EventNetworkPair enp;
+        synchronized(enpToDo) {
+            enp = enpToDo.poll();
+        }
         if (enp != null) {
             // might be new thread
             // ok to use even though might not be committed as hibernate flushes
@@ -181,14 +194,19 @@ public class SodDB extends AbstractHibernateDB {
         query.setMaxResults(100);
         List<EventNetworkPair> result = query.list();
         for (EventNetworkPair enpResult : result) {
-            enpToDo.offer(enpResult);
+            synchronized(enpToDo) {
+                enpToDo.offer(enpResult);
+            }
         }
     }
 
     /** next successful event-station to process from memory cache. 
      * Returns null if no more esp in memory. */
     public synchronized EventStationPair getNextESPFromCache() {
-        EventStationPair esp = espToDo.poll();
+        EventStationPair esp;
+        synchronized(espToDo) {
+            esp = espToDo.poll();
+        }
         if (esp != null) {
             // might be new thread
             // ok to use even though might not be committed as hibernate flushes
@@ -221,7 +239,9 @@ public class SodDB extends AbstractHibernateDB {
         query.setMaxResults(1000);
         List<EventStationPair> result = query.list();
         for (EventStationPair eventStationPair : result) {
-            espToDo.offer(eventStationPair);
+            synchronized(espToDo) {
+                espToDo.offer(eventStationPair);
+            }
         }
     }
 
@@ -244,7 +264,10 @@ public class SodDB extends AbstractHibernateDB {
     }
 
     public synchronized AbstractEventChannelPair getNextRetryECPFromCache() {
-        AbstractEventChannelPair ecp = retryToDo.poll();
+        AbstractEventChannelPair ecp;
+        synchronized(retryToDo) {
+            ecp = retryToDo.poll();
+        }
         if (ecp != null) {
             return (AbstractEventChannelPair)getSession().get(ecp.getClass(), 
                                                              new Long(ecp.getDbid()));
@@ -273,7 +296,9 @@ public class SodDB extends AbstractHibernateDB {
         query.setMaxResults(1000);
         List<AbstractEventChannelPair> result = query.list();
         for (AbstractEventChannelPair abstractEventChannelPair : result) {
-            retryToDo.offer(abstractEventChannelPair);
+            synchronized(retryToDo) {
+                retryToDo.offer(abstractEventChannelPair);
+            }
         }
         return getNextRetryECPFromCache();
     }
