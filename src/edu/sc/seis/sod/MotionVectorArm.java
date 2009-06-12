@@ -23,6 +23,7 @@ import edu.sc.seis.fissuresUtil.cache.NSSeismogramDC;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
+import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.process.waveform.vector.ANDWaveformProcessWrapper;
 import edu.sc.seis.sod.process.waveform.vector.WaveformProcessWrapper;
@@ -323,8 +324,13 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
             if(ClockUtil.now().subtract(Start.getRunProps().getSeismogramLatency()).after(ecp.getEvent()
                                                                                           .getOrigin()
                                                                                           .getTime())) {
+                logger.info("Retry Reject, older than acceptible latency: "+Start.getRunProps().getSeismogramLatency()+" "+ecp);
+                ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.REJECT));
+            } else if (ecp.getNumRetries() >= SodDB.getSingleton().getMaxRetries()){
+                logger.info("Retry Reject, at max retries: "+SodDB.getSingleton().getMaxRetries()+" "+ecp);
                 ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.REJECT));
             } else {
+                logger.info("Retry Retry, within acceptible latency: "+Start.getRunProps().getSeismogramLatency()+" "+ecp);
                 ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.RETRY));
             }
             failLogger.info(ecp + " " + result + " on server " + dataCenter);

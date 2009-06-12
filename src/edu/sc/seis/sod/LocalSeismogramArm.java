@@ -22,6 +22,7 @@ import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.fissuresUtil.time.SortTool;
+import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.process.waveform.WaveformResult;
 import edu.sc.seis.sod.process.waveform.vector.WaveformVectorProcess;
@@ -356,6 +357,9 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                     .getOrigin()
                     .getTime())) {
                 logger.info("Retry Reject, older than acceptible latency: "+Start.getRunProps().getSeismogramLatency()+" "+ecp);
+                ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.REJECT));
+            } else if (ecp.getNumRetries() >= SodDB.getSingleton().getMaxRetries()){
+                logger.info("Retry Reject, at max retries: "+SodDB.getSingleton().getMaxRetries()+" "+ecp);
                 ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.REJECT));
             } else {
                 logger.info("Retry Retry, within acceptible latency: "+Start.getRunProps().getSeismogramLatency()+" "+ecp);

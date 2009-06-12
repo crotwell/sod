@@ -279,6 +279,7 @@ public class SodDB extends AbstractHibernateDB {
         if (! retryToDo.isEmpty()) {
             return getNextRetryECPFromCache();
         }
+        logger.debug("Getting retry from db");
         String q = "from "
                 + AbstractEventChannelPair.class.getName()
                 + "  where (status.standingInt = "
@@ -300,6 +301,7 @@ public class SodDB extends AbstractHibernateDB {
                 retryToDo.offer(abstractEventChannelPair);
             }
         }
+        logger.debug("Got "+result.size()+" retries from db.");
         return getNextRetryECPFromCache();
     }
 
@@ -379,6 +381,9 @@ public class SodDB extends AbstractHibernateDB {
 
     float retryBase = 2;
 
+    public int getMaxRetries() {
+        return maxRetries;
+    }
 
     public int getNumSuccessful() {
         Query query = getSession().createQuery(COUNT + totalSuccess);
