@@ -263,7 +263,7 @@ public class SodDB extends AbstractHibernateDB {
         return null;
     }
 
-    public synchronized AbstractEventChannelPair getNextRetryECPFromCache() {
+    public AbstractEventChannelPair getNextRetryECPFromCache() {
         AbstractEventChannelPair ecp;
         synchronized(retryToDo) {
             ecp = retryToDo.poll();
@@ -274,11 +274,14 @@ public class SodDB extends AbstractHibernateDB {
         }
         return null;
     }
-
-    public synchronized AbstractEventChannelPair getNextRetryECP() {
-        if (! retryToDo.isEmpty()) {
-            return getNextRetryECPFromCache();
+    
+    public boolean isRetryTodo() {
+        synchronized(retryToDo) {
+            return ! retryToDo.isEmpty();
         }
+    }
+    
+    public void populateRetryToDo() {
         logger.debug("Getting retry from db");
         String q = "from "
                 + AbstractEventChannelPair.class.getName()
@@ -294,7 +297,7 @@ public class SodDB extends AbstractHibernateDB {
         query.setFloat("base", retryBase);
         query.setFloat("minDelay", (float)getMinRetryDelay().getValue(UnitImpl.SECOND));
         query.setFloat("maxDelay", maxRetryDelay);
-        query.setMaxResults(1000);
+        query.setMaxResults(10000);
         List<AbstractEventChannelPair> result = query.list();
         for (AbstractEventChannelPair abstractEventChannelPair : result) {
             synchronized(retryToDo) {
@@ -302,7 +305,6 @@ public class SodDB extends AbstractHibernateDB {
             }
         }
         logger.debug("Got "+result.size()+" retries from db.");
-        return getNextRetryECPFromCache();
     }
 
     public int getNumWorkUnits(Standing standing) {

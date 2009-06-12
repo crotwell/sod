@@ -1,5 +1,8 @@
 package edu.sc.seis.sod;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
@@ -13,7 +16,6 @@ import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.StatefulEvent;
 import edu.sc.seis.sod.hibernate.StatefulEventDB;
 import edu.sc.seis.sod.status.OutputScheduler;
-import edu.sc.seis.sod.status.eventArm.LastEventTemplate;
 import edu.sc.seis.sod.subsetter.EventEffectiveTimeOverlap;
 
 public class WaveformArm extends Thread implements Arm {
@@ -21,6 +23,15 @@ public class WaveformArm extends Thread implements Arm {
     public WaveformArm(int nextProcessorNum, AbstractWaveformRecipe waveformRecipe) {
         super("WaveformArm " + nextProcessorNum);
         this.recipe = waveformRecipe;
+        Timer retryTimer = new Timer("retry loader", true);
+        retryTimer.schedule(new TimerTask() {
+            public void run() {
+                // only run if the retry queue is empty
+                if ( ! SodDB.getSingleton().isESPTodo()) {
+                    SodDB.getSingleton().populateRetryToDo();
+                }
+            }
+        }, 0, 10*60*1000);
     }
 
 
@@ -94,17 +105,10 @@ public class WaveformArm extends Thread implements Arm {
         AbstractEventChannelPair ecp = null;
         if(retryRandom < getRetryPercentage() ) {
             // try a retry
-            if (retryFoundLastTime || lastRetryQuery.add(SodDB.getSingleton().getMinRetryDelay()).before(ClockUtil.now())) {
-                // only go to db periodically if have not found a retry recently
-                ecp = SodDB.getSingleton().getNextRetryECP();
-            } else {
-                ecp = SodDB.getSingleton().getNextRetryECPFromCache();
-            }
+            ecp = SodDB.getSingleton().getNextRetryECPFromCache();
             if (ecp != null) {
-                retryFoundLastTime = true;
                 return ecp;
             }
-            retryFoundLastTime = false;
         }
         if (retryRandom > ecpPercentage) {
             // random not in small, so try memory esp or enp first
@@ -264,17 +268,11 @@ public class WaveformArm extends Thread implements Arm {
     }
 
     private static double getRetryPercentage() {
-        // weight retry percentage if we found one last time
-        return retryPercentage * ( retryFoundLastTime ? 1 : 1000 );
+        return retryPercentage;
     }
     
-    /** percent of the pool that will be retries, 
-        unless we found one last time through, in which case it will be 1000 times the percent */
-    private static double retryPercentage = .0001; 
-    
-    private static boolean retryFoundLastTime = true;
-    
-    private static MicroSecondDate lastRetryQuery = ClockUtil.now().subtract(SodDB.getSingleton().getMinRetryDelay());
+    /** percent of the pool that will be retries */
+    private static double retryPercentage = .01; 
     
     private static double ecpPercentage = .00001; // most processing uses esp from db, only use ecp if crash
 
