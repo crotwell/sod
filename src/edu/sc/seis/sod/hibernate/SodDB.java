@@ -291,7 +291,7 @@ public class SodDB extends AbstractHibernateDB {
         Query query = getSession().createQuery(q);
         query.setTimestamp("now", ClockUtil.now().getTimestamp());
         query.setFloat("base", retryBase);
-        query.setFloat("minDelay", minRetryDelay);
+        query.setFloat("minDelay", (float)getMinRetryDelay().getValue(UnitImpl.SECOND));
         query.setFloat("maxDelay", maxRetryDelay);
         query.setMaxResults(1000);
         List<AbstractEventChannelPair> result = query.list();
@@ -363,7 +363,11 @@ public class SodDB extends AbstractHibernateDB {
      * new JDBCRetryQueue("corbaFailure"); corbaFailures.setMinRetryWait(new
      * TimeInterval(2, UnitImpl.HOUR)); corbaFailures.setMaxRetries(10);
      */
-    float minRetryDelay = (float)new TimeInterval(2, UnitImpl.HOUR).getValue(UnitImpl.SECOND);
+    TimeInterval minRetryDelay = new TimeInterval(2, UnitImpl.HOUR);
+    
+    public TimeInterval getMinRetryDelay() {
+        return minRetryDelay;
+    }
 
     float maxRetryDelay = (float)((TimeInterval)Start.getRunProps()
             .getMaxRetryDelay()).getValue(UnitImpl.SECOND);

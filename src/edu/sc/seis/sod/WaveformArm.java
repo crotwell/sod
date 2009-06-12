@@ -92,16 +92,21 @@ public class WaveformArm extends Thread implements Arm {
     protected static synchronized AbstractEventPair getNext() {
         double retryRandom = Math.random();
         AbstractEventChannelPair ecp = null;
-        if(retryRandom < getRetryPercentage()) {
+        if(retryRandom < getRetryPercentage() ) {
             // try a retry
-            ecp = SodDB.getSingleton().getNextRetryECP();
+            if (retryFoundLastTime || lastRetryQuery.add(SodDB.getSingleton().getMinRetryDelay()).before(ClockUtil.now())) {
+                // only go to db periodically if have not found a retry recently
+                ecp = SodDB.getSingleton().getNextRetryECP();
+            } else {
+                ecp = SodDB.getSingleton().getNextRetryECPFromCache();
+            }
             if (ecp != null) {
                 retryFoundLastTime = true;
                 return ecp;
             }
             retryFoundLastTime = false;
         }
-        if (ecp == null && retryRandom > ecpPercentage) {
+        if (retryRandom > ecpPercentage) {
             // random not in small, so try memory esp or enp first
             if (SodDB.getSingleton().isESPTodo()) {
                 EventStationPair esp = SodDB.getSingleton().getNextESPFromCache();
@@ -130,12 +135,13 @@ public class WaveformArm extends Thread implements Arm {
         // we do this  by trying if the random is less than the ecpPercentage or if we have
         // have found an ecp in the db within the last ECP_WINDOW
         // this cuts down on useless db acccesses
-        if(ecp == null && (retryRandom < ecpPercentage || (ClockUtil.now().subtract(lastECP).lessThan(ECP_WINDOW))) ) {
+        if((retryRandom < ecpPercentage || (ClockUtil.now().subtract(lastECP).lessThan(ECP_WINDOW))) ) {
             ecp = SodDB.getSingleton().getNextECP();
             if(ecp != null) {
                 ecp.update(Status.get(Stage.EVENT_CHANNEL_SUBSETTER, Standing.INIT));
                 SodDB.commit();
                 ecp = (AbstractEventChannelPair)SodDB.getSession().get(ecp.getClass(), ecp.getDbid());
+                lastECP = ClockUtil.now();
                 return ecp;
             }
         }
@@ -267,6 +273,8 @@ public class WaveformArm extends Thread implements Arm {
     private static double retryPercentage = .0001; 
     
     private static boolean retryFoundLastTime = true;
+    
+    private static MicroSecondDate lastRetryQuery = ClockUtil.now().subtract(SodDB.getSingleton().getMinRetryDelay());
     
     private static double ecpPercentage = .00001; // most processing uses esp from db, only use ecp if crash
 
