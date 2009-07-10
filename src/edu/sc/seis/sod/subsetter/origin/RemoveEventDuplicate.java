@@ -32,22 +32,23 @@ public class RemoveEventDuplicate implements OriginSubsetter {
     public RemoveEventDuplicate(Element config) throws ConfigurationException {
         Element el = XMLUtil.getElement(config, "timeVariance");
         if (el != null){
-            timeVariance = SodUtil.loadQuantity(el);
+            setTimeVariance(SodUtil.loadQuantity(el));
         }
         el = XMLUtil.getElement(config, "distanceVariance");
         if (el != null){
-            distanceVariance = SodUtil.loadQuantity(el);
+            setDistanceVariance(SodUtil.loadQuantity(el));
         }
         el = XMLUtil.getElement(config, "depthVariance");
         if (el != null){
-            depthVariance = SodUtil.loadQuantity(el);
+            setDepthVariance(SodUtil.loadQuantity(el));
         }
     }
     
-    public RemoveEventDuplicate(QuantityImpl timeVariance, QuantityImpl distanceVariance, QuantityImpl depthVariance) {
-        this.timeVariance = timeVariance;
-        this.distanceVariance = distanceVariance;
-        this.depthVariance = depthVariance;
+    public RemoveEventDuplicate(QuantityImpl timeVariance, QuantityImpl distanceVariance, QuantityImpl depthVariance)
+            throws ConfigurationException {
+        setTimeVariance(timeVariance);
+        setDistanceVariance(distanceVariance);
+        setDepthVariance(depthVariance);
     }
     
     public RemoveEventDuplicate() {
@@ -81,7 +82,12 @@ public class RemoveEventDuplicate implements OriginSubsetter {
     public boolean isDistanceClose(CacheEvent eventA, Origin originB) {
         Origin curOrig = eventA.getOrigin();
         DistAz distAz = new DistAz(curOrig.getLocation(), originB.getLocation());
-        return distAz.getDelta() < distanceVariance.value;
+        if (distanceVariance.getUnit().isConvertableTo(UnitImpl.DEGREE)) {
+            return distAz.getDelta() < distanceVariance.convertTo(UnitImpl.DEGREE).value;
+        } else {
+            // use earth radius of 6371 km
+            return distAz.getDelta()*6371 < distanceVariance.convertTo(UnitImpl.KILOMETER).value;
+        }
     }
     
     public List getEventsNearTimeAndDepth(Origin preferred_origin) throws SQLException {
@@ -120,6 +126,27 @@ public class RemoveEventDuplicate implements OriginSubsetter {
             } 
         }
         return out;
+    }
+    
+    protected void setTimeVariance(QuantityImpl timeVariance) throws ConfigurationException {
+        if ( ! ( timeVariance.getUnit().isConvertableTo(UnitImpl.DEGREE))) {
+            throw new ConfigurationException("Units must be convertible to SECOND: "+timeVariance.getUnit());
+        }
+        this.timeVariance = timeVariance;
+    }
+    
+    protected void setDistanceVariance(QuantityImpl maxDistance) throws ConfigurationException {
+        if ( ! ( maxDistance.getUnit().isConvertableTo(UnitImpl.DEGREE) || maxDistance.getUnit().isConvertableTo(UnitImpl.KILOMETER))) {
+            throw new ConfigurationException("Units must be convertible to DEGREE or KILOMETER: "+maxDistance.getUnit());
+        }
+        this.distanceVariance = maxDistance;
+    }
+    
+    protected void setDepthVariance(QuantityImpl depthVariance) throws ConfigurationException {
+        if ( ! ( depthVariance.getUnit().isConvertableTo(UnitImpl.KILOMETER))) {
+            throw new ConfigurationException("Units must be convertible to KILOMETER: "+depthVariance.getUnit());
+        }
+        this.depthVariance = depthVariance;
     }
 
     protected QuantityImpl timeVariance = new QuantityImpl(10, UnitImpl.SECOND);

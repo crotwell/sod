@@ -6,6 +6,7 @@
         <ref name="eventStation"/>
     </start>
     <include href="../base/include/range.rng"/>
+    <include href="../base/include/quantity.rng"/>
     <include href="../base/include/taup.rng"/>
     <define name="eventStation">
         <choice>
@@ -226,6 +227,24 @@
                     the given area. Areas can be any valid area, including BoxArea, and GlobalArea.</description>
             </xsd:annotation>
             <externalRef href="../base/externalRef/area.rng"/>
+        </element>
+    </define>
+    <define name="removeStationDuplicate">
+        <element name="removeStationDuplicate">
+            <xsd:annotation>
+                <description>This subsetter first gets all of the successful stations for this events. Then it takes the current
+                    station, and if location falls within the distance variance of one of the already
+                    accepted stations, the event-station pair is rejected. This allows for the use of only one of 
+                    several very similar stations for each event. Note that because this happens in the waveform arm,
+                    it is not guarantied that the same station will be used for each event. Also, if multiple waveformWorkerThreads
+                    are used, there is a small chance that more than one station for the same event will be processed.</description>
+                <summary>Accepts events that are dissimilar from already accepted events</summary>
+            </xsd:annotation>
+            <optional>
+                <element name="maxDistance">
+                    <ref name="length"/>
+                </element>
+            </optional>
         </element>
     </define>
     <define name="jythonEventStation">
