@@ -83,7 +83,7 @@ public class TimeParser extends StringParser {
         return Integer.parseInt(m.group(i));
     }
 
-    private Pattern datePattern = Pattern.compile("(\\d{4})-?(\\d{2})?-?(\\d{2})?-?(\\d{2})?-?(\\d{2})?-?(\\d{2})?");
+    private Pattern datePattern = Pattern.compile("(\\-?\\d{4})-?(\\d{2})?-?(\\d{2})?-?(\\d{2})?-?(\\d{2})?-?(\\d{2})?");
 
     public static FlaggedOption createYesterdayParam(String name,
                                                      String helpMessage,
@@ -107,6 +107,8 @@ public class TimeParser extends StringParser {
     private boolean ceiling;
 
     private static DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+    public static final String FIRST_SEISMOGRAM = "1889-04-17";
 
     private static final String PREVIOUS_DAY = df.format(ClockUtil.now()
             .subtract(new TimeInterval(1, UnitImpl.DAY)));

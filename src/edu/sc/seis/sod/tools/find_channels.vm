@@ -44,6 +44,16 @@ $additionalArms#end
                 <longitude>$donut.lon</longitude>
             </stationPointDistance>
 #end
+#if($needsEffectiveTimeRange)
+            <stationEffectiveTimeOverlap>
+                <startTime>
+                    $begin
+                </startTime>
+                <endTime>
+                    $end
+                </endTime>
+            </stationEffectiveTimeOverlap>
+#end
         </stationAND>
 #if($sites)
         <siteOR>
@@ -58,6 +68,16 @@ $additionalArms#end
             <channelCode>$code</channelCode>
 #end
         </channelOR>
+#end
+#if($needsEffectiveTimeRange)
+            <channelEffectiveTimeOverlap>
+                <startTime>
+                    $begin
+                </startTime>
+                <endTime>
+                    $end
+                </endTime>
+            </channelEffectiveTimeOverlap>
 #end
 #if($output)
         <printlineChannelProcess>

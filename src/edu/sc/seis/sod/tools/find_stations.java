@@ -25,6 +25,11 @@ public class find_stations extends CommandLineTool {
                 || needsStationAndSpecified()) {
             con.put("needsStationAND", Boolean.TRUE);
         }
+        if (result.userSpecified(beginParam.getID()) || result.userSpecified(endParam.getID())) {
+            con.put("needsEffectiveTimeRange", Boolean.TRUE);
+        } else {
+            con.put("needsEffectiveTimeRange", Boolean.FALSE);
+        }
         return con;
     }
 
@@ -65,6 +70,16 @@ public class find_stations extends CommandLineTool {
                              'n',
                              "networks",
                              "The codes of networks to retrieve"));
+        beginParam = TimeParser.createParam("begin",
+                                               TimeParser.FIRST_SEISMOGRAM,
+                                               "The earliest time to overlap an accepted station",
+                                               false);
+        addStationParam(beginParam);
+        endParam = TimeParser.createParam("end",
+                                               "now",
+                                               "The latest time to overlap an accepted station",
+                                               true);
+        addStationParam(endParam);
     }
 
     private void addStationParam(FlaggedOption option) throws JSAPException {
@@ -72,6 +87,9 @@ public class find_stations extends CommandLineTool {
         add(option);
     }
 
+    protected FlaggedOption beginParam;
+    protected FlaggedOption endParam;
+    
     private List needsStationAndIfSpecified;
 
     protected FlaggedOption outputFormatFlag;

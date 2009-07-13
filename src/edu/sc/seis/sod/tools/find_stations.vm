@@ -44,6 +44,16 @@ $additionalArms#end
                 <longitude>$donut.lon</longitude>
             </stationPointDistance>
 #end
+#if($needsEffectiveTimeRange)
+            <stationEffectiveTimeOverlap>
+                <startTime>
+                    $begin
+                </startTime>
+                <endTime>
+                    $end
+                </endTime>
+            </stationEffectiveTimeOverlap>
+#end
 #if($output)
             <printlineStationProcess>
                 <template>$output</template>
