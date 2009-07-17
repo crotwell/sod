@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -479,8 +481,10 @@ public class Start {
                 } else if(el.getTagName().startsWith("waveform")
                         && args.doWaveformArm()) {
                     if(el.getTagName().equals("waveformVectorArm")) {
+                        SodDB.setDefaultEcpClass(EventVectorPair.class);
                         waveformRecipe = new MotionVectorArm(el);
                     } else if(el.getTagName().equals("waveformArm")) {
+                        SodDB.setDefaultEcpClass(EventChannelPair.class);
                         waveformRecipe = new LocalSeismogramArm(el);
                     } else {
                         throw new ConfigurationException("unknown waveform arm type: "+el.getTagName());
@@ -498,6 +502,15 @@ public class Start {
                     for(int j = 0; j < waveforms.length; j++) {
                         waveforms[j] = new WaveformArm(j, waveformRecipe);
                     }
+                    Timer retryTimer = new Timer("retry loader", true);
+                    retryTimer.schedule(new TimerTask() {
+                        public void run() {
+                            // only run if the retry queue is empty
+                            if ( ! SodDB.getSingleton().isESPTodo()) {
+                                SodDB.getSingleton().populateRetryToDo();
+                            }
+                        }
+                    }, 0, 10*60*1000);
                 }
             }
         }
