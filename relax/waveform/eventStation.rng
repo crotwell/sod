@@ -24,6 +24,7 @@
             <ref name="OR"/>
             <ref name="NOT"/>
             <ref name="midPoint"/>
+            <ref name="removeStationDuplicate"/>
             <ref name="phaseExists"/>
             <ref name="jythonEventStation"/>
             <ref name="external"/>
