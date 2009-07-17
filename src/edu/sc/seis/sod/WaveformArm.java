@@ -1,8 +1,5 @@
 package edu.sc.seis.sod;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
@@ -23,15 +20,6 @@ public class WaveformArm extends Thread implements Arm {
     public WaveformArm(int nextProcessorNum, AbstractWaveformRecipe waveformRecipe) {
         super("WaveformArm " + nextProcessorNum);
         this.recipe = waveformRecipe;
-        Timer retryTimer = new Timer("retry loader", true);
-        retryTimer.schedule(new TimerTask() {
-            public void run() {
-                // only run if the retry queue is empty
-                if ( ! SodDB.getSingleton().isESPTodo()) {
-                    SodDB.getSingleton().populateRetryToDo();
-                }
-            }
-        }, 0, 10*60*1000);
     }
 
 
