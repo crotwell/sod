@@ -75,7 +75,7 @@ public class NetworkArm implements Arm {
             }
             // only do timer if positive interval and waveform arm exists, otherwise run in thread
             if (getRefreshInterval().value > 0 && Start.getWaveformRecipe() != null) {
-            Timer timer = new Timer(true);
+            Timer timer = new Timer("Refresh NetworkArm", true);
             long period = (long)finder.getRefreshInterval().getValue(UnitImpl.MILLISECOND);
             long firstDelay = lastQueryTime.delayUntilNextRefresh(getRefreshInterval());
             timer.schedule(refresh, firstDelay, period);
