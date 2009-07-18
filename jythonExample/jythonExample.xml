@@ -59,10 +59,6 @@
             <class>StationExample</class>
 	    <stationCode>HOPE</stationCode>
         </jythonStationSubsetter>
-        <jythonSiteSubsetter>
-            <module>siteExample</module>
-            <class>SiteExample</class>
-        </jythonSiteSubsetter>
         <jythonChannelSubsetter>
             <module>channelExample</module>
             <class>ChannelCodeIsBHZ</class>
