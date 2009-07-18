@@ -31,6 +31,10 @@ public class VelocityChannel extends ChannelImpl {
         return chan.get_id();
     }
 
+    public ChannelId getId() {
+        return chan.getId();
+    }
+
     public String get_code() {
         return chan.get_code();
     }
