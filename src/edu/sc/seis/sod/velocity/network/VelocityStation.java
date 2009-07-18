@@ -51,6 +51,10 @@ public class VelocityStation extends StationImpl {
     public StationId get_id() {
         return sta.get_id();
     }
+    
+    public StationId getId() {
+        return sta.getId();
+    }
 
     public String get_code() {
         return sta.get_code();
