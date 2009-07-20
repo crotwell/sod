@@ -7,9 +7,10 @@
     <define name="eventVector">
         <choice>
             <xsd:annotation>
-                <summary>Tactics for selecting channel groups for events</summary>
+                <summary>Ingredients for selecting channel groups for events</summary>
                 <velocity>#waveformVectorArmPage()</velocity>
             </xsd:annotation>
+            <ref name="bestChannelAtStation"/>
             <ref name="ANDEventChannelWrapper"/>
             <ref name="OREventChannelWrapper"/>
             <ref name="eventVectorAND"/>
@@ -18,6 +19,53 @@
             <ref name="jythonEventVector"/>
             <ref name="external"/>
         </choice>
+    </define>
+    <define name="bestChannelAtStation">
+        <element name="bestChannelAtStation">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Picks the best channels for a station.</summary>
+                    <description>Picks the best channels at a station, avoiding processing 00.BHZ and 01.BHZ at the same station. 
+                    This can often happen when there are multiple sensors at a station, perhaps a surface seismometer and
+                    a borehole seismometer. The processor decides on best based on a simple hueristic based on site
+                    and channel codes. The default is:<br/>
+                    site Code Heuristic = "00", "  ", "01"<br/>
+                    gain Code Heuristic = "H", "L" <br/>
+                    band Code Heuristic = "B", "H", "L", "M", "S", "V", "E", "U" <br/>
+                    orientation Codes = "Z", "N", "E", "1", "2", "3", "U", "V", "W" <br/>
+                    All three components are considered equally best, so in a typical broadband station
+                    the best channels might be 00.BHE, 00.BHN, 00.BHZ, and this subsetter will pass
+                    all three, while failing every other channel at this station.
+                    <br/>
+                    See edu.sc.seis.fissuresUtil.chooser.BestChannelUtil for the underlying code.
+                    The reason this is an event-channel subsetter is because the "best" channel
+                    at a station may change with time, for example a short period only station may
+                    be replaced by a broadband seismometer. Before the switch SHZ may be the best
+                    vertical, but afterwards it would be BHZ and SHZ would no longer exist.
+                    </description>
+                </xsd:documentation>
+            </xsd:annotation>
+            <zeroOrMore>
+                <element name="siteCodeHeuristic">
+                    <data type="string"/>
+                </element>
+            </zeroOrMore>
+            <zeroOrMore>
+                <element name="gainCodeHeuristic">
+                    <data type="string"/>
+                </element>
+            </zeroOrMore>
+            <zeroOrMore>
+                <element name="bandCodeHeuristic">
+                    <data type="string"/>
+                </element>
+            </zeroOrMore>
+            <zeroOrMore>
+                <element name="orientationCodeHeuristic">
+                    <data type="string"/>
+                </element>
+            </zeroOrMore>
+        </element>
     </define>
     <define name="ANDEventChannelWrapper">
         <element name="ANDEventChannelWrapper">
