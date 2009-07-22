@@ -10,7 +10,9 @@ import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
+import edu.sc.seis.fissuresUtil.hibernate.SeismogramFileReference;
 import edu.sc.seis.fissuresUtil.sac.FissuresToSac;
+import edu.sc.seis.fissuresUtil.xml.SeismogramFileTypes;
 import edu.sc.seis.seisFile.sac.SacTimeSeries;
 import edu.sc.seis.sod.ConfigurationException;
 
@@ -23,6 +25,7 @@ public class SacWriter extends AbstractSeismogramWriter {
              extractFileTemplate(el, DEFAULT_FILE_TEMPLATE),
              extractPrefix(el),
              extractProcessors(el),
+             DOMHelper.hasElement(el, "storeSeismogramsInDB"),
              DOMHelper.hasElement(el, "littleEndian"));
     }
 
@@ -44,15 +47,15 @@ public class SacWriter extends AbstractSeismogramWriter {
     }
 
     public SacWriter(String workingDir, String fileTemplate) throws ConfigurationException {
-        this(workingDir, fileTemplate, DEFAULT_PREFIX, new SacProcess[0], false);
+        this(workingDir, fileTemplate, DEFAULT_PREFIX, new SacProcess[0], false, false);
     }
 
     public SacWriter(SacProcess[] processes) throws ConfigurationException {
-        this(DEFAULT_WORKING_DIR, DEFAULT_FILE_TEMPLATE, DEFAULT_PREFIX, processes, false);
+        this(DEFAULT_WORKING_DIR, DEFAULT_FILE_TEMPLATE, DEFAULT_PREFIX, processes, false, false);
     }
 
-    public SacWriter(String workingDir, String fileTemplate, String prefix, SacProcess[] processes, boolean littleEndian) throws ConfigurationException {
-        super(workingDir, fileTemplate, prefix);
+    public SacWriter(String workingDir, String fileTemplate, String prefix, SacProcess[] processes, boolean storeSeismogramsInDB, boolean littleEndian) throws ConfigurationException {
+        super(workingDir, fileTemplate, prefix, storeSeismogramsInDB);
         this.processors = processes;
         this.littleEndian=littleEndian;
     }
@@ -79,6 +82,11 @@ public class SacWriter extends AbstractSeismogramWriter {
         for(int i = 0; i < processors.length; i++) {
             processors[i].process(writer, ev, chan);
         }
+    }
+
+
+    public SeismogramFileTypes getFileType() {
+        return SeismogramFileTypes.SAC;
     }
     
     boolean littleEndian;

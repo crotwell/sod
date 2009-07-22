@@ -12,6 +12,8 @@ import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
+import edu.sc.seis.fissuresUtil.hibernate.SeismogramFileRefDB;
+import edu.sc.seis.fissuresUtil.xml.SeismogramFileTypes;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.FissuresFormatter;
@@ -28,8 +30,10 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
     public static final String DEFAULT_WORKING_DIR = "seismograms/";
 
     private String template, prefix;
+    
+    protected boolean storeSeismogramsInDB = false;
 
-    public AbstractSeismogramWriter(String workingDir, String fileTemplate, String prefix)
+    public AbstractSeismogramWriter(String workingDir, String fileTemplate, String prefix, boolean storeSeismogramsInDB)
             throws ConfigurationException {
         if(!INDEX_VAR.matcher(fileTemplate).matches()) {
             fileTemplate += "${index}";
@@ -37,6 +41,7 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
         VelocityFileElementParser parser = new VelocityFileElementParser(workingDir, fileTemplate);
         this.template = parser.getTemplate();
         this.prefix = prefix;
+        this.storeSeismogramsInDB = storeSeismogramsInDB;
         new PrintlineVelocitizer(new String[] {fileTemplate});
     }
 
@@ -87,11 +92,16 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
                     return new WaveformResult(seismograms, reason);
                 }
                 write(loc, seismograms[i], channel, event);
+                if (storeSeismogramsInDB) {
+                    SeismogramFileRefDB.getSingleton().saveSeismogramToDatabase(channel, seismograms[i], loc, getFileType());
+                }
                 cookieJar.put(SaveSeismogramToFile.getCookieName(prefix, channel.get_id(), i), loc);
             }
         }
         return new WaveformResult(true, seismograms, this);
     }
+    
+    public abstract SeismogramFileTypes getFileType();
     
     public String getTemplate(){
         return template;
