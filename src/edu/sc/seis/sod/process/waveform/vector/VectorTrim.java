@@ -10,6 +10,7 @@ import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.TimeUtils;
 import edu.iris.Fissures.model.UnitImpl;
+import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.bag.Cut;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
@@ -33,7 +34,7 @@ public class VectorTrim implements WaveformVectorProcess {
                 return new WaveformVectorResult(seismograms,
                                                 new StringTreeLeaf(this,
                                                                    false,
-                                                                   "At least one vector missing seismograms"));
+                                                                   "At least one vector missing seismograms: "+ChannelIdUtil.toString(available[i][0].channel_id)));
             }
         }
         try {
