@@ -65,10 +65,10 @@ public class SaveSeismogramToFile implements WaveformProcess {
         XMLUtil.registerExtractorWithExceptionHandler();
         String fileTypeStr = DOMHelper.extractText(config,
                                                    "fileType",
-                                                   SeismogramFileTypes.MSEED.getValue());
-        if(fileTypeStr.equals(SeismogramFileTypes.MSEED.getValue())) {
+                                                   SeismogramFileTypes.MSEED.getName());
+        if(fileTypeStr.equals(SeismogramFileTypes.MSEED.getName())) {
             fileType = SeismogramFileTypes.MSEED;
-        } else if(fileTypeStr.equals(SeismogramFileTypes.SAC.getValue())) {
+        } else if(fileTypeStr.equals(SeismogramFileTypes.SAC.getName())) {
             fileType = SeismogramFileTypes.SAC;
             if(DOMHelper.hasElement(config, "sacHeader")) {
                 Element sacHeader = DOMHelper.extractElement(config,
