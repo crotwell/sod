@@ -359,6 +359,11 @@
         <optional>
             <ref name="writerName"/>
         </optional>
+        <optional>
+            <element name="storeSeismogramsInDB">
+                <empty/>
+            </element>
+        </optional>
     </define>
     <define name="workingDir">
         <element name="workingDir">
