@@ -1,0 +1,20 @@
+
+group = 'edu.sc.seis'
+version = '3.0.0alpha'
+
+dependencies {
+    compile project(':fissuresUtil') { transitive = true }
+    compile project(':bag') { transitive = true }
+    compile: "jline:jline:0.9.91"
+    compile: "rngconv:rngconv:20030225"
+    compile: "msv:msv:20030807"
+    compile: "msv:isorelax:20030807"
+    compile: "msv:relaxngDatatype:20030807"
+    compile: "msv:xsdlib:20030807"
+    compile: "jing:jing:20030619"
+    compile: "velocity-tools:velocity-tools-generic:1.4"
+    compile: "mapData:dcwpo_browse:"
+    compile: "JSAP:JSAP:2.1"
+    compile: "JavaCSV:javacsv:2.0"
+    compile: "jython:jython:2.5rc2"
+}
