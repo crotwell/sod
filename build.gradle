@@ -3,18 +3,70 @@ group = 'edu.sc.seis'
 version = '3.0.0alpha'
 
 dependencies {
+    compile project(':fissuresImpl') { transitive = true }
+    compile project(':fissuresIDL') { transitive = true }
+    compile project(':seisFile') { transitive = true }
+    compile project(':seedCodec') { transitive = true }
+    compile project(':TauP') { transitive = true }
     compile project(':fissuresUtil') { transitive = true }
     compile project(':bag') { transitive = true }
-    compile: "jline:jline:0.9.91"
-    compile: "rngconv:rngconv:20030225"
-    compile: "msv:msv:20030807"
-    compile: "msv:isorelax:20030807"
-    compile: "msv:relaxngDatatype:20030807"
-    compile: "msv:xsdlib:20030807"
-    compile: "jing:jing:20030619"
-    compile: "velocity-tools:velocity-tools-generic:1.4"
-    compile: "mapData:dcwpo_browse:"
-    compile: "JSAP:JSAP:2.1"
-    compile: "JavaCSV:javacsv:2.0"
-    compile: "jython:jython:2.5rc2"
+    
+    compile "JSAP:JSAP:2.1"
+    compile "log4jUSC:log4j:1.2.15"
+    compile 'jython:jython:2.5.0'
+    compile group: 'org.jacorb', name: 'jacorb', version: '2.3.1', transitive: false
+    compile "log4jUSC:log4j:1.2.15"
+    compile "ehcache:ehcache:1.4.1"
+    compile "hibernate:hibernate:3.3.1"
+/*  
+    compile "hibernate:antlr:2.7.6"
+    compile "hibernate:jta:1.1"
+    compile "hibernate:javassist:3.4.GA"
+    compile "hibernate:slf4j-api:1.5.3"
+    compile "hibernate:slf4j-log4j12:1.5.3"
+*/
+    compile "dom4j:dom4j:1.6.1"
+    compile "commons-logging:commons-logging:1.0.4"
+    compile "isti:isti.util:1.0.3USC"
+    compile "jdom:jdom:b9"
+    compile "edu.sc.seis.mapData:etopo10:1.0"
+    compile "hsqldb:hsqldb:1.8.0.10"
+    compile "postgresql:postgresql:8.3-604.jdbc3"
+    compile "xerces:xerces:2.7.1"
+    compile "xerces:xml-apis:2.7.1"
+    compile "xalan:xalan:2.6.0"
+    compile "openmap:openmap:4.6.2"
+    compile "itext:itext:2.0.7"
+    compile "staxUSC:stax-api:1.0"
+    compile group: 'staxUSC', name: 'stax', version: '1.1.1-dev', transitive: false
+    compile "velocity:velocity:1.5"
+    compile "commons-collections:commons-collections:3.1"
+    compile "commons-lang:commons-lang:2.1"
+    compile "oro:oro:2.0.8"
+    compile "jfreechart:jcommon:1.0.0"
+    compile "jfreechart:jfreechart:1.0.1"
+    compile "javamailUSC:javamail:1.3.2"
+    compile "activationUSC:activation:1.0.2"
+
+
+    compile "jline:jline:0.9.91"
+    compile "rngconvUSC:rngconv:20030225"
+    compile "msv:msv:20030807"
+    compile "msv:isorelax:20030807"
+    compile "msv:relaxngDatatype:20030807"
+    compile "msv:xsdlib:20030807"
+    compile "thaiopensource:jing:20030619"
+    compile "velocity-tools:velocity-tools-generic:1.4"
+    compile "edu.sc.seis.mapData:dcwpo_browse:1.0"
+    compile "JSAP:JSAP:2.1"
+    compile "net.sourceforge.javacsv:javacsv:2.0"
+}
+
+task makeScript(dependsOn: copyToLib) << { task ->
+    scriptBuild('sod', 'edu.sc.seis.sod.Start', task.project)
+    scriptBuild('find_events', 'edu.sc.seis.sod.tools.find_events', task.project)
+    scriptBuild('find_stations', 'edu.sc.seis.sod.tools.find_stations', task.project)
+    scriptBuild('find_channels', 'edu.sc.seis.sod.tools.find_channels', task.project)
+    scriptBuild('find_seismograms', 'edu.sc.seis.sod.tools.find_seismograms', task.project)
+    scriptBuild('find_responses', 'edu.sc.seis.sod.tools.find_responses', task.project)
 }
