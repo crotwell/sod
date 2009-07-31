@@ -65,7 +65,7 @@
         <element name="stationCode">
             <xsd:annotation>
                 <summary>Matches a station code</summary>
-                <description>Matches a station code. This is a simple string match.</description>
+                <description>Matches a station code. This is a simple string match or a regular expression.</description>
             </xsd:annotation>
             <data type="string">
                 <xsd:annotation>

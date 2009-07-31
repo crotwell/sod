@@ -1,10 +1,14 @@
 package edu.sc.seis.sod.subsetter.channel;
 
+import java.util.regex.Pattern;
+
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.status.Fail;
+import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
@@ -21,11 +25,18 @@ public class SiteCode implements ChannelSubsetter {
             // the empty siteCode tag to mean space-space
             code = "  ";
         }
+        pattern = Pattern.compile(code);
     }
 
     public StringTree accept(Channel chan, ProxyNetworkAccess network) {
-        return new StringTreeLeaf(this, chan.getSite().get_id().site_code.equals(code));
+        if(pattern.matcher(chan.getSite().get_id().site_code).matches()) {
+            return new Pass(this);
+        } else {
+            return new Fail(this);
+        }
     }
 
     private String code;
+    
+    Pattern pattern;
 }

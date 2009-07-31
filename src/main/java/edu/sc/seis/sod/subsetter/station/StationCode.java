@@ -1,5 +1,7 @@
 package edu.sc.seis.sod.subsetter.station;
 
+import java.util.regex.Pattern;
+
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
@@ -20,13 +22,20 @@ import edu.sc.seis.sod.status.StringTree;
  */
 public class StationCode implements StationSubsetter {
 
-    public StationCode(Element config) { this.config = config; }
+    public StationCode(Element config) { 
+        this.config = config;
+        pattern = Pattern.compile(SodUtil.getNestedText(config));
+    }
 
     public StringTree accept(Station station, NetworkAccess network) {
-        if(station.get_id().station_code.equals(SodUtil.getNestedText(config))) return new Pass(this);
-        else return new Fail(this);
-
+        if(pattern.matcher(station.get_code()).matches()) {
+            return new Pass(this);
+        } else {
+            return new Fail(this);
+        }
     }
+    
+    Pattern pattern;
 
     private Element config = null;
 }

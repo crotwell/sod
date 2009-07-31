@@ -48,7 +48,7 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Matches a site code</summary>
-                    <description>Matches a site code. This is a simple string match.</description>
+                    <description>Matches a site code. This is a simple string match or a regular expression.</description>
                 </xsd:documentation>
             </xsd:annotation>
             <data type="string">
