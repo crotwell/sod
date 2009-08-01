@@ -238,7 +238,7 @@
                 <xsd:annotation>
                     <example>BHZ</example>
                 </xsd:annotation>
-                <param name="pattern">[A-Z0-9\*]{0,3}</param>
+                <param name="pattern">[A-Z0-9\*\?]{0,3}</param>
             </data>
         </element>
     </define>
