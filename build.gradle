@@ -3,12 +3,6 @@ group = 'edu.sc.seis'
 version = '3.0.0alpha'
 
 dependencies {
-    compile project(':fissuresImpl') { transitive = true }
-    compile project(':fissuresIDL') { transitive = true }
-    compile project(':seisFile') { transitive = true }
-    compile project(':seedCodec') { transitive = true }
-    compile project(':TauP') { transitive = true }
-    compile project(':fissuresUtil') { transitive = true }
     compile project(':bag') { transitive = true }
     
     compile "JSAP:JSAP:2.1"
@@ -63,10 +57,22 @@ dependencies {
 }
 
 task makeScript(dependsOn: copyToLib) << { task ->
-    scriptBuild('sod', 'edu.sc.seis.sod.Start', task.project)
-    scriptBuild('find_events', 'edu.sc.seis.sod.tools.find_events', task.project)
-    scriptBuild('find_stations', 'edu.sc.seis.sod.tools.find_stations', task.project)
-    scriptBuild('find_channels', 'edu.sc.seis.sod.tools.find_channels', task.project)
-    scriptBuild('find_seismograms', 'edu.sc.seis.sod.tools.find_seismograms', task.project)
-    scriptBuild('find_responses', 'edu.sc.seis.sod.tools.find_responses', task.project)
+    dExtras = [ 'seis.name':'sod-3.0.0alpha.sod', 
+                'org.omg.CORBA.ORBSingletonClass':'org.jacorb.orb.ORBSingleton', 
+                'python.path':'${LIB}', 
+                'java.awt.headless':'true', 
+                'org.omg.CORBA.ORBClass':'org.jacorb.orb.ORB', 
+                'swing.volatileImageBufferEnabled':'false', 
+                'java.endorsed.dirs':'${LIB}/endorsed', 
+                'jacorb.connection.client.pending_reply_timeout':'120000' ]
+    scriptBuild('sod', 'edu.sc.seis.sod.Start', task.project, dExtras:dExtras)
+    scriptBuild('find_events', 'edu.sc.seis.sod.tools.find_events', task.project, dExtras:dExtras)
+    scriptBuild('find_stations', 'edu.sc.seis.sod.tools.find_stations', task.project, dExtras:dExtras)
+    scriptBuild('find_channels', 'edu.sc.seis.sod.tools.find_channels', task.project, dExtras:dExtras)
+    scriptBuild('find_seismograms', 'edu.sc.seis.sod.tools.find_seismograms', task.project, dExtras:dExtras)
+    scriptBuild('find_responses', 'edu.sc.seis.sod.tools.find_responses', task.project, dExtras:dExtras)
+    relaxArgs = project.projectDir.path+'/relax/sod.rng > '+project.projectDir.path+'/src/main/resources/edu/sc/seis/sod/data/sod.rng'
+    scriptBuild('buildSchema', 'com.sun.msv.writer.relaxng.Driver', task.project, dExtras:dExtras, moreArgs:relaxArgs)
+    schemaDocArgs = project.projectDir.path+'/ '+project.projectDir.path+'/../seiswww/velocity/sod/ingredients/'
+    scriptBuild('schemaDocs', 'edu.sc.seis.sod.validator.documenter.SchemaDocumenter', task.project, moreArgs:schemaDocArgs)
 }
