@@ -56,7 +56,6 @@ public class BestChannelAtStation implements EventChannelSubsetter, EventVectorS
             return new Fail(this, "No best channel group");
         }
         ChannelGroup best = new ChannelGroup(ChannelImpl.implize(bestChannels));
-        System.out.println("best: "+ChannelIdUtil.toString(best.getChannel1().getId())+" "+ChannelIdUtil.toString(best.getChannel2().getId())+" "+ChannelIdUtil.toString(best.getChannel3().getId()));
         if (best.areEqual(channel)) {
             return new Pass(this);
         }
