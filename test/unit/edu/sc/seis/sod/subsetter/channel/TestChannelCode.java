@@ -23,8 +23,16 @@ public class TestChannelCode extends TestCase {
         assertRejected(LLN);
     }
 
+    public void testBHQuestion() throws UserConfigurationException {
+        doBHWild("?");
+    }
+    
     public void testBHStar() throws UserConfigurationException {
-        cc = new ChannelCode("BH*");
+        doBHWild("*");
+    }
+
+    public void doBHWild(String lastChar) throws UserConfigurationException {
+        cc = new ChannelCode("BH"+lastChar);
         assertAccepted(BHZ);
         assertAccepted(BHE);
         assertRejected(LHZ);
