@@ -1,12 +1,7 @@
 package edu.sc.seis.sod.tools;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import org.apache.velocity.VelocityContext;
 
-import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAPException;
 
 public class find_channels extends find_stations {
@@ -21,6 +16,12 @@ public class find_channels extends find_stations {
 
     public VelocityContext getContext() {
         VelocityContext con = super.getContext();
+        // override needsStationAND as output is only for channels
+        if(needsStationAndSpecified()) {
+            con.put("needsStationAND", Boolean.TRUE);
+        } else {
+            con.put("needsStationAND", Boolean.FALSE);
+        }
         return con;
     }
 
@@ -28,7 +29,7 @@ public class find_channels extends find_stations {
         addDefaultParams();
         String lonPrinter = "$station.getLongitude(' ##0.0000;-##0.0000')";
         String latPrinter = "$station.getLatitude(' ##0.0000;-##0.0000')";
-        String theRest = "$station.getElevation('###0.') ${network.code}.${station.code}.${site.code}.$channel.code $channel.azimuth $channel.dip $channel.start $channel.end";
+        String theRest = "$station.getElevation('###0.') ${network.code}.${station.code}.${site.code}.$channel.code $channel.azimuth $channel.dip $channel.getStart('yyyy-MM-dd') $channel.getEnd('yyyy-MM-dd')";
         outputFormatFlag = OutputFormatParser.createParam(lonPrinter + " "
                 + latPrinter + " " + theRest, latPrinter + " " + lonPrinter
                 + " " + theRest);

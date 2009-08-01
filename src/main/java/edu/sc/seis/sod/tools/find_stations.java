@@ -25,7 +25,7 @@ public class find_stations extends CommandLineTool {
                 || needsStationAndSpecified()) {
             con.put("needsStationAND", Boolean.TRUE);
         }
-        if (result.userSpecified(beginParam.getID()) || result.userSpecified(endParam.getID())) {
+        if (isSpecified(beginParam) || isSpecified(endParam)) {
             con.put("needsEffectiveTimeRange", Boolean.TRUE);
         } else {
             con.put("needsEffectiveTimeRange", Boolean.FALSE);
@@ -33,7 +33,7 @@ public class find_stations extends CommandLineTool {
         return con;
     }
 
-    private boolean needsStationAndSpecified() {
+    boolean needsStationAndSpecified() {
         Iterator it = needsStationAndIfSpecified.iterator();
         while(it.hasNext()) {
             FlaggedOption cur = (FlaggedOption)it.next();
@@ -71,12 +71,12 @@ public class find_stations extends CommandLineTool {
                              "networks",
                              "The codes of networks to retrieve"));
         beginParam = TimeParser.createParam("begin",
-                                               TimeParser.FIRST_SEISMOGRAM,
+                                               null,
                                                "The earliest time to overlap an accepted station",
                                                false);
         addStationParam(beginParam);
         endParam = TimeParser.createParam("end",
-                                               "now",
+                                               null,
                                                "The latest time to overlap an accepted station",
                                                true);
         addStationParam(endParam);
