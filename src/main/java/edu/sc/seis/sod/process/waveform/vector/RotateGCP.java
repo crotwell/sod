@@ -13,6 +13,7 @@ import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
 /**
@@ -38,6 +39,10 @@ public class RotateGCP implements WaveformVectorProcess {
                                         RequestFilter[][] available,
                                         LocalSeismogramImpl[][] seismograms,
                                         CookieJar cookieJar) throws Exception {
+        WaveformVectorResult trimResult = trimmer.process(event, channelGroup, original, available, seismograms, cookieJar);
+        if ( ! trimResult.isSuccess()) {
+            return new WaveformVectorResult(false, trimResult.getSeismograms(), new StringTreeBranch(this, false, trimResult.getReason()));
+        }
         // find x & y channel, y should be x+90 degrees and horizontal
         Channel[] horizontal = channelGroup.getHorizontalXY();
         if(horizontal.length == 0) {
@@ -112,4 +117,6 @@ public class RotateGCP implements WaveformVectorProcess {
     }
 
     private String radialOrientationCode, transverseOrientationCode;
+    
+    private VectorTrim trimmer = new VectorTrim();
 }
