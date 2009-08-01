@@ -12,6 +12,7 @@ import java.io.Writer;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.apache.log4j.BasicConfigurator;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
@@ -26,6 +27,7 @@ import edu.sc.seis.sod.validator.tour.HTMLOutlineTourist;
 public class SchemaDocumenter {
 
     public static void main(String[] args) throws Exception {
+        BasicConfigurator.configure();
         if (args.length != 2) {
             System.err.println("Usage: schemaDocumenter base outputdir");
             return;
