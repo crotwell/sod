@@ -6,6 +6,12 @@ import org.w3c.dom.NodeList;
 import edu.sc.seis.sod.SodUtil;
 
 public abstract class AbstractSource{
+
+    public AbstractSource (String dns, String name) {
+        this.dns = dns;
+        this.name = name;
+    }
+    
     public AbstractSource (Element config){
         NodeList children = config.getChildNodes();
         for(int i=0; i<children.getLength(); i++) {

@@ -23,13 +23,25 @@ import edu.sc.seis.sod.subsetter.AbstractSource;
 public class FixedDataCenter extends AbstractSource implements SodElement,
         SeismogramDCLocator {
 
-    public FixedDataCenter(Element element) throws Exception {
+    public FixedDataCenter() {
+        super("edu/iris/dmc", "IRIS_Datacenter");
+        init();
+    }
+    
+    public FixedDataCenter(Element element) {
         super(element);
+        init();
+    }
+
+    public FixedDataCenter(String dns, String name) {
+        super(dns, name);
+        init();
+    }
+    
+    void init() {
         fissuresNamingService = CommonAccess.getNameService();
-        dns = getDNS();
-        objectName = getName();
-        dataCenter = BulletproofVestFactory.vestSeismogramDC(dns,
-                                                             objectName,
+        dataCenter = BulletproofVestFactory.vestSeismogramDC(getDNS(),
+                                                             getName(),
                                                              fissuresNamingService,
                                                              BulletproofVestFactory.getDefaultNumRetry(),
                                                              Start.createRetryStrategy());
@@ -51,7 +63,4 @@ public class FixedDataCenter extends AbstractSource implements SodElement,
 
     private FissuresNamingService fissuresNamingService = null;
 
-    private String dns = null;
-
-    private String objectName = null;
 }// FixedDataCenter
