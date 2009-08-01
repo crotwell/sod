@@ -32,6 +32,7 @@ import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
 import edu.sc.seis.sod.subsetter.Subsetter;
 import edu.sc.seis.sod.subsetter.availableData.AvailableDataSubsetter;
 import edu.sc.seis.sod.subsetter.availableData.PassAvailableData;
+import edu.sc.seis.sod.subsetter.dataCenter.FixedDataCenter;
 import edu.sc.seis.sod.subsetter.dataCenter.SeismogramDCLocator;
 import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
 import edu.sc.seis.sod.subsetter.eventChannel.PassEventChannel;
@@ -464,7 +465,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
 
     private LinkedList<WaveformProcess> processes = new LinkedList<WaveformProcess>();
 
-    private SeismogramDCLocator dcLocator;
+    private SeismogramDCLocator dcLocator = new FixedDataCenter();
 
     public static final String NO_DATA = "no_data";
 

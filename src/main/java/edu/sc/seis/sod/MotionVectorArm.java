@@ -38,6 +38,7 @@ import edu.sc.seis.sod.subsetter.availableData.AvailableDataSubsetter;
 import edu.sc.seis.sod.subsetter.availableData.PassAvailableData;
 import edu.sc.seis.sod.subsetter.availableData.vector.ANDAvailableDataWrapper;
 import edu.sc.seis.sod.subsetter.availableData.vector.VectorAvailableDataSubsetter;
+import edu.sc.seis.sod.subsetter.dataCenter.FixedDataCenter;
 import edu.sc.seis.sod.subsetter.dataCenter.SeismogramDCLocator;
 import edu.sc.seis.sod.subsetter.eventChannel.PassEventChannel;
 import edu.sc.seis.sod.subsetter.eventChannel.vector.EventVectorSubsetter;
@@ -629,7 +630,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
 
     private VectorRequest request = new PassRequest();
 
-    private SeismogramDCLocator dcLocator;
+    private SeismogramDCLocator dcLocator = new FixedDataCenter();
 
     private VectorAvailableDataSubsetter availData = new PassAvailableData();
 
