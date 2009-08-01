@@ -1,5 +1,7 @@
 package edu.sc.seis.sod.subsetter.channel;
 
+import java.util.regex.Pattern;
+
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.IfNetwork.Channel;
@@ -35,6 +37,7 @@ public class ChannelCode implements ChannelSubsetter {
             throw new UserConfigurationException("A channelCode can be at most of length 3.  Yours was '"
                     + string + "'");
         }
+        required = required.replace('?', '*');
     }
 
     public StringTree accept(Channel channel, ProxyNetworkAccess network) {
@@ -51,4 +54,5 @@ public class ChannelCode implements ChannelSubsetter {
     String required;
 
     private String acceptedCode;
+    
 }// GainCode
