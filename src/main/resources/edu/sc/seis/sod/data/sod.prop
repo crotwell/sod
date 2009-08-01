@@ -2,6 +2,11 @@
 # for Log4J
 #
 #log4j.rootCategory=debug, R, C, E
+log4j.logger.org.hibernate=ERROR
+log4j.logger.com.mchange=ERROR
+log4j.logger.net.sf.ehcache=ERROR
+log4j.logger.org.jacorb=ERROR
+
 log4j.rootCategory=info, R, C, E
 log4j.appender.R=org.apache.log4j.RollingFileAppender
 log4j.appender.R.File=Sod.log
