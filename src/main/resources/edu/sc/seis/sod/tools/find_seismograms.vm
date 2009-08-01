@@ -33,6 +33,7 @@ $additionalArms#end
             <name>$server.name</name>
             <dns>$server.dns</dns>
         </fixedDataCenter>
+        <someCoverage/>
         <responseGain/>
         <sacWriter>
             <workingDir></workingDir>
