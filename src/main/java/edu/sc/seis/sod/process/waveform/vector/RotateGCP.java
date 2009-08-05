@@ -43,6 +43,7 @@ public class RotateGCP implements WaveformVectorProcess {
         if ( ! trimResult.isSuccess()) {
             return new WaveformVectorResult(false, trimResult.getSeismograms(), new StringTreeBranch(this, false, trimResult.getReason()));
         }
+        seismograms = trimResult.getSeismograms();
         // find x & y channel, y should be x+90 degrees and horizontal
         Channel[] horizontal = channelGroup.getHorizontalXY();
         if(horizontal.length == 0) {
