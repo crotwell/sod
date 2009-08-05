@@ -52,7 +52,14 @@
             <ref name="fullDataCoverage"/>
             <ref name="integrate"/>
             <ref name="differentiate"/>
-            <ref name="embeddedEventChannelProcessor"/>
+            <ref name="embeddedNetwork"/>
+            <ref name="embeddedStation"/>
+            <ref name="embeddedChannel"/>
+            <ref name="embeddedEventStation"/>
+            <ref name="embeddedEventChannel"/>
+            <ref name="embeddedRequest"/>
+            <ref name="embeddedEventStationProcessor"/> <!--depricated-->
+            <ref name="embeddedEventChannelProcessor"/> <!--depricated-->
             <ref name="transferResponse"/>
             <ref name="collapseOverlaps"/>
             <ref name="div"/>
@@ -888,10 +895,68 @@
             <empty/>
         </element>
     </define>
-    <define name="embeddedEventChannelProcessor">
+    <define name="embeddedNetwork">
+        <element name="embeddedNetwork">
+            <xsd:annotation>
+                <summary>Allows any network subsetter to be embedded here</summary>
+            </xsd:annotation>
+            <externalRef href="../network/network.rng"/>
+        </element>
+    </define>
+    <define name="embeddedStation">
+        <element name="embeddedStation">
+            <xsd:annotation>
+                <summary>Allows any station subsetter to be embedded here</summary>
+            </xsd:annotation>
+            <externalRef href="../network/station.rng"/>
+        </element>
+    </define>
+    <define name="embeddedChannel">
+        <element name="embeddedChannel">
+            <xsd:annotation>
+                <summary>Allows any  channel subsetter to be embedded here</summary>
+            </xsd:annotation>
+            <externalRef href="../network/channel.rng"/>
+        </element>
+    </define>
+    <define name="embeddedEventStation">
+        <element name="embeddedEventChannel">
+            <xsd:annotation>
+                <summary>Allows any event channel subsetter to be embedded here</summary>
+            </xsd:annotation>
+            <externalRef href="eventStation.rng"/>
+        </element>
+    </define>
+    <define name="embeddedEventChannel">
+        <element name="embeddedEventChannel">
+            <xsd:annotation>
+                <summary>Allows any event channel subsetter to be embedded here</summary>
+            </xsd:annotation>
+            <externalRef href="eventChannel.rng"/>
+        </element>
+    </define>
+    <define name="embeddedRequest">
+        <element name="embeddedRequest">
+            <xsd:annotation>
+                <summary>Allows any request subsetter to be embedded here</summary>
+            </xsd:annotation>
+            <externalRef href="requestSubsetter.rng"/>
+        </element>
+    </define>
+    <define name="embeddedEventStationProcessor"><!-- depricated-->
         <element name="embeddedEventChannelProcessor">
             <xsd:annotation>
                 <summary>Allows any event channel subsetter to be embedded here</summary>
+                <description>Depricated, use embeddedEventStation</description>
+            </xsd:annotation>
+            <externalRef href="eventStation.rng"/>
+        </element>
+    </define>
+    <define name="embeddedEventChannelProcessor"><!-- depricated-->
+        <element name="embeddedEventChannelProcessor">
+            <xsd:annotation>
+                <summary>Allows any event channel subsetter to be embedded here</summary>
+                <description>Depricated, use embeddedEventChannel</description>
             </xsd:annotation>
             <externalRef href="eventChannel.rng"/>
         </element>
@@ -906,7 +971,8 @@
                     frequency limits to be too large, specified in lowCut, lowPass, highPass and highCut, you will be
                     dividing one very small number by another very small number, which due to rounding errors may
                     generate very large amplitudes at long periods which are not real. Also, you should almost always
-                    apply an rmean and taper before applying transferResponse. See the sac <a
+                    apply an rmean and taper before applying transferResponse. The defaults are as in the example below.
+                    See the sac <a
                     href="http://www.llnl.gov/sac/SAC_Commands/transfer">manual</a> for more discussion of transfer. </description>
                 <example>
                     <transferResponse>
