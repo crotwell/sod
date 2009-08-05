@@ -16,6 +16,8 @@ import edu.sc.seis.fissuresUtil.display.PlottableDisplay;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.status.Pass;
+import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.AbstractSource;
 
 public class PlottableRequest extends AbstractSource  implements Request {
@@ -31,7 +33,7 @@ public class PlottableRequest extends AbstractSource  implements Request {
         System.out.println("PlottableRequest: "+getName()+" "+getDNS()+"  "+pixelsPerDay[0]);
     }
     
-    public boolean accept(CacheEvent event, Channel channel, RequestFilter[] request, CookieJar cookieJar)
+    public StringTree accept(CacheEvent event, Channel channel, RequestFilter[] request, CookieJar cookieJar)
             throws Exception {
         Plottable[] plottables = new Plottable[0];
         for (int i = 0; i < request.length; i++) {
@@ -41,7 +43,7 @@ public class PlottableRequest extends AbstractSource  implements Request {
             }
         }
         System.out.println("Got "+plottables.length+" plottable for "+ChannelIdUtil.toStringNoDates(channel)+" "+request[0].start_time.date_time+" to "+request[0].end_time.date_time);
-        return true;
+        return new Pass(this);
     }
 
     private ProxyPlottableDC plottableCache;

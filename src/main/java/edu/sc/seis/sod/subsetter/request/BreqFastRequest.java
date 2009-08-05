@@ -27,6 +27,8 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.FissuresFormatter;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.VelocityFileElementParser;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 import edu.sc.seis.sod.velocity.WaveformProcessContext;
@@ -52,11 +54,11 @@ public class BreqFastRequest implements Request {
         format.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
 
-    public boolean accept(CacheEvent event,
+    public StringTree accept(CacheEvent event,
                           Channel channel,
                           RequestFilter[] request,
                           CookieJar cookieJar) {
-        return writeToBFEmail(event, channel, request);
+        return new StringTreeLeaf(this, writeToBFEmail(event, channel, request));
     }
 
     protected String getConfig(String name) {

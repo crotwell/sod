@@ -153,7 +153,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
     private boolean firstRequest;
 
     public void processRequestSubsetter(EventChannelPair ecp, RequestFilter[] infilters) {
-        boolean passed;
+        StringTree passed;
         synchronized(request) {
             try {
                 passed = request.accept(ecp.getEvent(), ecp.getChannel(), infilters, ecp.getCookieJar());
@@ -170,7 +170,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
             ecp.update(Status.get(Stage.PROCESSOR, Standing.SUCCESS));
             return;
         }
-        if(passed) {
+        if(passed.isSuccess()) {
             ProxySeismogramDC dataCenter;
             synchronized(dcLocator) {
                 try {

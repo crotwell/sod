@@ -8,6 +8,8 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.status.Pass;
+import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.velocity.PrintlineVelocitizer;
 
 public class PrintlineRequestProcessor implements Request {
@@ -25,7 +27,7 @@ public class PrintlineRequestProcessor implements Request {
 
     public static final String DEFAULT_TEMPLATE = "Got $originalRequests.size()";
 
-    public boolean accept(CacheEvent event,
+    public StringTree accept(CacheEvent event,
                           Channel channel,
                           RequestFilter[] request,
                           CookieJar cookieJar) throws Exception {
@@ -35,6 +37,6 @@ public class PrintlineRequestProcessor implements Request {
                              channel,
                              request,
                              cookieJar);
-        return true;
+        return new Pass(this);
     }
 }

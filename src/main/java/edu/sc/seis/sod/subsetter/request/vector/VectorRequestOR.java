@@ -14,6 +14,8 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeBranch;
 
 public class VectorRequestOR extends VectorRequestLogical implements
         VectorRequest {
@@ -22,15 +24,19 @@ public class VectorRequestOR extends VectorRequestLogical implements
         super(config);
     }
 
-    public boolean accept(CacheEvent event,
+    public StringTree accept(CacheEvent event,
                           ChannelGroup channel,
                           RequestFilter[][] request,
                           CookieJar cookieJar) throws Exception {
         Iterator it = filterList.iterator();
+        StringTree[] result = new  StringTree[filterList.size()];
+        int i=0;
         while(it.hasNext()) {
             VectorRequest filter = (VectorRequest)it.next();
-            if(filter.accept(event, channel, request, cookieJar)) { return true; }
+            result[i] = filter.accept(event, channel, request, cookieJar);
+            if(result[i].isSuccess()) { return new StringTreeBranch(this, true, result); }
+            i++;
         }
-        return false;
+        return new StringTreeBranch(this, false, result);
     }
 }

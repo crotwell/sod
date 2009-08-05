@@ -9,6 +9,8 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeBranch;
 
 public final class RequestNOT extends RequestLogical implements Request {
 
@@ -24,32 +26,13 @@ public final class RequestNOT extends RequestLogical implements Request {
         super(config);
     }
 
-    /**
-     * Describe <code>accept</code> method here.
-     * 
-     * @param event
-     *            an <code>EventAccessOperations</code> value
-     * @param network
-     *            a <code>NetworkAccess</code> value
-     * @param channel
-     *            a <code>Channel</code> value
-     * @param original
-     *            a <code>RequestFilter[]</code> value
-     * @param cookies
-     *            a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     * @exception Exception
-     *                if an error occurs
-     */
-    public boolean accept(CacheEvent event,
+    public StringTree accept(CacheEvent event,
                           Channel channel,
                           RequestFilter[] original,
                           CookieJar cookieJar) throws Exception {
         Iterator it = filterList.iterator();
-        while(it.hasNext()) {
-            Request filter = (Request)it.next();
-            if(filter.accept(event, channel, original, cookieJar)) { return false; }
-        }
-        return true;
+        Request filter = (Request)it.next();
+        StringTree result = filter.accept(event, channel, original, cookieJar);
+        return new StringTreeBranch(this, ! result.isSuccess(), result);
     }
 }

@@ -15,6 +15,8 @@ import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.subsetter.request.Request;
 
 public class ORRequestWrapper implements VectorRequest {
@@ -35,17 +37,19 @@ public class ORRequestWrapper implements VectorRequest {
         }
     }
 
-    public boolean accept(CacheEvent event,
+    public StringTree accept(CacheEvent event,
                           ChannelGroup channelGroup,
                           RequestFilter[][] request,
                           CookieJar cookieJar) throws Exception {
+        StringTree[] result = new StringTree[channelGroup.getChannels().length];
         for(int i = 0; i < channelGroup.getChannels().length; i++) {
-            if(subsetter.accept(event,
+            result[i] = subsetter.accept(event,
                                 channelGroup.getChannels()[i],
                                 request[i],
-                                cookieJar)) { return true; }
+                                cookieJar);
+            if(result[i].isSuccess()) { return new StringTreeBranch(this, true, result); }
         }
-        return false;
+        return new StringTreeBranch(this, true, result);
     }
 
     Request subsetter;

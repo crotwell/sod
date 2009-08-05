@@ -175,7 +175,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
     private boolean firstRequest = true;
 
     public void processRequestSubsetter(EventVectorPair ecp, RequestFilter[][] infilters) {
-        boolean passed;
+        StringTree passed;
         synchronized(request) {
             try {
                 passed = request.accept(ecp.getEvent(), ecp.getChannelGroup(), infilters, ecp.getCookieJar());
@@ -191,7 +191,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
             }
             return;
         }
-        if (passed) {
+        if (passed.isSuccess()) {
             ProxySeismogramDC dataCenter;
             synchronized(dcLocator) {
                 try {
@@ -291,7 +291,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                 localSeismograms = getData(ecp, infilters, dataCenter);
                 MicroSecondDate after = new MicroSecondDate();
                 logger.info("After getting seismograms, time taken="
-                        + after.subtract(before).convertTo(UnitImpl.SECOND));
+                        + after.subtract(before).convertTo(UnitImpl.SECOND)+"  "+localSeismograms[0].length+", "+localSeismograms[1].length+", "+localSeismograms[2].length);
                 if (localSeismograms == null) {
                     return;
                 }

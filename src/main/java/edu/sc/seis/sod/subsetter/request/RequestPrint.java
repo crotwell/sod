@@ -10,15 +10,17 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.status.Pass;
+import edu.sc.seis.sod.status.StringTree;
 
 public class RequestPrint implements Request {
 
-    public boolean accept(CacheEvent event,
+    public StringTree accept(CacheEvent event,
                           Channel channel,
                           RequestFilter[] request,
                           CookieJar cookieJar) throws Exception {
         printRequests(request);
-        return true;
+        return new Pass(this);
     }
 
     public static void printRequests(RequestFilter[] request) {

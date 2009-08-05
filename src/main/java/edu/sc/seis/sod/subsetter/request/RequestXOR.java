@@ -7,6 +7,8 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeBranch;
 
 public final class RequestXOR extends RequestLogical implements Request {
 
@@ -22,32 +24,15 @@ public final class RequestXOR extends RequestLogical implements Request {
         super(config);
     }
 
-    /**
-     * Describe <code>accept</code> method here.
-     * 
-     * @param event
-     *            an <code>EventAccessOperations</code> value
-     * @param network
-     *            a <code>NetworkAccess</code> value
-     * @param channel
-     *            a <code>Channel</code> value
-     * @param original
-     *            a <code>RequestFilter[]</code> value
-     * @param cookies
-     *            a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     * @exception Exception
-     *                if an error occurs
-     */
-    public boolean accept(CacheEvent event,
+    public StringTree accept(CacheEvent event,
                           Channel channel,
                           RequestFilter[] original,
                           CookieJar cookieJar) throws Exception {
         Request filterA = (Request)filterList.get(0);
         Request filterB = (Request)filterList.get(1);
-        return (filterA.accept(event, channel, original, cookieJar) != filterB.accept(event,
-                                                                                      channel,
-                                                                                      original,
-                                                                                      cookieJar));
+        StringTree[] result = new StringTree[2];
+        result[0] = filterA.accept(event, channel, original, cookieJar);
+        result[1] = filterB.accept(event, channel, original, cookieJar);
+        return new StringTreeBranch(this, (result[0].isSuccess() != result[0].isSuccess()), result);
     }
 }// RequestSubsetterXOR

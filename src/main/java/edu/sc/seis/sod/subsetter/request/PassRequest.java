@@ -7,6 +7,8 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.status.Pass;
+import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.request.vector.VectorRequest;
 
 /**
@@ -21,17 +23,17 @@ public class PassRequest implements Request, VectorRequest {
 
     public PassRequest(Element config) {}
 
-    public boolean accept(CacheEvent event,
+    public StringTree accept(CacheEvent event,
                           Channel channel,
                           RequestFilter[] request,
                           CookieJar cookieJar) throws Exception {
-        return true;
+        return new Pass(this);
     }
 
-    public boolean accept(CacheEvent event,
+    public StringTree accept(CacheEvent event,
                           ChannelGroup channel,
                           RequestFilter[][] request,
                           CookieJar cookieJar) throws Exception {
-        return true;
+        return new Pass(this);
     }
 } // NullRequestSubsetter
