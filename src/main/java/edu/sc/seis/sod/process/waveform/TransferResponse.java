@@ -82,8 +82,8 @@ public class TransferResponse implements WaveformProcess, Threadable {
     
     float lowCut, lowPass, highPass, highCut;
     
-    public static final float DEFAULT_LOW_CUT = -2f;
-    public static final float DEFAULT_LOW_PASS = -2f;
+    public static final float DEFAULT_LOW_CUT = 0.005f;
+    public static final float DEFAULT_LOW_PASS = 0.01f;
     public static final float DEFAULT_HIGH_PASS = 1e5f;
     public static final float DEFAULT_HIGH_CUT = 1e6f;
 }
