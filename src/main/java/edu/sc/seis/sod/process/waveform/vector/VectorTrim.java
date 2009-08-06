@@ -34,7 +34,7 @@ public class VectorTrim implements WaveformVectorProcess {
                 return new WaveformVectorResult(seismograms,
                                                 new StringTreeLeaf(this,
                                                                    false,
-                                                                   "At least one vector missing seismograms: "+ChannelIdUtil.toString(available[i][0].channel_id)));
+                                                                   "At least one vector missing seismograms: "+ChannelIdUtil.toString(original[i][0].channel_id)));
             }
         }
         try {
