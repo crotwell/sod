@@ -18,6 +18,7 @@
             <ref name="CSVEventSource"/>
             <ref name="periodicFakeEventSource"/>
             <ref name="nowFakeEventSource"/>
+            <ref name="delayedEventSource"/>
         </choice>
     </define>
     <define name="eventFinder">
@@ -208,10 +209,25 @@ time, magnitude, latitude, longitude, depth
                 <ref name="quantity"/>
             </element>
             <optional>
-            	<element name="numEvents">
-                	<data type="int"/>
-            	</element>
+                <element name="numEvents">
+                    <data type="int"/>
+                </element>
             </optional>
+        </element>
+    </define>
+    <define name="delayedEventSource">
+        <element name="delayedEventSource">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Delays events from the enclosed source.</summary>
+                    <description>Events from the enclosed source are delayed if they are withing
+                    the given delay of now. This is useful for processing realtime events to allow for
+                    seismic wave propagation time and data latency.</description>
+                </xsd:documentation>
+            </xsd:annotation>
+            <element name="delay">
+                <ref name="quantity"/>
+            </element>
         </element>
     </define>
 </grammar>
