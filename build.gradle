@@ -5,44 +5,6 @@ version = '3.0.0alpha'
 dependencies {
     compile project(':bag') { transitive = true }
     
-    compile "JSAP:JSAP:2.1"
-    compile "log4jUSC:log4j:1.2.15"
-    compile 'jython:jython:2.5.0'
-    compile group: 'org.jacorb', name: 'jacorb', version: '2.3.1', transitive: false
-    compile "log4jUSC:log4j:1.2.15"
-    compile "ehcache:ehcache:1.4.1"
-    compile "hibernate:hibernate:3.3.1"
-/*  
-    compile "hibernate:antlr:2.7.6"
-    compile "hibernate:jta:1.1"
-    compile "hibernate:javassist:3.4.GA"
-    compile "hibernate:slf4j-api:1.5.3"
-    compile "hibernate:slf4j-log4j12:1.5.3"
-*/
-    compile "dom4j:dom4j:1.6.1"
-    compile "commons-logging:commons-logging:1.0.4"
-    compile "isti:isti.util:1.0.3USC"
-    compile "jdom:jdom:b9"
-    compile "edu.sc.seis.mapData:etopo10:1.0"
-    compile "hsqldb:hsqldb:1.8.0.10"
-    compile "postgresql:postgresql:8.3-604.jdbc3"
-    compile "xerces:xerces:2.7.1"
-    compile "xerces:xml-apis:2.7.1"
-    compile "xalan:xalan:2.6.0"
-    compile "openmap:openmap:4.6.2"
-    compile "itext:itext:2.0.7"
-    compile "staxUSC:stax-api:1.0"
-    compile group: 'staxUSC', name: 'stax', version: '1.1.1-dev', transitive: false
-    compile "velocity:velocity:1.5"
-    compile "commons-collections:commons-collections:3.1"
-    compile "commons-lang:commons-lang:2.1"
-    compile "oro:oro:2.0.8"
-    compile "jfreechart:jcommon:1.0.0"
-    compile "jfreechart:jfreechart:1.0.1"
-    compile "javamailUSC:javamail:1.3.2"
-    compile "activationUSC:activation:1.0.2"
-
-
     compile "jline:jline:0.9.91"
     compile "rngconvUSC:rngconv:20030225"
     compile "msv:msv:20030807"
@@ -52,7 +14,6 @@ dependencies {
     compile "thaiopensource:jing:20030619"
     compile "velocity-tools:velocity-tools-generic:1.4"
     compile "edu.sc.seis.mapData:dcwpo_browse:1.0"
-    compile "JSAP:JSAP:2.1"
     compile "net.sourceforge.javacsv:javacsv:2.0"
 }
 
@@ -76,3 +37,14 @@ task makeScript(dependsOn: copyToLib) << { task ->
     schemaDocArgs = project.projectDir.path+'/ '+project.projectDir.path+'/../seiswww/velocity/sod/ingredients/'
     scriptBuild('schemaDocs', 'edu.sc.seis.sod.validator.documenter.SchemaDocumenter', task.project, moreArgs:schemaDocArgs)
 }
+
+task buildSchema << { 
+    relaxArgs = project.projectDir.path+'/relax/sod.rng > '+project.projectDir.path+'/src/main/resources/edu/sc/seis/sod/data/sod.rng'
+
+    ant.java(dir:'build/output', 
+             classname:'com.sun.msv.writer.relaxng.Driver', 
+             args:relaxArgs,
+             fork:true,
+             classpath:configurations.runtime.asPath) 
+}
+
