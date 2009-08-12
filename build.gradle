@@ -32,15 +32,25 @@ task makeScript(dependsOn: copyToLib) << { task ->
     scriptBuild('find_channels', 'edu.sc.seis.sod.tools.find_channels', task.project, dExtras:dExtras)
     scriptBuild('find_seismograms', 'edu.sc.seis.sod.tools.find_seismograms', task.project, dExtras:dExtras)
     scriptBuild('find_responses', 'edu.sc.seis.sod.tools.find_responses', task.project, dExtras:dExtras)
-    relaxArgs = project.projectDir.path+'/relax/sod.rng > '+project.projectDir.path+'/src/main/resources/edu/sc/seis/sod/data/sod.rng'
-    scriptBuild('buildSchema', 'com.sun.msv.writer.relaxng.Driver', task.project, dExtras:dExtras, moreArgs:relaxArgs)
+}
+
+task printRT << {
+    configurations.runtime.each { File f -> println f.name }
+}
+       
+
+task buildSchemaDocs << { 
     schemaDocArgs = project.projectDir.path+'/ '+project.projectDir.path+'/../seiswww/velocity/sod/ingredients/'
-    scriptBuild('schemaDocs', 'edu.sc.seis.sod.validator.documenter.SchemaDocumenter', task.project, moreArgs:schemaDocArgs)
+    cp = configurations.runtime.asPath+":"+project.projectDir.path+"/build/classes"
+    ant.java(dir:'build/output', 
+             classname:'edu.sc.seis.sod.validator.documenter.SchemaDocumenter', 
+             args:schemaDocArgs,
+             fork:true,
+             classpath:cp) 
 }
 
 task buildSchema << { 
     relaxArgs = project.projectDir.path+'/relax/sod.rng > '+project.projectDir.path+'/src/main/resources/edu/sc/seis/sod/data/sod.rng'
-
     ant.java(dir:'build/output', 
              classname:'com.sun.msv.writer.relaxng.Driver', 
              args:relaxArgs,
