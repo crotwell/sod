@@ -604,7 +604,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
         } else if (t instanceof org.omg.CORBA.SystemException) {
             // just to generate user message if needed
             if (server != null) {
-                Start.createRetryStrategy().shouldRetry((SystemException)t, server, 0, 0);
+                Start.createRetryStrategy(-1).shouldRetry((SystemException)t, server, 0);
             } else {
                 failLogger.info("Network or server problem, SOD will continue to retry this item periodically: ("
                         + t.getClass().getName() + ") " + ecp);
@@ -619,7 +619,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
     }
 
     private static void serverSuccessful(ProxySeismogramDC dataCenter) {
-        Start.createRetryStrategy().serverRecovered(dataCenter);
+        Start.createRetryStrategy(-1).serverRecovered(dataCenter);
     }
 
     private EventStationSubsetter eventStationSubsetter = new PassEventStation();

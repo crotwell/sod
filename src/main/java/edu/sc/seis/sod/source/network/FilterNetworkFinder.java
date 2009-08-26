@@ -6,9 +6,7 @@ import org.w3c.dom.Element;
 
 import edu.sc.seis.fissuresUtil.cache.FilterNetworkDC;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
-import edu.sc.seis.fissuresUtil.cache.VestingNetworkDC;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.Start;
 
 /**
  * @author groves Created on Feb 4, 2005
@@ -22,17 +20,14 @@ public class FilterNetworkFinder extends NetworkFinder {
     }
 
     public synchronized ProxyNetworkDC getNetworkDC() {
-        if(netDC == null) {
-            netDC = new FilterNetworkDC(new VestingNetworkDC(getDNS(),
-                                                             getName(),
-                                                             getFissuresNamingService(),
-                                                             Start.createRetryStrategy()),
+        if(filterNetDC == null) {
+            filterNetDC = new FilterNetworkDC(super.getNetworkDC(),
                                         patterns);
         }
-        return netDC;
+        return filterNetDC;
     }
 
     private Pattern[] patterns;
 
-    private ProxyNetworkDC netDC;
+    private ProxyNetworkDC filterNetDC;
 }

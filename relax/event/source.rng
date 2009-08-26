@@ -36,6 +36,17 @@
             </xsd:annotation>
             <ref name="name"/>
             <ref name="dns"/>
+	    <optional>
+	      <element name="retries">
+		<xsd:annotation>
+		  <summary>Number of consecutive failures before quiting</summary>
+		  <description>In the event of server errors, SOD will retry 
+		  the query to the server for retries times before failing.
+		  The default is -1 which means to try forever.</description>
+            </xsd:annotation>
+		<data type="integer"/>
+	      </element>
+	    </optional>
             <optional>
                 <choice>
                     <ref name="globalArea"/>

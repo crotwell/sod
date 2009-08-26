@@ -3,6 +3,8 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
+import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.SodUtil;
 
 public abstract class AbstractSource{
@@ -10,6 +12,8 @@ public abstract class AbstractSource{
     public AbstractSource (String dns, String name) {
         this.dns = dns;
         this.name = name;
+        fns = CommonAccess.getNameService();
+        retries = -1;
     }
     
     public AbstractSource (Element config){
@@ -19,9 +23,10 @@ public abstract class AbstractSource{
                 Element el = (Element)children.item(i);
                 String tagName  = el.getTagName();
                 if(tagName.equals("dns")) dns = SodUtil.getText(el);
-                else if(tagName.equals("name"))name = SodUtil.getText(el);
+                else if(tagName.equals("name")) name = SodUtil.getText(el);
             }
         }
+        retries = SodUtil.loadInt(config, "retries", -1);
     }
     
     /**
@@ -30,7 +35,7 @@ public abstract class AbstractSource{
      *
      * @return a <code>String</code> value
      */
-    public String getDNS() {// end of for (int i=0; i<children.getSize(); i++)
+    public String getDNS() {
         return dns;
     }
     
@@ -44,7 +49,19 @@ public abstract class AbstractSource{
         return name;
     }
     
+    public int getRetries() {
+        return retries;
+    }
+
+    public FissuresNamingService getFissuresNamingService() {
+        return fns;
+    }
+
+    private FissuresNamingService fns;
+    
     private String name, dns;
+
+    private int retries = -1;
     
     private static Logger logger = Logger.getLogger(AbstractSource.class);
 }// AbstractSource

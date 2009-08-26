@@ -320,18 +320,14 @@ public class Start {
         return new BufferedInputStream(in);
     }
 
-    public static RetryStrategy createRetryStrategy() {
-        if(retryStrategy != null) {
-            return retryStrategy;
-        }
+    public static RetryStrategy createRetryStrategy(int numRetries) {
         if(commandName.equals("sod")) {
-            return new UserReportRetryStrategy("SOD will pick up where it left off when restarted.");
+            return new UserReportRetryStrategy(numRetries, 
+                                               "SOD will pick up where it left off when restarted.");
         } else {
-            return new UserReportRetryStrategy();
+            return new UserReportRetryStrategy(numRetries);
         }
     }
-
-    private static RetryStrategy retryStrategy = null;
 
     public static void setCommandName(String name) {
         commandName = name;

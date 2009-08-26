@@ -14,7 +14,18 @@
             </xsd:annotation>
             <ref name="name"/>
             <ref name="dns"/>
-        </element>
+	    <optional>
+	      <element name="retries">
+		<xsd:annotation>
+		  <summary>Number of consecutive failures before quiting</summary>
+		  <description>In the event of server errors, SOD will retry 
+		  the query to the server for retries times before failing.
+		  The default is -1 which means to try forever.</description>
+            </xsd:annotation>
+		<data type="integer"/>
+	      </element>
+	    </optional>
+	</element>
     </define>
     <define name="name">
         <element name="name">
@@ -28,6 +39,7 @@
                     conjunction with a DNS value "edu/sc/seis".</description>
             </xsd:annotation>
             <choice>
+                <value>IRIS_DataCenter</value>
                 <value>IRIS_BudDataCenter</value>
                 <value>IRIS_PondDataCenter</value>
                 <value>IRIS_ArchiveDataCenter</value>
@@ -40,14 +52,9 @@
     <define name="dns">
         <element name="dns">
             <xsd:annotation>
-                <summary>DNS location of a data center</summary>
-                <description>The server's dns is used in combination with a name value to find a
-                    server from a seismogram DC. The names "IRIS_BudDataCenter",
-                    "IRIS_PondDataCenter", and "IRIS_ArchiveDataCenter" must be used in combination
-                    with the "edu/iris/dmc" dns value. The name "NCEDC_DataCenter" must be used in
-                    conjunction with the "edu/berkley/geo/quake" dns value. The name
-                    "SCEPPSeismogramDC" must be used in conjunction with a DNS value
-                "edu/sc/seis".</description>
+                <summary>DNS location of a server</summary>
+                <description>The server's dns is used in combination with a 
+		name value to locate a server. Names are unique with a dns.</description>
             </xsd:annotation>
             <choice>
                 <value>edu/iris/dmc</value>

@@ -40,10 +40,11 @@ import edu.sc.seis.sod.subsetter.origin.OriginDepthRange;
 
 public class EventDCQuerier {
 
-    public EventDCQuerier(String serverName, String serverDNS, Element config)
+    public EventDCQuerier(String serverName, String serverDNS, int numRetries, Element config)
             throws ConfigurationException {
         this.serverName = serverName;
         this.serverDNS = serverDNS;
+        this.numRetries = numRetries;
         NodeList childNodes = config.getChildNodes();
         List configCatalogs = new ArrayList();
         List configContributors = new ArrayList();
@@ -52,6 +53,7 @@ public class EventDCQuerier {
             if(node instanceof Element) {
                 String tagName = ((Element)node).getTagName();
                 if(!tagName.equals("name") && !tagName.equals("dns")
+                        && !tagName.equals("retries")
                         && !tagName.equals("originTimeRange")) {
                     Object object = SodUtil.load((Element)node,
                                                  new String[] {"eventArm",
@@ -81,8 +83,7 @@ public class EventDCQuerier {
             eventDC = new VestingEventDC(serverName,
                                          serverDNS,
                                          CommonAccess.getNameService(),
-                                         -1,
-                                         Start.createRetryStrategy());
+                                         Start.createRetryStrategy(getRetries()));
         }
         return eventDC;
     }
@@ -184,6 +185,8 @@ public class EventDCQuerier {
         return "EventDCQuerier(" + serverDNS + "/" + serverName + ")";
     }
 
+    public int getRetries() {return numRetries;}
+    
     private int sequenceMaximum = 100;
 
     private ProxyEventDC eventDC;
@@ -199,6 +202,8 @@ public class EventDCQuerier {
     private MagnitudeRange magRange = new MagnitudeRange();
 
     private edu.iris.Fissures.Area area = new GlobalAreaImpl();
+    
+    private int numRetries;
 
     private static Logger logger = Logger.getLogger(EventDCQuerier.class);
 }

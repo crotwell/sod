@@ -39,7 +39,7 @@ public class EventFinder extends AbstractSource implements EventSource {
 		}
 		eventTimeRange = ((MicroSecondTimeRangeSupplier) SodUtil.load(queryTimeEl, new String[] {
 				"eventArm", "origin" }));
-		querier = new EventDCQuerier(getName(), getDNS(), config);
+		querier = new EventDCQuerier(getName(), getDNS(), getRetries(), config);
 	}
     
     public String getDescription() {
@@ -61,28 +61,6 @@ public class EventFinder extends AbstractSource implements EventSource {
 	}
 
 	public CacheEvent[] next() {
-		int count = 0;
-		SystemException latest;
-		try {
-			return loadMoreResults();
-		} catch (SystemException t) {
-			latest = t;
-		}
-		while (retryStrat
-				.shouldRetry(latest, querier.getEventDC(), count++, -1)) {
-			try {
-				CacheEvent[] result = loadMoreResults();
-				retryStrat.serverRecovered(querier.getEventDC());
-				return result;
-			} catch (SystemException t) {
-				latest = t;
-			}
-		}
-		// -1 in shouldRetry means we go forever and this never gets thrown
-		throw latest;
-	}
-
-	protected CacheEvent[] loadMoreResults() {
 		MicroSecondTimeRange queryTime = getQueryTime();
 		CacheEvent[] results = querier.query(queryTime);
 		logger.debug("Retrieved"+results.length+" events for time range "+queryTime);
@@ -197,5 +175,5 @@ public class EventFinder extends AbstractSource implements EventSource {
 
 	protected TimeInterval increment, lag, refreshInterval;
 
-	private RetryStrategy retryStrat = Start.createRetryStrategy();
+	private RetryStrategy retryStrat = Start.createRetryStrategy(getRetries());
 }// EventFinder
