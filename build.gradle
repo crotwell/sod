@@ -56,5 +56,6 @@ task buildSchema << {
              args:relaxArgs,
              fork:true,
              classpath:configurations.runtime.asPath) 
+    ant.delete(file:'build/output/velocity.log')
 }
 
