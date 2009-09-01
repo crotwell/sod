@@ -28,8 +28,8 @@ public class BackwardsEventFinder extends EventFinder {
         return ! currentQuery.getEndTime().equals(queryBegin);
     }
 
-    protected CacheEvent[] loadMoreResults() {
-        CacheEvent[] results = super.loadMoreResults();
+    public CacheEvent[] next() {
+        CacheEvent[] results = super.next();
         CacheEvent[] out = new CacheEvent[results.length];
         for(int i = 0; i < out.length; i++) {
             out[i] = results[results.length-i-1];
