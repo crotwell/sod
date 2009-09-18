@@ -1,6 +1,6 @@
 
 group = 'edu.sc.seis'
-version = '3.0.0alpha'
+version = '3.0.0beta3'
 
 dependencies {
     compile project(':bag') { transitive = true }
@@ -15,6 +15,35 @@ dependencies {
     compile "velocity-tools:velocity-tools-generic:1.4"
     compile "edu.sc.seis.mapData:dcwpo_browse:1.0"
     compile "net.sourceforge.javacsv:javacsv:2.0"
+}
+
+task zipDist(type: Zip, dependsOn: ['makeScript', 'createBuildScript', 'wrapper']) {
+    dirName = project.name+'-'+version+'-src'
+    zipFileSet(dir: 'build') {
+        include('build.gradle')
+        prefix = dirName
+    }
+    zipFileSet(dir: 'build/output') {
+        include('bin/**')
+        include('lib/**')
+        prefix = dirName
+    }
+    zipFileSet(dir: '.') {
+        include('gpl-3.0.txt')
+        include('defaultProps')
+        include('externalExample')
+        include('jythonExample')
+        include('src/**')
+        include('gradleWrapper/**')
+        include('gradlew')
+        include('gradlew.bat')
+        exclude('**/*.svn')
+        prefix = dirName
+    }
+    zipFileSet(dir: 'scripts') {
+        include('cwg.prop')
+    }
+
 }
 
 task makeScript(dependsOn: copyToLib) << { task ->
@@ -51,7 +80,7 @@ task buildSchemaDocs << {
 }
 
 task buildSchema << { 
-    relaxArgs = project.projectDir.path+'/relax/sod.rng'
+    relaxArgs = project.projectDir.path+'/src/main/relax/sod.rng'
     ant.java(dir:'build/output', 
              classname:'com.sun.msv.writer.relaxng.Driver', 
              args:relaxArgs,
