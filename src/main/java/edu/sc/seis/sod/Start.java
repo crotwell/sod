@@ -731,7 +731,9 @@ public class Start {
 
     protected static NetworkArm network;
 
-    private static String configFileName, commandName = "sod";
+    private static String configFileName;
+
+    private static String commandName = "sod";
 
     private static MicroSecondDate startTime;
 
