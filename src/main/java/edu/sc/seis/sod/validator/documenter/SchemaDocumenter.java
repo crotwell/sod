@@ -34,7 +34,7 @@ public class SchemaDocumenter {
         }
         base = args[0];
         outputdir = args[1];
-        StAXModelBuilder handler = new StAXModelBuilder(base + "relax/sod.rng");
+        StAXModelBuilder handler = new StAXModelBuilder(base + "src/main/relax/sod.rng");
         //Setup velocity
         VelocityEngine ve = new VelocityEngine();
         ve.setProperty("file.resource.loader.path", base + "site");
