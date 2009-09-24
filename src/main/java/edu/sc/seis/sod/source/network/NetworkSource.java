@@ -13,7 +13,7 @@ public abstract class NetworkSource extends AbstractSource {
         super(config);
         Element subElement = SodUtil.getElement(config, "refreshInterval");
         if(subElement != null) {
-            refreshInterval = SodUtil.loadTimeInterval(config);
+            refreshInterval = SodUtil.loadTimeInterval(subElement);
         } else {
             refreshInterval = new TimeInterval(1, UnitImpl.FORTNIGHT);
         }
