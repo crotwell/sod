@@ -42,6 +42,7 @@ task zipDist(type: Zip, dependsOn: ['makeScript', 'createBuildScript', 'wrapper'
     }
     zipFileSet(dir: 'scripts') {
         include('cwg.prop')
+        prefix = dirName
     }
 
 }
@@ -54,7 +55,8 @@ task makeScript(dependsOn: copyToLib) << { task ->
                 'org.omg.CORBA.ORBClass':'org.jacorb.orb.ORB', 
                 'swing.volatileImageBufferEnabled':'false', 
                 'java.endorsed.dirs':'${LIB}/endorsed', 
-                'jacorb.connection.client.pending_reply_timeout':'120000' ]
+                'jacorb.connection.client.pending_reply_timeout':'120000',
+                'jacorb.log.default.verbosity':'2' ]
     scriptBuild('sod', 'edu.sc.seis.sod.Start', task.project, dExtras:dExtras)
     scriptBuild('find_events', 'edu.sc.seis.sod.tools.find_events', task.project, dExtras:dExtras)
     scriptBuild('find_stations', 'edu.sc.seis.sod.tools.find_stations', task.project, dExtras:dExtras)
