@@ -12,7 +12,6 @@ public abstract class AbstractSource{
     public AbstractSource (String dns, String name) {
         this.dns = dns;
         this.name = name;
-        fns = CommonAccess.getNameService();
         retries = -1;
     }
     
@@ -54,10 +53,8 @@ public abstract class AbstractSource{
     }
 
     public FissuresNamingService getFissuresNamingService() {
-        return fns;
+        return CommonAccess.getNameService();
     }
-
-    private FissuresNamingService fns;
     
     private String name, dns;
 
