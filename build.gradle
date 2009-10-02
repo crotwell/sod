@@ -17,18 +17,21 @@ dependencies {
     compile "net.sourceforge.javacsv:javacsv:2.0"
 }
 
-task zipDist(type: Zip, dependsOn: ['makeScript', 'createBuildScript', 'wrapper']) {
-    dirName = project.name+'-'+version+'-src'
-    zipFileSet(dir: 'build') {
+task tarDist(type: Tar, dependsOn: ['makeScript', 'createBuildScript', 'wrapper']) {
+    dirName = project.name+'-'+version
+    tarFileSet(dir: 'build') {
         include('build.gradle')
         prefix = dirName
     }
-    zipFileSet(dir: 'build/output') {
+    tarFileSet(dir: 'build/output', fileMode: '755') {
         include('bin/**')
+        prefix = dirName
+    }
+    tarFileSet(dir: 'build/output') {
         include('lib/**')
         prefix = dirName
     }
-    zipFileSet(dir: '.') {
+    tarFileSet(dir: '.') {
         include('gpl-3.0.txt')
         include('defaultProps')
         include('externalExample')
@@ -40,8 +43,9 @@ task zipDist(type: Zip, dependsOn: ['makeScript', 'createBuildScript', 'wrapper'
         exclude('**/*.svn')
         prefix = dirName
     }
-    zipFileSet(dir: 'scripts') {
+    tarFileSet(dir: 'scripts') {
         include('cwg.prop')
+        include('tutorial')
         prefix = dirName
     }
 
