@@ -173,7 +173,7 @@
             <url>http://www.seis.sc.edu/software/fissuresIDL</url>
         </dependency>
         <dependency>
-            <id>SeedCodec</id>
+            <id>seedCodec</id>
             <version>1.0.6internal</version>
             <url>http://www.seis.sc.edu/software/SeedCodec</url>
         </dependency>
