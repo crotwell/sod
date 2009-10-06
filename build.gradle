@@ -51,8 +51,8 @@ task tarDist(type: Tar, dependsOn: ['makeScript', 'createBuildScript', 'wrapper'
 
 }
 
-task makeScript(dependsOn: copyToLib) << { task ->
-    dExtras = [ 'seis.name':'sod-3.0.0alpha.sod', 
+def getDExtras() {
+    return [ 'seis.name':'sod-3.0.0alpha.sod', 
                 'org.omg.CORBA.ORBSingletonClass':'org.jacorb.orb.ORBSingleton', 
                 'python.path':'${LIB}', 
                 'java.awt.headless':'true', 
@@ -61,6 +61,10 @@ task makeScript(dependsOn: copyToLib) << { task ->
                 'java.endorsed.dirs':'${LIB}/endorsed', 
                 'jacorb.connection.client.pending_reply_timeout':'120000',
                 'jacorb.log.default.verbosity':'2' ]
+}
+
+task makeScript(dependsOn: copyToLib) << { task ->
+    dExtras = getDExtras()
     scriptBuild('sod', 'edu.sc.seis.sod.Start', task.project, dExtras:dExtras)
     scriptBuild('find_events', 'edu.sc.seis.sod.tools.find_events', task.project, dExtras:dExtras)
     scriptBuild('find_stations', 'edu.sc.seis.sod.tools.find_stations', task.project, dExtras:dExtras)
