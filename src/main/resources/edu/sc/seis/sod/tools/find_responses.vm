@@ -18,6 +18,16 @@
 #end
             </stationOR>
 #end
+#if($needsEffectiveTimeRange)
+            <stationEffectiveTimeOverlap>
+                <startTime>
+                    $begin
+                </startTime>
+                <endTime>
+                    $end
+                </endTime>
+            </stationEffectiveTimeOverlap>
+#end
 #if($box)
             <stationArea>
                 <boxArea>
@@ -49,6 +59,7 @@
 #end
 		</siteOR>
 #end
+#if($needsEffectiveTimeRange)
         <channelEffectiveTimeOverlap>
             <startTime>
                $begin
@@ -57,6 +68,7 @@
                $end
             </endTime>
         </channelEffectiveTimeOverlap>
+#end
 #if($channels)
         <channelOR>
 #foreach($code in $channels)
