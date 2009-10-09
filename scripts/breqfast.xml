@@ -76,7 +76,8 @@
                 <value>360</value>
             </endOffset>
         </phaseRequest>
-        <breqFastRequest>
+        <requestNOT>
+          <breqFastRequest>
             <workingDir>sample_breqfast</workingDir>
             <location>$event.getTime('yyyy_DDD_HH_mm_ss')_A</location>
             <name>Felix T. Cat</name>
@@ -89,6 +90,7 @@
             <altmedia1>Electronic</altmedia1>
             <altmedia2>Electronic</altmedia2>
             <quality>b</quality>
-        </breqFastRequest>
+          </breqFastRequest>
+        </requestNOT>
     </waveformArm>
 </sod>
