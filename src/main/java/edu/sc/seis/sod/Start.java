@@ -698,8 +698,10 @@ public class Start {
         // wake up any sleeping arms
         Arm[] arms = new Arm[] {network, event};
         for(int i = 0; i < arms.length; i++) {
-            synchronized(arms[i]) {
-                arms[i].notifyAll();
+            if (arms[i] != null) {
+                synchronized(arms[i]) {
+                    arms[i].notifyAll();
+                }
             }
         }
         synchronized(OutputScheduler.getDefault()) {
