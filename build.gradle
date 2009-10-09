@@ -73,15 +73,17 @@ task makeScript(dependsOn: copyToLib) << { task ->
     scriptBuild('find_responses', 'edu.sc.seis.sod.tools.find_responses', task.project, dExtras:dExtras)
 }
 
-task printRT << {
-    configurations.runtime.each { File f -> println f.name }
+task printRT << { task ->
+    configurations.default.each { File f -> println f.path }
 }
        
 
-task buildSchemaDocs << { 
+task buildSchemaDocs(dependsOn: classes) << { task ->
+    outDir = task.project.file('build/output')
+    outDir.mkdirs()
     schemaDocArgs = project.projectDir.path+'/ '+project.projectDir.path+'/../seiswww/velocity/sod/ingredients/'
-    cp = configurations.runtime.asPath+":"+project.projectDir.path+"/build/classes"
-    ant.java(dir:'build/output', 
+    cp = configurations.runtime.asPath+":"+project.projectDir.path+"/build/classes/main"
+    ant.java(dir:outDir, 
              classname:'edu.sc.seis.sod.validator.documenter.SchemaDocumenter', 
              args:schemaDocArgs,
              fork:true,
@@ -89,7 +91,7 @@ task buildSchemaDocs << {
     ant.delete(file:'build/output/velocity.log')
 }
 
-task buildSchema << { 
+task buildSchema << { task ->
     relaxArgs = project.projectDir.path+'/src/main/relax/sod.rng'
     ant.java(dir:'build/output', 
              classname:'com.sun.msv.writer.relaxng.Driver', 
