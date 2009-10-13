@@ -305,8 +305,10 @@ public class NetworkArm implements Arm {
                                                   th);
                 }
             }
-                if(allNets.length == 0) {
+                if(lastQueryTime == null && allNets.length == 0) {
                     // hard to imagine a network arm that can't find a single good network is useful, so just fail
+                    // only fail if first time (lastQueryTime==null) so a server fail
+                    // during a run will not cause a crash
                     logger.warn("Found no networks.  Make sure the network codes you entered are valid");
                     Start.armFailure(this, new NotFound("Found no networks. Make sure the network codes you entered in your recipe are valid"));
                 }
