@@ -129,7 +129,7 @@ public class RemoveEventDuplicate implements OriginSubsetter {
     }
     
     protected void setTimeVariance(QuantityImpl timeVariance) throws ConfigurationException {
-        if ( ! ( timeVariance.getUnit().isConvertableTo(UnitImpl.DEGREE))) {
+        if ( ! ( timeVariance.getUnit().isConvertableTo(UnitImpl.SECOND))) {
             throw new ConfigurationException("Units must be convertible to SECOND: "+timeVariance.getUnit());
         }
         this.timeVariance = timeVariance;
