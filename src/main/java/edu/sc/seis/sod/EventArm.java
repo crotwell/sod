@@ -3,7 +3,6 @@ package edu.sc.seis.sod;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -65,8 +64,7 @@ public class EventArm implements Arm {
 
     public void run() {
         try {
-            for(Iterator iter = sources.iterator(); iter.hasNext();) {
-                EventSource source = (EventSource)iter.next();
+            for (EventSource source : sources) {
                 logger.debug(source + " covers events from "
                         + source.getEventTimeRange());
             }
@@ -112,9 +110,7 @@ public class EventArm implements Arm {
     }
 
     private void getEvents() throws Exception {
-            Iterator it = sources.iterator();
-            while(it.hasNext()) {
-                EventSource source = (EventSource)it.next();
+        for (EventSource source : sources) {
                 TimeInterval wait = source.getWaitBeforeNext();
                 if ((lastTime.get(source) == null || lastTime.get(source).add(wait).before(ClockUtil.now())) && source.hasNext()) {
                     CacheEvent[] next = source.next();
@@ -133,10 +129,8 @@ public class EventArm implements Arm {
                     lastTime.put(source, ClockUtil.now());
                 }
             }
-            it = sources.iterator();
             TimeInterval minWait = null;
-            while(it.hasNext()) {
-                EventSource source = (EventSource)it.next();
+            for (EventSource source : sources) {
                 if (source.hasNext() && lastTime.get(source) != null) {
                     TimeInterval tmpWait = lastTime.get(source).add(source.getWaitBeforeNext()).subtract(ClockUtil.now());
                     if (minWait == null || tmpWait.lessThan(minWait)) {
@@ -162,9 +156,8 @@ public class EventArm implements Arm {
     }
 
     private boolean atLeastOneSourceHasNext() {
-        Iterator it = sources.iterator();
-        while(it.hasNext()) {
-            if(((EventSource)it.next()).hasNext()) {
+        for (EventSource source : sources) {
+            if(source.hasNext()) {
                 return true;
             }
         }
@@ -268,9 +261,7 @@ public class EventArm implements Arm {
         if (storedEvent.getStatus() != ECPOP_INIT && storedEvent.getStatus() != SUCCESS) {
         	storedEvent.setStatus(EVENT_IN_PROG);
             change(storedEvent);
-            Iterator it = subsetters.iterator();
-            while(it.hasNext()) {
-                OriginSubsetter cur = (OriginSubsetter)it.next();
+            for (OriginSubsetter cur : subsetters) {
                 StringTree result = cur.accept(event, event.get_attributes(), event.getOrigin());
                 if(!result.isSuccess()) {
                 	storedEvent.setStatus(EVENT_REJECT);
@@ -286,10 +277,9 @@ public class EventArm implements Arm {
     }
 
     public void change(StatefulEvent event) {
-        Iterator it = statusMonitors.iterator();
         synchronized(statusMonitors) {
-            while(it.hasNext()) {
-                ((EventMonitor)it.next()).change(event, event.getStatus());
+            for (EventMonitor evMon : statusMonitors) {
+                evMon.change(event, event.getStatus());
             }
         }
     }
@@ -300,10 +290,9 @@ public class EventArm implements Arm {
 
     private void setStatus(String status) throws Exception {
         logger.debug(status);
-        Iterator it = statusMonitors.iterator();
         synchronized(statusMonitors) {
-            while(it.hasNext()) {
-                ((EventMonitor)it.next()).setArmStatus(status);
+            for (EventMonitor evMon : statusMonitors) {
+                evMon.setArmStatus(status);
             }
         }
     }
@@ -330,7 +319,7 @@ public class EventArm implements Arm {
 
     private List<OriginSubsetter> subsetters = new ArrayList<OriginSubsetter>();
 
-    private List statusMonitors = Collections.synchronizedList(new ArrayList());
+    private List<EventMonitor> statusMonitors = Collections.synchronizedList(new ArrayList<EventMonitor>());
 
     private StatefulEventDB eventStatus;
 
