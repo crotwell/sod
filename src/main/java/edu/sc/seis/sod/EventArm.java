@@ -41,23 +41,23 @@ public class EventArm implements Arm {
     public EventArm() throws ConfigurationException {
         this(null, true);
     }
+
     public EventArm(Element config) throws ConfigurationException {
         this(config, true);
     }
 
-    public EventArm(Element config, boolean waitForWaveformProcessing)
-            throws ConfigurationException {
+    public EventArm(Element config, boolean waitForWaveformProcessing) throws ConfigurationException {
         this.waitForWaveformProcessing = waitForWaveformProcessing;
         eventStatus = StatefulEventDB.getSingleton();
         if (config != null) {
-        processConfig(config);
+            processConfig(config);
         }
     }
 
     public boolean isActive() {
         return alive;
     }
-    
+
     public String getName() {
         return "EventArm";
     }
@@ -65,11 +65,9 @@ public class EventArm implements Arm {
     public void run() {
         try {
             for (EventSource source : sources) {
-                logger.debug(source + " covers events from "
-                        + source.getEventTimeRange());
+                logger.debug(source + " covers events from " + source.getEventTimeRange());
             }
-            
-            while( !Start.isArmFailure() && atLeastOneSourceHasNext()) {
+            while (!Start.isArmFailure() && atLeastOneSourceHasNext()) {
                 getEvents();
             }
             logger.debug("Finished processing the event arm.");
@@ -86,23 +84,20 @@ public class EventArm implements Arm {
         }
     }
 
-
     public void add(EventMonitor monitor) {
         statusMonitors.add(monitor);
     }
 
     private void processConfig(Element config) throws ConfigurationException {
         NodeList children = config.getChildNodes();
-        for(int i = 0; i < children.getLength(); i++) {
+        for (int i = 0; i < children.getLength(); i++) {
             Node node = children.item(i);
-            if(node instanceof Element) {
+            if (node instanceof Element) {
                 Element el = (Element)node;
-                Object sodElement = SodUtil.load(el, new String[] {"eventArm",
-                                                                   "origin",
-                                                                   "event"});
-                if(sodElement instanceof EventSource) {
+                Object sodElement = SodUtil.load(el, new String[] {"eventArm", "origin", "event"});
+                if (sodElement instanceof EventSource) {
                     sources.add((EventSource)sodElement);
-                } else if(sodElement instanceof OriginSubsetter) {
+                } else if (sodElement instanceof OriginSubsetter) {
                     subsetters.add((OriginSubsetter)sodElement);
                 }
             } // end of if (node instanceof Element)
@@ -111,53 +106,53 @@ public class EventArm implements Arm {
 
     private void getEvents() throws Exception {
         for (EventSource source : sources) {
-                TimeInterval wait = source.getWaitBeforeNext();
-                if ((lastTime.get(source) == null || lastTime.get(source).add(wait).before(ClockUtil.now())) && source.hasNext()) {
-                    CacheEvent[] next = source.next();
-                    logger.debug("Handling " + next.length + " events from "+source.getDescription());
-                    handle(next);
-                    lastTime.put(source, ClockUtil.now());
-                    waitForProcessing();
-                    if (waitForWaveformProcessing && Start.isArmFailure()) {
-                        // we are supposed to wait for the waveform arm to process, but
-                        // if it is no longer active due to an arm failure, then we should not wait forever
-                        logger.warn("Arm failure, "+getName()+" exiting early");
-                        return;
+            TimeInterval wait = source.getWaitBeforeNext();
+            if ((lastTime.get(source) == null || lastTime.get(source).add(wait).before(ClockUtil.now()))
+                    && source.hasNext()) {
+                CacheEvent[] next = source.next();
+                logger.debug("Handling " + next.length + " events from " + source.getDescription());
+                handle(next);
+                lastTime.put(source, ClockUtil.now());
+                waitForProcessing();
+                if (waitForWaveformProcessing && Start.isArmFailure()) {
+                    // we are supposed to wait for the waveform arm to process,
+                    // but
+                    // if it is no longer active due to an arm failure, then we
+                    // should not wait forever
+                    logger.warn("Arm failure, " + getName() + " exiting early");
+                    return;
+                }
+            }
+            if (lastTime.get(source) == null) {
+                lastTime.put(source, ClockUtil.now());
+            }
+        }
+        TimeInterval minWait = null;
+        for (EventSource source : sources) {
+            if (source.hasNext() && lastTime.get(source) != null) {
+                TimeInterval tmpWait = lastTime.get(source).add(source.getWaitBeforeNext()).subtract(ClockUtil.now());
+                if (minWait == null || tmpWait.lessThan(minWait)) {
+                    minWait = tmpWait;
+                }
+            }
+        }
+        if (minWait != null) {
+            logger.debug("Wait before next getEvents: " + minWait.convertTo(UnitImpl.SECOND));
+            long waitMillis = (long)minWait.convertTo(UnitImpl.MILLISECOND).get_value();
+            if (waitMillis > 0) {
+                try {
+                    setStatus("Waiting until " + ClockUtil.now().add(minWait) + " to check for new events");
+                    synchronized(this) {
+                        wait(waitMillis);
                     }
-                }
-                if (lastTime.get(source) == null) {
-                    lastTime.put(source, ClockUtil.now());
-                }
+                } catch(InterruptedException e) {}
             }
-            TimeInterval minWait = null;
-            for (EventSource source : sources) {
-                if (source.hasNext() && lastTime.get(source) != null) {
-                    TimeInterval tmpWait = lastTime.get(source).add(source.getWaitBeforeNext()).subtract(ClockUtil.now());
-                    if (minWait == null || tmpWait.lessThan(minWait)) {
-                        minWait = tmpWait;
-                    }
-                }
-            }
-            if (minWait != null) {
-                logger.debug("Wait before next getEvents: "+minWait.convertTo(UnitImpl.SECOND));
-                long waitMillis = (long)minWait.convertTo(UnitImpl.MILLISECOND).get_value();
-                if(waitMillis > 0) {
-                    try {
-                        setStatus("Waiting until "
-                                  + ClockUtil.now().add(minWait)
-                                  + " to check for new events");
-                        synchronized(this) {
-                            wait(waitMillis);
-                        }
-                    } catch(InterruptedException e) {}
-                }
-            }
-            
+        }
     }
 
     private boolean atLeastOneSourceHasNext() {
         for (EventSource source : sources) {
-            if(source.hasNext()) {
+            if (source.hasNext()) {
                 return true;
             }
         }
@@ -169,13 +164,14 @@ public class EventArm implements Arm {
     }
 
     static int MIN_WAIT_EVENTS = 10;
-    
+
     private void waitForProcessing() throws Exception {
         int numWaiting = eventStatus.getNumWaiting();
-        logger.debug("Event wait: numWaiting = "+numWaiting+" should be < "+MIN_WAIT_EVENTS);
-        while( !Start.isArmFailure() && waitForWaveformProcessing  &&  numWaiting > MIN_WAIT_EVENTS ) {
+        logger.debug("Event wait: numWaiting = " + numWaiting + " should be < " + MIN_WAIT_EVENTS);
+        while (!Start.isArmFailure() && waitForWaveformProcessing && numWaiting > MIN_WAIT_EVENTS) {
             synchronized(this) {
-                setStatus("eventArm waiting until there are less than "+MIN_WAIT_EVENTS+" events waiting to be processed. "+numWaiting+" in queue now.");
+                setStatus("eventArm waiting until there are less than " + MIN_WAIT_EVENTS
+                        + " events waiting to be processed. " + numWaiting + " in queue now.");
                 synchronized(getWaveformArmSync()) {
                     getWaveformArmSync().notifyAll();
                 }
@@ -185,10 +181,11 @@ public class EventArm implements Arm {
         }
         // less events, but maybe lots of event-network pairs
         int numENPWaiting = SodDB.getSingleton().getNumEventNetworkWorkUnits(Standing.INIT);
-        while( !Start.isArmFailure() && waitForWaveformProcessing  &&  numWaiting+numENPWaiting > MIN_WAIT_EVENTS ) {
+        while (!Start.isArmFailure() && waitForWaveformProcessing && numWaiting + numENPWaiting > MIN_WAIT_EVENTS) {
             synchronized(this) {
-                setStatus("eventArm waiting until there are less than "+MIN_WAIT_EVENTS
-                          +" events and event-network pairs waiting to be processed, "+(numWaiting+numENPWaiting)+" in queue now.");
+                setStatus("eventArm waiting until there are less than " + MIN_WAIT_EVENTS
+                        + " events and event-network pairs waiting to be processed, " + (numWaiting + numENPWaiting)
+                        + " in queue now.");
                 synchronized(getWaveformArmSync()) {
                     getWaveformArmSync().notifyAll();
                 }
@@ -196,11 +193,11 @@ public class EventArm implements Arm {
             }
             numENPWaiting = SodDB.getSingleton().getNumEventNetworkWorkUnits(Standing.INIT);
         }
-        logger.debug("event arm getting more events, numWaiting:"+numWaiting+" numENPWaiting:"+numENPWaiting);
+        logger.debug("event arm getting more events, numWaiting:" + numWaiting + " numENPWaiting:" + numENPWaiting);
     }
 
     public void handle(CacheEvent[] events) {
-        for(int i = 0; i < events.length; i++) {
+        for (int i = 0; i < events.length; i++) {
             try {
                 handle(events[i]);
                 eventStatus.commit();
@@ -217,11 +214,10 @@ public class EventArm implements Arm {
             }
         }
     }
-    
+
     private void handleException(Throwable t, CacheEvent event, int i) {
         // problem with this event, log it and go on
-        GlobalExceptionHandler.handle("Caught an exception for event "
-                + i + " " + bestEffortEventToString(event)
+        GlobalExceptionHandler.handle("Caught an exception for event " + i + " " + bestEffortEventToString(event)
                 + " Continuing with rest of events", t);
     }
 
@@ -234,37 +230,35 @@ public class EventArm implements Arm {
         try {
             Origin o = event.get_preferred_origin();
             s = " otime=" + o.getOriginTime().date_time;
-            s += " loc=" + o.getLocation().latitude + ", "
-                    + o.getLocation().longitude;
+            s += " loc=" + o.getLocation().latitude + ", " + o.getLocation().longitude;
         } catch(Throwable e) {
             s += e;
         }
         return s;
     }
 
-    static Status EVENT_IN_PROG = Status.get(Stage.EVENT_ORIGIN_SUBSETTER,
-            Standing.IN_PROG);
-    static Status EVENT_REJECT = Status.get(Stage.EVENT_ORIGIN_SUBSETTER,
-            Standing.REJECT);
-    
+    static Status EVENT_IN_PROG = Status.get(Stage.EVENT_ORIGIN_SUBSETTER, Standing.IN_PROG);
+
+    static Status EVENT_REJECT = Status.get(Stage.EVENT_ORIGIN_SUBSETTER, Standing.REJECT);
+
     private void handle(CacheEvent event) throws Exception {
-        logger.debug("Handle: "+event);
+        logger.debug("Handle: " + event);
         StatefulEvent storedEvent = eventStatus.getIdenticalEvent(event);
-        if(storedEvent == null ) {
-        	storedEvent = new StatefulEvent(event,  EVENT_IN_PROG);
-        	eventStatus.put(storedEvent);
+        if (storedEvent == null) {
+            storedEvent = new StatefulEvent(event, EVENT_IN_PROG);
+            eventStatus.put(storedEvent);
             change(storedEvent);
         } else {
             // already in database, so don't need to try it again
             return;
         }
         if (storedEvent.getStatus() != ECPOP_INIT && storedEvent.getStatus() != SUCCESS) {
-        	storedEvent.setStatus(EVENT_IN_PROG);
+            storedEvent.setStatus(EVENT_IN_PROG);
             change(storedEvent);
             for (OriginSubsetter cur : subsetters) {
                 StringTree result = cur.accept(event, event.get_attributes(), event.getOrigin());
-                if(!result.isSuccess()) {
-                	storedEvent.setStatus(EVENT_REJECT);
+                if (!result.isSuccess()) {
+                    storedEvent.setStatus(EVENT_REJECT);
                     change(storedEvent);
                     failLogger.info(event + " " + result);
                     return;
@@ -304,17 +298,15 @@ public class EventArm implements Arm {
     public Object getWaveformArmSync() {
         return waveformArmSync;
     }
-    
-    private static final Status ECPOP_INIT = Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                                                     Standing.INIT);
 
-    private static final Status SUCCESS = Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                                                     Standing.SUCCESS);
+    private static final Status ECPOP_INIT = Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.INIT);
+
+    private static final Status SUCCESS = Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.SUCCESS);
 
     private final Object waveformArmSync = new Object();
-    
+
     private HashMap<EventSource, MicroSecondDate> lastTime = new HashMap<EventSource, MicroSecondDate>();
-    
+
     private List<EventSource> sources = new ArrayList<EventSource>();
 
     private List<OriginSubsetter> subsetters = new ArrayList<OriginSubsetter>();
@@ -332,6 +324,4 @@ public class EventArm implements Arm {
     private static Logger logger = Logger.getLogger(EventArm.class);
 
     private static final org.apache.log4j.Logger failLogger = org.apache.log4j.Logger.getLogger("Fail.EventArm");
-
-    
 }// EventArm
