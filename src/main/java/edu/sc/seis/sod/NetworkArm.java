@@ -2,7 +2,6 @@ package edu.sc.seis.sod;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 
@@ -32,7 +31,6 @@ import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.DBCacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.LazyNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
-import edu.sc.seis.fissuresUtil.cache.WorkerThreadPool;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
@@ -349,8 +347,7 @@ public class NetworkArm implements Arm {
     void finish() {
         armFinished = true;
         logger.info("Network arm finished.");
-        for(Iterator iter = armListeners.iterator(); iter.hasNext();) {
-            ArmListener listener = (ArmListener)iter.next();
+        for (ArmListener listener : armListeners) {
             listener.finished(this);
         }
     }
@@ -533,9 +530,7 @@ public class NetworkArm implements Arm {
                     if(effectiveTimeResult.isSuccess()) {
                         boolean accepted = true;
                         synchronized(chanSubsetters) {
-                            Iterator it = chanSubsetters.iterator();
-                            while(it.hasNext()) {
-                                ChannelSubsetter cur = (ChannelSubsetter)it.next();
+                            for (ChannelSubsetter cur : chanSubsetters) {
                                 StringTree result = cur.accept(chan,
                                                                networkAccess);
                                 if(!result.isSuccess()) {
@@ -551,7 +546,7 @@ public class NetworkArm implements Arm {
                             }
                         }
                         if(accepted) {
-                            Integer dbidInt = new Integer(getNetworkDB().put(chan));
+                            getNetworkDB().put(chan);
                             needCommit = true;
                             successes.add(chan);
                             change(chan, Status.get(Stage.NETWORK_SUBSETTER,
@@ -604,8 +599,10 @@ public class NetworkArm implements Arm {
                         + " - from db " + sta.size());
                 return sta;
             }
-            // this is probably an error condition...
-            throw new RuntimeException("Should not happen, likely indicates a race condition between NetworkArm method and RefreshNetworkArm. Station="+StationIdUtil.toString(station)+" NetworkDbId="+((NetworkAttrImpl)station.getNetworkAttr()).getDbid());
+            // might be caused by a station with no successful channels, but on a sod restart the 
+            // allChannelGroupFailureStations would be empty as the refresher has not reprocessed the channels
+            logger.warn("Should not happen, either a sod restart or this indicates a race condition between NetworkArm method and RefreshNetworkArm. Station="+StationIdUtil.toString(station)+" NetworkDbId="+((NetworkAttrImpl)station.getNetworkAttr()).getDbid());
+            return new ArrayList<ChannelGroup>(0);
         }
     }
     
@@ -622,11 +619,7 @@ public class NetworkArm implements Arm {
             } else {
                 allChannelGroupFailureStations.add(StationIdUtil.toStringNoDates(station));
             }
-            Iterator it = failures.iterator();
-            Status chanReject = Status.get(Stage.NETWORK_SUBSETTER,
-                                           Standing.REJECT);
-            while(it.hasNext()) {
-                Channel failchan = (Channel)it.next();
+            for (ChannelImpl failchan : failures) {
                 failLogger.info(ChannelIdUtil.toString(failchan.get_id())
                         + "  Channel not grouped.");
             }
@@ -636,10 +629,9 @@ public class NetworkArm implements Arm {
 
     private void statusChanged(String newStatus) {
         synchronized(statusMonitors) {
-            Iterator it = statusMonitors.iterator();
-            while(it.hasNext()) {
+            for (NetworkMonitor netMon : statusMonitors) {
                 try {
-                    ((NetworkMonitor)it.next()).setArmStatus(newStatus);
+                    netMon.setArmStatus(newStatus);
                 } catch(Throwable e) {
                     // caught for one, but should continue with rest after
                     // logging
@@ -653,10 +645,9 @@ public class NetworkArm implements Arm {
 
     private void change(Channel chan, Status newStatus) {
         synchronized(statusMonitors) {
-            Iterator it = statusMonitors.iterator();
-            while(it.hasNext()) {
+            for (NetworkMonitor netMon : statusMonitors) {
                 try {
-                    ((NetworkMonitor)it.next()).change(chan, newStatus);
+                    netMon.change(chan, newStatus);
                 } catch(Throwable e) {
                     // caught for one, but should continue with rest after
                     // logging
@@ -670,10 +661,9 @@ public class NetworkArm implements Arm {
 
     private void change(Station sta, Status newStatus) {
         synchronized(statusMonitors) {
-            Iterator it = statusMonitors.iterator();
-            while(it.hasNext()) {
+            for (NetworkMonitor netMon : statusMonitors) {
                 try {
-                    ((NetworkMonitor)it.next()).change(sta, newStatus);
+                    netMon.change(sta, newStatus);
                 } catch(Throwable e) {
                     // caught for one, but should continue with rest after
                     // logging
@@ -687,10 +677,9 @@ public class NetworkArm implements Arm {
 
     private void change(NetworkAccess na, Status newStatus) {
         synchronized(statusMonitors) {
-            Iterator it = statusMonitors.iterator();
-            while(it.hasNext()) {
+            for (NetworkMonitor netMon : statusMonitors) {
                 try {
-                    ((NetworkMonitor)it.next()).change(na, newStatus);
+                    netMon.change(na, newStatus);
                 } catch(Throwable e) {
                     // caught for one, but should continue with rest after
                     // logging
@@ -701,15 +690,6 @@ public class NetworkArm implements Arm {
             }
         }
     }
-
-    // Since we synchronize around the NetDC, only 1 thread can get stuff from
-    // the network server at the same time. The pool is here in the off chance
-    // the IRIS Network Server is fixed and we can run multiple threads to fill
-    // up the db. If so, remove SynchronizedNetworkAccess from
-    // BulletproofVestFactory, increase the number of threads here, and chuckle
-    // as the stations stream in.
-    private WorkerThreadPool netPopulators = new WorkerThreadPool("NetPopulator",
-                                                                  1);
 
     private NetworkFinder finder = null;
 
@@ -745,9 +725,9 @@ public class NetworkArm implements Arm {
     
     private HashSet<String> allChannelGroupFailureStations = new HashSet<String>();
 
-    private List statusMonitors = new ArrayList();
+    private List<NetworkMonitor> statusMonitors = new ArrayList<NetworkMonitor>();
 
-    private List armListeners = new ArrayList();
+    private List<ArmListener> armListeners = new ArrayList<ArmListener>();
 
     private static Logger logger = Logger.getLogger(NetworkArm.class);
 
