@@ -26,6 +26,7 @@ import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.cache.ProxyEventDC;
+import edu.sc.seis.fissuresUtil.cache.RetryEventAccessOperations;
 import edu.sc.seis.fissuresUtil.cache.VestingEventDC;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.sod.CommonAccess;
@@ -145,17 +146,17 @@ public class EventDCQuerier {
             if(uncached[counter] instanceof CacheEvent) {
                 cached[counter] = (CacheEvent)uncached[counter];
             } else {
-                cached[counter] = new CacheEvent(uncached[counter]);
-                cached[counter].get_attributes();
-                // Call get_origins to cache it, and reorder the magnitudes so
-                // that one that passed is first while we're at it
-                Origin[] origins = cached[counter].get_origins();
-                for(int i = 0; i < origins.length; i++) {
-                    putPassingMagFirst(origins[i], magRange);
-                }
-                putPassingMagFirst(EventUtil.extractOrigin(cached[counter]),
-                                   magRange);
+                cached[counter] = new CacheEvent(new RetryEventAccessOperations(uncached[counter], 3));
             }
+            cached[counter].get_attributes();
+            // Call get_origins to cache it, and reorder the magnitudes so
+            // that one that passed is first while we're at it
+            Origin[] origins = cached[counter].get_origins();
+            for(int i = 0; i < origins.length; i++) {
+                putPassingMagFirst(origins[i], magRange);
+            }
+            putPassingMagFirst(EventUtil.extractOrigin(cached[counter]),
+                               magRange);
         }
         return cached;
     }
