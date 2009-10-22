@@ -200,6 +200,8 @@ public class NetworkArm implements Arm {
     CacheNetworkAccess[] loadNetworksFromDB() {
         cacheNets = getNetworkDB().getAllNets(getNetworkDC());
         for(int i = 0; i < cacheNets.length; i++) {
+            // make sure cache is populated
+            cacheNets[i].get_attributes();
             // this is for the side effect of creating
             // networkInfoTemplate stuff
             // avoids a null ptr later
