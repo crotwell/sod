@@ -60,12 +60,36 @@ public class EventFinder extends AbstractSource implements EventSource {
 				|| !getQueryStart().equals(queryEnd);
 	}
 
+	private CacheEvent[] internalNext() {
+        MicroSecondTimeRange queryTime = getQueryTime();
+	    CacheEvent[] results = querier.query(queryTime);
+        logger.debug("Retrieved"+results.length+" events for time range "+queryTime);
+        updateQueryEdge(queryTime);
+        return results;
+	}
+	
 	public CacheEvent[] next() {
-		MicroSecondTimeRange queryTime = getQueryTime();
-		CacheEvent[] results = querier.query(queryTime);
-		logger.debug("Retrieved"+results.length+" events for time range "+queryTime);
-		updateQueryEdge(queryTime);
-		return results;
+        int count = 0;
+        SystemException latest;
+        try {
+            return internalNext();
+        } catch(SystemException t) {
+            latest = t;
+        } catch(OutOfMemoryError e) {
+            throw new RuntimeException("Out of memory", e);
+        }
+        while(retryStrat.shouldRetry(latest, querier.getEventDC(), count++)) {
+            try {
+                CacheEvent[]  result = internalNext();
+                retryStrat.serverRecovered(querier.getEventDC());
+                return result;
+            } catch(SystemException t) {
+                latest = t;
+            } catch(OutOfMemoryError e) {
+                throw new RuntimeException("Out of memory", e);
+            }
+        }
+        throw latest;
 	}
 
 	protected void updateQueryEdge(MicroSecondTimeRange queryTime) {
