@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <classpath>
-	<classpathentry kind="src" output="target/test-classes" path="test/unit"/>
-	<classpathentry kind="src" path="src/main/java"/>
-	<classpathentry kind="src" path="externalExample/src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/fissuresUtil1"/>
-	<classpathentry exported="true" kind="var" path="MAVEN_REPO/activation/jars/activation-1.0.2.jar"/>
-	<classpathentry exported="true" kind="var" path="MAVEN_REPO/javamail/jars/javamail-1.3.2.jar"/>
-	<classpathentry exported="true" kind="var" path="MAVEN_REPO/velocity-tools/jars/velocity-tools-generic-1.4.jar"/>
-	<classpathentry exported="true" kind="var" path="MAVEN_REPO/msv/jars/msv-20030807.jar"/>
-	<classpathentry exported="true" kind="var" path="MAVEN_REPO/jing/jars/jing-20030619.jar"/>
-	<classpathentry exported="true" kind="var" path="MAVEN_REPO/JSAP/jars/JSAP-2.1.jar"/>
-	<classpathentry exported="true" kind="var" path="MAVEN_REPO/JavaCSV/jars/javacsv-2.0.jar" sourcepath="/MAVEN_REPO/JavaCSV/jars/javacsv-2.0-src.zip"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/bag"/>
-	<classpathentry exported="true" kind="var" path="MAVEN_REPO/ehcache/jars/ehcache-1.4.1.jar"/>
-	<classpathentry kind="output" path="build/classes"/>
+  <classpathentry kind="src" path="src/main/java" exported="true"/>
+  <classpathentry kind="src" path="src/main/resources" exported="true"/>
+  <classpathentry kind="output" path="build/classes/main"/>
+  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+  <classpathentry kind="src" path="/bag" combineaccessrules="false" exported="true"/>
+  <classpathentry kind="lib" path="/home/crotwell/.gradle/cache/edu.sc.seis.mapData/dcwpo_browse/jars/dcwpo_browse-1.0.jar" exported="true"/>
+  <classpathentry kind="lib" path="/home/crotwell/.gradle/cache/jline/jline/jars/jline-0.9.91.jar" exported="true"/>
+  <classpathentry kind="lib" path="/home/crotwell/.gradle/cache/junit/junit/jars/junit-4.4.jar" exported="true"/>
+  <classpathentry kind="lib" path="/home/crotwell/.gradle/cache/msv/isorelax/jars/isorelax-20030807.jar" exported="true"/>
+  <classpathentry kind="lib" path="/home/crotwell/.gradle/cache/msv/msv/jars/msv-20030807.jar" exported="true"/>
+  <classpathentry kind="lib" path="/home/crotwell/.gradle/cache/msv/relaxngDatatype/jars/relaxngDatatype-20030807.jar" exported="true"/>
+  <classpathentry kind="lib" path="/home/crotwell/.gradle/cache/msv/xsdlib/jars/xsdlib-20030807.jar" exported="true"/>
+  <classpathentry kind="lib" path="/home/crotwell/.gradle/cache/net.sourceforge.javacsv/javacsv/jars/javacsv-2.0.jar" exported="true"/>
+  <classpathentry kind="lib" path="/home/crotwell/.gradle/cache/rngconvUSC/rngconv/jars/rngconv-20030225.jar" exported="true"/>
+  <classpathentry kind="lib" path="/home/crotwell/.gradle/cache/thaiopensource/jing/jars/jing-20030619.jar" exported="true"/>
+  <classpathentry kind="lib" path="/home/crotwell/.gradle/cache/velocity-tools/velocity-tools-generic/jars/velocity-tools-generic-1.4.jar" exported="true"/>
 </classpath>
