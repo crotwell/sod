@@ -873,6 +873,18 @@ public class SodDB extends AbstractHibernateDB {
         totalSuccess = baseStatement + " "+PROCESS_SUCCESS;
     }
     
+    public static void discoverDbEcpClass() {
+        String q = "from "
+                + EventVectorPair.class.getName();
+        Query query = getSession().createQuery(q);
+        query.setMaxResults(1);
+        List<EventChannelPair> result = query.list();
+        if(result.size() > 0) {
+            setDefaultEcpClass(EventVectorPair.class);
+        }
+        setDefaultEcpClass(EventChannelPair.class);
+    }
+    
     public static void setDefaultEcpClass(Class<? extends AbstractEventChannelPair> ecpClass) {
         SodDB.defaultEcpClass = ecpClass;
         if (singleton != null && singleton.ecpClass != ecpClass) {
@@ -880,12 +892,15 @@ public class SodDB extends AbstractHibernateDB {
         }
     }
     
-    public static Class<? extends AbstractEventChannelPair> defaultEcpClass = EventChannelPair.class;
+    public static Class<? extends AbstractEventChannelPair> defaultEcpClass = null;
 
     public Class<? extends AbstractEventChannelPair> ecpClass = defaultEcpClass;
 
     public static SodDB getSingleton() {
         if(singleton == null) {
+            if (defaultEcpClass == null) {
+                discoverDbEcpClass();
+            }
             singleton = new SodDB(defaultEcpClass);
         }
         return singleton;
