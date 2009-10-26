@@ -45,7 +45,7 @@ task tarDist(type: Tar, dependsOn: ['makeScript', 'createBuildScript', 'wrapper'
     }
     tarFileSet(dir: 'scripts') {
         include('cwg.prop')
-        include('tutorial')
+        include('tutorial/**')
         prefix = dirName
     }
 
@@ -65,7 +65,7 @@ def getDExtras() {
 
 task makeScript(dependsOn: copyToLib) << { task ->
     dExtras = getDExtras()
-    scriptBuild('sod', 'edu.sc.seis.sod.Start', task.project, dExtras:dExtras)
+    scriptBuild('sod', 'edu.sc.seis.sod.Start', task.project, dExtras:dExtras, yourkit:true)
     scriptBuild('find_events', 'edu.sc.seis.sod.tools.find_events', task.project, dExtras:dExtras)
     scriptBuild('find_stations', 'edu.sc.seis.sod.tools.find_stations', task.project, dExtras:dExtras)
     scriptBuild('find_channels', 'edu.sc.seis.sod.tools.find_channels', task.project, dExtras:dExtras)
