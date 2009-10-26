@@ -37,6 +37,7 @@ public class EventStationPair extends CookieEventPair {
     }
 
     public void run() {
+        logger.debug("Begin EventStationPair (e="+getEvent().getDbid()+",s="+getStationDbId()+") "+this);
         // make sure origin and station not lazy
         Location l = getEvent().getOrigin().getLocation();
         l = getStation().getLocation();
@@ -136,6 +137,7 @@ public class EventStationPair extends CookieEventPair {
                 pair.run();
                 SodDB.commit();
             }
+            logger.debug("End EventStationPair (e="+getEvent().getDbid()+",s="+getStationDbId()+") "+this);
         } catch(NoPreferredOrigin e) {
             // should never happen
             GlobalExceptionHandler.handle(e);
