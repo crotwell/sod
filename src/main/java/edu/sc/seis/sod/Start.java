@@ -47,6 +47,7 @@ import edu.sc.seis.fissuresUtil.hibernate.AbstractHibernateDB;
 import edu.sc.seis.fissuresUtil.hibernate.HibernateUtil;
 import edu.sc.seis.fissuresUtil.simple.Initializer;
 import edu.sc.seis.sod.hibernate.SodDB;
+import edu.sc.seis.sod.hibernate.StatefulEvent;
 import edu.sc.seis.sod.hibernate.StatefulEventDB;
 import edu.sc.seis.sod.status.IndexTemplate;
 import edu.sc.seis.sod.status.OutputScheduler;
@@ -491,7 +492,11 @@ public class Start {
                                                                        (waveformRecipe instanceof LocalSeismogramArm));
                     }
                     // check for events that are "in progress" due to halt or reset
-                    WaveformArm.populateEventChannelDb(Standing.IN_PROG);
+                    StatefulEventDB eventDb = StatefulEventDB.getSingleton();
+                    for(StatefulEvent ev = eventDb.getNext(Standing.IN_PROG); ev != null; ev = eventDb.getNext(Standing.IN_PROG)) {
+                        WaveformArm.createEventNetworkPairs(ev);
+                    }
+                    eventDb.commit();
                     
                     int poolSize = runProps.getNumWaveformWorkerThreads();
                     waveforms = new WaveformArm[poolSize];

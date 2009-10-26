@@ -64,19 +64,16 @@ public class NetworkArm implements Arm {
     public void run() {
         try {
             SodDB sodDb = SodDB.getSingleton();
+            // lastQueryTime should be null if first time
             lastQueryTime = sodDb.getQueryTime(getNetworkFinderSource().getName(), getNetworkFinderSource().getDNS());
-            if (lastQueryTime == null) {
-                // still null, must be first time
-                lastQueryTime = new QueryTime(getNetworkFinderSource().getName(), getNetworkFinderSource().getDNS(), ClockUtil.wayPast().getTimestamp());
-                sodDb.putQueryTime(lastQueryTime);
-                SodDB.commit();
-            }
+            
             // only do timer if positive interval and waveform arm exists, otherwise run in thread
             if (getRefreshInterval().value > 0 && Start.getWaveformRecipe() != null) {
-            Timer timer = new Timer("Refresh NetworkArm", true);
-            long period = (long)finder.getRefreshInterval().getValue(UnitImpl.MILLISECOND);
-            long firstDelay = lastQueryTime.delayUntilNextRefresh(getRefreshInterval());
-            timer.schedule(refresh, firstDelay, period);
+                Timer timer = new Timer("Refresh NetworkArm", true);
+                long period = (long)finder.getRefreshInterval().getValue(UnitImpl.MILLISECOND);
+                long firstDelay = lastQueryTime==null ? 0 : lastQueryTime.delayUntilNextRefresh(getRefreshInterval());
+                logger.debug("Refresh timer startup: period: "+period+"  firstDelay: "+firstDelay+"  last query: "+(lastQueryTime==null ? "null" : lastQueryTime.getTime()));
+                timer.schedule(refresh, firstDelay, period);
             } else {
                 // no refresh, so do net arm in this thread once
                 refresh.run();
@@ -101,6 +98,7 @@ public class NetworkArm implements Arm {
         MicroSecondDate beginTime = new MicroSecondDate(network_id.begin_time);
         String netCode = network_id.network_code;
         for(int i = 0; i < netDbs.length; i++) {
+            if (netDbs[i] == null) {logger.error("Null network: "+i);}
             NetworkAttr attr = netDbs[i].get_attributes();
             if(netCode.equals(attr.get_code())
                     && new MicroSecondTimeRange(attr.getEffectiveTime()).contains(beginTime)) {
@@ -179,6 +177,7 @@ public class NetworkArm implements Arm {
     public List<ChannelSubsetter> getChannelSubsetters() {
         return chanSubsetters;
     }
+    
     /**
      * returns an array of SuccessfulNetworks. if the refreshInterval is valid
      * it gets the networks from the database(may be embedded or external). if
@@ -192,24 +191,30 @@ public class NetworkArm implements Arm {
         synchronized(refresh) {
             if(cacheNets == null) {
                 cacheNets = loadNetworksFromDB();
+                for (int i = 0; i < cacheNets.length; i++) {
+                    if (cacheNets[i] == null) {throw new RuntimeException("Null network from loadNetworksFromDB: "+i);}
+                }
             }
-            return cacheNets;
+            // be defensive
+            CacheNetworkAccess[] out = new CacheNetworkAccess[cacheNets.length];
+            System.arraycopy(cacheNets, 0, out, 0, out.length);
+            return out;
         }
     }
     
     CacheNetworkAccess[] loadNetworksFromDB() {
-        cacheNets = getNetworkDB().getAllNets(getNetworkDC());
-        for(int i = 0; i < cacheNets.length; i++) {
+        CacheNetworkAccess[] out = getNetworkDB().getAllNets(getNetworkDC());
+        for(int i = 0; i < out.length; i++) {
             // make sure cache is populated
-            cacheNets[i].get_attributes();
+            out[i].get_attributes();
             // this is for the side effect of creating
             // networkInfoTemplate stuff
             // avoids a null ptr later
-            change(cacheNets[i],
+            change(out[i],
                    Status.get(Stage.NETWORK_SUBSETTER,
                               Standing.SUCCESS));
         }
-        return cacheNets;
+        return out;
     }
 
     CacheNetworkAccess[] getSuccessfulNetworksFromServer() {
@@ -305,18 +310,24 @@ public class NetworkArm implements Arm {
                                                   th);
                 }
             }
-                if(lastQueryTime == null && allNets.length == 0) {
-                    // hard to imagine a network arm that can't find a single good network is useful, so just fail
-                    // only fail if first time (lastQueryTime==null) so a server fail
-                    // during a run will not cause a crash
-                    logger.warn("Found no networks.  Make sure the network codes you entered are valid");
-                    Start.armFailure(this, new NotFound("Found no networks. Make sure the network codes you entered in your recipe are valid"));
-                }
-            cacheNets = new CacheNetworkAccess[successes.size()];
-            successes.toArray(cacheNets);
-            logger.info(cacheNets.length + " networks passed");
+            if(lastQueryTime == null && allNets.length == 0) {
+                // hard to imagine a network arm that can't find a single good network is useful, so just fail
+                // only fail if first time (lastQueryTime==null) so a server fail
+                // during a run will not cause a crash
+                logger.warn("Found no networks.  Make sure the network codes you entered are valid");
+                Start.armFailure(this, new NotFound("Found no networks. Make sure the network codes you entered in your recipe are valid"));
+            }
+            CacheNetworkAccess[] out = new CacheNetworkAccess[successes.size()];
+            out = successes.toArray(out);
+            logger.info(out.length + " networks passed");
             statusChanged("Waiting for a request");
-            return cacheNets;
+            for (int i = 0; i < out.length; i++) {
+                if (out[i] == null) {
+                    throw new RuntimeException("null in networks from server: "+i);
+                }
+            }
+            cacheNets = out;
+            return out;
         }
     }
 
@@ -348,6 +359,9 @@ public class NetworkArm implements Arm {
 
     void finish() {
         armFinished = true;
+        lastQueryTime = new QueryTime(getNetworkFinderSource().getName(), getNetworkFinderSource().getDNS(), ClockUtil.wayPast().getTimestamp());
+        SodDB.getSingleton().putQueryTime(lastQueryTime);
+        SodDB.commit();
         logger.info("Network arm finished.");
         for (ArmListener listener : armListeners) {
             listener.finished(this);
@@ -371,7 +385,7 @@ public class NetworkArm implements Arm {
 
     public StationImpl[] getSuccessfulStations(NetworkAttrImpl net) {
         String netCode = net.get_code();
-        logger.debug("getSuccessfulStations");
+        logger.debug("getSuccessfulStations: "+net.get_code());
         synchronized(refresh) {
             while(refresh.isNetworkBeingReloaded(net.getDbid())) {
                 try {

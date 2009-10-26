@@ -16,10 +16,11 @@ import edu.sc.seis.sod.status.OutputScheduler;
 import edu.sc.seis.sod.subsetter.EventEffectiveTimeOverlap;
 
 public class WaveformArm extends Thread implements Arm {
-    
+
     public WaveformArm(int nextProcessorNum, AbstractWaveformRecipe waveformRecipe) {
         super("WaveformArm " + nextProcessorNum);
         this.recipe = waveformRecipe;
+        this.processorNum = nextProcessorNum;
     }
 
 
@@ -155,8 +156,9 @@ public class WaveformArm extends Thread implements Arm {
             return enp;
         }
         // go get more events to make e-net pairs
-        int numEvents = populateEventChannelDb(Standing.INIT);
-        if(numEvents != 0) {
+        StatefulEvent ev = StatefulEventDB.getSingleton().getNext(Standing.INIT);
+        if (ev != null) {
+            createEventNetworkPairs(ev);
             enp = SodDB.getSingleton().getNextENP();
             if(enp != null) {
                 enp.update(Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.INIT));
@@ -169,71 +171,73 @@ public class WaveformArm extends Thread implements Arm {
         // really nothing doing, might as well work on a retry if one is ready?
         return SodDB.getSingleton().getNextRetryECPFromCache();
     }
-    
-    protected static MicroSecondDate lastECP = ClockUtil.now(); 
 
-    protected static int populateEventChannelDb(Standing standing)  {
-        int numEvents = 0;
-        SodDB sodDb = SodDB.getSingleton();
+    protected static MicroSecondDate lastECP = ClockUtil.now(); 
+    
+    protected static void createEventNetworkPairs(StatefulEvent ev) {
+        logger.debug("Work on event: " + ev.getDbid() + " "
+                + EventUtil.getEventInfo(ev));
         StatefulEventDB eventDb = StatefulEventDB.getSingleton();
-        for(StatefulEvent ev = eventDb.getNext(standing); ev != null; ev = eventDb.getNext(standing)) {
-            logger.debug("Work on event: " + ev.getDbid() + " "
-                    + EventUtil.getEventInfo(ev));
-            ev.setStatus(Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                                    Standing.IN_PROG));
-            eventDb.getSession().saveOrUpdate(ev);
-            eventDb.commit();
-            // refresh event to put back in new session
-            eventDb.getSession().load(ev, ev.getDbid());
-            numEvents++;
-            EventEffectiveTimeOverlap overlap;
-            try {
-                if(ev.get_preferred_origin().getOriginTime() == null) {
-                    throw new RuntimeException("otime is null "
-                            + ev.get_preferred_origin().getLocation());
-                }
-                overlap = new EventEffectiveTimeOverlap(ev);
-            } catch(NoPreferredOrigin e) {
-                throw new RuntimeException("Should never happen...", e);
+        SodDB sodDb = SodDB.getSingleton();
+        ev.setStatus(Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                Standing.IN_PROG));
+        eventDb.getSession().saveOrUpdate(ev);
+        eventDb.commit();
+        // refresh event to put back in new session
+        eventDb.getSession().load(ev, ev.getDbid());
+        EventEffectiveTimeOverlap overlap;
+        try {
+            if(ev.get_preferred_origin().getOriginTime() == null) {
+                throw new RuntimeException("otime is null "
+                        + ev.get_preferred_origin().getLocation());
             }
-            CacheNetworkAccess[] networks;
-            networks = Start.getNetworkArm().getSuccessfulNetworks();
-            for(int i = 0; i < networks.length; i++) {
-                if(overlap.overlaps(networks[i].get_attributes())) {
-                    EventNetworkPair p = new EventNetworkPair(ev,
-                                                              networks[i],
-                                                              Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                                                                         Standing.INIT));
-                    sodDb.put(p);
-                } else {
-                    failLogger.info("Network "
-                            + NetworkIdUtil.toStringNoDates(networks[i].get_attributes())
-                            + " does not overlap event " + ev);
-                }
-            }
-            // set the status of the event to be SUCCESS implying that
-            // that all the network information for this particular event is
-            // inserted
-            // in the waveformDatabase.
-            ev.setStatus(Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                                    Standing.SUCCESS));
-            eventDb.commit();
-            Start.getEventArm().change(ev);
-            int numWaiting = eventDb.getNumWaiting();
-            if(numWaiting < EventArm.MIN_WAIT_EVENTS) {
-                logger.debug("There are less than "
-                        + EventArm.MIN_WAIT_EVENTS
-                        + " waiting events.  Telling the eventArm to start up again");
-                synchronized(Start.getEventArm()) {
-                    Start.getEventArm().notifyAll();
-                }
+            overlap = new EventEffectiveTimeOverlap(ev);
+        } catch(NoPreferredOrigin e) {
+            throw new RuntimeException("Should never happen...", e);
+        }
+        CacheNetworkAccess[] networks;
+        networks = Start.getNetworkArm().getSuccessfulNetworks();
+        for(int i = 0; i < networks.length; i++) {
+            if(overlap.overlaps(networks[i].get_attributes())) {
+                EventNetworkPair p = new EventNetworkPair(ev,
+                                                          networks[i],
+                                                          Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                                                     Standing.INIT));
+                sodDb.put(p);
+            } else {
+                failLogger.info("Network "
+                        + NetworkIdUtil.toStringNoDates(networks[i].get_attributes())
+                        + " does not overlap event " + ev);
             }
         }
+        // set the status of the event to be SUCCESS implying that
+        // that all the network information for this particular event is
+        // inserted
+        // in the waveformDatabase.
+        ev.setStatus(Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                Standing.SUCCESS));
         eventDb.commit();
-        return numEvents;
+        Start.getEventArm().change(ev);
+        int numWaiting = eventDb.getNumWaiting();
+        if(numWaiting < EventArm.MIN_WAIT_EVENTS) {
+            logger.debug("There are less than "
+                    + EventArm.MIN_WAIT_EVENTS
+                    + " waiting events.  Telling the eventArm to start up again");
+            synchronized(Start.getEventArm()) {
+                Start.getEventArm().notifyAll();
+            }
+        }
+    }
+    
+    public int getProcessorNum() {
+        return processorNum;
     }
     
     AbstractWaveformRecipe recipe;
+
+    private int processorNum;
+    
+    boolean lastWorkWasEvent = false;
     
     public static int getProcessorsWorking() {
         return processorsWorking;
