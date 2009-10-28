@@ -197,6 +197,9 @@ public class WaveformArm extends Thread implements Arm {
         }
         CacheNetworkAccess[] networks = Start.getNetworkArm().getSuccessfulNetworks();
         for(int i = 0; i < networks.length; i++) {
+            if (networks[i] == null) {
+                throw new RuntimeException("Null network: "+i);
+            }
             if(overlap.overlaps(networks[i].get_attributes())) {
                 EventNetworkPair p = new EventNetworkPair(ev,
                                                           networks[i],

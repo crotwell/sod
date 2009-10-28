@@ -195,6 +195,15 @@ public class NetworkArm implements Arm {
                     if (cacheNets[i] == null) {throw new RuntimeException("Null network from loadNetworksFromDB: "+i);}
                 }
             }
+            while (cacheNets == null && lastQueryTime == null && ! Start.isArmFailure()) {
+                // still null, maybe first time through
+                logger.info("Waiting on initial network load");
+                refresh.notifyAll();
+                try {
+                    refresh.wait();
+                } catch(InterruptedException e) {
+                }
+            }
             // be defensive
             CacheNetworkAccess[] out = new CacheNetworkAccess[cacheNets.length];
             System.arraycopy(cacheNets, 0, out, 0, out.length);
@@ -328,6 +337,7 @@ public class NetworkArm implements Arm {
             }
             synchronized(refresh) {
                 cacheNets = out;
+                refresh.notifyAll();
             }
             return out;
         }
