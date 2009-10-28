@@ -332,15 +332,9 @@ public class NetworkArm implements Arm {
                 logger.warn("Found no networks.  Make sure the network codes you entered are valid");
                 Start.armFailure(this, new NotFound("Found no networks. Make sure the network codes you entered in your recipe are valid"));
             }
-            CacheNetworkAccess[] out = new CacheNetworkAccess[successes.size()];
-            out = successes.toArray(out);
+            CacheNetworkAccess[] out = successes.toArray(new CacheNetworkAccess[0]);
             logger.info(out.length + " networks passed");
             statusChanged("Waiting for a request");
-            for (int i = 0; i < out.length; i++) {
-                if (out[i] == null) {
-                    throw new RuntimeException("null in networks from server: "+i);
-                }
-            }
             synchronized(refresh) {
                 setSuccessfulNetworks(out);
                 refresh.notifyAll();
