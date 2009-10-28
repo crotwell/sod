@@ -326,7 +326,9 @@ public class NetworkArm implements Arm {
                     throw new RuntimeException("null in networks from server: "+i);
                 }
             }
-            cacheNets = out;
+            synchronized(refresh) {
+                cacheNets = out;
+            }
             return out;
         }
     }
