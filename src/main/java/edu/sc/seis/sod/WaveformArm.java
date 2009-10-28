@@ -195,8 +195,7 @@ public class WaveformArm extends Thread implements Arm {
         } catch(NoPreferredOrigin e) {
             throw new RuntimeException("Should never happen...", e);
         }
-        CacheNetworkAccess[] networks;
-        networks = Start.getNetworkArm().getSuccessfulNetworks();
+        CacheNetworkAccess[] networks = Start.getNetworkArm().getSuccessfulNetworks();
         for(int i = 0; i < networks.length; i++) {
             if(overlap.overlaps(networks[i].get_attributes())) {
                 EventNetworkPair p = new EventNetworkPair(ev,
