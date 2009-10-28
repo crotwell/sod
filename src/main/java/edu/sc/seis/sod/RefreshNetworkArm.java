@@ -1,6 +1,7 @@
 package edu.sc.seis.sod;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.TimerTask;
 
@@ -21,6 +22,7 @@ public class RefreshNetworkArm extends TimerTask {
         logger.info("Refreshing Network Arm");
         try {
             CacheNetworkAccess[] nets;
+            List<CacheNetworkAccess> needReload = new LinkedList<CacheNetworkAccess>();
             synchronized(this) {
                 nets = netArm.getSuccessfulNetworksFromServer();
                 // maybe previous update has not yet finished, only reload nets
@@ -28,20 +30,17 @@ public class RefreshNetworkArm extends TimerTask {
                 for (int i = 0; i < nets.length; i++) {
                     if (!isNetworkBeingReloaded(nets[i].get_attributes().getDbid())) {
                         networksBeingReloaded.add(new Integer(nets[i].get_attributes().getDbid()));
+                        needReload.add(nets[i]);
                     } else {
                         logger.info("net already in processing list, skipping..."+NetworkIdUtil.toString(nets[i].get_attributes()));
-                        nets[i] = null; // skip it
                     }
                 }
             }
             
-            for (int i = 0; i < nets.length; i++) {
-                if (nets[i] == null) {
-                    continue;
-                }
-                processNetwork(nets[i]);
+            for (CacheNetworkAccess cacheNetworkAccess : needReload) {
+                processNetwork(cacheNetworkAccess);
                 synchronized(this) {
-                    networksBeingReloaded.remove(new Integer(nets[i].get_attributes().getDbid()));
+                    networksBeingReloaded.remove(new Integer(cacheNetworkAccess.get_attributes().getDbid()));
                     // in case networkArm methods are waiting on this network to be refreshed 
                     notifyAll();
                     if (Start.getWaveformRecipe() != null) {
