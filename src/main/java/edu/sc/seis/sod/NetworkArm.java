@@ -204,6 +204,9 @@ public class NetworkArm implements Arm {
             // be defensive
             CacheNetworkAccess[] out = new CacheNetworkAccess[cacheNets.length];
             System.arraycopy(cacheNets, 0, out, 0, out.length);
+            for (int i = 0; i < out.length; i++) {
+                if (out[i] == null) {throw new RuntimeException("null network: "+i);}
+            }
             return out;
         }
     }
