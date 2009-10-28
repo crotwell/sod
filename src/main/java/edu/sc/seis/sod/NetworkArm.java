@@ -190,10 +190,7 @@ public class NetworkArm implements Arm {
     public CacheNetworkAccess[] getSuccessfulNetworks() {
         synchronized(refresh) {
             if(cacheNets == null) {
-                cacheNets = loadNetworksFromDB();
-                for (int i = 0; i < cacheNets.length; i++) {
-                    if (cacheNets[i] == null) {throw new RuntimeException("Null network from loadNetworksFromDB: "+i);}
-                }
+                setSuccessfulNetworks(loadNetworksFromDB());
             }
             while (cacheNets == null && lastQueryTime == null && ! Start.isArmFailure()) {
                 // still null, maybe first time through
@@ -209,6 +206,15 @@ public class NetworkArm implements Arm {
             System.arraycopy(cacheNets, 0, out, 0, out.length);
             return out;
         }
+    }
+    
+    void setSuccessfulNetworks(CacheNetworkAccess[] nets) {
+        for (int i = 0; i < nets.length; i++) {
+            if (nets[i] == null) {
+                throw new RuntimeException("Network is null: "+i);
+            }
+        }
+        this.cacheNets = nets;
     }
     
     CacheNetworkAccess[] loadNetworksFromDB() {
@@ -336,7 +342,7 @@ public class NetworkArm implements Arm {
                 }
             }
             synchronized(refresh) {
-                cacheNets = out;
+                setSuccessfulNetworks(out);
                 refresh.notifyAll();
             }
             return out;
