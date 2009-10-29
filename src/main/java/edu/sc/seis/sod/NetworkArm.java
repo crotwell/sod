@@ -1,6 +1,7 @@
 package edu.sc.seis.sod;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Timer;
@@ -94,15 +95,14 @@ public class NetworkArm implements Arm {
 
     public CacheNetworkAccess getNetwork(NetworkId network_id)
             throws NetworkNotFound {
-        CacheNetworkAccess[] netDbs = getSuccessfulNetworks();
+        List<CacheNetworkAccess> netDbs = getSuccessfulNetworks();
         MicroSecondDate beginTime = new MicroSecondDate(network_id.begin_time);
         String netCode = network_id.network_code;
-        for(int i = 0; i < netDbs.length; i++) {
-            if (netDbs[i] == null) {logger.error("Null network: "+i);}
-            NetworkAttr attr = netDbs[i].get_attributes();
+        for (CacheNetworkAccess net : netDbs) {
+            NetworkAttr attr = net.get_attributes();
             if(netCode.equals(attr.get_code())
                     && new MicroSecondTimeRange(attr.getEffectiveTime()).contains(beginTime)) {
-                return netDbs[i];
+                return net;
             }
         }
         throw new NetworkNotFound("No network for id: "
@@ -187,7 +187,7 @@ public class NetworkArm implements Arm {
      * NetworkDbObjects.
      * 
      */
-    public CacheNetworkAccess[] getSuccessfulNetworks() {
+    public List<CacheNetworkAccess> getSuccessfulNetworks() {
         synchronized(refresh) {
             if(cacheNets == null) {
                 setSuccessfulNetworks(loadNetworksFromDB());
@@ -197,45 +197,32 @@ public class NetworkArm implements Arm {
                 logger.info("Waiting on initial network load");
                 refresh.notifyAll();
                 try {
-                    refresh.wait();
+                    refresh.wait(1000);
                 } catch(InterruptedException e) {
                 }
             }
-            // be defensive
-            CacheNetworkAccess[] out = new CacheNetworkAccess[cacheNets.length];
-            System.arraycopy(cacheNets, 0, out, 0, out.length);
-            for (int i = 0; i < out.length; i++) {
-                if (out[i] == null) {throw new RuntimeException("null network: "+i);}
-            }
-            return out;
+            return cacheNets;
         }
     }
     
-    void setSuccessfulNetworks(CacheNetworkAccess[] nets) {
-        for (int i = 0; i < nets.length; i++) {
-            if (nets[i] == null) {
-                throw new RuntimeException("Network is null: "+i);
-            }
-        }
-        this.cacheNets = nets;
+    void setSuccessfulNetworks(List<CacheNetworkAccess> nets) {
+        this.cacheNets = Collections.unmodifiableList(nets);
     }
     
-    CacheNetworkAccess[] loadNetworksFromDB() {
-        CacheNetworkAccess[] out = getNetworkDB().getAllNets(getNetworkDC());
-        for(int i = 0; i < out.length; i++) {
-            // make sure cache is populated
-            out[i].get_attributes();
+    List<CacheNetworkAccess> loadNetworksFromDB() {
+        List<CacheNetworkAccess> out = getNetworkDB().getAllNets(getNetworkDC());
+        for (CacheNetworkAccess net : out) {
             // this is for the side effect of creating
             // networkInfoTemplate stuff
             // avoids a null ptr later
-            change(out[i],
+            change(net,
                    Status.get(Stage.NETWORK_SUBSETTER,
                               Standing.SUCCESS));
         }
         return out;
     }
 
-    CacheNetworkAccess[] getSuccessfulNetworksFromServer() {
+    List<CacheNetworkAccess> getSuccessfulNetworksFromServer() {
         synchronized(netGetSync) {
             statusChanged("Getting networks");
             logger.info("Getting networks");
@@ -335,14 +322,13 @@ public class NetworkArm implements Arm {
                 logger.warn("Found no networks.  Make sure the network codes you entered are valid");
                 Start.armFailure(this, new NotFound("Found no networks. Make sure the network codes you entered in your recipe are valid"));
             }
-            CacheNetworkAccess[] out = successes.toArray(new CacheNetworkAccess[0]);
-            logger.info(out.length + " networks passed");
+            logger.info(successes.size() + " networks passed");
             statusChanged("Waiting for a request");
             synchronized(refresh) {
-                setSuccessfulNetworks(out);
+                setSuccessfulNetworks(successes);
                 refresh.notifyAll();
             }
-            return out;
+            return successes;
         }
     }
 
@@ -748,7 +734,7 @@ public class NetworkArm implements Arm {
     }
 
     /** null means that we have not yet gotten nets from the server, so wait. */
-    private CacheNetworkAccess[] cacheNets;
+    private List<CacheNetworkAccess> cacheNets;
 
     private HashSet<String> allStationFailureNets = new HashSet<String>();
 

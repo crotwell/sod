@@ -7,6 +7,7 @@ package edu.sc.seis.sod.status.networkArm;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.velocity.context.AbstractContext;
 import org.apache.velocity.context.Context;
@@ -29,34 +30,22 @@ public class NetworkArmContext extends AbstractContext {
 
     public Object internalGet(String key) {
         if(key.equals(ALL_NETS_KEY)) {
-            CacheNetworkAccess[] netdbs = netDb.getAllNets(Start.getNetworkArm()
-                    .getNetworkDC());
-            ArrayList out = new ArrayList(netdbs.length);
-            for(int i = 0; i < netdbs.length; i++) {
-                out.add(netdbs[i]);
-            }
-            return out;
+            return netDb.getAllNets(Start.getNetworkArm().getNetworkDC());
         } else if(key.equals(SUCCESSFUL_NETS_KEY)) {
             try {
-                CacheNetworkAccess[] netdbs = Start.getNetworkArm()
+                return Start.getNetworkArm()
                         .getSuccessfulNetworks();
-                ArrayList out = new ArrayList(netdbs.length);
-                for(int i = 0; i < netdbs.length; i++) {
-                    out.add(netdbs[i]);
-                }
-                return out;
             } catch(Exception e) {
                 throw new RuntimeException("can't get for key=" + key, e);
             }
         } else if(key.length() == 2
                 && !(key.startsWith("X") || key.startsWith("Y") || key.startsWith("Z"))) {
             // try as a network code
-            CacheNetworkAccess[] netdbs = netDb.getAllNets(Start.getNetworkArm()
+            List<CacheNetworkAccess> netdbs = netDb.getAllNets(Start.getNetworkArm()
                     .getNetworkDC());
-            ArrayList out = new ArrayList(netdbs.length);
-            for(int i = 0; i < netdbs.length; i++) {
-                if(netdbs[i].get_attributes().get_code().equals(key)) {
-                    return netdbs[i];
+            for (CacheNetworkAccess net : netdbs) {
+                if(net.get_attributes().get_code().equals(key)) {
+                    return net;
                 }
             }
         }

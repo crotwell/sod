@@ -70,14 +70,9 @@ public class NetworkTimeRange implements OriginSubsetter, ArmListener,
                 }
             }
         }
-        CacheNetworkAccess[] nets;
-        try {
-            nets = arm.getSuccessfulNetworks();
-        } catch(Exception e) {
-            throw new RuntimeException(e);
-        }
-        for(int i = 0; i < nets.length; i++) {
-            StationImpl[] stas = arm.getSuccessfulStations(nets[i].get_attributes());
+        List<CacheNetworkAccess> nets = arm.getSuccessfulNetworks();
+        for (CacheNetworkAccess net : nets) {
+            StationImpl[] stas = arm.getSuccessfulStations(net.get_attributes());
             for(int j = 0; j < stas.length; j++) {
                 List<ChannelImpl> chans = arm.getSuccessfulChannels(stas[j]);
                 for(ChannelImpl c : chans) {

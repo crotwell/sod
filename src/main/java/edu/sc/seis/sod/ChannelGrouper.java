@@ -134,16 +134,13 @@ public class ChannelGrouper {
                                                                     NetworkArm.PACKAGES);
                                     if(subsetter instanceof NetworkSubsetter) {
                                         NetworkId netId = chn.get(0).get_id().network_id;
-                                        CacheNetworkAccess[] networks = Start.getNetworkArm()
+                                        List<CacheNetworkAccess> networks = Start.getNetworkArm()
                                                 .getSuccessfulNetworks();
                                         NetworkAttr netAttr = null;
-                                        for(int nCount = 0; nCount < networks.length; nCount++) {
-                                            if(NetworkIdUtil.areEqual(networks[nCount]
-                                                                              .get_attributes()
-                                                                              .get_id(),
+                                        for (CacheNetworkAccess net : networks) {
+                                            if(NetworkIdUtil.areEqual(net.get_attributes().get_id(),
                                                                       netId)) {
-                                                netAttr = networks[nCount]
-                                                        .get_attributes();
+                                                netAttr = net.get_attributes();
                                             }
                                             NetworkSubsetter netSubsetter = (NetworkSubsetter)subsetter;
                                             if(!netSubsetter.accept(netAttr).isSuccess()) {

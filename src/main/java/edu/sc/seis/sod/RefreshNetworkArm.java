@@ -21,18 +21,18 @@ public class RefreshNetworkArm extends TimerTask {
     public void run() {
         logger.info("Refreshing Network Arm");
         try {
-            CacheNetworkAccess[] nets;
+            List<CacheNetworkAccess> nets;
             List<CacheNetworkAccess> needReload = new LinkedList<CacheNetworkAccess>();
             synchronized(this) {
                 nets = netArm.getSuccessfulNetworksFromServer();
                 // maybe previous update has not yet finished, only reload nets
                 // not already in list???
-                for (int i = 0; i < nets.length; i++) {
-                    if (!isNetworkBeingReloaded(nets[i].get_attributes().getDbid())) {
-                        networksBeingReloaded.add(new Integer(nets[i].get_attributes().getDbid()));
-                        needReload.add(nets[i]);
+                for (CacheNetworkAccess net : nets) {
+                    if (!isNetworkBeingReloaded(net.get_attributes().getDbid())) {
+                        networksBeingReloaded.add(new Integer(net.get_attributes().getDbid()));
+                        needReload.add(net);
                     } else {
-                        logger.info("net already in processing list, skipping..."+NetworkIdUtil.toString(nets[i].get_attributes()));
+                        logger.info("net already in processing list, skipping..."+NetworkIdUtil.toString(net.get_attributes()));
                     }
                 }
             }

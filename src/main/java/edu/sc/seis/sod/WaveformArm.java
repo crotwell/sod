@@ -1,5 +1,7 @@
 package edu.sc.seis.sod;
 
+import java.util.List;
+
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
@@ -9,6 +11,7 @@ import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.StatefulEvent;
 import edu.sc.seis.sod.hibernate.StatefulEventDB;
@@ -74,6 +77,7 @@ public class WaveformArm extends Thread implements Arm {
         } catch(Throwable t) {
             // just in case...
             GlobalExceptionHandler.handle(t);
+            Start.armFailure(this, t);
         } finally {
             active = false;
             synchronized(OutputScheduler.getDefault()) {
@@ -195,20 +199,17 @@ public class WaveformArm extends Thread implements Arm {
         } catch(NoPreferredOrigin e) {
             throw new RuntimeException("Should never happen...", e);
         }
-        CacheNetworkAccess[] networks = Start.getNetworkArm().getSuccessfulNetworks();
-        for(int i = 0; i < networks.length; i++) {
-            if (networks[i] == null) {
-                throw new RuntimeException("Null network: "+i);
-            }
-            if(overlap.overlaps(networks[i].get_attributes())) {
+        List<CacheNetworkAccess> networks = Start.getNetworkArm().getSuccessfulNetworks();
+        for (CacheNetworkAccess net : networks) {
+            if(overlap.overlaps(net.get_attributes())) {
                 EventNetworkPair p = new EventNetworkPair(ev,
-                                                          networks[i],
+                                                          net,
                                                           Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                                                      Standing.INIT));
                 sodDb.put(p);
             } else {
                 failLogger.info("Network "
-                        + NetworkIdUtil.toStringNoDates(networks[i].get_attributes())
+                        + NetworkIdUtil.toStringNoDates(net.get_attributes())
                         + " does not overlap event " + ev);
             }
         }
