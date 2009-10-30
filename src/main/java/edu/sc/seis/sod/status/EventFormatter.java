@@ -160,19 +160,17 @@ public class EventFormatter extends Template implements EventTemplate {
 
         public String getResult(CacheEvent ev) {
             if(s.equals(Standing.SUCCESS)) {
-                return ""+evStatus.getNumSuccessful(ev);
+                return ""+SodDB.getSingleton().getNumSuccessful(ev);
             } else if(s.equals(Standing.REJECT)) {
-                return ""+evStatus.getNumFailed(ev);
+                return ""+SodDB.getSingleton().getNumFailed(ev);
             } else if(s.equals(Standing.RETRY)) {
-                return ""+evStatus.getNumRetry(ev);
+                return ""+SodDB.getSingleton().getNumRetry(ev);
             }
             throw new RuntimeException("Should never happen: standing="+s);
         }
 
         private Standing s;
     }
-
-    private static SodDB evStatus = SodDB.getSingleton();
 
     public static String format(double d) {
         return defaultDecimalFormat.format(d);
