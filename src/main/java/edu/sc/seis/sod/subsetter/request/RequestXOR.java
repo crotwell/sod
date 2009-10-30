@@ -2,8 +2,8 @@ package edu.sc.seis.sod.subsetter.request;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
@@ -25,7 +25,7 @@ public final class RequestXOR extends RequestLogical implements Request {
     }
 
     public StringTree accept(CacheEvent event,
-                          Channel channel,
+                             ChannelImpl channel,
                           RequestFilter[] original,
                           CookieJar cookieJar) throws Exception {
         Request filterA = (Request)filterList.get(0);

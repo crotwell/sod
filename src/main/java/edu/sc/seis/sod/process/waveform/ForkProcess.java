@@ -72,7 +72,7 @@ public class ForkProcess implements WaveformProcess, Threadable {
                                    LocalSeismogramImpl[] seismograms,
                                    CookieJar cookieJar) throws Exception {
         // pass originals to the contained processors
-        List reasons = new ArrayList(localSeisProcessList.size());
+        List<StringTree> reasons = new ArrayList<StringTree>(localSeisProcessList.size());
         Iterator it = localSeisProcessList.iterator();
         WaveformResult result = new WaveformResult(seismograms,
                                                    new StringTreeLeaf(this,

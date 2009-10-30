@@ -19,7 +19,7 @@ public class ChannelSubsetterLoader implements SubsetterLoader {
 
     public Subsetter load(Element el) throws ConfigurationException {
         try {
-            Object subsetter = SodUtil.load(el, new String[] {"channel", "site"});
+            Object subsetter = SodUtil.load(el, new String[] {"channel", "site", "station", "network"});
             return (ChannelSubsetter)subsetter;
         } catch(ConfigurationException e) {
             return new StationSubsetterWrapper((StationSubsetter)stationLoader.load(el));

@@ -18,6 +18,7 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
@@ -55,7 +56,7 @@ public class BreqFastRequest implements Request {
     }
 
     public StringTree accept(CacheEvent event,
-                          Channel channel,
+                          ChannelImpl channel,
                           RequestFilter[] request,
                           CookieJar cookieJar) {
         return new StringTreeLeaf(this, writeToBFEmail(event, channel, request));

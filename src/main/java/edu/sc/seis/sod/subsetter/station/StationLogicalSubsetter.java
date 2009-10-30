@@ -1,7 +1,9 @@
 package edu.sc.seis.sod.subsetter.station;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.w3c.dom.Element;
@@ -12,6 +14,9 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.subsetter.LogicalSubsetter;
+import edu.sc.seis.sod.subsetter.Subsetter;
+import edu.sc.seis.sod.subsetter.network.NetworkLogicalSubsetter;
+import edu.sc.seis.sod.subsetter.network.NetworkSubsetter;
 
 /**
  * @author groves Created on Aug 30, 2004
@@ -27,10 +32,22 @@ public abstract class StationLogicalSubsetter extends LogicalSubsetter {
         return (StationSubsetter[])filterList.toArray(new StationSubsetter[0]);
     }
 
-    public String getPackage() {
-        return "station";
+    public static final List<String> packages;
+    
+    static {
+        packages = new LinkedList<String>();
+        packages.add("station");
+        packages.addAll(NetworkLogicalSubsetter.packages);
+    }
+    
+    public List<String> getPackages() {
+        return packages;
     }
 
+    protected Subsetter getSubsetter(Subsetter s) throws ConfigurationException {
+        return createSubsetter(s);
+    }
+    
     public StringTree accept(Station sta, NetworkAccess network) throws Exception {
         List reasons = new ArrayList(filterList.size());
         Iterator it = filterList.iterator();
@@ -52,4 +69,18 @@ public abstract class StationLogicalSubsetter extends LogicalSubsetter {
     public abstract boolean shouldContinue(StringTree result);
 
     public abstract boolean isSuccess(StringTree[] reasons);
+
+    public static StationSubsetter createSubsetter(final Subsetter s) throws ConfigurationException {
+        if (s instanceof StationSubsetter) {
+            return (StationSubsetter)s;
+        }
+        return new StationSubsetter() {
+            NetworkSubsetter ns = NetworkLogicalSubsetter.createSubsetter(s);
+
+            public StringTree accept(Station station, NetworkAccess network) throws Exception {
+                return ns.accept(station.getNetworkAttr());
+            }
+            
+        };
+    }
 }

@@ -47,7 +47,7 @@ public class WaveformVectorFork implements WaveformVectorProcessWrapper, Threada
         LocalSeismogramImpl[][] out = copySeismograms(seismograms);
         // pass originals to the contained processors
         WaveformVectorProcess processor;
-        LinkedList reasons = new LinkedList();
+        LinkedList<StringTree> reasons = new LinkedList<StringTree>();
         Iterator it = cgProcessList.iterator();
         WaveformVectorResult result = new WaveformVectorResult(seismograms,
                                                                new StringTreeLeaf(this,

@@ -2,6 +2,7 @@ package edu.sc.seis.sod.subsetter.channel;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.w3c.dom.Element;
@@ -11,6 +12,10 @@ import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
+import edu.sc.seis.sod.subsetter.Subsetter;
+import edu.sc.seis.sod.subsetter.network.NetworkLogicalSubsetter;
+import edu.sc.seis.sod.subsetter.station.StationLogicalSubsetter;
+import edu.sc.seis.sod.subsetter.station.StationSubsetter;
 
 /**
  * @author groves Created on Aug 30, 2004
@@ -22,6 +27,14 @@ public abstract class ChannelLogicalSubsetter extends CompositeChannelSubsetter 
         super(config);
     }
 
+    public static final List<String> packages;
+    
+    static {
+        packages = new LinkedList<String>();
+        packages.add("channel");
+        packages.addAll(StationLogicalSubsetter.packages);
+    }
+    
     public StringTree accept(Channel e, ProxyNetworkAccess network)
             throws Exception {
         List reasons = new ArrayList(subsetters.size());
@@ -44,4 +57,17 @@ public abstract class ChannelLogicalSubsetter extends CompositeChannelSubsetter 
     public abstract boolean shouldContinue(StringTree result);
 
     public abstract boolean isSuccess(StringTree[] reasons);
+
+
+    public static ChannelSubsetter createSubsetter(final Subsetter s) throws ConfigurationException {
+        if (s instanceof ChannelSubsetter) {
+            return (ChannelSubsetter)s;
+        }
+        return new ChannelSubsetter() {
+            StationSubsetter ss = StationLogicalSubsetter.createSubsetter(s);
+            public StringTree accept(Channel channel, ProxyNetworkAccess network) throws Exception {
+                return ss.accept(channel.getStation(), network);
+            }
+        };
+    }
 }

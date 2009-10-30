@@ -5,9 +5,9 @@ import org.w3c.dom.NodeList;
 
 import edu.iris.Fissures.Dimension;
 import edu.iris.Fissures.Plottable;
-import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.NSPlottableDC;
 import edu.sc.seis.fissuresUtil.cache.ProxyPlottableDC;
@@ -33,7 +33,7 @@ public class PlottableRequest extends AbstractSource  implements Request {
         System.out.println("PlottableRequest: "+getName()+" "+getDNS()+"  "+pixelsPerDay[0]);
     }
     
-    public StringTree accept(CacheEvent event, Channel channel, RequestFilter[] request, CookieJar cookieJar)
+    public StringTree accept(CacheEvent event, ChannelImpl channel, RequestFilter[] request, CookieJar cookieJar)
             throws Exception {
         Plottable[] plottables = new Plottable[0];
         for (int i = 0; i < request.length; i++) {
