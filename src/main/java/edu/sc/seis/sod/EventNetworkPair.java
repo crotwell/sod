@@ -50,7 +50,7 @@ public class EventNetworkPair extends AbstractEventPair {
                                                               stations[i],
                                                               Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                                                          Standing.INIT));
-                    sodDb.put(p);
+                    SodDB.getSingleton().put(p);
                 }
             }
             update(Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.SUCCESS));

@@ -37,6 +37,7 @@ public class EventStationPair extends CookieEventPair {
     }
 
     public void run() {
+        SodDB sodDb = SodDB.getSingleton();
         logger.debug("Begin EventStationPair (e="+getEvent().getDbid()+",s="+getStationDbId()+") "+this);
         // make sure origin and station not lazy
         Location l = getEvent().getOrigin().getLocation();
