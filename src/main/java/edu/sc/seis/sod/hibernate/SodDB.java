@@ -873,19 +873,23 @@ public class SodDB extends AbstractHibernateDB {
         totalSuccess = baseStatement + " "+PROCESS_SUCCESS;
     }
     
-    public static void discoverDbEcpClass() {
-        String q = "from "
-                + EventVectorPair.class.getName();
-        Query query = getSession().createQuery(q);
-        query.setMaxResults(1);
-        List<EventChannelPair> result = query.list();
-        if(result.size() > 0) {
-            setDefaultEcpClass(EventVectorPair.class);
+    public static Class<? extends AbstractEventChannelPair> discoverDbEcpClass() {
+        try {
+            String q = "from " + EventVectorPair.class.getName();
+            Query query = getSession().createQuery(q);
+            query.setMaxResults(1);
+            List<EventChannelPair> result = query.list();
+            if(result.size() > 0) {
+                return EventVectorPair.class;
+            }
+        } catch(Throwable e) {
+            logger.warn(e);
         }
-        setDefaultEcpClass(EventChannelPair.class);
+        return EventChannelPair.class;
     }
     
     public static void setDefaultEcpClass(Class<? extends AbstractEventChannelPair> ecpClass) {
+        if (ecpClass == null) {throw new IllegalArgumentException("ECP Class cannot be null");}
         SodDB.defaultEcpClass = ecpClass;
         if (singleton != null && singleton.ecpClass != ecpClass) {
             singleton = null;
@@ -894,12 +898,12 @@ public class SodDB extends AbstractHibernateDB {
     
     public static Class<? extends AbstractEventChannelPair> defaultEcpClass = null;
 
-    public Class<? extends AbstractEventChannelPair> ecpClass = defaultEcpClass;
+    public Class<? extends AbstractEventChannelPair> ecpClass = null;
 
     public static SodDB getSingleton() {
         if(singleton == null) {
             if (defaultEcpClass == null) {
-                discoverDbEcpClass();
+                setDefaultEcpClass(discoverDbEcpClass());
             }
             singleton = new SodDB(defaultEcpClass);
         }
