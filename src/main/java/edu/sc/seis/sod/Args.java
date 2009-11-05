@@ -66,8 +66,12 @@ public class Args {
                        'i',
                        "invalid",
                        "The recipe is known to be invalid so skip the 10 second wait"));
-        add(new Switch("replace-recipe",
+        add(new Switch("print-recipe",
                        'r',
+                       "print-recipe",
+                       "Print the created recipe to stdout instead of running it"));
+        add(new Switch("replace-recipe",
+                       JSAP.NO_SHORTFLAG,
                        "replace-recipe",
                        "Replace the recipe in the db with this one"));
         add(new Switch("version",
