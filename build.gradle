@@ -18,6 +18,7 @@ dependencies {
 }
 
 task tarDist(type: Tar, dependsOn: ['makeScript', 'createBuildScript', 'wrapper']) {
+    compression = Compression.GZIP
     dirName = project.name+'-'+version
     tarFileSet(dir: 'build') {
         include('build.gradle')
@@ -83,13 +84,16 @@ task buildSchemaDocs(dependsOn: classes) << { task ->
     outDir = task.project.file('build/output')
     outDir.mkdirs()
     schemaDocArgs = project.projectDir.path+'/ '+project.projectDir.path+'/../seiswww/velocity/sod/ingredients/'
+    print schemaDocArgs
     cp = configurations.runtime.asPath+":"+project.projectDir.path+"/build/classes/main"
     ant.java(dir:outDir, 
              classname:'edu.sc.seis.sod.validator.documenter.SchemaDocumenter', 
              args:schemaDocArgs,
              fork:true,
+             maxmemory:'512m',
+             output:'ant_java.out',
              classpath:cp) 
-    ant.delete(file:'build/output/velocity.log')
+    //ant.delete(file:'build/output/velocity.log')
 }
 
 task buildSchema << { task ->
