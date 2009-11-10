@@ -13,6 +13,9 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.LogicalSubsetter;
 import edu.sc.seis.sod.subsetter.Subsetter;
+import edu.sc.seis.sod.subsetter.availableData.AvailableDataSubsetter;
+import edu.sc.seis.sod.subsetter.request.Request;
+import edu.sc.seis.sod.subsetter.request.vector.ANDRequestWrapper;
 import edu.sc.seis.sod.subsetter.request.vector.VectorRequest;
 import edu.sc.seis.sod.subsetter.request.vector.VectorRequestLogical;
 
@@ -45,6 +48,8 @@ public class VectorAvailableDataLogicalSubsetter extends LogicalSubsetter {
     public static VectorAvailableDataSubsetter createSubsetter(final Subsetter s) throws ConfigurationException {
         if (s instanceof VectorAvailableDataSubsetter) {
             return (VectorAvailableDataSubsetter)s;
+        } else if (s instanceof AvailableDataSubsetter) {
+            return new ANDAvailableDataWrapper((AvailableDataSubsetter)s);
         } else {
             return new VectorAvailableDataSubsetter() {
                 VectorRequest ecs = VectorRequestLogical.createSubsetter(s);

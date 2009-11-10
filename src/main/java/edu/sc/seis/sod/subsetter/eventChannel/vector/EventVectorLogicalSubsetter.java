@@ -13,8 +13,11 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.LogicalSubsetter;
 import edu.sc.seis.sod.subsetter.Subsetter;
+import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
 import edu.sc.seis.sod.subsetter.eventStation.EventStationLogicalSubsetter;
 import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
+import edu.sc.seis.sod.subsetter.request.Request;
+import edu.sc.seis.sod.subsetter.request.vector.ANDRequestWrapper;
 
 /**
  * @author groves Created on Aug 31, 2004
@@ -45,6 +48,8 @@ public class EventVectorLogicalSubsetter extends LogicalSubsetter {
     public static EventVectorSubsetter createSubsetter(final Subsetter s) throws ConfigurationException {
         if (s instanceof EventVectorSubsetter) {
             return (EventVectorSubsetter)s;
+        } else if (s instanceof EventChannelSubsetter) {
+            return new ANDEventChannelWrapper((EventChannelSubsetter)s);
         } else {
             return new EventVectorSubsetter() {
                 EventStationSubsetter ecs = EventStationLogicalSubsetter.createSubsetter(s);

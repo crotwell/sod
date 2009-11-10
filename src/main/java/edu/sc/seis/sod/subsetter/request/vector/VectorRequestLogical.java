@@ -15,6 +15,7 @@ import edu.sc.seis.sod.subsetter.LogicalSubsetter;
 import edu.sc.seis.sod.subsetter.Subsetter;
 import edu.sc.seis.sod.subsetter.eventChannel.vector.EventVectorLogicalSubsetter;
 import edu.sc.seis.sod.subsetter.eventChannel.vector.EventVectorSubsetter;
+import edu.sc.seis.sod.subsetter.request.Request;
 
 /**
  * @author groves Created on Aug 31, 2004
@@ -44,6 +45,8 @@ public class VectorRequestLogical extends LogicalSubsetter {
     public static VectorRequest createSubsetter(final Subsetter s) throws ConfigurationException {
         if (s instanceof VectorRequest) {
             return (VectorRequest)s;
+        } else if (s instanceof Request) {
+            return new ANDRequestWrapper((Request)s);
         } else {
             return new VectorRequest() {
                 EventVectorSubsetter ecs = EventVectorLogicalSubsetter.createSubsetter(s);
