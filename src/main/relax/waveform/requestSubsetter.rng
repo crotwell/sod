@@ -92,7 +92,7 @@
                     returns true, processing will continue past this point. In most cases, the whole reason to generate
                     breqfast requests is that it is the only way to get the data, and so there is not much point in
                     proceeding down the waveform arm. You will generally want to wrap the breqFastRequest in a
-                    requestNOT so that the return value is false. This will allow SOD to proceed to the next piece of
+                    requestNOT (or vectorRequestNOT for a waveformVectorArm) so that the return value is false. This will allow SOD to proceed to the next piece of
                     work and avoid the wasted time in going to the server to get data.</description>
             </xsd:annotation>
             <optional>
@@ -131,6 +131,7 @@
                     </data>
                 </element>
             </optional>
+            <interleave>
             <optional>
                 <element name="label">
                     <xsd:annotation>
@@ -221,6 +222,7 @@
                     </xsd:annotation>
                 </data>
             </element>
+            </interleave>
         </element>
     </define>
     <define name="netDCRequest">
@@ -272,6 +274,7 @@
                     </data>
                 </element>
             </optional>
+            <interleave>
             <optional>
                 <element name="label">
                     <xsd:annotation>
@@ -394,6 +397,7 @@
                     </data>
                 </element>
             </optional>
+            </interleave>
         </element>
     </define>
     <define name="plottableRequest">
