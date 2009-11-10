@@ -7,11 +7,12 @@
     <define name="dataCenter">
         <choice>
             <xsd:annotation>
-                <summary>Specifies the server to ask for seismograms</summary>
+                <summary>Specifies the server to ask for seismograms.</summary>
+                <description> The default is the edu/iris/dmc IRIS_Datacenter</description>
                 <velocity>#waveformArmPage()</velocity>
             </xsd:annotation>
-            <ref name="choiceDataCenter"/>
             <externalRef href="fixedDataCenter.rng"/>
+            <ref name="choiceDataCenter"/>
         </choice>
     </define>
     <define name="choiceDataCenter">
