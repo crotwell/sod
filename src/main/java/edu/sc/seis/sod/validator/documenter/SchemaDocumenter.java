@@ -38,6 +38,7 @@ public class SchemaDocumenter {
         //Setup velocity
         VelocityEngine ve = new VelocityEngine();
         ve.setProperty("file.resource.loader.path", base + "site");
+        ve.setProperty("runtime.log.logsystem.log4j.logger", "schemaDocumenter");
         ve.init();
         VelocityContext c = new VelocityContext();
         c.put("root", handler.getRoot());
