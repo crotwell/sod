@@ -11,15 +11,9 @@ import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.request.vector.VectorRequest;
 
-/**
- * PassRequest.java Created: Wed Mar 19 16:16:50 2003
- * 
- * @author <a href="mailto:crotwell@owl.seis.sc.edu">Philip Crotwell </a>
- * @version 1.0
- */
 public class PassRequest implements Request, VectorRequest {
 
-    public PassRequest() {} // NullRequestSubsetter constructor
+    public PassRequest() {} 
 
     public PassRequest(Element config) {}
 
@@ -36,4 +30,4 @@ public class PassRequest implements Request, VectorRequest {
                           CookieJar cookieJar) throws Exception {
         return new Pass(this);
     }
-} // NullRequestSubsetter
+}
