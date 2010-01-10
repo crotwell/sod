@@ -271,7 +271,7 @@ public class WaveformArm extends Thread implements Arm {
     
     private static double ecpPercentage = .00001; // most processing uses esp from db, only use ecp if crash
 
-    private static TimeInterval ECP_WINDOW = new TimeInterval(1, UnitImpl.MINUTE);
+    private static TimeInterval ECP_WINDOW = new TimeInterval(5, UnitImpl.MINUTE);
     
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(WaveformArm.class);
     
