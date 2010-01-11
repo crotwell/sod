@@ -5,27 +5,20 @@ import org.w3c.dom.Element;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
-import edu.sc.seis.sod.velocity.PrintlineVelocitizer;
+import edu.sc.seis.sod.subsetter.AbstractPrintlineProcess;
 
-public class PrintlineRequestProcessor implements Request {
+public class PrintlineRequestProcessor extends AbstractPrintlineProcess implements Request {
 
     public PrintlineRequestProcessor(Element config)
             throws ConfigurationException {
-        filename = DOMHelper.extractText(config, "filename", "");
-        template = DOMHelper.extractText(config, "template", DEFAULT_TEMPLATE);
-        velocitizer = new PrintlineVelocitizer(new String[] {filename, template});
+        super(config);
     }
-
-    private PrintlineVelocitizer velocitizer;
-
-    private String template, filename;
-
-    public static final String DEFAULT_TEMPLATE = "Got $originalRequests.size()";
+    
+    public static final String DEFAULT_TEMPLATE = "Got $originalRequests.size() from $channel for $event";
 
     public StringTree accept(CacheEvent event,
                           ChannelImpl channel,
@@ -38,5 +31,10 @@ public class PrintlineRequestProcessor implements Request {
                              request,
                              cookieJar);
         return new Pass(this);
+    }
+
+    @Override
+    public String getDefaultTemplate() {
+        return DEFAULT_TEMPLATE;
     }
 }
