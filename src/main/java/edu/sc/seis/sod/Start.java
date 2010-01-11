@@ -278,6 +278,7 @@ public class Start {
         }
         PropertyConfigurator.configure(props);
         logger.info("logging configured");
+        logger.info("SOD version "+Version.current().getVersion());
         // Error html dir and output should be set up now, so remove the
         // Std out reporter
         GlobalExceptionHandler.remove(sysOutReporter);
