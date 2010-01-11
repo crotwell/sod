@@ -10,6 +10,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
+import org.apache.velocity.context.Context;
 import org.apache.velocity.exception.ParseErrorException;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
@@ -93,6 +94,17 @@ public class PrintlineVelocitizer {
         return evalulate(fileTemplate,
                          template,
                          ContextWrangler.createContext(sta));
+    }
+
+    public String evaluate(String fileTemplate, String template, 
+                           EventAccessOperations event, StationImpl sta, CookieJar cookieJar)
+            throws IOException {
+        VelocityContext cntxt = ContextWrangler.createContext(sta);
+        ContextWrangler.insertIntoContext(event, cntxt);
+        cntxt.put("cookieJar", cookieJar);
+        return evalulate(fileTemplate,
+                         template,
+                         cntxt);
     }
 
     public String evaluate(String filename,
