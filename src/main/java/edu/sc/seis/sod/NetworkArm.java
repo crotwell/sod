@@ -41,6 +41,7 @@ import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.source.event.EventSource;
 import edu.sc.seis.sod.source.network.NetworkFinder;
+import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.networkArm.NetworkMonitor;
 import edu.sc.seis.sod.subsetter.channel.ChannelEffectiveTimeOverlap;
@@ -282,7 +283,13 @@ public class NetworkArm implements Arm {
                 try {
                     attr = (NetworkAttrImpl)allNets[i].get_attributes();
                     if(netEffectiveSubsetter.accept(attr).isSuccess()) {
-                        if(attrSubsetter.accept(attr).isSuccess()) {
+                        StringTree result;
+                        try {
+                            result = attrSubsetter.accept(attr);
+                        } catch(Throwable t) {
+                            result = new Fail(attrSubsetter, "Exception", t);
+                        }
+                        if(result.isSuccess()) {
                             NetworkDB ndb = getNetworkDB();
                             int dbid = ndb.put(attr);
                             NetworkDB.commit();
@@ -430,8 +437,13 @@ public class NetworkArm implements Arm {
                     StringTree effResult = staEffectiveSubsetter.accept(stations[i],
                                                                         netAccess);
                     if(effResult.isSuccess()) {
-                        StringTree staResult = stationSubsetter.accept(stations[i],
+                        StringTree staResult;
+                        try {
+                            staResult = stationSubsetter.accept(stations[i],
                                                                        netAccess);
+                        } catch(Throwable t) {
+                            staResult = new Fail(stationSubsetter, "Exception", t);
+                        }
                         if(staResult.isSuccess()) {
                             int dbid = getNetworkDB().put((StationImpl)stations[i]);
                             logger.info("Store " + stations[i].get_code()
@@ -548,8 +560,13 @@ public class NetworkArm implements Arm {
                         boolean accepted = true;
                         synchronized(chanSubsetters) {
                             for (ChannelSubsetter cur : chanSubsetters) {
-                                StringTree result = cur.accept(chan,
-                                                               networkAccess);
+                                StringTree result;
+                                try {
+                                    result = cur.accept(chan,
+                                                        networkAccess);
+                                } catch(Throwable t) {
+                                    result = new Fail(cur, "Exception", t);
+                                }
                                 if(!result.isSuccess()) {
                                     change(chan,
                                            Status.get(Stage.NETWORK_SUBSETTER,
