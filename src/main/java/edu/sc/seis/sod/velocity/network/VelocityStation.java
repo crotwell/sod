@@ -237,7 +237,7 @@ public class VelocityStation extends StationImpl {
     }
 
     public String toString() {
-        return StationIdUtil.toString(get_id());
+        return StationIdUtil.toStringNoDates(get_id());
     }
 
     public boolean equals(Object o) {

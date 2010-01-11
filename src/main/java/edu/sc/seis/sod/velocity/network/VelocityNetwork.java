@@ -36,7 +36,7 @@ public class VelocityNetwork extends NetworkAttr {
         return stations.get(0);
     }
 
-    public VelocityNetwork(NetworkAttrImpl net, List stations) {
+    public VelocityNetwork(NetworkAttrImpl net, List<VelocityStation> stations) {
         this.net = net;
         this.stations = stations;
         this.setName(net.getName());
@@ -117,7 +117,7 @@ public class VelocityNetwork extends NetworkAttr {
         return s;
     }
 
-    public List getStations() {
+    public List<VelocityStation> getStations() {
         if(stations == null) {
             throw new UnsupportedOperationException("Stations have not been added for this network!");
         }
@@ -133,10 +133,10 @@ public class VelocityNetwork extends NetworkAttr {
     }
     
     public String toString(){
-        return NetworkIdUtil.toString(get_id());
+        return getCodeWithYear();
     }
 
-    private List stations;
+    private List<VelocityStation> stations;
 
     private NetworkAttrImpl net;
 
