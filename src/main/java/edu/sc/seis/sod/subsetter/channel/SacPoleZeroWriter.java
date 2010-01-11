@@ -47,7 +47,15 @@ public class SacPoleZeroWriter implements ChannelSubsetter {
             return new Fail(this, "Invalid instrumentation", e);
         }
         if(inst.the_response.stages[0].filters[0].discriminator().value() != FilterType._POLEZERO) {
-            return new Fail(this, "stage zero is not a PoleZero filter");
+            String filter;
+            if (inst.the_response.stages[0].filters[0].discriminator().value() == FilterType.COEFFICIENT.value()) {
+                filter = "COEFFICIENT";
+            } else if (inst.the_response.stages[0].filters[0].discriminator().value() == FilterType.LIST.value()) {
+                filter = "LIST";
+            } else {
+                filter = "UNKNOWN: "+inst.the_response.stages[0].filters[0].discriminator().value();
+            }
+            return new Fail(this, "first (sensor) stage is not a PoleZero filter: "+filter);
         }
         String response = FissuresToSac.getPoleZero(inst.the_response)
                 .toString();
