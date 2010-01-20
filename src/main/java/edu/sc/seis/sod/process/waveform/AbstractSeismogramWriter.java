@@ -93,7 +93,7 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
                 }
                 write(loc, seismograms[i], channel, event);
                 if (storeSeismogramsInDB) {
-                    SeismogramFileRefDB.getSingleton().saveSeismogramToDatabase(channel, seismograms[i], loc, getFileType());
+                    SeismogramFileRefDB.getSingleton().saveSeismogramToDatabase(event, channel, seismograms[i], loc, getFileType());
                 }
                 cookieJar.put(SaveSeismogramToFile.getCookieName(prefix, channel.get_id(), i), loc);
             }
