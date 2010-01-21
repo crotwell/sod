@@ -16,7 +16,7 @@
                 <summary>All of the items that process seismograms</summary>
                 <description>At this point in the waveform arm, data has been retrieved. Therefore, these items all work
                     on the received data. Some of them like rMean and rTrend perform manipulations on the data. Others
-                    like saveSeismogramToFile and seismogramImageProcess write out information based on the data. Some
+                    like sacWriter and seismogramImageProcess write out information based on the data. Some
                     like fullDataCoverage and phaseSignalToNoise subset the items based on the data&apos;s
                     properties. If several items are used, the data from each step feeds into the next. So if a
                     seismogramImageProcessor follows a phaseCut the image drawn will be of the data after the cut. If
@@ -65,7 +65,6 @@
             <ref name="div"/>
             <ref name="mul"/>
             <ref name="invertFlippedChannels"/>
-            <ref name="saveSeismogramToFile"/><!--depricated-->
             <ref name="seismogramSampling"/>
             <ref name="decimate"/>
             <ref name="compressionType"/>
@@ -442,77 +441,11 @@
             </choice>
         </element>
     </define>
-    <define name="saveSeismogramToFile">
-        <element name="saveSeismogramToFile">
-            <xsd:annotation>
-                <summary>Deprecated! Use sacWriter or mseedWriter instead!</summary>
-                <description>As of sod-2.2 this processor is deprecated. Unless you specifically want DSML files, use
-                    sacWriter or mseedWriter instead. When sod-2.3 is released, this processor will no longer be
-                    allowed. The seismograms are written to data files in the given directory. Also writes out a dsml
-                    file for use in GEE and other fissures tools that support datasets. If fileType isn't set,
-                    seismograms will be saved as mseed. Always returns true unless there is an error.</description>
-                <example>
-                    <saveSeismogramToFile>
-                        <fileType>sac</fileType>
-                        <dataDirectory>POND_II</dataDirectory>
-                        <eventDirLabel>Event_$event.getTime(&apos;yyyy_DDD_HH_mm_ss&apos;)</eventDirLabel>
-                    </saveSeismogramToFile>
-                </example>
-            </xsd:annotation>
-            <optional>
-                <element name="fileType">
-                    <choice>
-                        <value>sac</value>
-                        <value>mseed</value>
-                    </choice>
-                </element>
-            </optional>
-            <optional>
-                <element name="prefix">
-                    <data type="string"/>
-                </element>
-            </optional>
-            <optional>
-                <element name="dataDirectory">
-                    <data type="string"/>
-                </element>
-            </optional>
-            <optional>
-                <element name="eventDirLabel">
-                    <data type="string"/>
-                </element>
-            </optional>
-            <optional>
-                <element name="id">
-                    <data type="string"/>
-                </element>
-            </optional>
-            <optional>
-                <element name="preserveRequest">
-                    <empty/>
-                </element>
-            </optional>
-            <optional>
-                <element name="storeSeismogramsInDB">
-                    <empty/>
-                </element>
-            </optional>
-            <optional>
-                <element name="sacHeader">
-                    <zeroOrMore>
-                        <element name="phaseTime">
-                            <ref name="phaseTimeContents"/>
-                        </element>
-                    </zeroOrMore>
-                </element>
-            </optional>
-        </element>
-    </define>
     <define name="recordSectionDisplayGenerator">
         <element name="recordSectionDisplayGenerator">
             <xsd:annotation>
                 <summary>Generates the recordsection display for each event</summary>
-                <description>Reads the dsml file created by the saveSeismogramToFile processor and generates the
+                <description>Loads seismograms from files created by the sacWriter or mseedWriter processor and generates the
                     recordsection image file</description>
                 <example>
                     <recordSectionDisplayGenerator>
@@ -714,12 +647,10 @@
                 <example>
                     <forkProcess>
                         <rTrend/>
-                        <saveSeismogramToFile>
-                            <fileType>sac</fileType>
-                            <dataDirectory>rTrendData</dataDirectory>
-                            <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
-                            </eventDirLabel>
-                        </saveSeismogramToFile>
+                        <sacWriter>
+                            <workingDir>rTrendData</workingDir>
+                            <location>${network.code}.${station.code}/${event.filizedTime}/${site.code}.${channel.code}.sac</location>
+                        </sacWriter>
                     </forkProcess>
                 </example>
             </xsd:annotation>

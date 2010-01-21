@@ -73,7 +73,7 @@
             <xsd:annotation>
                 <summary>Executes an external program</summary>
                 <description>The legacyVectorExecute processor is capable of running existing command line programs. It
-                    does this by passing the filenames of the seismograms saved by a earlier SaveSeismogramToFile
+                    does this by passing the filenames of the seismograms saved by a earlier sacWriter or mseedWriter
                     processor to a program started with Runtime.exec().</description>
                 <example>
                     <legacyVectorExecute>
@@ -105,12 +105,10 @@
                 <example>
                     <waveformVectorFork>
                         <rMean/>
-                        <saveSeismogramToFile>
-                            <fileType>sac</fileType>
-                            <dataDirectory>POND_II</dataDirectory>
-                            <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
-                            </eventDirLabel>
-                        </saveSeismogramToFile>
+                        <sacWriter>
+                            <workingDir>rTrendData</workingDir>
+                            <location>${network.code}.${station.code}/${event.filizedTime}/${site.code}.${channel.code}.sac</location>
+                        </sacWriter>
                     </waveformVectorFork>
                 </example>
             </xsd:annotation>
@@ -132,12 +130,10 @@
                         <waveformVectorNOT>
                             <rMean/>
                         </waveformVectorNOT>
-                        <saveSeismogramToFile>
-                            <fileType>sac</fileType>
-                            <dataDirectory>POND_II</dataDirectory>
-                            <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
-                            </eventDirLabel>
-                        </saveSeismogramToFile>
+                        <sacWriter>
+                            <workingDir>rTrendData</workingDir>
+                            <location>${network.code}.${station.code}/${event.filizedTime}/${site.code}.${channel.code}.sac</location>
+                        </sacWriter>
                     </waveformVectorAND>
                 </example>
             </xsd:annotation>
@@ -159,12 +155,10 @@
                         <waveformVectorNOT>
                             <rMean/>
                         </waveformVectorNOT>
-                        <saveSeismogramToFile>
-                            <fileType>sac</fileType>
-                            <dataDirectory>POND_II</dataDirectory>
-                            <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
-                            </eventDirLabel>
-                        </saveSeismogramToFile>
+                        <sacWriter>
+                            <workingDir>rTrendData</workingDir>
+                            <location>${network.code}.${station.code}/${event.filizedTime}/${site.code}.${channel.code}.sac</location>
+                        </sacWriter>
                     </waveformVectorOR>
                 </example>
             </xsd:annotation>
@@ -200,12 +194,10 @@
                     <waveformVectorAlwaysSuccess>
                         <waveformVectorFork>
                             <rMean/>
-                            <saveSeismogramToFile>
-                                <fileType>sac</fileType>
-                                <dataDirectory>POND_II</dataDirectory>
-                                <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
-                                </eventDirLabel>
-                            </saveSeismogramToFile>
+                            <sacWriter>
+                            <workingDir>rTrendData</workingDir>
+                            <location>${network.code}.${station.code}/${event.filizedTime}/${site.code}.${channel.code}.sac</location>
+                        </sacWriter>
                         </waveformVectorFork>
                     </waveformVectorAlwaysSuccess>
                 </example>
