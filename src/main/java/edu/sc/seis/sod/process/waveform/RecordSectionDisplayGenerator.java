@@ -34,8 +34,8 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
                                                           "fileNameBase"))
                     + FILE_EXTENSION;
         }
-        if(DOMHelper.hasElement(config, "baseDir")) {
-            baseDirName = SodUtil.getText(SodUtil.getElement(config, "baseDir"));
+        if(DOMHelper.hasElement(config, "workingDir")) {
+            workingDirName = SodUtil.getText(SodUtil.getElement(config, "workingDir"));
         }
         if(DOMHelper.hasElement(config, "location")) {
             location = SodUtil.getText(SodUtil.getElement(config, "location"));
@@ -88,11 +88,11 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
     }
 
     public String getFileBaseDir() {
-        return Start.getRunProps().getStatusBaseDir() + '/' + baseDirName;
+        return Start.getRunProps().getStatusBaseDir() + '/' + workingDirName;
     }
 
     public String getBaseDirName() {
-        return baseDirName;
+        return workingDirName;
     }
 
     public void outputBestRecordSection(EventAccessOperations event,
@@ -156,7 +156,7 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
     
     protected String filename = "recordsection" + FILE_EXTENSION;
 
-    protected String baseDirName = DEFAULT_BASE_DIRNAME;
+    protected String workingDirName = DEFAULT_BASE_DIRNAME;
     
     protected String location = DEFAULT_TEMPLATE;
     
