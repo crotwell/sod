@@ -23,6 +23,7 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.status.StringTreeLeaf;
+import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
 public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
 
@@ -35,6 +36,9 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
         }
         if(DOMHelper.hasElement(config, "baseDir")) {
             baseDirName = SodUtil.getText(SodUtil.getElement(config, "baseDir"));
+        }
+        if(DOMHelper.hasElement(config, "location")) {
+            location = SodUtil.getText(SodUtil.getElement(config, "location"));
         }
     }
 
@@ -77,7 +81,7 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
 
     public String getFileLoc(EventAccessOperations event) throws Exception {
         String base = getFileBaseDir();
-        String dir = getSaveSeismogramToFile().getLabel(event);
+        String dir = velocitizer.evaluate(location, event);
         new File(base + "/" + dir).mkdirs();
         String fileLoc = dir + "/" + filename;
         return fileLoc;
@@ -153,6 +157,12 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
     protected String filename = "recordsection" + FILE_EXTENSION;
 
     protected String baseDirName = DEFAULT_BASE_DIRNAME;
+    
+    protected String location = DEFAULT_TEMPLATE;
+    
+    private SimpleVelocitizer velocitizer = new SimpleVelocitizer();
+    
+    public static final String DEFAULT_TEMPLATE = "Event_$event.getTime('yyyy_DDD_HH_mm_ss')";
 
     protected static final String FILE_EXTENSION = ".png";
 

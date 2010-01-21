@@ -73,7 +73,7 @@ public class SacWriter extends AbstractSeismogramWriter {
         }
         File f = new File(location);
         writer.write(f);
-        SaveSeismogramToFile.addBytesWritten(f.length());
+        AbstractSeismogramWriter.addBytesWritten(f.length());
     }
 
     public void applyProcessors(SacTimeSeries writer,

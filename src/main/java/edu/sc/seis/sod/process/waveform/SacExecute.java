@@ -78,7 +78,7 @@ public class SacExecute implements WaveformProcess {
         String files = "";
         for(int i = 0; i < seismograms.length; i++) {
             files += " "
-                    + (String)cookieJar.get(SaveSeismogramToFile.getCookieName(prefix,
+                    + (String)cookieJar.get(AbstractSeismogramWriter.getCookieName(prefix,
                                                                                channel.get_id(),
                                                                                i));
         } // end of for (int i=0; i<seismograms.length; i++)

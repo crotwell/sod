@@ -61,7 +61,7 @@ public class LegacyExecute implements WaveformProcess {
         String args = command;
         for(int i = 0; i < seismograms.length; i++) {
             args += " "
-                    + (String)cookieJar.get(SaveSeismogramToFile.getCookieName(prefix,
+                    + (String)cookieJar.get(AbstractSeismogramWriter.getCookieName(prefix,
                                                                                channel.get_id(),
                                                                                i));
         } // end of for (int i=0; i<seismograms.length; i++)

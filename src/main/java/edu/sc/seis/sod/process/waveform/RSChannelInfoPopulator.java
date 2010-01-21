@@ -5,23 +5,33 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.text.AbstractWriter;
+
 import org.w3c.dom.Element;
 
+import edu.iris.Fissures.AuditInfo;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.database.NotFound;
+import edu.sc.seis.fissuresUtil.dataset.DataSetEventOrganizer;
 import edu.sc.seis.fissuresUtil.display.RecordSectionDisplay;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.display.configuration.SeismogramDisplayConfiguration;
 import edu.sc.seis.fissuresUtil.display.registrar.CustomLayOutConfig;
+import edu.sc.seis.fissuresUtil.hibernate.EventSeismogramFileReference;
+import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
+import edu.sc.seis.fissuresUtil.hibernate.SeismogramFileRefDB;
 import edu.sc.seis.fissuresUtil.xml.DataSet;
 import edu.sc.seis.fissuresUtil.xml.DataSetSeismogram;
 import edu.sc.seis.fissuresUtil.xml.DataSetToXML;
+import edu.sc.seis.fissuresUtil.xml.MemoryDataSet;
 import edu.sc.seis.fissuresUtil.xml.MemoryDataSetSeismogram;
+import edu.sc.seis.fissuresUtil.xml.StdDataSetParamNames;
 import edu.sc.seis.fissuresUtil.xml.URLDataSetSeismogram;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
@@ -96,19 +106,20 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         return recSecDim;
     }
 
-    public SaveSeismogramToFile getSaveSeismogramToFile() throws Exception {
+    public AbstractWriter getSaveSeismogramToFile() throws Exception {
         return saveSeisToFile;
     }
 
-    public static SaveSeismogramToFile getSaveSeismogramToFile(String saveId)
+    public static AbstractWriter getSaveSeismogramToFile(String saveId)
             throws Exception {
-        String xpath = "//saveSeismogramToFile[id/text() = \"" + saveId + "\"]";
+        String xpath = "//mseedWriter[writerName/text() = \"" + saveId + "\"] | "+
+                       "//sacWriter[writerName/text() = \"" + saveId + "\"]";
         return extractSaveSeis(xpath,
-                               "No SaveSeismogramToFile element with id "
+                               "No Writer element with writerName "
                                        + saveId + " found");
     }
 
-    private static SaveSeismogramToFile extractSaveSeis(String xpath,
+    private static AbstractWriter extractSaveSeis(String xpath,
                                                         String errorMsgIfNotFound)
             throws ConfigurationException {
         Element saveSeisConf = DOMHelper.extractElement(Start.getConfig(),
@@ -116,7 +127,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         if(saveSeisConf == null) {
             throw new ConfigurationException(errorMsgIfNotFound);
         }
-        return new SaveSeismogramToFile(saveSeisConf);
+        return (AbstractWriter) SodUtil.load(saveSeisConf, "waveform");
     }
 
     public MemoryDataSetSeismogram[] wrap(DataSetSeismogram[] dss)
@@ -192,29 +203,30 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         return channelIds;
     }
 
-    public DataSetSeismogram[] extractSeismograms(CacheEvent eao)
+    public DataSetSeismogram[] extractSeismograms(CacheEvent event)
             throws Exception {
-        DataSet ds = DataSetToXML.load(saveSeisToFile.getDSMLFile(eao)
-                .toURI()
-                .toURL());
-        String[] dataSeisNames = ds.getDataSetSeismogramNames();
-        List dss = new ArrayList();
-        for(int i = 0; i < dataSeisNames.length; i++) {
-            DataSetSeismogram seis = ds.getDataSetSeismogram(dataSeisNames[i]);
-            ChannelId chanId = getMatchingChanIdIgnoreDates(seis.getChannelId(),
-                                                            ds.getChannelIds());
-            if(chanId == null) {
-                logger.error("no channel in dataset for id="
-                        + ChannelIdUtil.toString(seis.getChannelId())
-                        + " even though seismogram is in dataset. Skipping this seismogram.");
-                continue;
+        List<EventSeismogramFileReference> seisFileRefs = SeismogramFileRefDB.getSingleton().getSeismogramsForEvent(event);
+        DataSet ds = new MemoryDataSet("fake id", "temp name", getClass().getName(), new AuditInfo[0]);
+        ds.addParameter(StdDataSetParamNames.EVENT, event, new AuditInfo[0]);
+        List<DataSetSeismogram> dss = new ArrayList<DataSetSeismogram>();
+        for (EventSeismogramFileReference esRef : seisFileRefs) {
+            try {
+            ChannelImpl chan = NetworkDB.getSingleton().getChannel(esRef.getNetworkCode(),
+                                                                   esRef.getStationCode(),
+                                                                   esRef.getSiteCode(),
+                                                                   esRef.getChannelCode(),
+                                                                   new MicroSecondDate(esRef.getBeginTime()));
+            if(channelAcceptor.eventChannelSubsetter.accept(event, chan, null).isSuccess()) {
+                dss.add(esRef.getDataSetSeismogram(ds));
             }
-            ChannelImpl chan = (ChannelImpl)ds.getChannel(chanId);
-            if(channelAcceptor.eventChannelSubsetter.accept(eao, chan, null)
-                    .isSuccess()) {
-                dss.add(seis);
+            } catch (NotFound e) {
+                logger.error("no channel in dataset for id="
+                             + esRef.getNetworkCode()+"."+esRef.getStationCode()+"."+esRef.getSiteCode()+"."+esRef.getChannelCode()
+                             + " even though seismogram is in dataset. Skipping this seismogram.");
+                     continue;
             }
         }
+
         return (DataSetSeismogram[])dss.toArray(new DataSetSeismogram[0]);
     }
 
@@ -275,7 +287,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         return saveSeisId;
     }
 
-    private SaveSeismogramToFile saveSeisToFile;
+    private AbstractWriter saveSeisToFile;
 
     private String orientationId, saveSeisId, recordSectionId;
 

@@ -29,7 +29,7 @@ public class MseedWriter extends AbstractSeismogramWriter {
                       LocalSeismogramImpl seis,
                       ChannelImpl chan,
                       EventAccessOperations ev) throws Exception {
-        SaveSeismogramToFile.addBytesWritten(URLDataSetSeismogram.writeMSeed(seis,
+        AbstractSeismogramWriter.addBytesWritten(URLDataSetSeismogram.writeMSeed(seis,
                                                                              new File(loc))
                 .length());
     }

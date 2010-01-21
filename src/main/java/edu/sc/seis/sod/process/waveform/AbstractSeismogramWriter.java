@@ -7,7 +7,9 @@ import org.apache.velocity.VelocityContext;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
@@ -95,7 +97,7 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
                 if (storeSeismogramsInDB) {
                     SeismogramFileRefDB.getSingleton().saveSeismogramToDatabase(event, channel, seismograms[i], loc, getFileType());
                 }
-                cookieJar.put(SaveSeismogramToFile.getCookieName(prefix, channel.get_id(), i), loc);
+                cookieJar.put(AbstractSeismogramWriter.getCookieName(prefix, channel.get_id(), i), loc);
             }
         }
         return new WaveformResult(true, seismograms, this);
@@ -112,7 +114,27 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
                                ChannelImpl chan,
                                EventAccessOperations ev) throws Exception;
 
+    public static void addBytesWritten(long bytes) {
+        bytesWritten += bytes;
+    }
+
+    public static long getBytesWritten() {
+        return bytesWritten;
+    }
+
+    public static String getCookieName(String prefix, ChannelId channel, int i) {
+        return AbstractSeismogramWriter.COOKIE_PREFIX + prefix + ChannelIdUtil.toString(channel) + "_"
+                + i;
+    }
+
     private SimpleVelocitizer velocitizer = new SimpleVelocitizer();
+
+    public static final String SVN_PARAM = PhaseSignalToNoise.PHASE_STON_PREFIX
+    + "ttp";
+
+    static long bytesWritten = 0;
+
+    public static final String COOKIE_PREFIX = "SeisFile_";
 
     protected static String extractFileTemplate(Element el, String def) {
         return DOMHelper.extractText(el, "location", def);

@@ -107,7 +107,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
                                                   "eventName",
                                                   DEFAULT_TEMPLATE);
         createMasterDS(DOMHelper.extractText(config, "masterDSName", "Master"));
-        cookiesToParams.add(SVN_PARAM);
+        cookiesToParams.add(AbstractSeismogramWriter.SVN_PARAM);
     }
 
     public WaveformResult process(CacheEvent event,
@@ -142,7 +142,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
         }
         URL[] urls = urlDSS.getURLs();
         for(int i = 0; i < urls.length; i++) {
-            cookieJar.put(getCookieName(prefix, channel.get_id(), i),
+            cookieJar.put(AbstractSeismogramWriter.getCookieName(prefix, channel.get_id(), i),
                           urls[i].getFile());
         }
         boolean found = false;
@@ -161,11 +161,6 @@ public class SaveSeismogramToFile implements WaveformProcess {
                     + regions.getRegionName(event.get_attributes().region) + " at "
                     + event.get_preferred_origin().getOriginTime().date_time+" url="+urls[0]);
         return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
-    }
-
-    public static String getCookieName(String prefix, ChannelId channel, int i) {
-        return COOKIE_PREFIX + prefix + ChannelIdUtil.toString(channel) + "_"
-                + i;
     }
 
     public String getId() {
@@ -316,7 +311,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
             seisURLStr[i] = getRelativeURLString(dataSetFile, seisFile);
             seisURL[i] = seisFile.toURI().toURL();
             seisFileTypeArray[i] = type; // all are the same
-            bytesWritten += seisFile.length();
+            AbstractSeismogramWriter.bytesWritten += seisFile.length();
         }
         URLDataSetSeismogram urlDSS = new URLDataSetSeismogram(seisURL,
                                                                seisFileTypeArray,
@@ -528,16 +523,6 @@ public class SaveSeismogramToFile implements WaveformProcess {
         return dataset;
     }
 
-    public static long getBytesWritten() {
-        return bytesWritten;
-    }
-
-    public static void addBytesWritten(long bytes) {
-        bytesWritten += bytes;
-    }
-
-    private static long bytesWritten = 0;
-
     static long lastDataSetFileModTime;
 
     static File dataDirectory;
@@ -567,14 +552,9 @@ public class SaveSeismogramToFile implements WaveformProcess {
 
     private boolean preserveRequest = false, storeSeismogramsInDB = false;
 
-    public static final String COOKIE_PREFIX = "SeisFile_";
-
     public static final String DEFAULT_TEMPLATE = "Event_$event.getTime('yyyy_DDD_HH_mm_ss')";
 
     public static final String DEFAULT_DATA_DIRECTORY = "seismograms";
-
-    public static final String SVN_PARAM = PhaseSignalToNoise.PHASE_STON_PREFIX
-            + "ttp";
 
     private static boolean printDeprecationWarning = true;
 
