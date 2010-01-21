@@ -467,12 +467,10 @@
                 <data type="string"/>
             </element>
             <optional>
-                <element name="saveSeisId">
-                    <data type="string"/>
-                </element>
+                <ref name="writerName"/>
             </optional>
             <optional>
-                <ref name="baseDir"/>
+                <ref name="workingDir"/>
             </optional>
             <optional>
                 <ref name="seisFileLocation"/>
