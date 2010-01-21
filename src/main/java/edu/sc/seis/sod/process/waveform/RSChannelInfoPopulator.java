@@ -46,7 +46,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
 
     public RSChannelInfoPopulator(Element config) throws Exception {
         initConfig(config);
-        saveSeisToFile = getSaveSeismogramToFile(saveSeisId);
+        saveSeisToFile = getSeismogramWriter(saveSeisId);
     }
 
     public static final String GENS_POPS_XPATH = "//recordSectionDisplayGenerator | //RSChannelInfoPopulator | //externalWaveformProcess[classname/text() = \"edu.sc.seis.rev.map.RecordSectionAndMapGenerator\"]";
@@ -106,11 +106,11 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         return recSecDim;
     }
 
-    public AbstractWriter getSaveSeismogramToFile() throws Exception {
+    public AbstractWriter getSeismogramWriter() throws Exception {
         return saveSeisToFile;
     }
 
-    public static AbstractWriter getSaveSeismogramToFile(String saveId)
+    public static AbstractWriter getSeismogramWriter(String saveId)
             throws Exception {
         String xpath = "//mseedWriter[writerName/text() = \"" + saveId + "\"] | "+
                        "//sacWriter[writerName/text() = \"" + saveId + "\"]";
