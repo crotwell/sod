@@ -467,7 +467,7 @@
                 <data type="string"/>
             </element>
             <optional>
-                <ref name="writerName"/>
+                <element name="writerName"/>
             </optional>
             <optional>
                 <ref name="workingDir"/>
