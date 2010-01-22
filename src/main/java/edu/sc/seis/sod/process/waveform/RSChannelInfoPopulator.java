@@ -55,7 +55,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
             ConfigurationException {
         orientationId = SodUtil.getText(SodUtil.getElement(config, "orientationId"));
         recordSectionId = SodUtil.getText(SodUtil.getElement(config, "recordSectionId"));
-        saveSeisId = DOMHelper.extractText(config, "saveSeisId", orientationId);
+        saveSeisId = DOMHelper.extractText(config, "writerName", orientationId);
         if(DOMHelper.hasElement(config, "embeddedEventChannelProcessor")) {
             channelAcceptor = new EmbeddedEventChannelProcessor(SodUtil.getElement(config,
                                                                                    "embeddedEventChannelProcessor"));
@@ -106,20 +106,20 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         return recSecDim;
     }
 
-    public AbstractWriter getSeismogramWriter() throws Exception {
+    public AbstractSeismogramWriter getSeismogramWriter() throws Exception {
         return saveSeisToFile;
     }
 
-    public static AbstractWriter getSeismogramWriter(String saveId)
+    public static AbstractSeismogramWriter getSeismogramWriter(String saveId)
             throws Exception {
-        String xpath = "//mseedWriter[writerName/text() = \"" + saveId + "\"] | "+
-                       "//sacWriter[writerName/text() = \"" + saveId + "\"]";
+        String xpath = "//mseedWriter[name/text() = \"" + saveId + "\"] | "+
+                       "//sacWriter[name/text() = \"" + saveId + "\"]";
         return extractSaveSeis(xpath,
                                "No Writer element with writerName "
                                        + saveId + " found");
     }
 
-    private static AbstractWriter extractSaveSeis(String xpath,
+    private static AbstractSeismogramWriter extractSaveSeis(String xpath,
                                                         String errorMsgIfNotFound)
             throws ConfigurationException {
         Element saveSeisConf = DOMHelper.extractElement(Start.getConfig(),
@@ -127,7 +127,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         if(saveSeisConf == null) {
             throw new ConfigurationException(errorMsgIfNotFound);
         }
-        return (AbstractWriter) SodUtil.load(saveSeisConf, "waveform");
+        return (AbstractSeismogramWriter) SodUtil.load(saveSeisConf, "waveform");
     }
 
     public MemoryDataSetSeismogram[] wrap(DataSetSeismogram[] dss)
@@ -218,6 +218,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
                                                                    new MicroSecondDate(esRef.getBeginTime()));
             if(channelAcceptor.eventChannelSubsetter.accept(event, chan, null).isSuccess()) {
                 dss.add(esRef.getDataSetSeismogram(ds));
+                ds.addParameter(StdDataSetParamNames.CHANNEL, chan, new AuditInfo[0]);
             }
             } catch (NotFound e) {
                 logger.error("no channel in dataset for id="
@@ -287,7 +288,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         return saveSeisId;
     }
 
-    private AbstractWriter saveSeisToFile;
+    private AbstractSeismogramWriter saveSeisToFile;
 
     private String orientationId, saveSeisId, recordSectionId;
 
