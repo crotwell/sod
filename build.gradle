@@ -98,13 +98,15 @@ task buildSchemaDocs(dependsOn: classes) << { task ->
     //ant.delete(file:'build/output/velocity.log')
 }
 
-task buildSchema << { task ->
+task buildSchema(dependsOn: classes) << { task ->
+    outDir = task.project.file('build/output')
+    outDir.mkdirs()
     relaxArgs = project.projectDir.path+'/src/main/relax/sod.rng'
-    ant.java(dir:'build/output', 
+    ant.java(dir:outDir, 
              classname:'com.sun.msv.writer.relaxng.Driver', 
              args:relaxArgs,
              fork:true,
              classpath:configurations.runtime.asPath,
-             output:project.projectDir.path+'/src/main/resources/edu/sc/seis/sod/data/sod.rng') 
+             output:task.project.projectDir.path+'/src/main/resources/edu/sc/seis/sod/data/sod.rng') 
 }
 
