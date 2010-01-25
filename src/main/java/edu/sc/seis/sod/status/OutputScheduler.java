@@ -18,6 +18,7 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.NetworkArm;
 import edu.sc.seis.sod.PeriodicCheckpointer;
 import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.hibernate.SodDB;
 
 public class OutputScheduler extends Thread implements ArmListener {
 
@@ -116,6 +117,8 @@ public class OutputScheduler extends Thread implements ArmListener {
                 GlobalExceptionHandler.handle(t);
             }
         }
+        // just make sure any read-only database connections are closed
+        SodDB.rollback();
     }
 
     private boolean anyArmsActive() {

@@ -48,6 +48,8 @@ public class WaveformArm extends Thread implements Arm {
                         }
                             if(possibleToContinue()) {
                                 synchronized(Start.getEventArm().getWaveformArmSync()) {
+                                    // close db connection as we don't need it for next 2 minutes
+                                    SodDB.rollback();
                                     // wake up every 2 minutes in case there is retrys to process
                                     Start.getEventArm().getWaveformArmSync().wait(2*60*1000);
                                 }

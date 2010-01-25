@@ -84,6 +84,8 @@ public class NetworkArm implements Arm {
             armFinished = true;
             Start.armFailure(this, e);
         }
+        // make sure any open read only db connetion is closed (ie from lastQueryTime above)
+        SodDB.rollback();
     }
 
     public boolean isActive() {

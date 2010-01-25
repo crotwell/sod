@@ -480,6 +480,8 @@ public class Start {
                             // only run if the retry queue is empty
                             if ( ! SodDB.getSingleton().isESPTodo()) {
                                 SodDB.getSingleton().populateRetryToDo();
+                                // db connection recycling
+                                SodDB.rollback();
                             }
                         }
                     }, 0, 10*60*1000);
