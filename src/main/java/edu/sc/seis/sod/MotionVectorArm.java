@@ -66,6 +66,10 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
         add(new ANDWaveformProcessWrapper(proc));
     }
 
+    public VectorRequestGenerator getRequestGenerator() {
+        return requestGenerator;
+    }
+    
     public WaveformVectorProcess[] getProcesses() {
         WaveformVectorProcess[] result = new WaveformVectorProcess[processes.size()];
         return (WaveformVectorProcess[])processes.toArray(result);
