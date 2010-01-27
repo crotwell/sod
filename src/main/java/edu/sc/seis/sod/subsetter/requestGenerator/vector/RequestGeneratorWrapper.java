@@ -47,6 +47,10 @@ public class RequestGeneratorWrapper implements VectorRequestGenerator {
         }
         return out;
     }
+    
+    public RequestGenerator getRequestGenerator() {
+        return  requestGenerator;
+    }
 
     RequestGenerator requestGenerator;
 }
