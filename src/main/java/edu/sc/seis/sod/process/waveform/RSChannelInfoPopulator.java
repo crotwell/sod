@@ -26,6 +26,7 @@ import edu.sc.seis.fissuresUtil.display.registrar.CustomLayOutConfig;
 import edu.sc.seis.fissuresUtil.hibernate.EventSeismogramFileReference;
 import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
 import edu.sc.seis.fissuresUtil.hibernate.SeismogramFileRefDB;
+import edu.sc.seis.fissuresUtil.time.ReduceTool;
 import edu.sc.seis.fissuresUtil.xml.DataSet;
 import edu.sc.seis.fissuresUtil.xml.DataSetSeismogram;
 import edu.sc.seis.fissuresUtil.xml.DataSetToXML;
@@ -35,12 +36,16 @@ import edu.sc.seis.fissuresUtil.xml.StdDataSetParamNames;
 import edu.sc.seis.fissuresUtil.xml.URLDataSetSeismogram;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.LocalSeismogramArm;
+import edu.sc.seis.sod.MotionVectorArm;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.hibernate.RecordSectionItem;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.eventChannel.PassEventChannel;
+import edu.sc.seis.sod.subsetter.requestGenerator.vector.RequestGeneratorWrapper;
+import edu.sc.seis.sod.subsetter.requestGenerator.vector.VectorRequestGenerator;
 
 public class RSChannelInfoPopulator implements WaveformProcess {
 
@@ -208,7 +213,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         List<EventSeismogramFileReference> seisFileRefs = SeismogramFileRefDB.getSingleton().getSeismogramsForEvent(event);
         DataSet ds = new MemoryDataSet("fake id", "temp name", getClass().getName(), new AuditInfo[0]);
         ds.addParameter(StdDataSetParamNames.EVENT, event, new AuditInfo[0]);
-        List<DataSetSeismogram> dss = new ArrayList<DataSetSeismogram>();
+        List<DataSetSeismogram> dssList = new ArrayList<DataSetSeismogram>();
         for (EventSeismogramFileReference esRef : seisFileRefs) {
             try {
             ChannelImpl chan = NetworkDB.getSingleton().getChannel(esRef.getNetworkCode(),
@@ -217,8 +222,19 @@ public class RSChannelInfoPopulator implements WaveformProcess {
                                                                    esRef.getChannelCode(),
                                                                    new MicroSecondDate(esRef.getBeginTime()));
             if(channelAcceptor.eventChannelSubsetter.accept(event, chan, null).isSuccess()) {
-                dss.add(esRef.getDataSetSeismogram(ds));
+                RequestFilter[] rf = null;
+                if (Start.getWaveformRecipe() instanceof LocalSeismogramArm) {
+                    rf = ((LocalSeismogramArm)Start.getWaveformRecipe()).getRequestGenerator().generateRequest(event, chan, null);
+                } else {
+                    VectorRequestGenerator vrg = ((MotionVectorArm)Start.getWaveformRecipe()).getRequestGenerator();
+                    if (vrg instanceof RequestGeneratorWrapper) {
+                        rf = ((RequestGeneratorWrapper)vrg).getRequestGenerator().generateRequest(event, chan, null);
+                    }
+                }
+                URLDataSetSeismogram dss = esRef.getDataSetSeismogram(ds, ReduceTool.cover(rf));
+                dssList.add(dss);
                 ds.addParameter(StdDataSetParamNames.CHANNEL, chan, new AuditInfo[0]);
+                
             }
             } catch (NotFound e) {
                 logger.error("no channel in dataset for id="
@@ -228,7 +244,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
             }
         }
 
-        return (DataSetSeismogram[])dss.toArray(new DataSetSeismogram[0]);
+        return (DataSetSeismogram[])dssList.toArray(new DataSetSeismogram[0]);
     }
 
     public RecordSectionDisplay getConfiguredRSDisplay() {
