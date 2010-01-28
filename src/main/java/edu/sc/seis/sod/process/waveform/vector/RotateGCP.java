@@ -13,13 +13,14 @@ import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.Threadable;
 import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
 /**
  * @author crotwell Created on May 20, 2005
  */
-public class RotateGCP implements WaveformVectorProcess {
+public class RotateGCP implements WaveformVectorProcess, Threadable {
 
     public RotateGCP(Element el) {
         radialOrientationCode = DOMHelper.extractText(el,
@@ -117,6 +118,10 @@ public class RotateGCP implements WaveformVectorProcess {
         return new WaveformVectorResult(out, new StringTreeLeaf(this, true));
     }
 
+    public boolean isThreadSafe() {
+        return true;
+    }
+    
     private String radialOrientationCode, transverseOrientationCode;
     
     private VectorTrim trimmer = new VectorTrim();

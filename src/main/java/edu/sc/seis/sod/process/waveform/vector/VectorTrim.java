@@ -16,9 +16,10 @@ import edu.sc.seis.fissuresUtil.bag.Cut;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.Threadable;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
-public class VectorTrim implements WaveformVectorProcess {
+public class VectorTrim implements WaveformVectorProcess, Threadable {
 
     private static final Cut EMPTY_CUT = new Cut(TimeUtils.futurePlusOne,
                                                  new MicroSecondDate(-100000000000000l));
@@ -143,6 +144,10 @@ public class VectorTrim implements WaveformVectorProcess {
                 impls[i][j].sampling_info = impls[0][0].sampling_info;
             }
         }
+        return true;
+    }
+    
+    public boolean isThreadSafe() {
         return true;
     }
 }

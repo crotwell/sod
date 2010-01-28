@@ -16,6 +16,7 @@ import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.MotionVectorArm;
+import edu.sc.seis.sod.Threadable;
 import edu.sc.seis.sod.process.waveform.ForkProcess;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
@@ -24,7 +25,7 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
 /**
  * @author groves Created on Mar 23, 2005
  */
-public class VectorForkProcess implements WaveformVectorProcess {
+public class VectorForkProcess implements WaveformVectorProcess, Threadable {
 
     public VectorForkProcess(Element config) throws ConfigurationException {
         NodeList children = config.getChildNodes();
@@ -54,14 +55,13 @@ public class VectorForkProcess implements WaveformVectorProcess {
             WaveformVectorProcess processor = (WaveformVectorProcess)it.next();
             logger.info("vectorFork processing "
                     + processor.getClass().getName());
-            synchronized(processor) {
-                result = processor.process(event,
-                                           channelGroup,
-                                           original,
-                                           available,
-                                           result.getSeismograms(),
-                                           cookieJar);
-            }
+            result = MotionVectorArm.runProcessorThreadCheck(processor,
+                                                             event,
+                                                             channelGroup,
+                                                             original,
+                                                             available,
+                                                             result.getSeismograms(),
+                                                             cookieJar);
             reasons.addLast(result.getReason());
         } // end of while (it.hasNext())
         return new WaveformVectorResult(out,
@@ -82,6 +82,10 @@ public class VectorForkProcess implements WaveformVectorProcess {
         return (WaveformVectorProcess[])processes.toArray(new WaveformVectorProcess[0]);
     }
 
+    public boolean isThreadSafe() {
+        return true;
+    }
+    
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(VectorForkProcess.class);
 
     private List processes = new ArrayList();
