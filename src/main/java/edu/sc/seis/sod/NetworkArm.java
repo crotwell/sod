@@ -412,10 +412,10 @@ public class NetworkArm implements Arm {
                 logger.debug("getSuccessfulStations " + netCode + " - from db "
                         + sta.size());
                 return sta.toArray(new StationImpl[0]);
+            } else {
+                allStationFailureNets.add(NetworkIdUtil.toStringNoDates(net));
+                return new StationImpl[0];
             }
-
-            // this is probably an error condition...
-            throw new RuntimeException("Should not happen, likely indicates a race condition between NetworkArm method and RefreshNetworkArm. "+NetworkIdUtil.toString(net));
         }
     }
     
@@ -482,6 +482,8 @@ public class NetworkArm implements Arm {
                     + rtnValues.length);
             if(rtnValues.length == 0) {
                 allStationFailureNets.add(NetworkIdUtil.toStringNoDates(net));
+            } else {
+                allStationFailureNets.remove(NetworkIdUtil.toStringNoDates(net));
             }
             return rtnValues;
         }
@@ -512,9 +514,8 @@ public class NetworkArm implements Arm {
                 return sta;
             } else {
                 allChannelFailureStations.add(StationIdUtil.toStringNoDates(station));
+                return new ArrayList<ChannelImpl>(0);
             }
-            // this is probably an error condition...
-            throw new RuntimeException("Should not happen, likely indicates a race condition between NetworkArm method and RefreshNetworkArm. "+StationIdUtil.toString(station));
         }
     }
     
@@ -608,6 +609,8 @@ public class NetworkArm implements Arm {
             statusChanged("Waiting for a request");
             if(successes.size() == 0) {
                 allChannelFailureStations.add(StationIdUtil.toStringNoDates(station));
+            } else {
+                allChannelFailureStations.remove(StationIdUtil.toStringNoDates(station));
             }
             return successes;
         }
@@ -634,11 +637,10 @@ public class NetworkArm implements Arm {
                 logger.debug("successfulChannelGroups " + station.get_code()
                         + " - from db " + sta.size());
                 return sta;
+            } else {
+                allChannelGroupFailureStations.add(StationIdUtil.toStringNoDates(station));
+                return new ArrayList<ChannelGroup>(0);
             }
-            // might be caused by a station with no successful channels, but on a sod restart the 
-            // allChannelGroupFailureStations would be empty as the refresher has not reprocessed the channels
-            logger.warn("Should not happen, either a sod restart or this indicates a race condition between NetworkArm method and RefreshNetworkArm. Station="+StationIdUtil.toString(station)+" NetworkDbId="+((NetworkAttrImpl)station.getNetworkAttr()).getDbid());
-            return new ArrayList<ChannelGroup>(0);
         }
     }
     
@@ -652,6 +654,7 @@ public class NetworkArm implements Arm {
             }
             if (chanGroups.size() != 0) {
                 NetworkDB.commit();
+                allChannelGroupFailureStations.remove(StationIdUtil.toStringNoDates(station));
             } else {
                 allChannelGroupFailureStations.add(StationIdUtil.toStringNoDates(station));
             }
