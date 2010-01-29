@@ -80,6 +80,10 @@ public class VelocityEvent extends ProxyEventAccessOperations {
         return origin.getMagnitudes()[0].type;
     }
 
+    public String getMagnitudeContributor() {
+        return origin.getMagnitudes()[0].contributor;
+    }
+
     public String getLatitude() {
         return df.format(origin.getLocation().latitude);
     }
