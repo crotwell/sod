@@ -144,7 +144,7 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
         return DOMHelper.extractText(el, "prefix", DEFAULT_PREFIX);
     }
 
-    protected static String extractWorkingDir(Element el) {
+    public static String extractWorkingDir(Element el) {
         return DOMHelper.extractText(el, "workingDir", DEFAULT_WORKING_DIR, true);
     }
 
