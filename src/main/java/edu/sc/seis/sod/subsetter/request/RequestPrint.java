@@ -26,7 +26,7 @@ public class RequestPrint implements Request {
     public static void printRequests(RequestFilter[] request) {
         for(int i = 0; i < request.length; i++) {
             System.out.println("Request "
-                    + ChannelIdUtil.toString(request[i].channel_id) + " from "
+                    + ChannelIdUtil.toStringNoDates(request[i].channel_id) + " from "
                     + request[i].start_time.date_time + " to "
                     + request[i].end_time.date_time);
         }
