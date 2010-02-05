@@ -382,6 +382,15 @@ public class SodUtil {
         }
     }
 
+    public static String loadText(Element config, String elementName, String defaultValue) {
+        Element child = getElement(config, elementName);
+        if(child != null) {
+            return getText(child);
+        } else {
+            return defaultValue;
+        }
+    }
+
     public static void copyFile(String src, String dest) throws FileNotFoundException {
         if(src.startsWith("jar")) {
             try {
