@@ -292,21 +292,23 @@
                     accepted events, the event is rejected. This allows for the use of only one of several very similar events</description>
                 <summary>Accepts events that are dissimilar from already accepted events</summary>
             </xsd:annotation>
-            <optional>
-                <element name="timeVariance">
-                    <ref name="time"/>
-                </element>
-            </optional>
-            <optional>
-                <element name="depthVariance">
-                    <ref name="length"/>
-                </element>
-            </optional>
-            <optional>
-                <element name="distanceVariance">
-                    <ref name="length"/>
-                </element>
-            </optional>
+            <interleave>
+                <optional>
+                    <element name="timeVariance">
+                        <ref name="time"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="depthVariance">
+                        <ref name="length"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="distanceVariance">
+                        <ref name="length"/>
+                    </element>
+                </optional>
+            </interleave>
         </element>
     </define>
     <define name="externalOriginSubsetter">
