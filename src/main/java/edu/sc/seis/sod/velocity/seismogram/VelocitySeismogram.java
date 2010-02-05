@@ -62,7 +62,7 @@ public class VelocitySeismogram extends LocalSeismogramImpl {
     }
     
     public String toString() {
-        return "Seismogram on " + getChannel() + " from" + getBegin() + " to "
+        return "Seismogram on " + getChannel() + " from " + getBegin() + " to "
                 + getEnd();
     }
 
