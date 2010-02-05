@@ -23,7 +23,7 @@ import edu.sc.seis.sod.subsetter.AbstractSource;
 public class PlottableRequest extends AbstractSource  implements Request {
 
     public PlottableRequest(Element config) throws Exception {
-        super(config);
+        super(config, "DelilahCache");
         NodeList dims = config.getElementsByTagName("pixelsPerDay");
         pixelsPerDay = new int[dims.getLength()];
         for(int i=0;i<dims.getLength();i++) {

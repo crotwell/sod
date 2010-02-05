@@ -8,6 +8,11 @@ import edu.sc.seis.sod.Start;
 
 public class NetworkFinder extends NetworkSource {
 
+
+    public NetworkFinder(String dns, String name, int retries) {
+        super(dns, name, retries);
+    }
+    
     public NetworkFinder(Element element) throws Exception {
         super(element);
     }

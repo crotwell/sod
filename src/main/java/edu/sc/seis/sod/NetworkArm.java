@@ -72,7 +72,7 @@ public class NetworkArm implements Arm {
             // only do timer if positive interval and waveform arm exists, otherwise run in thread
             if (getRefreshInterval().value > 0 && Start.getWaveformRecipe() != null) {
                 Timer timer = new Timer("Refresh NetworkArm", true);
-                long period = (long)finder.getRefreshInterval().getValue(UnitImpl.MILLISECOND);
+                long period = (long)getNetworkFinderSource().getRefreshInterval().getValue(UnitImpl.MILLISECOND);
                 long firstDelay = lastQueryTime==null ? 0 : lastQueryTime.delayUntilNextRefresh(getRefreshInterval());
                 logger.debug("Refresh timer startup: period: "+period+"  firstDelay: "+firstDelay+"  last query: "+(lastQueryTime==null ? "null" : lastQueryTime.getTime()));
                 timer.schedule(refresh, firstDelay, period);
@@ -170,11 +170,11 @@ public class NetworkArm implements Arm {
     }
 
     public ProxyNetworkDC getNetworkDC() {
-        return finder.getNetworkDC();
+        return getNetworkFinderSource().getNetworkDC();
     }
 
     public TimeInterval getRefreshInterval() {
-        return finder.getRefreshInterval();
+        return getNetworkFinderSource().getRefreshInterval();
     }
 
     public List<ChannelSubsetter> getChannelSubsetters() {
@@ -231,7 +231,7 @@ public class NetworkArm implements Arm {
             logger.info("Getting networks");
             ArrayList<CacheNetworkAccess> successes = new ArrayList<CacheNetworkAccess>();
             CacheNetworkAccess[] allNets;
-            ProxyNetworkDC netDC = finder.getNetworkDC();
+            ProxyNetworkDC netDC = getNetworkDC();
             // purge cache before loading from server
             netDC.reset();
             synchronized(netDC) {
@@ -426,7 +426,7 @@ public class NetworkArm implements Arm {
             ArrayList<Station> arrayList = new ArrayList<Station>();
             try {
                 CacheNetworkAccess netAccess = new LazyNetworkAccess((NetworkAttrImpl)net,
-                                                                     finder.getNetworkDC());
+                                                                     getNetworkDC());
                 Station[] stations = netAccess.retrieve_stations();
                 for(int i = 0; i < stations.length; i++) {
                     logger.debug("Station in NetworkArm: "
@@ -525,7 +525,7 @@ public class NetworkArm implements Arm {
             List<ChannelImpl> successes = new ArrayList<ChannelImpl>();
             try {
                 CacheNetworkAccess networkAccess = new LazyNetworkAccess((NetworkAttrImpl)station.getNetworkAttr(),
-                                                                             finder.getNetworkDC());
+                                                                             getNetworkDC());
                 Channel[] tmpChannels = networkAccess.retrieve_for_station(station.get_id());
                 MicroSecondDate stationBegin = new MicroSecondDate(station.getBeginTime());
                 // dmc network server ignores date in station id in
@@ -730,7 +730,7 @@ public class NetworkArm implements Arm {
         }
     }
 
-    private NetworkFinder finder = null;
+    private NetworkFinder finder = new NetworkFinder("edu/iris/dmc", "IRIS_NetworkDC", -1);
 
     private NetworkSubsetter attrSubsetter = new PassNetwork();
 

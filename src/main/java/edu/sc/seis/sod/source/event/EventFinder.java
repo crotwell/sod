@@ -23,7 +23,7 @@ import edu.sc.seis.sod.subsetter.AbstractSource;
 public class EventFinder extends AbstractSource implements EventSource {
 
 	public EventFinder(Element config) throws Exception {
-		super(config);
+		super(config, "IRIS_EventDC");
 		eventFinderId = eventFinderCount++;
 		processConfig(config);
 		refreshInterval = Start.getRunProps().getEventRefreshInterval();

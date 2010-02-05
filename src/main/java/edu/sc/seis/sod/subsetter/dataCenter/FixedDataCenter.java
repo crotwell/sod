@@ -16,12 +16,12 @@ public class FixedDataCenter extends AbstractSource implements SodElement,
         SeismogramDCLocator {
 
     public FixedDataCenter() {
-        super("edu/iris/dmc", "IRIS_Datacenter");
+        super("edu/iris/dmc", DEFAULT_SERVER_NAME);
         init();
     }
     
     public FixedDataCenter(Element element) {
-        super(element);
+        super(element, DEFAULT_SERVER_NAME);
         init();
     }
 
@@ -50,5 +50,7 @@ public class FixedDataCenter extends AbstractSource implements SodElement,
     }
 
     private ProxySeismogramDC dataCenter;
+    
+    public static final String DEFAULT_SERVER_NAME="IRIS_DataCenter";
 
 }// FixedDataCenter

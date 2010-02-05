@@ -9,8 +9,12 @@ import edu.sc.seis.sod.subsetter.AbstractSource;
 
 public abstract class NetworkSource extends AbstractSource {
 
+    public NetworkSource(String dns, String name, int retries) {
+        super(dns, name, retries);
+    }
+    
     public NetworkSource(Element config) throws Exception {
-        super(config);
+        super(config, "IRIS_NetworkDC");
         Element subElement = SodUtil.getElement(config, "refreshInterval");
         if(subElement != null) {
             refreshInterval = SodUtil.loadTimeInterval(subElement);

@@ -10,21 +10,18 @@ import edu.sc.seis.sod.SodUtil;
 public abstract class AbstractSource{
 
     public AbstractSource (String dns, String name) {
+        this(dns, name, -1);
+    }
+
+    public AbstractSource (String dns, String name, int retries) {
         this.dns = dns;
         this.name = name;
         retries = -1;
     }
     
-    public AbstractSource (Element config){
-        NodeList children = config.getChildNodes();
-        for(int i=0; i<children.getLength(); i++) {
-            if (children.item(i) instanceof Element) {
-                Element el = (Element)children.item(i);
-                String tagName  = el.getTagName();
-                if(tagName.equals("dns")) dns = SodUtil.getText(el);
-                else if(tagName.equals("name")) name = SodUtil.getText(el);
-            }
-        }
+    public AbstractSource (Element config, String defaultName){
+        dns = SodUtil.loadText(config, "dns", "edu/iris/dmc");
+        name = SodUtil.loadText(config, "name", defaultName);
         retries = SodUtil.loadInt(config, "retries", -1);
     }
     
