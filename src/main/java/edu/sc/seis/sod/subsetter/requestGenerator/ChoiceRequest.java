@@ -41,15 +41,13 @@ public class ChoiceRequest implements RequestGenerator {
         for(int i = 0; i < choices.size(); i++) {
             Choice c = (Choice)choices.get(i);
             if(c.accept(event, channel, cookieJar).isSuccess()) {
-                logger.debug("Generating request from choice " + i);
                 return c.generateRequest(event, channel, cookieJar);
             }
         } // end of while (it.hasNext())
         if(otherwise != null) {
-            logger.debug("Generating request with otherwise");
             return otherwise.generateRequest(event, channel, cookieJar);
         } else {
-            logger.debug("Generating no request");
+            logger.debug("No choice matched, generating no request");
             return new RequestFilter[0];
         } // end of else
     }
