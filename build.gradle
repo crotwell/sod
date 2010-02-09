@@ -110,3 +110,4 @@ task buildSchema(dependsOn: classes) << { task ->
              output:task.project.projectDir.path+'/src/main/resources/edu/sc/seis/sod/data/sod.rng') 
 }
 
+assemble.dependsOn(tarDist)
