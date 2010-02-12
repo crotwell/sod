@@ -342,19 +342,6 @@ public class Start {
         return doc;
     }
 
-    public static void addMailExceptionReporter(Properties mailProps) {
-        if(mailProps.containsKey("mail.smtp.host")) {
-            try {
-                GlobalExceptionHandler.add(new MailExceptionReporter(mailProps));
-            } catch(MissingPropertyException e) {
-                logger.debug("Not able to add a mail reporter.  This is only a problem if you specified one",
-                             e);
-            }
-        } else {
-            logger.debug("Not trying to add a mail reporter since mail.smtp.host isn't set");
-        }
-    }
-
     public static ResultMailer getResultMailer() throws ConfigurationException {
         if(mailer != null) {
             return mailer;
@@ -392,7 +379,7 @@ public class Start {
             indexTemplate.performRegistration();
         }
         if(!commandLineToolRun) {
-            addMailExceptionReporter(props);
+            MailExceptionReporter.addMailExceptionReporter(props);;
             addResultMailer(props);
             if(runProps.checkpointPeriodically()) {
                 new PeriodicCheckpointer();
