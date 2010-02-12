@@ -4,6 +4,7 @@ version = '3.0.0beta3'
 
 dependencies {
     compile project(':bag') { transitive = true }
+    compile project(':cormorant') { transitive = true }
     
     compile "jline:jline:0.9.91"
     compile "rngconvUSC:rngconv:20030225"
