@@ -95,7 +95,7 @@ public class EventNetworkPair extends AbstractEventPair {
 
     public String toString() {
         return "EventNetworkPair: (" + getDbid() + ") " + getEvent() + " "
-                + NetworkIdUtil.toString(getNetwork()) + " " + getStatus();
+                + NetworkIdUtil.toStringNoDates(getNetwork()) + " " + getStatus();
     }
 
     public int getNetworkDbId() {

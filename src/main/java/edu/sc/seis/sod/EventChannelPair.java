@@ -67,7 +67,7 @@ public class EventChannelPair extends AbstractEventChannelPair {
 
     public String toString(){
         return "EventChannelPair: ("+getDbid()+") " + getEvent() + " " +
-            ChannelIdUtil.toString(getChannel().getId()) + " " + getStatus();
+            ChannelIdUtil.toStringNoDates(getChannel().getId()) + " " + getStatus();
     }
 
     public int getChannelDbId(){ return chan.getDbid(); }
