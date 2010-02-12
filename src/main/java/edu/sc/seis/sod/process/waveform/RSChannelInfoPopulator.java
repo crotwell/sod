@@ -176,7 +176,24 @@ public class RSChannelInfoPopulator implements WaveformProcess {
                                    cookieJar).isSuccess()) {
             return false;
         }
-            DataSetSeismogram[] dss = extractSeismograms(event);
+        URLDataSetSeismogram[] dss;
+        synchronized(this) {
+            if (lastDSS.length != 0 && event.equals(lastEvent)) {
+                URLDataSetSeismogram chanDSS = SeismogramFileRefDB.getSingleton().getDataSetSeismogram(channel.get_id(), 
+                                                                                                       event, 
+                                                                                                       ReduceTool.cover(original));
+                lastDSS[0].getDataSet().addDataSetSeismogram(chanDSS, new AuditInfo[0]);
+                dss = new URLDataSetSeismogram[lastDSS.length+1];
+                dss[0] = chanDSS;
+                System.arraycopy(lastDSS, 0, dss, 1, lastDSS.length);
+                lastDSS = dss;
+            } else {
+                // new event
+                dss = extractSeismograms(event);
+                lastEvent = event;
+                lastDSS = dss;
+            }
+        }
             SodDB soddb = SodDB.getSingleton();
             if(soddb.getRecordSectionItem(orientationId,
                                           recordSectionId, event, channel) != null) {
@@ -208,12 +225,12 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         return channelIds;
     }
 
-    public DataSetSeismogram[] extractSeismograms(CacheEvent event)
+    public URLDataSetSeismogram[] extractSeismograms(CacheEvent event)
             throws Exception {
         List<EventSeismogramFileReference> seisFileRefs = SeismogramFileRefDB.getSingleton().getSeismogramsForEvent(event);
         DataSet ds = new MemoryDataSet("fake id", "temp name", getClass().getName(), new AuditInfo[0]);
         ds.addParameter(StdDataSetParamNames.EVENT, event, new AuditInfo[0]);
-        List<DataSetSeismogram> dssList = new ArrayList<DataSetSeismogram>();
+        List<URLDataSetSeismogram> dssList = new ArrayList<URLDataSetSeismogram>();
         for (EventSeismogramFileReference esRef : seisFileRefs) {
             try {
             ChannelImpl chan = NetworkDB.getSingleton().getChannel(esRef.getNetworkCode(),
@@ -244,7 +261,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
             }
         }
 
-        return (DataSetSeismogram[])dssList.toArray(new DataSetSeismogram[0]);
+        return (URLDataSetSeismogram[])dssList.toArray(new URLDataSetSeismogram[0]);
     }
 
     public RecordSectionDisplay getConfiguredRSDisplay() {
@@ -319,6 +336,10 @@ public class RSChannelInfoPopulator implements WaveformProcess {
     private SeismogramDisplayConfiguration displayCreator;
 
     private EmbeddedEventChannelProcessor channelAcceptor;
+    
+    private CacheEvent lastEvent = null;
+    
+    private URLDataSetSeismogram[] lastDSS = new URLDataSetSeismogram[0];
 
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(RSChannelInfoPopulator.class);
 }
