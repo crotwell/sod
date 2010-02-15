@@ -178,21 +178,16 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         }
         URLDataSetSeismogram[] dss;
         synchronized(this) {
-            if (lastDSS.length != 0 && event.equals(lastEvent)) {
-                URLDataSetSeismogram chanDSS = SeismogramFileRefDB.getSingleton().getDataSetSeismogram(channel.get_id(), 
-                                                                                                       event, 
-                                                                                                       ReduceTool.cover(original));
-                lastDSS[0].getDataSet().addDataSetSeismogram(chanDSS, new AuditInfo[0]);
-                dss = new URLDataSetSeismogram[lastDSS.length+1];
-                dss[0] = chanDSS;
-                System.arraycopy(lastDSS, 0, dss, 1, lastDSS.length);
-                lastDSS = dss;
-            } else {
-                // new event
-                dss = extractSeismograms(event);
-                lastEvent = event;
-                lastDSS = dss;
-            }
+            dss = extractSeismograms(event);
+            URLDataSetSeismogram chanDSS = SeismogramFileRefDB.getSingleton().getDataSetSeismogram(channel.get_id(), 
+                                                                                                   event, 
+                                                                                                   ReduceTool.cover(original));
+            lastDSS[0].getDataSet().addDataSetSeismogram(chanDSS, new AuditInfo[0]);
+            URLDataSetSeismogram[] dssPlusOne = new URLDataSetSeismogram[lastDSS.length+1];
+            dssPlusOne[0] = chanDSS;
+            System.arraycopy(dss, 0, dssPlusOne, 1, lastDSS.length);
+            lastDSS = dssPlusOne;
+            dss = dssPlusOne;
         }
             SodDB soddb = SodDB.getSingleton();
             if(soddb.getRecordSectionItem(orientationId,
@@ -227,6 +222,21 @@ public class RSChannelInfoPopulator implements WaveformProcess {
 
     public URLDataSetSeismogram[] extractSeismograms(CacheEvent event)
             throws Exception {
+        synchronized(this) {
+            if (lastDSS.length != 0 && event.equals(lastEvent)) {
+                return lastDSS;
+            } else {
+                // new event
+                URLDataSetSeismogram[] dss = extractSeismogramsFromDB(event);
+                lastEvent = event;
+                lastDSS = dss;
+                return lastDSS;
+            }
+        }
+    }
+
+    private URLDataSetSeismogram[] extractSeismogramsFromDB(CacheEvent event)
+            throws Exception {   
         List<EventSeismogramFileReference> seisFileRefs = SeismogramFileRefDB.getSingleton().getSeismogramsForEvent(event);
         DataSet ds = new MemoryDataSet("fake id", "temp name", getClass().getName(), new AuditInfo[0]);
         ds.addParameter(StdDataSetParamNames.EVENT, event, new AuditInfo[0]);
