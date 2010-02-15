@@ -67,12 +67,12 @@ public class NetworkArm implements Arm {
         try {
             SodDB sodDb = SodDB.getSingleton();
             // lastQueryTime should be null if first time
-            lastQueryTime = sodDb.getQueryTime(getNetworkFinderSource().getName(), getNetworkFinderSource().getDNS());
+            lastQueryTime = sodDb.getQueryTime(getNetworkSource().getName(), getNetworkSource().getDNS());
             
             // only do timer if positive interval and waveform arm exists, otherwise run in thread
             if (getRefreshInterval().value > 0 && Start.getWaveformRecipe() != null) {
                 Timer timer = new Timer("Refresh NetworkArm", true);
-                long period = (long)getNetworkFinderSource().getRefreshInterval().getValue(UnitImpl.MILLISECOND);
+                long period = (long)getNetworkSource().getRefreshInterval().getValue(UnitImpl.MILLISECOND);
                 long firstDelay = lastQueryTime==null ? 0 : lastQueryTime.delayUntilNextRefresh(getRefreshInterval());
                 logger.debug("Refresh timer startup: period: "+period+"  firstDelay: "+firstDelay+"  last query: "+(lastQueryTime==null ? "null" : lastQueryTime.getTime()));
                 timer.schedule(refresh, firstDelay, period);
@@ -170,11 +170,11 @@ public class NetworkArm implements Arm {
     }
 
     public ProxyNetworkDC getNetworkDC() {
-        return getNetworkFinderSource().getNetworkDC();
+        return getNetworkSource().getNetworkDC();
     }
 
     public TimeInterval getRefreshInterval() {
-        return getNetworkFinderSource().getRefreshInterval();
+        return getNetworkSource().getRefreshInterval();
     }
 
     public List<ChannelSubsetter> getChannelSubsetters() {
@@ -369,7 +369,7 @@ public class NetworkArm implements Arm {
 
     void finish() {
         armFinished = true;
-        lastQueryTime = new QueryTime(getNetworkFinderSource().getName(), getNetworkFinderSource().getDNS(), ClockUtil.now().getTimestamp());
+        lastQueryTime = new QueryTime(getNetworkSource().getName(), getNetworkSource().getDNS(), ClockUtil.now().getTimestamp());
         SodDB.getSingleton().putQueryTime(lastQueryTime);
         SodDB.commit();
         logger.info("Network arm finished.");
@@ -747,7 +747,7 @@ public class NetworkArm implements Arm {
     private ChannelGrouper channelGrouper = new ChannelGrouper();
     
 
-    protected NetworkFinder getNetworkFinderSource() {
+    protected NetworkFinder getNetworkSource() {
         return finder;
     }
     
