@@ -369,7 +369,7 @@ public class NetworkArm implements Arm {
 
     void finish() {
         armFinished = true;
-        lastQueryTime = new QueryTime(getNetworkFinderSource().getName(), getNetworkFinderSource().getDNS(), ClockUtil.wayPast().getTimestamp());
+        lastQueryTime = new QueryTime(getNetworkFinderSource().getName(), getNetworkFinderSource().getDNS(), ClockUtil.now().getTimestamp());
         SodDB.getSingleton().putQueryTime(lastQueryTime);
         SodDB.commit();
         logger.info("Network arm finished.");
