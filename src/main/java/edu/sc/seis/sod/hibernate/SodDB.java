@@ -807,8 +807,15 @@ public class SodDB extends AbstractHibernateDB {
     }
 
     public int putQueryTime(QueryTime qtime) {
-        Integer dbid = (Integer)getSession().save(qtime);
-        return dbid.intValue();
+        QueryTime indb = getQueryTime(qtime.getServerName(), qtime.getServerDNS());
+        if (indb != null) {
+            indb.setTime(qtime.getTime());
+            getSession().saveOrUpdate(indb);
+            return indb.getDbid();
+        } else {
+            Integer dbid = (Integer)getSession().save(qtime);
+            return dbid.intValue();
+        }
     }
 
     public Version getDBVersion() {
