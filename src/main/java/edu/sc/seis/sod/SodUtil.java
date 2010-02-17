@@ -45,6 +45,7 @@ import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
+import edu.sc.seis.sod.source.event.MicroSecondTimeRangeSupplier;
 import edu.sc.seis.sod.status.TemplateFileLoader;
 import edu.sc.seis.sod.subsetter.LatitudeRange;
 import edu.sc.seis.sod.subsetter.LongitudeRange;
@@ -257,7 +258,7 @@ public class SodUtil {
         } // end of try-catch
     }
 
-    public static Time loadTime(Element el) throws ConfigurationException {
+    public static MicroSecondDateSupplier loadTime(Element el) throws ConfigurationException {
         return loadTime(el, false);
     }
 
@@ -265,7 +266,7 @@ public class SodUtil {
      * If endOfDay is true, and the hours, minutes and seconds are unspecified
      * by this time element, those fields are set to the end of the day
      */
-    public static Time loadTime(Element el, boolean endOfDay) throws ConfigurationException {
+    public static MicroSecondDateSupplier loadTime(final Element el, boolean endOfDay) throws ConfigurationException {
         NodeList kids = el.getChildNodes();
         for(int i = 0; i < kids.getLength(); i++) {
             Node node = kids.item(i);
@@ -275,31 +276,43 @@ public class SodUtil {
                 if(tagName.equals("earlier") || tagName.equals("later")) {
                     return loadRelativeTime(element);
                 } else if(tagName.equals("now")) {
-                    return ClockUtil.now().getFissuresTime();
+                    return new MicroSecondDateSupplier() {
+                        public MicroSecondDate load() { return ClockUtil.now(); }
+                    };
                 } else if(tagName.equals("future")) {
-                    return ClockUtil.wayFuture().getFissuresTime();
+                    return new MicroSecondDateSupplier() {
+                        public MicroSecondDate load() {
+                            return ClockUtil.wayFuture();
+                        }
+                    };
                 } else {
                     return loadSplitupTime(el, endOfDay);
                 }
             }
         }
-        return new Time(getNestedText(el).trim(), 0);
+        return new MicroSecondDateSupplier() {
+            final MicroSecondDate date = new MicroSecondDate(new Time(getNestedText(el).trim(), 0));
+            public MicroSecondDate load() {  return date; }
+        };
     }
 
-    private static Time loadSplitupTime(Element element, boolean ceiling)
+    private static MicroSecondDateSupplier loadSplitupTime(Element element, boolean ceiling)
             throws ConfigurationException {
         int year = DOMHelper.extractInt(element, "year", -1);
         if(year == -1) {
             throw new ConfigurationException("No year given");
         }
-        Calendar cal = createCalendar(year,
+        final Calendar cal = createCalendar(year,
                                       DOMHelper.extractInt(element, "month", -1),
                                       DOMHelper.extractInt(element, "day", -1),
                                       DOMHelper.extractInt(element, "hour", -1),
                                       DOMHelper.extractInt(element, "minute", -1),
                                       DOMHelper.extractInt(element, "second", -1),
                                       ceiling);
-        return new MicroSecondDate(cal.getTime()).getFissuresTime();
+        return new MicroSecondDateSupplier() {
+            final MicroSecondDate date =  new MicroSecondDate(cal.getTime());
+            public MicroSecondDate load() {  return date; }
+        };
     }
 
     /**
@@ -336,13 +349,17 @@ public class SodUtil {
         }
     }
 
-    private static Time loadRelativeTime(Element el) throws ConfigurationException {
-        TimeInterval duration = loadTimeInterval(DOMHelper.getElement(el, "timeInterval"));
+    private static MicroSecondDateSupplier loadRelativeTime(Element el) throws ConfigurationException {
+        final TimeInterval duration = loadTimeInterval(DOMHelper.getElement(el, "timeInterval"));
         MicroSecondDate now = ClockUtil.now();
         if(el.getTagName().equals("earlier")) {
-            return now.subtract(duration).getFissuresTime();
+            return new MicroSecondDateSupplier() {
+                public MicroSecondDate load() {return ClockUtil.now().subtract(duration);}
+            };
         }
-        return now.add(duration).getFissuresTime();
+        return new MicroSecondDateSupplier() {
+            public MicroSecondDate load() {return ClockUtil.now().add(duration);}
+        };
     }
 
     public static TimeInterval loadTimeInterval(Element config) throws ConfigurationException {
@@ -449,9 +466,9 @@ public class SodUtil {
         return unitRange;
     }
 
-    public static MicroSecondTimeRange loadTimeRange(Element config) throws ConfigurationException {
+    public static MicroSecondTimeRangeSupplier loadTimeRange(Element config) throws ConfigurationException {
         NodeList children = config.getChildNodes();
-        Time begin = null, end = null;
+        MicroSecondDateSupplier begin = null, end = null;
         for(int i = 0; i < children.getLength(); i++) {
             if(children.item(i) instanceof Element) {
                 Element subElement = (Element)children.item(i);
@@ -463,7 +480,7 @@ public class SodUtil {
                 }
             }
         }
-        return new MicroSecondTimeRange(begin, end);
+        return new BeginEndTimeRangeSupplier(begin, end);
     }
 
     public static Dimension loadDimensions(Element element) throws Exception {

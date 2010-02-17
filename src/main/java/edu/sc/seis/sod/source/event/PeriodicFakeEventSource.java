@@ -25,7 +25,7 @@ public class PeriodicFakeEventSource implements EventSource {
     }
 
     public PeriodicFakeEventSource(Element config) throws ConfigurationException {
-        startTime = new MicroSecondDate(SodUtil.loadTime(SodUtil.getElement(config, "startTime")));
+        startTime = SodUtil.loadTime(SodUtil.getElement(config, "startTime")).load();
         interval = SodUtil.loadTimeInterval(SodUtil.getElement(config, "interval"));
         numEvents = SodUtil.loadInt(config, "numEvents", -1);
         nextEventTime = startTime;

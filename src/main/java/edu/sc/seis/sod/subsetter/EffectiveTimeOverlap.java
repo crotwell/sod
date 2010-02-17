@@ -8,21 +8,22 @@ import edu.iris.Fissures.model.TimeUtils;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.source.event.MicroSecondTimeRangeSupplier;
 
 public abstract class EffectiveTimeOverlap implements Subsetter{
     public EffectiveTimeOverlap(edu.iris.Fissures.TimeRange range) {
         this(new MicroSecondDate(range.start_time), new MicroSecondDate(range.end_time));
     }
 
-    public EffectiveTimeOverlap(MicroSecondDate start, MicroSecondDate end) {
-        this.start = start;
-        this.end = end;
+    public EffectiveTimeOverlap(final MicroSecondDate start, final MicroSecondDate end) {
+        timeRange = new MicroSecondTimeRangeSupplier() {
+            MicroSecondTimeRange range = new MicroSecondTimeRange(start, end);
+            public MicroSecondTimeRange getMSTR() { return range; }
+            };
     }
 
     public EffectiveTimeOverlap(Element config) throws ConfigurationException{
-        MicroSecondTimeRange timeRange = SodUtil.loadTimeRange(config);
-        start = timeRange.getBeginTime();
-        end = timeRange.getEndTime();
+        timeRange = SodUtil.loadTimeRange(config);
     }
 
     public boolean overlaps(edu.iris.Fissures.TimeRange otherRange) {
@@ -37,6 +38,9 @@ public abstract class EffectiveTimeOverlap implements Subsetter{
     }
     
     public boolean overlaps(MicroSecondDate otherStart, MicroSecondDate otherEnd) {
+        MicroSecondTimeRange mstr = timeRange.getMSTR();
+        MicroSecondDate start = mstr.getBeginTime();
+        MicroSecondDate end = mstr.getEndTime();
         if (end == null && start == null) {
             return true;
         } else if (end == null && start.before(otherEnd)) {
@@ -50,7 +54,7 @@ public abstract class EffectiveTimeOverlap implements Subsetter{
         }
     }
 
-    private MicroSecondDate start, end;
+    private MicroSecondTimeRangeSupplier timeRange;
 
     private static Logger logger = Logger.getLogger(EffectiveTimeOverlap.class);
 }// EffectiveTimeOverlap

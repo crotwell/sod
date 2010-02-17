@@ -9,6 +9,7 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.MicroSecondDateSupplier;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.source.event.MicroSecondTimeRangeSupplier;
 import edu.sc.seis.sod.status.StringTree;
@@ -21,7 +22,7 @@ public class OriginTimeRange implements OriginSubsetter, MicroSecondTimeRangeSup
         end = makeLoader(config, "endTime");
     }
 
-    private MicroSecondDateLoader makeLoader(Element config, String time)
+    private MicroSecondDateSupplier makeLoader(Element config, String time)
             throws ConfigurationException {
         Element timeEl = DOMHelper.getElement(config, time);
         Element network = null;
@@ -36,7 +37,7 @@ public class OriginTimeRange implements OriginSubsetter, MicroSecondTimeRangeSup
         if(network != null) {
             final String netElName = network.getLocalName();
             final NetworkTimeRange ntr = new NetworkTimeRange();
-            return new MicroSecondDateLoader() {
+            return new MicroSecondDateSupplier() {
 
                 public MicroSecondDate load() {
                     if(netElName.indexOf("Start") != -1) {
@@ -47,14 +48,7 @@ public class OriginTimeRange implements OriginSubsetter, MicroSecondTimeRangeSup
                 }
             };
         } else {
-            final MicroSecondDate date = new MicroSecondDate(SodUtil.loadTime(timeEl,
-                                                                              time.indexOf("end") != -1));
-            return new MicroSecondDateLoader() {
-
-                public MicroSecondDate load() {
-                    return date;
-                }
-            };
+            return SodUtil.loadTime(timeEl, time.indexOf("end") != -1);
         }
     }
 
@@ -69,12 +63,7 @@ public class OriginTimeRange implements OriginSubsetter, MicroSecondTimeRangeSup
         return new StringTreeLeaf(this, getMSTR().contains(new MicroSecondDate(origin.getOriginTime())));
     }
 
-    public interface MicroSecondDateLoader {
-
-        public MicroSecondDate load();
-    }
-
     private MicroSecondTimeRange range;
 
-    private MicroSecondDateLoader begin, end;
+    private MicroSecondDateSupplier begin, end;
 }// EventTimeRange
