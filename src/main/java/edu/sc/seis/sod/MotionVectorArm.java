@@ -183,7 +183,8 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                 return;
             }
         }
-        if (dcLocator == null) {
+        if (getProcesses().length == 0 
+                && availData.getClass().equals(PassAvailableData.class)) {
             if (firstRequest) {
                 firstRequest = false;
                 logger.info("No seismogram data center has been set, so no data is being requested.  If you're only generating BreqFast requests, this is fine.  Otherwise, it's probably an error.");
