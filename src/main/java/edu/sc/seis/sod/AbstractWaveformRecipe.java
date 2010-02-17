@@ -11,7 +11,10 @@ import org.w3c.dom.NodeList;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
+import edu.sc.seis.sod.subsetter.dataCenter.FixedDataCenter;
+import edu.sc.seis.sod.subsetter.dataCenter.SeismogramDCLocator;
 import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
+import edu.sc.seis.sod.subsetter.eventStation.PassEventStation;
 
 
 public abstract class AbstractWaveformRecipe  {
@@ -83,7 +86,13 @@ public abstract class AbstractWaveformRecipe  {
         }
     }
     
-    public abstract EventStationSubsetter getEventStationSubsetter();
+    public EventStationSubsetter getEventStationSubsetter() {
+        return eventStation;
+    }
     
     public abstract void add(WaveformProcess proc);
+
+    protected EventStationSubsetter eventStation = new PassEventStation();;
+    
+    protected SeismogramDCLocator dcLocator = new FixedDataCenter();
 }

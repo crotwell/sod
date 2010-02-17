@@ -71,11 +71,6 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
         } // end of else
     }
 
-    @Override
-    public EventStationSubsetter getEventStationSubsetter() {
-        return eventStation;
-    }
-
     public EventChannelSubsetter getEventChannelSubsetter() {
         return eventChannel;
     }
@@ -162,10 +157,11 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                 return;
             }
         }
-        if(getSeismogramDCLocator() == null) {
+        if(getProcesses().length == 0 
+                && getAvailableDataSubsetter().getClass().equals(PassAvailableData.class)) {
             if(firstRequest) {
                 firstRequest = false;
-                logger.info("No seismogram data center has been set, so no data is being requested.  If you're only generating BreqFast requests, this is fine.  Otherwise, it's probably an error.");
+                logger.info("No seismogram processors have been set, so no data is being requested.  If you're only generating BreqFast requests, this is fine.  Otherwise, it's probably an error.");
             }
             ecp.update(Status.get(Stage.PROCESSOR, Standing.SUCCESS));
             return;
@@ -453,8 +449,6 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
         Start.createRetryStrategy(-1).serverRecovered(dataCenter);
     }
 
-    private EventStationSubsetter eventStation = new PassEventStation();;
-
     private EventChannelSubsetter eventChannel = new PassEventChannel();
 
     private RequestGenerator requestGenerator;
@@ -464,8 +458,6 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
     private AvailableDataSubsetter availData = new PassAvailableData();
 
     private LinkedList<WaveformProcess> processes = new LinkedList<WaveformProcess>();
-
-    private SeismogramDCLocator dcLocator = new FixedDataCenter();
 
     public static final String NO_DATA = "no_data";
 

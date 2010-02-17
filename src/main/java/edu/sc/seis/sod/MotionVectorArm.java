@@ -97,7 +97,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
     public void handle(Element el) throws ConfigurationException {
         Object sodObject = SodUtil.load(el, PACKAGES);
         if (sodObject instanceof EventStationSubsetter) {
-            eventStationSubsetter = (EventStationSubsetter)sodObject;
+            eventStation = (EventStationSubsetter)sodObject;
         } else if (sodObject instanceof WaveformMonitor) {
             addStatusMonitor((WaveformMonitor)sodObject);
         } else if (sodObject instanceof EventVectorSubsetter) {
@@ -124,12 +124,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
             throw new ConfigurationException("Unknown tag in MotionVectorArm config. " + el.getLocalName());
         } // end of else
     }
-
-    @Override
-    public EventStationSubsetter getEventStationSubsetter() {
-        return eventStationSubsetter;
-    }
-
+    
     public void processMotionVectorArm(EventVectorPair ecp) {
         StringTree passed;
         CacheEvent eventAccess = ecp.getEvent();
@@ -626,15 +621,11 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
         Start.createRetryStrategy(-1).serverRecovered(dataCenter);
     }
 
-    private EventStationSubsetter eventStationSubsetter = new PassEventStation();
-
     private EventVectorSubsetter eventChannelGroup = new PassEventChannel();
 
     private VectorRequestGenerator requestGenerator;
 
     private VectorRequest request = new PassRequest();
-
-    private SeismogramDCLocator dcLocator = new FixedDataCenter();
 
     private VectorAvailableDataSubsetter availData = new PassAvailableData();
 
