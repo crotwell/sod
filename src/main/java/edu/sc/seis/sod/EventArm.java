@@ -105,6 +105,7 @@ public class EventArm implements Arm {
     }
 
     private void getEvents() throws Exception {
+        waitForProcessing();
         for (EventSource source : sources) {
             TimeInterval wait = source.getWaitBeforeNext();
             if ((lastTime.get(source) == null || lastTime.get(source).add(wait).before(ClockUtil.now()))
