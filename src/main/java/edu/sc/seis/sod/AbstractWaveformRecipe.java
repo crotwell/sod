@@ -11,6 +11,8 @@ import org.w3c.dom.NodeList;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
+import edu.sc.seis.sod.subsetter.availableData.AvailableDataSubsetter;
+import edu.sc.seis.sod.subsetter.availableData.SomeCoverage;
 import edu.sc.seis.sod.subsetter.dataCenter.FixedDataCenter;
 import edu.sc.seis.sod.subsetter.dataCenter.SeismogramDCLocator;
 import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
@@ -95,4 +97,7 @@ public abstract class AbstractWaveformRecipe  {
     protected EventStationSubsetter eventStation = new PassEventStation();;
     
     protected SeismogramDCLocator dcLocator = new FixedDataCenter();
+
+    protected static final AvailableDataSubsetter defaultAvailableDataSubsetter = new SomeCoverage();
+    
 }

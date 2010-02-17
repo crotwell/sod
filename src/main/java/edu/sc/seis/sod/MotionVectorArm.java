@@ -36,7 +36,9 @@ import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
 import edu.sc.seis.sod.subsetter.Subsetter;
 import edu.sc.seis.sod.subsetter.availableData.AvailableDataSubsetter;
 import edu.sc.seis.sod.subsetter.availableData.PassAvailableData;
+import edu.sc.seis.sod.subsetter.availableData.SomeCoverage;
 import edu.sc.seis.sod.subsetter.availableData.vector.ANDAvailableDataWrapper;
+import edu.sc.seis.sod.subsetter.availableData.vector.ORAvailableDataWrapper;
 import edu.sc.seis.sod.subsetter.availableData.vector.VectorAvailableDataSubsetter;
 import edu.sc.seis.sod.subsetter.dataCenter.FixedDataCenter;
 import edu.sc.seis.sod.subsetter.dataCenter.SeismogramDCLocator;
@@ -184,7 +186,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
             }
         }
         if (getProcesses().length == 0 
-                && availData.getClass().equals(PassAvailableData.class)) {
+                && availData.equals(defaultVectorAvailableData)) {
             if (firstRequest) {
                 firstRequest = false;
                 logger.info("No seismogram data center has been set, so no data is being requested.  If you're only generating BreqFast requests, this is fine.  Otherwise, it's probably an error.");
@@ -627,8 +629,10 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
     private VectorRequestGenerator requestGenerator;
 
     private VectorRequest request = new PassRequest();
-
-    private VectorAvailableDataSubsetter availData = new PassAvailableData();
+    
+    private static final VectorAvailableDataSubsetter defaultVectorAvailableData = new ORAvailableDataWrapper(defaultAvailableDataSubsetter);
+    
+    private VectorAvailableDataSubsetter availData = defaultVectorAvailableData;
 
     private LinkedList<WaveformVectorProcess> processes = new LinkedList<WaveformVectorProcess>();
 

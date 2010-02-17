@@ -32,6 +32,7 @@ import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
 import edu.sc.seis.sod.subsetter.Subsetter;
 import edu.sc.seis.sod.subsetter.availableData.AvailableDataSubsetter;
 import edu.sc.seis.sod.subsetter.availableData.PassAvailableData;
+import edu.sc.seis.sod.subsetter.availableData.SomeCoverage;
 import edu.sc.seis.sod.subsetter.dataCenter.FixedDataCenter;
 import edu.sc.seis.sod.subsetter.dataCenter.SeismogramDCLocator;
 import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
@@ -158,7 +159,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
             }
         }
         if(getProcesses().length == 0 
-                && getAvailableDataSubsetter().getClass().equals(PassAvailableData.class)) {
+                && getAvailableDataSubsetter().equals(defaultAvailableDataSubsetter)) {
             if(firstRequest) {
                 firstRequest = false;
                 logger.info("No seismogram processors have been set, so no data is being requested.  If you're only generating BreqFast requests, this is fine.  Otherwise, it's probably an error.");
@@ -454,8 +455,8 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
     private RequestGenerator requestGenerator;
 
     private Request request = new PassRequest();
-
-    private AvailableDataSubsetter availData = new PassAvailableData();
+    
+    private AvailableDataSubsetter availData = defaultAvailableDataSubsetter;
 
     private LinkedList<WaveformProcess> processes = new LinkedList<WaveformProcess>();
 
