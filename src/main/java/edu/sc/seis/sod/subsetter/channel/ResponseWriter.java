@@ -4,15 +4,16 @@ import java.io.FileNotFoundException;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.ResponsePrint;
 import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
@@ -30,12 +31,13 @@ public class ResponseWriter implements ChannelSubsetter {
         velocitizer = new PrintlineVelocitizer(new String[] {template});
     }
 
-    public StringTree accept(Channel chan, ProxyNetworkAccess network)
+    public StringTree accept(ChannelImpl chan, ProxyNetworkAccess network)
             throws Exception {
         try {
             ChannelId channel_id = chan.get_id();
             Instrumentation inst = network.retrieve_instrumentation(channel_id,
                                                                     channel_id.begin_time);
+            NetworkDB.getSingleton().putInstrumentation(chan, inst);
             String response = ResponsePrint.printResponse(channel_id, inst);
             velocitizer.evaluate(template, response, chan);
         } catch(ChannelNotFound e) {

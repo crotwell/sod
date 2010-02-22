@@ -1,9 +1,9 @@
 package edu.sc.seis.sod.subsetter.channel;
 
-import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.Response;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
 import edu.sc.seis.fissuresUtil.cache.InstrumentationLoader;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
@@ -12,7 +12,7 @@ import edu.sc.seis.sod.status.StringTree;
 
 public abstract class AbstractResponseSubsetter implements ChannelSubsetter {
 
-	public StringTree accept(Channel channel, ProxyNetworkAccess network)
+	public StringTree accept(ChannelImpl channel, ProxyNetworkAccess network)
 			throws Exception {
 		Instrumentation instrumentation;
 		try {

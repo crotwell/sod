@@ -2,10 +2,10 @@ package edu.sc.seis.sod.subsetter.channel;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.model.SamplingImpl;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
@@ -23,7 +23,7 @@ public class Sampling extends RangeSubsetter implements ChannelSubsetter {
         max = getHertz((int)getMaxValue(), interval);
     }
 
-    public StringTree accept(Channel channel, ProxyNetworkAccess network)
+    public StringTree accept(ChannelImpl channel, ProxyNetworkAccess network)
             throws Exception {
         return new StringTreeLeaf(this, accept((SamplingImpl)channel.getSamplingInfo()));
     }

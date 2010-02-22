@@ -15,7 +15,7 @@ import edu.sc.seis.sod.status.StringTree;
 
 public class IsGroupable implements ChannelSubsetter {
 
-	public StringTree accept(Channel channel, ProxyNetworkAccess network)
+	public StringTree accept(ChannelImpl channel, ProxyNetworkAccess network)
 			throws Exception {
         Channel[] allChans = network.retrieve_for_station(channel.getSite().getStation().get_id());
         ArrayList<ChannelImpl> siteChans = new ArrayList<ChannelImpl>();

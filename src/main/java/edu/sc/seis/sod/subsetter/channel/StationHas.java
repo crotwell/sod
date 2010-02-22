@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.status.Fail;
@@ -20,10 +20,10 @@ public class StationHas extends CompositeChannelSubsetter {
         super(config);
     }
 
-    public StringTree accept(Channel channel, ProxyNetworkAccess network)
+    public StringTree accept(ChannelImpl channel, ProxyNetworkAccess network)
             throws Exception {
         Iterator it = subsetters.iterator();
-        Channel[] allChans = network.retrieve_for_station(channel.getSite().getStation().get_id());
+        ChannelImpl[] allChans = ChannelImpl.implize(network.retrieve_for_station(channel.getSite().getStation().get_id()));
         while(it.hasNext()) {
             if(!atLeastOneChannelPasses((ChannelSubsetter)it.next(),
                                         allChans,
@@ -35,7 +35,7 @@ public class StationHas extends CompositeChannelSubsetter {
     }
 
     private static boolean atLeastOneChannelPasses(ChannelSubsetter filter,
-                                                   Channel[] chans,
+                                                   ChannelImpl[] chans,
                                                    ProxyNetworkAccess net)
             throws Exception {
         for(int i = 0; i < chans.length; i++) {

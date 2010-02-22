@@ -1,11 +1,10 @@
 package edu.sc.seis.sod.subsetter.channel;
 
-import org.apache.log4j.Category;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.TimeRange;
-import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.status.StringTree;
@@ -28,9 +27,10 @@ public class ChannelEffectiveTimeOverlap extends EffectiveTimeOverlap implements
         super(start, end);
     }
 
-    public StringTree accept(Channel channel, ProxyNetworkAccess network) {
+    public StringTree accept(ChannelImpl channel, ProxyNetworkAccess network) {
         return new StringTreeLeaf(this, overlaps(channel.getEffectiveTime()));
     }
 
-    static Category logger = Category.getInstance(ChannelEffectiveTimeOverlap.class.getName());
+    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(ChannelEffectiveTimeOverlap.class);
+
 }// ChannelEffectiveTimeOverlap

@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.sod.status.Fail;
@@ -12,7 +13,7 @@ import edu.sc.seis.sod.status.StringTree;
 
 public class HasResponse implements ChannelSubsetter {
 
-    public StringTree accept(Channel channel, ProxyNetworkAccess network) {
+    public StringTree accept(ChannelImpl channel, ProxyNetworkAccess network) {
         try {
             network.retrieve_instrumentation(channel.get_id(),
                                              channel.get_id().begin_time);

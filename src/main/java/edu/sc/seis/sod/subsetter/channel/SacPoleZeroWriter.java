@@ -4,12 +4,12 @@ import java.io.FileNotFoundException;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.FilterType;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
@@ -34,7 +34,7 @@ public class SacPoleZeroWriter implements ChannelSubsetter {
         velocitizer = new PrintlineVelocitizer(new String[] {template});
     }
 
-    public StringTree accept(Channel chan, ProxyNetworkAccess network)
+    public StringTree accept(ChannelImpl chan, ProxyNetworkAccess network)
             throws Exception {
         ChannelId channel_id = chan.get_id();
         Instrumentation inst;

@@ -4,13 +4,13 @@ import java.util.HashMap;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
@@ -27,7 +27,7 @@ public class HadDataLastWeek implements ChannelSubsetter {
         fixDC = new FixedDataCenter(DOMHelper.getElement(el, "fixedDataCenter"));
     }
 
-    public StringTree accept(Channel channel, ProxyNetworkAccess network)
+    public StringTree accept(ChannelImpl channel, ProxyNetworkAccess network)
             throws Exception {
         MicroSecondDate now = ClockUtil.now();
         ChannelEffectiveTimeOverlap overlap = new ChannelEffectiveTimeOverlap(now.subtract(makeDayInterval(7)), now);
