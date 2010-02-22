@@ -2,6 +2,7 @@ package edu.sc.seis.sod;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +23,12 @@ public class CookieJar implements Context {
     Map<String, Serializable> stationCookies;
 
     Map<String, Serializable> channelCookies = null;
+    
+    /** sometime you need an empty cookie jar...*/
+    public CookieJar() {
+        stationCookies = new HashMap<String, Serializable>();
+        pair = null; // likely bad, but don't think we want to recreate the pair here
+    }
 
     public CookieJar(CookieEventPair pair,
                      Map<String, Serializable> stationCookies) {
