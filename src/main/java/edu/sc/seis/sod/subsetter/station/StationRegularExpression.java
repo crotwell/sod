@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
-import edu.iris.Fissures.IfNetwork.Station;
+import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.FilterNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.FilterNetworkDC;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
@@ -24,7 +24,7 @@ public class StationRegularExpression implements StationSubsetter {
         patterns = FilterNetworkDC.readPattern(url);
     }
 
-    public StringTree accept(Station station, NetworkAccess network) throws Exception {
+    public StringTree accept(StationImpl station, NetworkAccess network) throws Exception {
         for(int i = 0; i < patterns.length; i++) {
             if(patterns[i].matcher(FilterNetworkAccess.getStationString(station.get_id()))
                     .matches()) { return new Pass(this); }

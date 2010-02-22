@@ -4,7 +4,7 @@ import org.w3c.dom.Element;
 
 import edu.iris.Fissures.BoxArea;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
-import edu.iris.Fissures.IfNetwork.Station;
+import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.bag.AreaUtil;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
@@ -17,7 +17,7 @@ public class StationBoxArea implements StationSubsetter {
         this.ba = SodUtil.loadBoxArea(el);
     }
 
-    public StringTree accept(Station station, NetworkAccess network) {
+    public StringTree accept(StationImpl station, NetworkAccess network) {
         return new StringTreeLeaf(this,
                                   AreaUtil.inArea(ba, station.getLocation()));
     }

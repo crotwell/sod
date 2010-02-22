@@ -1,6 +1,6 @@
 package edu.sc.seis.sod.subsetter.station;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
-import edu.iris.Fissures.IfNetwork.Station;
+import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.Subsetter;
 
@@ -16,6 +16,6 @@ import edu.sc.seis.sod.subsetter.Subsetter;
 
 public interface StationSubsetter extends Subsetter{
 
-    public StringTree accept(Station station, NetworkAccess network) throws Exception;
+    public StringTree accept(StationImpl station, NetworkAccess network) throws Exception;
 
 }// StationSubsetter

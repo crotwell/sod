@@ -7,6 +7,7 @@ import edu.iris.Fissures.TimeRange;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
@@ -28,7 +29,7 @@ public class StationEffectiveTimeOverlap extends EffectiveTimeOverlap implements
         super(start, end);
     }
 
-    public StringTree accept(Station station, NetworkAccess network) {
+    public StringTree accept(StationImpl station, NetworkAccess network) {
         return new StringTreeLeaf(this, overlaps(station));
     }
     

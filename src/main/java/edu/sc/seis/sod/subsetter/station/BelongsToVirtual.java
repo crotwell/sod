@@ -10,6 +10,7 @@ import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.StationIdUtil;
+import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
@@ -61,7 +62,7 @@ public class BelongsToVirtual implements StationSubsetter {
         this.refreshInterval = refreshInterval;
     }
 
-    public StringTree accept(Station station, NetworkAccess network) {
+    public StringTree accept(StationImpl station, NetworkAccess network) {
         refreshStations();
         for(int i = 0; i < stations.length; i++) {
             if(StationIdUtil.areEqual(station, stations[i])) {

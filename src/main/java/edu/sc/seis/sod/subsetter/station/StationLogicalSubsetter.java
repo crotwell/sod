@@ -9,7 +9,7 @@ import java.util.List;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
-import edu.iris.Fissures.IfNetwork.Station;
+import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
@@ -48,7 +48,7 @@ public abstract class StationLogicalSubsetter extends LogicalSubsetter {
         return createSubsetter(s);
     }
     
-    public StringTree accept(Station sta, NetworkAccess network) throws Exception {
+    public StringTree accept(StationImpl sta, NetworkAccess network) throws Exception {
         List reasons = new ArrayList(filterList.size());
         Iterator it = filterList.iterator();
         while(it.hasNext()) {
@@ -77,7 +77,7 @@ public abstract class StationLogicalSubsetter extends LogicalSubsetter {
         return new StationSubsetter() {
             NetworkSubsetter ns = NetworkLogicalSubsetter.createSubsetter(s);
 
-            public StringTree accept(Station station, NetworkAccess network) throws Exception {
+            public StringTree accept(StationImpl station, NetworkAccess network) throws Exception {
                 return ns.accept(station.getNetworkAttr());
             }
             

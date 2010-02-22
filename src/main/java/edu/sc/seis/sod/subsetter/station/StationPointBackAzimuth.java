@@ -3,8 +3,8 @@ package edu.sc.seis.sod.subsetter.station;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
-import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.model.UnitImpl;
+import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.bag.DistAz;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
@@ -18,7 +18,7 @@ public class StationPointBackAzimuth extends AbstractOriginPoint implements
         super(config);
     }
 
-    public StringTree accept(Station station, NetworkAccess network) {
+    public StringTree accept(StationImpl station, NetworkAccess network) {
         double oLat = station.getLocation().latitude;
         double oLon = station.getLocation().longitude;
         DistAz distaz = new DistAz(oLat, oLon, latitude, longitude);
