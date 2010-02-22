@@ -3,6 +3,7 @@ package edu.sc.seis.sod.process.waveform;
 import java.awt.Dimension;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.text.AbstractWriter;
@@ -43,6 +44,7 @@ import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.hibernate.RecordSectionItem;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.status.StringTreeLeaf;
+import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
 import edu.sc.seis.sod.subsetter.eventChannel.PassEventChannel;
 import edu.sc.seis.sod.subsetter.requestGenerator.vector.RequestGeneratorWrapper;
 import edu.sc.seis.sod.subsetter.requestGenerator.vector.VectorRequestGenerator;
@@ -62,10 +64,10 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         recordSectionId = SodUtil.getText(SodUtil.getElement(config, "recordSectionId"));
         saveSeisId = DOMHelper.extractText(config, "writerName", orientationId);
         if(DOMHelper.hasElement(config, "embeddedEventChannelProcessor")) {
-            channelAcceptor = new EmbeddedEventChannelProcessor(SodUtil.getElement(config,
-                                                                                   "embeddedEventChannelProcessor"));
+            channelAcceptor = (EventChannelSubsetter)SodUtil.load(SodUtil.getFirstEmbeddedElement(SodUtil.getElement(config, "embeddedEventChannelProcessor")),
+            "eventChannel");
         } else {
-            channelAcceptor = new EmbeddedEventChannelProcessor(new PassEventChannel());
+            channelAcceptor = new PassEventChannel();
         }
         if(DOMHelper.hasElement(config, "percentSeisHeight")) {
             percentSeisHeight = new Double(SodUtil.getText(SodUtil.getElement(config,
@@ -168,26 +170,17 @@ public class RSChannelInfoPopulator implements WaveformProcess {
                                RequestFilter[] available,
                                LocalSeismogramImpl[] seismograms,
                                CookieJar cookieJar) throws Exception {
-        if( ! channelAcceptor.process(event,
+        if( ! channelAcceptor.accept(event,
                                    channel,
-                                   original,
-                                   available,
-                                   seismograms,
                                    cookieJar).isSuccess()) {
             return false;
         }
         URLDataSetSeismogram[] dss;
         synchronized(this) {
-            dss = extractSeismograms(event);
             URLDataSetSeismogram chanDSS = SeismogramFileRefDB.getSingleton().getDataSetSeismogram(channel.get_id(), 
                                                                                                    event, 
                                                                                                    ReduceTool.cover(original));
-            lastDSS[0].getDataSet().addDataSetSeismogram(chanDSS, new AuditInfo[0]);
-            URLDataSetSeismogram[] dssPlusOne = new URLDataSetSeismogram[lastDSS.length+1];
-            dssPlusOne[0] = chanDSS;
-            System.arraycopy(dss, 0, dssPlusOne, 1, lastDSS.length);
-            lastDSS = dssPlusOne;
-            dss = dssPlusOne;
+            dss = addToCache(event, channel, chanDSS).toArray(new URLDataSetSeismogram[0]);
         }
             SodDB soddb = SodDB.getSingleton();
             if(soddb.getRecordSectionItem(orientationId,
@@ -220,49 +213,56 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         return channelIds;
     }
 
-    public URLDataSetSeismogram[] extractSeismograms(CacheEvent event)
+    public  URLDataSetSeismogram[] extractSeismograms(CacheEvent event)
             throws Exception {
-        synchronized(this) {
-            if (lastDSS.length != 0 && event.equals(lastEvent)) {
-                return lastDSS;
-            } else {
-                // new event
-                URLDataSetSeismogram[] dss = extractSeismogramsFromDB(event);
-                lastEvent = event;
-                lastDSS = dss;
-                return lastDSS;
+        List<URLDataSetSeismogram> copy = extractSeismogramsFromDB(event);
+        List<URLDataSetSeismogram> out = new ArrayList<URLDataSetSeismogram>();
+        for (URLDataSetSeismogram urlDSS : copy) {
+            // this is bad, but not sure how to populate the cookie jar
+            if(channelAcceptor.accept(event, (ChannelImpl)urlDSS.getChannel(), new CookieJar()).isSuccess()) {
+                out.add(urlDSS);
             }
         }
+        return out.toArray(new URLDataSetSeismogram[0]);
     }
 
-    private URLDataSetSeismogram[] extractSeismogramsFromDB(CacheEvent event)
-            throws Exception {   
-        List<EventSeismogramFileReference> seisFileRefs = SeismogramFileRefDB.getSingleton().getSeismogramsForEvent(event);
-        DataSet ds = new MemoryDataSet("fake id", "temp name", getClass().getName(), new AuditInfo[0]);
-        ds.addParameter(StdDataSetParamNames.EVENT, event, new AuditInfo[0]);
-        List<URLDataSetSeismogram> dssList = new ArrayList<URLDataSetSeismogram>();
-        for (EventSeismogramFileReference esRef : seisFileRefs) {
-            try {
-            ChannelImpl chan = NetworkDB.getSingleton().getChannel(esRef.getNetworkCode(),
-                                                                   esRef.getStationCode(),
-                                                                   esRef.getSiteCode(),
-                                                                   esRef.getChannelCode(),
-                                                                   new MicroSecondDate(esRef.getBeginTime()));
-            if(channelAcceptor.eventChannelSubsetter.accept(event, chan, null).isSuccess()) {
-                RequestFilter[] rf = null;
-                if (Start.getWaveformRecipe() instanceof LocalSeismogramArm) {
-                    rf = ((LocalSeismogramArm)Start.getWaveformRecipe()).getRequestGenerator().generateRequest(event, chan, null);
-                } else {
-                    VectorRequestGenerator vrg = ((MotionVectorArm)Start.getWaveformRecipe()).getRequestGenerator();
-                    if (vrg instanceof RequestGeneratorWrapper) {
-                        rf = ((RequestGeneratorWrapper)vrg).getRequestGenerator().generateRequest(event, chan, null);
+    private synchronized static List<URLDataSetSeismogram> addToCache(CacheEvent event, ChannelImpl chan, URLDataSetSeismogram dss) throws Exception {
+        extractSeismogramsFromDB(event); // make sure cache is for current event
+        lastDSS.get(0).getDataSet().addDataSetSeismogram(dss, new AuditInfo[0]);
+        dss.getDataSet().addParameter(StdDataSetParamNames.CHANNEL, chan, new AuditInfo[0]);
+        lastDSS.add(dss);
+        return extractSeismogramsFromDB(event);
+    }
+    
+    private synchronized static List<URLDataSetSeismogram> extractSeismogramsFromDB(CacheEvent event)
+            throws Exception {  
+        if (lastDSS.size() == 0 || lastEvent.getDbid() != event.getDbid()) {
+            // new event
+            logger.debug("Not a repeat event, getting dss from db. lastEvent="+lastEvent+"  newEvent="+event);
+        
+            List<EventSeismogramFileReference> seisFileRefs = SeismogramFileRefDB.getSingleton().getSeismogramsForEvent(event);
+            DataSet ds = new MemoryDataSet("fake id", "temp name", "RSChannelInfoPopulator", new AuditInfo[0]);
+            ds.addParameter(StdDataSetParamNames.EVENT, event, new AuditInfo[0]);
+            List<URLDataSetSeismogram> dssList = new ArrayList<URLDataSetSeismogram>();
+            for (EventSeismogramFileReference esRef : seisFileRefs) {
+                try {
+                    ChannelImpl chan = NetworkDB.getSingleton().getChannel(esRef.getNetworkCode(),
+                                                                           esRef.getStationCode(),
+                                                                           esRef.getSiteCode(),
+                                                                           esRef.getChannelCode(),
+                                                                           new MicroSecondDate(esRef.getBeginTime()));
+                    RequestFilter[] rf = null;
+                    if (Start.getWaveformRecipe() instanceof LocalSeismogramArm) {
+                        rf = ((LocalSeismogramArm)Start.getWaveformRecipe()).getRequestGenerator().generateRequest(event, chan, null);
+                    } else {
+                        VectorRequestGenerator vrg = ((MotionVectorArm)Start.getWaveformRecipe()).getRequestGenerator();
+                        if (vrg instanceof RequestGeneratorWrapper) {
+                            rf = ((RequestGeneratorWrapper)vrg).getRequestGenerator().generateRequest(event, chan, null);
+                        }
                     }
-                }
-                URLDataSetSeismogram dss = esRef.getDataSetSeismogram(ds, ReduceTool.cover(rf));
-                dssList.add(dss);
-                ds.addParameter(StdDataSetParamNames.CHANNEL, chan, new AuditInfo[0]);
-                
-            }
+                    URLDataSetSeismogram dss = esRef.getDataSetSeismogram(ds, ReduceTool.cover(rf));
+                    dssList.add(dss);
+                    ds.addParameter(StdDataSetParamNames.CHANNEL, chan, new AuditInfo[0]);
             } catch (NotFound e) {
                 logger.error("no channel in dataset for id="
                              + esRef.getNetworkCode()+"."+esRef.getStationCode()+"."+esRef.getSiteCode()+"."+esRef.getChannelCode()
@@ -270,8 +270,14 @@ public class RSChannelInfoPopulator implements WaveformProcess {
                      continue;
             }
         }
+        lastEvent = event;
+        lastDSS = dssList;
+        
+        }
 
-        return (URLDataSetSeismogram[])dssList.toArray(new URLDataSetSeismogram[0]);
+        List<URLDataSetSeismogram> copy = new ArrayList<URLDataSetSeismogram>(lastDSS.size());
+        copy.addAll(lastDSS);
+        return copy;
     }
 
     public RecordSectionDisplay getConfiguredRSDisplay() {
@@ -345,11 +351,11 @@ public class RSChannelInfoPopulator implements WaveformProcess {
 
     private SeismogramDisplayConfiguration displayCreator;
 
-    private EmbeddedEventChannelProcessor channelAcceptor;
+    private EventChannelSubsetter channelAcceptor;
     
-    private CacheEvent lastEvent = null;
+    private static CacheEvent lastEvent = null;
     
-    private URLDataSetSeismogram[] lastDSS = new URLDataSetSeismogram[0];
+    private static List<URLDataSetSeismogram> lastDSS = new ArrayList<URLDataSetSeismogram>();
 
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(RSChannelInfoPopulator.class);
 }
