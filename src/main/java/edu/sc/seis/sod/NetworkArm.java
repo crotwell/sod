@@ -427,7 +427,7 @@ public class NetworkArm implements Arm {
             try {
                 CacheNetworkAccess netAccess = new LazyNetworkAccess((NetworkAttrImpl)net,
                                                                      getNetworkDC());
-                Station[] stations = netAccess.retrieve_stations();
+                StationImpl[] stations = StationImpl.implize(netAccess.retrieve_stations());
                 for(int i = 0; i < stations.length; i++) {
                     logger.debug("Station in NetworkArm: "
                             + StationIdUtil.toString(stations[i]));
@@ -474,6 +474,7 @@ public class NetworkArm implements Arm {
                 GlobalExceptionHandler.handle("Problem in method getSuccessfulStations for net "
                                                       + NetworkIdUtil.toString(net.get_id()),
                                               e);
+                NetworkDB.rollback();
             }
             StationImpl[] rtnValues = new StationImpl[arrayList.size()];
             rtnValues = (StationImpl[])arrayList.toArray(rtnValues);
