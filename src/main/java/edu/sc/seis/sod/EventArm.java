@@ -192,6 +192,8 @@ public class EventArm implements Arm {
                 synchronized(getWaveformArmSync()) {
                     getWaveformArmSync().notifyAll();
                 }
+                // close db connections as not needed while waiting
+                eventStatus.rollback();
                 wait();
             }
             numENPWaiting = SodDB.getSingleton().getNumEventNetworkWorkUnits(Standing.INIT);
