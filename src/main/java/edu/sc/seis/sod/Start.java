@@ -186,7 +186,7 @@ public class Start {
         System.exit(0);
     }
 
-    protected static void informUserOfBadNetworkAndExit(String networkCode, NetworkNotFound nnf) {
+    public static void informUserOfBadNetworkAndExit(String networkCode, NetworkNotFound nnf) {
         logger.fatal("Can't find "+networkCode+" network from server", nnf);
         System.err.println("You told SOD to use the '"
                 + networkCode + "' network, but the server does not think it exists. SOD is now cowardly quitting.");

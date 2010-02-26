@@ -58,16 +58,16 @@ public class RefreshNetworkArm extends TimerTask {
     void processNetwork(CacheNetworkAccess net) {
         try {
             logger.info("process "+NetworkIdUtil.toString(net.get_attributes()));
-            StationImpl[] stas = netArm.getSuccessfulStationsFromServer(net.get_attributes());
+            StationImpl[] stas = netArm.getSuccessfulStationsFromServer(net);
             logger.info("found "+stas.length+" stations in "+NetworkIdUtil.toString(net.get_attributes()));
             if (Start.getWaveformRecipe() != null || netArm.getChannelSubsetters().size() != 0) {
             if (Start.getWaveformRecipe() instanceof MotionVectorArm) {
                 for (int s = 0; s < stas.length; s++) {
-                    List<ChannelGroup> cg = netArm.getSuccessfulChannelGroupsFromServer(stas[s]);
+                    List<ChannelGroup> cg = netArm.getSuccessfulChannelGroupsFromServer(stas[s], net);
                 }
             } else {
                 for (int s = 0; s < stas.length; s++) {
-                    List<ChannelImpl> chans = netArm.getSuccessfulChannelsFromServer(stas[s]);
+                    List<ChannelImpl> chans = netArm.getSuccessfulChannelsFromServer(stas[s], net);
                 }
             }
             }

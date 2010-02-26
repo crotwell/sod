@@ -1,9 +1,17 @@
 package edu.sc.seis.sod.source.network;
 
+import java.util.List;
+
 import org.w3c.dom.Element;
 
+import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.StationId;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
+import edu.iris.Fissures.network.ChannelImpl;
+import edu.iris.Fissures.network.NetworkAttrImpl;
+import edu.iris.Fissures.network.StationImpl;
+import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.subsetter.AbstractSource;
 
@@ -28,4 +36,20 @@ public abstract class NetworkSource extends AbstractSource {
     }
 
     protected TimeInterval refreshInterval;
+    
+    protected String[] constrainingCodes;
+    
+    public void setConstrainingNetworkCodes(String[] constrainingCodes) {
+        this.constrainingCodes = constrainingCodes;
+    }
+    
+    public String[] getConstrainingNetworkCodes() {
+        return constrainingCodes;
+    }
+
+    public abstract List<CacheNetworkAccess> getNetworks();
+    
+    public abstract List<StationImpl> getStations(CacheNetworkAccess net);
+    
+    public abstract List<ChannelImpl> getChannels(CacheNetworkAccess net, StationImpl station);
 }
