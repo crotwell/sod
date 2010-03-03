@@ -385,6 +385,14 @@ public class NetworkArm implements Arm {
     
     StationImpl[] getSuccessfulStationsFromServer(CacheNetworkAccess net) {
         synchronized(this) {
+            NetworkAttrImpl netAttr;
+            try {
+                netAttr = NetworkDB.getSingleton().getNetwork(net.get_attributes().getDbid());
+            } catch(NotFound e1) {
+                // must not be in db yet???
+                throw new RuntimeException("Network not in db yet: "+NetworkIdUtil.toString(net.get_attributes()));
+            }
+            net = new CacheNetworkAccess(net, netAttr);
             statusChanged("Getting stations for "
                     + net.get_attributes().getName());
             ArrayList<Station> arrayList = new ArrayList<Station>();
@@ -397,7 +405,7 @@ public class NetworkArm implements Arm {
                 for (StationImpl currStation : stations) {
                     // hibernate gets angry if the network isn't the same object
                     // as the one already in the thread's session
-                    currStation.setNetworkAttr(net.get_attributes());
+                    currStation.setNetworkAttr(netAttr);
                     StringTree effResult = staEffectiveSubsetter.accept(currStation,
                                                                         net);
                     if(effResult.isSuccess()) {
