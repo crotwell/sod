@@ -64,7 +64,9 @@ public class StatefulEventDB {
         List<CacheEvent> ans = trans.query(q);
         List<StatefulEvent> out = new ArrayList<StatefulEvent>(ans.size());
         for(CacheEvent e : ans) {
-            out.add((StatefulEvent)e);
+            if (((StatefulEvent)e).getStatus().equals(success)) {
+                out.add((StatefulEvent)e);
+            }
         }
         return out;
     }
@@ -172,6 +174,34 @@ public class StatefulEventDB {
     }
     
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(StatefulEventDB.class);
+
+    public CacheEvent[] getByName(String name) {
+        String q = baseSuccessfulQuery+" AND " + "e.attr.name = :name";
+        Query query = trans.getSession().createQuery(q);
+        query.setString("name", name);
+        List result = query.list();
+        CacheEvent[] out = (CacheEvent[]) result.toArray(new CacheEvent[0]);
+        return out;
+    }
+    
+
+    private static Status success = Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                Standing.SUCCESS);
+    
+    private static String baseSuccessfulQuery = "from "+StatefulEvent.class.getName()+" e where " +
+     " ( e.status.stageInt = "+success.getStageInt()+" and e.status.standingInt = "+success.getStandingInt()+" ) ";
+
+    public String[] getCatalogs() {
+        return trans.getCatalogs();
+    }
+    
+    public String[] getContributors() {
+        return trans.getContributors();
+    }
+
+    public String[] getCatalogsFor(String contributor) {
+        return trans.getCatalogsFor(contributor);
+    }
 }
 
 class EventToStatefulDBTranslater extends EventDB {
