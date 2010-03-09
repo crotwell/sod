@@ -12,12 +12,12 @@ import org.apache.velocity.VelocityContext;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Site;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.iris.Fissures.network.StationImpl;
+import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.EventNetworkPair;
@@ -92,7 +92,7 @@ public class WaveformStationStatus extends AbstractVelocityStatus implements Wav
     public void change(Channel channel, Status s) {
     }
 
-    public void change(NetworkAccess net, Status status){
+    public void change(CacheNetworkAccess net, Status status){
     }
 
     public void change(Site site, Status s) {

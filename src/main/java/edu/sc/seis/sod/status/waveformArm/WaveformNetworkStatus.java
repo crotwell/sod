@@ -18,6 +18,7 @@ import edu.iris.Fissures.IfNetwork.Site;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
+import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.EventNetworkPair;
@@ -76,7 +77,7 @@ public class WaveformNetworkStatus extends AbstractVelocityStatus implements Wav
 
     public void change(Channel channel, Status s) {}
 
-    public void change(NetworkAccess networkAccess, Status s) {
+    public void change(CacheNetworkAccess networkAccess, Status s) {
         if (s.getStanding().equals(Standing.SUCCESS)) {
             // update the index list
             VelocityContext context = new VelocityContext();
