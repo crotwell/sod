@@ -5,6 +5,7 @@ import java.util.List;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.iris.Fissures.IfNetwork.StationId;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
@@ -12,6 +13,7 @@ import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
+import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.subsetter.AbstractSource;
 
@@ -30,7 +32,7 @@ public abstract class NetworkSource extends AbstractSource {
             refreshInterval = new TimeInterval(1, UnitImpl.FORTNIGHT);
         }
     }
-
+    
     public TimeInterval getRefreshInterval() {
         return this.refreshInterval;
     }
@@ -47,6 +49,11 @@ public abstract class NetworkSource extends AbstractSource {
         return constrainingCodes;
     }
 
+
+    public abstract CacheNetworkAccess getNetwork(NetworkAttrImpl attr);
+    
+    public abstract List<CacheNetworkAccess> getNetworkByName(String name) throws NetworkNotFound;
+    
     public abstract List<CacheNetworkAccess> getNetworks();
     
     public abstract List<StationImpl> getStations(CacheNetworkAccess net);
