@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Timer;
 
 import org.apache.log4j.Logger;
+import org.hibernate.NonUniqueObjectException;
 import org.omg.CORBA.BAD_PARAM;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -40,9 +41,11 @@ import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
+import edu.sc.seis.sod.hibernate.InstrumentationDBNetworkAccess;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.source.event.EventSource;
 import edu.sc.seis.sod.source.network.NetworkFinder;
+import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.networkArm.NetworkMonitor;
@@ -172,10 +175,6 @@ public class NetworkArm implements Arm {
         }
     }
 
-    public ProxyNetworkDC getNetworkDC() {
-        return getNetworkSource().getNetworkDC();
-    }
-
     public TimeInterval getRefreshInterval() {
         return getNetworkSource().getRefreshInterval();
     }
@@ -195,9 +194,8 @@ public class NetworkArm implements Arm {
      */
     public List<CacheNetworkAccess> getSuccessfulNetworks() {
         synchronized(refresh) {
-            if(cacheNets == null) {
-                setSuccessfulNetworks(loadNetworksFromDB());
-            }
+            /** null means that we have not yet gotten nets from the server, so wait. */
+            List<CacheNetworkAccess> cacheNets = loadNetworksFromDB();
             while (cacheNets == null && lastQueryTime == null && ! Start.isArmFailure()) {
                 // still null, maybe first time through
                 logger.info("Waiting on initial network load");
@@ -206,24 +204,24 @@ public class NetworkArm implements Arm {
                     refresh.wait(1000);
                 } catch(InterruptedException e) {
                 }
+                cacheNets = loadNetworksFromDB();
             }
             return cacheNets;
         }
     }
     
-    void setSuccessfulNetworks(List<CacheNetworkAccess> nets) {
-        this.cacheNets = Collections.unmodifiableList(nets);
-    }
-    
     List<CacheNetworkAccess> loadNetworksFromDB() {
-        List<CacheNetworkAccess> out = getNetworkDB().getAllNets(getNetworkDC());
-        for (CacheNetworkAccess net : out) {
+        List<NetworkAttrImpl> fromDB = getNetworkDB().getAllNetworks();
+        List<CacheNetworkAccess> out = new ArrayList<CacheNetworkAccess>();
+        for (NetworkAttrImpl net : fromDB) {
             // this is for the side effect of creating
             // networkInfoTemplate stuff
             // avoids a null ptr later
-            change(net,
+            DBCacheNetworkAccess outNet = new DBCacheNetworkAccess(getNetworkSource().getNetwork(net));
+            change(outNet,
                    Status.get(Stage.NETWORK_SUBSETTER,
                               Standing.SUCCESS));
+            out.add(outNet);
         }
         return out;
     }
@@ -233,17 +231,10 @@ public class NetworkArm implements Arm {
             statusChanged("Getting networks");
             logger.info("Getting networks");
             ArrayList<CacheNetworkAccess> successes = new ArrayList<CacheNetworkAccess>();
-            List<CacheNetworkAccess> allNets;
-            ProxyNetworkDC netDC = getNetworkDC();
-            // purge cache before loading from server
-            netDC.reset();
-            synchronized(netDC) {
-                allNets = getNetworkSource().getNetworks();
-            }
+            List<CacheNetworkAccess> allNets = getNetworkSource().getNetworks();
             logger.info("Found " + allNets.size() + " networks");
             int i=0;
-            for (CacheNetworkAccess cacheNetworkAccess : allNets) {
-                CacheNetworkAccess currNet = new DBCacheNetworkAccess(cacheNetworkAccess);
+            for (CacheNetworkAccess currNet : allNets) {
                 NetworkAttrImpl attr = null;
                 try {
                     attr = (NetworkAttrImpl)currNet.get_attributes();
@@ -298,7 +289,6 @@ public class NetworkArm implements Arm {
             logger.info(successes.size() + " networks passed");
             statusChanged("Waiting for a request");
             synchronized(refresh) {
-                setSuccessfulNetworks(successes);
                 refresh.notifyAll();
             }
             return successes;
@@ -398,6 +388,7 @@ public class NetworkArm implements Arm {
             ArrayList<Station> arrayList = new ArrayList<Station>();
             try {
                 List<StationImpl> stations = getNetworkSource().getStations(net);
+
                 for (StationImpl stationImpl : stations) {
                     logger.debug("Station in NetworkArm: "
                             + StationIdUtil.toString(stationImpl));
@@ -419,8 +410,8 @@ public class NetworkArm implements Arm {
                         if(staResult.isSuccess()) {
                             int dbid = getNetworkDB().put(currStation);
                             logger.info("Store " + currStation.get_code()
-                                    + " as " + dbid + " in " + getNetworkDB());
-                            arrayList.add(currStation);
+                                        + " as " + dbid + " in " + getNetworkDB());
+                                arrayList.add(currStation);
                             change(currStation,
                                    Status.get(Stage.NETWORK_SUBSETTER,
                                               Standing.SUCCESS));
@@ -617,8 +608,7 @@ public class NetworkArm implements Arm {
     public Instrumentation getInstrumentation(ChannelImpl chan) throws ChannelNotFound {
         Instrumentation inst = getNetworkDB().getInstrumentation(chan);
         if (inst == null) {
-            CacheNetworkAccess networkAccess = new LazyNetworkAccess((NetworkAttrImpl)chan.getNetworkAttr(),
-                                                                     getNetworkDC());
+            CacheNetworkAccess networkAccess = new InstrumentationDBNetworkAccess(getNetworkSource().getNetwork((NetworkAttrImpl)chan.getNetworkAttr()));
             try {
                 inst = networkAccess.retrieve_instrumentation(chan.getId(), chan.getBeginTime());
             } catch (ChannelNotFound e) {
@@ -677,7 +667,7 @@ public class NetworkArm implements Arm {
         }
     }
 
-    private void change(NetworkAccess na, Status newStatus) {
+    private void change(CacheNetworkAccess na, Status newStatus) {
         synchronized(statusMonitors) {
             for (NetworkMonitor netMon : statusMonitors) {
                 try {
@@ -693,7 +683,7 @@ public class NetworkArm implements Arm {
         }
     }
 
-    private NetworkFinder finder = new NetworkFinder("edu/iris/dmc", "IRIS_NetworkDC", -1);
+    private NetworkSource finder = new NetworkFinder("edu/iris/dmc", "IRIS_NetworkDC", -1);
 
     private NetworkSubsetter attrSubsetter = new PassNetwork();
 
@@ -710,16 +700,13 @@ public class NetworkArm implements Arm {
     private ChannelGrouper channelGrouper = new ChannelGrouper();
     
 
-    protected NetworkFinder getNetworkSource() {
+    public NetworkSource getNetworkSource() {
         return finder;
     }
     
     protected NetworkDB getNetworkDB() {
         return NetworkDB.getSingleton();
     }
-
-    /** null means that we have not yet gotten nets from the server, so wait. */
-    private List<CacheNetworkAccess> cacheNets;
 
     private HashSet<String> allStationFailureNets = new HashSet<String>();
 
