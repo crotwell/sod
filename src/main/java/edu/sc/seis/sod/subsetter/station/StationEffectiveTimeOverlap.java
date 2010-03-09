@@ -1,6 +1,5 @@
 package edu.sc.seis.sod.subsetter.station;
 
-import org.apache.log4j.Category;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.TimeRange;
@@ -9,6 +8,7 @@ import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.source.event.MicroSecondTimeRangeSupplier;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.EffectiveTimeOverlap;
@@ -16,6 +16,10 @@ import edu.sc.seis.sod.subsetter.EffectiveTimeOverlap;
 public class StationEffectiveTimeOverlap extends EffectiveTimeOverlap implements
         StationSubsetter {
 
+    public StationEffectiveTimeOverlap(MicroSecondTimeRangeSupplier timeRange) {
+        super(timeRange);
+    }
+    
     public StationEffectiveTimeOverlap(Element config)
             throws ConfigurationException {
         super(config);
@@ -37,5 +41,6 @@ public class StationEffectiveTimeOverlap extends EffectiveTimeOverlap implements
         return overlaps(station.getEffectiveTime());
     }
 
-    static Category logger = Category.getInstance(StationEffectiveTimeOverlap.class.getName());
+    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(StationEffectiveTimeOverlap.class);
+    
 }// StationEffectiveTimeOverlap

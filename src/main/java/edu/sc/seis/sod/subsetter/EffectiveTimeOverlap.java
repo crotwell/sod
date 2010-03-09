@@ -11,6 +11,11 @@ import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.source.event.MicroSecondTimeRangeSupplier;
 
 public abstract class EffectiveTimeOverlap implements Subsetter{
+    
+    public EffectiveTimeOverlap(MicroSecondTimeRangeSupplier timeRange) {
+        this.timeRange = timeRange;
+    }
+    
     public EffectiveTimeOverlap(edu.iris.Fissures.TimeRange range) {
         this(new MicroSecondDate(range.start_time), new MicroSecondDate(range.end_time));
     }
