@@ -5,32 +5,30 @@
  */
 package edu.sc.seis.sod.status.networkArm;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.velocity.context.AbstractContext;
 import org.apache.velocity.context.Context;
 
-import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
+import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
 import edu.sc.seis.sod.Start;
 
 public class NetworkArmContext extends AbstractContext {
 
-    public NetworkArmContext() throws SQLException {
+    public NetworkArmContext()   {
         super();
         netDb =  NetworkDB.getSingleton();
     }
 
-    public NetworkArmContext(Context context) throws SQLException {
+    public NetworkArmContext(Context context)   {
         super(context);
         netDb =  NetworkDB.getSingleton();
     }
 
     public Object internalGet(String key) {
         if(key.equals(ALL_NETS_KEY)) {
-            return netDb.getAllNets(Start.getNetworkArm().getNetworkDC());
+            return Start.getNetworkArm().getNetworkSource().getNetworks();
         } else if(key.equals(SUCCESSFUL_NETS_KEY)) {
             try {
                 return Start.getNetworkArm()
@@ -41,11 +39,10 @@ public class NetworkArmContext extends AbstractContext {
         } else if(key.length() == 2
                 && !(key.startsWith("X") || key.startsWith("Y") || key.startsWith("Z"))) {
             // try as a network code
-            List<CacheNetworkAccess> netdbs = netDb.getAllNets(Start.getNetworkArm()
-                    .getNetworkDC());
-            for (CacheNetworkAccess net : netdbs) {
-                if(net.get_attributes().get_code().equals(key)) {
-                    return net;
+            List<NetworkAttrImpl> dbAttrs =  netDb.getNetworkByCode(key);
+            for (NetworkAttrImpl attr : dbAttrs) {
+                if(attr.get_code().equals(key)) {
+                    return Start.getNetworkArm().getNetworkSource().getNetwork(attr);
                 }
             }
         }

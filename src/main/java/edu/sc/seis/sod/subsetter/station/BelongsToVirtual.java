@@ -1,5 +1,7 @@
 package edu.sc.seis.sod.subsetter.station;
 
+import java.util.List;
+
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
@@ -11,6 +13,7 @@ import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.iris.Fissures.network.StationImpl;
+import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
@@ -24,22 +27,18 @@ public class BelongsToVirtual implements StationSubsetter {
 
     private static NetworkAccess getVirtual(Element el)
             throws ConfigurationException {
-        NetworkFinderOperations finder = Start.getNetworkArm()
-                .getNetworkDC()
-                .a_finder();
-        return getVirtual(SodUtil.getNestedText(el), finder);
+        return getVirtual(SodUtil.getNestedText(el));
     }
 
-    private static NetworkAccess getVirtual(String name,
-                                            NetworkFinderOperations finder)
+    private static NetworkAccess getVirtual(String name)
             throws ConfigurationException {
         try {
-            NetworkAccess[] nets = finder.retrieve_by_name(name);
-            if(nets.length > 1) {
+            List<CacheNetworkAccess> nets = Start.getNetworkArm().getNetworkSource().getNetworkByName(name);
+            if(nets.size() > 1) {
                 throw new ConfigurationException("There are several nets with the name "
                         + name);
             }
-            return nets[0];
+            return nets.get(0);
         } catch(NetworkNotFound nnf) {
             throw new UserConfigurationException("No network by the name of "
                     + name + " found");
@@ -48,12 +47,6 @@ public class BelongsToVirtual implements StationSubsetter {
 
     public BelongsToVirtual(Element el) throws ConfigurationException {
         this(getVirtual(el), Start.getNetworkArm().getRefreshInterval());
-    }
-
-    public BelongsToVirtual(NetworkFinderOperations operations, String name)
-            throws ConfigurationException {
-        this(getVirtual(name, operations), new TimeInterval(1,
-                                                            UnitImpl.FORTNIGHT));
     }
 
     public BelongsToVirtual(NetworkAccess virtualNet,
