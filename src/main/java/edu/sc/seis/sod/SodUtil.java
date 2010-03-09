@@ -276,9 +276,7 @@ public class SodUtil {
                 if(tagName.equals("earlier") || tagName.equals("later")) {
                     return loadRelativeTime(element);
                 } else if(tagName.equals("now")) {
-                    return new MicroSecondDateSupplier() {
-                        public MicroSecondDate load() { return ClockUtil.now(); }
-                    };
+                    return nowSupplier();
                 } else if(tagName.equals("future")) {
                     return new MicroSecondDateSupplier() {
                         public MicroSecondDate load() {
@@ -293,6 +291,12 @@ public class SodUtil {
         return new MicroSecondDateSupplier() {
             final MicroSecondDate date = new MicroSecondDate(new Time(getNestedText(el).trim(), 0));
             public MicroSecondDate load() {  return date; }
+        };
+    }
+    
+    public static MicroSecondDateSupplier nowSupplier() {
+        return new MicroSecondDateSupplier() {
+            public MicroSecondDate load() { return ClockUtil.now(); }
         };
     }
 
@@ -351,16 +355,25 @@ public class SodUtil {
 
     private static MicroSecondDateSupplier loadRelativeTime(Element el) throws ConfigurationException {
         final TimeInterval duration = loadTimeInterval(DOMHelper.getElement(el, "timeInterval"));
-        MicroSecondDate now = ClockUtil.now();
         if(el.getTagName().equals("earlier")) {
-            return new MicroSecondDateSupplier() {
-                public MicroSecondDate load() {return ClockUtil.now().subtract(duration);}
-            };
+            return getEarlierSupplier(duration);
         }
         return new MicroSecondDateSupplier() {
             public MicroSecondDate load() {return ClockUtil.now().add(duration);}
         };
     }
+    
+    public static MicroSecondDateSupplier getEarlierSupplier(final TimeInterval duration) {
+        return new MicroSecondDateSupplier() {
+            public MicroSecondDate load() {return ClockUtil.now().subtract(duration);}
+        };
+    }
+    
+    public static MicroSecondDateSupplier getLaterSupplier(final TimeInterval duration) {
+        return new MicroSecondDateSupplier() {
+        public MicroSecondDate load() {return ClockUtil.now().add(duration);}
+        };
+    };
 
     public static TimeInterval loadTimeInterval(Element config) throws ConfigurationException {
         try {
