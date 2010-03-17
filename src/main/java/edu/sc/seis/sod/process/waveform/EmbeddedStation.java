@@ -45,7 +45,7 @@ public class EmbeddedStation implements WaveformProcess {
                                   CookieJar cookieJar) throws Exception {
         return new WaveformResult(seismograms,
                                   stationSubsetter.accept((StationImpl)channel.getStation(),
-                                                          Start.getNetworkArm().getNetwork(channel.getId().network_id)));
+                                                          Start.getNetworkArm().getNetworkSource()));
     }
 
     StationSubsetter stationSubsetter;

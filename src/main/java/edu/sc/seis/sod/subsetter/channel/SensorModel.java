@@ -5,8 +5,8 @@ import org.w3c.dom.Element;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
-import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
@@ -21,7 +21,7 @@ public class SensorModel extends SensorSubsetter {
         acceptedModel = SodUtil.getNestedText(config);
     }
 
-    public StringTree accept(ChannelImpl channel, ProxyNetworkAccess network)
+    public StringTree accept(ChannelImpl channel, NetworkSource network)
             throws Exception {
         boolean accept;
         try {

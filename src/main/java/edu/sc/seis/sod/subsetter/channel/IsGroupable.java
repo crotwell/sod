@@ -6,16 +6,16 @@ import java.util.List;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.SiteIdUtil;
-import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.ChannelGrouper;
+import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
 
 public class IsGroupable implements ChannelSubsetter {
 
-	public StringTree accept(ChannelImpl channel, ProxyNetworkAccess network)
+	public StringTree accept(ChannelImpl channel, NetworkSource network)
 			throws Exception {
         Channel[] allChans = network.retrieve_for_station(channel.getSite().getStation().get_id());
         ArrayList<ChannelImpl> siteChans = new ArrayList<ChannelImpl>();

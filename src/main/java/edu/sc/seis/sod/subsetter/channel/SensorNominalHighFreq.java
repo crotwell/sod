@@ -3,8 +3,8 @@ package edu.sc.seis.sod.subsetter.channel;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.network.ChannelImpl;
-import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
@@ -20,7 +20,7 @@ public class SensorNominalHighFreq extends SensorSubsetter {
         acceptedNominalHighFreq = Float.parseFloat(SodUtil.getNestedText(config));
     }
 
-    public StringTree accept(ChannelImpl channel, ProxyNetworkAccess network)
+    public StringTree accept(ChannelImpl channel, NetworkSource network)
             throws Exception {
         return new StringTreeLeaf(this, acceptNominalHighFreq(channel, network, acceptedNominalHighFreq));
     }

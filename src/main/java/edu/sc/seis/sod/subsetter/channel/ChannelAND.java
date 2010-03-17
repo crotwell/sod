@@ -2,6 +2,7 @@ package edu.sc.seis.sod.subsetter.channel;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.status.StringTree;
 
@@ -21,9 +22,11 @@ public class ChannelAND extends ChannelLogicalSubsetter implements
     public boolean isSuccess(StringTree[] reasons) {
         for(int i = 0; i < reasons.length; i++) {
             if(!reasons[i].isSuccess()){
+                NetworkDB.flush();
                 return false;
             }
         }
+        NetworkDB.flush();
         return true;
     }
 }// ChannelAND

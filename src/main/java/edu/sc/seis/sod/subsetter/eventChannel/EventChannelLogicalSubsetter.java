@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
@@ -15,17 +14,12 @@ import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.LogicalSubsetter;
 import edu.sc.seis.sod.subsetter.Subsetter;
-import edu.sc.seis.sod.subsetter.availableData.AvailableDataSubsetter;
 import edu.sc.seis.sod.subsetter.channel.ChannelLogicalSubsetter;
 import edu.sc.seis.sod.subsetter.channel.ChannelSubsetter;
 import edu.sc.seis.sod.subsetter.eventStation.EventStationLogicalSubsetter;
 import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
-import edu.sc.seis.sod.subsetter.network.NetworkSubsetter;
 import edu.sc.seis.sod.subsetter.origin.EventLogicalSubsetter;
 import edu.sc.seis.sod.subsetter.origin.OriginSubsetter;
-import edu.sc.seis.sod.subsetter.request.Request;
-import edu.sc.seis.sod.subsetter.station.StationLogicalSubsetter;
-import edu.sc.seis.sod.subsetter.station.StationSubsetter;
 
 /**
  * @author groves Created on Aug 31, 2004
@@ -75,7 +69,7 @@ public class EventChannelLogicalSubsetter extends LogicalSubsetter {
                 public StringTree accept(CacheEvent event,
                                          ChannelImpl channel,
                                          CookieJar cookieJar) throws Exception {
-                    return ecs.accept(channel, Start.getNetworkArm().getNetwork(channel.getId().network_id));
+                    return ecs.accept(channel, Start.getNetworkArm().getNetworkSource());
                 }
             };
         }

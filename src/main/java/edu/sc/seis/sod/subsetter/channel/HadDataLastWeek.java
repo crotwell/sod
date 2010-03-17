@@ -11,9 +11,9 @@ import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
-import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
+import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.dataCenter.FixedDataCenter;
@@ -27,7 +27,7 @@ public class HadDataLastWeek implements ChannelSubsetter {
         fixDC = new FixedDataCenter(DOMHelper.getElement(el, "fixedDataCenter"));
     }
 
-    public StringTree accept(ChannelImpl channel, ProxyNetworkAccess network)
+    public StringTree accept(ChannelImpl channel, NetworkSource network)
             throws Exception {
         MicroSecondDate now = ClockUtil.now();
         ChannelEffectiveTimeOverlap overlap = new ChannelEffectiveTimeOverlap(now.subtract(makeDayInterval(7)), now);

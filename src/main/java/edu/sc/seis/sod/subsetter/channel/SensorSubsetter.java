@@ -6,7 +6,7 @@ import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.SeismicHardware;
 import edu.iris.Fissures.IfNetwork.Sensor;
 import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
-import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
+import edu.sc.seis.sod.source.network.NetworkSource;
 
 /**
  * @author oliverpa
@@ -20,7 +20,7 @@ public abstract class SensorSubsetter extends InstrumentationSubsetter {
     }
 
     protected boolean acceptNominalHighFreq(Channel channel,
-                                            ProxyNetworkAccess network,
+                                            NetworkSource network,
                                             float nominalHighFreq) {
         try {
             return ((Sensor)getSeismicHardware(channel, network)).nominal_high_freq == nominalHighFreq;
@@ -34,7 +34,7 @@ public abstract class SensorSubsetter extends InstrumentationSubsetter {
     }
 
     protected boolean acceptNominalLowFreq(Channel channel,
-                                           ProxyNetworkAccess network,
+                                           NetworkSource network,
                                            float nominalLowFreq) {
         try {
             return ((Sensor)getSeismicHardware(channel, network)).nominal_low_freq == nominalLowFreq;

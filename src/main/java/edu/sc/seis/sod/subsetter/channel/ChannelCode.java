@@ -3,9 +3,9 @@ package edu.sc.seis.sod.subsetter.channel;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.network.ChannelImpl;
-import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.UserConfigurationException;
+import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
@@ -38,7 +38,7 @@ public class ChannelCode implements ChannelSubsetter {
         required = required.replace('?', '*');
     }
 
-    public StringTree accept(ChannelImpl channel, ProxyNetworkAccess network) {
+    public StringTree accept(ChannelImpl channel, NetworkSource network) {
         String code = channel.get_id().channel_code;
         for(int i = 0; i < required.length(); i++) {
             if(required.charAt(i) != '*'

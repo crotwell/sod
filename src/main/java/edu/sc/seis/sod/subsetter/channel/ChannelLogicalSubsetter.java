@@ -9,8 +9,8 @@ import org.w3c.dom.Element;
 
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.StationImpl;
-import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.subsetter.Subsetter;
@@ -35,7 +35,7 @@ public abstract class ChannelLogicalSubsetter extends CompositeChannelSubsetter 
         packages.addAll(StationLogicalSubsetter.packages);
     }
     
-    public StringTree accept(ChannelImpl e, ProxyNetworkAccess network)
+    public StringTree accept(ChannelImpl e, NetworkSource network)
             throws Exception {
         List reasons = new ArrayList(subsetters.size());
         Iterator it = subsetters.iterator();
@@ -65,7 +65,7 @@ public abstract class ChannelLogicalSubsetter extends CompositeChannelSubsetter 
         }
         return new ChannelSubsetter() {
             StationSubsetter ss = StationLogicalSubsetter.createSubsetter(s);
-            public StringTree accept(ChannelImpl channel, ProxyNetworkAccess network) throws Exception {
+            public StringTree accept(ChannelImpl channel, NetworkSource network) throws Exception {
                 return ss.accept((StationImpl)channel.getStation(), network);
             }
         };

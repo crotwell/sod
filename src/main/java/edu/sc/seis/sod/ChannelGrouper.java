@@ -154,7 +154,7 @@ public class ChannelGrouper {
                                             NetworkAccess network = Start.getNetworkArm()
                                                     .getNetwork(chn.get(0).getSite().getStation().get_id().network_id);
                                             if(!stationSubsetter.accept((StationImpl)chn.get(0).getSite().getStation(),
-                                                                        network).isSuccess()) {
+                                                                        Start.getNetworkArm().getNetworkSource()).isSuccess()) {
                                                 accept = false;
                                             }
                                         }
@@ -165,7 +165,7 @@ public class ChannelGrouper {
                                                 ProxyNetworkAccess network = Start.getNetworkArm()
                                                         .getNetwork(channelImpl.get_id().network_id);
                                                 if(!channelSubsetter.accept(channelImpl,
-                                                                            network).isSuccess()) {
+                                                                            Start.getNetworkArm().getNetworkSource()).isSuccess()) {
                                                     accept = false;
                                                 }
                                             }

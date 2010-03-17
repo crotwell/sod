@@ -13,7 +13,6 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.subsetter.channel.ChannelSubsetter;
-import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
 
 /**
  * @author crotwell Created on Mar 18, 2005
@@ -45,7 +44,7 @@ public class EmbeddedChannel implements WaveformProcess {
                                   CookieJar cookieJar) throws Exception {
         return new WaveformResult(seismograms,
                                   channelSubsetter.accept(channel,
-                                                          Start.getNetworkArm().getNetwork(channel.getId().network_id)));
+                                                          Start.getNetworkArm().getNetworkSource()));
     }
 
     ChannelSubsetter channelSubsetter;

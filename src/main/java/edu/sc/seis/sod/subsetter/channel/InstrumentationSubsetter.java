@@ -4,9 +4,10 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
+import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.iris.Fissures.IfNetwork.SeismicHardware;
 import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
-import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
+import edu.sc.seis.sod.source.network.NetworkSource;
 
 /**
  * @author oliverpa
@@ -16,17 +17,16 @@ import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 public abstract class InstrumentationSubsetter implements ChannelSubsetter {
 
     protected SeismicHardware getSeismicHardware(Channel channel,
-                                                 ProxyNetworkAccess network)
-            throws ChannelNotFound {
+                                                 NetworkSource network)
+            throws ChannelNotFound, InstrumentationInvalid {
         ChannelId chanId = channel.get_id();
-        return getSeismicHardware(network.retrieve_instrumentation(chanId,
-                                                                   chanId.begin_time));
+        return getSeismicHardware(network.getInstrumentation(chanId));
     }
 
     protected abstract SeismicHardware getSeismicHardware(Instrumentation inst);
 
     protected boolean acceptId(Channel channel,
-                               ProxyNetworkAccess network,
+                               NetworkSource network,
                                int id) {
         try {
             return getSeismicHardware(channel, network).id_number == id;
@@ -40,7 +40,7 @@ public abstract class InstrumentationSubsetter implements ChannelSubsetter {
     }
 
     protected boolean acceptManufacturer(Channel channel,
-                                         ProxyNetworkAccess network,
+                                         NetworkSource network,
                                          String manufacturer) {
         try {
             return manufacturer.equals(getSeismicHardware(channel, network).manufacturer);
@@ -54,7 +54,7 @@ public abstract class InstrumentationSubsetter implements ChannelSubsetter {
     }
 
     protected boolean acceptModel(Channel channel,
-                                  ProxyNetworkAccess network,
+                                  NetworkSource network,
                                   String model) {
         try {
             return model.equals(getSeismicHardware(channel, network).model);
@@ -68,7 +68,7 @@ public abstract class InstrumentationSubsetter implements ChannelSubsetter {
     }
 
     protected boolean acceptSerialNumber(Channel channel,
-                                         ProxyNetworkAccess network,
+                                         NetworkSource network,
                                          String serialNum) {
         try {
             return serialNum.equals(getSeismicHardware(channel, network).serial_number);

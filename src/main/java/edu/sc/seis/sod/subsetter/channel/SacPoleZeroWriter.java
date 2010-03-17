@@ -11,10 +11,10 @@ import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
-import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.sac.FissuresToSac;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
@@ -34,13 +34,12 @@ public class SacPoleZeroWriter implements ChannelSubsetter {
         velocitizer = new PrintlineVelocitizer(new String[] {template});
     }
 
-    public StringTree accept(ChannelImpl chan, ProxyNetworkAccess network)
+    public StringTree accept(ChannelImpl chan, NetworkSource network)
             throws Exception {
         ChannelId channel_id = chan.get_id();
         Instrumentation inst;
         try {
-            inst = network.retrieve_instrumentation(channel_id,
-                                                    channel_id.begin_time);
+            inst = network.getInstrumentation(channel_id);
         } catch(ChannelNotFound e) {
             return new Fail(this, "No instrumentation");
         } catch(InstrumentationInvalid e) {

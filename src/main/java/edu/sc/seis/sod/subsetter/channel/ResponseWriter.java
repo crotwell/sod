@@ -11,10 +11,10 @@ import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.ResponsePrint;
 import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
-import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
@@ -31,12 +31,11 @@ public class ResponseWriter implements ChannelSubsetter {
         velocitizer = new PrintlineVelocitizer(new String[] {template});
     }
 
-    public StringTree accept(ChannelImpl chan, ProxyNetworkAccess network)
+    public StringTree accept(ChannelImpl chan, NetworkSource network)
             throws Exception {
         try {
             ChannelId channel_id = chan.get_id();
-            Instrumentation inst = network.retrieve_instrumentation(channel_id,
-                                                                    channel_id.begin_time);
+            Instrumentation inst = network.getInstrumentation(channel_id);
             NetworkDB.getSingleton().putInstrumentation(chan, inst);
             String response = ResponsePrint.printResponse(channel_id, inst);
             velocitizer.evaluate(template, response, chan);

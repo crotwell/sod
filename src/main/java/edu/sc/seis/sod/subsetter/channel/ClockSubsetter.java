@@ -6,7 +6,7 @@ import edu.iris.Fissures.IfNetwork.Clock;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.SeismicHardware;
 import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
-import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
+import edu.sc.seis.sod.source.network.NetworkSource;
 
 
 /**
@@ -21,7 +21,7 @@ public abstract class ClockSubsetter extends InstrumentationSubsetter {
     }
     
     protected boolean acceptType(Channel channel,
-                                 ProxyNetworkAccess network,
+                                 NetworkSource network,
                                  String type) {
         try {
             return type.equals(((Clock)getSeismicHardware(channel, network)).type);

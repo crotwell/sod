@@ -5,8 +5,8 @@ import org.w3c.dom.Element;
 import edu.iris.Fissures.TimeRange;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.network.ChannelImpl;
-import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.EffectiveTimeOverlap;
@@ -27,7 +27,7 @@ public class ChannelEffectiveTimeOverlap extends EffectiveTimeOverlap implements
         super(start, end);
     }
 
-    public StringTree accept(ChannelImpl channel, ProxyNetworkAccess network) {
+    public StringTree accept(ChannelImpl channel, NetworkSource network) {
         return new StringTreeLeaf(this, overlaps(channel.getEffectiveTime()));
     }
 

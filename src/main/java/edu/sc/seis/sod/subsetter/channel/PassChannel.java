@@ -1,7 +1,7 @@
 package edu.sc.seis.sod.subsetter.channel;
 
 import edu.iris.Fissures.network.ChannelImpl;
-import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
+import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
 
@@ -17,7 +17,7 @@ import edu.sc.seis.sod.status.StringTree;
 
 public class PassChannel implements ChannelSubsetter{
 
-    public StringTree accept(ChannelImpl channel, ProxyNetworkAccess network) { return new Pass(this); }
+    public StringTree accept(ChannelImpl channel, NetworkSource network) { return new Pass(this); }
 
 }// PassChannel
 
