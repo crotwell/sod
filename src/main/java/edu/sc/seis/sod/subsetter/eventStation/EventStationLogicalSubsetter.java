@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
@@ -14,10 +13,6 @@ import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.LogicalSubsetter;
 import edu.sc.seis.sod.subsetter.Subsetter;
-import edu.sc.seis.sod.subsetter.channel.ChannelSubsetter;
-import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
-import edu.sc.seis.sod.subsetter.network.NetworkLogicalSubsetter;
-import edu.sc.seis.sod.subsetter.network.NetworkSubsetter;
 import edu.sc.seis.sod.subsetter.origin.EventLogicalSubsetter;
 import edu.sc.seis.sod.subsetter.origin.OriginSubsetter;
 import edu.sc.seis.sod.subsetter.station.StationLogicalSubsetter;
@@ -68,7 +63,7 @@ public class EventStationLogicalSubsetter extends LogicalSubsetter {
                 public StringTree accept(CacheEvent event,
                                          StationImpl station,
                                          CookieJar cookieJar) throws Exception {
-                    return ecs.accept(station, Start.getNetworkArm().getNetwork(station.getId().network_id));
+                    return ecs.accept(station, Start.getNetworkArm().getNetworkSource());
                 }
             };
         }

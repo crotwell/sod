@@ -9,8 +9,13 @@ import org.w3c.dom.Element;
 
 import edu.iris.Fissures.IfEvent.NotFound;
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.ChannelId;
+import edu.iris.Fissures.IfNetwork.ChannelNotFound;
+import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.IfNetwork.NetworkNotFound;
+import edu.iris.Fissures.IfNetwork.Sensitivity;
 import edu.iris.Fissures.IfNetwork.VirtualNetworkHelper;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.network.ChannelIdUtil;
@@ -19,6 +24,7 @@ import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
+import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
 import edu.sc.seis.fissuresUtil.cache.LazyNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
 import edu.sc.seis.fissuresUtil.cache.VestingNetworkDC;
@@ -105,7 +111,8 @@ public class NetworkFinder extends NetworkSource {
     }
 
     @Override
-    public List<StationImpl> getStations(CacheNetworkAccess net) {
+    public List<StationImpl> getStations(NetworkId netId) {
+        CacheNetworkAccess net = getNetwork(netId);
         StationImpl[] stations = StationImpl.implize(net.retrieve_stations());
         List<StationImpl> out = new ArrayList<StationImpl>(stations.length);
         for (int i = 0; i < stations.length; i++) {
@@ -115,7 +122,8 @@ public class NetworkFinder extends NetworkSource {
     }
 
     @Override
-    public List<ChannelImpl> getChannels(CacheNetworkAccess net, StationImpl station) {
+    public List<ChannelImpl> getChannels(StationImpl station) {
+        CacheNetworkAccess net = getNetwork(station.getId().network_id);
         Channel[] tmpChannels = net.retrieve_for_station(station.get_id());
         MicroSecondDate stationBegin = new MicroSecondDate(station.getBeginTime());
         // dmc network server ignores date in station id in
@@ -138,6 +146,28 @@ public class NetworkFinder extends NetworkSource {
             }
         }
         return chansAtStation;
+    }
+    
+    public CacheNetworkAccess getNetwork(NetworkId netId) throws NetworkNotFound {
+        return (CacheNetworkAccess)netDC.a_finder().retrieve_by_id(netId);
+    }
+
+    @Override
+    public Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InstrumentationInvalid {
+        try {
+            return getNetwork(chanId.network_id).retrieve_instrumentation(chanId, chanId.begin_time);
+        } catch(NetworkNotFound e) {
+            throw new ChannelNotFound();
+        }
+    }
+
+    @Override
+    public Sensitivity getSensitivity(ChannelId chanId) throws ChannelNotFound, InstrumentationInvalid {
+        try {
+            return getNetwork(chanId.network_id).retrieve_sensitivity(chanId, chanId.begin_time);
+        } catch(NetworkNotFound e) {
+            throw new ChannelNotFound();
+        }
     }
 
     private VestingNetworkDC netDC;

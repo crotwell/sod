@@ -4,7 +4,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
@@ -33,10 +32,8 @@ public class EmbeddedStationSubsetter implements EventStationSubsetter {
     public StringTree accept(CacheEvent eventAccess,
                              StationImpl station,
                              CookieJar cookieJar) throws Exception {
-        NetworkAccess network = Start.getNetworkArm()
-                .getNetwork(station.get_id().network_id);
         StringTree out = stationSubsetter.accept(station,
-                                                 network);
+                                                 Start.getNetworkArm().getNetworkSource());
         return new StringTreeBranch(this, out.isSuccess(), out);
     }
 
