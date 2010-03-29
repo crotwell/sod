@@ -84,6 +84,8 @@ task printRT << { task ->
        
 
 task buildSchemaDocs(dependsOn: classes) << { task ->
+    indirs.files 'src/main/relax'
+    outdirs.files project.projectDir.path+'/../seiswww/velocity/sod/ingredients/'
     outDir = task.project.file('build/output')
     outDir.mkdirs()
     schemaDocArgs = project.projectDir.path+'/ '+project.projectDir.path+'/../seiswww/velocity/sod/ingredients/'
@@ -96,16 +98,18 @@ task buildSchemaDocs(dependsOn: classes) << { task ->
              maxmemory:'512m',
              output:'ant_java.out',
              classpath:cp) 
-    //ant.delete(file:'build/output/velocity.log')
 }
 
 task buildSchema(dependsOn: classes) << { task ->
     outDir = task.project.file('build/output')
     outDir.mkdirs()
+    indirs.files 'src/main/relax/sod.rng'
+    outdirs.files 'src/main/resources/edu/sc/seis/sod/data/sod.rng'
     relaxArgs = project.projectDir.path+'/src/main/relax/sod.rng'
     ant.java(dir:outDir, 
              classname:'com.sun.msv.writer.relaxng.Driver', 
              args:relaxArgs,
+             maxmemory:'512m',
              fork:true,
              classpath:configurations.runtime.asPath,
              output:task.project.projectDir.path+'/src/main/resources/edu/sc/seis/sod/data/sod.rng') 
