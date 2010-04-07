@@ -739,7 +739,7 @@ public class SodDB extends AbstractHibernateDB {
         chanIt = adders.keySet().iterator();
         while(chanIt.hasNext()) {
             ChannelId c = adders.get(chanIt.next());
-            logger.debug("adds " + q + "  " + event.getDbid() + "  "
+            logger.debug("adds  " + event.getDbid() + "  "
                     + recordSectionId + " " + c.channel_code + " "
                     + c.site_code + " " + c.station_code + " "
                     + c.network_id.network_code);
