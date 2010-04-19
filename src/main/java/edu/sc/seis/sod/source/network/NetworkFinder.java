@@ -148,26 +148,22 @@ public class NetworkFinder extends NetworkSource {
         return chansAtStation;
     }
     
-    public CacheNetworkAccess getNetwork(NetworkId netId) throws NetworkNotFound {
+    public CacheNetworkAccess getNetwork(NetworkId netId)  {
+        try {
         return (CacheNetworkAccess)netDC.a_finder().retrieve_by_id(netId);
+        } catch (NetworkNotFound e) {
+            throw new RuntimeException("don't think this should happen as we must have gotten the netid from the server", e);
+        }
     }
 
     @Override
     public Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InstrumentationInvalid {
-        try {
-            return getNetwork(chanId.network_id).retrieve_instrumentation(chanId, chanId.begin_time);
-        } catch(NetworkNotFound e) {
-            throw new ChannelNotFound();
-        }
+        return getNetwork(chanId.network_id).retrieve_instrumentation(chanId, chanId.begin_time);
     }
 
     @Override
     public Sensitivity getSensitivity(ChannelId chanId) throws ChannelNotFound, InstrumentationInvalid {
-        try {
-            return getNetwork(chanId.network_id).retrieve_sensitivity(chanId, chanId.begin_time);
-        } catch(NetworkNotFound e) {
-            throw new ChannelNotFound();
-        }
+        return getNetwork(chanId.network_id).retrieve_sensitivity(chanId, chanId.begin_time);
     }
 
     private VestingNetworkDC netDC;
