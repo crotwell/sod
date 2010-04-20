@@ -112,11 +112,11 @@ public class VelocityStation extends StationImpl {
     }
 
     public String getName() {
-        return name;
+        return FissuresFormatter.oneLineAndClean(super.getName());
     }
 
     public String getCSVName() {
-        return name.replaceAll(",", "");
+        return getName().replaceAll(",", "");
     }
 
     public String getDescription() {

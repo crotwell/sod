@@ -9,6 +9,7 @@ import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.NetworkIdUtil;
+import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
 /**
@@ -64,7 +65,11 @@ public class VelocityNetwork extends NetworkAttr {
     public String getCodeWithYear() {
         return NetworkIdUtil.toStringNoDates(net.get_id());
     }
-
+    
+    public String getName() {
+        return FissuresFormatter.oneLineAndClean(super.getName());
+    }
+    
     public String getRawBeginDate() {
         return net.get_id().begin_time.date_time;
     }
