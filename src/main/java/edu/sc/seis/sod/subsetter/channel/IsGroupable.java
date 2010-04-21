@@ -3,9 +3,9 @@ package edu.sc.seis.sod.subsetter.channel;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.SiteIdUtil;
+import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.ChannelGrouper;
 import edu.sc.seis.sod.source.network.NetworkSource;
@@ -17,11 +17,11 @@ public class IsGroupable implements ChannelSubsetter {
 
 	public StringTree accept(ChannelImpl channel, NetworkSource network)
 			throws Exception {
-        Channel[] allChans = network.retrieve_for_station(channel.getSite().getStation().get_id());
+	    List<ChannelImpl> allChans = network.getChannels((StationImpl)channel.getStation());
         ArrayList<ChannelImpl> siteChans = new ArrayList<ChannelImpl>();
-        for (int i = 0; i < allChans.length; i++) {
-			if (SiteIdUtil.areSameSite(allChans[i].get_id(), channel.get_id())) {
-				siteChans.add((ChannelImpl)allChans[i]);
+        for (ChannelImpl channelImpl : allChans) {
+			if (SiteIdUtil.areSameSite(channelImpl.get_id(), channel.get_id())) {
+				siteChans.add(channelImpl);
 			}
 		}
 
