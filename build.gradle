@@ -1,6 +1,6 @@
 
 group = 'edu.sc.seis'
-version = '3.0.0beta3'
+version = '3.0.0beta4'
 
 dependencies {
     compile project(':bag') { transitive = true }
@@ -116,11 +116,12 @@ task buildSchemaDocs(dependsOn: ['buildSchema', classes])  {
     }
 }
 
-task buildSchema(dependsOn: classes) << { task ->
-    outDir = task.project.file('build/output')
-    outDir.mkdirs()
+task buildSchema(dependsOn: classes)  {
     inputs.dir 'src/main/relax/'
     outputs.files 'src/main/resources/edu/sc/seis/sod/data/sod.rng'
+    doLast{
+    outDir = task.project.file('build/output')
+    outDir.mkdirs()
     relaxArgs = project.projectDir.path+'/src/main/relax/sod.rng'
     ant.java(dir:outDir, 
              classname:'com.sun.msv.writer.relaxng.Driver', 
@@ -129,6 +130,7 @@ task buildSchema(dependsOn: classes) << { task ->
              fork:true,
              classpath:configurations.runtime.asPath,
              output:task.project.projectDir.path+'/src/main/resources/edu/sc/seis/sod/data/sod.rng') 
+    }
 }
 
 assemble.dependsOn(tarDist)
