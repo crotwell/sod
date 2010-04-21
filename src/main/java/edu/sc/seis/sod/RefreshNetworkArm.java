@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TimerTask;
 
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationImpl;
@@ -12,6 +13,7 @@ import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
+import edu.sc.seis.sod.source.network.LoadedNetworkSource;
 
 public class RefreshNetworkArm extends TimerTask {
 
@@ -61,22 +63,25 @@ public class RefreshNetworkArm extends TimerTask {
     }
 
     void processNetwork(CacheNetworkAccess net) {
+
+        // how do we refresh instrumentation???
+        
         try {
-            logger.info("process "+NetworkIdUtil.toString(net.get_attributes()));
             StationImpl[] stas = netArm.getSuccessfulStationsFromServer(net);
             logger.info("found "+stas.length+" stations in "+NetworkIdUtil.toString(net.get_attributes()));
             if (Start.getWaveformRecipe() != null || netArm.getChannelSubsetters().size() != 0) {
-            if (Start.getWaveformRecipe() instanceof MotionVectorArm) {
                 for (int s = 0; s < stas.length; s++) {
-                    List<ChannelGroup> cg = netArm.getSuccessfulChannelGroupsFromServer(stas[s], net);
-                }
-            } else {
-                for (int s = 0; s < stas.length; s++) {
-                    List<ChannelImpl> chans = netArm.getSuccessfulChannelsFromServer(stas[s], net);
+                    LoadedNetworkSource loadSource = new LoadedNetworkSource(netArm.getNetworkSource(), stas[s]);
+                    if (Start.getWaveformRecipe() instanceof MotionVectorArm) {
+                        List<ChannelGroup> cg = netArm.getSuccessfulChannelGroupsFromServer(stas[s], loadSource);
+                    } else {
+                        List<ChannelImpl> chans = netArm.getSuccessfulChannelsFromServer(stas[s], loadSource);
+                    }
                 }
             }
-            }
+            NetworkDB.commit(); // make sure session is clear
         } catch(Throwable t) {
+            NetworkDB.rollback(); // oops
             String netstr = "unknown";
             try {
                 netstr = NetworkIdUtil.toString(net.get_attributes());
