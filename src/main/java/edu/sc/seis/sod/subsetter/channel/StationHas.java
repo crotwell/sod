@@ -1,11 +1,12 @@
 package edu.sc.seis.sod.subsetter.channel;
 
 import java.util.Iterator;
+import java.util.List;
 
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.network.ChannelImpl;
-import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
+import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.source.network.NetworkSource;
@@ -25,7 +26,7 @@ public class StationHas extends CompositeChannelSubsetter {
     public StringTree accept(ChannelImpl channel, NetworkSource network)
             throws Exception {
         Iterator it = subsetters.iterator();
-        ChannelImpl[] allChans = ChannelImpl.implize(network.retrieve_for_station(channel.getSite().getStation().get_id()));
+        List<ChannelImpl> allChans = network.getChannels((StationImpl)channel.getStation());
         NetworkDB.flush();
         while(it.hasNext()) {
             if(!atLeastOneChannelPasses((ChannelSubsetter)it.next(),
@@ -40,16 +41,14 @@ public class StationHas extends CompositeChannelSubsetter {
     }
 
     private static boolean atLeastOneChannelPasses(ChannelSubsetter filter,
-                                                   ChannelImpl[] chans,
+                                                   List<ChannelImpl> chans,
                                                    NetworkSource net)
             throws Exception {
-        for(int i = 0; i < chans.length; i++) {
-            if(filter.accept(chans[i], net).isSuccess()) {
-                NetworkDB.flush();
+        for (ChannelImpl channelImpl : chans) {
+            if(filter.accept(channelImpl, net).isSuccess()) {
                 return true;
             }
         }
-        NetworkDB.flush();
         return false;
     }
 }
