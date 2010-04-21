@@ -97,10 +97,10 @@ task copySchemaDocs(dependsOn: 'buildSchemaDocs', type: Copy) {
     into project.file('../seiswww/velocity/sod/ingredients/')
 }
 
-task buildSchemaDocs(dependsOn: classes)  { 
-    inputs.files 'src/main/relax'
+task buildSchemaDocs(dependsOn: ['buildSchema', classes])  { 
+    inputs.dir 'src/main/relax'
     outDir = project.file('build/velocity/sod/ingredients/')
-    outputs.files outDir
+    outputs.dir outDir
     doLast{
     outDir.mkdirs()
     schemaDocArgs = project.projectDir.path+'/ '+outDir+'/'
@@ -119,8 +119,8 @@ task buildSchemaDocs(dependsOn: classes)  {
 task buildSchema(dependsOn: classes) << { task ->
     outDir = task.project.file('build/output')
     outDir.mkdirs()
-    indirs.files 'src/main/relax/sod.rng'
-    outdirs.files 'src/main/resources/edu/sc/seis/sod/data/sod.rng'
+    inputs.dir 'src/main/relax/'
+    outputs.files 'src/main/resources/edu/sc/seis/sod/data/sod.rng'
     relaxArgs = project.projectDir.path+'/src/main/relax/sod.rng'
     ant.java(dir:outDir, 
              classname:'com.sun.msv.writer.relaxng.Driver', 
