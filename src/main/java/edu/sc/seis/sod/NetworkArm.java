@@ -387,7 +387,7 @@ public class NetworkArm implements Arm {
                     + net.get_attributes().getName());
             ArrayList<Station> arrayList = new ArrayList<Station>();
             try {
-                List<StationImpl> stations = getNetworkSource().getStations(net);
+                List<StationImpl> stations = getNetworkSource().getStations(netAttr.getId());
 
                 for (StationImpl stationImpl : stations) {
                     logger.debug("Station in NetworkArm: "
@@ -398,12 +398,12 @@ public class NetworkArm implements Arm {
                     // as the one already in the thread's session
                     currStation.setNetworkAttr(netAttr);
                     StringTree effResult = staEffectiveSubsetter.accept(currStation,
-                                                                        net);
+                                                                        getNetworkSource());
                     if(effResult.isSuccess()) {
                         StringTree staResult;
                         try {
                             staResult = stationSubsetter.accept(currStation,
-                                                                       net);
+                                                                getNetworkSource());
                         } catch(Throwable t) {
                             staResult = new Fail(stationSubsetter, "Exception", t);
                         }
@@ -481,12 +481,12 @@ public class NetworkArm implements Arm {
         }
     }
     
-    List<ChannelImpl> getSuccessfulChannelsFromServer(StationImpl station, CacheNetworkAccess networkAccess) {
+    List<ChannelImpl> getSuccessfulChannelsFromServer(StationImpl station, NetworkSource networkSource) {
         synchronized(this) {
             statusChanged("Getting channels for " + station);
             List<ChannelImpl> successes = new ArrayList<ChannelImpl>();
             try {               
-                List<ChannelImpl> chansAtStation = getNetworkSource().getChannels(networkAccess, station);
+                List<ChannelImpl> chansAtStation = networkSource.getChannels(station);
                 Status inProg = Status.get(Stage.NETWORK_SUBSETTER,
                                            Standing.IN_PROG);
                 boolean needCommit = false;
@@ -496,15 +496,17 @@ public class NetworkArm implements Arm {
                     chan.getSite().setStation(dbSta);
                     change(chan, inProg);
                     StringTree effectiveTimeResult = chanEffectiveSubsetter.accept(chan,
-                                                                                   networkAccess);
+                                                                                   getNetworkSource());
+                    NetworkDB.flush();
                     if(effectiveTimeResult.isSuccess()) {
+                        NetworkDB.flush();
                         boolean accepted = true;
                         synchronized(chanSubsetters) {
                             for (ChannelSubsetter cur : chanSubsetters) {
                                 StringTree result;
                                 try {
                                     result = cur.accept(chan,
-                                                        networkAccess);
+                                                        getNetworkSource());
                                 } catch(Throwable t) {
                                     result = new Fail(cur, "Exception", t);
                                 }
@@ -583,7 +585,7 @@ public class NetworkArm implements Arm {
         }
     }
     
-    List<ChannelGroup> getSuccessfulChannelGroupsFromServer(StationImpl station, CacheNetworkAccess net) {
+    List<ChannelGroup> getSuccessfulChannelGroupsFromServer(StationImpl station, NetworkSource net) {
         synchronized(this) {
             List<ChannelImpl> failures = new ArrayList<ChannelImpl>();
             List<ChannelGroup> chanGroups = channelGrouper.group(getSuccessfulChannelsFromServer(station, net),
