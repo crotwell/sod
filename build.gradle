@@ -4,6 +4,7 @@ version = '3.0.0beta3'
 
 dependencies {
     compile project(':bag') { transitive = true }
+    compile project(':seiswww') { transitive = true }
     compile project(':cormorant') { transitive = true }
     
     compile "jline:jline:0.9.91"
@@ -18,7 +19,7 @@ dependencies {
     compile "net.sourceforge.javacsv:javacsv:2.0"
 }
 
-task tarDist(type: Tar, dependsOn: ['makeScript', 'createBuildScript', 'wrapper']) {
+task tarDist(type: Tar, dependsOn: ['makeScript', 'createBuildScript', 'wrapper', 'copySodSite', 'buildSchema']) {
     compression = Compression.GZIP
     longfile = 'gnu'
     dirName = project.name+'-'+version
@@ -52,7 +53,10 @@ task tarDist(type: Tar, dependsOn: ['makeScript', 'createBuildScript', 'wrapper'
         include('tutorial/**')
         into dirName
     }
-
+    from('build') {
+        include('doc/**')
+        into dirName
+    }
 }
 
 def getDExtras() {
@@ -83,12 +87,23 @@ task printRT << { task ->
 }
        
 
-task buildSchemaDocs(dependsOn: classes) << { task ->
-    indirs.files 'src/main/relax'
-    outdirs.files project.projectDir.path+'/../seiswww/velocity/sod/ingredients/'
-    outDir = task.project.file('build/output')
+
+task copySodSite(dependsOn: ['copySchemaDocs', ':seiswww:makeSodSite'], type: Copy) {
+    from project.file('../seiswww/build/sod/')
+    into project.file('build/doc/')
+}
+task copySchemaDocs(dependsOn: 'buildSchemaDocs', type: Copy) {
+    from project.file('build/velocity/sod/ingredients')
+    into project.file('../seiswww/velocity/sod/ingredients/')
+}
+
+task buildSchemaDocs(dependsOn: classes)  { 
+    inputs.files 'src/main/relax'
+    outDir = project.file('build/velocity/sod/ingredients/')
+    outputs.files outDir
+    doLast{
     outDir.mkdirs()
-    schemaDocArgs = project.projectDir.path+'/ '+project.projectDir.path+'/../seiswww/velocity/sod/ingredients/'
+    schemaDocArgs = project.projectDir.path+'/ '+outDir+'/'
     print schemaDocArgs
     cp = configurations.runtime.asPath+":"+project.projectDir.path+"/build/classes/main"
     ant.java(dir:outDir, 
@@ -98,6 +113,7 @@ task buildSchemaDocs(dependsOn: classes) << { task ->
              maxmemory:'512m',
              output:'ant_java.out',
              classpath:cp) 
+    }
 }
 
 task buildSchema(dependsOn: classes) << { task ->
