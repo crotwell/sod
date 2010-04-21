@@ -32,6 +32,7 @@
             <ref name="responseGain"/>
             <ref name="phaseCut"/>
             <ref name="merge"/>
+            <ref name="gapFill"/>
             <ref name="rMean"/>
             <ref name="rTrend"/>
             <ref name="taper"/>
@@ -176,6 +177,20 @@
                     will join them into a single seismogram</description>
             </xsd:annotation>
             <empty/>
+        </element>
+    </define>
+    <define name="gapFill">
+        <element name="gapFill">
+            <xsd:annotation>
+                <summary>Joins multiple seismograms into a single seismogram by filling gaps</summary>
+                <description>If the seismogram server is returning multiple continuous seismograms for a request, this
+                    will join them into a single seismogram filling any gaps. This implicitly does a merge before filling gaps.</description>
+            </xsd:annotation>
+            
+            <choice>
+                <element name="zeroFill">
+                <element name="linearFill">
+            </choice>
         </element>
     </define>
     <define name="filter">
