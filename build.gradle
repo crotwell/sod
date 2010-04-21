@@ -120,7 +120,7 @@ task buildSchema(dependsOn: classes)  {
     inputs.dir 'src/main/relax/'
     outputs.files 'src/main/resources/edu/sc/seis/sod/data/sod.rng'
     doLast{
-    outDir = task.project.file('build/output')
+    outDir = project.file('build/output')
     outDir.mkdirs()
     relaxArgs = project.projectDir.path+'/src/main/relax/sod.rng'
     ant.java(dir:outDir, 
@@ -129,7 +129,7 @@ task buildSchema(dependsOn: classes)  {
              maxmemory:'512m',
              fork:true,
              classpath:configurations.runtime.asPath,
-             output:task.project.projectDir.path+'/src/main/resources/edu/sc/seis/sod/data/sod.rng') 
+             output:project.projectDir.path+'/src/main/resources/edu/sc/seis/sod/data/sod.rng') 
     }
 }
 
