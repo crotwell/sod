@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.subsetter.eventStation;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.w3c.dom.Element;
 
@@ -79,9 +80,9 @@ public class PhaseInteraction implements EventStationSubsetter {
                                                  station.getLocation().latitude,
                                                  station.getLocation().longitude);
         tauPPath.calculate(eventStationDistance);
-        Arrival[] arrivals = tauPPath.getArrivals();
-        Arrival[] requiredArrivals = getRequiredArrival(arrivals);
-        if(requiredArrivals.length == 0) return false;
+        List<Arrival> arrivals = tauPPath.getArrivals();
+        List<Arrival> requiredArrivals = getRequiredArrival(arrivals);
+        if(requiredArrivals.size() == 0) return false;
         if(phaseInteractionType instanceof Relative) {
             return handleRelativePathInteraction(requiredArrivals,
                                                  eventStationDistance);
@@ -109,9 +110,9 @@ public class PhaseInteraction implements EventStationSubsetter {
                                                  station.getLocation().latitude,
                                                  station.getLocation().longitude);
         tauPPierce.calculate(eventStationDistance);
-        Arrival[] arrivals = tauPPierce.getArrivals();
-        Arrival[] requiredArrivals = getRequiredArrival(arrivals);
-        if(requiredArrivals.length != 0) {
+        List<Arrival> arrivals = tauPPierce.getArrivals();
+        List<Arrival> requiredArrivals = getRequiredArrival(arrivals);
+        if(requiredArrivals.size() != 0) {
             if(phaseInteractionType instanceof Relative) {
                 return handlePierceRelativePhaseInteraction(requiredArrivals,
                                                             eventStationDistance);
@@ -126,11 +127,11 @@ public class PhaseInteraction implements EventStationSubsetter {
         } else return false;
     }
 
-    public boolean handlePierceRelativePhaseInteraction(Arrival[] requiredArrivals,
+    public boolean handlePierceRelativePhaseInteraction(List<Arrival> requiredArrivals,
                                                         double eventStationDistance)
             throws Exception {
-        for(int counter = 0; counter < requiredArrivals.length; counter++) {
-            TimeDist[] timeDistArray = requiredArrivals[counter].getPierce();
+        for(int counter = 0; counter < requiredArrivals.size(); counter++) {
+            TimeDist[] timeDistArray = requiredArrivals.get(counter).getPierce();
             TimeDist timeDist = getRequiredTimeDist(timeDistArray);
             QuantityImpl timeDistDepth = new QuantityImpl(timeDist.depth,
                                                           UnitImpl.KILOMETER);
@@ -174,16 +175,16 @@ public class PhaseInteraction implements EventStationSubsetter {
         return false;
     }
 
-    public boolean handleRelativePathInteraction(Arrival[] requiredArrivals,
+    public boolean handleRelativePathInteraction(List<Arrival> requiredArrivals,
                                                  double eventStationDistance)
             throws Exception {
-        for(int counter = 0; counter < requiredArrivals.length; counter++) {
-            TimeDist[] timeDistArray = requiredArrivals[counter].getPath();
+        for(int counter = 0; counter < requiredArrivals.size(); counter++) {
+            TimeDist[] timeDistArray = requiredArrivals.get(counter).getPath();
             if(checkForRelativePathInteraction(timeDistArray,
                                                0,
                                                timeDistArray.length,
                                                eventStationDistance,
-                                               requiredArrivals[counter].getDistDeg())) { return true; }
+                                               requiredArrivals.get(counter).getDistDeg())) { return true; }
         }
         return false;
     }
@@ -263,19 +264,19 @@ public class PhaseInteraction implements EventStationSubsetter {
         //}
     }
 
-    public boolean handleAbsolutePhaseInteraction(Arrival[] requiredArrivals,
+    public boolean handleAbsolutePhaseInteraction(List<Arrival> requiredArrivals,
                                                   double azimuth,
                                                   OriginImpl origin,
                                                   String type) throws Exception {
         edu.iris.Fissures.Area area = ((Absolute)phaseInteractionType).getArea();
-        for(int i = 0; i < requiredArrivals.length; i++) {
+        for(int i = 0; i < requiredArrivals.size(); i++) {
             TimeDist[] timeDist;
             if(type.equals("PIERCE")) {
-                timeDist = requiredArrivals[i].getPierce();
+                timeDist = requiredArrivals.get(i).getPierce();
             } else {
-                timeDist = requiredArrivals[i].getPath();
+                timeDist = requiredArrivals.get(i).getPath();
             }
-            azimuth = checkForLongway(requiredArrivals[i].getDistDeg(), azimuth);
+            azimuth = checkForLongway(requiredArrivals.get(i).getDistDeg(), azimuth);
             for(int counter = 0; counter < timeDist.length; counter++) {
                 QuantityImpl timeDistDepth = new QuantityImpl(timeDist[0].depth,
                                                               UnitImpl.KILOMETER);
@@ -337,25 +338,23 @@ public class PhaseInteraction implements EventStationSubsetter {
         return null;
     }
 
-    public Arrival[] getRequiredArrival(Arrival[] arrivals) {
-        ArrayList arrayList = new ArrayList();
-        for(int counter = 0; counter < arrivals.length; counter++) {
-            String arrivalName = arrivals[counter].getName();
+    public List<Arrival> getRequiredArrival(List<Arrival> arrivals) {
+        ArrayList<Arrival> arrayList = new ArrayList<Arrival>();
+        for(int counter = 0; counter < arrivals.size(); counter++) {
+            String arrivalName = arrivals.get(counter).getName();
             if(phaseName.startsWith("tt")) {
                 if(phaseName.equals("tts")
                         && arrivalName.toUpperCase().startsWith("S")) {
-                    arrayList.add(arrivals[counter]);
+                    arrayList.add(arrivals.get(counter));
                 } else if(phaseName.equals("ttp")
                         && arrivalName.toUpperCase().startsWith("P")) {
-                    arrayList.add(arrivals[counter]);
+                    arrayList.add(arrivals.get(counter));
                 }
             } else if(phaseName.equals(arrivalName)) {
-                arrayList.add(arrivals[counter]);
+                arrayList.add(arrivals.get(counter));
             }
         }
-        Arrival[] requiredArrivals = new Arrival[arrayList.size()];
-        requiredArrivals = (Arrival[])arrayList.toArray(requiredArrivals);
-        return requiredArrivals;
+        return arrayList;
     }
 
     public double checkForLongway(double distance, double azimuth) {

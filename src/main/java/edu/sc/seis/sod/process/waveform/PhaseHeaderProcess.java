@@ -1,5 +1,7 @@
 package edu.sc.seis.sod.process.waveform;
 
+import java.util.List;
+
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
@@ -35,12 +37,12 @@ public class PhaseHeaderProcess implements SacProcess {
                         EventAccessOperations event,
                         Channel channel) {
         try {
-            Arrival[] arrivals = TauPUtil.getTauPUtil(model)
+            List<Arrival> arrivals = TauPUtil.getTauPUtil(model)
                     .calcTravelTimes(channel.getSite().getLocation(),
                                      EventUtil.extractOrigin(event),
                                      new String[] {phaseName});
-            if(arrivals.length != 0) {
-                TauP_SetSac.setSacTHeader(sac, tHeader, arrivals[0]);
+            if(arrivals.size() != 0) {
+                TauP_SetSac.setSacTHeader(sac, tHeader, arrivals.get(0));
             }
         } catch(TauModelException e) {
             logger.warn("Problem setting travel times for " + phaseName

@@ -140,7 +140,7 @@ public class VectorImageProcess extends SeismogramImageProcess implements
                                  List<VelocityChannel> channels,
                                  DataSetSeismogram[] seis) throws Exception {
         Origin o = EventUtil.extractOrigin(event);
-        Arrival[] arrivals = getArrivals(channels.iterator().next(), o, phaseFlagNames);
+        List<Arrival> arrivals = getArrivals(channels.iterator().next(), o, phaseFlagNames);
         AmpConfig globalAC = null;
         if(globalACConf != null) {
             globalAC = globalACConf.createAmpConfig();

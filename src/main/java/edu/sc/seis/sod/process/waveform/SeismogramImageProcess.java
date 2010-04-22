@@ -7,6 +7,7 @@ package edu.sc.seis.sod.process.waveform;
 
 import java.awt.Dimension;
 import java.io.File;
+import java.util.List;
 
 import javax.swing.SwingUtilities;
 
@@ -160,11 +161,11 @@ public class SeismogramImageProcess implements WaveformProcess {
         return memDSS;
     }
 
-    protected Arrival[] getArrivals(Channel chan, Origin o, String[] phases)
+    protected List<Arrival> getArrivals(Channel chan, Origin o, String[] phases)
             throws TauModelException {
         Station sta = chan.getSite().getStation();
         TimeInterval filterOffset = new TimeInterval(10, UnitImpl.SECOND);
-        Arrival[] arrivals = PhasePhilter.filter(tauP.calcTravelTimes(sta,
+        List<Arrival> arrivals = PhasePhilter.filter(tauP.calcTravelTimes(sta,
                                                                       o,
                                                                       phases),
                                                  filterOffset);
@@ -174,16 +175,16 @@ public class SeismogramImageProcess implements WaveformProcess {
         return arrivals;
     }
 
-    protected void addFlags(Arrival[] arrivals,
+    protected void addFlags(List<Arrival> arrivals,
                             Origin o,
                             SeismogramDisplay bsd,
                             DataSetSeismogram seis) {
         MicroSecondDate originTime = new MicroSecondDate(o.getOriginTime());
-        for(int i = 0; i < arrivals.length; i++) {
-            MicroSecondDate flagTime = originTime.add(new TimeInterval(arrivals[i].getTime(),
+        for(int i = 0; i < arrivals.size(); i++) {
+            MicroSecondDate flagTime = originTime.add(new TimeInterval(arrivals.get(i).getTime(),
                                                                        UnitImpl.SECOND));
             bsd.add(new Flag(flagTime,
-                             renamer.rename(arrivals[i]),
+                             renamer.rename(arrivals.get(i)),
                              bsd.getDrawableSeismogram(seis)));
         }
     }

@@ -1,5 +1,7 @@
 package edu.sc.seis.sod.subsetter.eventStation;
 
+import java.util.List;
+
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.IfEvent.Origin;
@@ -49,27 +51,27 @@ public class PhaseExists implements EventStationSubsetter {
                              StationImpl station,
                           CookieJar cookieJar) throws Exception {
         Origin origin = event.get_preferred_origin();
-        Arrival[] arrivals = tauPTime.calcTravelTimes(station,
+        List<Arrival> arrivals = tauPTime.calcTravelTimes(station,
                                                       origin,
                                                       new String[] {phaseName});
         if(getRequiredArrival(arrivals) == null) return new StringTreeLeaf(this, false);
         else return new StringTreeLeaf(this, true);
     }
 
-    public Arrival getRequiredArrival(Arrival[] arrivals) {
+    public Arrival getRequiredArrival(List<Arrival> arrivals) {
         Arrival requiredArrival = null;
-        for(int counter = 0; counter < arrivals.length; counter++) {
-            String arrivalName = arrivals[counter].getName();
+        for(int counter = 0; counter < arrivals.size(); counter++) {
+            String arrivalName = arrivals.get(counter).getName();
             if(phaseName.startsWith("tt")) {
                 if(phaseName.equals("tts")
                         && arrivalName.toUpperCase().startsWith("S")) {
-                    requiredArrival = arrivals[counter];
+                    requiredArrival = arrivals.get(counter);
                 } else if(phaseName.equals("ttp")
                         && arrivalName.toUpperCase().startsWith("P")) {
-                    requiredArrival = arrivals[counter];
+                    requiredArrival = arrivals.get(counter);
                 }
             } else if(phaseName.equals(arrivalName)) {
-                requiredArrival = arrivals[counter];
+                requiredArrival = arrivals.get(counter);
             }
         }
         return requiredArrival;
