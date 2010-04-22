@@ -188,8 +188,8 @@
             </xsd:annotation>
             
             <choice>
-                <element name="zeroFill">
-                <element name="linearFill">
+                <element name="zeroFill"> <empty/> </element>
+                <element name="linearFill"> <empty/> </element>
             </choice>
         </element>
     </define>
