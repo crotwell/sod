@@ -42,6 +42,8 @@ task tarDist(type: Tar, dependsOn: ['makeScript', 'createBuildScript', 'wrapper'
         include('externalExample/**')
         include('jythonExample/**')
         include('src/**')
+        include('lib/**')
+        include('etc/**')
         include('gradleWrapper/**')
         include('gradlew')
         include('gradlew.bat')
@@ -68,6 +70,7 @@ def getDExtras() {
                 'swing.volatileImageBufferEnabled':'false', 
                 'java.endorsed.dirs':'${LIB}/endorsed', 
                 'jacorb.connection.client.pending_reply_timeout':'120000',
+                'jacorb.home':'.' ,
                 'jacorb.log.default.verbosity':'2' ]
 }
 
