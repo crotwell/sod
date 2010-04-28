@@ -37,6 +37,12 @@
         overflowToDisk="false"
         />
         
+    <cache name="edu.sc.seis.fissuresUtil.hibernate.ChannelGroup"
+        maxElementsInMemory="4000"
+        eternal="true"
+        overflowToDisk="false"
+        />
+        
     <cache name="edu.sc.seis.fissuresUtil.cache.CacheEvent"
         maxElementsInMemory="100"
         eternal="true"
@@ -49,4 +55,27 @@
         overflowToDisk="false"
         />
 
+    <cache name="edu.sc.seis.sod.EventNetworkPair"
+        maxElementsInMemory="10"
+        eternal="true"
+        overflowToDisk="false"
+        />
+
+    <cache name="edu.sc.seis.sod.EventStationPair"
+        maxElementsInMemory="100"
+        eternal="true"
+        overflowToDisk="false"
+        />
+
+    <cache name="edu.sc.seis.sod.AbstractEventChannelPair"
+        maxElementsInMemory="100"
+        eternal="true"
+        overflowToDisk="false"
+        />
+
+    <cache name="edu.sc.seis.sod.QueryTime"
+        maxElementsInMemory="10"
+        eternal="true"
+        overflowToDisk="false"
+        />
 </ehcache>
