@@ -1,6 +1,6 @@
 
 group = 'edu.sc.seis'
-version = '3.0.0beta4'
+version = '3.0.0beta5'
 
 dependencies {
     compile project(':bag') { transitive = true }
