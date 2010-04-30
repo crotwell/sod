@@ -36,7 +36,6 @@ public class ResponseWriter implements ChannelSubsetter {
         try {
             ChannelId channel_id = chan.get_id();
             Instrumentation inst = network.getInstrumentation(channel_id);
-            NetworkDB.getSingleton().putInstrumentation(chan, inst);
             String response = ResponsePrint.printResponse(channel_id, inst);
             velocitizer.evaluate(template, response, chan);
         } catch(ChannelNotFound e) {
