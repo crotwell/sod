@@ -29,6 +29,10 @@ public abstract class NetworkSource extends AbstractSource {
         super(dns, name, retries);
     }
     
+    public NetworkSource(NetworkSource wrapped) {
+        this(wrapped.getDNS(), wrapped.getName(), wrapped.getRetries());
+    }
+    
     public NetworkSource(Element config) throws Exception {
         super(config, "IRIS_NetworkDC");
         Element subElement = SodUtil.getElement(config, "refreshInterval");

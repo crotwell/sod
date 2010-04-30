@@ -1,13 +1,11 @@
 package edu.sc.seis.sod.source.network;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.omg.CORBA.BAD_PARAM;
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfEvent.NotFound;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
@@ -29,7 +27,6 @@ import edu.sc.seis.fissuresUtil.cache.LazyNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
 import edu.sc.seis.fissuresUtil.cache.VestingNetworkDC;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.hibernate.InstrumentationDBNetworkAccess;
 
 public class NetworkFinder extends NetworkSource {
 
@@ -103,7 +100,7 @@ public class NetworkFinder extends NetworkSource {
                     continue;
                 } catch(BAD_PARAM bp) {
                     // Must be a concrete, keep it
-                    goodNets.add(new InstrumentationDBNetworkAccess((CacheNetworkAccess)tmpNets[i]));
+                    goodNets.add((CacheNetworkAccess)tmpNets[i]);
                 }
             }
             return goodNets;

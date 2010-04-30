@@ -1,27 +1,20 @@
 package edu.sc.seis.sod;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Timer;
 
 import org.apache.log4j.Logger;
-import org.hibernate.NonUniqueObjectException;
-import org.omg.CORBA.BAD_PARAM;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.ChannelNotFound;
-import edu.iris.Fissures.IfNetwork.Instrumentation;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.iris.Fissures.IfNetwork.Station;
-import edu.iris.Fissures.IfNetwork.VirtualNetworkHelper;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
@@ -33,17 +26,16 @@ import edu.iris.Fissures.network.StationIdUtil;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.DBCacheNetworkAccess;
-import edu.sc.seis.fissuresUtil.cache.LazyNetworkAccess;
-import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
-import edu.sc.seis.sod.hibernate.InstrumentationDBNetworkAccess;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.source.event.EventSource;
+import edu.sc.seis.sod.source.network.InstrumentationFromDB;
+import edu.sc.seis.sod.source.network.LoadedNetworkSource;
 import edu.sc.seis.sod.source.network.NetworkFinder;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
@@ -481,12 +473,12 @@ public class NetworkArm implements Arm {
         }
     }
     
-    List<ChannelImpl> getSuccessfulChannelsFromServer(StationImpl station, NetworkSource networkSource) {
+    List<ChannelImpl> getSuccessfulChannelsFromServer(StationImpl station, LoadedNetworkSource loadedNetworkSource) {
         synchronized(this) {
             statusChanged("Getting channels for " + station);
             List<ChannelImpl> successes = new ArrayList<ChannelImpl>();
             try {               
-                List<ChannelImpl> chansAtStation = networkSource.getChannels(station);
+                List<ChannelImpl> chansAtStation = loadedNetworkSource.getChannels(station);
                 Status inProg = Status.get(Stage.NETWORK_SUBSETTER,
                                            Standing.IN_PROG);
                 boolean needCommit = false;
@@ -496,7 +488,7 @@ public class NetworkArm implements Arm {
                     chan.getSite().setStation(dbSta);
                     change(chan, inProg);
                     StringTree effectiveTimeResult = chanEffectiveSubsetter.accept(chan,
-                                                                                   getNetworkSource());
+                                                                                   loadedNetworkSource);
                     NetworkDB.flush();
                     if(effectiveTimeResult.isSuccess()) {
                         NetworkDB.flush();
@@ -506,7 +498,7 @@ public class NetworkArm implements Arm {
                                 StringTree result;
                                 try {
                                     result = cur.accept(chan,
-                                                        getNetworkSource());
+                                                        loadedNetworkSource);
                                 } catch(Throwable t) {
                                     result = new Fail(cur, "Exception", t);
                                 }
@@ -585,7 +577,7 @@ public class NetworkArm implements Arm {
         }
     }
     
-    List<ChannelGroup> getSuccessfulChannelGroupsFromServer(StationImpl station, NetworkSource net) {
+    List<ChannelGroup> getSuccessfulChannelGroupsFromServer(StationImpl station, LoadedNetworkSource net) {
         synchronized(this) {
             List<ChannelImpl> failures = new ArrayList<ChannelImpl>();
             List<ChannelGroup> chanGroups = channelGrouper.group(getSuccessfulChannelsFromServer(station, net),
@@ -605,20 +597,6 @@ public class NetworkArm implements Arm {
             }
             return chanGroups;
         }
-    }
-    
-    public Instrumentation getInstrumentation(ChannelImpl chan) throws ChannelNotFound {
-        Instrumentation inst = getNetworkDB().getInstrumentation(chan);
-        if (inst == null) {
-            CacheNetworkAccess networkAccess = new InstrumentationDBNetworkAccess(getNetworkSource().getNetwork((NetworkAttrImpl)chan.getNetworkAttr()));
-            try {
-                inst = networkAccess.retrieve_instrumentation(chan.getId(), chan.getBeginTime());
-            } catch (ChannelNotFound e) {
-                getNetworkDB().putInstrumentation(chan, null);
-            }
-            getNetworkDB().putInstrumentation(chan, inst);
-        }
-        return inst;
     }
 
     private void statusChanged(String newStatus) {
@@ -685,8 +663,10 @@ public class NetworkArm implements Arm {
         }
     }
 
-    private NetworkSource finder = new NetworkFinder("edu/iris/dmc", "IRIS_NetworkDC", -1);
+    private NetworkSource internalFinder = new NetworkFinder("edu/iris/dmc", "IRIS_NetworkDC", -1);
 
+    private NetworkSource finder = new InstrumentationFromDB(internalFinder);
+    
     private NetworkSubsetter attrSubsetter = new PassNetwork();
 
     private NetworkSubsetter netEffectiveSubsetter = new PassNetwork();
@@ -700,10 +680,14 @@ public class NetworkArm implements Arm {
     private ChannelSubsetter chanEffectiveSubsetter = new PassChannel();
 
     private ChannelGrouper channelGrouper = new ChannelGrouper();
-    
+
 
     public NetworkSource getNetworkSource() {
         return finder;
+    }
+
+     NetworkSource getInternalNetworkSource() {
+        return internalFinder;
     }
     
     protected NetworkDB getNetworkDB() {

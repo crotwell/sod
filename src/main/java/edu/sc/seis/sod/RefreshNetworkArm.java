@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TimerTask;
 
+import edu.iris.Fissures.IfNetwork.ChannelNotFound;
+import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.NetworkIdUtil;
@@ -71,11 +73,17 @@ public class RefreshNetworkArm extends TimerTask {
             logger.info("found "+stas.length+" stations in "+NetworkIdUtil.toString(net.get_attributes()));
             if (Start.getWaveformRecipe() != null || netArm.getChannelSubsetters().size() != 0) {
                 for (int s = 0; s < stas.length; s++) {
-                    LoadedNetworkSource loadSource = new LoadedNetworkSource(netArm.getNetworkSource(), stas[s]);
+                    LoadedNetworkSource loadSource = new LoadedNetworkSource(netArm.getInternalNetworkSource(), stas[s]);
                     if (Start.getWaveformRecipe() instanceof MotionVectorArm) {
                         List<ChannelGroup> cg = netArm.getSuccessfulChannelGroupsFromServer(stas[s], loadSource);
+                        for (ChannelGroup channelGroup : cg) {
+                            checkInstLoaded(channelGroup, loadSource);
+                        }
                     } else {
                         List<ChannelImpl> chans = netArm.getSuccessfulChannelsFromServer(stas[s], loadSource);
+                        for (ChannelImpl channelImpl : chans) {
+                            checkInstLoaded(channelImpl, loadSource);
+                        }
                     }
                 }
             }
@@ -87,6 +95,24 @@ public class RefreshNetworkArm extends TimerTask {
                 netstr = NetworkIdUtil.toString(net.get_attributes());
             } catch(Throwable tt) {}
             GlobalExceptionHandler.handle("Problem with network: " + netstr, t);
+        }
+    }
+    
+    void checkInstLoaded(ChannelGroup cg, LoadedNetworkSource loadSource) {
+        checkInstLoaded(cg.getChannel1(), loadSource);
+        checkInstLoaded(cg.getChannel2(), loadSource);
+        checkInstLoaded(cg.getChannel3(), loadSource);
+    }
+    
+    void checkInstLoaded(ChannelImpl chan, LoadedNetworkSource loadSource) {
+        if (loadSource.isInstrumentationLoaded(chan.getId())) {
+            Instrumentation inst;
+            try {
+                inst = loadSource.getInstrumentation(chan.getId());
+                NetworkDB.getSingleton().putInstrumentation(chan, inst);
+            } catch(ChannelNotFound e) {
+                NetworkDB.getSingleton().putInstrumentation(chan, null);
+            }
         }
     }
 

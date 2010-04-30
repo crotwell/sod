@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.source.network;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import edu.iris.Fissures.IfNetwork.ChannelId;
@@ -9,6 +10,7 @@ import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.iris.Fissures.IfNetwork.Sensitivity;
+import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.NetworkIdUtil;
@@ -40,6 +42,7 @@ public class LoadedNetworkSource extends NetworkSource {
 
     @Override
     public Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InstrumentationInvalid {
+        instrumentationLoaded.add(ChannelIdUtil.toString(chanId));
         return wrapped.getInstrumentation(chanId);
     }
 
@@ -60,6 +63,7 @@ public class LoadedNetworkSource extends NetworkSource {
 
     @Override
     public Sensitivity getSensitivity(ChannelId chanId) throws ChannelNotFound, InstrumentationInvalid {
+        instrumentationLoaded.add(ChannelIdUtil.toString(chanId));
         return wrapped.getSensitivity(chanId);
     }
 
@@ -71,8 +75,13 @@ public class LoadedNetworkSource extends NetworkSource {
         return wrapped.getStations(net);
     }
     
+    public boolean isInstrumentationLoaded(ChannelId chan) {
+        return instrumentationLoaded.contains(ChannelIdUtil.toString(chan));
+    }
+    
     NetworkSource wrapped;
     StationImpl sta;
     List<StationImpl> allStations;
     List<ChannelImpl> chans;
+    HashSet<String> instrumentationLoaded = new HashSet<String>();
 }
