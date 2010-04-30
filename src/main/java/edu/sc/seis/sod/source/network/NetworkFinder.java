@@ -147,7 +147,7 @@ public class NetworkFinder extends NetworkSource {
     
     public CacheNetworkAccess getNetwork(NetworkId netId)  {
         try {
-        return (CacheNetworkAccess)netDC.a_finder().retrieve_by_id(netId);
+        return (CacheNetworkAccess)getNetworkDC().a_finder().retrieve_by_id(netId);
         } catch (NetworkNotFound e) {
             throw new RuntimeException("don't think this should happen as we must have gotten the netid from the server", e);
         }
