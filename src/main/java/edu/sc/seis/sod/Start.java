@@ -597,8 +597,12 @@ public class Start {
 
     private InputSourceCreator creator;
 
-    private Args args;
+    private static Args args;
 
+    public static Args getArgs() {
+        return args;
+    }
+    
     public static Element getConfig() {
         return config;
     }
@@ -643,8 +647,8 @@ public class Start {
             System.err.println("Oh boy, this is really bad. No, it is even worse then that.");
             logger.fatal("horror of horrors...");
         } catch(Throwable t) {
-            System.exit(1);
         }
+        System.exit(1);
     }
 
     public static void armFailure(Arm arm, Throwable t) {

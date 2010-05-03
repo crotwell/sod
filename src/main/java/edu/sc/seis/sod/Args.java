@@ -78,6 +78,10 @@ public class Args {
                        'v',
                        "version",
                        "Print SOD's version and exit"));
+        add(new Switch(QUIT_ON_ERROR_SWITCH,
+                       JSAP.NO_SHORTFLAG,
+                       QUIT_ON_ERROR_SWITCH,
+                       "Exit on the first error instead of retrying"));
         add(new FlaggedOption("props",
                               new FileParser(),
                               null,
@@ -231,6 +235,10 @@ public class Args {
         return result.getBoolean("quick");
     }
 
+    public boolean isQuitOnError() {
+        return result.getBoolean(QUIT_ON_ERROR_SWITCH);
+    }
+
     public boolean onlyValidate() {
         return result.getBoolean("validate");
     }
@@ -276,6 +284,8 @@ public class Args {
             return f;
         }
     }
+    
+    public static final String QUIT_ON_ERROR_SWITCH = "quitOnError";
     
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(Args.class);
 }
