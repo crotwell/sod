@@ -78,4 +78,31 @@
             </element>
         </element>
     </define>
+    <define name="tryInOrderDataCenter">
+        <element name="tryInOrderDataCenter">
+            <xsd:annotation>
+                <summary>Allows multiple data centers with the first one with data being used</summary>
+                <description> This type of datacenter allows several
+                    data centers with the first one that has data for a given even-channel being used. It goes through
+                    each of the choices in the order given, and uses the first one that gives any available data.
+                    If no choice has data, then the result of the last datacenter is used (albeit the empty result). The
+                    example tried to get data from the BUD first and then POND if it isn't in the BUD.</description>
+                <example>
+                    <tryInOrderDataCenter>
+                            <fixedDataCenter>
+                                <name>IRIS_BudDataCenter</name>
+                                <dns>edu/iris/dmc</dns>
+                            </fixedDataCenter>
+                            <fixedDataCenter>
+                                <name>IRIS_PondDataCenter</name>
+                                <dns>edu/iris/dmc</dns>
+                            </fixedDataCenter>
+                    </tryInOrderDataCenter>
+                </example>
+            </xsd:annotation>
+            <oneOrMore>
+                <externalRef href="fixedDataCenter.rng"/>
+            </oneOrMore>
+        </element>
+    </define>
 </grammar>
