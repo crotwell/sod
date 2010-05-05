@@ -73,8 +73,8 @@ public class Version{
 
     public static String getCVSVersion() { return cvsversion; }
 
-    private static String cvsversion = "$Revision: 20868 $";
-    private static String datetime = "$Date: 2009-11-10 16:40:11 -0500 (Tue, 10 Nov 2009) $";
+    private static String cvsversion = "$Revision: 21282 $";
+    private static String datetime = "$Date: 2010-05-05 10:37:36 -0400 (Wed, 05 May 2010) $";
 
     //versionsToDate stores all of the versions that have been released,
     //and is a multidimensional array of width 2.  The first String in
@@ -103,7 +103,9 @@ public class Version{
       new Version("3.0alpha", true),
       new Version("3.0beta1", true),
       new Version("3.0beta2", false),
-      new Version("3.0beta3", false)
+      new Version("3.0beta3", false),
+      new Version("3.0beta4", false),
+      new Version("3.0beta5", false)
     };
 
 }
