@@ -102,6 +102,7 @@ task copySchemaDocs(dependsOn: 'buildSchemaDocs', type: Copy) {
 
 task buildSchemaDocs(dependsOn: ['buildSchema', classes])  { 
     inputs.dir 'src/main/relax'
+    inputs.files 'site/elementPage.vm'
     outDir = project.file('build/velocity/sod/ingredients/')
     outputs.dir outDir
     doLast{
