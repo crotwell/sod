@@ -154,6 +154,15 @@ public class Start {
             Start.props.put("fissuresUtil.database.url", "jdbc:hsqldb:mem:SodDB");
         }
         logger.info("Recipe: "+configFileName);
+        if (args.isPrintRecipe()) {
+            BufferedReader in = new BufferedReader(new InputStreamReader(createInputStream(configFileName)));
+            String line;
+            while((line = in.readLine()) != null) {
+                System.out.println(line);
+            }
+            System.out.flush();
+            System.exit(0);
+        }
         initDatabase();
     }
 

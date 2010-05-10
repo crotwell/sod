@@ -66,9 +66,9 @@ public class Args {
                        'i',
                        "invalid",
                        "The recipe is known to be invalid so skip the 10 second wait"));
-        add(new Switch("print-recipe",
+        add(new Switch(PRINT_RECIPE_SWITCH,
                        'r',
-                       "print-recipe",
+                       PRINT_RECIPE_SWITCH,
                        "Print the created recipe to stdout instead of running it"));
         add(new Switch("replace-recipe",
                        JSAP.NO_SHORTFLAG,
@@ -238,6 +238,10 @@ public class Args {
     public boolean isQuitOnError() {
         return result.getBoolean(QUIT_ON_ERROR_SWITCH);
     }
+    
+    public boolean isPrintRecipe() {
+        return result.getBoolean(PRINT_RECIPE_SWITCH);
+    }
 
     public boolean onlyValidate() {
         return result.getBoolean("validate");
@@ -284,8 +288,9 @@ public class Args {
             return f;
         }
     }
-    
+
     public static final String QUIT_ON_ERROR_SWITCH = "quitOnError";
+    public static final String PRINT_RECIPE_SWITCH = "print-recipe";
     
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(Args.class);
 }
