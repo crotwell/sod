@@ -38,7 +38,12 @@ public class GapFill extends Merge {
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) throws Exception {
-        WaveformResult merged = super.process(event, channel, original, available, seismograms, cookieJar);
+        WaveformResult merged = super.process(event, 
+                                              channel, 
+                                              original, 
+                                              available, 
+                                              ReduceTool.cutOverlap(seismograms), 
+                                              cookieJar);
         List<LocalSeismogramImpl> sortedSeismograms = new ArrayList<LocalSeismogramImpl>();
         for (int i = 0; i < merged.getSeismograms().length; i++) {
             sortedSeismograms.add(merged.getSeismograms()[i]);
@@ -119,6 +124,8 @@ public class GapFill extends Merge {
     }
     
     FillStyle filler;
+    
+    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(GapFill.class);
 }
 
 abstract class FillStyle {
