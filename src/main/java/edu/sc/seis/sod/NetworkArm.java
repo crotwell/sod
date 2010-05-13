@@ -147,8 +147,8 @@ public class NetworkArm implements Arm {
 
     private void loadConfigElement(Object sodElement)
             throws ConfigurationException {
-        if(sodElement instanceof NetworkFinder) {
-            finder = (NetworkFinder)sodElement;
+        if(sodElement instanceof NetworkSource) {
+            finder = (NetworkSource)sodElement;
         } else if(sodElement instanceof NetworkSubsetter) {
             attrSubsetter = (NetworkSubsetter)sodElement;
         } else if(sodElement instanceof StationSubsetter) {
@@ -157,7 +157,7 @@ public class NetworkArm implements Arm {
             chanSubsetters.add((ChannelSubsetter)sodElement);
         } else {
             throw new ConfigurationException("Unknown configuration object: "
-                    + sodElement);
+                    + sodElement.getClass());
         }
     }
 
