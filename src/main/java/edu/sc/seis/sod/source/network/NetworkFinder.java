@@ -66,23 +66,23 @@ public class NetworkFinder extends NetworkSource {
         ProxyNetworkDC netDC = getNetworkDC();
         // purge cache before loading from server
         netDC.reset();
-        if (constrainingCodes.length > 0) {
+        if (getConstrainingNetworkCodes().length > 0) {
             edu.iris.Fissures.IfNetwork.NetworkFinder netFinder = netDC.a_finder();
-            List<CacheNetworkAccess> constrainedNets = new ArrayList<CacheNetworkAccess>(constrainingCodes.length);
-            for (int i = 0; i < constrainingCodes.length; i++) {
+            List<CacheNetworkAccess> constrainedNets = new ArrayList<CacheNetworkAccess>();
+            for (int i = 0; i < getConstrainingNetworkCodes().length; i++) {
                 CacheNetworkAccess[] found = null;
                 // this is a bit of a hack as names could be one or two
                 // characters, but works with _US-TA style
                 // virtual networks at the DMC
                 try {
-                    if (constrainingCodes[i].length() > 2) {
-                        found = (CacheNetworkAccess[])netFinder.retrieve_by_name(constrainingCodes[i]);
+                    if (getConstrainingNetworkCodes()[i].length() > 2) {
+                        found = (CacheNetworkAccess[])netFinder.retrieve_by_name(getConstrainingNetworkCodes()[i]);
                     } else {
-                        found = (CacheNetworkAccess[])netFinder.retrieve_by_code(constrainingCodes[i]);
+                        found = (CacheNetworkAccess[])netFinder.retrieve_by_code(getConstrainingNetworkCodes()[i]);
                     }
                 } catch(NetworkNotFound e) {
                     // this probably indicates a bad conf file, warn and exit
-                    Start.informUserOfBadNetworkAndExit(constrainingCodes[i], e);
+                    Start.informUserOfBadNetworkAndExit(getConstrainingNetworkCodes()[i], e);
                 }
                 for (int j = 0; j < found.length; j++) {
                     constrainedNets.add(found[j]);
