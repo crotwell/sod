@@ -22,6 +22,12 @@ public class InstrumentationFromDB extends NetworkSource {
         super(wrapped);
         this.wrapped = wrapped;
     }
+
+    @Override
+    public void setConstrainingNetworkCodes(String[] constrainingCodes) {
+        super.setConstrainingNetworkCodes(constrainingCodes);
+        wrapped.setConstrainingNetworkCodes(constrainingCodes);
+    }
     
     @Override
     public Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InstrumentationInvalid {
@@ -66,16 +72,16 @@ public class InstrumentationFromDB extends NetworkSource {
 
     @Override
     public List<CacheNetworkAccess> getNetworkByName(String name) throws NetworkNotFound {
-        return getNetworkByName(name);
+        return wrapped.getNetworkByName(name);
     }
 
     @Override
     public List<CacheNetworkAccess> getNetworks() {
-        return getNetworks();
+        return wrapped.getNetworks();
     }
 
     @Override
     public List<StationImpl> getStations(NetworkId net) {
-        return getStations(net);
+        return wrapped.getStations(net);
     }
 }
