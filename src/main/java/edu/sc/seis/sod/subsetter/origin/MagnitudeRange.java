@@ -83,9 +83,14 @@ public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter {
     private Magnitude[] acceptValues(Magnitude[] mags) {
         List accepted = new ArrayList();
         for(int i = 0; i < mags.length; i++) {
-            if(accept(mags[i].value)) {
+            // be careful here as we have doubles and floats
+            // double 5.7 is not equal to float 5.7 and
+            // we might want equal to work for magnitudes, so simple cast is not what we want
+            double doubleMag = ((double)(1000f*mags[i].value))/1000d;
+            if(accept(doubleMag)) {
                 accepted.add(mags[i]);
             }
+            System.out.println("MagnitudeRange: "+doubleMag+"  "+ accept(doubleMag));
         }
         return (Magnitude[])accepted.toArray(new Magnitude[0]);
     }
