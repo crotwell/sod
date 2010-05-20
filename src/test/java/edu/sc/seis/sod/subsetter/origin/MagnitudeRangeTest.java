@@ -19,6 +19,41 @@ import edu.sc.seis.sod.XMLConfigUtil;
 
 public class MagnitudeRangeTest extends TestCase {
 
+    public void testLessThan() throws Exception {
+        Magnitude mag = new Magnitude();
+        mag.type = "mb";
+        mag.value = 6.0f;
+        Origin origin = MockOrigin.create();
+        origin.setMagnitudes(new Magnitude[] {mag});
+        EventAttr eventAttr = new EventAttrImpl("test",
+                                                ParseRegions.getInstance()
+                                                        .getGeographicRegion(7));
+        Element element = XMLConfigUtil.parse("<magnitudeRange>"
+                + "<magType>mb</magType>" + "<min>5.7</min>" + "<lessThan>6.0</lessThan>"
+                + "</magnitudeRange>");
+        MagnitudeRange range = new MagnitudeRange(element);
+        
+        mag.value=6.0f;
+        assertFalse(mag.value + " " + mag.type + "  (" + range.getMinValue()+ " - " + range.getMaxValue()
+                   + ") lessThan ",
+           range.accept(null, eventAttr, origin).isSuccess());
+        
+        mag.value = 5.9f;
+        assertTrue(mag.value + " " + mag.type + "  (" + range.getMinValue()+ " - " + range.getMaxValue()
+                    + ") lessThan ",
+            range.accept(null, eventAttr, origin).isSuccess());
+        
+        mag.value = 5.7f;
+        assertTrue(mag.value + " " + mag.type + "  (" + range.getMinValue()+ " - " + range.getMaxValue()
+                    + ") min ",
+            range.accept(null, eventAttr, origin).isSuccess());
+        
+        mag.value = 5.6f;
+        assertFalse(mag.value + " " + mag.type + "  (" + range.getMinValue()+ " - " + range.getMaxValue()
+                    + ") min ",
+            range.accept(null, eventAttr, origin).isSuccess());
+    }
+    
     public void testMag() throws Exception {
         Magnitude mag = new Magnitude();
         mag.type = "mb";
