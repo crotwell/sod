@@ -2,6 +2,7 @@ package edu.sc.seis.sod.subsetter.channel;
 
 import junit.framework.TestCase;
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannel;
 import edu.sc.seis.sod.UserConfigurationException;
 
@@ -78,24 +79,24 @@ public class TestChannelCode extends TestCase {
         } catch(UserConfigurationException uce) {}
     }
 
-    private void assertAccepted(Channel chan) {
+    private void assertAccepted(ChannelImpl chan) {
         assertTrue(cc.accept(chan, null).isSuccess());
     }
 
-    private void assertRejected(Channel chan) {
+    private void assertRejected(ChannelImpl chan) {
         assertFalse(cc.accept(chan, null).isSuccess());
     }
 
-    private static final Channel BHZ = MockChannel.createChannel();
+    private static final ChannelImpl BHZ = MockChannel.createChannel();
 
-    private static final Channel BHE = MockChannel.createEastChannel();
+    private static final ChannelImpl BHE = MockChannel.createEastChannel();
 
-    private static final Channel LHZ = MockChannel.createChannel();
+    private static final ChannelImpl LHZ = MockChannel.createChannel();
     static {
         LHZ.get_id().channel_code = "LHZ";
     }
 
-    private static final Channel LLN = MockChannel.createChannel();
+    private static final ChannelImpl LLN = MockChannel.createChannel();
     static {
         LLN.get_id().channel_code = "LLN";
     }

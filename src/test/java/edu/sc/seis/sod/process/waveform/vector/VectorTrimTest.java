@@ -216,7 +216,7 @@ public class VectorTrimTest extends TestCase {
     }
     
     public void testAmmonData() throws Exception {
-        String ammomSacFileBase = "poha-iu-10-lh";
+        String ammomSacFileBase = "edu.sc.seis.sod.process.waveform.vector.vectorTrimTest.poha-iu-10-lh";
         BufferedInputStream in = new BufferedInputStream(getClass().getClassLoader().getResourceAsStream(ammomSacFileBase+"z"));
         LocalSeismogramImpl z = SacToFissures.getSeismogram(in);
         in.close();

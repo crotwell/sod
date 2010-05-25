@@ -26,15 +26,10 @@ import edu.sc.seis.sod.status.StringTree;
 
 public class BelongsToVirtual implements StationSubsetter {
 
-    private static NetworkAccess getVirtual(Element el)
-            throws ConfigurationException {
-        return getVirtual(SodUtil.getNestedText(el));
-    }
-
-    private static NetworkAccess getVirtual(String name)
+    private static NetworkAccess getVirtual(NetworkSource networkSource, String name)
             throws ConfigurationException {
         try {
-            List<CacheNetworkAccess> nets = Start.getNetworkArm().getNetworkSource().getNetworkByName(name);
+            List<CacheNetworkAccess> nets = networkSource.getNetworkByName(name);
             if(nets.size() > 1) {
                 throw new ConfigurationException("There are several nets with the name "
                         + name);
@@ -47,37 +42,39 @@ public class BelongsToVirtual implements StationSubsetter {
     }
 
     public BelongsToVirtual(Element el) throws ConfigurationException {
-        this(getVirtual(el), Start.getNetworkArm().getRefreshInterval());
+        this(SodUtil.getNestedText(el), Start.getNetworkArm().getRefreshInterval());
     }
 
-    public BelongsToVirtual(NetworkAccess virtualNet,
+    public BelongsToVirtual(String virtualNetName,
                             TimeInterval refreshInterval) {
-        this.net = virtualNet;
+        this.name = virtualNetName;
         this.refreshInterval = refreshInterval;
     }
 
-    public StringTree accept(StationImpl station, NetworkSource network) {
-        refreshStations();
-        for(int i = 0; i < stations.length; i++) {
-            if(StationIdUtil.areEqual(station, stations[i])) {
+    public StringTree accept(StationImpl station, NetworkSource network) throws ConfigurationException {
+        refreshStations(network);
+        for (StationImpl sta : stations) {
+            if(StationIdUtil.areEqual(station, sta)) {
                 return new Pass(this);
             }
         }
         return new Fail(this);
     }
 
-    private void refreshStations() {
+    private void refreshStations(NetworkSource network) throws ConfigurationException {
         if(ClockUtil.now().subtract(refreshInterval).after(lastQuery)) {
             lastQuery = ClockUtil.now();
-            stations = net.retrieve_stations();
+            NetworkAccess virtual = getVirtual(network, name);
+            stations = network.getStations(virtual.get_attributes().getId());
         }
     }
+    
+    private String name;
 
-    private Station[] stations;
+    private List<StationImpl> stations;
 
     private TimeInterval refreshInterval;
 
     private MicroSecondDate lastQuery = new MicroSecondDate(0);
 
-    private NetworkAccess net;
 }
