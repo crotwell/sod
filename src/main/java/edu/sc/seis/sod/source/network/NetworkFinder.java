@@ -163,7 +163,7 @@ public class NetworkFinder extends NetworkSource {
         return getNetwork(chanId.network_id).retrieve_sensitivity(chanId, chanId.begin_time);
     }
 
-    private VestingNetworkDC netDC;
+    protected VestingNetworkDC netDC;
 
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(NetworkFinder.class);
 }// NetworkFinder
