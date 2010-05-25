@@ -33,6 +33,7 @@ import org.xml.sax.SAXException;
 import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
+import edu.sc.seis.fissuresUtil.Alohomora;
 import edu.sc.seis.fissuresUtil.cache.RetryStrategy;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
@@ -150,6 +151,7 @@ public class Start {
         } else {
             Start.props = props;
         }
+        Alohomora.insertOrbProp(Start.props);
         if (args.isQuickAndDirty()) {
             Start.props.put("fissuresUtil.database.url", "jdbc:hsqldb:mem:SodDB");
         }
