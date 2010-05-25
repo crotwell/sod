@@ -1,5 +1,8 @@
 package edu.sc.seis.sod.process.waveform.vector;
 
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
@@ -16,6 +19,9 @@ import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.display.SimplePlotUtil;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannelId;
+import edu.sc.seis.fissuresUtil.mseed.FissuresConvert;
+import edu.sc.seis.fissuresUtil.sac.SacToFissures;
+import edu.sc.seis.seisFile.sac.SacTimeSeries;
 
 public class VectorTrimTest extends TestCase {
 
@@ -207,6 +213,25 @@ public class VectorTrimTest extends TestCase {
         checkCut(vector, start, end); 
         Cut cut = trimmer.findSmallestCoveringCuts(vector)[0];
         checkTrim(trimmer.trim(vector), new MicroSecondTimeRange(cut.getBegin(), cut.getEnd()));
+    }
+    
+    public void testAmmonData() throws Exception {
+        String ammomSacFileBase = "poha-iu-10-lh";
+        BufferedInputStream in = new BufferedInputStream(getClass().getClassLoader().getResourceAsStream(ammomSacFileBase+"z"));
+        LocalSeismogramImpl z = SacToFissures.getSeismogram(in);
+        in.close();
+        in = new BufferedInputStream(getClass().getClassLoader().getResourceAsStream(ammomSacFileBase+"n"));
+        LocalSeismogramImpl n = SacToFissures.getSeismogram(in);
+        in.close();
+        in = new BufferedInputStream(getClass().getClassLoader().getResourceAsStream(ammomSacFileBase+"e"));
+        LocalSeismogramImpl e = SacToFissures.getSeismogram(in);
+        in.close();
+
+        LocalSeismogramImpl[][] vector = new LocalSeismogramImpl[][] { {z},
+                                                                      {n},
+                                                                      {e}};
+        checkCut(vector);
+        checkTrim(trimmer.trim(vector));
     }
 
     private LocalSeismogramImpl createSpike() {
