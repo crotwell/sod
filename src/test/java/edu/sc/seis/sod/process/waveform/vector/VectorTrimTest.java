@@ -1,33 +1,30 @@
 package edu.sc.seis.sod.process.waveform.vector;
 
 import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
 import junit.framework.TestCase;
 import edu.iris.Fissures.FissuresException;
+import edu.iris.Fissures.model.ISOTime;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.SamplingImpl;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.bag.Cut;
-import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.display.SimplePlotUtil;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannelId;
-import edu.sc.seis.fissuresUtil.mseed.FissuresConvert;
 import edu.sc.seis.fissuresUtil.sac.SacToFissures;
-import edu.sc.seis.seisFile.sac.SacTimeSeries;
 
 public class VectorTrimTest extends TestCase {
 
     public void setUp() {
         trimmer = new VectorTrim();
-        baseTime = ClockUtil.now();
+        //baseTime = ClockUtil.now();
+        baseTime = new ISOTime("2010-05-26T16:28:40.059Z").getDate();
         baseSeis = createSpike();
     }
 
@@ -48,8 +45,8 @@ public class VectorTrimTest extends TestCase {
                           MicroSecondDate end) {
         Cut[] cuts = trimmer.findSmallestCoveringCuts(vector);
         assertEquals(1, cuts.length);
-        assertEquals(begin, cuts[0].getBegin());
-        assertEquals(end, cuts[0].getEnd());
+        assertEquals(begin.subtract(((TimeInterval)vector[0][0].getSampling().getPeriod().divideBy(2))), cuts[0].getBegin());
+        assertEquals(end.add(((TimeInterval)vector[0][0].getSampling().getPeriod().divideBy(2))), cuts[0].getEnd());
     }
 
     public void testOnThreeSeismogramsWithIncreasingLength()
@@ -124,7 +121,7 @@ public class VectorTrimTest extends TestCase {
         for(int i = 0; i < result.length; i++) {
             assertEquals(2, result[i].length);
             for(int j = 0; j < result[i].length; j++) {
-                assertEquals(new MicroSecondTimeRange(vector[i][j]),
+                assertEquals(" "+i+" "+j, new MicroSecondTimeRange(vector[i][j]),
                              new MicroSecondTimeRange(result[i][j]));
             }
         }
@@ -230,7 +227,8 @@ public class VectorTrimTest extends TestCase {
         LocalSeismogramImpl[][] vector = new LocalSeismogramImpl[][] { {z},
                                                                       {n},
                                                                       {e}};
-        checkCut(vector);
+        // e is latest begin, z is earliest end
+        checkCut(vector, e.getBeginTime(), z.getEndTime());
         checkTrim(trimmer.trim(vector));
     }
 
