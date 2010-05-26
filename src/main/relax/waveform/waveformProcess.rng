@@ -174,7 +174,10 @@
             <xsd:annotation>
                 <summary>Joins multiple seismograms into a single seismogram if they're contiguous</summary>
                 <description>If the seismogram server is returning multiple continuous seismograms for a request, this
-                    will join them into a single seismogram</description>
+                    will join them into a single seismogram. Continuous means that the begin time of the second seismogram
+                    is approximately one sample period after the end time of the first seismogram. 
+                    This processor does not merge overlapping seismograms or seismograms where there
+                    is a gap larger than one sample period. For those cases see collapseOverlaps and gapFill.</description>
             </xsd:annotation>
             <empty/>
         </element>
@@ -184,7 +187,7 @@
             <xsd:annotation>
                 <summary>Joins multiple seismograms into a single seismogram by filling gaps</summary>
                 <description>If the seismogram server is returning multiple continuous seismograms for a request, this
-                    will join them into a single seismogram filling any gaps. This implicitly does a merge before filling gaps.</description>
+                    will join them into a single seismogram filling any gaps. This implicitly does a collapseOverlaps and a merge before filling gaps.</description>
             </xsd:annotation>
             
             <choice>
