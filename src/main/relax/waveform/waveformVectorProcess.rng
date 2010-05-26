@@ -29,6 +29,7 @@
             <ref name="external"/>
             <ref name="vectorImageProcess"/>
             <ref name="vectorForkProcess"/>
+            <ref name="sampleSyncronize"/>
             <ref name="rotateGCP"/>
             <ref name="vectorTrim"/>
             <ref name="embeddedEventVector"/>
@@ -286,6 +287,21 @@
                 <summary>Allows any event station subsetter to be embedded here</summary>
             </xsd:annotation>
             <externalRef href="eventStation.rng"/>
+        </element>
+    </define>
+    <define name="sampleSyncronize">
+        <element name="sampleSyncronize">
+            <xsd:annotation>
+                <summary>Shifts seismograms in the vector so samples are aligned.</summary>
+                <description>Time shifts the seismograms of the vector so that the samples
+                    align in time with integer multiples of the sample period, 
+                    based on the first seismogram in the first component. 
+                    This does not modify the data, only moves the begin times by up
+                    to one half a sample period to syncronize the components. This is useful for processors
+                    like vectorTrim and rotateGCP which expect seismograms to be of the same length and/or time.
+                    Note that this may not be exact for large time windows due to numerical rounding.</description>
+            </xsd:annotation>
+            <empty/>
         </element>
     </define>
     <define name="vectorTrim">
