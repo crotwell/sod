@@ -25,6 +25,7 @@
             <ref name="temporaryNetwork"/>
             <ref name="printlineNetworkProcess"/>
             <ref name="jythonNetworkSubsetter"/>
+            <ref name="inlineJythonNetworkSubsetter"/>
         </choice>
     </define>
     <define name="code">
@@ -188,7 +189,18 @@
                             href="../../templateTypes.html#net">net</a> variables. If no template element is given, it defaults
                     to "Network: $net". If no filename is given, the output goes to standard out.</description>
             </xsd:annotation>
-            <ref name="externalClass"/>
+            <interleave>
+                <optional>
+                    <element name="template">
+                        <text/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
+            </interleave>
         </element>
     </define>
     <define name="jythonNetworkSubsetter">
@@ -214,6 +226,20 @@
             <zeroOrMore>
                 <externalRef href="../base/externalRef/anyXML.rng"/>
             </zeroOrMore>
+        </element>
+    </define>
+    <define name="inlineJythonNetworkSubsetter">
+        <element name="inlineJythonNetworkSubsetter">
+            <xsd:annotation>
+                <summary>Runs the enclosed Jython code as a network subsetter</summary>
+                <description>$jythonWaveformProcessInfo.getRelaxHTML('../../../')</description>
+                <example>
+                    <inlineJythonNetworkSubsetter>
+                        print networkAttr.network_code
+                    </inlineJythonNetworkSubsetter>
+                </example>
+            </xsd:annotation>
+            <data type="string"/>
         </element>
     </define>
 </grammar>
