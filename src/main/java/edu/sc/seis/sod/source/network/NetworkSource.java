@@ -27,6 +27,7 @@ public abstract class NetworkSource extends AbstractSource {
 
     public NetworkSource(String dns, String name, int retries) {
         super(dns, name, retries);
+        refreshInterval = new TimeInterval(1, UnitImpl.FORTNIGHT);
     }
     
     public NetworkSource(NetworkSource wrapped) {
@@ -52,6 +53,7 @@ public abstract class NetworkSource extends AbstractSource {
     protected String[] constrainingCodes;
     
     public void setConstrainingNetworkCodes(String[] constrainingCodes) {
+        if (constrainingCodes == null) {throw new IllegalArgumentException();}
         this.constrainingCodes = constrainingCodes;
     }
     
