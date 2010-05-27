@@ -205,8 +205,34 @@ public class VectorTrimTest extends TestCase {
                                                             20 - i / 133.0);
         }
         trimmer.normalizeSampling(vector);
-        MicroSecondDate start = vector[1][0].getBeginTime();
-        MicroSecondDate end = vector[2][0].getEndTime();
+        MicroSecondDate start = vector[1][0].getBeginTime(); // 1,0 has latest start
+        MicroSecondDate end = vector[2][0].getEndTime();     // 2,0 has earliest end
+        checkCut(vector, start, end); 
+        Cut cut = trimmer.findSmallestCoveringCuts(vector)[0];
+        checkTrim(trimmer.trim(vector), new MicroSecondTimeRange(cut.getBegin(), cut.getEnd()));
+    }
+
+    public void testOnSeismogramsWithSlightlyVaryingStart()
+            throws FissuresException, ParseException {
+        String[] seisTimes = new String[] { "2003.01.06 23:50:07.481",
+                                            "2003.01.06 23:50:07.482",
+                                            "2003.01.06 23:50:07.483"};
+        SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS");
+        timeFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        LocalSeismogramImpl[][] vector = new LocalSeismogramImpl[seisTimes.length][1];
+        TimeInterval seisWidth = new TimeInterval(10, UnitImpl.MINUTE);
+        for(int i = 0; i < seisTimes.length; i++) {
+            MicroSecondDate start = new MicroSecondDate(timeFormat.parse(seisTimes[i]));
+            vector[i][0] = SimplePlotUtil.createRaggedSpike(start,
+                                                            seisWidth,
+                                                            20,
+                                                            0,
+                                                            MockChannelId.createVerticalChanId(),
+                                                            20);
+        }
+        trimmer.normalizeSampling(vector);
+        MicroSecondDate start = vector[0][0].getBeginTime(); // 1,0 has latest start
+        MicroSecondDate end = vector[2][0].getEndTime();     // 2,0 has earliest end
         checkCut(vector, start, end); 
         Cut cut = trimmer.findSmallestCoveringCuts(vector)[0];
         checkTrim(trimmer.trim(vector), new MicroSecondTimeRange(cut.getBegin(), cut.getEnd()));

@@ -35,7 +35,7 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
                 return new WaveformVectorResult(seismograms,
                                                 new StringTreeLeaf(this,
                                                                    false,
-                                                                   "At least one vector missing seismograms: "+ChannelIdUtil.toString(original[i][0].channel_id)));
+                                                                   "At least one vector has no seismograms: "+ChannelIdUtil.toString(original[i][0].channel_id)));
             }
         }
         try {
@@ -54,10 +54,40 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
     public LocalSeismogramImpl[][] trim(LocalSeismogramImpl[][] vector)
             throws FissuresException {
         if(normalizeSampling(vector)) {
-            return cutVector(vector, findSmallestCoveringCuts(vector));
+            LocalSeismogramImpl[][] cutSeis = cutVector(vector, findSmallestCoveringCuts(vector));
+            // check time alignment
+            LocalSeismogramImpl[][] out = new LocalSeismogramImpl[3][cutSeis[0].length];
+            for (int i = 0; i < cutSeis[0].length; i++) {
+                out[0][i] = cutSeis[0][i];
+                out[1][i] = alignTimes(cutSeis[0][i], cutSeis[1][i]);
+                out[2][i] = alignTimes(cutSeis[0][i], cutSeis[2][i]);
+            }
+            return out;
         } else {
             throw new IllegalArgumentException("Unable to normalize samplings on seismograms in vector.  These can not be trimmed to the same length");
         }
+    }
+    
+    public static LocalSeismogramImpl alignTimes(LocalSeismogramImpl main, LocalSeismogramImpl shifty) throws FissuresException {
+        if (shifty.getNumPoints() == main.getNumPoints() +1) {
+            // looks like we are long by one
+            if (shifty.getBeginTime().difference(main.getBeginTime()).lessThan(shifty.getBeginTime().add(shifty.getSampling().getPeriod()).difference(main.getBeginTime()))) {
+                // first data point closer than second, so chop end 
+                shifty = Cut.cut(shifty, 0, shifty.getNumPoints()-1);
+            } else {
+                // second is close, so chop begin
+                shifty = Cut.cut(shifty, 1, shifty.getNumPoints());
+            }
+        }
+        if (shifty.getNumPoints() == main.getNumPoints()) {
+            shifty.begin_time = main.begin_time;
+            return shifty;
+        } 
+        if (shifty.getNumPoints() == main.getNumPoints()-1) {
+            // Oops!
+            throw new RuntimeException("Oops, cut ends up with too few points");
+        }
+        throw new RuntimeException("Oops, can't handle different num points: main="+main.getNumPoints()+" shifty="+shifty.getNumPoints());
     }
 
     public LocalSeismogramImpl[][] cutVector(LocalSeismogramImpl[][] vector,
@@ -69,12 +99,6 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
                 for(int k = 0; k < c.length; k++) {
                     LocalSeismogramImpl cutSeis = c[k].apply(vector[i][j]);
                     if(cutSeis != null) {
-                        cutSeis.begin_time = c[k].getBegin().getFissuresTime();//Align all seis on microseconds
-                        if(cutSeis.getEndTime().after(c[k].getEnd())) {//Since they weren't aligned during initial cut, there could be an extra point
-                            cutSeis = Cut.cut(cutSeis,
-                                             0,
-                                              cutSeis.getNumPoints() - 1);
-                       }
                         iResults.add(cutSeis);
                     }
                 }
@@ -85,11 +109,15 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
     }
 
     public Cut[] findSmallestCoveringCuts(LocalSeismogramImpl[][] vector) {
-        List results = new ArrayList();
+        List<Cut> results = new ArrayList<Cut>();
         for(int i = 0; i < vector[0].length; i++) {
-            results.add(findSmallestCoveringCut(vector[0][i].getBeginTime(),
-                                                vector[0][i].getEndTime(),
-                                                vector));
+            Cut cut = findSmallestCoveringCut(vector[0][i].getBeginTime(),
+                                              vector[0][i].getEndTime(),
+                                              vector);
+            // add extra 1/2 sample to begin and end in case seismograms are not quite time aligned
+            TimeInterval halfSampPeriod = ((TimeInterval)vector[0][i].getSampling().getPeriod().divideBy(2));
+            cut = new Cut(cut.getBegin().subtract(halfSampPeriod), cut.getEnd().add(halfSampPeriod));
+            results.add(cut);
         }
         return (Cut[])results.toArray(new Cut[0]);
     }
