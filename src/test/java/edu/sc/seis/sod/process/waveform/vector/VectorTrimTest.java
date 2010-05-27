@@ -65,8 +65,12 @@ public class VectorTrimTest extends TestCase {
     private void checkTrim(LocalSeismogramImpl[][] trimmed,
                            MicroSecondTimeRange cutTime) {
         for(int i = 0; i < trimmed.length; i++) {
+            assertEquals("length", trimmed[0].length, trimmed[i].length);
             assertEquals(1, trimmed[i].length);
-            assertEquals(trimmed[0][0].num_points, trimmed[i][0].num_points);
+            for (int j = 0; j < trimmed[i].length; j++) {
+                assertEquals("num points", trimmed[0][j].num_points, trimmed[i][j].num_points);
+                assertEquals("begin time", trimmed[0][j].getBeginTime(), trimmed[i][j].getBeginTime());
+            }
         }
     }
 
@@ -231,8 +235,8 @@ public class VectorTrimTest extends TestCase {
                                                             20);
         }
         trimmer.normalizeSampling(vector);
-        MicroSecondDate start = vector[0][0].getBeginTime(); // 1,0 has latest start
-        MicroSecondDate end = vector[2][0].getEndTime();     // 2,0 has earliest end
+        MicroSecondDate start = vector[2][0].getBeginTime(); // 2,0 has latest start
+        MicroSecondDate end = vector[0][0].getEndTime();     // 0,0 has earliest end
         checkCut(vector, start, end); 
         Cut cut = trimmer.findSmallestCoveringCuts(vector)[0];
         checkTrim(trimmer.trim(vector), new MicroSecondTimeRange(cut.getBegin(), cut.getEnd()));
