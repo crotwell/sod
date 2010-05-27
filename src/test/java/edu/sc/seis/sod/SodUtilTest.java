@@ -9,8 +9,6 @@ import junit.framework.TestCase;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-import edu.iris.Fissures.Time;
-
 
 public class SodUtilTest extends TestCase {
 
