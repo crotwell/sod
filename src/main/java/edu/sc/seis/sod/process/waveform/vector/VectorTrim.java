@@ -69,6 +69,7 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
     }
     
     public static LocalSeismogramImpl alignTimes(LocalSeismogramImpl main, LocalSeismogramImpl shifty) throws FissuresException {
+        shifty = SampleSyncronize.alignTimes(main, shifty);
         if (shifty.getNumPoints() == main.getNumPoints() +1) {
             // looks like we are long by one
             if (shifty.getBeginTime().difference(main.getBeginTime()).lessThan(shifty.getBeginTime().add(shifty.getSampling().getPeriod()).difference(main.getBeginTime()))) {
@@ -80,7 +81,7 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
             }
         }
         if (shifty.getNumPoints() == main.getNumPoints()) {
-            shifty.begin_time = main.begin_time;
+            shifty.begin_time = main.begin_time; // just make sure we are lined up
             return shifty;
         } 
         if (shifty.getNumPoints() == main.getNumPoints()-1) {
