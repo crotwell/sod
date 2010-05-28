@@ -17,7 +17,7 @@
                 </endTime>
             </originTimeRange>
             <magnitudeRange>
-                <min>5</min>
+                <min>6</min>
             </magnitudeRange>
             <catalog>WHDF</catalog>
         </eventFinder>
@@ -44,7 +44,9 @@
             <dns>edu/iris/dmc</dns>
         </networkFinder>
         <networkCode>II</networkCode>
+        <siteCode>00</siteCode>
         <bandCode>B</bandCode>
+        <gainCode>H</gainCode>
         <printlineChannelProcess/>
     </networkArm>
     <waveformArm>
