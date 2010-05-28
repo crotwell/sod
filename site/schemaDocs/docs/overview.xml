@@ -1,50 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document>
     <properties>
-        <title>SOD - SOD's Tactic Reference</title>
+        <title>SOD - SOD's Ingredient Reference</title>
     </properties>
     <body>
-        <section name="Welcome to the SOD Tactic Reference!">
-            <p>The tactic reference contains a page for every tactic that can go into SOD. If you
+        <section name="Welcome to the SOD Ingredient Reference!">
+            <p>The ingredient reference contains a page for every ingredient that can go into SOD. If you
                 want to extend and improve your SOD runs, it's the place to find pieces of SOD that
                 do what you want.</p>
         </section>
-        <section name="What is a tactic?">
-            <p>A tactic is a single operation in SOD. A SOD strategy file consists of multiple
-                tactics that tell SOD how to gather and process data.</p>
+        <section name="What is an Ingredient?">
+            <p>A ingredient is a single operation in SOD. A SOD recipe file consists of multiple
+                ingredients that tell SOD how to gather and process data.</p>
         </section>
-        <section name="What's in each tactic's page?">
-            <p> Each tactic's page consists of four major sections: a description of the tactic's
-                uses, an example of the tactic's structure, an abstract description of the tactic's
-                structure, and a list of all of the tactics that contain this tactic. </p>
+        <section name="What's in each ingredient's page?">
+            <p> Each ingredient's page consists of four major sections: a description of the ingredient's
+                uses, an example of the ingredient's structure, an abstract description of the ingredient's
+                structure, and a list of all of the ingredients that contain this ingredient. </p>
             <section name="Description">
-                <p> Each page starts with the name of the tactic followed by its description. The
-                    description contains a general idea of what the tactic does, common usages, and
-                    references to other tactics that use this one.</p>
+                <p> Each page starts with the name of the ingredient followed by its description. The
+                    description contains a general idea of what the ingredient does, common usages, and
+                    references to other ingredients that use this one.</p>
             </section>
             <section name="Example">
-                <p>The example shows what an instance of this tactic looks like. You can copy the
-                    example, paste it in the correct place in a strategy file, and SOD will start
-                    using it. It can help to see a base usage of a tactic to modify it for your own purposes.</p>
+                <p>The example shows what an instance of this ingredient looks like. You can copy the
+                    example, paste it in the correct place in a recipe file, and SOD will start
+                    using it. It can help to see a base usage of a ingredient to modify it for your own purposes.</p>
             </section>
             <section name="This consists of">
-                <p>This section describes the exact structure of the current tactic. It's important
+                <p>This section describes the exact structure of the current ingredient. It's important
                     enough to get its own page explaining it <a href="abstractStructure.html">here</a>.</p>
             </section>
             <section name="Places this can be found">
-                <p> This section lists every tactic that contains this tactic. In the case where
+                <p> This section lists every ingredient that contains this ingredient. In the case where
                     this is contained in a choice, the items that can be substituted for this are
                     listed as well. </p>
             </section>
         </section>
-        <section name="How do I find the tactic I want?">
-            <p>So you've got a SOD strategy file that does most of what you want, but you need to
-                refine the data or add another processing step. How do you find the right tactic to
+        <section name="How do I find the Ingredient I want?">
+            <p>So you've got a SOD recipe file that does most of what you want, but you need to
+                refine the data or add another processing step. How do you find the right ingredient to
                 insert to get the work done? The menu that runs down the left side of all of the
-                Tactic Reference pages consists of links to each of the tactic pages for the major
+                Ingredient Reference pages consists of links to each of the ingredient pages for the major
                 steps in SOD's operations broken down by arm. If you can identify the step that
                 needs to be refined, just select that one out of the menu and find the appropriate
-                tactic. Lets say the events SOD returns past a certain distance aren't worth
+                ingredient. Lets say the events SOD returns past a certain distance aren't worth
                 processing. Since the problem is solely with the events, that means the event arm
                 needs to be tweaked. After clicking on Origin in the eventArm section of the menu,
                 scanning the various pieces that can go there reveals originPointDistance. By adding

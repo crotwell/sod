@@ -4,16 +4,16 @@
         <title>SOD - How to Interpret This Consists Of</title>
     </properties>
     <body>
-        <section name="The 'This Consists Of' Section of the Tactic Reference">
-            <p>When SOD starts up, your strategy file is checked to make sure it will work. Only certain items are
-                allowed in certain places, so you have to be careful when creating or editing a strategy file.</p>
-            <p>The 'This Consists Of' section of the Tactic Reference describes what should go where. We explain what
+        <section name="The 'This Consists Of' Section of the Ingredient Reference">
+            <p>When SOD starts up, your recipe file is checked to make sure it will work. Only certain items are
+                allowed in certain places, so you have to be careful when creating or editing a recipe file.</p>
+            <p>The 'This Consists Of' section of the Ingredient Reference describes what should go where. We explain what
                 the pieces are in terms of XML. If you don't know anything about XML, we recommend that you read our <a
                 href="../xmlIntro.html">introduction</a> before reading this page any further.</p>
         </section>
         <section name="A Basic Example">
             <p>This the 'This consists of' section of the <a href="event/origin/originPointDistance.html">origin point
-                distance</a> tactic.</p>
+                distance</a> ingredient.</p>
             <div id="contained">
                 <p> &lt;<a href="event/origin/originPointDistance.html"
                     title="Distance range from a fixed point">originPointDistance</a>&gt; <div>
@@ -30,7 +30,7 @@
             </div>
             <section name="The containing originPointDistance tag">
                 <p>The first line shows the start tag &lt;originPointDistance&gt; . This means that at this
-                    point in the strategy file (ie every place in the 'Places containing this' section) the element
+                    point in the recipe file (ie every place in the 'Places containing this' section) the element
                     originPointDistance along with its contents are acceptable.</p>
                 <p>The next three lines along the black line must appear inside the originPointDistance element since
                     they are directly below and indented from it. The black line indicates they are grouped together and
@@ -66,7 +66,7 @@
             </section>
         </section>
         <section name="A Slightly More Complicated Example">
-            <p>This is the 'This Consists Of' section of the <a href="event/source/eventFinder.html">Event Finder</a> tactic.</p>
+            <p>This is the 'This Consists Of' section of the <a href="event/source/eventFinder.html">Event Finder</a> ingredient.</p>
             <div id="contained">
                 <p> &lt;<a href="eventFinder.html"
                     title="Retrieve events from an EventFinder">eventFinder</a>&gt; <div>
@@ -136,7 +136,7 @@
         </section>
         <section name="A Couple Other Important Examples">
             <p>This is the 'This consists of' section of the <a
-                href="properties/eventRefreshInterval.html">eventRefreshInterval</a> tactic...</p>
+                href="properties/eventRefreshInterval.html">eventRefreshInterval</a> ingredient...</p>
             <div id="contained">
                 <p> &lt;<a href="properties/eventRefreshInterval.html"
                     title="Time between queries to the event server">eventRefreshInterval</a>&gt; <div>
@@ -156,11 +156,11 @@
                 </p>
             </div>
             <p>...and this is the 'This consists of' section of the <a
-                href="waveform/requestSubsetter/requestOR.html">requestOR</a> tactic.</p>
+                href="waveform/requestSubsetter/requestOR.html">requestOR</a> ingredient.</p>
             <div id="contained">
                 <p> &lt;<a href="waveform/requestSubsetter/requestOR.html"
                     title="Matches at least one enclosed request">requestOR</a>&gt; <div>
-                        <a href="waveform/requestSubsetter/request.html" title="Tactics that work based on the generated request">request</a>
+                        <a href="waveform/requestSubsetter/request.html" title="Ingredients that work based on the generated request">request</a>
                         <i>
                             <a href="abstractStructure.html#At least once">At least once</a>
                         </i>
@@ -181,7 +181,7 @@
                             title=" Always returns true. ">passRequest</a>&gt; <div/>&lt;<a
                                 href="waveform/requestSubsetter/external.html"
                             title="Use a request subsetter external to SOD">externalRequest</a>&gt; <div/>
-                        </div>end <a href="waveform/requestSubsetter/request.html" title="Tactics that work based on the generated request">request</a>
+                        </div>end <a href="waveform/requestSubsetter/request.html" title="Ingredients that work based on the generated request">request</a>
                         <i>
                             <a href="abstractStructure.html#At least once">At least once</a>
                         </i>
@@ -194,7 +194,7 @@
             </div>
             <section name="Just a few more labels you need to know...">
                 <p>These last two examples illustrate a couple of other important concepts you need to know before you
-                    start looking up tactics. These concepts are 'interleave' and 'At least once'.</p>
+                    start looking up ingredients. These concepts are 'interleave' and 'At least once'.</p>
             </section>
             <section name="interleave">
                 <p>An interleave is denoted by a dotted vertical line. It is similar to a choice, but its contents can
