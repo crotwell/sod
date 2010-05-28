@@ -52,6 +52,10 @@ public class Annotation {
         return summary != null;
     }
 
+    public boolean hasDescription() {
+        return desc != null;
+    }
+
     public String getExample() {
         // System.out.println("getting example");
         return getExample(DEFAULT_HTMLIZE);
