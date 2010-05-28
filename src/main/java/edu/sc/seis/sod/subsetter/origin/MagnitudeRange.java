@@ -90,7 +90,6 @@ public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter {
             if(accept(doubleMag)) {
                 accepted.add(mags[i]);
             }
-            System.out.println("MagnitudeRange: "+doubleMag+"  "+ accept(doubleMag));
         }
         return (Magnitude[])accepted.toArray(new Magnitude[0]);
     }
