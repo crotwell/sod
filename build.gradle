@@ -14,7 +14,7 @@ dependencies {
     compile "msv:relaxngDatatype:20030807"
     compile "msv:xsdlib:20030807"
     compile "thaiopensource:jing:20030619"
-    compile "velocity-tools:velocity-tools-generic:1.4"
+    compile "org.apache.velocity:velocity-tools:2.0"
     compile "edu.sc.seis.mapData:dcwpo_browse:1.0"
     compile "net.sourceforge.javacsv:javacsv:2.0"
 }
@@ -52,8 +52,11 @@ task tarDist(type: Tar, dependsOn: ['makeScript', 'createBuildScript', 'wrapper'
     }
     from('scripts') {
         include('cwg.prop')
-        include('tutorial/**')
         into dirName
+    }
+    from('scripts/tutorial') {
+        include('**')
+        into dirName+'/recipes'
     }
     from('build') {
         include('doc/**')
@@ -100,7 +103,7 @@ task copySchemaDocs(dependsOn: 'buildSchemaDocs', type: Copy) {
     into project.file('../seiswww/velocity/sod/ingredients/')
 }
 
-task buildSchemaDocs(dependsOn: ['buildSchema', classes])  { 
+task buildSchemaDocs(dependsOn: ['buildSchema', 'classes'])  { 
     inputs.dir 'src/main/relax'
     inputs.files 'site/elementPage.vm'
     outDir = project.file('build/velocity/sod/ingredients/')
@@ -115,12 +118,12 @@ task buildSchemaDocs(dependsOn: ['buildSchema', classes])  {
              args:schemaDocArgs,
              fork:true,
              maxmemory:'512m',
-             output:'ant_java.out',
+             output:'build/ant_java.out',
              classpath:cp) 
     }
 }
 
-task buildSchema(dependsOn: classes)  {
+task buildSchema(dependsOn: 'classes')  {
     inputs.dir 'src/main/relax/'
     outputs.files 'src/main/resources/edu/sc/seis/sod/data/sod.rng'
     doLast{
@@ -138,3 +141,5 @@ task buildSchema(dependsOn: classes)  {
 }
 
 assemble.dependsOn(tarDist)
+//processResources.dependsOn(buildSchema)
+
