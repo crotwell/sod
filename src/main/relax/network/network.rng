@@ -217,6 +217,8 @@
                     </jythonNetworkSubsetter>
                 </example>
             </xsd:annotation>
+            <choice>
+            <group>
             <element name="module">
                 <data type="string"/>
             </element>
@@ -226,6 +228,20 @@
             <zeroOrMore>
                 <externalRef href="../base/externalRef/anyXML.rng"/>
             </zeroOrMore>
+            </group>
+            <element name="inline">
+            <xsd:annotation>
+                <summary>Runs the enclosed Jython code as a network subsetter</summary>
+                <description>$jythonWaveformProcessInfo.getRelaxHTML('../../../')</description>
+                <example>
+                    <inlineJythonNetworkSubsetter>
+                        print networkAttr.network_code
+                    </inlineJythonNetworkSubsetter>
+                </example>
+            </xsd:annotation>
+            <data type="string"/>
+            </element>
+            </choice>
         </element>
     </define>
     <define name="inlineJythonNetworkSubsetter">

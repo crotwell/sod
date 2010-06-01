@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.transform.TransformerException;
 
@@ -41,7 +43,6 @@ import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.model.UnitRangeImpl;
 import edu.sc.seis.bag.BagUtil;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
-import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
@@ -186,22 +187,82 @@ public class SodUtil {
         return Class.forName(baseName + "." + tagName);
     }
 
-    public static synchronized Object loadJython(String tagName, String[] armNames, Element config)
-    throws Exception {
-        String moduleName = getNestedText(SodUtil.getElement(config, "module"));
-        String className = getNestedText(SodUtil.getElement(config, "class"));
+    public static PythonInterpreter getPythonInterpreter() {
         if (interpreter == null) {
             interpreter = new PythonInterpreter();
             interpreter.exec("import sys");
             interpreter.exec("sys.path.append('.')");
             BagUtil.addClassAdapters();
         }
-        interpreter.exec("from "+moduleName+" import "+className);
-        PyObject jyWaveformProcessClass = interpreter.get(className);
-        PyObject pyWaveformProcessObj = jyWaveformProcessClass.__call__( PyJavaType.wrapJavaObject(config));
-        Class mustImplement = load(tagName.substring("jython".length()), armNames);
-        return pyWaveformProcessObj.__tojava__(mustImplement);
+        return interpreter;
     }
+    
+    public static synchronized Object loadJython(String tagName, String[] armNames, Element config)
+    throws Exception {
+        Class mustImplement = load(tagName.substring("jython".length()), armNames);
+        if (getElement(config, "inline") != null) {
+            String jythonCode = getNestedText(getElement(config, "inline"));
+            return inlineJython(tagName+pythonClassNum++, mustImplement, jythonCode);
+        } else {
+            String moduleName = getNestedText(SodUtil.getElement(config, "module"));
+            String className = getNestedText(SodUtil.getElement(config, "class"));
+            PythonInterpreter interp = getPythonInterpreter();
+            interp.exec("from "+moduleName+" import "+className);
+            PyObject jyWaveformProcessClass = interp.get(className);
+            PyObject pyWaveformProcessObj = jyWaveformProcessClass.__call__( PyJavaType.wrapJavaObject(config));
+            return mustImplement.cast(pyWaveformProcessObj.__tojava__(mustImplement));
+        }
+    }
+
+    protected static synchronized Object inlineJython(String className, Class mustImplement, String jythonCode) throws ClassNotFoundException {
+        try {
+        
+        String[] lines = jythonCode.split("[\\r\\n]+");
+        PythonInterpreter interp = getPythonInterpreter();
+        interp.setOut(System.out);
+        interp.setErr(System.err);
+        interp.exec("from "+mustImplement.getPackage().getName()+" import "+mustImplement.getSimpleName());
+        String classDef = "class "+className+"("+mustImplement.getSimpleName()+"):\n"+
+         "  def __init__(self):\n"+
+         "      print 'in inline constructor'\n"+
+         "      pass\n"+
+         "  def accept(self, networkAttr):\n"+
+         "      print 'in inline accept'\n";
+        int numSpaces = 0;
+        int firstLine = 0;
+        while (lines[firstLine].trim().length() == 0) {
+            firstLine++;
+        }
+        while (lines[firstLine].charAt(numSpaces) == ' ') {
+            numSpaces++;
+        }
+        Pattern pattern = Pattern.compile(" {0,"+numSpaces+"}");
+        for (int i = 0; i < lines.length; i++) {
+            String trimmedLine = lines[i];
+            Matcher matcher = pattern.matcher(trimmedLine);
+            if (trimmedLine.length() > 0 && matcher.find()) {
+                trimmedLine = trimmedLine.substring(matcher.end());
+            }
+            classDef += "      "+trimmedLine+"\n";
+        }
+        classDef+= "      print ''\n\n";
+        classDef+= "      return Pass(self)\n\n";
+        System.out.println("jython inline: \n"+classDef);
+        interp.exec(classDef);
+        PyObject jyWaveformProcessClass = interp.get(className);
+        PyObject pyWaveformProcessObj = jyWaveformProcessClass.__call__();
+        
+        System.out.println("must implement="+mustImplement);
+        Object out = pyWaveformProcessObj.__tojava__(mustImplement);
+        System.out.println("jav jython class: "+out.getClass());
+        return mustImplement.cast(out);
+        }catch(RuntimeException e) {
+            System.err.println("RuntimeException in SodUtil.inlineJython"+ e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
+    }
+    
     /**
      * loads the class named in the element "classname" in config with config as
      * a costructor argument. If the loaded class doesnt implement
@@ -695,6 +756,8 @@ public class SodUtil {
     }
     
     public static PythonInterpreter interpreter;
+    
+    public static int pythonClassNum = 1;
 
     public static final UnitImpl[] LENGTH_UNITS = {UnitImpl.KILOMETER,
                                                    UnitImpl.METER,
