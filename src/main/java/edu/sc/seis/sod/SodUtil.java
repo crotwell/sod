@@ -34,6 +34,9 @@ import org.w3c.dom.Text;
 
 import edu.iris.Fissures.Time;
 import edu.iris.Fissures.Unit;
+import edu.iris.Fissures.IfEvent.EventAttr;
+import edu.iris.Fissures.IfEvent.Origin;
+import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.BoxAreaImpl;
 import edu.iris.Fissures.model.GlobalAreaImpl;
 import edu.iris.Fissures.model.MicroSecondDate;
@@ -41,17 +44,36 @@ import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.model.UnitRangeImpl;
+import edu.iris.Fissures.network.ChannelImpl;
+import edu.iris.Fissures.network.StationImpl;
+import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.bag.BagUtil;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
+import edu.sc.seis.sod.process.waveform.WaveformProcess;
+import edu.sc.seis.sod.process.waveform.vector.WaveformVectorProcess;
 import edu.sc.seis.sod.source.event.MicroSecondTimeRangeSupplier;
 import edu.sc.seis.sod.status.TemplateFileLoader;
 import edu.sc.seis.sod.subsetter.LatitudeRange;
 import edu.sc.seis.sod.subsetter.LongitudeRange;
+import edu.sc.seis.sod.subsetter.availableData.AvailableDataSubsetter;
+import edu.sc.seis.sod.subsetter.availableData.vector.VectorAvailableDataSubsetter;
+import edu.sc.seis.sod.subsetter.channel.ChannelSubsetter;
+import edu.sc.seis.sod.subsetter.dataCenter.SeismogramDCLocator;
+import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
+import edu.sc.seis.sod.subsetter.eventChannel.vector.EventVectorSubsetter;
+import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
+import edu.sc.seis.sod.subsetter.network.NetworkSubsetter;
 import edu.sc.seis.sod.subsetter.origin.OriginPointDistance;
+import edu.sc.seis.sod.subsetter.origin.OriginSubsetter;
+import edu.sc.seis.sod.subsetter.request.RequestSubsetter;
+import edu.sc.seis.sod.subsetter.request.vector.VectorRequestSubsetter;
 import edu.sc.seis.sod.subsetter.requestGenerator.RandomTimeInterval;
+import edu.sc.seis.sod.subsetter.requestGenerator.RequestGenerator;
+import edu.sc.seis.sod.subsetter.station.StationSubsetter;
 
 public class SodUtil {
 
@@ -222,11 +244,12 @@ public class SodUtil {
         interp.setOut(System.out);
         interp.setErr(System.err);
         interp.exec("from "+mustImplement.getPackage().getName()+" import "+mustImplement.getSimpleName());
+        interp.exec("from edu.sc.seis.sod.status import Pass, Fail");
         String classDef = "class "+className+"("+mustImplement.getSimpleName()+"):\n"+
          "  def __init__(self):\n"+
          "      print 'in inline constructor'\n"+
          "      pass\n"+
-         "  def accept(self, networkAttr):\n"+
+         "  def accept(self, "+getJythonAcceptArgs(mustImplement)+"):\n"+
          "      print 'in inline accept'\n";
         int numSpaces = 0;
         int firstLine = 0;
@@ -245,7 +268,6 @@ public class SodUtil {
             }
             classDef += "      "+trimmedLine+"\n";
         }
-        classDef+= "      print ''\n\n";
         classDef+= "      return Pass(self)\n\n";
         System.out.println("jython inline: \n"+classDef);
         interp.exec(classDef);
@@ -261,6 +283,49 @@ public class SodUtil {
             e.printStackTrace();
             throw e;
         }
+    }
+    
+    protected static String getJythonAcceptArgs(Class mustImplement) {
+        if (mustImplement.equals(NetworkSubsetter.class)) {
+            return "networkAttr";
+        }if (mustImplement.equals(StationSubsetter.class)) {
+            return "station, networkSource";
+        }if (mustImplement.equals(ChannelSubsetter.class)) {
+            return "channel, networkSource";
+        }if (mustImplement.equals(OriginSubsetter.class)) {
+            return "eventAccess, eventAttr, preferred_origin";
+        }if (mustImplement.equals(EventStationSubsetter.class)) {
+            return "event, station, cookieJar";
+        }
+        if (mustImplement.equals(EventChannelSubsetter.class) || mustImplement.equals(RequestGenerator.class)) {
+            return "event, channel, cookieJar";
+        }
+        if (mustImplement.equals(EventVectorSubsetter.class)) {
+            return "event, channelGroup, cookieJar";
+        }
+        if (mustImplement.equals(RequestSubsetter.class)) {
+            return "event, channel, request, cookieJar";
+        }
+        if (mustImplement.equals(VectorRequestSubsetter.class)) {
+            return "event, channelGroup, request, cookieJar";
+        }
+        if (mustImplement.equals(AvailableDataSubsetter.class)) {
+            return "event, channel, original, available, cookieJar";
+        }
+        if (mustImplement.equals(VectorAvailableDataSubsetter.class)) {
+            return "event, channelGroup, original, available, cookieJar";
+        }
+        if (mustImplement.equals(WaveformProcess.class)) {
+            return "event, channel, original, available, seismograms, cookieJar";
+        }
+        if (mustImplement.equals(WaveformVectorProcess.class)) {
+            return "event, channelGroup, original, available, seismograms, cookieJar";
+        }
+        if (mustImplement.equals(SeismogramDCLocator.class)) {
+            return "event, channel, infilters, cookieJar";
+        }
+        // should not happen
+        throw new IllegalArgumentException("Class mustImplement: "+mustImplement+" is not recognized.");
     }
     
     /**
