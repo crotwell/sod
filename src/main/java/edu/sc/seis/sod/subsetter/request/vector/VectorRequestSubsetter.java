@@ -12,7 +12,7 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.Subsetter;
 
-public interface VectorRequest extends Subsetter {
+public interface VectorRequestSubsetter extends Subsetter {
 
     public StringTree accept(CacheEvent event,
                           ChannelGroup channel,

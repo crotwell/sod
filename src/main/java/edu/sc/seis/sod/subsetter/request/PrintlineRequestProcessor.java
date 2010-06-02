@@ -11,7 +11,7 @@ import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.AbstractPrintlineProcess;
 
-public class PrintlineRequestProcessor extends AbstractPrintlineProcess implements Request {
+public class PrintlineRequestProcessor extends AbstractPrintlineProcess implements RequestSubsetter {
 
     public PrintlineRequestProcessor(Element config)
             throws ConfigurationException {

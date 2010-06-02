@@ -15,7 +15,7 @@ import edu.sc.seis.sod.subsetter.LogicalSubsetter;
 import edu.sc.seis.sod.subsetter.Subsetter;
 import edu.sc.seis.sod.subsetter.eventChannel.vector.EventVectorLogicalSubsetter;
 import edu.sc.seis.sod.subsetter.eventChannel.vector.EventVectorSubsetter;
-import edu.sc.seis.sod.subsetter.request.Request;
+import edu.sc.seis.sod.subsetter.request.RequestSubsetter;
 
 /**
  * @author groves Created on Aug 31, 2004
@@ -42,13 +42,13 @@ public class VectorRequestLogical extends LogicalSubsetter {
         return createSubsetter(s);
     }
     
-    public static VectorRequest createSubsetter(final Subsetter s) throws ConfigurationException {
-        if (s instanceof VectorRequest) {
-            return (VectorRequest)s;
-        } else if (s instanceof Request) {
-            return new ANDRequestWrapper((Request)s);
+    public static VectorRequestSubsetter createSubsetter(final Subsetter s) throws ConfigurationException {
+        if (s instanceof VectorRequestSubsetter) {
+            return (VectorRequestSubsetter)s;
+        } else if (s instanceof RequestSubsetter) {
+            return new ANDRequestWrapper((RequestSubsetter)s);
         } else {
-            return new VectorRequest() {
+            return new VectorRequestSubsetter() {
                 EventVectorSubsetter ecs = EventVectorLogicalSubsetter.createSubsetter(s);
                 public StringTree accept(CacheEvent event,
                                          ChannelGroup channelGroup,

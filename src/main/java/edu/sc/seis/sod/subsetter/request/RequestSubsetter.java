@@ -13,7 +13,7 @@ import edu.sc.seis.sod.subsetter.Subsetter;
  * @author <a href="mailto:crotwell@owl.seis.sc.edu">Philip Crotwell </a>
  * @version 1.0
  */
-public interface Request extends Subsetter {
+public interface RequestSubsetter extends Subsetter {
 
     public StringTree accept(CacheEvent event,
                              ChannelImpl channel,

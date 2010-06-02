@@ -18,7 +18,7 @@ import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
 
 public class VectorRequestAND extends VectorRequestLogical implements
-        VectorRequest {
+        VectorRequestSubsetter {
 
     public VectorRequestAND(Element config) throws ConfigurationException {
         super(config);
@@ -32,7 +32,7 @@ public class VectorRequestAND extends VectorRequestLogical implements
         StringTree[] result = new StringTree[filterList.size()];
         int i=0;
         while(it.hasNext()) {
-            VectorRequest filter = (VectorRequest)it.next();
+            VectorRequestSubsetter filter = (VectorRequestSubsetter)it.next();
             result[i] = filter.accept(event, channel, request, cookieJar);
             if(result[i].isSuccess() == false) { return new StringTreeBranch(this, false, result); }
             i++;

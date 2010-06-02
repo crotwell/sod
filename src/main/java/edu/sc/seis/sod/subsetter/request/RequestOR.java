@@ -12,7 +12,7 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
 
-public final class RequestOR extends RequestLogical implements Request {
+public final class RequestOR extends RequestLogical implements RequestSubsetter {
 
     public RequestOR(Element config) throws ConfigurationException {
         super(config);
@@ -26,7 +26,7 @@ public final class RequestOR extends RequestLogical implements Request {
         StringTree[] result = new StringTree[filterList.size()];
         int i =0;
         while(it.hasNext()) {
-            Request filter = (Request)it.next();
+            RequestSubsetter filter = (RequestSubsetter)it.next();
             result[i] = filter.accept(event, channel, original, cookieJar);
             if(result[i].isSuccess()) { return new StringTreeBranch(this, true, result); }
             i++;

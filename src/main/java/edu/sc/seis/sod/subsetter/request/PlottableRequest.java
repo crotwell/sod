@@ -20,7 +20,7 @@ import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.AbstractSource;
 
-public class PlottableRequest extends AbstractSource  implements Request {
+public class PlottableRequest extends AbstractSource  implements RequestSubsetter {
 
     public PlottableRequest(Element config) throws Exception {
         super(config, "DelilahCache");

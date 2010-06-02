@@ -22,7 +22,7 @@ import edu.sc.seis.sod.subsetter.station.StationLogicalSubsetter;
 /**
  * @author groves Created on Aug 31, 2004
  */
-public abstract class RequestLogical extends LogicalSubsetter implements Request {
+public abstract class RequestLogical extends LogicalSubsetter implements RequestSubsetter {
 
     protected RequestLogical() {}
     
@@ -47,10 +47,10 @@ public abstract class RequestLogical extends LogicalSubsetter implements Request
         return createSubsetter(s);
     }
     
-    public static Request createSubsetter(final Subsetter s) throws ConfigurationException {
-        if (s instanceof Request) { return (Request)s; 
+    public static RequestSubsetter createSubsetter(final Subsetter s) throws ConfigurationException {
+        if (s instanceof RequestSubsetter) { return (RequestSubsetter)s; 
         } else { 
-            return new Request() {
+            return new RequestSubsetter() {
                 EventChannelSubsetter ecs = EventChannelLogicalSubsetter.createSubsetter(s);
                 public StringTree accept(CacheEvent event, ChannelImpl channel, RequestFilter[] request, CookieJar cookieJar)
                 throws Exception {

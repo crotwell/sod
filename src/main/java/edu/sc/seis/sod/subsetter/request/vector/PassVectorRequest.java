@@ -14,7 +14,7 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
 
-public class PassVectorRequest implements VectorRequest {
+public class PassVectorRequest implements VectorRequestSubsetter {
 
     public PassVectorRequest() {}
 

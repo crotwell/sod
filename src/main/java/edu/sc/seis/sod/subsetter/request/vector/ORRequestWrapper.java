@@ -17,11 +17,11 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
-import edu.sc.seis.sod.subsetter.request.Request;
+import edu.sc.seis.sod.subsetter.request.RequestSubsetter;
 
-public class ORRequestWrapper implements VectorRequest {
+public class ORRequestWrapper implements VectorRequestSubsetter {
 
-    public ORRequestWrapper(Request subsetter) {
+    public ORRequestWrapper(RequestSubsetter subsetter) {
         this.subsetter = subsetter;
     }
 
@@ -31,7 +31,7 @@ public class ORRequestWrapper implements VectorRequest {
         for(int counter = 0; counter < childNodes.getLength(); counter++) {
             node = childNodes.item(counter);
             if(node instanceof Element) {
-                subsetter = (Request)SodUtil.load((Element)node, "request");
+                subsetter = (RequestSubsetter)SodUtil.load((Element)node, "request");
                 break;
             }
         }
@@ -52,5 +52,5 @@ public class ORRequestWrapper implements VectorRequest {
         return new StringTreeBranch(this, true, result);
     }
 
-    Request subsetter;
+    RequestSubsetter subsetter;
 }

@@ -16,7 +16,7 @@ import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
 
 public class VectorRequestXOR extends VectorRequestLogical implements
-        VectorRequest {
+        VectorRequestSubsetter {
 
     public VectorRequestXOR(Element config) throws ConfigurationException {
         super(config);
@@ -26,8 +26,8 @@ public class VectorRequestXOR extends VectorRequestLogical implements
                           ChannelGroup channel,
                           RequestFilter[][] request,
                           CookieJar cookieJar) throws Exception {
-        VectorRequest filterA = (VectorRequest)filterList.get(0);
-        VectorRequest filterB = (VectorRequest)filterList.get(1);
+        VectorRequestSubsetter filterA = (VectorRequestSubsetter)filterList.get(0);
+        VectorRequestSubsetter filterB = (VectorRequestSubsetter)filterList.get(1);
         StringTree[] result = new StringTree[2];
         result[0] = filterA.accept(event, channel, request, cookieJar);
         result[1] = filterB.accept(event, channel, request, cookieJar);

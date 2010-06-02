@@ -10,7 +10,7 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
 
-public final class RequestXOR extends RequestLogical implements Request {
+public final class RequestXOR extends RequestLogical implements RequestSubsetter {
 
     /**
      * Creates a new <code>RequestSubsetterXOR</code> instance.
@@ -28,8 +28,8 @@ public final class RequestXOR extends RequestLogical implements Request {
                              ChannelImpl channel,
                           RequestFilter[] original,
                           CookieJar cookieJar) throws Exception {
-        Request filterA = (Request)filterList.get(0);
-        Request filterB = (Request)filterList.get(1);
+        RequestSubsetter filterA = (RequestSubsetter)filterList.get(0);
+        RequestSubsetter filterB = (RequestSubsetter)filterList.get(1);
         StringTree[] result = new StringTree[2];
         result[0] = filterA.accept(event, channel, original, cookieJar);
         result[1] = filterB.accept(event, channel, original, cookieJar);

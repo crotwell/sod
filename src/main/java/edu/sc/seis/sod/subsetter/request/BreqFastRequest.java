@@ -40,7 +40,7 @@ import edu.sc.seis.sod.velocity.WaveformProcessContext;
  * @author <a href="mailto:crotwell@owl.seis.sc.edu">Philip Crotwell </a>
  * @version 1.0
  */
-public class BreqFastRequest implements Request {
+public class BreqFastRequest implements RequestSubsetter {
 
     public BreqFastRequest(Element config) throws ConfigurationException {
         this.config = config;

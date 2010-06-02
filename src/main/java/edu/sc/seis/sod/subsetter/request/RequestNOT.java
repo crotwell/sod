@@ -12,7 +12,7 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
 
-public final class RequestNOT extends RequestLogical implements Request {
+public final class RequestNOT extends RequestLogical implements RequestSubsetter {
 
     /**
      * Creates a new <code>RequestSubsetterNOT</code> instance.
@@ -31,7 +31,7 @@ public final class RequestNOT extends RequestLogical implements Request {
                           RequestFilter[] original,
                           CookieJar cookieJar) throws Exception {
         Iterator it = filterList.iterator();
-        Request filter = (Request)it.next();
+        RequestSubsetter filter = (RequestSubsetter)it.next();
         StringTree result = filter.accept(event, channel, original, cookieJar);
         return new StringTreeBranch(this, ! result.isSuccess(), result);
     }

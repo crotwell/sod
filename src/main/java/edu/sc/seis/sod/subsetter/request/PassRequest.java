@@ -9,9 +9,9 @@ import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
-import edu.sc.seis.sod.subsetter.request.vector.VectorRequest;
+import edu.sc.seis.sod.subsetter.request.vector.VectorRequestSubsetter;
 
-public class PassRequest implements Request, VectorRequest {
+public class PassRequest implements RequestSubsetter, VectorRequestSubsetter {
 
     public PassRequest() {} 
 

@@ -13,7 +13,7 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
 
-public class RequestPrint implements Request {
+public class RequestPrint implements RequestSubsetter {
 
     public StringTree accept(CacheEvent event,
                              ChannelImpl channel,
