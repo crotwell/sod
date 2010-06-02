@@ -597,15 +597,23 @@
                     </jythonWaveformProcess>
                 </example>
             </xsd:annotation>
-            <element name="module">
-                <data type="string"/>
-            </element>
-            <element name="class">
-                <data type="string"/>
-            </element>
-            <zeroOrMore>
-                <externalRef href="../base/externalRef/anyXML.rng"/>
-            </zeroOrMore>
+            
+            <choice>
+                <group>
+                    <element name="module">
+                        <data type="string"/>
+                    </element>
+                    <element name="class">
+                        <data type="string"/>
+                    </element>
+                    <zeroOrMore>
+                        <externalRef href="../base/externalRef/anyXML.rng"/>
+                    </zeroOrMore>
+                </group>
+                <element name="inline">
+                    <data type="string"/>
+                </element>
+            </choice>
         </element>
     </define>
     <define name="printlineSeismogramProcess">

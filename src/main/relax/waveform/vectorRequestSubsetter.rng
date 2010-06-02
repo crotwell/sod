@@ -16,7 +16,7 @@
             <ref name="vectorRequestAND"/>
             <ref name="vectorRequestOR"/>
             <ref name="vectorRequestNOT"/>
-            <ref name="jythonVectorRequest"/>
+            <ref name="jythonVectorRequestSubsetter"/>
             <ref name="external"/>
             <externalRef href="requestSubsetter.rng"/>
         </choice>
@@ -96,29 +96,37 @@
             <ref name="vectorRequest"/>
         </element>
     </define>
-    <define name="jythonVectorRequest">
-        <element name="jythonVectorRequest">
+    <define name="jythonVectorRequestSubsetter">
+        <element name="jythonVectorRequestSubsetter">
             <xsd:annotation>
                 <summary>Runs an externally defined Jython vector request subsetter</summary>
                 <description>$jythonWaveformProcessInfo.getRelaxHTML('../../../')</description>
                 <example>
-                    <jythonVectorRequest>
+                    <jythonVectorRequestSubsetter>
                         <module>helloSod</module>
                         <class>helloSod</class>
                         <dataDirectory>POND_II</dataDirectory>
                         <extraParam>1.7</extraParam>
-                    </jythonVectorRequest>
+                    </jythonVectorRequestSubsetter>
                 </example>
             </xsd:annotation>
-            <element name="module">
-                <data type="string"/>
-            </element>
-            <element name="class">
-                <data type="string"/>
-            </element>
-            <zeroOrMore>
-                <externalRef href="../base/externalRef/anyXML.rng"/>
-            </zeroOrMore>
+            
+            <choice>
+                <group>
+                    <element name="module">
+                        <data type="string"/>
+                    </element>
+                    <element name="class">
+                        <data type="string"/>
+                    </element>
+                    <zeroOrMore>
+                        <externalRef href="../base/externalRef/anyXML.rng"/>
+                    </zeroOrMore>
+                </group>
+                <element name="inline">
+                    <data type="string"/>
+                </element>
+            </choice>
         </element>
     </define>
     <define name="external">

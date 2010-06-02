@@ -18,7 +18,7 @@
             <ref name="breqFastRequest"/>
             <ref name="netDCRequest"/>
             <ref name="plottableRequest"/>
-            <ref name="jythonRequest"/>
+            <ref name="jythonRequestSubsetter"/>
             <ref name="external"/>
         </choice>
     </define>
@@ -419,33 +419,41 @@
             </oneOrMore>
         </element>
     </define>
-    <define name="jythonRequest">
-        <element name="jythonRequest">
+    <define name="jythonRequestSubsetter">
+        <element name="jythonRequestSubsetter">
             <xsd:annotation>
                 <summary>Runs an externally defined Jython request subsetter</summary>
                 <description>$jythonWaveformProcessInfo.getRelaxHTML('../../../')</description>
                 <example>
-                    <jythonRequest>
+                    <jythonRequestSubsetter>
                         <module>helloSod</module>
                         <class>helloSod</class>
                         <dataDirectory>POND_II</dataDirectory>
                         <extraParam>1.7</extraParam>
-                    </jythonRequest>
+                    </jythonRequestSubsetter>
                 </example>
             </xsd:annotation>
-            <element name="module">
-                <data type="string"/>
-            </element>
-            <element name="class">
-                <data type="string"/>
-            </element>
-            <zeroOrMore>
-                <externalRef href="../base/externalRef/anyXML.rng"/>
-            </zeroOrMore>
+            
+            <choice>
+                <group>
+                    <element name="module">
+                        <data type="string"/>
+                    </element>
+                    <element name="class">
+                        <data type="string"/>
+                    </element>
+                    <zeroOrMore>
+                        <externalRef href="../base/externalRef/anyXML.rng"/>
+                    </zeroOrMore>
+                </group>
+                <element name="inline">
+                    <data type="string"/>
+                </element>
+            </choice>
         </element>
     </define>
     <define name="external">
-        <element name="externalRequest">
+        <element name="externalRequestSubsetter">
             <xsd:annotation>
                 <summary>Use a request subsetter external to SOD</summary>
                 <description>$externalRequestInfo.getRelaxHTML('../../../')</description>
