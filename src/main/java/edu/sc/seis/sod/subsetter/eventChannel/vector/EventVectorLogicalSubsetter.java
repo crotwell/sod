@@ -16,8 +16,6 @@ import edu.sc.seis.sod.subsetter.Subsetter;
 import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
 import edu.sc.seis.sod.subsetter.eventStation.EventStationLogicalSubsetter;
 import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
-import edu.sc.seis.sod.subsetter.request.Request;
-import edu.sc.seis.sod.subsetter.request.vector.ANDRequestWrapper;
 
 /**
  * @author groves Created on Aug 31, 2004
