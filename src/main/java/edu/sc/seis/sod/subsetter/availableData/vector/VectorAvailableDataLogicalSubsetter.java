@@ -14,9 +14,9 @@ import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.LogicalSubsetter;
 import edu.sc.seis.sod.subsetter.Subsetter;
 import edu.sc.seis.sod.subsetter.availableData.AvailableDataSubsetter;
-import edu.sc.seis.sod.subsetter.request.Request;
+import edu.sc.seis.sod.subsetter.request.RequestSubsetter;
 import edu.sc.seis.sod.subsetter.request.vector.ANDRequestWrapper;
-import edu.sc.seis.sod.subsetter.request.vector.VectorRequest;
+import edu.sc.seis.sod.subsetter.request.vector.VectorRequestSubsetter;
 import edu.sc.seis.sod.subsetter.request.vector.VectorRequestLogical;
 
 /**
@@ -52,7 +52,7 @@ public class VectorAvailableDataLogicalSubsetter extends LogicalSubsetter {
             return new ANDAvailableDataWrapper((AvailableDataSubsetter)s);
         } else {
             return new VectorAvailableDataSubsetter() {
-                VectorRequest ecs = VectorRequestLogical.createSubsetter(s);
+                VectorRequestSubsetter ecs = VectorRequestLogical.createSubsetter(s);
                 public StringTree accept(CacheEvent event,
                                          ChannelGroup channelGroup,
                                          RequestFilter[][] original,

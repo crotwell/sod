@@ -13,7 +13,7 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.LogicalSubsetter;
 import edu.sc.seis.sod.subsetter.Subsetter;
-import edu.sc.seis.sod.subsetter.request.Request;
+import edu.sc.seis.sod.subsetter.request.RequestSubsetter;
 import edu.sc.seis.sod.subsetter.request.RequestLogical;
 
 /**
@@ -55,7 +55,7 @@ public class AvailableDataLogicalSubsetter extends LogicalSubsetter {
                                          RequestFilter[] original,
                                          RequestFilter[] available,
                                          CookieJar cookieJar) throws Exception {
-                    return ((Request)RequestLogical.createSubsetter(s)).accept(event, channel, original, cookieJar);
+                    return ((RequestSubsetter)RequestLogical.createSubsetter(s)).accept(event, channel, original, cookieJar);
                 }
             };
         }

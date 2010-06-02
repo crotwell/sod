@@ -40,7 +40,7 @@ import edu.sc.seis.sod.subsetter.eventChannel.PassEventChannel;
 import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
 import edu.sc.seis.sod.subsetter.eventStation.PassEventStation;
 import edu.sc.seis.sod.subsetter.request.PassRequest;
-import edu.sc.seis.sod.subsetter.request.Request;
+import edu.sc.seis.sod.subsetter.request.RequestSubsetter;
 import edu.sc.seis.sod.subsetter.requestGenerator.RequestGenerator;
 
 public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subsetter {
@@ -59,8 +59,8 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
             eventChannel = (EventChannelSubsetter)sodObject;
         } else if(sodObject instanceof RequestGenerator) {
             requestGenerator = (RequestGenerator)sodObject;
-        } else if(sodObject instanceof Request) {
-            request = (Request)sodObject;
+        } else if(sodObject instanceof RequestSubsetter) {
+            request = (RequestSubsetter)sodObject;
         } else if(sodObject instanceof SeismogramDCLocator) {
             dcLocator = (SeismogramDCLocator)sodObject;
         } else if(sodObject instanceof AvailableDataSubsetter) {
@@ -80,7 +80,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
         return requestGenerator;
     }
 
-    public Request getRequestSubsetter() {
+    public RequestSubsetter getRequestSubsetter() {
         return request;
     }
 
@@ -454,7 +454,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
 
     private RequestGenerator requestGenerator;
 
-    private Request request = new PassRequest();
+    private RequestSubsetter request = new PassRequest();
     
     private AvailableDataSubsetter availData = defaultAvailableDataSubsetter;
 

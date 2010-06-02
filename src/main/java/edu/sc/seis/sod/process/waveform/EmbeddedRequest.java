@@ -12,14 +12,14 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
-import edu.sc.seis.sod.subsetter.request.Request;
+import edu.sc.seis.sod.subsetter.request.RequestSubsetter;
 
 /**
  * @author crotwell Created on Mar 18, 2005
  */
 public class EmbeddedRequest implements WaveformProcess {
 
-    public EmbeddedRequest(Request request) {
+    public EmbeddedRequest(RequestSubsetter request) {
         this.request = request;
     }
 
@@ -30,7 +30,7 @@ public class EmbeddedRequest implements WaveformProcess {
         for(int counter = 0; counter < childNodes.getLength(); counter++) {
             node = childNodes.item(counter);
             if(node instanceof Element) {
-                request = (Request)SodUtil.load((Element)node,
+                request = (RequestSubsetter)SodUtil.load((Element)node,
                 "request");
             }
         }
@@ -50,5 +50,5 @@ public class EmbeddedRequest implements WaveformProcess {
         return result;
     }
 
-    Request request;
+    RequestSubsetter request;
 }

@@ -47,9 +47,9 @@ import edu.sc.seis.sod.subsetter.eventChannel.vector.EventVectorSubsetter;
 import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
 import edu.sc.seis.sod.subsetter.eventStation.PassEventStation;
 import edu.sc.seis.sod.subsetter.request.PassRequest;
-import edu.sc.seis.sod.subsetter.request.Request;
+import edu.sc.seis.sod.subsetter.request.RequestSubsetter;
 import edu.sc.seis.sod.subsetter.request.vector.ANDRequestWrapper;
-import edu.sc.seis.sod.subsetter.request.vector.VectorRequest;
+import edu.sc.seis.sod.subsetter.request.vector.VectorRequestSubsetter;
 import edu.sc.seis.sod.subsetter.requestGenerator.RequestGenerator;
 import edu.sc.seis.sod.subsetter.requestGenerator.vector.RequestGeneratorWrapper;
 import edu.sc.seis.sod.subsetter.requestGenerator.vector.VectorRequestGenerator;
@@ -108,10 +108,10 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
             requestGenerator = (VectorRequestGenerator)sodObject;
         } else if (sodObject instanceof RequestGenerator) {
             requestGenerator = new RequestGeneratorWrapper((RequestGenerator)sodObject);
-        } else if (sodObject instanceof VectorRequest) {
-            request = (VectorRequest)sodObject;
-        } else if (sodObject instanceof Request) {
-            request = new ANDRequestWrapper((Request)sodObject);
+        } else if (sodObject instanceof VectorRequestSubsetter) {
+            request = (VectorRequestSubsetter)sodObject;
+        } else if (sodObject instanceof RequestSubsetter) {
+            request = new ANDRequestWrapper((RequestSubsetter)sodObject);
         } else if (sodObject instanceof SeismogramDCLocator) {
             dcLocator = (SeismogramDCLocator)sodObject;
         } else if (sodObject instanceof VectorAvailableDataSubsetter) {
@@ -628,7 +628,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
 
     private VectorRequestGenerator requestGenerator;
 
-    private VectorRequest request = new PassRequest();
+    private VectorRequestSubsetter request = new PassRequest();
     
     private static final VectorAvailableDataSubsetter defaultVectorAvailableData = new ORAvailableDataWrapper(defaultAvailableDataSubsetter);
     
