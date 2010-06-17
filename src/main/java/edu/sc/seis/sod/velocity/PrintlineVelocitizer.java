@@ -10,7 +10,6 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
-import org.apache.velocity.context.Context;
 import org.apache.velocity.exception.ParseErrorException;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;

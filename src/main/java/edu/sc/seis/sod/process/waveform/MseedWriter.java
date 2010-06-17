@@ -8,10 +8,8 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
-import edu.sc.seis.fissuresUtil.hibernate.SeismogramFileReference;
 import edu.sc.seis.fissuresUtil.xml.SeismogramFileTypes;
 import edu.sc.seis.fissuresUtil.xml.URLDataSetSeismogram;
-import edu.sc.seis.seisFile.mseed.Blockette1000;
 import edu.sc.seis.sod.ConfigurationException;
 
 public class MseedWriter extends AbstractSeismogramWriter {

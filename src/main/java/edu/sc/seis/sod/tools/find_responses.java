@@ -2,7 +2,6 @@ package edu.sc.seis.sod.tools;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.apache.velocity.VelocityContext;
 

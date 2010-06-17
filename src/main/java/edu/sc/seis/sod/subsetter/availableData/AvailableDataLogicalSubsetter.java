@@ -13,8 +13,8 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.LogicalSubsetter;
 import edu.sc.seis.sod.subsetter.Subsetter;
-import edu.sc.seis.sod.subsetter.request.RequestSubsetter;
 import edu.sc.seis.sod.subsetter.request.RequestLogical;
+import edu.sc.seis.sod.subsetter.request.RequestSubsetter;
 
 /**
  * @author groves Created on Aug 31, 2004

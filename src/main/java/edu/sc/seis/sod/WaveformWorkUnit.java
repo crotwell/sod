@@ -3,7 +3,6 @@ package edu.sc.seis.sod;
 import java.sql.Timestamp;
 
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
-import edu.sc.seis.sod.hibernate.SodDB;
 
 
 public abstract class WaveformWorkUnit implements Runnable {
