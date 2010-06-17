@@ -1,7 +1,6 @@
 package edu.sc.seis.sod.subsetter.channel;
 
 import junit.framework.TestCase;
-import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannel;
 import edu.sc.seis.sod.UserConfigurationException;

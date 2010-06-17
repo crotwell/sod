@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
@@ -16,8 +15,6 @@ import edu.sc.seis.sod.subsetter.LogicalSubsetter;
 import edu.sc.seis.sod.subsetter.Subsetter;
 import edu.sc.seis.sod.subsetter.eventChannel.EventChannelLogicalSubsetter;
 import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
-import edu.sc.seis.sod.subsetter.origin.EventLogicalSubsetter;
-import edu.sc.seis.sod.subsetter.station.StationLogicalSubsetter;
 
 /**
  * @author groves Created on Aug 31, 2004
