@@ -1,5 +1,6 @@
 package edu.sc.seis.sod;
 
+import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -20,25 +21,19 @@ import edu.sc.seis.fissuresUtil.cache.NSSeismogramDC;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.fissuresUtil.time.SortTool;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.process.waveform.WaveformResult;
-import edu.sc.seis.sod.process.waveform.vector.WaveformVectorProcess;
-import edu.sc.seis.sod.process.waveform.vector.WaveformVectorResult;
+import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
 import edu.sc.seis.sod.subsetter.Subsetter;
 import edu.sc.seis.sod.subsetter.availableData.AvailableDataSubsetter;
-import edu.sc.seis.sod.subsetter.availableData.PassAvailableData;
-import edu.sc.seis.sod.subsetter.availableData.SomeCoverage;
-import edu.sc.seis.sod.subsetter.dataCenter.FixedDataCenter;
 import edu.sc.seis.sod.subsetter.dataCenter.SeismogramDCLocator;
 import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
 import edu.sc.seis.sod.subsetter.eventChannel.PassEventChannel;
 import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
-import edu.sc.seis.sod.subsetter.eventStation.PassEventStation;
 import edu.sc.seis.sod.subsetter.request.PassRequest;
 import edu.sc.seis.sod.subsetter.request.RequestSubsetter;
 import edu.sc.seis.sod.subsetter.requestGenerator.RequestGenerator;
@@ -406,13 +401,20 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                                                                RequestFilter[] available,
                                                                LocalSeismogramImpl[] seismograms,
                                                                CookieJar cookieJar) throws Exception {
+        WaveformResult out;
         if (processor instanceof Threadable && ((Threadable)processor).isThreadSafe()) {
-            return processor.process(event, channel, original, available, seismograms, cookieJar);
+            out = processor.accept(event, channel, original, available, seismograms, cookieJar);
         } else {
             synchronized(processor) {
-                return processor.process(event, channel, original, available, seismograms, cookieJar);
+                out = processor.accept(event, channel, original, available, seismograms, cookieJar);
             }
         }
+        if (out == null) {
+            // badly behaved processor, assume success???
+            logger.warn("Processor "+processor.getClass().getName()+" returned null for WaveformResult: "+processor.getClass());
+            return new WaveformResult(seismograms, new Pass(processor));
+        }
+        return out;
     }
     
     private static void handle(EventChannelPair ecp, Stage stage, Throwable t) {
