@@ -13,37 +13,37 @@ public class NoDataGapsTest extends TestCase {
 
     public void testOverage() {
         CoverageTestData ctd = CoverageTestData.makeOverage();
-        assertTrue(ng.process(null, null, ctd.request, null, ctd.seis, null)
+        assertTrue(ng.accept(null, null, ctd.request, null, ctd.seis, null)
                 .isSuccess());
     }
 
     public void testNoData() {
         CoverageTestData ctd = CoverageTestData.makeNoData();
-        assertTrue(ng.process(null, null, ctd.request, null, ctd.seis, null)
+        assertTrue(ng.accept(null, null, ctd.request, null, ctd.seis, null)
                 .isSuccess());
     }
 
     public void testCompleteMiss() {
         CoverageTestData ctd = CoverageTestData.makeCompleteMiss();
-        assertTrue(ng.process(null, null, ctd.request, null, ctd.seis, null)
+        assertTrue(ng.accept(null, null, ctd.request, null, ctd.seis, null)
                 .isSuccess());
     }
 
     public void testContigousData() {
         CoverageTestData ctd = CoverageTestData.makeContigousData();
-        assertTrue(ng.process(null, null, ctd.request, null, ctd.seis, null)
+        assertTrue(ng.accept(null, null, ctd.request, null, ctd.seis, null)
                 .isSuccess());
     }
 
     public void testSlightlySeperatedData() {
         CoverageTestData ctd = CoverageTestData.makeSlightlySeperatedData();
-        assertFalse(ng.process(null, null, ctd.request, null, ctd.seis, null)
+        assertFalse(ng.accept(null, null, ctd.request, null, ctd.seis, null)
                 .isSuccess());
     }
     
     public void testOverlappingData(){
         CoverageTestData ctd = CoverageTestData.makeOverlappingData();
-        assertTrue(ng.process(null, null, ctd.request, null, ctd.seis, null)
+        assertTrue(ng.accept(null, null, ctd.request, null, ctd.seis, null)
                 .isSuccess());
     }
 

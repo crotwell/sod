@@ -15,31 +15,31 @@ public class SomeDataCoverageTest extends TestCase {
 
     public void testTooLateBeginAndTooEarlyEnd() {
         CoverageTestData ctd = CoverageTestData.makeTooLateBeginAndTooEarlyEnd();
-        assertTrue(sc.process(null, null, ctd.request, null, ctd.seis, null)
+        assertTrue(sc.accept(null, null, ctd.request, null, ctd.seis, null)
                 .isSuccess());
     }
 
     public void testTooEarlyEnd() {
         CoverageTestData ctd = CoverageTestData.makeTooEarlyEndTime();
-        assertTrue(sc.process(null, null, ctd.request, null, ctd.seis, null)
+        assertTrue(sc.accept(null, null, ctd.request, null, ctd.seis, null)
                 .isSuccess());
     }
 
     public void testOverage() {
         CoverageTestData ctd = CoverageTestData.makeOverage();
-        assertTrue(sc.process(null, null, ctd.request, null, ctd.seis, null)
+        assertTrue(sc.accept(null, null, ctd.request, null, ctd.seis, null)
                 .isSuccess());
     }
 
     public void testNoData() {
         CoverageTestData ctd = CoverageTestData.makeNoData();
-        assertFalse(sc.process(null, null, ctd.request, null, ctd.seis, null)
+        assertFalse(sc.accept(null, null, ctd.request, null, ctd.seis, null)
                 .isSuccess());
     }
 
     public void testCompleteMiss() {
         CoverageTestData ctd = CoverageTestData.makeCompleteMiss();
-        assertFalse(sc.process(null, null, ctd.request, null, ctd.seis, null)
+        assertFalse(sc.accept(null, null, ctd.request, null, ctd.seis, null)
                 .isSuccess());
     }
 

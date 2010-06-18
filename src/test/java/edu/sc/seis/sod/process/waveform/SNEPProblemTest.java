@@ -18,46 +18,46 @@ public class SNEPProblemTest extends TestCase {
 
     public void testProcessWithNoType() throws Exception {
         SNEPProblem process = new SNEPProblem();
-        WaveformResult result = process.process(null,
+        WaveformResult result = process.accept(null,
                                                 null,
                                                 null,
                                                 null,
                                                 clean,
                                                 null);
         assertFalse(result.isSuccess());
-        result = process.process(null, null, null, null, noType, null);
+        result = process.accept(null, null, null, null, noType, null);
         assertTrue(result.isSuccess());
-        result = process.process(null, null, null, null, typed, null);
+        result = process.accept(null, null, null, null, typed, null);
         assertTrue(result.isSuccess());
     }
 
     public void testProcessWithType() throws Exception {
         SNEPProblem process = new SNEPProblem("flatline");
-        WaveformResult result = process.process(null,
+        WaveformResult result = process.accept(null,
                                                 null,
                                                 null,
                                                 null,
                                                 clean,
                                                 null);
         assertFalse(result.isSuccess());
-        result = process.process(null, null, null, null, noType, null);
+        result = process.accept(null, null, null, null, noType, null);
         assertFalse(result.isSuccess());
-        result = process.process(null, null, null, null, typed, null);
+        result = process.accept(null, null, null, null, typed, null);
         assertTrue(result.isSuccess());
     }
 
     public void testProcessWithWrongType() throws Exception {
         SNEPProblem process = new SNEPProblem("timing");
-        WaveformResult result = process.process(null,
+        WaveformResult result = process.accept(null,
                                                 null,
                                                 null,
                                                 null,
                                                 clean,
                                                 null);
         assertFalse(result.isSuccess());
-        result = process.process(null, null, null, null, noType, null);
+        result = process.accept(null, null, null, null, noType, null);
         assertFalse(result.isSuccess());
-        result = process.process(null, null, null, null, typed, null);
+        result = process.accept(null, null, null, null, typed, null);
         assertFalse(result.isSuccess());
     }
 
