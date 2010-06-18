@@ -236,9 +236,11 @@ public class SodUtil {
         PythonInterpreter interp = getPythonInterpreter();
         interp.setOut(System.out);
         interp.setErr(System.err);
+        interp.exec("from array import array");
         interp.exec("from "+mustImplement.getPackage().getName()+" import "+mustImplement.getSimpleName());
         interp.exec("from edu.sc.seis.sod.status import Pass, Fail");
         interp.exec("from edu.sc.seis.sod.process.waveform import WaveformResult");
+        interp.exec("from edu.sc.seis.sod.process.waveform.vector import WaveformVectorResult");
         interp.exec("from edu.iris.Fissures.seismogramDC import LocalSeismogramImpl");
         String classDef = "class "+className+"("+mustImplement.getSimpleName()+"):\n"+
          "  def __init__(self):\n"+

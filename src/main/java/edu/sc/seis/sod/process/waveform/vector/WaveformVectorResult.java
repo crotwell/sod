@@ -19,6 +19,17 @@ public class WaveformVectorResult {
     public WaveformVectorResult(boolean success, LocalSeismogramImpl[][] seismograms, Object actor, String reason) {
         this(seismograms, new StringTreeLeaf(actor, success, reason));
     }
+    
+    /** convenience constructor to get around two dimensional arrays being hard in jython. */ 
+    public WaveformVectorResult(boolean success, LocalSeismogramImpl[] seismogramsA, LocalSeismogramImpl[] seismogramsB, LocalSeismogramImpl[] seismogramsC, Object actor) {
+        this(success, new LocalSeismogramImpl[][] {seismogramsA, seismogramsB, seismogramsC}, actor);
+    }
+
+    /** convenience constructor to get around two dimensional arrays being hard in jython. */ 
+    public WaveformVectorResult(boolean success, LocalSeismogramImpl[] seismogramsA, LocalSeismogramImpl[] seismogramsB, LocalSeismogramImpl[] seismogramsC, Object actor, String reason) {
+        this(success, new LocalSeismogramImpl[][] {seismogramsA, seismogramsB, seismogramsC}, actor, reason);
+    }
+    
     public WaveformVectorResult(LocalSeismogramImpl[][] seismograms, StringTree reason) {
         this.seismograms = seismograms;
         this.reason = reason;
