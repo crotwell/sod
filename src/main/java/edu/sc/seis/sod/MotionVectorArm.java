@@ -378,10 +378,10 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                                                                LocalSeismogramImpl[][] seismograms,
                                                                CookieJar cookieJar) throws Exception {
         if (processor instanceof Threadable && ((Threadable)processor).isThreadSafe()) {
-            return processor.process(event, channel, original, available, seismograms, cookieJar);
+            return processor.accept(event, channel, original, available, seismograms, cookieJar);
         } else {
             synchronized(processor) {
-                return processor.process(event, channel, original, available, seismograms, cookieJar);
+                return processor.accept(event, channel, original, available, seismograms, cookieJar);
             }
         }
     }
