@@ -14,7 +14,7 @@ public class ExampleExternalProcess implements WaveformProcess {
 
     public ExampleExternalProcess(Element config) throws ConfigurationException {}
 
-    public WaveformResult process(CacheEvent event,
+    public WaveformResult accept(CacheEvent event,
                                   ChannelImpl channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,

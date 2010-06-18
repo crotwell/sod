@@ -24,7 +24,7 @@ public class LegacyVectorExecute extends LegacyExecute implements WaveformVector
         super(config);
     }
 
-    public WaveformVectorResult process(CacheEvent event,
+    public WaveformVectorResult accept(CacheEvent event,
                                                      ChannelGroup channelGroup,
                                                      RequestFilter[][] original,
                                                      RequestFilter[][] available,

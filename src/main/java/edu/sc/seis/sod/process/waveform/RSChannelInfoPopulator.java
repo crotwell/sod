@@ -144,7 +144,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         return memDss;
     }
 
-    public WaveformResult process(CacheEvent event,
+    public WaveformResult accept(CacheEvent event,
                                   ChannelImpl chan,
                                   RequestFilter[] original,
                                   RequestFilter[] available,

@@ -22,7 +22,7 @@ import edu.sc.seis.sod.subsetter.requestGenerator.PhaseRequest;
  * Cuts seismograms relative to phases. Created: Wed Nov 6 17:58:10 2002
  * 
  * @author <a href="mailto:crotwell@seis.sc.edu">Philip Crotwell </a>
- * @version $Id: PhaseCut.java 19806 2008-06-06 19:54:52Z crotwell $
+ * @version $Id: PhaseCut.java 21405 2010-06-18 15:30:36Z crotwell $
  */
 public class PhaseCut implements WaveformProcess {
 
@@ -35,7 +35,7 @@ public class PhaseCut implements WaveformProcess {
     /**
      * Cuts the seismograms based on phase arrivals.
      */
-    public WaveformResult process(CacheEvent event,
+    public WaveformResult accept(CacheEvent event,
                                   ChannelImpl channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,

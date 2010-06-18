@@ -65,7 +65,7 @@ public class Filter implements WaveformProcess, Threadable {
         return true;
     }
 
-    public WaveformResult process(CacheEvent event,
+    public WaveformResult accept(CacheEvent event,
                                   ChannelImpl channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,

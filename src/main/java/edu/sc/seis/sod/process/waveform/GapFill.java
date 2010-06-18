@@ -32,13 +32,13 @@ public class GapFill extends Merge {
         }
     }
 
-    public WaveformResult process(CacheEvent event,
+    public WaveformResult accept(CacheEvent event,
                                   ChannelImpl channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) throws Exception {
-        WaveformResult merged = super.process(event, 
+        WaveformResult merged = super.accept(event, 
                                               channel, 
                                               original, 
                                               available, 

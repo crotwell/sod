@@ -59,7 +59,7 @@ public class VectorImageProcess extends SeismogramImageProcess implements
         }
     }
 
-    public WaveformVectorResult process(CacheEvent event,
+    public WaveformVectorResult accept(CacheEvent event,
                                         ChannelGroup channelGroup,
                                         RequestFilter[][] original,
                                         RequestFilter[][] available,

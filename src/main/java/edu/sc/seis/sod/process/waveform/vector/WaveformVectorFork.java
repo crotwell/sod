@@ -38,7 +38,7 @@ public class WaveformVectorFork implements WaveformVectorProcessWrapper, Threada
         }
     }
 
-    public WaveformVectorResult process(CacheEvent event,
+    public WaveformVectorResult accept(CacheEvent event,
                                         ChannelGroup channelGroup,
                                         RequestFilter[][] original,
                                         RequestFilter[][] available,

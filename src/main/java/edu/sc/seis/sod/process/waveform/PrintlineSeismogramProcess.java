@@ -22,7 +22,7 @@ public class PrintlineSeismogramProcess implements WaveformProcess {
         velocitizer = new PrintlineVelocitizer(new String[] {filename, template});
     }
 
-    public WaveformResult process(CacheEvent event,
+    public WaveformResult accept(CacheEvent event,
                                   ChannelImpl channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,

@@ -16,7 +16,7 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
  * Created: Wed Nov  6 17:58:10 2002
  *
  * @author <a href="mailto:www@seis.sc.edu">Philip Crotwell</a>
- * @version $Id: RTrend.java 19806 2008-06-06 19:54:52Z crotwell $
+ * @version $Id: RTrend.java 21405 2010-06-18 15:30:36Z crotwell $
  */
 
 public class RTrend implements WaveformProcess, Threadable {
@@ -25,7 +25,7 @@ public class RTrend implements WaveformProcess, Threadable {
         return true;
     }
 
-    public WaveformResult process(CacheEvent event,
+    public WaveformResult accept(CacheEvent event,
                                   ChannelImpl channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,

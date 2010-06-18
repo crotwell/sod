@@ -49,7 +49,7 @@ public class ANDWaveformProcessWrapper implements WaveformProcessWrapper {
         return process;
     }
 
-    public WaveformVectorResult process(CacheEvent event,
+    public WaveformVectorResult accept(CacheEvent event,
                                         ChannelGroup channelGroup,
                                         RequestFilter[][] original,
                                         RequestFilter[][] available,

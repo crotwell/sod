@@ -24,7 +24,7 @@ public class RetryAndContinue extends ResultWrapper {
         return "RetryAndContinue(" + subprocess.toString() + ")";
     }
 
-    public WaveformResult process(CacheEvent event,
+    public WaveformResult accept(CacheEvent event,
                                   ChannelImpl channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,
@@ -33,7 +33,7 @@ public class RetryAndContinue extends ResultWrapper {
         if(sodDb == null) {
             sodDb = SodDB.getSingleton();
         }
-        WaveformResult result = subprocess.process(event,
+        WaveformResult result = subprocess.accept(event,
                                                    channel,
                                                    original,
                                                    available,

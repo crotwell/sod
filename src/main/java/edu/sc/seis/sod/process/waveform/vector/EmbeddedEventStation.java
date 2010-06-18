@@ -40,7 +40,7 @@ public class EmbeddedEventStation  implements WaveformVectorProcess {
 
     EventStationSubsetter eventStation;
     
-    public WaveformVectorResult process(CacheEvent event,
+    public WaveformVectorResult accept(CacheEvent event,
                                         ChannelGroup channelGroup,
                                         RequestFilter[][] original,
                                         RequestFilter[][] available,

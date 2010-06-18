@@ -73,7 +73,7 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
         return FissuresFormatter.filize(velocitizer.evaluate(template, ctx));
     }
 
-    public WaveformResult process(CacheEvent event,
+    public WaveformResult accept(CacheEvent event,
                                   ChannelImpl channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,

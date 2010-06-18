@@ -29,7 +29,7 @@ public class SNEPProblem implements WaveformProcess {
         }
     }
 
-    public WaveformResult process(CacheEvent event,
+    public WaveformResult accept(CacheEvent event,
                                   ChannelImpl channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,

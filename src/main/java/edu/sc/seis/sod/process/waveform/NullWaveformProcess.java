@@ -15,7 +15,7 @@ public class NullWaveformProcess implements WaveformProcess {
     public NullWaveformProcess (Element config){
     }
 
-    public WaveformResult process(CacheEvent event,
+    public WaveformResult accept(CacheEvent event,
                                          ChannelImpl channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,

@@ -37,7 +37,7 @@ public class TransferResponse implements WaveformProcess, Threadable {
         highCut = DOMHelper.extractFloat(config, "highCut", DEFAULT_HIGH_CUT);
     }
 
-    public WaveformResult process(CacheEvent event,
+    public WaveformResult accept(CacheEvent event,
                                   ChannelImpl channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,

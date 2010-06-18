@@ -42,7 +42,7 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
         }
     }
 
-    public WaveformResult process(CacheEvent event,
+    public WaveformResult accept(CacheEvent event,
                                   ChannelImpl chan,
                                   RequestFilter[] original,
                                   RequestFilter[] available,

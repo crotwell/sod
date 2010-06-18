@@ -34,13 +34,13 @@ public class RotateGCP implements WaveformVectorProcess, Threadable {
     /**
      * 
      */
-    public WaveformVectorResult process(CacheEvent event,
+    public WaveformVectorResult accept(CacheEvent event,
                                         ChannelGroup channelGroup,
                                         RequestFilter[][] original,
                                         RequestFilter[][] available,
                                         LocalSeismogramImpl[][] seismograms,
                                         CookieJar cookieJar) throws Exception {
-        WaveformVectorResult trimResult = trimmer.process(event, channelGroup, original, available, seismograms, cookieJar);
+        WaveformVectorResult trimResult = trimmer.accept(event, channelGroup, original, available, seismograms, cookieJar);
         if ( ! trimResult.isSuccess()) {
             return new WaveformVectorResult(false, trimResult.getSeismograms(), new StringTreeBranch(this, false, trimResult.getReason()));
         }

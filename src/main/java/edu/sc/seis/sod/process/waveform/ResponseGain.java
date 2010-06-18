@@ -23,7 +23,7 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
  * deconvolution, merely a constant multiplier. Created: Wed Nov 6 17:58:10 2002
  * 
  * @author <a href="mailto:www@seis.sc.edu">Philip Crotwell </a>
- * @version $Id: ResponseGain.java 19806 2008-06-06 19:54:52Z crotwell $
+ * @version $Id: ResponseGain.java 21405 2010-06-18 15:30:36Z crotwell $
  */
 public class ResponseGain implements WaveformProcess, Threadable {
 
@@ -31,7 +31,7 @@ public class ResponseGain implements WaveformProcess, Threadable {
         return true;
     }
 
-    public WaveformResult process(CacheEvent event,
+    public WaveformResult accept(CacheEvent event,
                                   ChannelImpl channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,

@@ -24,7 +24,7 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
     private static final Cut EMPTY_CUT = new Cut(TimeUtils.futurePlusOne,
                                                  new MicroSecondDate(-100000000000000l));
 
-    public WaveformVectorResult process(CacheEvent event,
+    public WaveformVectorResult accept(CacheEvent event,
                                         ChannelGroup channelGroup,
                                         RequestFilter[][] original,
                                         RequestFilter[][] available,

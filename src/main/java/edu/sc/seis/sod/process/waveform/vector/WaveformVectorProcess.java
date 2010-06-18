@@ -13,7 +13,7 @@ import edu.sc.seis.sod.CookieJar;
 
 public interface WaveformVectorProcess {
 
-    public WaveformVectorResult process(CacheEvent event,
+    public WaveformVectorResult accept(CacheEvent event,
                                                      ChannelGroup channelGroup,
                                                      RequestFilter[][] original,
                                                      RequestFilter[][] available,

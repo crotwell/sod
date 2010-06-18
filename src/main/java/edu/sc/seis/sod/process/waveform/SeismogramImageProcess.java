@@ -99,7 +99,7 @@ public class SeismogramImageProcess implements WaveformProcess {
         locator = new SeismogramImageOutputLocator(el);
     }
 
-    public WaveformResult process(CacheEvent event,
+    public WaveformResult accept(CacheEvent event,
                                   ChannelImpl channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,

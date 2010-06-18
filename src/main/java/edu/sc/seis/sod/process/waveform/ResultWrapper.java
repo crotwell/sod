@@ -25,7 +25,7 @@ public abstract class ResultWrapper implements WaveformProcess {
         }
     }
 
-    public abstract WaveformResult process(CacheEvent event,
+    public abstract WaveformResult accept(CacheEvent event,
                                            ChannelImpl channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,

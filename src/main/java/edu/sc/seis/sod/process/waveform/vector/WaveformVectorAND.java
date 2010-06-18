@@ -28,7 +28,7 @@ public class WaveformVectorAND extends WaveformVectorFork  {
         super(config);
     }
 
-    public WaveformVectorResult process(CacheEvent event,
+    public WaveformVectorResult accept(CacheEvent event,
                                                      ChannelGroup channelGroup,
                                                      RequestFilter[][] original,
                                                      RequestFilter[][] available,

@@ -50,7 +50,7 @@ public class LegacyExecute implements WaveformProcess {
     /**
      * Removes the mean from the seismograms.
      */
-    public WaveformResult process(CacheEvent event,
+    public WaveformResult accept(CacheEvent event,
                                   ChannelImpl channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,

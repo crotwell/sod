@@ -84,7 +84,7 @@ public class LocalSeismogramTemplateGenerator implements WaveformProcess {
         }
     }
 
-    public WaveformResult process(CacheEvent event,
+    public WaveformResult accept(CacheEvent event,
                                   ChannelImpl channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,
@@ -92,7 +92,7 @@ public class LocalSeismogramTemplateGenerator implements WaveformProcess {
                                   CookieJar cookieJar) throws Exception {
         logger.debug("process() called");
         if(seismoImageProcess != null) {
-            seismoImageProcess.process(event,
+            seismoImageProcess.accept(event,
                                        channel,
                                        original,
                                        available,

@@ -26,7 +26,7 @@ public class WaveformVectorAlwaysSuccess extends VectorResultWrapper implements 
         super(config);
     }
 
-    public WaveformVectorResult process(CacheEvent event,
+    public WaveformVectorResult accept(CacheEvent event,
                                         ChannelGroup channel,
                                         RequestFilter[][] original,
                                         RequestFilter[][] available,

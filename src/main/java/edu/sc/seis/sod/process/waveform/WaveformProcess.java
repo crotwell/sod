@@ -17,7 +17,7 @@ public interface WaveformProcess {
     /**
      * Processes localSeismograms, possibly modifying them.
      */
-    public WaveformResult process(CacheEvent event,
+    public WaveformResult accept(CacheEvent event,
                                   ChannelImpl channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,

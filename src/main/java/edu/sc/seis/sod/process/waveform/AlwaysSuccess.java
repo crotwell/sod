@@ -22,14 +22,14 @@ public class AlwaysSuccess extends ResultWrapper {
         super(config);
     }
 
-    public WaveformResult process(CacheEvent event,
+    public WaveformResult accept(CacheEvent event,
                                   ChannelImpl channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) throws Exception {
         try {
-            WaveformResult result = subprocess.process(event,
+            WaveformResult result = subprocess.accept(event,
                                                        channel,
                                                        original,
                                                        available,

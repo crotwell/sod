@@ -13,7 +13,7 @@ import edu.sc.seis.sod.status.Pass;
 
 public class QuitOnce implements WaveformProcess {
 
-    public WaveformResult process(CacheEvent event,
+    public WaveformResult accept(CacheEvent event,
                                   ChannelImpl channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,
