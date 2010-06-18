@@ -34,9 +34,6 @@ import org.w3c.dom.Text;
 
 import edu.iris.Fissures.Time;
 import edu.iris.Fissures.Unit;
-import edu.iris.Fissures.IfEvent.EventAttr;
-import edu.iris.Fissures.IfEvent.Origin;
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.BoxAreaImpl;
 import edu.iris.Fissures.model.GlobalAreaImpl;
 import edu.iris.Fissures.model.MicroSecondDate;
@@ -44,14 +41,10 @@ import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.model.UnitRangeImpl;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.network.StationImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.bag.BagUtil;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.process.waveform.vector.WaveformVectorProcess;
@@ -245,6 +238,8 @@ public class SodUtil {
         interp.setErr(System.err);
         interp.exec("from "+mustImplement.getPackage().getName()+" import "+mustImplement.getSimpleName());
         interp.exec("from edu.sc.seis.sod.status import Pass, Fail");
+        interp.exec("from edu.sc.seis.sod.process.waveform import WaveformResult");
+        interp.exec("from edu.iris.Fissures.seismogramDC import LocalSeismogramImpl");
         String classDef = "class "+className+"("+mustImplement.getSimpleName()+"):\n"+
          "  def __init__(self):\n"+
          "      print 'in inline constructor'\n"+
@@ -268,15 +263,12 @@ public class SodUtil {
             }
             classDef += "      "+trimmedLine+"\n";
         }
-        classDef+= "      return Pass(self)\n\n";
-        System.out.println("jython inline: \n"+classDef);
         interp.exec(classDef);
         PyObject jyWaveformProcessClass = interp.get(className);
+        
         PyObject pyWaveformProcessObj = jyWaveformProcessClass.__call__();
         
-        System.out.println("must implement="+mustImplement);
         Object out = pyWaveformProcessObj.__tojava__(mustImplement);
-        System.out.println("jav jython class: "+out.getClass());
         return mustImplement.cast(out);
         }catch(RuntimeException e) {
             System.err.println("RuntimeException in SodUtil.inlineJython"+ e.getMessage());
