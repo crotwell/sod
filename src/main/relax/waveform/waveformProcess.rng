@@ -43,6 +43,7 @@
             <ref name="forkProcess"/>
             <ref name="alwaysSuccess"/>
             <ref name="phaseSignalToNoise"/>
+            <ref name="compoundPhaseSignalToNoise"/>
             <ref name="seismogramImageProcess"/>
             <ref name="legacyExecute"/>
             <ref name="seismogramAND"/>
@@ -704,7 +705,7 @@
         <element name="phaseSignalToNoise">
             <xsd:annotation>
                 <summary>Accepts or rejects seismograms based on their signal to noise ratio</summary>
-                <description>This calculates the signal to noise ratio in the time window described by the offsets
+                <description>This calculates the signal to noise ratio (short/long) in the time window described by the offsets
                     around the given phases and passes if the ratio is less than the given ratio. See the documentation
                     for the TauP Toolkit, http://www.seis.sc.edu/TauP for the phase naming convention. SOD uses the TauP
                     Toolkit internally.</description>
@@ -744,6 +745,66 @@
             </element>
             <element name="shortOffsetEnd">
                 <ref name="time"/>
+            </element>
+            <element name="longOffsetBegin">
+                <ref name="time"/>
+            </element>
+            <element name="longOffsetEnd">
+                <ref name="time"/>
+            </element>
+            <element name="ratio">
+                <data type="float"/>
+            </element>
+        </element>
+    </define>
+    <define name="compoundPhaseSignalToNoise">
+        <element name="compoundPhaseSignalToNoise">
+            <xsd:annotation>
+                <summary>Accepts or rejects seismograms based on their signal to noise ratio</summary>
+                <description>This calculates the signal to noise ratio (short/long) in the time window described by the offsets
+                    around the given phases and passes if the ratio is less than the given ratio. See the documentation
+                    for the TauP Toolkit, http://www.seis.sc.edu/TauP for the phase naming convention. SOD uses the TauP
+                    Toolkit internally.</description>
+                <example>
+                    <compoundPhaseSignalToNoise>
+                        <phaseName>SKS</phaseName>
+                        <shortOffsetBegin>
+                            <unit>SECOND</unit>
+                            <value>-5</value>
+                        </shortOffsetBegin>
+                        <shortOffsetEnd>
+                            <unit>SECOND</unit>
+                            <value>5</value>
+                        </shortOffsetEnd>
+                        <longPhaseName>ttp</phaseName>
+                        <longOffsetBegin>
+                            <unit>SECOND</unit>
+                            <value>-105</value>
+                        </longOffsetBegin>
+                        <longOffsetEnd>
+                            <unit>SECOND</unit>
+                            <value>-5</value>
+                        </longOffsetEnd>
+                        <ratio>2.5</ratio>
+                    </compoundPhaseSignalToNoise>
+                </example>
+            </xsd:annotation>
+            <optional>
+                <element name="modelName">
+                    <data type="string"/>
+                </element>
+            </optional>
+            <element name="phaseName">
+                <data type="string"/>
+            </element>
+            <element name="shortOffsetBegin">
+                <ref name="time"/>
+            </element>
+            <element name="shortOffsetEnd">
+                <ref name="time"/>
+            </element>
+            <element name="longPhaseName">
+                <data type="string"/>
             </element>
             <element name="longOffsetBegin">
                 <ref name="time"/>

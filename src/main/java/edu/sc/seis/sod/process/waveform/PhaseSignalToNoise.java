@@ -44,8 +44,6 @@ public class PhaseSignalToNoise  implements WaveformProcess, Threadable {
     public PhaseSignalToNoise(Element config) throws ConfigurationException, TauModelException{
         NodeList childNodes = config.getChildNodes();
         Node node;
-        TimeInterval shortOffsetBegin=null, shortOffsetEnd=null;
-        TimeInterval longOffsetBegin=null, longOffsetEnd=null;
         for(int counter = 0; counter < childNodes.getLength(); counter++) {
             node = childNodes.item(counter);
             if(node instanceof Element) {
@@ -94,7 +92,7 @@ public class PhaseSignalToNoise  implements WaveformProcess, Threadable {
         LongShortTrigger trigger = calcTrigger(event, channel, seismograms);
         if (trigger != null) {
             if (trigger.getValue() > ratio) {
-                cookieJar.put(PHASE_STON_PREFIX+phaseName, trigger);
+                cookieJar.put(getCookieName(), trigger);
                 return new WaveformResult(seismograms,
                                                  new StringTreeLeaf(this, true));
             }
@@ -127,6 +125,10 @@ public class PhaseSignalToNoise  implements WaveformProcess, Threadable {
         }
         return null;
     }
+    
+    public String getCookieName() {
+        return PHASE_STON_PREFIX+getPhaseName();
+    }
 
     public String getPhaseName() {
         return phaseName;
@@ -145,6 +147,10 @@ public class PhaseSignalToNoise  implements WaveformProcess, Threadable {
 
     protected String phaseName;
 
+    protected TimeInterval shortOffsetBegin, shortOffsetEnd;
+    
+    protected TimeInterval longOffsetBegin, longOffsetEnd;
+    
     protected String modelName = "prem";
 
     protected TimeInterval triggerWindow;
