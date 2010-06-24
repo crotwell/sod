@@ -23,12 +23,12 @@ public class EventVectorOR extends EventVectorLogicalSubsetter implements
     }
 
     public StringTree accept(CacheEvent event,
-                             ChannelGroup channel,
+                             ChannelGroup channelGroup,
                              CookieJar cookieJar) throws Exception {
         StringTree[] result = new StringTree[filterList.size()];
         for(int i = 0; i < filterList.size(); i++) {
             EventVectorSubsetter f = (EventVectorSubsetter)filterList.get(i);
-            result[i] = f.accept(event, channel, cookieJar);
+            result[i] = f.accept(event, channelGroup, cookieJar);
             if(result[i].isSuccess()) {
                 for(int j = i + 1; j < result.length; j++) {
                     result[j] = new ShortCircuit(filterList.get(j));

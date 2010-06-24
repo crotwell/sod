@@ -14,6 +14,6 @@ import edu.sc.seis.sod.subsetter.Subsetter;
 public interface EventVectorSubsetter extends Subsetter {
 
     public StringTree accept(CacheEvent event,
-                          ChannelGroup channel,
+                          ChannelGroup channelGroup,
                           CookieJar cookieJar) throws Exception;
 }

@@ -25,12 +25,12 @@ public class EventVectorNOT extends EventVectorLogicalSubsetter implements
     }
 
     public StringTree accept(CacheEvent event,
-                          ChannelGroup channel,
+                          ChannelGroup channelGroup,
                           CookieJar cookieJar) throws Exception {
         Iterator it = filterList.iterator();
         if(it.hasNext()) {
             EventVectorSubsetter filter = (EventVectorSubsetter)it.next();
-            StringTree result = filter.accept(event, channel, cookieJar);
+            StringTree result = filter.accept(event, channelGroup, cookieJar);
             return new StringTreeBranch(this, !result.isSuccess(), new StringTree[] {result});
         }
         return new StringTreeLeaf(this, false, "Empty NOT");

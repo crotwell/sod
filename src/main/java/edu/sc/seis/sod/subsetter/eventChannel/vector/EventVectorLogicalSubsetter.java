@@ -52,9 +52,9 @@ public class EventVectorLogicalSubsetter extends LogicalSubsetter {
             return new EventVectorSubsetter() {
                 EventStationSubsetter ecs = EventStationLogicalSubsetter.createSubsetter(s);
                 public StringTree accept(CacheEvent event,
-                                         ChannelGroup channel,
+                                         ChannelGroup channelGroup,
                                          CookieJar cookieJar) throws Exception {
-                    return ecs.accept(event, (StationImpl)channel.getStation(), cookieJar);
+                    return ecs.accept(event, (StationImpl)channelGroup.getStation(), cookieJar);
                 }
             };
         }

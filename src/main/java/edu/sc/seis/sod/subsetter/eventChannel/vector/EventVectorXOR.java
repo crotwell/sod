@@ -22,12 +22,12 @@ public class EventVectorXOR extends EventVectorLogicalSubsetter implements
     }
 
     public StringTree accept(CacheEvent event,
-                          ChannelGroup channel,
+                          ChannelGroup channelGroup,
                           CookieJar cookieJar) throws Exception {
         EventVectorSubsetter filterA = (EventVectorSubsetter)filterList.get(0);
-        StringTree resultA = filterA.accept(event, channel, cookieJar);
+        StringTree resultA = filterA.accept(event, channelGroup, cookieJar);
         EventVectorSubsetter filterB = (EventVectorSubsetter)filterList.get(1);
-        StringTree resultB = filterB.accept(event, channel, cookieJar);
+        StringTree resultB = filterB.accept(event, channelGroup, cookieJar);
         return new StringTreeBranch(this, resultA.isSuccess() != resultB.isSuccess(), new StringTree[] {resultA, resultB});
     }
 }
