@@ -4,7 +4,7 @@ import org.apache.log4j.Category;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.TimeRange;
-import edu.iris.Fissures.IfNetwork.NetworkAttr;
+import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
@@ -22,7 +22,7 @@ public class NetworkEffectiveTimeOverlap extends EffectiveTimeOverlap implements
         super(tr);
     }
 
-    public StringTree accept(NetworkAttr network) {
+    public StringTree accept(NetworkAttrImpl network) {
         return new StringTreeLeaf(this, overlaps(network.getEffectiveTime()));
     }
 

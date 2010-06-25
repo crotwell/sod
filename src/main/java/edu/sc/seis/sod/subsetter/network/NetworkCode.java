@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfNetwork.NetworkAttr;
+import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
@@ -27,7 +27,7 @@ public class NetworkCode implements NetworkSubsetter {
         }
     }
 
-    public StringTree accept(NetworkAttr attr) throws Exception {
+    public StringTree accept(NetworkAttrImpl attr) throws Exception {
         if(attr.get_code().equals(desiredCode)
                 && (year == null || year.equals(NetworkIdUtil.getTwoCharYear(attr.get_id())))) {
             return new Pass(this);

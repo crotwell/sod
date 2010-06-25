@@ -1,6 +1,6 @@
 package edu.sc.seis.sod.subsetter.network;
 
-import edu.iris.Fissures.IfNetwork.NetworkAttr;
+import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
 
@@ -16,7 +16,7 @@ import edu.sc.seis.sod.status.StringTree;
 
 public class  PassNetwork implements NetworkSubsetter{
 
-    public StringTree accept(NetworkAttr networkAttr) {
+    public StringTree accept(NetworkAttrImpl networkAttr) {
         return new Pass(this);
     }
 

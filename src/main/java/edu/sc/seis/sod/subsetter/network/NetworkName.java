@@ -2,7 +2,7 @@ package edu.sc.seis.sod.subsetter.network;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfNetwork.NetworkAttr;
+import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.StringTree;
@@ -27,7 +27,7 @@ public class NetworkName implements NetworkSubsetter {
         this.config = config;
     }
 
-    public StringTree accept(NetworkAttr net) {
+    public StringTree accept(NetworkAttrImpl net) {
         return new StringTreeLeaf(this, net.getName().equals(SodUtil.getNestedText(config)));
     }
 

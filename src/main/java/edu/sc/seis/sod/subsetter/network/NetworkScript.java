@@ -2,9 +2,10 @@ package edu.sc.seis.sod.subsetter.network;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfNetwork.NetworkAttr;
+import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.AbstractScriptSubsetter;
+import edu.sc.seis.sod.velocity.network.VelocityNetwork;
 
 
 public class NetworkScript extends AbstractScriptSubsetter implements NetworkSubsetter {
@@ -14,8 +15,8 @@ public class NetworkScript extends AbstractScriptSubsetter implements NetworkSub
     }
 
     @Override
-    public StringTree accept(NetworkAttr attr) throws Exception {
-        engine.put("networkAttr", attr);
+    public StringTree accept(NetworkAttrImpl network) throws Exception {
+        engine.put("networkAttr", new VelocityNetwork(network));
         return eval();
     }
 }
