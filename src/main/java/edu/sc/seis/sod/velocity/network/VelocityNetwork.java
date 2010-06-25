@@ -70,6 +70,10 @@ public class VelocityNetwork extends NetworkAttr {
         return FissuresFormatter.oneLineAndClean(super.getName());
     }
     
+    public String getRawName() {
+        return super.getName();
+    }
+    
     public String getRawBeginDate() {
         return net.get_id().begin_time.date_time;
     }
