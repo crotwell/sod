@@ -30,7 +30,7 @@ public class PassEventChannel implements EventChannelSubsetter,
     }
 
     public StringTree accept(CacheEvent event,
-                          ChannelGroup channel,
+                          ChannelGroup channelGroup,
                           CookieJar cookieJar) throws Exception {
         return new StringTreeLeaf(this, true);
     }
