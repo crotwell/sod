@@ -17,7 +17,7 @@ public class IsGroupable implements ChannelSubsetter {
 
 	public StringTree accept(ChannelImpl channel, NetworkSource network)
 			throws Exception {
-	    List<ChannelImpl> allChans = network.getChannels((StationImpl)channel.getStation());
+	    List<? extends ChannelImpl> allChans = network.getChannels((StationImpl)channel.getStation());
         ArrayList<ChannelImpl> siteChans = new ArrayList<ChannelImpl>();
         for (ChannelImpl channelImpl : allChans) {
 			if (SiteIdUtil.areSameSite(channelImpl.get_id(), channel.get_id())) {

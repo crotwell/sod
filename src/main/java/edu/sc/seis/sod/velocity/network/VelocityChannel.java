@@ -131,7 +131,7 @@ public class VelocityChannel extends ChannelImpl {
         return velChans;
     }
     
-    public static List<VelocityChannel> wrap(List<ChannelImpl> chans) {
+    public static List<VelocityChannel> wrap(List<? extends ChannelImpl> chans) {
         List<VelocityChannel> velChans = new ArrayList<VelocityChannel>();
         for(ChannelImpl c : chans) {
             velChans.add(wrap(c));

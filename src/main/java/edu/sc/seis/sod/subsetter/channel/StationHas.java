@@ -13,6 +13,7 @@ import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.subsetter.Subsetter;
 
 /**
  * @author crotwell Created on Jun 3, 2005
@@ -25,8 +26,8 @@ public class StationHas extends CompositeChannelSubsetter {
 
     public StringTree accept(ChannelImpl channel, NetworkSource network)
             throws Exception {
-        Iterator it = subsetters.iterator();
-        List<ChannelImpl> allChans = network.getChannels((StationImpl)channel.getStation());
+        Iterator<Subsetter> it = subsetters.iterator();
+        List<? extends ChannelImpl> allChans = network.getChannels((StationImpl)channel.getStation());
         NetworkDB.flush();
         while(it.hasNext()) {
             if(!atLeastOneChannelPasses((ChannelSubsetter)it.next(),
@@ -41,7 +42,7 @@ public class StationHas extends CompositeChannelSubsetter {
     }
 
     private static boolean atLeastOneChannelPasses(ChannelSubsetter filter,
-                                                   List<ChannelImpl> chans,
+                                                   List<? extends ChannelImpl> chans,
                                                    NetworkSource net)
             throws Exception {
         for (ChannelImpl channelImpl : chans) {
