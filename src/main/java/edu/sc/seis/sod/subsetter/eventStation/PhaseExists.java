@@ -77,9 +77,9 @@ public class PhaseExists implements EventStationSubsetter {
         return requiredArrival;
     }
 
-    TauPUtil tauPTime;
+    protected TauPUtil tauPTime;
 
-    private String modelName = "iasp91";
+    protected String modelName = "iasp91";
 
-    private String phaseName;
+    protected String phaseName;
 }// PhaseExists
