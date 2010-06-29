@@ -35,6 +35,7 @@
             <ref name="externalStationSubsetter"/>
             <ref name="belongsToVirtual"/>
             <ref name="jythonStationSubsetter"/>
+            <ref name="stationScript"/>
         </choice>
     </define>
     <define name="stationLogical">
@@ -377,4 +378,29 @@
             </choice>
         </element>
     </define>
+    <define name="stationScript">
+        <element name="stationScript">
+            <xsd:annotation>
+                <summary>Runs an script station subsetter</summary>
+                <description>Runs a station subsetter script via JSR223. The networkSource is put as "networkSource" and the station
+                as "station". The station object is a
+                VelocityStation, the same class used in the <a href="../../templates.html">templates</a> for the printlineStationProcess.
+                See the <a href="../../scripting.html">scripting tutorial</a> for more information on inlining scripts
+                into a SOD recipe.</description>
+                <example>
+                    <stationScript type="jython">
+                        if networkAttr.get_code() == 'IU' or networkAttr.get_code() == 'II':
+                          print networkAttr.get_code()
+                          result = True
+                        else:
+                          result = False
+                    </stationScript>
+                </example>
+            </xsd:annotation>
+            <attribute name="type">
+                    <text/>
+            </attribute>
+            <data type="string"/>
+        </element>
+    </define>  
 </grammar>

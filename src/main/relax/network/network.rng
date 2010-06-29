@@ -25,6 +25,7 @@
             <ref name="temporaryNetwork"/>
             <ref name="printlineNetworkProcess"/>
             <ref name="jythonNetworkSubsetter"/>
+            <ref name="networkScript"/>
         </choice>
     </define>
     <define name="code">
@@ -241,4 +242,28 @@
             </choice>
         </element>
     </define>
+    <define name="networkScript">
+        <element name="networkScript">
+            <xsd:annotation>
+                <summary>Runs an script network subsetter</summary>
+                <description>Runs a network subsetter script via JSR223. The network is put as "network" and is a
+                VelocityNetwork, the same class used in the <a href="../../templates.html">templates</a> for the printlineNetworkProcess.
+                See the <a href="../../scripting.html">scripting tutorial</a> for more information on inlining scripts
+                into a SOD recipe.</description>
+                <example>
+                    <networkScript type="jython">
+                        if networkAttr.get_code() == 'IU' or networkAttr.get_code() == 'II':
+                          print networkAttr.get_code()
+                          result = True
+                        else:
+                          result = False
+                    </networkScript>
+                </example>
+            </xsd:annotation>
+            <attribute name="type">
+                    <text/>
+            </attribute>
+            <data type="string"/>
+        </element>
+    </define>  
 </grammar>

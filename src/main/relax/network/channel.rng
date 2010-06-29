@@ -68,6 +68,7 @@
             <ref name="isFlipped"/>
             <ref name="isGroupable"/>
             <ref name="jythonChannelSubsetter"/>
+            <ref name="channelScript"/>
         </choice>
     </define>
     <define name="channelLogical">
@@ -912,4 +913,29 @@
             </choice>
         </element>
     </define>
+    <define name="channelScript">
+        <element name="channelScript">
+            <xsd:annotation>
+                <summary>Runs an script channel subsetter</summary>
+                <description>Runs a channel subsetter script via JSR223. The networkSource is put as "networkSource" and the channel
+                as "channel". The channel object is a
+                VelocityChannel, the same class used in the <a href="../../templates.html">templates</a> for the printlineChannelProcess.
+                See the <a href="../../scripting.html">scripting tutorial</a> for more information on inlining scripts
+                into a SOD recipe.</description>
+                <example>
+                    <channelScript type="jython">
+                        if networkAttr.get_code() == 'IU' or networkAttr.get_code() == 'II':
+                          print networkAttr.get_code()
+                          result = True
+                        else:
+                          result = False
+                    </channelScript>
+                </example>
+            </xsd:annotation>
+            <attribute name="type">
+                    <text/>
+            </attribute>
+            <data type="string"/>
+        </element>
+    </define>  
 </grammar>
