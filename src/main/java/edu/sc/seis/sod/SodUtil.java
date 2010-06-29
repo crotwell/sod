@@ -12,6 +12,7 @@ import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
@@ -20,6 +21,8 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.script.ScriptEngineFactory;
+import javax.script.ScriptEngineManager;
 import javax.xml.transform.TransformerException;
 
 import org.apache.xpath.XPathAPI;
@@ -228,10 +231,30 @@ public class SodUtil {
             return mustImplement.cast(pyWaveformProcessObj.__tojava__(mustImplement));
         }
     }
+    
+    public void listKnownScriptEngines() {
+        ScriptEngineManager mgr = new ScriptEngineManager();
+        List<ScriptEngineFactory> factories = 
+            mgr.getEngineFactories();
+        for (ScriptEngineFactory factory: factories) {
+          System.out.println("ScriptEngineFactory Info");
+          String engName = factory.getEngineName();
+          String engVersion = factory.getEngineVersion();
+          String langName = factory.getLanguageName();
+          String langVersion = factory.getLanguageVersion();
+          System.out.printf("\tScript Engine: %s (%s)\n", 
+              engName, engVersion);
+          List<String> engNames = factory.getNames();
+          for(String name: engNames) {
+            System.out.printf("\tEngine Alias: %s\n", name);
+          }
+          System.out.printf("\tLanguage: %s (%s)\n", 
+              langName, langVersion);
+        }
+    }
 
     protected static synchronized Object inlineJython(String className, Class mustImplement, String jythonCode) throws ClassNotFoundException {
         try {
-        
         String[] lines = jythonCode.split("[\\r\\n]+");
         PythonInterpreter interp = getPythonInterpreter();
         interp.setOut(System.out);
@@ -265,6 +288,7 @@ public class SodUtil {
             }
             classDef += "      "+trimmedLine+"\n";
         }
+        logger.info("inline jython class: \n\n"+classDef+"\n\n");
         interp.exec(classDef);
         PyObject jyWaveformProcessClass = interp.get(className);
         
@@ -649,7 +673,7 @@ public class SodUtil {
     }
 
     /**
-     * returns the element with the given name
+     * returns the first element with the given name
      */
     public static Element getElement(Element config, String elementName) {
         NodeList children = config.getChildNodes();
@@ -662,6 +686,23 @@ public class SodUtil {
             }
         }
         return null;
+    }
+
+    /**
+     * returns all the element with the given name
+     */
+    public static List<Element> getAllElements(Element config, String elementName) {
+        List<Element> out = new ArrayList<Element>();
+        NodeList children = config.getChildNodes();
+        for(int counter = 0; counter < children.getLength(); counter++) {
+            if(children.item(counter) instanceof Element) {
+                Element el = (Element)children.item(counter);
+                if(el.getTagName().equals(elementName)) {
+                    out.add(el);
+                }
+            }
+        }
+        return out;
     }
 
     public static Element getFirstEmbeddedElement(Element config) {
