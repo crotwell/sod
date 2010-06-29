@@ -27,6 +27,7 @@
             <ref name="midPoint"/>
             <ref name="removeStationDuplicate"/>
             <ref name="phaseExists"/>
+            <ref name="phaseWithoutInterference"/>
             <ref name="jythonEventStation"/>
             <ref name="external"/>
         </choice>
@@ -247,6 +248,59 @@
             <element name="phaseName">
                 <ref name="phaseName"/>
             </element>
+        </element>
+    </define>
+    <define name="phaseWithoutInterference">
+        <element name="phaseWithoutInterference">
+            <xsd:annotation>
+                <summary>Accepts an event-station pair if the given phase is not interfered with by other phases.</summary>
+                <description>Accepts an event-station pair if the given phase exists at the station and the interferingPhases
+                either do not exist, or are outside the given time window.</description>
+            </xsd:annotation>
+            <optional>
+                <element name="model">
+                    <ref name="model"/>
+                </element>
+            </optional>
+            <element name="phaseName">
+                <ref name="phaseName"/>
+            </element>
+            <optional>
+                <element name="arrivalIndex">
+                    <data type="integer"/>
+                </element>
+            </optional>
+            <element name="beginOffset">
+                <xsd:annotation>
+                    <example>
+                        <beginOffset>
+                            <unit>SECOND</unit>
+                            <value>-60</value>
+                        </beginOffset>
+                    </example>
+                </xsd:annotation>
+                <choice>
+                    <ref name="time"/>
+                </choice>
+            </element>
+            <element name="endOffset">
+                <xsd:annotation>
+                    <example>
+                        <endOffset>
+                            <unit>SECOND</unit>
+                            <value>360</value>
+                        </endOffset>
+                    </example>
+                </xsd:annotation>
+                <choice>
+                    <ref name="time"/>
+                </choice>
+            </element>
+            <oneOrMore>
+                <element name="interferingPhase">
+                    <ref name="phaseName"/>
+                </element>
+            </oneOrMore>
         </element>
     </define>
     <define name="midPoint">
