@@ -6,6 +6,7 @@ import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.AbstractScriptSubsetter;
+import edu.sc.seis.sod.velocity.network.VelocityStation;
 
 
 public class StationScript extends AbstractScriptSubsetter implements StationSubsetter {
@@ -16,8 +17,8 @@ public class StationScript extends AbstractScriptSubsetter implements StationSub
 
     @Override
     public StringTree accept(StationImpl station, NetworkSource network) throws Exception {
-        engine.put("station", station);
-        engine.put("network", network);
+        engine.put("station", new VelocityStation(station));
+        engine.put("networkSource", network);
         return eval();
     }
 }
