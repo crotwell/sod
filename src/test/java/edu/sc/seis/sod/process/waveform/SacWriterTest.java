@@ -11,10 +11,16 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.varia.NullAppender;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.model.QuantityImpl;
+import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.iris.dmc.seedcodec.CodecException;
+import edu.sc.seis.TauP.SeismicPhase;
+import edu.sc.seis.TauP.TauModelException;
+import edu.sc.seis.fissuresUtil.bag.DistAz;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.display.SimplePlotUtil;
 import edu.sc.seis.fissuresUtil.mockFissures.IfEvent.MockEventAccessOperations;
@@ -63,6 +69,14 @@ public class SacWriterTest extends TestCase {
         }});
         sw.applyProcessors(sts, ev, chan);
         assertEquals(sts.kt0, "ttp");
+    }
+    
+    public void testSecondArrival() throws ConfigurationException, NoPreferredOrigin, TauModelException {
+        SacWriter sw = new SacWriter(new SacProcess[] {new PhaseHeaderProcess("prem", "P", 1, 2)});
+        sw.applyProcessors(sts, ev, chan);
+        SeismicPhase sp = new SeismicPhase("P", "prem", ((QuantityImpl)ev.get_preferred_origin().getLocation().depth).getValue(UnitImpl.KILOMETER));
+        assertEquals(sts.t1, sp.calcTime(new DistAz(chan.getStation().getLocation(),
+                                                    ev.get_preferred_origin().getLocation()).getDelta()).get(1).getTime());
     }
 
     public void testGenerateLocations() throws ConfigurationException {

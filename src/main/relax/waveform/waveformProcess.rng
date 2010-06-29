@@ -319,8 +319,11 @@
                     appended to their file name. ie the second seismogram will be filename.1 and the third will be
                     filename.2. The phaseTimeHeader element will cause the travel time of the given phase to be placed
                     in the sac header corresponding to the tHeader element. tHeader can be 0-9 as well as a. In the case
-                    of 0-9, the ray parameter is inserted into the corresponding userX header as rad/sec. See the TauP
-                    user manual, http://www.seis.sc.edu/TauP, for the phase naming convention.  
+                    of 0-9, the ray parameter is inserted into the corresponding userX header as rad/sec. In the case of
+                    triplicated phases, the arrivalIndex can be used to pick an arrival different from the first.
+                    The default is 1, yeilding the first arrival. If this is set to 2, the second arrival is used
+                    and if it is set to -1 then the last arrival is used.
+                    See the TauP user manual, http://www.seis.sc.edu/TauP, for the phase naming convention.  
                     If the littleEndian element is added to the sacWriter, it will write out sac files in Intel processor style 
                     little endian byte order.  It defaults to writing in big endian order.</description>
                 <example>
@@ -336,6 +339,7 @@
                             <model>prem</model>
                             <phaseName>tts</phaseName>
                             <tHeader>1</tHeader>
+                            <arrivalIndex>2</arrivalIndex>
                         </phaseTimeHeader>
                     </sacWriter>
                 </example>
@@ -459,6 +463,11 @@
                 <value>9</value>
             </choice>
         </element>
+        <optional>
+            <element name="arrivalIndex">
+                <data type="integer"/>
+            </element>
+        </optional>
     </define>
     <define name="recordSectionDisplayGenerator">
         <element name="recordSectionDisplayGenerator">
@@ -776,7 +785,7 @@
                             <unit>SECOND</unit>
                             <value>5</value>
                         </shortOffsetEnd>
-                        <longPhaseName>ttp</phaseName>
+                        <longPhaseName>ttp</longPhaseName>
                         <longOffsetBegin>
                             <unit>SECOND</unit>
                             <value>-105</value>
