@@ -23,8 +23,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
-import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
@@ -32,11 +30,11 @@ import edu.iris.Fissures.model.SamplingImpl;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
+import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.bag.OrientationUtil;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
-import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.subsetter.channel.ChannelSubsetter;
@@ -137,7 +135,7 @@ public class ChannelGrouper {
                                         NetworkId netId = chn.get(0).get_id().network_id;
                                         List<CacheNetworkAccess> networks = Start.getNetworkArm()
                                                 .getSuccessfulNetworks();
-                                        NetworkAttr netAttr = null;
+                                        NetworkAttrImpl netAttr = null;
                                         for (CacheNetworkAccess net : networks) {
                                             if(NetworkIdUtil.areEqual(net.get_attributes().get_id(),
                                                                       netId)) {
@@ -151,8 +149,6 @@ public class ChannelGrouper {
                                     } else if(subsetter instanceof StationSubsetter) {
                                         if(accept) {
                                             StationSubsetter stationSubsetter = (StationSubsetter)subsetter;
-                                            NetworkAccess network = Start.getNetworkArm()
-                                                    .getNetwork(chn.get(0).getSite().getStation().get_id().network_id);
                                             if(!stationSubsetter.accept((StationImpl)chn.get(0).getSite().getStation(),
                                                                         Start.getNetworkArm().getNetworkSource()).isSuccess()) {
                                                 accept = false;
@@ -162,8 +158,6 @@ public class ChannelGrouper {
                                         if(accept) {
                                             ChannelSubsetter channelSubsetter = (ChannelSubsetter)subsetter;
                                             for(ChannelImpl channelImpl : chn) {
-                                                ProxyNetworkAccess network = Start.getNetworkArm()
-                                                        .getNetwork(channelImpl.get_id().network_id);
                                                 if(!channelSubsetter.accept(channelImpl,
                                                                             Start.getNetworkArm().getNetworkSource()).isSuccess()) {
                                                     accept = false;
