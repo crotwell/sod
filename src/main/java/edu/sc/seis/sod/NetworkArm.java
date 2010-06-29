@@ -223,7 +223,7 @@ public class NetworkArm implements Arm {
             statusChanged("Getting networks");
             logger.info("Getting networks");
             ArrayList<CacheNetworkAccess> successes = new ArrayList<CacheNetworkAccess>();
-            List<CacheNetworkAccess> allNets = getNetworkSource().getNetworks();
+            List<? extends CacheNetworkAccess> allNets = getNetworkSource().getNetworks();
             logger.info("Found " + allNets.size() + " networks");
             int i=0;
             for (CacheNetworkAccess currNet : allNets) {
@@ -253,7 +253,7 @@ public class NetworkArm implements Arm {
                                               Standing.REJECT));
                             failLogger.info(NetworkIdUtil.toString(currNet.get_attributes()
                                     .get_id())
-                                    + " was rejected.");
+                                    + " was rejected. "+result);
                         }
                     } else {
                         change(currNet, Status.get(Stage.NETWORK_SUBSETTER,
@@ -379,7 +379,7 @@ public class NetworkArm implements Arm {
                     + net.get_attributes().getName());
             ArrayList<Station> arrayList = new ArrayList<Station>();
             try {
-                List<StationImpl> stations = getNetworkSource().getStations(netAttr.getId());
+                List<? extends StationImpl> stations = getNetworkSource().getStations(netAttr.getId());
 
                 for (StationImpl stationImpl : stations) {
                     logger.debug("Station in NetworkArm: "
@@ -478,7 +478,7 @@ public class NetworkArm implements Arm {
             statusChanged("Getting channels for " + station);
             List<ChannelImpl> successes = new ArrayList<ChannelImpl>();
             try {               
-                List<ChannelImpl> chansAtStation = loadedNetworkSource.getChannels(station);
+                List<? extends ChannelImpl> chansAtStation = loadedNetworkSource.getChannels(station);
                 Status inProg = Status.get(Stage.NETWORK_SUBSETTER,
                                            Standing.IN_PROG);
                 boolean needCommit = false;

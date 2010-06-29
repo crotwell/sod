@@ -61,13 +61,13 @@ public abstract class NetworkSource extends AbstractSource {
 
     public abstract CacheNetworkAccess getNetwork(NetworkAttrImpl attr);
     
-    public abstract List<CacheNetworkAccess> getNetworkByName(String name) throws NetworkNotFound;
+    public abstract List<? extends CacheNetworkAccess> getNetworkByName(String name) throws NetworkNotFound;
     
-    public abstract List<CacheNetworkAccess> getNetworks();
+    public abstract List<? extends CacheNetworkAccess> getNetworks();
     
-    public abstract List<StationImpl> getStations(NetworkId net);
+    public abstract List<? extends StationImpl> getStations(NetworkId net);
     
-    public abstract List<ChannelImpl> getChannels(StationImpl station);
+    public abstract List<? extends ChannelImpl> getChannels(StationImpl station);
 
     public abstract Sensitivity getSensitivity(ChannelId chanId) throws ChannelNotFound, InstrumentationInvalid;
     

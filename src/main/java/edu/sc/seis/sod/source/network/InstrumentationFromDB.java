@@ -61,7 +61,7 @@ public class InstrumentationFromDB extends NetworkSource {
     private NetworkSource wrapped;
 
     @Override
-    public List<ChannelImpl> getChannels(StationImpl station) {
+    public List<? extends ChannelImpl> getChannels(StationImpl station) {
         return wrapped.getChannels(station);
     }
 
@@ -71,17 +71,17 @@ public class InstrumentationFromDB extends NetworkSource {
     }
 
     @Override
-    public List<CacheNetworkAccess> getNetworkByName(String name) throws NetworkNotFound {
+    public List<? extends CacheNetworkAccess> getNetworkByName(String name) throws NetworkNotFound {
         return wrapped.getNetworkByName(name);
     }
 
     @Override
-    public List<CacheNetworkAccess> getNetworks() {
+    public List<? extends CacheNetworkAccess> getNetworks() {
         return wrapped.getNetworks();
     }
 
     @Override
-    public List<StationImpl> getStations(NetworkId net) {
+    public List<? extends StationImpl> getStations(NetworkId net) {
         return wrapped.getStations(net);
     }
 }

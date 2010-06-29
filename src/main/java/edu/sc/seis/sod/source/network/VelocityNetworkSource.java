@@ -1,8 +1,8 @@
 package edu.sc.seis.sod.source.network;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
+
+import org.w3c.dom.Element;
 
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
@@ -10,39 +10,30 @@ import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.iris.Fissures.IfNetwork.Sensitivity;
-import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.NetworkAttrImpl;
-import edu.iris.Fissures.network.NetworkIdUtil;
-import edu.iris.Fissures.network.StationIdUtil;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
+import edu.sc.seis.sod.velocity.network.VelocityChannel;
+import edu.sc.seis.sod.velocity.network.VelocityNetwork;
+import edu.sc.seis.sod.velocity.network.VelocityStation;
 
 
-public class LoadedNetworkSource extends NetworkSource {
+public class VelocityNetworkSource extends NetworkSource {
 
-    public LoadedNetworkSource(NetworkSource wrapped, StationImpl sta) {
-        super(wrapped.getDNS(), wrapped.getName(), wrapped.getRetries());
+    public VelocityNetworkSource(NetworkSource wrapped) {
+        super(wrapped);
         this.wrapped = wrapped;
-        this.sta = sta;
-        this.chans = wrapped.getChannels(sta);
-        this.allStations = wrapped.getStations(sta.getId().network_id);
     }
 
     @Override
     public List<? extends ChannelImpl> getChannels(StationImpl station) {
-        if (StationIdUtil.areEqual(station, sta)) {
-            ArrayList<ChannelImpl> out = new ArrayList<ChannelImpl>();
-            out.addAll(chans);
-            return out;
-        }
-        return wrapped.getChannels(station);
+        return VelocityChannel.wrap(wrapped.getChannels(station));
     }
 
     @Override
     public Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InstrumentationInvalid {
-        instrumentationLoaded.add(ChannelIdUtil.toString(chanId));
         return wrapped.getInstrumentation(chanId);
     }
 
@@ -58,30 +49,19 @@ public class LoadedNetworkSource extends NetworkSource {
 
     @Override
     public List<? extends CacheNetworkAccess> getNetworks() {
+        // TODO: this is not really what we want as it is not a Velocity
         return wrapped.getNetworks();
     }
 
     @Override
     public Sensitivity getSensitivity(ChannelId chanId) throws ChannelNotFound, InstrumentationInvalid {
-        instrumentationLoaded.add(ChannelIdUtil.toString(chanId));
         return wrapped.getSensitivity(chanId);
     }
 
     @Override
     public List<? extends StationImpl> getStations(NetworkId net) {
-        if (NetworkIdUtil.areEqual(net, sta.getNetworkAttr().getId())) {
-            return allStations;
-        }
-        return wrapped.getStations(net);
-    }
-    
-    public boolean isInstrumentationLoaded(ChannelId chan) {
-        return instrumentationLoaded.contains(ChannelIdUtil.toString(chan));
+        return VelocityStation.wrapList(wrapped.getStations(net));
     }
     
     NetworkSource wrapped;
-    StationImpl sta;
-    List<? extends StationImpl> allStations;
-    List<? extends ChannelImpl> chans;
-    HashSet<String> instrumentationLoaded = new HashSet<String>();
 }
