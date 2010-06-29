@@ -26,7 +26,7 @@ public class BelongsToVirtual implements StationSubsetter {
     private static NetworkAccess getVirtual(NetworkSource networkSource, String name)
             throws ConfigurationException {
         try {
-            List<CacheNetworkAccess> nets = networkSource.getNetworkByName(name);
+            List<? extends CacheNetworkAccess> nets = networkSource.getNetworkByName(name);
             if(nets.size() > 1) {
                 throw new ConfigurationException("There are several nets with the name "
                         + name);
@@ -68,7 +68,7 @@ public class BelongsToVirtual implements StationSubsetter {
     
     private String name;
 
-    private List<StationImpl> stations;
+    private List<? extends StationImpl> stations;
 
     private TimeInterval refreshInterval;
 
