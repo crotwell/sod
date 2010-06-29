@@ -295,14 +295,6 @@ public class VelocityStation extends StationImpl {
         return sta;
     }
 
-    public static VelocityStation[] wrap(List stations) {
-        VelocityStation[] out = new VelocityStation[stations.size()];
-        for(int i = 0; i < out.length; i++) {
-            out[i] = new VelocityStation((StationImpl)stations.get(i));
-        }
-        return out;
-    }
-
     public static VelocityStation[] wrap(Station[] stations) {
         VelocityStation[] out = new VelocityStation[stations.length];
         for(int i = 0; i < out.length; i++) {
