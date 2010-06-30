@@ -20,10 +20,9 @@ import edu.sc.seis.sod.velocity.network.VelocityNetwork;
 import edu.sc.seis.sod.velocity.network.VelocityStation;
 
 
-public class VelocityNetworkSource extends NetworkSource {
+public class VelocityNetworkSource implements NetworkSource {
 
-    public VelocityNetworkSource(NetworkSource wrapped) {
-        super(wrapped);
+    public VelocityNetworkSource(AbstractNetworkSource wrapped) {
         this.wrapped = wrapped;
     }
 
@@ -61,6 +60,11 @@ public class VelocityNetworkSource extends NetworkSource {
     @Override
     public List<? extends StationImpl> getStations(NetworkId net) {
         return VelocityStation.wrapList(wrapped.getStations(net));
+    }
+
+    @Override
+    public String[] getConstrainingNetworkCodes() {
+        return wrapped.getConstrainingNetworkCodes();
     }
     
     NetworkSource wrapped;

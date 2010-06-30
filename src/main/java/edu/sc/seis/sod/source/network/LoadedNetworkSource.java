@@ -20,10 +20,9 @@ import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
 
 
-public class LoadedNetworkSource extends NetworkSource {
+public class LoadedNetworkSource implements NetworkSource {
 
-    public LoadedNetworkSource(NetworkSource wrapped, StationImpl sta) {
-        super(wrapped.getDNS(), wrapped.getName(), wrapped.getRetries());
+    public LoadedNetworkSource(AbstractNetworkSource wrapped, StationImpl sta) {
         this.wrapped = wrapped;
         this.sta = sta;
         this.chans = wrapped.getChannels(sta);
@@ -77,6 +76,11 @@ public class LoadedNetworkSource extends NetworkSource {
     
     public boolean isInstrumentationLoaded(ChannelId chan) {
         return instrumentationLoaded.contains(ChannelIdUtil.toString(chan));
+    }
+
+    @Override
+    public String[] getConstrainingNetworkCodes() {
+        return wrapped.getConstrainingNetworkCodes();
     }
     
     NetworkSource wrapped;

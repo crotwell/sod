@@ -37,6 +37,7 @@ import edu.sc.seis.sod.source.event.EventSource;
 import edu.sc.seis.sod.source.network.InstrumentationFromDB;
 import edu.sc.seis.sod.source.network.LoadedNetworkSource;
 import edu.sc.seis.sod.source.network.NetworkFinder;
+import edu.sc.seis.sod.source.network.AbstractNetworkSource;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.StringTree;
@@ -64,12 +65,12 @@ public class NetworkArm implements Arm {
         try {
             SodDB sodDb = SodDB.getSingleton();
             // lastQueryTime should be null if first time
-            lastQueryTime = sodDb.getQueryTime(getNetworkSource().getName(), getNetworkSource().getDNS());
+            lastQueryTime = sodDb.getQueryTime(getInternalNetworkSource().getName(), getInternalNetworkSource().getDNS());
             
             // only do timer if positive interval and waveform arm exists, otherwise run in thread
             if (getRefreshInterval().value > 0 && Start.getWaveformRecipe() != null) {
                 Timer timer = new Timer("Refresh NetworkArm", true);
-                long period = (long)getNetworkSource().getRefreshInterval().getValue(UnitImpl.MILLISECOND);
+                long period = (long)getInternalNetworkSource().getRefreshInterval().getValue(UnitImpl.MILLISECOND);
                 long firstDelay = lastQueryTime==null ? 0 : lastQueryTime.delayUntilNextRefresh(getRefreshInterval());
                 logger.debug("Refresh timer startup: period: "+period+"  firstDelay: "+firstDelay+"  last query: "+(lastQueryTime==null ? "null" : lastQueryTime.getTime()));
                 timer.schedule(refresh, firstDelay, period);
@@ -117,7 +118,7 @@ public class NetworkArm implements Arm {
                 loadConfigElement(SodUtil.load((Element)node, PACKAGES));
             } // end of if (node instanceof Element)
         } // end of for (int i=0; i<children.getSize(); i++)
-        getNetworkSource().setConstrainingNetworkCodes(getConstrainingNetworkCodes(attrSubsetter));
+        getInternalNetworkSource().setConstrainingNetworkCodes(getConstrainingNetworkCodes(attrSubsetter));
         configureEffectiveTimeCheckers();
     }
 
@@ -147,8 +148,8 @@ public class NetworkArm implements Arm {
 
     private void loadConfigElement(Object sodElement)
             throws ConfigurationException {
-        if(sodElement instanceof NetworkSource) {
-            finder = (NetworkSource)sodElement;
+        if(sodElement instanceof AbstractNetworkSource) {
+            finder = (AbstractNetworkSource)sodElement;
         } else if(sodElement instanceof NetworkSubsetter) {
             attrSubsetter = (NetworkSubsetter)sodElement;
         } else if(sodElement instanceof StationSubsetter) {
@@ -168,7 +169,7 @@ public class NetworkArm implements Arm {
     }
 
     public TimeInterval getRefreshInterval() {
-        return getNetworkSource().getRefreshInterval();
+        return getInternalNetworkSource().getRefreshInterval();
     }
 
     public List<ChannelSubsetter> getChannelSubsetters() {
@@ -315,7 +316,7 @@ public class NetworkArm implements Arm {
 
     void finish() {
         armFinished = true;
-        lastQueryTime = new QueryTime(getNetworkSource().getName(), getNetworkSource().getDNS(), ClockUtil.now().getTimestamp());
+        lastQueryTime = new QueryTime(getInternalNetworkSource().getName(), getInternalNetworkSource().getDNS(), ClockUtil.now().getTimestamp());
         SodDB.getSingleton().putQueryTime(lastQueryTime);
         SodDB.commit();
         logger.info("Network arm finished.");
@@ -663,7 +664,7 @@ public class NetworkArm implements Arm {
         }
     }
 
-    private NetworkSource internalFinder = new NetworkFinder("edu/iris/dmc", "IRIS_NetworkDC", -1);
+    private AbstractNetworkSource internalFinder = new NetworkFinder("edu/iris/dmc", "IRIS_NetworkDC", -1);
 
     private NetworkSource finder = new InstrumentationFromDB(internalFinder);
     
@@ -686,7 +687,7 @@ public class NetworkArm implements Arm {
         return finder;
     }
 
-     NetworkSource getInternalNetworkSource() {
+     protected AbstractNetworkSource getInternalNetworkSource() {
         return internalFinder;
     }
     

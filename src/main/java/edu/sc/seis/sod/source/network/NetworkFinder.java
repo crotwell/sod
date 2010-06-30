@@ -28,7 +28,7 @@ import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
 import edu.sc.seis.fissuresUtil.cache.VestingNetworkDC;
 import edu.sc.seis.sod.Start;
 
-public class NetworkFinder extends NetworkSource {
+public class NetworkFinder extends AbstractNetworkSource {
 
     public NetworkFinder(String dns, String name, int retries) {
         super(dns, name, retries);

@@ -16,17 +16,10 @@ import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
 
-public class InstrumentationFromDB extends NetworkSource {
+public class InstrumentationFromDB implements NetworkSource {
 
-    public InstrumentationFromDB(NetworkSource wrapped) {
-        super(wrapped);
+    public InstrumentationFromDB(AbstractNetworkSource wrapped) {
         this.wrapped = wrapped;
-    }
-
-    @Override
-    public void setConstrainingNetworkCodes(String[] constrainingCodes) {
-        super.setConstrainingNetworkCodes(constrainingCodes);
-        wrapped.setConstrainingNetworkCodes(constrainingCodes);
     }
     
     @Override
@@ -58,7 +51,7 @@ public class InstrumentationFromDB extends NetworkSource {
         return inst;
     }
     
-    private NetworkSource wrapped;
+    private AbstractNetworkSource wrapped;
 
     @Override
     public List<? extends ChannelImpl> getChannels(StationImpl station) {
@@ -83,5 +76,10 @@ public class InstrumentationFromDB extends NetworkSource {
     @Override
     public List<? extends StationImpl> getStations(NetworkId net) {
         return wrapped.getStations(net);
+    }
+
+    @Override
+    public String[] getConstrainingNetworkCodes() {
+        return wrapped.constrainingCodes;
     }
 }
