@@ -2,9 +2,17 @@
 group = 'edu.sc.seis'
 version = '3.0.0beta7'
 
+project.sourceSets {
+            relax {
+                java {
+                    srcDir 'src/main/relax'
+                }
+            }
+        }
+        
 dependencies {
     compile project(':bag') { transitive = true }
-    compile project(':seiswww') { transitive = true }
+    compile project(':seiswww') { transitive = false }
     compile project(':cormorant') { transitive = true }
     
     compile "jline:jline:0.9.91"
@@ -14,7 +22,10 @@ dependencies {
     compile "msv:relaxngDatatype:20030807"
     compile "msv:xsdlib:20030807"
     compile "thaiopensource:jing:20030619"
-    compile "org.apache.velocity:velocity-tools:2.0"
+    compile ("org.apache.velocity:velocity-tools:2.0") {
+        exclude group: 'xml-apis',  module: 'xml-apis'
+    }
+
     compile "edu.sc.seis.mapData:dcwpo_browse:1.0"
     compile "net.sourceforge.javacsv:javacsv:2.0"
 }
