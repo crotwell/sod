@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sod>
+    <eventArm>
+        <eventFinder>
+            <name>IRIS_EventDC</name>
+            <dns>edu/iris/dmc</dns>
+            <originTimeRange>
+                <startTime>
+                    <year>2003</year>
+                    <month>1</month>
+                    <day>1</day>
+                </startTime>
+                <endTime>
+                    <year>2003</year>
+                    <month>1</month>
+                    <day>16</day>
+                </endTime>
+            </originTimeRange>
+            <magnitudeRange>
+                <min>5</min>
+            </magnitudeRange>
+            <catalog>WHDF</catalog>
+        </eventFinder>
+        <originScript type="jython">
+           # preferredOrigin.getLocation().depth.getValue() / preferredOrigin.magnitudeList.get(0).value > 10
+           result = preferredOrigin.magnitudeList.get(0).value > 5.5
+        </originScript>
+        <printlineEventProcess/>
+    </eventArm>
+    <networkArm>
+        <networkFinder>
+            <name>IRIS_NetworkDC</name>
+            <dns>edu/iris/dmc</dns>
+        </networkFinder>
+        <networkAND>
+            <networkScript type="jython" >
+                if networkAttr.get_code() == 'CO' or networkAttr.get_code() == 'SP':
+                  print networkAttr.get_code()
+                  result = True
+                else:
+                  result = False
+            </networkScript>
+        </networkAND>
+        <stationScript type="jython">
+            from edu.sc.seis.fissuresUtil.chooser import ClockUtil
+            from edu.sc.seis.sod.status import Pass, Fail
+            if station.getEndDate().after(ClockUtil.now()):
+                result = util.pass("Station is alive now")
+            else:
+                result = util.fail("Station is no longer active")
+        </stationScript>
+        <siteCode>00</siteCode>
+        <channelOR>
+           <channelCode>BHZ</channelCode>
+           <channelAND>
+               <channelCode>LHZ</channelCode>
+               <channelScript type="jython">
+                   from edu.sc.seis.fissuresUtil.chooser import ClockUtil
+                   otherChans = networkSource.getChannels(channel.station)
+                   result = util.pass("No BHZ, only LHZ is alive now")
+                   for other in otherChans:
+                       if other.code == "BHZ" and other.getEndDate().after(ClockUtil.now()):
+                           # active BHZ, so reject LHZ
+                           result = util.fail( "Use BHZ instead of LHZ for "+channel.network.code+"."+channel.station.code)
+               </channelScript>
+           </channelAND>
+        </channelOR>
+        <printlineChannelProcess/>
+    </networkArm>
+    <waveformArm>
+        <distanceRange>
+            <unit>DEGREE</unit>
+            <min>30</min>
+            <max>90</max>
+        </distanceRange>
+        <phaseRequest>
+            <model>prem</model>
+            <beginPhase>ttp</beginPhase>
+            <beginOffset>
+                <unit>SECOND</unit>
+                <value>-120</value>
+            </beginOffset>
+            <endPhase>tts</endPhase>
+            <endOffset>
+                <unit>SECOND</unit>
+                <value>360</value>
+            </endOffset>
+        </phaseRequest>
+        <fixedDataCenter>
+            <name>IRIS_PondDataCenter</name>
+            <dns>edu/iris/dmc</dns>
+        </fixedDataCenter>
+        <someCoverage/>
+        <printlineSeismogramProcess/>
+<!--
+        <jythonWaveformProcess>
+<inline>
+        from jarray import array
+        from bag import rmean, taper, rtrend, stat
+        print "Hello Sod "
+        out = array([], LocalSeismogramImpl)
+        for s in seismograms:
+            s = rmean(s)
+            s = taper(rtrend(s))
+            print s
+            print
+            print stat(s)
+            print
+            out.append(s)
+        print "\n"
+        return WaveformResult(True, out, self)
+</inline>
+       </jythonWaveformProcess>
+-->
+        <printlineSeismogramProcess/>
+    </waveformArm>
+</sod>
