@@ -13,6 +13,7 @@ import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Magnitude;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.event.EventAttrImpl;
+import edu.iris.Fissures.event.OriginImpl;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.fissuresUtil.mockFissures.IfEvent.MockOrigin;
 import edu.sc.seis.sod.XMLConfigUtil;
@@ -23,9 +24,9 @@ public class MagnitudeRangeTest extends TestCase {
         Magnitude mag = new Magnitude();
         mag.type = "mb";
         mag.value = 6.0f;
-        Origin origin = MockOrigin.create();
+        OriginImpl origin = MockOrigin.create();
         origin.setMagnitudes(new Magnitude[] {mag});
-        EventAttr eventAttr = new EventAttrImpl("test",
+        EventAttrImpl eventAttr = new EventAttrImpl("test",
                                                 ParseRegions.getInstance()
                                                         .getGeographicRegion(7));
         Element element = XMLConfigUtil.parse("<magnitudeRange>"
@@ -58,9 +59,9 @@ public class MagnitudeRangeTest extends TestCase {
         Magnitude mag = new Magnitude();
         mag.type = "mb";
         mag.value = 5.0f;
-        Origin origin = MockOrigin.create();
+        OriginImpl origin = MockOrigin.create();
         origin.setMagnitudes(new Magnitude[] {mag});
-        EventAttr eventAttr = new EventAttrImpl("test",
+        EventAttrImpl eventAttr = new EventAttrImpl("test",
                                                 ParseRegions.getInstance()
                                                         .getGeographicRegion(7));
         Element element = XMLConfigUtil.parse("<magnitudeRange>"
