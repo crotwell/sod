@@ -224,7 +224,7 @@ public class NetworkArm implements Arm {
             statusChanged("Getting networks");
             logger.info("Getting networks");
             ArrayList<CacheNetworkAccess> successes = new ArrayList<CacheNetworkAccess>();
-            List<? extends CacheNetworkAccess> allNets = getNetworkSource().getNetworks();
+            List<? extends CacheNetworkAccess> allNets = getInternalNetworkSource().getNetworks();
             logger.info("Found " + allNets.size() + " networks");
             int i=0;
             for (CacheNetworkAccess currNet : allNets) {
@@ -380,7 +380,7 @@ public class NetworkArm implements Arm {
                     + net.get_attributes().getName());
             ArrayList<Station> arrayList = new ArrayList<Station>();
             try {
-                List<? extends StationImpl> stations = getNetworkSource().getStations(netAttr.getId());
+                List<? extends StationImpl> stations = getInternalNetworkSource().getStations(netAttr.getId());
 
                 for (StationImpl stationImpl : stations) {
                     logger.debug("Station in NetworkArm: "
