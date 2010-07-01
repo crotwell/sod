@@ -22,7 +22,7 @@ import edu.sc.seis.sod.velocity.network.VelocityStation;
 
 public class VelocityNetworkSource implements NetworkSource {
 
-    public VelocityNetworkSource(AbstractNetworkSource wrapped) {
+    public VelocityNetworkSource(NetworkSource wrapped) {
         this.wrapped = wrapped;
     }
 
