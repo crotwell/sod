@@ -80,6 +80,6 @@ public class InstrumentationFromDB implements NetworkSource {
 
     @Override
     public String[] getConstrainingNetworkCodes() {
-        return wrapped.constrainingCodes;
+        return wrapped.getConstrainingNetworkCodes();
     }
 }
