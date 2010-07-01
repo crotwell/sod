@@ -188,6 +188,10 @@ public class VelocityEvent extends ProxyEventAccessOperations {
     public OriginImpl getPreferred() throws NoPreferredOrigin {
         return getCacheEvent().getPreferred();
     }
+    
+    public Origin[] getOrigins() {
+        return getCacheEvent().getOrigins();
+    }
 
     public String getParam(String name) {
         for(int i = 0; i < origin.getParmIds().length; i++) {
