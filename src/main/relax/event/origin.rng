@@ -42,6 +42,7 @@
             <ref name="CSVEventPrinter"/>
             <ref name="similarEvent"/>
             <ref name="jythonOriginSubsetter"/>
+            <ref name="originScript"/>
         </choice>
     </define>
     <define name="name">
@@ -415,4 +416,28 @@
             </choice>
         </element>
     </define>
+    <define name="originScript">
+        <element name="originScript">
+            <xsd:annotation>
+                <summary>Runs an script origin subsetter</summary>
+                <description>Runs a origin subsetter script via JSR223. The eventAccess is put as "eventAccess", 
+                the EventAttrImpl as "eventAttr" and the preferred origin
+                as "preferredOrigin". The eventAccess object is a
+                VelocityEvent, the same class used in the <a href="../../templates.html">templates</a> for the printlineEventProcess.
+                Note that most of the VelocityEvent methods return Strings, and so if you want to do calculations,
+                you probably want to deal with the eventAttr and preferredOrigin.
+                See the <a href="../../scripting.html">scripting tutorial</a> for more information on inlining scripts
+                into a SOD recipe.</description>
+                <example>
+                    <originScript type="jython">
+                        return preferredOrigin.getLocation().depth.getValue() / preferredOrigin.magnitudeList.get(0).value > 10
+                    </originScript>
+                </example>
+            </xsd:annotation>
+            <attribute name="type">
+                    <text/>
+            </attribute>
+            <data type="string"/>
+        </element>
+    </define>  
 </grammar>
