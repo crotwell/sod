@@ -11,6 +11,7 @@ import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.SiteImpl;
+import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
 /**
@@ -80,20 +81,28 @@ public class VelocityChannel extends ChannelImpl {
         return new VelocitySite((SiteImpl)super.getSite());
     }
 
-    public MicroSecondDate getStart() {
+    public MicroSecondDate getStartDate() {
         return new MicroSecondDate(getEffectiveTime().start_time);
     }
 
-    public String getStart(String format) {
-        return SimpleVelocitizer.format(getStart(), format);
+    public String getStart() {
+        return FissuresFormatter.formatDate(getEffectiveTime().start_time);
     }
 
-    public MicroSecondDate getEnd() {
+    public String getStart(String format) {
+        return SimpleVelocitizer.format(getStartDate(), format);
+    }
+
+    public MicroSecondDate getEndDate() {
         return new MicroSecondDate(getEffectiveTime().end_time);
     }
 
+    public String getEnd() {
+        return FissuresFormatter.formatDate(getEffectiveTime().end_time);
+    }
+
     public String getEnd(String format) {
-        return SimpleVelocitizer.format(getEnd(), format);
+        return SimpleVelocitizer.format(getEndDate(), format);
     }
 
     public VelocitySampling getSampling() {
