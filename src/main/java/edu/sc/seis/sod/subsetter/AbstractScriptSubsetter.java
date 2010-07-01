@@ -17,7 +17,7 @@ import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
 
-public class AbstractScriptSubsetter {
+public class AbstractScriptSubsetter implements Subsetter {
     
     public AbstractScriptSubsetter(Element config) {
         this.config = config;
@@ -29,9 +29,10 @@ public class AbstractScriptSubsetter {
     protected StringTree eval() throws Exception {
         try {
             engine.put("result", new Pass(this));
+            engine.put("util", new ScriptUtil(this));
             Object result = engine.eval(script);
             if (result == null) {
-                // try getting result from engine
+                // try getting variable named result from engine
                 result = engine.get("result");
             }
             if (result == null) {
@@ -92,6 +93,8 @@ public class AbstractScriptSubsetter {
         }
         return out;
     }
+    
+    
     
     protected String script;
     
