@@ -8,6 +8,8 @@ import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.AbstractScriptSubsetter;
+import edu.sc.seis.sod.velocity.event.VelocityEvent;
+import edu.sc.seis.sod.velocity.network.VelocityChannelGroup;
 
 
 public class VectorRequestScript extends AbstractScriptSubsetter implements VectorRequestSubsetter {
@@ -19,8 +21,8 @@ public class VectorRequestScript extends AbstractScriptSubsetter implements Vect
     @Override
     public StringTree accept(CacheEvent event, ChannelGroup channelGroup, RequestFilter[][] request, CookieJar cookieJar)
             throws Exception {
-        engine.put("event", event);
-        engine.put("channelGroup", channelGroup);
+        engine.put("event",  new VelocityEvent(event));
+        engine.put("channelGroup",  new VelocityChannelGroup(channelGroup));
         engine.put("request", request);
         engine.put("cookieJar", cookieJar);
         return eval();

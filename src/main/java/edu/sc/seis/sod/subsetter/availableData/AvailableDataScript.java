@@ -8,6 +8,8 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.AbstractScriptSubsetter;
+import edu.sc.seis.sod.velocity.event.VelocityEvent;
+import edu.sc.seis.sod.velocity.network.VelocityChannel;
 
 
 public class AvailableDataScript extends AbstractScriptSubsetter implements AvailableDataSubsetter {
@@ -23,8 +25,8 @@ public class AvailableDataScript extends AbstractScriptSubsetter implements Avai
                              RequestFilter[] original,
                              RequestFilter[] available,
                              CookieJar cookieJar) throws Exception {
-        engine.put("event", event);
-        engine.put("channel", channel);
+        engine.put("event",  new VelocityEvent(event));
+        engine.put("channel",  new VelocityChannel(channel));
         engine.put("original", original);
         engine.put("available", available);
         engine.put("cookieJar", cookieJar);
