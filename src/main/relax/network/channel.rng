@@ -125,6 +125,7 @@
             <ref name="isFlipped"/>
             <ref name="isGroupable"/>
             <ref name="jythonChannelSubsetter"/>
+            <ref name="channelScript"/>
             <externalRef href="site.rng"/>
             <externalRef href="station.rng"/>
             <externalRef href="network.rng"/>
