@@ -73,6 +73,10 @@ public class VelocityChannel extends ChannelImpl {
         return getStation().getNet();
     }
 
+    public VelocityNetwork getNetwork() {
+        return getNet();
+    }
+
     public VelocityStation getStation() {
         return getSite().getStation();
     }
