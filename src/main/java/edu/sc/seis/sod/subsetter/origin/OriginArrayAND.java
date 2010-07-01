@@ -33,7 +33,7 @@ public class OriginArrayAND extends EventLogicalSubsetter implements
             Origin[] origins = event.get_origins();
             StringTree[] result = new StringTree[origins.length];
             for(int counter = 0; counter < origins.length; counter++) {
-                result[counter] = filter.accept(event, eventAttr, origins[counter]);
+                result[counter] = filter.accept(event, eventAttr, (OriginImpl)origins[counter]);
                 if(!result[counter].isSuccess()) { 
                     for(int j = counter + 1; j < result.length; j++) {
                         result[j] = new ShortCircuit(origins[j]);

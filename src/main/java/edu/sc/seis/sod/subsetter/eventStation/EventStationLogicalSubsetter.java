@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
+import edu.iris.Fissures.event.EventAttrImpl;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
@@ -54,7 +55,7 @@ public class EventStationLogicalSubsetter extends LogicalSubsetter {
                 public StringTree accept(CacheEvent event,
                                          StationImpl station,
                                          CookieJar cookieJar) throws Exception {
-                    return ecs.accept(event, event.get_attributes(), event.getPreferred());
+                    return ecs.accept(event, (EventAttrImpl)event.get_attributes(), event.getPreferred());
                 }
             };
         } else  {

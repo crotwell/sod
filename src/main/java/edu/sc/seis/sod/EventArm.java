@@ -13,6 +13,7 @@ import org.w3c.dom.NodeList;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.Origin;
+import edu.iris.Fissures.event.EventAttrImpl;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
@@ -261,7 +262,7 @@ public class EventArm implements Arm {
             storedEvent.setStatus(EVENT_IN_PROG);
             change(storedEvent);
             for (OriginSubsetter cur : subsetters) {
-                StringTree result = cur.accept(event, event.get_attributes(), event.getOrigin());
+                StringTree result = cur.accept(event, (EventAttrImpl)event.get_attributes(), event.getOrigin());
                 if (!result.isSuccess()) {
                     storedEvent.setStatus(EVENT_REJECT);
                     change(storedEvent);

@@ -4,6 +4,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import edu.iris.Fissures.event.EventAttrImpl;
+import edu.iris.Fissures.event.OriginImpl;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
@@ -33,8 +35,8 @@ public class EmbeddedOriginSubsetter implements EventStationSubsetter {
                              StationImpl station,
                           CookieJar cookieJar) throws Exception {
         StringTree result = originSubsetter.accept(eventAccess,
-                                                   eventAccess.get_attributes(),
-                                                   eventAccess.get_preferred_origin());
+                                                   (EventAttrImpl)eventAccess.get_attributes(),
+                                                   (OriginImpl)eventAccess.get_preferred_origin());
         return new StringTreeBranch(this, result.isSuccess(), result);
     }
 
