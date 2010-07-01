@@ -4,8 +4,8 @@ import java.util.Iterator;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfEvent.EventAttr;
-import edu.iris.Fissures.IfEvent.Origin;
+import edu.iris.Fissures.event.EventAttrImpl;
+import edu.iris.Fissures.event.OriginImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.status.StringTree;
@@ -32,7 +32,7 @@ public final class OriginNOT extends EventLogicalSubsetter
         super(config);
     }
 
-    public StringTree accept(CacheEvent event, EventAttr eventAttr, Origin e) throws Exception{
+    public StringTree accept(CacheEvent event, EventAttrImpl eventAttr, OriginImpl e) throws Exception{
         Iterator it = filterList.iterator();
         if (it.hasNext()) {
             OriginSubsetter filter = (OriginSubsetter)it.next();

@@ -7,9 +7,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Magnitude;
-import edu.iris.Fissures.IfEvent.Origin;
+import edu.iris.Fissures.event.EventAttrImpl;
+import edu.iris.Fissures.event.OriginImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.sod.ConfigurationException;
@@ -33,8 +33,8 @@ public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter {
     }
 
     public StringTree accept(CacheEvent event,
-                             EventAttr eventAttr,
-                             Origin origin) {
+                             EventAttrImpl eventAttr,
+                             OriginImpl origin) {
         return new StringTreeLeaf(this, getAcceptable(origin.getMagnitudes()).length > 0);
     }
 

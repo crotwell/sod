@@ -2,8 +2,8 @@ package edu.sc.seis.sod.subsetter.origin;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfEvent.EventAttr;
-import edu.iris.Fissures.IfEvent.Origin;
+import edu.iris.Fissures.event.EventAttrImpl;
+import edu.iris.Fissures.event.OriginImpl;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.bag.DistAz;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
@@ -20,7 +20,7 @@ public class OriginPointAzimuth extends AbstractOriginPoint implements OriginSub
         max = getMax().convertTo(UnitImpl.DEGREE).get_value();
     }
 
-    public StringTree accept(CacheEvent event, EventAttr eventAttr, Origin origin) {
+    public StringTree accept(CacheEvent event, EventAttrImpl eventAttr, OriginImpl origin) {
         double oLat = origin.getLocation().latitude;
         double oLon = origin.getLocation().longitude;
         DistAz distaz = new DistAz(latitude, longitude, oLat, oLon);

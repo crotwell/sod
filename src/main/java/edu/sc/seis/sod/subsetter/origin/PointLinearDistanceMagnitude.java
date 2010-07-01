@@ -8,8 +8,8 @@ package edu.sc.seis.sod.subsetter.origin;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfEvent.EventAttr;
-import edu.iris.Fissures.IfEvent.Origin;
+import edu.iris.Fissures.event.EventAttrImpl;
+import edu.iris.Fissures.event.OriginImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.status.StringTree;
@@ -25,7 +25,7 @@ public class PointLinearDistanceMagnitude extends LinearDistanceMagnitudeRange i
         lon = latlon[1];
     }
 
-   public StringTree accept(CacheEvent eventAccess, EventAttr eventAttr, Origin preferred_origin)
+   public StringTree accept(CacheEvent eventAccess, EventAttrImpl eventAttr, OriginImpl preferred_origin)
         throws Exception {
         return new StringTreeLeaf(this, accept(eventAccess, lat, lon));
     }

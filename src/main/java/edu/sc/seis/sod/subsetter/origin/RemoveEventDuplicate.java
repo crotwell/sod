@@ -7,8 +7,9 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
+import edu.iris.Fissures.event.EventAttrImpl;
+import edu.iris.Fissures.event.OriginImpl;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.TimeInterval;
@@ -63,8 +64,8 @@ public class RemoveEventDuplicate implements OriginSubsetter {
     }
     
     public StringTree accept(CacheEvent eventAccess,
-                          EventAttr eventAttr,
-                          Origin preferred_origin)
+                          EventAttrImpl eventAttr,
+                          OriginImpl preferred_origin)
         throws Exception {
         // first eliminate based on time and depth as these are easy and the database can do efficiently
         Iterator matchingEvents = getEventsNearTimeAndDepth(preferred_origin).iterator();

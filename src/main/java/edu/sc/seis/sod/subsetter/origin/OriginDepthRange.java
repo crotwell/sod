@@ -2,8 +2,8 @@ package edu.sc.seis.sod.subsetter.origin;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfEvent.EventAttr;
-import edu.iris.Fissures.IfEvent.Origin;
+import edu.iris.Fissures.event.EventAttrImpl;
+import edu.iris.Fissures.event.OriginImpl;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.status.StringTree;
@@ -17,8 +17,8 @@ public class OriginDepthRange extends edu.sc.seis.sod.subsetter.DepthRange
     }
 
     public StringTree accept(CacheEvent event,
-                             EventAttr eventAttr,
-                             Origin origin) {
+                             EventAttrImpl eventAttr,
+                             OriginImpl origin) {
         QuantityImpl actualDepth = (QuantityImpl)origin.getLocation().depth;
         if(actualDepth.greaterThanEqual(getMinDepth())
                 && actualDepth.lessThanEqual(getMaxDepth())) {

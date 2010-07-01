@@ -6,8 +6,9 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
+import edu.iris.Fissures.event.EventAttrImpl;
+import edu.iris.Fissures.event.OriginImpl;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
@@ -42,11 +43,11 @@ public class SimilarEvent extends RemoveEventDuplicate {
 
     
     public StringTree accept(CacheEvent eventAccess,
-                          EventAttr eventAttr,
-                          Origin preferred_origin)
+                          EventAttrImpl eventAttr,
+                          OriginImpl preferred_origin)
         throws Exception {
         // first eliminate based on time and depth as these are easy and the database can do efficiently
-        Iterator matchingEvents = getEventsNearTimeAndDepth(preferred_origin).iterator();
+        Iterator<CacheEvent> matchingEvents = getEventsNearTimeAndDepth(preferred_origin).iterator();
         while( matchingEvents.hasNext()) {
         	CacheEvent e = (CacheEvent)matchingEvents.next();
             if (e.equals(eventAccess) || isDistanceClose(e, preferred_origin)){
@@ -56,9 +57,9 @@ public class SimilarEvent extends RemoveEventDuplicate {
         return new Fail(this);
     }
 
-    public List getEventsNearTimeAndDepth(Origin preferred_origin) {
-        ArrayList out = new ArrayList();
-        Iterator it = eventList.iterator();
+    public List<CacheEvent> getEventsNearTimeAndDepth(Origin preferred_origin) {
+        ArrayList<CacheEvent> out = new ArrayList<CacheEvent>();
+        Iterator<CacheEvent> it = eventList.iterator();
         while(it.hasNext()) {
             CacheEvent event = (CacheEvent)it.next();
             if (isTimeOK(event, preferred_origin)
@@ -82,5 +83,5 @@ public class SimilarEvent extends RemoveEventDuplicate {
         return Math.abs(difference) <= depthVariance.getValue();
     }
     
-    ArrayList eventList = new ArrayList();;
+    ArrayList<CacheEvent> eventList = new ArrayList<CacheEvent>();;
 }

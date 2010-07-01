@@ -2,8 +2,8 @@ package edu.sc.seis.sod.subsetter.origin;
 
 import java.util.List;
 
-import edu.iris.Fissures.IfEvent.EventAttr;
-import edu.iris.Fissures.IfEvent.Origin;
+import edu.iris.Fissures.event.EventAttrImpl;
+import edu.iris.Fissures.event.OriginImpl;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.StationImpl;
@@ -51,8 +51,8 @@ public class NetworkTimeRange implements OriginSubsetter, ArmListener,
     }
 
     public StringTree accept(CacheEvent event,
-                             EventAttr eventAttr,
-                             Origin origin) {
+                             EventAttrImpl eventAttr,
+                             OriginImpl origin) {
         return new StringTreeLeaf(this,
                                   getMSTR().contains(new MicroSecondDate(origin.getOriginTime())));
     }

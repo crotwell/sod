@@ -2,8 +2,8 @@ package edu.sc.seis.sod.subsetter.origin;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfEvent.EventAttr;
-import edu.iris.Fissures.IfEvent.Origin;
+import edu.iris.Fissures.event.EventAttrImpl;
+import edu.iris.Fissures.event.OriginImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.StringTree;
@@ -16,8 +16,8 @@ public class EventAttrName implements OriginSubsetter {
     }
 
     public StringTree accept(CacheEvent event,
-                          EventAttr attr,
-                          Origin origin) {
+                          EventAttrImpl attr,
+                          OriginImpl origin) {
         return new StringTreeLeaf(this, name.equals(attr));
     }
 

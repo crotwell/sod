@@ -3,8 +3,8 @@ package edu.sc.seis.sod.subsetter.origin;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.Area;
-import edu.iris.Fissures.IfEvent.EventAttr;
-import edu.iris.Fissures.IfEvent.Origin;
+import edu.iris.Fissures.event.EventAttrImpl;
+import edu.iris.Fissures.event.OriginImpl;
 import edu.iris.Fissures.model.PointDistanceAreaImpl;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
@@ -25,7 +25,7 @@ public class OriginPointDistance extends AbstractOriginPoint implements OriginSu
      * Accepts an origin only if it lies within the given distance range of the
      * given lat and lon.
      */
-    public StringTree accept(CacheEvent event, EventAttr eventAttr, Origin origin) {
+    public StringTree accept(CacheEvent event, EventAttrImpl eventAttr, OriginImpl origin) {
         double oLat = origin.getLocation().latitude;
         double oLon = origin.getLocation().longitude;
         DistAz distaz = new DistAz(latitude, longitude, oLat, oLon);

@@ -3,8 +3,8 @@ package edu.sc.seis.sod.subsetter.origin;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.Location;
-import edu.iris.Fissures.IfEvent.EventAttr;
-import edu.iris.Fissures.IfEvent.Origin;
+import edu.iris.Fissures.event.EventAttrImpl;
+import edu.iris.Fissures.event.OriginImpl;
 import edu.sc.seis.fissuresUtil.bag.AreaUtil;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
@@ -20,8 +20,8 @@ public class EventPolygonFile implements OriginSubsetter {
     }
 
     public StringTree accept(CacheEvent eventAccess,
-                             EventAttr eventAttr,
-                             Origin preferred_origin) {
+                             EventAttrImpl eventAttr,
+                             OriginImpl preferred_origin) {
         return new StringTreeLeaf(this,
                                   AreaUtil.inArea(locations,
                                                   preferred_origin.getLocation()));

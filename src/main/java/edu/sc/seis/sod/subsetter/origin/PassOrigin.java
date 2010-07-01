@@ -1,7 +1,7 @@
 package edu.sc.seis.sod.subsetter.origin;
 
-import edu.iris.Fissures.IfEvent.EventAttr;
-import edu.iris.Fissures.IfEvent.Origin;
+import edu.iris.Fissures.event.EventAttrImpl;
+import edu.iris.Fissures.event.OriginImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
@@ -18,8 +18,8 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
 public class PassOrigin implements OriginSubsetter {
 
     public StringTree accept(CacheEvent event,
-                             EventAttr eventAttr,
-                             Origin e) {
+                             EventAttrImpl eventAttr,
+                             OriginImpl e) {
         return new StringTreeLeaf(this, true);
     }
 }// PassOrigin

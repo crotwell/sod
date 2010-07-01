@@ -4,8 +4,8 @@ import org.apache.log4j.Category;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.FlinnEngdahlType;
-import edu.iris.Fissures.IfEvent.EventAttr;
-import edu.iris.Fissures.IfEvent.Origin;
+import edu.iris.Fissures.event.EventAttrImpl;
+import edu.iris.Fissures.event.OriginImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.StringTree;
@@ -21,8 +21,8 @@ public abstract class FlinnEngdahlRegion implements OriginSubsetter {
     }
 
     public StringTree accept(CacheEvent eventAccess,
-                          EventAttr eventAttr,
-                          Origin preferred_origin) {
+                          EventAttrImpl eventAttr,
+                          OriginImpl preferred_origin) {
         edu.iris.Fissures.FlinnEngdahlRegion reg = eventAttr.region;
         return new StringTreeLeaf(this, reg.type.value() == getType().value() && reg.number == region);
     }

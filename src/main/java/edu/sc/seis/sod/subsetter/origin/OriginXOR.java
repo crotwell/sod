@@ -2,8 +2,8 @@ package edu.sc.seis.sod.subsetter.origin;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfEvent.EventAttr;
-import edu.iris.Fissures.IfEvent.Origin;
+import edu.iris.Fissures.event.EventAttrImpl;
+import edu.iris.Fissures.event.OriginImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.status.StringTree;
@@ -51,7 +51,7 @@ public final class OriginXOR extends EventLogicalSubsetter
         super(config);
     }
 
-    public StringTree accept(CacheEvent event, EventAttr eventAttr, Origin e) throws Exception{
+    public StringTree accept(CacheEvent event, EventAttrImpl eventAttr, OriginImpl e) throws Exception{
         OriginSubsetter filterA = (OriginSubsetter)filterList.get(0);
         OriginSubsetter filterB = (OriginSubsetter)filterList.get(1);
         StringTree[] result = new StringTree[2];
