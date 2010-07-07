@@ -29,6 +29,7 @@
             <ref name="phaseExists"/>
             <ref name="phaseWithoutInterference"/>
             <ref name="jythonEventStation"/>
+            <ref name="eventStationScript"/>
             <ref name="external"/>
         </choice>
     </define>
@@ -378,4 +379,45 @@
             <ref name="externalClass"/>
         </element>
     </define>
+    <define name="eventStationScript">
+        <element name="eventStationScript">
+            <xsd:annotation>
+                <summary>Runs a script eventStation subsetter</summary>
+                <description>Runs a eventStation subsetter script via JSR223. The event is put as "event" and the station
+                as "station". The station and event objects are a
+                VelocityStation and VelocityEvent, respectively, the same classes used in the <a href="../../templates.html">templates</a> for the printlineChannelProcess.
+                See the <a href="../../scripting.html">scripting tutorial</a> for more information on inlining scripts
+                into a SOD recipe.</description>
+                <example>
+                    <eventStationScript type="jython">
+        from edu.sc.seis.TauP import SphericalCoords, SeismicPhase
+        from edu.iris.Fissures import Location
+        from edu.iris.Fissures.model import BoxAreaImpl
+        from edu.sc.seis.fissuresUtil.bag import AreaUtil
+        minLatitude = 0;
+        maxLatitude = 40;
+        minLongitude = 100;
+        maxLongitude = 160;
+        result = False
+        box = BoxAreaImpl(minLatitude, maxLatitude, minLongitude, maxLongitude)
+        pkppkp = SeismicPhase('PKPPKP','iasp91',event.getPreferred().getLocation().depth.value)        dist = SphericalCoords.distance(event.getPreferred().getLocation().latitude, event.getP
+referred().getLocation().longitude, station.getFloatLatitude(), station.getFloatLongitude())
+        arrival = pkppkp.getEarliestArrival(dist)
+        if arrival != None:
+           piercePoints = arrival.getPierce()
+           for timeDist in piercePoints:
+              if timeDist.getDistDeg() != 0 and timeDist.getDepth() == 0:                 azimuth = SphericalCoords.azimuth(event.getPreferred().getLocation().latitude, event.getPreferred().getLocation().longitude, station.getFloatLatitude(), station.getFloatLong
+itude())                 bounceLat = SphericalCoords.latFor(station.getFloatLatitude(), station.getFloatLongitude(), timeDist.getDistDeg(), azimuth)
+                 bounceLon = SphericalCoords.lonFor(station.getFloatLatitude(), station.getFloatLongitude(), timeDist.getDistDeg(), azimuth)
+                 result = AreaUtil.inArea(box, bounceLat, bounceLon)
+                 break
+                    </eventStationScript>
+                </example>
+            </xsd:annotation>
+            <attribute name="type">
+                    <text/>
+            </attribute>
+            <data type="string"/>
+        </element>
+    </define>  
 </grammar>
