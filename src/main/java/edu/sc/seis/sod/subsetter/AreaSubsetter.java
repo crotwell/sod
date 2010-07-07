@@ -19,14 +19,6 @@ import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.UserConfigurationException;
 
-/**
- * SiteArea.java Created: Thu Mar 14 14:02:33 2002
- * 
- * @author <a href="mailto:">Philip Crotwell </a>
- * @version This class is used to represent the subsetter SiteArea. Site Area
- *          implements SiteSubsetter and can be any one of GlobalArea or BoxArea
- *          or PointDistanceArea or FlinneEngdahlArea.
- */
 public class AreaSubsetter {
 
     public AreaSubsetter(Element config) throws ConfigurationException {
