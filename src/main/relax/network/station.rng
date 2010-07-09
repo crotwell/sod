@@ -59,6 +59,7 @@
             <ref name="externalStationSubsetter"/>
             <ref name="belongsToVirtual"/>
             <ref name="jythonStationSubsetter"/>
+            <ref name="stationScript"/>
             <externalRef href="network.rng"/>
         </choice>
     </define>

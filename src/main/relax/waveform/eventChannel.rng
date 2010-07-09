@@ -18,6 +18,7 @@
             <ref name="eventChannelOR"/>
             <ref name="eventChannelNOT"/>
             <ref name="jythonEventChannel"/>
+            <ref name="eventChannelScript"/>
             <ref name="external"/>
         </choice>
     </define>
@@ -224,6 +225,28 @@
                     <data type="string"/>
                 </element>
             </choice>
+        </element>
+    </define>
+    <define name="eventChannelScript">
+        <element name="eventChannelScript">
+            <xsd:annotation>
+                <summary>Runs a script eventChannel subsetter</summary>
+                <description>Runs a eventChannel subsetter script via JSR223. The event is put as "event" and the channel
+                as "channel". The channel and event objects are a
+                VelocityChannel and VelocityEvent, respectively, the same classes used in the <a href="../../templates.html">templates</a> for the printlineChannelProcess.
+                See the <a href="../../scripting.html">scripting tutorial</a> for more information on inlining scripts
+                into a SOD recipe.</description>
+                <example>
+                    <eventChannelScript type="jython">
+                    result = True
+                    
+                    </eventChannelScript>
+                </example>
+            </xsd:annotation>
+            <attribute name="type">
+                    <text/>
+            </attribute>
+            <data type="string"/>
         </element>
     </define>
     <define name="external">

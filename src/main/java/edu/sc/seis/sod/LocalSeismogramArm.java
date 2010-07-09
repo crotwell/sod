@@ -423,6 +423,12 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
 
     private static void handle(EventChannelPair ecp, Stage stage, Throwable t, ProxySeismogramDC server) {
         try {
+            if (t instanceof OutOfMemoryError) {
+                //can't do much useful, at least get the stack trace before anything else as other
+                // code might trigger further OutofMem
+                t.printStackTrace(System.err);
+                logger.fatal("", t);
+            }
             if(t instanceof org.omg.CORBA.SystemException) {
                 // don't log exception here, let RetryStragtegy do it
                 ecp.update(Status.get(stage, Standing.CORBA_FAILURE));

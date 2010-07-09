@@ -25,6 +25,7 @@
             <ref name="availableDataAND"/>
             <ref name="availableDataOR"/>
             <ref name="availableDataNOT"/>
+            <ref name="availableDataScript"/>
             <ref name="jythonAvailableData"/>
             <ref name="externalAvailable"/>
             <ref name="printlineAvailableDataProcess"/>
@@ -183,6 +184,30 @@
                 <element name="filename">
                     <text/></element></optional>
             </interleave>
+        </element>
+    </define>
+    <define name="availableDataScript">
+        <element name="availableDataScript">
+            <xsd:annotation>
+                <summary>Runs a script available data subsetter</summary>
+                <description>Runs a available data subsetter script via JSR223. The event is put as "event" and the channel
+                as "channel". The channel and event objects are a
+                VelocityChannel and VelocityEvent, respectively, the same classes used in the <a href="../../templates.html">templates</a> for the printlineChannelProcess.
+                The original request is put as "original" and the returned available data, also as an array of RequestFilter objects,
+                is put as "available".
+                See the <a href="../../scripting.html">scripting tutorial</a> for more information on inlining scripts
+                into a SOD recipe.</description>
+                <example>
+                    <availableDataScript type="jython">
+                        result = len(original) == len(available)
+                    
+                    </availableDataScript>
+                </example>
+            </xsd:annotation>
+            <attribute name="type">
+                    <text/>
+            </attribute>
+            <data type="string"/>
         </element>
     </define>
     <define name="jythonAvailableData">
