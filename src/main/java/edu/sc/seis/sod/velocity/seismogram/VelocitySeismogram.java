@@ -6,6 +6,7 @@ import java.util.List;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.SamplingImpl;
+import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 import edu.sc.seis.sod.velocity.network.VelocityChannel;
@@ -19,6 +20,9 @@ public class VelocitySeismogram extends LocalSeismogramImpl {
     public VelocitySeismogram(LocalSeismogramImpl localSeis, Channel chan) {
         super(localSeis, localSeis.getData());
         this.chan = VelocityChannel.wrap(chan);
+        if ( ! ChannelIdUtil.areEqualExceptForBeginTime(localSeis.getChannelID(), chan.getId())) {
+            throw new IllegalArgumentException("Channel ids do not match: "+ChannelIdUtil.toString(localSeis.getChannelID())+"  "+chan.getId());
+        }
     }
 
     public MicroSecondDate getBegin() {
