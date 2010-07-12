@@ -16,6 +16,7 @@
             <ref name="vectorAvailableDataAND"/>
             <ref name="vectorAvailableDataOR"/>
             <ref name="vectorAvailableDataNOT"/>
+            <ref name="vectorAvailableDataScript"/>
             <ref name="jythonVectorAvailableData"/>
             <ref name="external"/>
             <externalRef href="availableData.rng"/>
@@ -136,7 +137,11 @@
                 into a SOD recipe.</description>
                 <example>
                     <availableDataScript type="jython">
-                        result = len(request) == len(available)
+                        result = True
+                        for i in range(len(request)):
+                            if len(request[i]) != len(available[i]):
+                                result = False
+                                break
                     
                     </availableDataScript>
                 </example>
