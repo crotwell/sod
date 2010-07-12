@@ -58,6 +58,10 @@ public class Args {
                        'V',
                        "validate",
                        "Validate the recipe and exit"));
+        add(new Switch(CLEAN_SWITCH,
+                       'c',
+                       CLEAN_SWITCH,
+                       "Clean the database before starting, any existing results are lost."));
         add(new Switch("quick",
                        'q',
                        "quick",
@@ -238,6 +242,10 @@ public class Args {
     public boolean isQuitOnError() {
         return result.getBoolean(QUIT_ON_ERROR_SWITCH);
     }
+
+    public boolean isClean() {
+        return result.getBoolean(CLEAN_SWITCH);
+    }
     
     public boolean isPrintRecipe() {
         return result.getBoolean(PRINT_RECIPE_SWITCH);
@@ -289,6 +297,7 @@ public class Args {
         }
     }
 
+    public static final String CLEAN_SWITCH = "clean";
     public static final String QUIT_ON_ERROR_SWITCH = "quitOnError";
     public static final String PRINT_RECIPE_SWITCH = "print-recipe";
     

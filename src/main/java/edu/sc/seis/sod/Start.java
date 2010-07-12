@@ -521,7 +521,7 @@ public class Start {
     }
 
     private void handleStartupRunProperties() {
-        if(runProps.removeDatabase()) {
+        if(runProps.removeDatabase() || getArgs().isClean()) {
             String dbUrl = ConnMgr.getURL();
             if(!dbUrl.startsWith("jdbc:hsqldb")
                     || dbUrl.indexOf("hsql://") != -1
