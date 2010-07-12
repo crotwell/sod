@@ -13,7 +13,7 @@
                 <endTime>
                     <year>2003</year>
                     <month>1</month>
-                    <day>16</day>
+                    <day>7</day>
                 </endTime>
             </originTimeRange>
             <magnitudeRange>
@@ -136,7 +136,13 @@
             <name>IRIS_PondDataCenter</name>
             <dns>edu/iris/dmc</dns>
         </fixedDataCenter>
-        <someCoverage/>
+        <vectorAvailableDataScript type="jython">
+             result = True
+             for i in range(len(request)):
+                 if len(request[i]) != len(available[i]):
+                     result = False
+                     break
+        </vectorAvailableDataScript>
         <printlineSeismogramProcess/>
         <vectorScript type="jython" >
         from jarray import array
