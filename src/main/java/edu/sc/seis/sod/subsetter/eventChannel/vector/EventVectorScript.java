@@ -15,7 +15,6 @@ public class EventVectorScript extends AbstractScriptSubsetter implements EventV
 
     public EventVectorScript(Element config) {
         super(config);
-        // TODO Auto-generated constructor stub
     }
 
     @Override

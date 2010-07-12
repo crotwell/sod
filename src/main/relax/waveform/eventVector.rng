@@ -17,6 +17,7 @@
             <ref name="eventVectorOR"/>
             <ref name="eventVectorNOT"/>
             <ref name="jythonEventVector"/>
+            <ref name="eventVectorScript"/>
             <ref name="external"/>
         </choice>
     </define>
@@ -137,6 +138,28 @@
                     included subsetter must evaluate to false for this subsetter to evaluate to true, and vice versa.</description>
             </xsd:annotation>
             <ref name="eventVector"/>
+        </element>
+    </define>
+    <define name="eventVectorScript">
+        <element name="eventVectorScript">
+            <xsd:annotation>
+                <summary>Runs a script eventVector subsetter</summary>
+                <description>Runs a eventVector subsetter script via JSR223. The event is put as "event" and the channelGroup
+                as "channelGroup". The channel and event objects are a
+                VelocityChannelGroup and VelocityEvent, respectively, the same classes used in the <a href="../../templates.html">templates</a> for the printlineChannelProcess.
+                See the <a href="../../scripting.html">scripting tutorial</a> for more information on inlining scripts
+                into a SOD recipe.</description>
+                <example>
+                    <eventVectorScript type="jython">
+                    result = True
+                    
+                    </eventVectorScript>
+                </example>
+            </xsd:annotation>
+            <attribute name="type">
+                    <text/>
+            </attribute>
+            <data type="string"/>
         </element>
     </define>
     <define name="jythonEventVector">

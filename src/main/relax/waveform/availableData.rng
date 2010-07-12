@@ -193,13 +193,13 @@
                 <description>Runs a available data subsetter script via JSR223. The event is put as "event" and the channel
                 as "channel". The channel and event objects are a
                 VelocityChannel and VelocityEvent, respectively, the same classes used in the <a href="../../templates.html">templates</a> for the printlineChannelProcess.
-                The original request is put as "original" and the returned available data, also as an array of RequestFilter objects,
+                The original request is put as "request" and the returned available data, also as an array of RequestFilter objects,
                 is put as "available".
                 See the <a href="../../scripting.html">scripting tutorial</a> for more information on inlining scripts
                 into a SOD recipe.</description>
                 <example>
                     <availableDataScript type="jython">
-                        result = len(original) == len(available)
+                        result = len(request) == len(available)
                     
                     </availableDataScript>
                 </example>

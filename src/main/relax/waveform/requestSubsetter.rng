@@ -19,6 +19,7 @@
             <ref name="netDCRequest"/>
             <ref name="plottableRequest"/>
             <ref name="jythonRequestSubsetter"/>
+            <ref name="requestScript"/>
             <ref name="external"/>
         </choice>
     </define>
@@ -417,6 +418,29 @@
                     <data type="int"/>
                 </element>
             </oneOrMore>
+        </element>
+    </define>
+    <define name="requestScript">
+        <element name="requestScript">
+            <xsd:annotation>
+                <summary>Runs a script request subsetter</summary>
+                <description>Runs a request subsetter script via JSR223. The event is put as "event" and the channel
+                as "channel". The channel and event objects are a
+                VelocityChannel and VelocityEvent, respectively, the same classes used in the <a href="../../templates.html">templates</a> for the printlineChannelProcess.
+                The request is put as "request" as an array of RequestFilter objects.
+                See the <a href="../../scripting.html">scripting tutorial</a> for more information on inlining scripts
+                into a SOD recipe.</description>
+                <example>
+                    <requestScript type="jython">
+                        result = len(original) == len(available)
+                    
+                    </requestScript>
+                </example>
+            </xsd:annotation>
+            <attribute name="type">
+                    <text/>
+            </attribute>
+            <data type="string"/>
         </element>
     </define>
     <define name="jythonRequestSubsetter">

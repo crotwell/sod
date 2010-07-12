@@ -31,7 +31,7 @@ public class SeismogramScript extends AbstractScriptSubsetter implements Wavefor
                                  CookieJar cookieJar) throws Exception {
         engine.put("event",  new VelocityEvent(event));
         engine.put("channel",  new VelocityChannel(channel));
-        engine.put("original", original);
+        engine.put("request", original);
         engine.put("available", available);
         engine.put("seismograms", seismograms);
         engine.put("cookieJar", cookieJar);

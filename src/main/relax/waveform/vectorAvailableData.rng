@@ -123,6 +123,30 @@
             <ref name="vectorAvailableData"/>
         </element>
     </define>
+    <define name="vectorAvailableDataScript">
+        <element name="vectorAvailableDataScript">
+            <xsd:annotation>
+                <summary>Runs a script vector available data subsetter</summary>
+                <description>Runs a vector available data subsetter script via JSR223. The event is put as "event" and the channelGroup
+                as "channelGroup". The channelGroup and event objects are a
+                VelocityChannelGroup and VelocityEvent, respectively, the same classes used in the <a href="../../templates.html">templates</a> for the printlineChannelProcess.
+                The original request is put as "request" and the returned available data, also as an array of RequestFilter objects,
+                is put as "available".
+                See the <a href="../../scripting.html">scripting tutorial</a> for more information on inlining scripts
+                into a SOD recipe.</description>
+                <example>
+                    <availableDataScript type="jython">
+                        result = len(request) == len(available)
+                    
+                    </availableDataScript>
+                </example>
+            </xsd:annotation>
+            <attribute name="type">
+                    <text/>
+            </attribute>
+            <data type="string"/>
+        </element>
+    </define>
     <define name="jythonVectorAvailableData">
         <element name="jythonVectorAvailableDataSubsetter">
             <xsd:annotation>

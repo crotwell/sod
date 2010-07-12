@@ -601,15 +601,29 @@
                 <description>Runs a waveform subsetter script via JSR223. The event is put as "event" and the channel
                 as "channel". The channel and event objects are a
                 VelocityChannel and VelocityEvent, respectively, the same classes used in the <a href="../../templates.html">templates</a> for the printlineChannelProcess.
-                The original request is put as "original" and the returned available data, also as an array of RequestFilter objects,
-                is put as "available".
+                The original request is put as "request" and the returned available data, also as an array of RequestFilter objects,
+                is put as "available". The seismograms are put as "seismograms" as an array of LocalSeismogramImpl objects.
                 See the <a href="../../scripting.html">scripting tutorial</a> for more information on inlining scripts
                 into a SOD recipe.</description>
                 <example>
-                    <seismogramScript type="jython">
-                        result = len(original) == len(available)
-                    
-                    </seismogramScript>
+        <seismogramScript type="jython" >
+        from jarray import array
+        from bag import rmean, taper, rtrend, stat
+        from edu.iris.Fissures.seismogramDC import LocalSeismogramImpl
+        
+        print "Hello Sod "
+        out = array([], LocalSeismogramImpl)
+        for s in seismograms:
+            s = rmean(s)
+            s = taper(rtrend(s))
+            print s
+            print
+            print stat(s)
+            print
+            out.append(s)
+        print "\n"
+        result = util.waveformResult(True, out)
+       </seismogramScript>
                 </example>
             </xsd:annotation>
             <attribute name="type">

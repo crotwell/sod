@@ -16,6 +16,7 @@
             <ref name="vectorRequestAND"/>
             <ref name="vectorRequestOR"/>
             <ref name="vectorRequestNOT"/>
+            <ref name="vectorRequestScript"/>
             <ref name="jythonVectorRequestSubsetter"/>
             <ref name="external"/>
             <externalRef href="requestSubsetter.rng"/>
@@ -94,6 +95,29 @@
                     true, and vice versa.</description>
             </xsd:annotation>
             <ref name="vectorRequest"/>
+        </element>
+    </define>
+    <define name="vectorRequestScript">
+        <element name="vectorRequestScript">
+            <xsd:annotation>
+                <summary>Runs a script vector request subsetter</summary>
+                <description>Runs a vector request subsetter script via JSR223. The event is put as "event" and the channel
+                as "channel". The channel and event objects are a
+                VelocityChannel and VelocityEvent, respectively, the same classes used in the <a href="../../templates.html">templates</a> for the printlineChannelProcess.
+                The request is put as "request" as a two dimensional array of RequestFilter objects.
+                See the <a href="../../scripting.html">scripting tutorial</a> for more information on inlining scripts
+                into a SOD recipe.</description>
+                <example>
+                    <requestScript type="jython">
+                        result = len(original) == len(available)
+                    
+                    </requestScript>
+                </example>
+            </xsd:annotation>
+            <attribute name="type">
+                    <text/>
+            </attribute>
+            <data type="string"/>
         </element>
     </define>
     <define name="jythonVectorRequestSubsetter">

@@ -27,7 +27,7 @@ public class AvailableDataScript extends AbstractScriptSubsetter implements Avai
                              CookieJar cookieJar) throws Exception {
         engine.put("event",  new VelocityEvent(event));
         engine.put("channel",  new VelocityChannel(channel));
-        engine.put("original", original);
+        engine.put("request", original);
         engine.put("available", available);
         engine.put("cookieJar", cookieJar);
         return eval();

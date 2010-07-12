@@ -35,6 +35,7 @@
             <ref name="embeddedEventVector"/>
             <ref name="embeddedEventStation"/>
             <ref name="jythonVectorProcess"/>
+            <ref name="vectorScript"/>
         </choice>
     </define>
     <define name="threeComponentData">
@@ -312,6 +313,47 @@
                     like rotateGCP which expect seismograms to be of the same length and time.</description>
             </xsd:annotation>
             <empty/>
+        </element>
+    </define>
+    <define name="vectorScript">
+        <element name="vectorScript">
+            <xsd:annotation>
+                <summary>Runs a script waveform subsetter</summary>
+                <description>Runs a waveform subsetter script via JSR223. The event is put as "event" and the channel
+                as "channel". The channel and event objects are a
+                VelocityChannel and VelocityEvent, respectively, the same classes used in the <a href="../../templates.html">templates</a> for the printlineChannelProcess.
+                The original request is put as "request" and the returned available data, also as an array of RequestFilter objects,
+                is put as "available".  The seismograms are put as "seismograms" as a two dimensional array of LocalSeismogramImpl objects.
+                See the <a href="../../scripting.html">scripting tutorial</a> for more information on inlining scripts
+                into a SOD recipe.</description>
+                <example>
+        <vectorScript type="jython" >
+        from jarray import array
+        from bag import rmean, taper, rtrend, stat
+        from edu.iris.Fissures.seismogramDC import LocalSeismogramImpl
+        
+        print "Hello Sod "
+        out = []
+        for perChanSeis in seismograms:
+            seisout = array([], LocalSeismogramImpl)
+            out.append(seisout)
+            for s in perChanSeis:
+                s = rmean(s)
+                s = taper(rtrend(s))
+                print s
+                print
+                print stat(s)
+                print
+                seisout.append(s)
+            print "\n"
+        result = util.waveformResult(True, out[0], out[1], out[2])
+       </vectorScript>
+                </example>
+            </xsd:annotation>
+            <attribute name="type">
+                    <text/>
+            </attribute>
+            <data type="string"/>
         </element>
     </define>
     <define name="jythonVectorProcess">

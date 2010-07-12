@@ -40,6 +40,10 @@ public class ScriptUtil {
     public WaveformVectorResult waveformVectorResult(boolean result, LocalSeismogramImpl[][] seis) {
         return new WaveformVectorResult(result, seis, subsetter);
     }
+
+    public WaveformVectorResult waveformVectorResult(boolean result, LocalSeismogramImpl[] seisA, LocalSeismogramImpl[] seisB, LocalSeismogramImpl[] seisC) {
+        return waveformVectorResult(result, new LocalSeismogramImpl[][] {seisA, seisB, seisC});
+    }
     
     Subsetter subsetter;
 }

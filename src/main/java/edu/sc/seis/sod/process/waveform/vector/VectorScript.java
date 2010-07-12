@@ -28,7 +28,7 @@ public class VectorScript extends AbstractScriptSubsetter implements WaveformVec
                                        CookieJar cookieJar) throws Exception {
         engine.put("event",  new VelocityEvent(event));
         engine.put("channelGroup",  new VelocityChannelGroup(channelGroup));
-        engine.put("original", original);
+        engine.put("request", original);
         engine.put("available", available);
         engine.put("seismograms", seismograms);
         engine.put("cookieJar", cookieJar);
