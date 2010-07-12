@@ -21,13 +21,13 @@ public final class AvailableDataAND extends AvailableDataLogicalSubsetter
 
     public StringTree accept(CacheEvent event,
                              ChannelImpl channel,
-                             RequestFilter[] original,
+                             RequestFilter[] request,
                              RequestFilter[] available,
                              CookieJar cookieJar) throws Exception {
         StringTree[] result = new StringTree[filterList.size()];
         for(int i = 0; i < filterList.size(); i++) {
             AvailableDataSubsetter f = (AvailableDataSubsetter)filterList.get(i);
-            result[i] = f.accept(event, channel, original, available, cookieJar);
+            result[i] = f.accept(event, channel, request, available, cookieJar);
             if(!result[i].isSuccess()) {
                 for(int j = i + 1; j < result.length; j++) {
                     result[j] = new ShortCircuit(filterList.get(j));

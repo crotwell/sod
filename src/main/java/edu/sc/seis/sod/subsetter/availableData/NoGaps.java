@@ -18,16 +18,16 @@ public class NoGaps implements AvailableDataSubsetter, SodElement {
 
     public StringTree accept(CacheEvent event,
                              ChannelImpl channel,
-                          RequestFilter[] original,
+                          RequestFilter[] request,
                           RequestFilter[] available,
                           CookieJar cookieJar) {
         boolean ok = true;
-        logger.debug("original length=" + original.length
+        logger.debug("original length=" + request.length
                 + "  available legnth=" + available.length);
-        for(int counter = 0; counter < original.length; counter++) {
+        for(int counter = 0; counter < request.length; counter++) {
             ok = false;
-            MicroSecondDate originalStartDate = new MicroSecondDate(original[counter].start_time);
-            MicroSecondDate originalEndDate = new MicroSecondDate(original[counter].end_time);
+            MicroSecondDate originalStartDate = new MicroSecondDate(request[counter].start_time);
+            MicroSecondDate originalEndDate = new MicroSecondDate(request[counter].end_time);
             for(int subcounter = 0; subcounter < available.length; subcounter++) {
                 MicroSecondDate availableStartDate = new MicroSecondDate(available[subcounter].start_time);
                 MicroSecondDate availableEndDate = new MicroSecondDate(available[subcounter].end_time);

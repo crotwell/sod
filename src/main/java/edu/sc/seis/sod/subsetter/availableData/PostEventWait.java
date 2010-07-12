@@ -23,8 +23,8 @@ public class PostEventWait implements AvailableDataSubsetter {
 
     public StringTree accept(CacheEvent ev,
                              ChannelImpl chan,
-                          RequestFilter[] orig,
-                          RequestFilter[] avail,
+                          RequestFilter[] request,
+                          RequestFilter[] available,
                           CookieJar cookies) {
         MicroSecondDate originTime = new MicroSecondDate(EventUtil.extractOrigin(ev).getOriginTime());
         MicroSecondDate waitTime = originTime.add(postOriginTime);

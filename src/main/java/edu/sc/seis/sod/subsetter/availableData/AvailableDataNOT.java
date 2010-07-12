@@ -20,12 +20,12 @@ public final class AvailableDataNOT extends AvailableDataLogicalSubsetter
 
     public StringTree accept(CacheEvent event,
                              ChannelImpl channel,
-                             RequestFilter[] original,
+                             RequestFilter[] request,
                              RequestFilter[] available,
                              CookieJar cookieJar) throws Exception {
         StringTree result = filter.accept(event,
                                           channel,
-                                          original,
+                                          request,
                                           available,
                                           cookieJar);
         return new StringTreeBranch(this, !result.isSuccess(), result);

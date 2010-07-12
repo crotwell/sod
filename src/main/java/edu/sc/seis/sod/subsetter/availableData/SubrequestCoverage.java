@@ -27,7 +27,7 @@ public class SubrequestCoverage implements AvailableDataSubsetter {
 
     public StringTree accept(CacheEvent ev,
                              ChannelImpl chan,
-                             RequestFilter[] original,
+                             RequestFilter[] request,
                              RequestFilter[] available,
                              CookieJar cookies) throws Exception {
         RequestFilter[] sub = subrequest.generateRequest(ev, chan, cookies);

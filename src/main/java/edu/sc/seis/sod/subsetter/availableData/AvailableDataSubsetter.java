@@ -17,7 +17,7 @@ public interface AvailableDataSubsetter extends Subsetter {
 
     public StringTree accept(CacheEvent event,
                              ChannelImpl channel,
-                          RequestFilter[] original,
-                          RequestFilter[] available,
-                          CookieJar cookieJar) throws Exception;
+                             RequestFilter[] request,
+                             RequestFilter[] available,
+                             CookieJar cookieJar) throws Exception;
 }// AvailableDataSubsetter

@@ -19,13 +19,13 @@ public final class AvailableDataXOR extends AvailableDataLogicalSubsetter
 
     public StringTree accept(CacheEvent event,
                              ChannelImpl channel,
-                          RequestFilter[] original,
+                          RequestFilter[] request,
                           RequestFilter[] available,
                           CookieJar cookieJar) throws Exception {
         AvailableDataSubsetter filterA = (AvailableDataSubsetter)filterList.get(0);
-        StringTree resultA = filterA.accept(event, channel, original, available, cookieJar);
+        StringTree resultA = filterA.accept(event, channel, request, available, cookieJar);
         AvailableDataSubsetter filterB = (AvailableDataSubsetter)filterList.get(1);
-        StringTree resultB = filterB.accept(event, channel, original, available, cookieJar);
+        StringTree resultB = filterB.accept(event, channel, request, available, cookieJar);
         return new StringTreeBranch(this, resultA.isSuccess() != resultB.isSuccess(), new StringTree[] {resultA, resultB});
     }
 }// AvailableDataXOR

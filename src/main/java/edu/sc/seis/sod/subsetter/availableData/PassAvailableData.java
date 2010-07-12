@@ -26,7 +26,7 @@ public class PassAvailableData implements AvailableDataSubsetter,
 
     public StringTree accept(CacheEvent event,
                              ChannelImpl channel,
-                             RequestFilter[] original,
+                             RequestFilter[] request,
                              RequestFilter[] available,
                              CookieJar cookieJar) {
         return new StringTreeLeaf(this, true);
@@ -34,7 +34,7 @@ public class PassAvailableData implements AvailableDataSubsetter,
 
     public StringTree accept(CacheEvent event,
                              ChannelGroup channelGroup,
-                             RequestFilter[][] original,
+                             RequestFilter[][] request,
                              RequestFilter[][] available,
                              CookieJar cookieJar) throws Exception {
         return new StringTreeLeaf(this, true);

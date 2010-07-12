@@ -42,14 +42,14 @@ public class ANDAvailableDataWrapper implements VectorAvailableDataSubsetter {
 
     public StringTree accept(CacheEvent event,
                              ChannelGroup channelGroup,
-                             RequestFilter[][] original,
+                             RequestFilter[][] request,
                              RequestFilter[][] available,
                              CookieJar cookieJar) throws Exception {
         StringTree[] result = new StringTree[channelGroup.getChannels().length];
         for(int i = 0; i < channelGroup.getChannels().length; i++) {
             result[i] = subsetter.accept(event,
                                          channelGroup.getChannels()[i],
-                                         original[i],
+                                         request[i],
                                          available[i],
                                          cookieJar);
             if(!result[i].isSuccess()) {

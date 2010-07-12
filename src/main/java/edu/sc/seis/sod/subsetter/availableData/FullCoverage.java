@@ -14,10 +14,10 @@ public class FullCoverage implements AvailableDataSubsetter, SodElement {
 
     public StringTree accept(CacheEvent event,
                              ChannelImpl channel,
-                             RequestFilter[] original,
+                             RequestFilter[] request,
                              RequestFilter[] available,
                              CookieJar cookieJar) {
-        double coveragePercentage = pc.percentCovered(original, available);
+        double coveragePercentage = pc.percentCovered(request, available);
         return new StringTreeLeaf(this,
                                   coveragePercentage >= 100,
                                   coveragePercentage

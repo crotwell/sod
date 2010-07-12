@@ -16,7 +16,7 @@ public class PassVectorAvailableData implements VectorAvailableDataSubsetter {
 
     public StringTree accept(CacheEvent event,
                              ChannelGroup channelGroup,
-                             RequestFilter[][] original,
+                             RequestFilter[][] request,
                              RequestFilter[][] available,
                              CookieJar cookieJar) throws Exception {
         return new StringTreeLeaf(this, true);

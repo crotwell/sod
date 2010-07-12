@@ -16,18 +16,17 @@ public class AvailableDataScript extends AbstractScriptSubsetter implements Avai
 
     public AvailableDataScript(Element config) {
         super(config);
-        // TODO Auto-generated constructor stub
     }
 
     @Override
     public StringTree accept(CacheEvent event,
                              ChannelImpl channel,
-                             RequestFilter[] original,
+                             RequestFilter[] request,
                              RequestFilter[] available,
                              CookieJar cookieJar) throws Exception {
         engine.put("event",  new VelocityEvent(event));
         engine.put("channel",  new VelocityChannel(channel));
-        engine.put("request", original);
+        engine.put("request", request);
         engine.put("available", available);
         engine.put("cookieJar", cookieJar);
         return eval();

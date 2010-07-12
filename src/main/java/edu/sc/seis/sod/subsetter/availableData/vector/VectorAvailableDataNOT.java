@@ -25,12 +25,12 @@ public class VectorAvailableDataNOT extends VectorAvailableDataLogicalSubsetter
 
     public StringTree accept(CacheEvent event,
                              ChannelGroup channel,
-                             RequestFilter[][] original,
+                             RequestFilter[][] request,
                              RequestFilter[][] available,
                              CookieJar cookieJar) throws Exception {
         StringTree result = filter.accept(event,
                                           channel,
-                                          original,
+                                          request,
                                           available,
                                           cookieJar);
         return new StringTreeBranch(this, !result.isSuccess(), result);

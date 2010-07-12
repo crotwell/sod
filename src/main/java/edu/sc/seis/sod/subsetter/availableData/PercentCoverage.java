@@ -33,20 +33,20 @@ public class PercentCoverage implements AvailableDataSubsetter {
 
     public StringTree accept(CacheEvent event,
                              ChannelImpl channel,
-                             RequestFilter[] original,
+                             RequestFilter[] request,
                              RequestFilter[] available,
                              CookieJar cookieJar) {
-        return new StringTreeLeaf(this, accept(original, available));
+        return new StringTreeLeaf(this, accept(request, available));
     }
 
     public boolean accept(RequestFilter[] original, RequestFilter[] available) {
         return percentCovered(original, available) >= percentage;
     }
 
-    public double percentCovered(RequestFilter[] original,
+    public double percentCovered(RequestFilter[] request,
                                  RequestFilter[] available) {
-        RequestFilter[] uncovered = CoverageTool.notCovered(original, available);
-        TimeInterval totalOriginalTime = sum(toMSTR(original));
+        RequestFilter[] uncovered = CoverageTool.notCovered(request, available);
+        TimeInterval totalOriginalTime = sum(toMSTR(request));
         TimeInterval totalUncoveredTime = sum(toMSTR(uncovered));
         return (1 - totalUncoveredTime.divideBy(totalOriginalTime).getValue()) * 100;
     }
@@ -60,10 +60,10 @@ public class PercentCoverage implements AvailableDataSubsetter {
         return total;
     }
 
-    private List toMSTR(RequestFilter[] filters) {
+    private List<MicroSecondTimeRange> toMSTR(RequestFilter[] filters) {
         // Ensure that there are no overlaps in the request filters
         filters = ReduceTool.merge(filters);
-        List mstrs = new ArrayList(filters.length);
+        List<MicroSecondTimeRange> mstrs = new ArrayList<MicroSecondTimeRange>(filters.length);
         for(int i = 0; i < filters.length; i++) {
             mstrs.add(new MicroSecondTimeRange(filters[i]));
         }

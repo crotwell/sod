@@ -21,12 +21,12 @@ public class VectorAvailableDataScript extends AbstractScriptSubsetter implement
     @Override
     public StringTree accept(CacheEvent event,
                              ChannelGroup channelGroup,
-                             RequestFilter[][] original,
+                             RequestFilter[][] request,
                              RequestFilter[][] available,
                              CookieJar cookieJar) throws Exception {
         engine.put("event",  new VelocityEvent(event));
         engine.put("channelGroup",  new VelocityChannelGroup(channelGroup));
-        engine.put("original", original);
+        engine.put("request", request);
         engine.put("available", available);
         engine.put("cookieJar", cookieJar);
         return eval();

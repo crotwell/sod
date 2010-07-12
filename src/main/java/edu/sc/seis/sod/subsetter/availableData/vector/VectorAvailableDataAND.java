@@ -25,7 +25,7 @@ public class VectorAvailableDataAND extends VectorAvailableDataLogicalSubsetter
 
     public StringTree accept(CacheEvent event,
                              ChannelGroup channel,
-                             RequestFilter[][] original,
+                             RequestFilter[][] request,
                              RequestFilter[][] available,
                              CookieJar cookieJar) throws Exception {
         StringTree[] result = new StringTree[filterList.size()];
@@ -33,7 +33,7 @@ public class VectorAvailableDataAND extends VectorAvailableDataLogicalSubsetter
             VectorAvailableDataSubsetter filter = (VectorAvailableDataSubsetter)filterList.get(i);
             result[i] = filter.accept(event,
                                       channel,
-                                      original,
+                                      request,
                                       available,
                                       cookieJar);
             if(!result[i].isSuccess()) {

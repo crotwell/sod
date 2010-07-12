@@ -16,7 +16,7 @@ public interface VectorAvailableDataSubsetter extends Subsetter {
 
     public StringTree accept(CacheEvent event,
                           ChannelGroup channelGroup,
-                          RequestFilter[][] original,
+                          RequestFilter[][] request,
                           RequestFilter[][] available,
                           CookieJar cookieJar) throws Exception;
 }

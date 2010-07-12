@@ -13,7 +13,7 @@ public class SomeCoverage implements AvailableDataSubsetter {
 
     public StringTree accept(CacheEvent event,
                              ChannelImpl channel,
-                             RequestFilter[] original,
+                             RequestFilter[] request,
                              RequestFilter[] available,
                              CookieJar cookieJar) {
         // simple impl, probably need more robust

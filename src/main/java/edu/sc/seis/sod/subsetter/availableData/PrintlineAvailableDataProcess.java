@@ -29,14 +29,14 @@ public class PrintlineAvailableDataProcess implements AvailableDataSubsetter {
 
     public StringTree accept(CacheEvent event,
                              ChannelImpl channel,
-                             RequestFilter[] original,
+                             RequestFilter[] request,
                              RequestFilter[] available,
                              CookieJar cookieJar) throws Exception {
         velocitizer.evaluate(filename,
                              template,
                              event,
                              channel,
-                             original,
+                             request,
                              available,
                              cookieJar);
         return new StringTreeLeaf(this, true);

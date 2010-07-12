@@ -52,10 +52,10 @@ public class AvailableDataLogicalSubsetter extends LogicalSubsetter {
                 
                 public StringTree accept(CacheEvent event,
                                          ChannelImpl channel,
-                                         RequestFilter[] original,
+                                         RequestFilter[] request,
                                          RequestFilter[] available,
                                          CookieJar cookieJar) throws Exception {
-                    return ((RequestSubsetter)RequestLogical.createSubsetter(s)).accept(event, channel, original, cookieJar);
+                    return ((RequestSubsetter)RequestLogical.createSubsetter(s)).accept(event, channel, request, cookieJar);
                 }
             };
         }
