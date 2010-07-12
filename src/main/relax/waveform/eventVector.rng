@@ -151,8 +151,10 @@
                 into a SOD recipe.</description>
                 <example>
                     <eventVectorScript type="jython">
-                    result = True
-                    
+                        for channel in channelGroup.getChannels():
+                            if channel.getOrientationCode() == 'N' and abs(channel.getAzimuth()) > 5:
+                                # reject N channels that are more than 5 degrees from north
+                                result = util.fail('channel not really North'+channel.getAzimuth())
                     </eventVectorScript>
                 </example>
             </xsd:annotation>
