@@ -1,6 +1,6 @@
 
 group = 'edu.sc.seis'
-version = '3.0.0beta7'
+version = '3.0.0beta8'
 
 project.sourceSets {
             relax {
