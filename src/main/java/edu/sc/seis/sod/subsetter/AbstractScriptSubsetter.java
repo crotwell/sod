@@ -60,7 +60,7 @@ public class AbstractScriptSubsetter implements Subsetter {
         } else if (result instanceof Boolean) {
             return new StringTreeLeaf(this, ((Boolean)result).booleanValue());
         } else {
-            throw new UnknownScriptResult(this, "Script returns unknown results type, should be boolean or StringTree: " + result.toString());
+            throw new UnknownScriptResult("Script returns unknown results type, should be boolean or StringTree: " + result.toString());
         }
     }
 
