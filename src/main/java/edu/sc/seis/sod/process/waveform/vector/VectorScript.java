@@ -13,6 +13,7 @@ import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.AbstractScriptSubsetter;
+import edu.sc.seis.sod.subsetter.UnknownScriptResult;
 import edu.sc.seis.sod.velocity.event.VelocityEvent;
 import edu.sc.seis.sod.velocity.network.VelocityChannelGroup;
 
@@ -54,8 +55,8 @@ public class VectorScript extends AbstractScriptSubsetter implements WaveformVec
         } else if (result instanceof Boolean) {
             return new WaveformVectorResult((LocalSeismogramImpl[][])engine.get("seismograms"), new StringTreeLeaf(this, ((Boolean)result).booleanValue()));
         } else {
-            System.out.println("script unknown, so Fail: " + result);
-            return new WaveformVectorResult((LocalSeismogramImpl[][])engine.get("seismograms"), new Fail(this, "script return unknown results: " + result.toString()));
+
+            throw new UnknownScriptResult("Script returns unknown results type, should be boolean or StringTree or WaveformVectorResult: " + result.toString());
         }
     }
 }
