@@ -2,11 +2,19 @@
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
     xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <start>
+        <ref name="source"/>
+    </start>
+    <define name="source">
         <choice>
+            <xsd:annotation>
+                <summary>Defines the source for network/station/channel information.</summary>
+                <description>This defines the source for all network information.</description>
+                <velocity>#networkArmPage()</velocity>
+            </xsd:annotation>
             <ref name="finder"/>
             <ref name="filterFinder"/>
         </choice>
-    </start>
+    </define>
     <define name="finder">
         <element name="networkFinder">
             <xsd:annotation>
