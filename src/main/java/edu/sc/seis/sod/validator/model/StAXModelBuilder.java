@@ -36,7 +36,7 @@ public class StAXModelBuilder implements XMLStreamConstants {
     public StAXModelBuilder(String relaxLoc) throws XMLStreamException,
             IOException {
         if(parsedGrammars.containsKey(relaxLoc)) {
-            definedGrammar = (Grammar)parsedGrammars.get(relaxLoc);
+            definedGrammar = parsedGrammars.get(relaxLoc);
         } else {
             if(relaxLoc.endsWith("anyXML.rng")) {
                 definedGrammar = new Grammar(relaxLoc);
@@ -66,11 +66,11 @@ public class StAXModelBuilder implements XMLStreamConstants {
             }
             parsedGrammars.put(relaxLoc, definedGrammar);
             if(waiters.size() > 0) {
-                Iterator it = waiters.entrySet().iterator();
+                Iterator<Map.Entry<String, String>> it = waiters.entrySet().iterator();
                 while(it.hasNext()) {
-                    Map.Entry entry = (Map.Entry)it.next();
-                    definedGrammar.add((String)entry.getKey(),
-                                       definedGrammar.getDef((String)entry.getValue()));
+                    Map.Entry<String, String> entry = it.next();
+                    definedGrammar.add(entry.getKey(),
+                                       definedGrammar.getDef(entry.getValue()));
                 }
             }
         }
@@ -158,7 +158,7 @@ public class StAXModelBuilder implements XMLStreamConstants {
     }
 
     private FormProvider handleAll() throws XMLStreamException {
-        List kids = new ArrayList();
+        List<Object> kids = new ArrayList<Object>();
         while(reader.getEventType() == START_ELEMENT) {
             String tag = reader.getLocalName();
             if(isCardinality(tag)) {
@@ -188,7 +188,7 @@ public class StAXModelBuilder implements XMLStreamConstants {
             return (FormProvider)kids.get(0);
         }
         Group g = new Group(1, 1);
-        Iterator it = kids.iterator();
+        Iterator<Object> it = kids.iterator();
         while(it.hasNext()) {
             g.add((FormProvider)it.next());
         }
@@ -501,24 +501,24 @@ public class StAXModelBuilder implements XMLStreamConstants {
                 e.printStackTrace();
             }
         }
-        return (Grammar)parsedGrammars.get(loc);
+        return parsedGrammars.get(loc);
     }
 
-    public static Collection getAllDefinitions() {
-        Set defs = new HashSet();
-        Iterator it = parsedGrammars.values().iterator();
+    public static Collection<Definition> getAllDefinitions() {
+        Set<Definition> defs = new HashSet<Definition>();
+        Iterator<Grammar> it = parsedGrammars.values().iterator();
         while(it.hasNext()) {
-            Grammar cur = (Grammar)it.next();
+            Grammar cur = it.next();
             defs.addAll(cur.getDefs());
         }
         return defs;
     }
 
-    private Map waiters = new HashMap();
+    private Map<String, String> waiters = new HashMap<String, String>();
 
     private XMLStreamReader reader;
 
     private Grammar definedGrammar;
 
-    private static Map parsedGrammars = new HashMap();
+    private static Map<String, Grammar> parsedGrammars = new HashMap<String, Grammar>();
 }

@@ -17,8 +17,8 @@ public class Grammar {
         this.filename = filename.replace('\\', '/');
     }
 
-    public List getDefs() {
-        List defList = new ArrayList();
+    public List<Definition> getDefs() {
+        List<Definition> defList = new ArrayList<Definition>();
         defList.addAll(defs.values());
         return defList;
     }
@@ -62,7 +62,7 @@ public class Grammar {
     }
 
     public Definition getDef(String name) {
-        return (Definition)defs.get(name);
+        return defs.get(name);
     }
 
     public String toString() {
@@ -71,5 +71,5 @@ public class Grammar {
 
     private String filename;
 
-    private Map defs = new HashMap();
+    private Map<String, Definition> defs = new HashMap<String, Definition>();
 }

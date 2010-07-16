@@ -9,8 +9,12 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.velocity.VelocityContext;
@@ -46,10 +50,19 @@ public class SchemaDocumenter {
         c.put("util", new SodUtil());
         c.put("helper", new VelocityModelHelper());
         c.put("doc", new SchemaDocumenter());
-        Collection defs = StAXModelBuilder.getAllDefinitions();
-        Iterator it = defs.iterator();
+        Collection<Definition> defs = StAXModelBuilder.getAllDefinitions();
+        List<Definition> sortedDefs = new ArrayList<Definition>();
+        sortedDefs.addAll(defs);
+        Collections.sort(sortedDefs, new Comparator<Definition>() {
+            @Override
+            public int compare(Definition o1, Definition o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+            
+        });
+        Iterator<Definition> it = sortedDefs.iterator();
         while(it.hasNext()) {
-            Definition def = (Definition)it.next();
+            Definition def = it.next();
 //            if(!def.getName().equals("eventArea")){
 //                continue;
 //            }
