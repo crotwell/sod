@@ -441,34 +441,36 @@
         </element>
     </define>
     <define name="phaseTimeContents">
-        <optional>
-            <element name="model">
-                <ref name="model"/>
+        <interleave>
+            <optional>
+                <element name="model">
+                    <ref name="model"/>
+                </element>
+            </optional>
+            <element name="phaseName">
+                <ref name="phaseName"/>
+           </element>
+            <element name="tHeader">
+                <choice>
+                    <value>a</value>
+                    <value>0</value>
+                    <value>1</value>
+                    <value>2</value>
+                    <value>3</value>
+                    <value>4</value>
+                    <value>5</value>
+                    <value>6</value>
+                    <value>7</value>
+                    <value>8</value>
+                    <value>9</value>
+                </choice>
             </element>
-        </optional>
-        <element name="phaseName">
-            <ref name="phaseName"/>
-        </element>
-        <element name="tHeader">
-            <choice>
-                <value>a</value>
-                <value>0</value>
-                <value>1</value>
-                <value>2</value>
-                <value>3</value>
-                <value>4</value>
-                <value>5</value>
-                <value>6</value>
-                <value>7</value>
-                <value>8</value>
-                <value>9</value>
-            </choice>
-        </element>
-        <optional>
-            <element name="arrivalIndex">
-                <data type="integer"/>
-            </element>
-        </optional>
+            <optional>
+                <element name="arrivalIndex">
+                    <data type="integer"/>
+                </element>
+            </optional>
+        <interleave>
     </define>
     <define name="recordSectionDisplayGenerator">
         <element name="recordSectionDisplayGenerator">
