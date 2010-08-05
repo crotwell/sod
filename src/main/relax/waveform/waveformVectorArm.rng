@@ -20,7 +20,7 @@
                 <externalRef href="vectorRequestSubsetter.rng"/>
             </optional>
             <optional>
-                <externalRef href="dataCenter.rng"/>
+                <externalRef href="seismogramSource.rng"/>
             </optional>
             <optional>
                 <externalRef href="vectorAvailableData.rng"/>

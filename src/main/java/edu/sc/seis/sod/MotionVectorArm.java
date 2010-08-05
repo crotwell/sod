@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.hibernate.LazyInitializationException;
-import org.omg.CORBA.SystemException;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.FissuresException;
@@ -19,7 +18,6 @@ import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.cache.NSSeismogramDC;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
@@ -30,6 +28,9 @@ import edu.sc.seis.sod.process.waveform.vector.WaveformProcessWrapper;
 import edu.sc.seis.sod.process.waveform.vector.WaveformVectorProcess;
 import edu.sc.seis.sod.process.waveform.vector.WaveformVectorProcessWrapper;
 import edu.sc.seis.sod.process.waveform.vector.WaveformVectorResult;
+import edu.sc.seis.sod.source.seismogram.DataCenterSource;
+import edu.sc.seis.sod.source.seismogram.SeismogramSource;
+import edu.sc.seis.sod.source.seismogram.SeismogramSourceLocator;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
@@ -38,7 +39,6 @@ import edu.sc.seis.sod.subsetter.availableData.AvailableDataSubsetter;
 import edu.sc.seis.sod.subsetter.availableData.vector.ANDAvailableDataWrapper;
 import edu.sc.seis.sod.subsetter.availableData.vector.ORAvailableDataWrapper;
 import edu.sc.seis.sod.subsetter.availableData.vector.VectorAvailableDataSubsetter;
-import edu.sc.seis.sod.subsetter.dataCenter.SeismogramDCLocator;
 import edu.sc.seis.sod.subsetter.eventChannel.PassEventChannel;
 import edu.sc.seis.sod.subsetter.eventChannel.vector.EventVectorSubsetter;
 import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
@@ -49,6 +49,7 @@ import edu.sc.seis.sod.subsetter.request.vector.VectorRequestSubsetter;
 import edu.sc.seis.sod.subsetter.requestGenerator.RequestGenerator;
 import edu.sc.seis.sod.subsetter.requestGenerator.vector.RequestGeneratorWrapper;
 import edu.sc.seis.sod.subsetter.requestGenerator.vector.VectorRequestGenerator;
+
 
 public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter {
 
@@ -108,8 +109,8 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
             request = (VectorRequestSubsetter)sodObject;
         } else if (sodObject instanceof RequestSubsetter) {
             request = new ANDRequestWrapper((RequestSubsetter)sodObject);
-        } else if (sodObject instanceof SeismogramDCLocator) {
-            dcLocator = (SeismogramDCLocator)sodObject;
+        } else if (sodObject instanceof SeismogramSourceLocator) {
+            dcLocator = (SeismogramSourceLocator)sodObject;
         } else if (sodObject instanceof VectorAvailableDataSubsetter) {
             availData = (VectorAvailableDataSubsetter)sodObject;
         } else if (sodObject instanceof AvailableDataSubsetter) {
@@ -190,13 +191,13 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
             return;
         }
         if (passed.isSuccess()) {
-            ProxySeismogramDC dataCenter;
+            SeismogramSource dataCenter;
             synchronized(dcLocator) {
                 try {
                     // ********************************************************
                     // WARNING, the dcLocator only uses the first channel!!! *
                     // ********************************************************
-                    dataCenter = dcLocator.getSeismogramDC(ecp.getEvent(),
+                    dataCenter = dcLocator.getSeismogramSource(ecp.getEvent(),
                                                            ecp.getChannelGroup().getChannels()[0],
                                                            infilters[0],
                                                            ecp.getCookieJar());
@@ -209,37 +210,13 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
             for (int i = 0; i < outfilters.length; i++) {
                 logger.debug("Trying available_data for " + ChannelIdUtil.toString(infilters[0][0].channel_id)
                         + " from " + infilters[0][0].start_time.date_time + " to " + infilters[0][0].end_time.date_time);
-                int retries = 0;
-                int MAX_RETRY = 5;
-                while (retries < MAX_RETRY) {
-                    try {
-                        logger.debug("before available_data call retries=" + retries);
-                        outfilters[i] = dataCenter.available_data(infilters[i]);
-                        logger.debug("after successful available_data call retries=" + retries);
-                        serverSuccessful(dataCenter);
-                        break;
-                    } catch(org.omg.CORBA.SystemException e) {
-                        retries++;
-                        logger.debug("after failed available_data call retries=" + retries + " " + e.toString());
-                        if (retries < MAX_RETRY) {
-                            // sleep is 10 seconds times num retries
-                            int sleepTime = 10 * retries;
-                            logger.info("Caught CORBA exception, sleep for " + sleepTime + " then retry..." + retries,
-                                        e);
-                            try {
-                                Thread.sleep(sleepTime * 1000); // change
-                                // seconds to
-                                // milliseconds
-                            } catch(InterruptedException ex) {}
-                            if (retries % 2 == 0) {
-                                // force reload from name service evey other try
-                                dataCenter.reset();
-                            }
-                        } else {
-                            handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e, dataCenter);
-                            return;
-                        }
-                    }
+                logger.debug("before available_data call");
+                try {
+                outfilters[i] = DataCenterSource.toArray(dataCenter.available_data(DataCenterSource.toList(infilters[i])));
+                logger.debug("after successful available_data call");
+                } catch(org.omg.CORBA.SystemException e) {
+                    handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e, dataCenter);
+                    return;
                 }
                 if (outfilters[i].length != 0) {
                     logger.debug("Got available_data for " + ChannelIdUtil.toString(outfilters[i][0].channel_id)
@@ -257,7 +234,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
     }
 
     public void processAvailableDataSubsetter(EventVectorPair ecp,
-                                              ProxySeismogramDC dataCenter,
+                                              SeismogramSource seismogramSource,
                                               RequestFilter[][] infilters,
                                               RequestFilter[][] outfilters) {
         StringTree result;
@@ -286,13 +263,16 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
             // Using infilters as asking for more than is there probably doesn't
             // hurt
             try {
-                localSeismograms = getData(ecp, infilters, dataCenter);
+                localSeismograms = getData(ecp, infilters, seismogramSource);
                 MicroSecondDate after = new MicroSecondDate();
                 logger.info("After getting seismograms, time taken="
                         + after.subtract(before).convertTo(UnitImpl.SECOND)+"  "+localSeismograms[0].length+", "+localSeismograms[1].length+", "+localSeismograms[2].length);
                 if (localSeismograms == null) {
                     return;
                 }
+            } catch(org.omg.CORBA.SystemException e) {
+                handle(ecp, Stage.DATA_RETRIEVAL, e);
+                return;
             } catch(FissuresException e) {
                 handle(ecp, Stage.DATA_RETRIEVAL, e);
                 return;
@@ -332,7 +312,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                 logger.info("Retry Retry, within acceptible latency: "+Start.getRunProps().getSeismogramLatency()+" "+ecp);
                 ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.RETRY));
             }
-            failLogger.info(ecp + " " + result + " on server " + dataCenter);
+            failLogger.info(ecp + " " + result + " on server " + seismogramSource);
         }
     }
 
@@ -398,136 +378,27 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
         }
     }
 
-    private LocalSeismogram[][] getData(EventVectorPair ecp, RequestFilter[][] rf, ProxySeismogramDC dataCenter)
-            throws FissuresException {
-        NSSeismogramDC nsDC = (NSSeismogramDC)dataCenter.getWrappedDC(NSSeismogramDC.class);
-        // Special case for IRIS_ArchiveDataCenter
-        // add all 3 sets of requests to archive, then go back and check
-        if (nsDC.getServerDNS().equals("edu/iris/dmc") && nsDC.getServerName().equals("IRIS_ArchiveDataCenter")) {
-            return getDataViaQueue(ecp, rf, dataCenter);
-        }
-        return getDataNormal(ecp, rf, dataCenter);
-    }
-
-    private LocalSeismogram[][] getDataNormal(EventVectorPair ecp, RequestFilter[][] rf, ProxySeismogramDC dataCenter)
+    private LocalSeismogram[][] getData(EventVectorPair ecp, RequestFilter[][] rf, SeismogramSource seismogramSource)
             throws FissuresException {
         LocalSeismogram[][] localSeismograms = new LocalSeismogram[rf.length][];
         for (int i = 0; i < rf.length; i++) {
             if (rf[i].length != 0) {
-                int retries = 0;
-                int MAX_RETRY = 5;
-                while (retries < MAX_RETRY) {
-                    try {
-                        logger.debug("before retrieve_seismograms");
-                        localSeismograms[i] = dataCenter.retrieve_seismograms(rf[i]);
-                        logger.debug("after successful retrieve_seismograms");
-                        if (localSeismograms[i].length > 0
-                                && !ChannelIdUtil.areEqual(localSeismograms[i][0].channel_id, rf[i][0].channel_id)) {
-                            // must be server error
-                            logger.warn("X Channel id in returned seismogram doesn not match channelid in request. req="
-                                    + ChannelIdUtil.toString(rf[i][0].channel_id)
-                                    + " seis="
-                                    + ChannelIdUtil.toString(localSeismograms[i][0].channel_id));
-                        }
-                        break;
-                    } catch(org.omg.CORBA.SystemException e) {
-                        retries++;
-                        logger.debug("after failed retrieve_seismograms, retries=" + retries);
-                        if (retries < MAX_RETRY) {
-                            logger.info("Caught CORBA exception, retrying..." + retries, e);
-                            try {
-                                Thread.sleep(1000 * retries);
-                            } catch(InterruptedException ex) {}
-                            if (retries % 2 == 0) {
-                                // reget from Name service every other
-                                // time
-                                dataCenter.reset();
-                            }
-                        } else {
-                            handle(ecp, Stage.DATA_RETRIEVAL, e);
-                            return null;
-                        }
-                    }
+                logger.debug("before retrieve_seismograms");
+                localSeismograms[i] = DataCenterSource.toSeisArray(seismogramSource.retrieveData(DataCenterSource.toList(rf[i])));
+                logger.debug("after successful retrieve_seismograms");
+                if (localSeismograms[i].length > 0
+                        && !ChannelIdUtil.areEqual(localSeismograms[i][0].channel_id, rf[i][0].channel_id)) {
+                    // must be server error
+                    logger.warn("X Channel id in returned seismogram doesn not match channelid in request. req="
+                            + ChannelIdUtil.toString(rf[i][0].channel_id) + " seis="
+                            + ChannelIdUtil.toString(localSeismograms[i][0].channel_id));
                 }
             } else {
-                logger.debug("Failed, retrieve data returned no requestFilters ");
+                logger.debug("Failed, retrieve data, no requestFilters for component "+i+" continuing with remaining components.");
                 localSeismograms[i] = new LocalSeismogram[0];
             } // end of else
         }
         return localSeismograms;
-    }
-
-    private LocalSeismogram[][] getDataViaQueue(EventVectorPair ecp, RequestFilter[][] rf, ProxySeismogramDC dataCenter)
-            throws FissuresException {
-        LocalSeismogram[][] localSeismograms = new LocalSeismogram[rf.length][];
-        String[] id = new String[rf.length];
-        // send each request to server
-        for (int i = 0; i < id.length; i++) {
-            try {
-                id[i] = queueRequest(rf[i], dataCenter);
-                logger.info("added to queue request id: " + id[i]);
-            } catch(org.omg.CORBA.SystemException e) {
-                handle(ecp, Stage.DATA_RETRIEVAL, e);
-                return null;
-            }
-        }
-        for (int i = 0; i < id.length; i++) {
-            // keep checking until request is done, then retrieve it
-            String status = LocalSeismogramArm.RETRIEVING_DATA;
-            while (status.equals(LocalSeismogramArm.RETRIEVING_DATA)) {
-                try {
-                    status = statusRequest(id[i], dataCenter);
-                } catch(org.omg.CORBA.SystemException e) {
-                    handle(ecp, Stage.DATA_RETRIEVAL, e);
-                    return null;
-                }
-                if (status.equals(LocalSeismogramArm.RETRIEVING_DATA)) {
-                    try {
-                        Thread.sleep(30 * 1000);
-                    } catch(InterruptedException ex) {}
-                }
-            }
-            if (status.equals(LocalSeismogramArm.DATA_RETRIEVED)) {
-                try {
-                    localSeismograms[i] = retrieveRequest(id[i], dataCenter);
-                } catch(org.omg.CORBA.SystemException e) {
-                    handle(ecp, Stage.DATA_RETRIEVAL, e);
-                    return null;
-                }
-            } else {
-                localSeismograms[i] = new LocalSeismogram[0];
-                failLogger.info("Did not get seismogram " + i + " status was: " + status);
-            }
-        }
-        return localSeismograms;
-    }
-
-    private String queueRequest(RequestFilter[] rf, ProxySeismogramDC dataCenter) throws FissuresException {
-        int retries = 0;
-        int MAX_RETRY = 5;
-        while (retries < MAX_RETRY) {
-            try {
-                return dataCenter.queue_seismograms(rf);
-            } catch(org.omg.CORBA.SystemException e) {
-                retries++;
-                logger.debug("after failed queue_seismograms, retries=" + retries);
-                if (retries < MAX_RETRY) {
-                    logger.info("Caught CORBA exception, retrying..." + retries, e);
-                    try {
-                        Thread.sleep(1000 * retries);
-                    } catch(InterruptedException ex) {}
-                    if (retries % 2 == 0) {
-                        // reget from Name service every other
-                        // time
-                        dataCenter.reset();
-                    }
-                } else {
-                    throw e;
-                }
-            }
-        }
-        // should never get here
-        throw new RuntimeException("Should never happen");
     }
 
     private String statusRequest(String id, ProxySeismogramDC dataCenter) throws FissuresException {
@@ -557,38 +428,11 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
         throw new RuntimeException("Should never happen");
     }
 
-    private LocalSeismogram[] retrieveRequest(String id, ProxySeismogramDC dataCenter) throws FissuresException {
-        int retries = 0;
-        int MAX_RETRY = 5;
-        while (retries < MAX_RETRY) {
-            try {
-                return dataCenter.retrieve_queue(id);
-            } catch(org.omg.CORBA.SystemException e) {
-                retries++;
-                logger.debug("after failed retrieve_queue, retries=" + retries);
-                if (retries < MAX_RETRY) {
-                    logger.info("Caught CORBA exception, retrying..." + retries, e);
-                    try {
-                        Thread.sleep(1000 * retries);
-                    } catch(InterruptedException ex) {}
-                    if (retries % 2 == 0) {
-                        // reget from Name service every other
-                        // time
-                        dataCenter.reset();
-                    }
-                } else {
-                    throw e;
-                }
-            }
-        }
-        throw new RuntimeException("Should never happen");
-    }
-
     private static void handle(EventVectorPair ecp, Stage stage, Throwable t) {
         handle(ecp, stage, t, null);
     }
 
-    private static void handle(EventVectorPair ecp, Stage stage, Throwable t, ProxySeismogramDC server) {
+    private static void handle(EventVectorPair ecp, Stage stage, Throwable t, SeismogramSource seismogramSource) {
         try {
         if (t instanceof org.omg.CORBA.SystemException) {
             // don't log exception here, let RetryStragtegy do it
@@ -600,13 +444,9 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
             FissuresException f = (FissuresException)t;
             failLogger.warn(f.the_error.error_code + " " + f.the_error.error_description + " " + ecp, t);
         } else if (t instanceof org.omg.CORBA.SystemException) {
-            // just to generate user message if needed
-            if (server != null) {
-                Start.createRetryStrategy(-1).shouldRetry((SystemException)t, server, 0);
-            } else {
-                failLogger.info("Network or server problem, SOD will continue to retry this item periodically: ("
+            failLogger.info("Network or server problem, SOD will continue to retry this item periodically: ("
                         + t.getClass().getName() + ") " + ecp);
-            }
+            
             logger.debug(ecp, t);
         } else {
             failLogger.warn(ecp, t);
@@ -614,10 +454,6 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
         } catch (LazyInitializationException lazy) {
             logger.error("LazyInitializationException after exception, so I can't print the evp", t);
         }
-    }
-
-    private static void serverSuccessful(ProxySeismogramDC dataCenter) {
-        Start.createRetryStrategy(-1).serverRecovered(dataCenter);
     }
 
     private EventVectorSubsetter eventChannelGroup = new PassEventChannel();

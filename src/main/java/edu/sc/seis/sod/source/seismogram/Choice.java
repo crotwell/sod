@@ -1,4 +1,4 @@
-package edu.sc.seis.sod.subsetter.dataCenter;
+package edu.sc.seis.sod.source.seismogram;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -11,7 +11,6 @@ import org.w3c.dom.NodeList;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
@@ -23,33 +22,33 @@ import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
 /**
  * @author groves Created on May 4, 2005
  */
-public class ChoiceDataCenter implements SeismogramDCLocator {
+public class ChoiceSource implements SeismogramSourceLocator {
 
-    public ChoiceDataCenter(Element config) throws ConfigurationException {
+    public ChoiceSource(Element config) throws ConfigurationException {
         NodeList choiceNodes = DOMHelper.extractNodes(config, "choice");
         for(int i = 0; i < choiceNodes.getLength(); i++) {
             choices.add(new Choice((Element)choiceNodes.item(i)));
         }
         Element otherwiseEl = DOMHelper.extractElement(config, "otherwise/*");
-        otherwise = (SeismogramDCLocator)SodUtil.load(otherwiseEl, "dataCenter");
+        otherwise = (SeismogramSourceLocator)SodUtil.load(otherwiseEl, "seismogram");
     }
 
-    public ProxySeismogramDC getSeismogramDC(CacheEvent event,
+    public SeismogramSource getSeismogramSource(CacheEvent event,
                                              ChannelImpl channel,
                                              RequestFilter[] infilters,
                                              CookieJar cookieJar)
             throws Exception {
-        Iterator it = choices.iterator();
+        Iterator<Choice> it = choices.iterator();
         while(it.hasNext()) {
-            Choice cur = (Choice)it.next();
+            Choice cur = it.next();
             if(cur.accept(event, channel, cookieJar).isSuccess()) {
-                return cur.getSeismogramDC(event, channel, infilters, cookieJar);
+                return cur.getSeismogramSource(event, channel, infilters, cookieJar);
             }
         }
-        return otherwise.getSeismogramDC(event, channel, infilters, cookieJar);
+        return otherwise.getSeismogramSource(event, channel, infilters, cookieJar);
     }
 
-    private class Choice implements EventChannelSubsetter, SeismogramDCLocator {
+    private class Choice implements EventChannelSubsetter, SeismogramSourceLocator {
 
         Choice(Element config) throws ConfigurationException {
             NodeList childNodes = config.getChildNodes();
@@ -60,8 +59,8 @@ public class ChoiceDataCenter implements SeismogramDCLocator {
                     SodElement sodElement = (SodElement)SodUtil.load((Element)node,
                                                                      new String[] {"dataCenter",
                                                                                    "eventChannel"});
-                    if(sodElement instanceof SeismogramDCLocator) {
-                        locator = (SeismogramDCLocator)sodElement;
+                    if(sodElement instanceof SeismogramSourceLocator) {
+                        locator = (SeismogramSourceLocator)sodElement;
                     } else if(sodElement instanceof EventChannelSubsetter) {
                         eventChannelSubsetter = (EventChannelSubsetter)sodElement;
                     }
@@ -69,12 +68,12 @@ public class ChoiceDataCenter implements SeismogramDCLocator {
             }
         }
 
-        public ProxySeismogramDC getSeismogramDC(CacheEvent event,
+        public SeismogramSource getSeismogramSource(CacheEvent event,
                                                  ChannelImpl channel,
                                                  RequestFilter[] infilters,
                                                  CookieJar cookieJar)
                 throws Exception {
-            return locator.getSeismogramDC(event, channel, infilters, cookieJar);
+            return locator.getSeismogramSource(event, channel, infilters, cookieJar);
         }
 
         public StringTree accept(CacheEvent event,
@@ -83,12 +82,12 @@ public class ChoiceDataCenter implements SeismogramDCLocator {
             return eventChannelSubsetter.accept(event, channel, cookieJar);
         }
 
-        SeismogramDCLocator locator;
+        SeismogramSourceLocator locator;
 
         EventChannelSubsetter eventChannelSubsetter;
     }
 
-    private List choices = new ArrayList();
+    private List<Choice> choices = new ArrayList<Choice>();
 
-    private SeismogramDCLocator otherwise;
+    private SeismogramSourceLocator otherwise;
 }

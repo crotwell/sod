@@ -1,6 +1,5 @@
 package edu.sc.seis.sod;
 
-import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -25,12 +24,14 @@ import edu.sc.seis.fissuresUtil.time.SortTool;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.process.waveform.WaveformResult;
+import edu.sc.seis.sod.source.seismogram.DataCenterSource;
+import edu.sc.seis.sod.source.seismogram.SeismogramSource;
+import edu.sc.seis.sod.source.seismogram.SeismogramSourceLocator;
 import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
 import edu.sc.seis.sod.subsetter.Subsetter;
 import edu.sc.seis.sod.subsetter.availableData.AvailableDataSubsetter;
-import edu.sc.seis.sod.subsetter.dataCenter.SeismogramDCLocator;
 import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
 import edu.sc.seis.sod.subsetter.eventChannel.PassEventChannel;
 import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
@@ -56,8 +57,8 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
             requestGenerator = (RequestGenerator)sodObject;
         } else if(sodObject instanceof RequestSubsetter) {
             request = (RequestSubsetter)sodObject;
-        } else if(sodObject instanceof SeismogramDCLocator) {
-            dcLocator = (SeismogramDCLocator)sodObject;
+        } else if(sodObject instanceof SeismogramSourceLocator) {
+            dcLocator = (SeismogramSourceLocator)sodObject;
         } else if(sodObject instanceof AvailableDataSubsetter) {
             availData = (AvailableDataSubsetter)sodObject;
         } else if(sodObject instanceof WaveformProcess) {
@@ -83,7 +84,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
         return availData;
     }
 
-    public SeismogramDCLocator getSeismogramDCLocator() {
+    public SeismogramSourceLocator getSeismogramDCLocator() {
         return dcLocator;
     }
 
@@ -163,10 +164,10 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
             return;
         }
         if(passed.isSuccess()) {
-            ProxySeismogramDC dataCenter;
+            SeismogramSource dataCenter;
             synchronized(dcLocator) {
                 try {
-                    dataCenter = dcLocator.getSeismogramDC(ecp.getEvent(),
+                    dataCenter = dcLocator.getSeismogramSource(ecp.getEvent(),
                                                            ecp.getChannel(),
                                                            infilters,
                                                            ecp.getCookieJar());
@@ -182,36 +183,9 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
             } else {
                 logger.debug("Empty request generated for " + ChannelIdUtil.toString(ecp.getChannel().get_id()));
             }
-            int retries = 0;
-            int MAX_RETRY = 5;
-            while(retries < MAX_RETRY) {
-                try {
-                    logger.debug("before available_data call retries=" + retries);
-                    outfilters = dataCenter.available_data(infilters);
-                    logger.debug("after successful available_data call retries=" + retries);
-                    serverSuccessful(dataCenter);
-                    break;
-                } catch(org.omg.CORBA.SystemException e) {
-                    retries++;
-                    logger.debug("after failed available_data call retries=" + retries + " " + e.toString());
-                    if(retries < MAX_RETRY) {
-                        // sleep is 10 seconds times num retries
-                        int sleepTime = 10 * retries;
-                        logger.info("Caught CORBA exception, sleep for " + sleepTime + " then retry..." + retries, e);
-                        try {
-                            Thread.sleep(sleepTime * 1000); // change seconds to
-                            // milliseconds
-                        } catch(InterruptedException ex) {}
-                        if(retries % 2 == 0) {
-                            // force reload from name service evey other try
-                            dataCenter.reset();
-                        }
-                    } else {
-                        handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e, dataCenter);
-                        return;
-                    }
-                }
-            }
+            logger.debug("before available_data call retries=");
+            outfilters = DataCenterSource.toArray(dataCenter.available_data(DataCenterSource.toList(infilters)));
+            logger.debug("after successful available_data call retries=");
             if(outfilters.length != 0) {
                 logger.debug("Got available_data for " + ChannelIdUtil.toString(outfilters[0].channel_id) + " from "
                         + outfilters[0].start_time.date_time + " to " + outfilters[0].end_time.date_time);
@@ -226,7 +200,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
     }
 
     public void processAvailableDataSubsetter(EventChannelPair ecp,
-                                              ProxySeismogramDC dataCenter,
+                                              SeismogramSource dataCenter,
                                               RequestFilter[] infilters,
                                               RequestFilter[] outfilters) {
         StringTree passed;
@@ -247,77 +221,27 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
             MicroSecondDate before = new MicroSecondDate();
             LocalSeismogram[] localSeismograms = new LocalSeismogram[0];
             if(outfilters.length != 0) {
-                int retries = 0;
-                int MAX_RETRY = 5;
-                while(retries < MAX_RETRY) {
-                    try {
-                        logger.debug("before retrieve_seismograms");
-                        NSSeismogramDC nsDC = (NSSeismogramDC)dataCenter.getWrappedDC(NSSeismogramDC.class);
-                        if(nsDC.getServerDNS().equals("edu/iris/dmc")
-                                && nsDC.getServerName().equals("IRIS_ArchiveDataCenter")) {
-                            // Archive doesn't support retrieve_seismograms
-                            // so try using the queue set of retrieve calls
-                            try {
-                                String id = dataCenter.queue_seismograms(infilters);
-                                logger.info("request id: " + id);
-                                String status = dataCenter.request_status(id);
-                                int i = 0;
-                                while(status.equals(RETRIEVING_DATA) && i < 60) {
-                                    logger.info("Waiting for data to be returned from the archive.  We've been waiting for "
-                                            + i++ + " minutes");
-                                    try {
-                                        Thread.sleep(60 * 1000);
-                                    } catch(InterruptedException ex) {}
-                                    status = dataCenter.request_status(id);
-                                }
-                                if(status.equals(DATA_RETRIEVED)) {
-                                    localSeismograms = dataCenter.retrieve_queue(id);
-                                } else if(status.equals(RETRIEVING_DATA)) {
-                                    ecp.update(Status.get(Stage.DATA_RETRIEVAL, Standing.CORBA_FAILURE));
-                                    dataCenter.cancel_request(id);
-                                    failLogger.info("Looks like the archive lost request ID " + id
-                                            + ".  No data was returned after " + i + " minutes. " + ecp);
-                                    return;
-                                }
-                            } catch(FissuresException ex) {
-                                handle(ecp, Stage.DATA_RETRIEVAL, ex);
-                                return;
-                            }
-                        } else {
-                            try {
-                                localSeismograms = dataCenter.retrieve_seismograms(infilters);
-                            } catch(FissuresException e) {
-                                handle(ecp, Stage.DATA_RETRIEVAL, e);
-                                return;
-                            }
-                        }
-                        logger.debug("after successful retrieve_seismograms");
-                        if(localSeismograms.length > 0
-                                && !ChannelIdUtil.areEqual(localSeismograms[0].channel_id, infilters[0].channel_id)) {
-                            // must be server error
-                            logger.warn("X Channel id in returned seismogram doesn not match channelid in request. req="
-                                    + ChannelIdUtil.toString(infilters[0].channel_id)
-                                    + " seis="
-                                    + ChannelIdUtil.toString(localSeismograms[0].channel_id));
-                        }
-                        break;
-                    } catch(org.omg.CORBA.SystemException e) {
-                        retries++;
-                        logger.debug("after failed retrieve_seismograms, retries=" + retries);
-                        if(retries < MAX_RETRY) {
-                            logger.info("Caught CORBA exception, retrying..." + retries, e);
-                            try {
-                                Thread.sleep(1000 * retries);
-                            } catch(InterruptedException ex) {}
-                            if(retries % 2 == 0) {
-                                // reget from Name service every other time
-                                dataCenter.reset();
-                            }
-                        } else {
-                            handle(ecp, Stage.DATA_RETRIEVAL, e);
-                            return;
-                        }
-                    }
+                
+                
+                
+                
+                try {
+                    localSeismograms = DataCenterSource.toSeisArray(dataCenter.retrieveData(DataCenterSource.toList(infilters)));
+                } catch(FissuresException e) {
+                    handle(ecp, Stage.DATA_RETRIEVAL, e);
+                    return;
+                } catch(org.omg.CORBA.SystemException e) {
+                    handle(ecp, Stage.DATA_RETRIEVAL, e);
+                    return;
+                }
+                logger.debug("after successful retrieve_seismograms");
+                if(localSeismograms.length > 0
+                        && !ChannelIdUtil.areEqual(localSeismograms[0].channel_id, infilters[0].channel_id)) {
+                    // must be server error
+                    logger.warn("X Channel id in returned seismogram doesn not match channelid in request. req="
+                            + ChannelIdUtil.toString(infilters[0].channel_id)
+                            + " seis="
+                            + ChannelIdUtil.toString(localSeismograms[0].channel_id));
                 }
             } else {
                 failLogger.info(ecp + " retrieve data returned no requestFilters: ");
@@ -454,10 +378,6 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
         }
     }
 
-    private static void serverSuccessful(ProxySeismogramDC dataCenter) {
-        Start.createRetryStrategy(-1).serverRecovered(dataCenter);
-    }
-
     private EventChannelSubsetter eventChannel = new PassEventChannel();
 
     private RequestGenerator requestGenerator;
@@ -467,12 +387,6 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
     private AvailableDataSubsetter availData = defaultAvailableDataSubsetter;
 
     private LinkedList<WaveformProcess> processes = new LinkedList<WaveformProcess>();
-
-    public static final String NO_DATA = "no_data";
-
-    public static final String DATA_RETRIEVED = "Finished";
-
-    public static final String RETRIEVING_DATA = "Processing";
 
     private static final Logger logger = Logger.getLogger(LocalSeismogramArm.class);
 

@@ -18,7 +18,7 @@
                 <externalRef href="requestSubsetter.rng"/>
             </optional>
             <optional>
-                <externalRef href="dataCenter.rng"/>
+                <externalRef href="seismogramSource.rng"/>
             </optional>
             <optional>
                 <externalRef href="availableData.rng"/>

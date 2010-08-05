@@ -42,17 +42,17 @@ public class DepthAwareGuide implements TourGuide {
         } else if(curForm instanceof Choice) {
             Choice c = (Choice)curForm;
             visitor.visit(c);
-            handleKids(visitor, c);
+            handleKids(visitor, c, true);
             visitor.leave(c);
         } else if(curForm instanceof Group) {
             Group g = (Group)curForm;
             visitor.visit(g);
-            handleKids(visitor, g);
+            handleKids(visitor, g, false);
             visitor.leave(g);
         } else if(curForm instanceof Interleave) {
             Interleave g = (Interleave)curForm;
             visitor.visit(g);
-            handleKids(visitor, g);
+            handleKids(visitor, g, true);
             visitor.leave(g);
         } else if(curForm instanceof Value) {
             visitor.visit((Value)curForm);
@@ -68,7 +68,7 @@ public class DepthAwareGuide implements TourGuide {
         }
     }
 
-    private void handleKids(Tourist visitor, MultigenitorForm f) {
+    private void handleKids(Tourist visitor, MultigenitorForm f, boolean sort) {
         Form[] children = f.getChildren();
         for(int i = 0; i < children.length; i++) {
             internalLead(visitor, children[i]);

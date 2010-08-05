@@ -52,13 +52,13 @@ import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.process.waveform.vector.WaveformVectorProcess;
 import edu.sc.seis.sod.source.event.MicroSecondTimeRangeSupplier;
+import edu.sc.seis.sod.source.seismogram.SeismogramSourceLocator;
 import edu.sc.seis.sod.status.TemplateFileLoader;
 import edu.sc.seis.sod.subsetter.LatitudeRange;
 import edu.sc.seis.sod.subsetter.LongitudeRange;
 import edu.sc.seis.sod.subsetter.availableData.AvailableDataSubsetter;
 import edu.sc.seis.sod.subsetter.availableData.vector.VectorAvailableDataSubsetter;
 import edu.sc.seis.sod.subsetter.channel.ChannelSubsetter;
-import edu.sc.seis.sod.subsetter.dataCenter.SeismogramDCLocator;
 import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
 import edu.sc.seis.sod.subsetter.eventChannel.vector.EventVectorSubsetter;
 import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
@@ -339,7 +339,7 @@ public class SodUtil {
         if (mustImplement.equals(WaveformVectorProcess.class)) {
             return "event, channelGroup, original, available, seismograms, cookieJar";
         }
-        if (mustImplement.equals(SeismogramDCLocator.class)) {
+        if (mustImplement.equals(SeismogramSourceLocator.class)) {
             return "event, channel, infilters, cookieJar";
         }
         // should not happen

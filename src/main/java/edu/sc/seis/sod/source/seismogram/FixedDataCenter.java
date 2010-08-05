@@ -1,4 +1,4 @@
-package edu.sc.seis.sod.subsetter.dataCenter;
+package edu.sc.seis.sod.source.seismogram;
 
 import org.w3c.dom.Element;
 
@@ -13,7 +13,7 @@ import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.subsetter.AbstractSource;
 
 public class FixedDataCenter extends AbstractSource implements SodElement,
-        SeismogramDCLocator {
+        SeismogramSourceLocator {
 
     public FixedDataCenter() {
         super("edu/iris/dmc", DEFAULT_SERVER_NAME);
@@ -31,13 +31,13 @@ public class FixedDataCenter extends AbstractSource implements SodElement,
     }
     
     void init() {
-        dataCenter = BulletproofVestFactory.vestSeismogramDC(getDNS(),
+        dataCenter = new DataCenterSource(BulletproofVestFactory.vestSeismogramDC(getDNS(),
                                                              getName(),
                                                              getFissuresNamingService(),
-                                                             Start.createRetryStrategy(getRetries()));
+                                                             Start.createRetryStrategy(getRetries())));
     }
 
-    public ProxySeismogramDC getSeismogramDC(CacheEvent event,
+    public SeismogramSource getSeismogramSource(CacheEvent event,
                                              ChannelImpl channel,
                                              RequestFilter[] infilters,
                                              CookieJar cookieJar)
@@ -46,10 +46,10 @@ public class FixedDataCenter extends AbstractSource implements SodElement,
     }
 
     public ProxySeismogramDC getDataCenter() {
-        return dataCenter;
+        return dataCenter.getDataCenter();
     }
 
-    private ProxySeismogramDC dataCenter;
+    private DataCenterSource dataCenter;
     
     public static final String DEFAULT_SERVER_NAME="IRIS_DataCenter";
 

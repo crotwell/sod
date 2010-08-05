@@ -14,9 +14,9 @@ import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.source.network.NetworkSource;
+import edu.sc.seis.sod.source.seismogram.FixedDataCenter;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
-import edu.sc.seis.sod.subsetter.dataCenter.FixedDataCenter;
 
 /**
  * @author groves Created on May 6, 2005

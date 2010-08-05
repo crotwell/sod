@@ -2,9 +2,9 @@
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
     xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <start>
-        <ref name="dataCenter"/>
+        <ref name="seismogramSource"/>
     </start>
-    <define name="dataCenter">
+    <define name="seismogramSource">
         <choice>
             <xsd:annotation>
                 <summary>Specifies the server to ask for seismograms.</summary>
@@ -12,24 +12,26 @@
                 <velocity>#waveformArmPage()</velocity>
             </xsd:annotation>
             <externalRef href="fixedDataCenter.rng"/>
-            <ref name="choiceDataCenter"/>
+            <ref name="choiceSource"/>
+            <ref name="tryInOrder"/>
+            <ref name="winstonWaveServer"/>
         </choice>
     </define>
-    <define name="choiceDataCenter">
-        <element name="choiceDataCenter">
+    <define name="choiceSource">
+        <element name="choiceSource">
             <xsd:annotation>
-                <summary>Allows a choice between data centers based on an eventChannelSubsetter</summary>
-                <description> This type of datacenter allows for a choice to be made between several
-                    data centers based on characteristics of an event and channel. It goes through
+                <summary>Allows a choice between seismogram sources based on an eventChannelSubsetter</summary>
+                <description> This type of seismogram source allows for a choice to be made between several
+                    seismogram sources based on characteristics of an event and channel. It goes through
                     each of the choices in order, and if the subsetter inside of a choice matches,
-                    it uses it. If no choice matches, the data center in the otherwise is used. The
+                    it uses it. If no choice matches, the seismogram source in the otherwise is used. The
                     example gets data from the POND from half a year ago up until 8 weeks ago. For
                     anything more recent, it gets data from the BUD. Other uses for this are to
-                    switch datacenters based on the preferred datacenter for a station, or to use
-                    the POND to retrieve data if an event meets the POND criteria but use the
-                    Archive otherwise.</description>
+                    switch seismogram sources based on the preferred seismogram sources for a station, or to use
+                    the POND  (IRIS_PondDataCenter) to retrieve data if an event meets the POND criteria but use the
+                    IRIS mass store (IRIS_DataCenter) otherwise.</description>
                 <example>
-                    <choiceDataCenter>
+                    <choiceSource>
                         <choice>
                             <embeddedEventStation>
                                 <embeddedOriginSubsetter>
@@ -64,31 +66,31 @@
                                 <dns>edu/iris/dmc</dns>
                             </fixedDataCenter>
                         </otherwise>
-                    </choiceDataCenter>
+                    </choiceSource>
                 </example>
             </xsd:annotation>
             <oneOrMore>
                 <element name="choice">
                     <externalRef href="eventChannel.rng"/>
-                    <externalRef href="fixedDataCenter.rng"/>
+                    <ref name="seismogramSource"/>
                 </element>
             </oneOrMore>
             <element name="otherwise">
-                <externalRef href="fixedDataCenter.rng"/>
+                <ref name="seismogramSource"/>
             </element>
         </element>
     </define>
-    <define name="tryInOrderDataCenter">
-        <element name="tryInOrderDataCenter">
+    <define name="tryInOrder">
+        <element name="tryInOrder">
             <xsd:annotation>
-                <summary>Allows multiple data centers with the first one with data being used</summary>
-                <description> This type of datacenter allows several
-                    data centers with the first one that has data for a given even-channel being used. It goes through
+                <summary>Allows multiple seismogram sourcess with the first one with data being used</summary>
+                <description> This type of seismogram source allows several
+                    seismogram sources with the first one that has data for a given even-channel being used. It goes through
                     each of the choices in the order given, and uses the first one that gives any available data.
                     If no choice has data, then the result of the last datacenter is used (albeit the empty result). The
-                    example tried to get data from the BUD first and then POND if it isn't in the BUD.</description>
+                    example tries to get data from the BUD first and then POND if it isn't in the BUD.</description>
                 <example>
-                    <tryInOrderDataCenter>
+                    <tryInOrder>
                             <fixedDataCenter>
                                 <name>IRIS_BudDataCenter</name>
                                 <dns>edu/iris/dmc</dns>
@@ -97,12 +99,29 @@
                                 <name>IRIS_PondDataCenter</name>
                                 <dns>edu/iris/dmc</dns>
                             </fixedDataCenter>
-                    </tryInOrderDataCenter>
+                    </tryInOrder>
                 </example>
             </xsd:annotation>
             <oneOrMore>
-                <externalRef href="fixedDataCenter.rng"/>
+                <ref name="seismogramSource"/>
             </oneOrMore>
+        </element>
+    </define>
+    <define name="winstonWaveServer">
+        <element name="winstonWaveServer">
+            <xsd:annotation>
+                <summary>Pick a Winston/Earthworm Wave Server</summary>
+                <description>This specifies a Winston or Earthworm Wave Server.
+                    </description>
+            </xsd:annotation>
+            <element name="host">
+                <data type="string"/>
+            </element>
+            <optional>
+                <element name="port">
+                    <data type="integer"/>
+                </element>
+            </optional>
         </element>
     </define>
 </grammar>

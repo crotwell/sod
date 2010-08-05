@@ -470,7 +470,7 @@
                     <data type="integer"/>
                 </element>
             </optional>
-        <interleave>
+        </interleave>
     </define>
     <define name="recordSectionDisplayGenerator">
         <element name="recordSectionDisplayGenerator">
