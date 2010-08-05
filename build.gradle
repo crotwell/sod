@@ -119,11 +119,11 @@ task printRT << { task ->
        
 
 
-task copySodSite(dependsOn: ['copySchemaDocs', ':seiswww:makeSodSite'], type: Copy) {
+task copySodSite(dependsOn: ['copySchemaDocs', ':seiswww:makeSodSite'], type: Sync) {
     from project.file('../seiswww/build/sod/')
     into project.file('build/doc/')
 }
-task copySchemaDocs(dependsOn: 'buildSchemaDocs', type: Copy) {
+task copySchemaDocs(dependsOn: 'buildSchemaDocs', type: Sync) {
     from project.file('build/velocity/sod/ingredients')
     into project.file('../seiswww/velocity/sod/ingredients/')
 }
