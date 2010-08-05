@@ -24,12 +24,16 @@ dependencies {
     compile "thaiopensource:jing:20030619"
     compile ("org.apache.velocity:velocity-tools:2.0") {
         exclude group: 'xml-apis',  module: 'xml-apis'
+        exclude group: 'org.apache.struts',  module: 'struts-taglib'
+        exclude group: 'org.apache.struts',  module: 'struts-tiles'
+        exclude group: 'org.apache.struts',  module: 'struts-core'
     }
 
     compile "edu.sc.seis.mapData:dcwpo_browse:1.0"
     compile "net.sourceforge.javacsv:javacsv:2.0"
-
     compile "gov.usgs.earthworm:Earthworm:1.0.0svn"
+//    runtime "org.codehaus.groovy:groovy:1.7.3"
+//    runtime "org.jruby:jruby:1.5.1"
 }
 
 dirName = project.name+'-'+version
