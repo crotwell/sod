@@ -42,16 +42,13 @@ distFiles = copySpec {
 
     from('build') {
         include('build.gradle')
-        into dirName
     }
     from('build/output') {
         fileMode=0755
         include('bin/**')
-        into dirName
     }
     from('build/output') {
         include('lib/**')
-        into dirName
     }
     from('.') {
         include('gpl-3.0.txt')
@@ -65,19 +62,16 @@ distFiles = copySpec {
         include('gradlew')
         include('gradlew.bat')
         exclude('**/*.svn')
-        into dirName
     }
     from('scripts') {
         include('cwg.prop')
-        into dirName
     }
     from('scripts/tutorial') {
         include('**')
-        into dirName+'/recipes'
+        into 'recipes'
     }
     from('build') {
         include('doc/**')
-        into dirName
     }
 }
 task tarDist(type: Tar, dependsOn: ['makeScript', 'createBuildScript', 'wrapper', 'copySodSite', 'buildSchema']) {
