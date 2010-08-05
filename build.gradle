@@ -28,12 +28,14 @@ dependencies {
 
     compile "edu.sc.seis.mapData:dcwpo_browse:1.0"
     compile "net.sourceforge.javacsv:javacsv:2.0"
+
+    compile "gov.usgs.earthworm:Earthworm:1.0.0svn"
 }
 
-task tarDist(type: Tar, dependsOn: ['makeScript', 'createBuildScript', 'wrapper', 'copySodSite', 'buildSchema']) {
-    compression = Compression.GZIP
-    longfile = 'gnu'
-    dirName = project.name+'-'+version
+dirName = project.name+'-'+version
+
+distFiles = copySpec {
+
     from('build') {
         include('build.gradle')
         into dirName
@@ -74,9 +76,21 @@ task tarDist(type: Tar, dependsOn: ['makeScript', 'createBuildScript', 'wrapper'
         into dirName
     }
 }
+task tarDist(type: Tar, dependsOn: ['makeScript', 'createBuildScript', 'wrapper', 'copySodSite', 'buildSchema']) {
+    compression = Compression.GZIP
+    longfile = 'gnu'
+    into(dirName) {
+        with distFiles
+    }
+}
+
+task explodeDist(type: Sync, dependsOn: ['makeScript', 'createBuildScript', 'wrapper', 'copySodSite', 'buildSchema']) {
+    with distFiles
+    into file("$buildDir/explode")
+}
 
 def getDExtras() {
-    return [ 'seis.name':'sod-3.0.0alpha.sod', 
+    return [ 'seis.name':'sod'+getVersion(), 
                 'org.omg.CORBA.ORBSingletonClass':'org.jacorb.orb.ORBSingleton', 
                 'python.path':'${LIB}', 
                 'java.awt.headless':'true', 
@@ -90,14 +104,15 @@ def getDExtras() {
 
 task makeScript(dependsOn: copyToLib) << { task ->
     dExtras = getDExtras()
+    doBat = true
 //    ScriptBuilder.create('sod', 'edu.sc.seis.sod.Start', task.project, dExtras:dExtras, yourkit:true)
-    ScriptBuilder.create('sod', 'edu.sc.seis.sod.Start', task.project, dExtras:dExtras)
-    ScriptBuilder.create('bgsod', 'edu.sc.seis.sod.Start', task.project, dExtras:dExtras, background:true)
-    ScriptBuilder.create('find_events', 'edu.sc.seis.sod.tools.find_events', task.project, dExtras:dExtras)
-    ScriptBuilder.create('find_stations', 'edu.sc.seis.sod.tools.find_stations', task.project, dExtras:dExtras)
-    ScriptBuilder.create('find_channels', 'edu.sc.seis.sod.tools.find_channels', task.project, dExtras:dExtras)
-    ScriptBuilder.create('find_seismograms', 'edu.sc.seis.sod.tools.find_seismograms', task.project, dExtras:dExtras)
-    ScriptBuilder.create('find_responses', 'edu.sc.seis.sod.tools.find_responses', task.project, dExtras:dExtras)
+    ScriptBuilder.create('sod', 'edu.sc.seis.sod.Start', task.project, dExtras:dExtras, bat:true)
+    ScriptBuilder.create('bgsod', 'edu.sc.seis.sod.Start', task.project, dExtras:dExtras, bat:doBat, background:true)
+    ScriptBuilder.create('find_events', 'edu.sc.seis.sod.tools.find_events', task.project, dExtras:dExtras, bat:doBat)
+    ScriptBuilder.create('find_stations', 'edu.sc.seis.sod.tools.find_stations', task.project, dExtras:dExtras, bat:doBat)
+    ScriptBuilder.create('find_channels', 'edu.sc.seis.sod.tools.find_channels', task.project, dExtras:dExtras, bat:doBat)
+    ScriptBuilder.create('find_seismograms', 'edu.sc.seis.sod.tools.find_seismograms', task.project, dExtras:dExtras, bat:doBat)
+    ScriptBuilder.create('find_responses', 'edu.sc.seis.sod.tools.find_responses', task.project, dExtras:dExtras, bat:doBat)
 }
 
 task printRT << { task ->
