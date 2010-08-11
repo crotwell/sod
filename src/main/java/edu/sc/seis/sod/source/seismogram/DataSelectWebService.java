@@ -15,8 +15,6 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
-import com.sun.tools.internal.ws.wsdl.framework.GlobalEntity;
-
 import edu.iris.Fissures.FissuresException;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
@@ -25,12 +23,12 @@ import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.mseed.FissuresConvert;
 import edu.sc.seis.seisFile.mseed.DataRecord;
 import edu.sc.seis.seisFile.mseed.SeedFormatException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 
 public class DataSelectWebService implements SeismogramSource, SeismogramSourceLocator {
 
