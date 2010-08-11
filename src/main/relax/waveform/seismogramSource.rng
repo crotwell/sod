@@ -15,6 +15,7 @@
             <ref name="choiceSource"/>
             <ref name="tryInOrder"/>
             <ref name="winstonWaveServer"/>
+            <ref name="dataSelectWebService"/>
         </choice>
     </define>
     <define name="choiceSource">
@@ -120,6 +121,30 @@
             <optional>
                 <element name="port">
                     <data type="integer"/>
+                </element>
+            </optional>
+        </element>
+    </define>
+    <define name="dataSelectWebService">
+        <element name="dataSelectWebService">
+            <xsd:annotation>
+                <summary>Pick a IRIS DMC dataselect web service</summary>
+                <description>This specifies a IRIS DMC dataselect web service.
+                    </description>
+            </xsd:annotation>
+            <optional>
+                <element name="url">
+                    <data type="string"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="user">
+                    <data type="string"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="password">
+                    <data type="string"/>
                 </element>
             </optional>
         </element>
