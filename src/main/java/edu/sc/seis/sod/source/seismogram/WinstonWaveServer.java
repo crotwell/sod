@@ -24,8 +24,7 @@ import edu.sc.seis.sod.SodUtil;
 import gov.usgs.earthworm.Menu;
 import gov.usgs.earthworm.MenuItem;
 import gov.usgs.earthworm.TraceBuf;
-import gov.usgs.earthworm.WaveServer;
-import gov.usgs.vdx.data.wave.Wave;
+import gov.usgs.winston.server.WWSClient;
 
 
 
@@ -54,9 +53,9 @@ public class WinstonWaveServer implements SeismogramSourceLocator, SodElement {
         return new WinstonWaveServerSource(getWaveServer());
     }
     
-    public WaveServer getWaveServer() {
+    public WWSClient getWaveServer() {
         if (ws == null) {
-            ws = new WaveServer(host, port);
+            ws = new WWSClient(host, port);
             if (! ws.connect()) {
                 System.out.println("Not connected to WWS");
             }
@@ -65,14 +64,14 @@ public class WinstonWaveServer implements SeismogramSourceLocator, SodElement {
         return ws;
     }
 
-    private WaveServer ws;
+    private WWSClient ws;
     String host;
     int port;
 }
 
 class WinstonWaveServerSource implements SeismogramSource {
      
-    WinstonWaveServerSource(WaveServer ws) {
+    WinstonWaveServerSource(WWSClient ws) {
         this.ws = ws;
     }
     
@@ -144,5 +143,5 @@ class WinstonWaveServerSource implements SeismogramSource {
                                        chan),
                                        buf.data);
     }
-    private WaveServer ws;
+    private WWSClient ws;
 }
