@@ -13,6 +13,7 @@
             </xsd:annotation>
             <ref name="finder"/>
             <ref name="filterFinder"/>
+            <ref name="CSVNetworkSource"/>
         </choice>
     </define>
     <define name="finder">
@@ -85,6 +86,89 @@
             <element name="filterURL">
                 <data type="string"/>
             </element>
+        </element>
+    </define>
+    <define name="CSVNetworkSource">
+        <element name="CSVNetworkSource">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Retrieve channels from a Comma-Separated Values file</summary>
+                    <description>Channels are stored in a text file where the first line indicates which fields are going
+                        to be used in creating the channels for use in the SOD run. Each field, of course, is separated by
+                        a comma. From the second line on, each line represents an channel, and the values are filled in
+                        the same order as the fields in the first line. For more information on how to use this, <a
+                            href="../../csvEvents.html">look here</a>.</description>
+                </xsd:documentation>
+            </xsd:annotation>
+            <choice>
+                <element name="filename">
+                    <data type="string">
+                        <xsd:annotation>
+                            <example>csvChans.txt</example>
+                        </xsd:annotation>
+                    </data>
+                </element>
+                <group>
+                    <element name="stations">
+                        <data type="string">
+                            <xsd:annotation>
+                                <example>
+net.code, code, start, latitude, longitude, elevation, depth
+CO, JSC, 2009-04-13T00:00:00.000Z, 34.2816, -81.2597, 103, 1
+CO, CASEE, 2009-04-13T00:00:00.000Z, 34.993, -82.9317, 385, 2
+CO, RGR, 2009-04-13T00:00:00.000Z, 32.9074, -80.1939, 10, 51
+CO, CSB, 2009-04-13T00:00:00.000Z, 32.987, -80.0715, 6, 76.3
+CO, HODGE, 2009-04-13T00:00:00.000Z, 34.2314, -82.2585, 155, 1
+CO, BIRD, 2009-04-13T00:00:00.000Z, 34.6449, -80.4614, 132, 1
+CO, PAULI, 2009-04-13T00:00:00.000Z, 34.2816, -81.259752, 103, 1
+CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
+
+<network code="CO">
+    <station code="JSC" lat="34.2816" lon="-81.2597" elevation="103" depth="1">
+        <site code="00">
+            <channel code="BHZ" samplingPeriod="0.01"/>
+        </site>
+    </station> 
+</network>
+                                </example>
+                            </xsd:annotation>
+                        </data>
+                    </element>
+                    <element name="channels">
+                        <data type="string">
+                            <xsd:annotation>
+                                <example>
+net.code, station.code, site.code, code, sampling.frequency
+CO, JSC, 00, BHZ, 100
+CO, JSC, 00, BHN, 100
+CO, JSC, 00, BHE, 100
+CO, CASEE, 00, BHZ, 100
+CO, CASEE, 00, BHN, 100
+CO, CASEE, 00, BHE, 100
+CO, HODGE, 00, BHZ, 100
+CO, HODGE, 00, BHN, 100
+CO, HODGE, 00, BHE, 100
+CO, BIRD, 00, BHZ, 100
+CO, BIRD, 00, BHN, 100
+CO, BIRD, 00, BHE, 100
+CO, PAULI, 00, BHZ, 100
+CO, PAULI, 00, BHN, 100
+CO, PAULI, 00, BHE, 100
+CO, HAW, 00, BHZ, 100
+CO, HAW, 00, BHN, 100
+CO, HAW, 00, BHE, 100
+CO, RGR, 00, EHZ, 100
+CO, RGR, 00, EHN, 100
+CO, RGR, 00, EHE, 100
+CO, CSB, 00, EHZ, 100
+CO, CSB, 00, EHN, 100
+CO, CSB, 00, EHE, 100
+                                </example>
+                            </xsd:annotation>
+                        </data>
+                    </element>
+                </group>
+            </choice>
         </element>
     </define>
     <define name="name">
