@@ -148,8 +148,8 @@ public class NetworkArm implements Arm {
 
     private void loadConfigElement(Object sodElement)
             throws ConfigurationException {
-        if(sodElement instanceof AbstractNetworkSource) {
-            finder = (AbstractNetworkSource)sodElement;
+        if(sodElement instanceof NetworkSource) {
+            finder = (NetworkSource)sodElement;
         } else if(sodElement instanceof NetworkSubsetter) {
             attrSubsetter = (NetworkSubsetter)sodElement;
         } else if(sodElement instanceof StationSubsetter) {
