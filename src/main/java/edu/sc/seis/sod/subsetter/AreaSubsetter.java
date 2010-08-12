@@ -5,7 +5,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -59,6 +63,14 @@ public class AreaSubsetter {
 
     public static BufferedReader makeRelativeOrRecipeDirReader(String fileLocation)
             throws FileNotFoundException {
+        try {
+            URI uri = new URI(fileLocation);
+            return new BufferedReader(new InputStreamReader(uri.toURL().openStream()));
+        } catch(URISyntaxException e1) {
+            // not a uri, try as simple file
+        } catch(IOException e) {
+            // not a uri, try as simple file
+        }
         File simpleLocation = new File(fileLocation.trim());
         Reader fileInput;
         try {
@@ -69,7 +81,7 @@ public class AreaSubsetter {
             try {
                 fileInput = new FileReader(inConfigDir);
             } catch(FileNotFoundException e2) {
-                throw new FileNotFoundException("Unable to find '"
+                throw new FileNotFoundException("Unable to find as URL or '"
                         + simpleLocation + "' or '" + inConfigDir + "'");
             }
         }
