@@ -63,26 +63,27 @@ public class NetworkFinder extends AbstractNetworkSource {
 
     @Override
     public synchronized List<CacheNetworkAccess> getNetworks() {
+        String[] constrainingCodes = Start.getNetworkArm().getConstrainingNetworkCodes();
         ProxyNetworkDC netDC = getNetworkDC();
         // purge cache before loading from server
         netDC.reset();
-        if (getConstrainingNetworkCodes().length > 0) {
+        if (constrainingCodes.length > 0) {
             edu.iris.Fissures.IfNetwork.NetworkFinder netFinder = netDC.a_finder();
             List<CacheNetworkAccess> constrainedNets = new ArrayList<CacheNetworkAccess>();
-            for (int i = 0; i < getConstrainingNetworkCodes().length; i++) {
+            for (int i = 0; i < constrainingCodes.length; i++) {
                 CacheNetworkAccess[] found = null;
                 // this is a bit of a hack as names could be one or two
                 // characters, but works with _US-TA style
                 // virtual networks at the DMC
                 try {
-                    if (getConstrainingNetworkCodes()[i].length() > 2) {
-                        found = (CacheNetworkAccess[])netFinder.retrieve_by_name(getConstrainingNetworkCodes()[i]);
+                    if (constrainingCodes[i].length() > 2) {
+                        found = (CacheNetworkAccess[])netFinder.retrieve_by_name(constrainingCodes[i]);
                     } else {
-                        found = (CacheNetworkAccess[])netFinder.retrieve_by_code(getConstrainingNetworkCodes()[i]);
+                        found = (CacheNetworkAccess[])netFinder.retrieve_by_code(constrainingCodes[i]);
                     }
                 } catch(NetworkNotFound e) {
                     // this probably indicates a bad conf file, warn and exit
-                    Start.informUserOfBadNetworkAndExit(getConstrainingNetworkCodes()[i], e);
+                    Start.informUserOfBadNetworkAndExit(constrainingCodes[i], e);
                 }
                 for (int j = 0; j < found.length; j++) {
                     constrainedNets.add(found[j]);

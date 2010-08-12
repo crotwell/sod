@@ -18,7 +18,7 @@ import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.subsetter.AbstractSource;
+import edu.sc.seis.sod.source.AbstractSource;
 
 public abstract class AbstractNetworkSource extends AbstractSource implements NetworkSource {
 
@@ -46,21 +46,6 @@ public abstract class AbstractNetworkSource extends AbstractSource implements Ne
     }
 
     protected TimeInterval refreshInterval;
-    
-    protected String[] constrainingCodes;
-    
-    public void setConstrainingNetworkCodes(String[] constrainingCodes) {
-        if (constrainingCodes == null) {throw new IllegalArgumentException();}
-        this.constrainingCodes = constrainingCodes;
-    }
-    
-    /* (non-Javadoc)
-     * @see edu.sc.seis.sod.source.network.NetworkSource#getConstrainingNetworkCodes()
-     */
-    public String[] getConstrainingNetworkCodes() {
-        return constrainingCodes;
-    }
-
 
     /* (non-Javadoc)
      * @see edu.sc.seis.sod.source.network.NetworkSource#getNetwork(edu.iris.Fissures.network.NetworkAttrImpl)

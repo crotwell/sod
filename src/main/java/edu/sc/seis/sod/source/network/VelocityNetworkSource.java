@@ -20,52 +20,45 @@ import edu.sc.seis.sod.velocity.network.VelocityNetwork;
 import edu.sc.seis.sod.velocity.network.VelocityStation;
 
 
-public class VelocityNetworkSource implements NetworkSource {
+public class VelocityNetworkSource extends WrappingNetworkSource implements NetworkSource {
 
     public VelocityNetworkSource(NetworkSource wrapped) {
-        this.wrapped = wrapped;
+        super(wrapped);
     }
 
     @Override
     public List<? extends ChannelImpl> getChannels(StationImpl station) {
-        return VelocityChannel.wrap(wrapped.getChannels(station));
+        return VelocityChannel.wrap(getWrapped().getChannels(station));
     }
 
     @Override
     public Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InstrumentationInvalid {
-        return wrapped.getInstrumentation(chanId);
+        return getWrapped().getInstrumentation(chanId);
     }
 
     @Override
     public CacheNetworkAccess getNetwork(NetworkAttrImpl attr) {
-        return wrapped.getNetwork(attr);
+        return getWrapped().getNetwork(attr);
     }
 
     @Override
     public List<? extends CacheNetworkAccess> getNetworkByName(String name) throws NetworkNotFound {
-        return wrapped.getNetworkByName(name);
+        return getWrapped().getNetworkByName(name);
     }
 
     @Override
     public List<? extends CacheNetworkAccess> getNetworks() {
         // TODO: this is not really what we want as it is not a Velocity
-        return wrapped.getNetworks();
+        return getWrapped().getNetworks();
     }
 
     @Override
     public Sensitivity getSensitivity(ChannelId chanId) throws ChannelNotFound, InstrumentationInvalid {
-        return wrapped.getSensitivity(chanId);
+        return getWrapped().getSensitivity(chanId);
     }
 
     @Override
     public List<? extends StationImpl> getStations(NetworkId net) {
-        return VelocityStation.wrapList(wrapped.getStations(net));
+        return VelocityStation.wrapList(getWrapped().getStations(net));
     }
-
-    @Override
-    public String[] getConstrainingNetworkCodes() {
-        return wrapped.getConstrainingNetworkCodes();
-    }
-    
-    NetworkSource wrapped;
 }

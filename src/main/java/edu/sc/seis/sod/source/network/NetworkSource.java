@@ -8,15 +8,17 @@ import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.iris.Fissures.IfNetwork.Sensitivity;
+import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
+import edu.sc.seis.sod.source.Source;
 
-public interface NetworkSource {
+public interface NetworkSource extends Source {
 
-    public abstract String[] getConstrainingNetworkCodes();
+    public TimeInterval getRefreshInterval();
 
     public abstract CacheNetworkAccess getNetwork(NetworkAttrImpl attr);
 

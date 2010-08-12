@@ -1,25 +1,18 @@
 package edu.sc.seis.sod.source.network;
 
-import java.util.List;
-
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
-import edu.iris.Fissures.IfNetwork.NetworkId;
-import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.iris.Fissures.IfNetwork.Sensitivity;
 import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.network.NetworkAttrImpl;
-import edu.iris.Fissures.network.StationImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
 
-public class InstrumentationFromDB implements NetworkSource {
+public class InstrumentationFromDB extends WrappingNetworkSource implements NetworkSource {
 
-    public InstrumentationFromDB(AbstractNetworkSource wrapped) {
-        this.wrapped = wrapped;
+    public InstrumentationFromDB(NetworkSource wrapped) {
+        super(wrapped);
     }
     
     @Override
@@ -42,7 +35,7 @@ public class InstrumentationFromDB implements NetworkSource {
             // null means we have not yet tried to get this instrumentation
             // db throws ChannelNotFound if we tried before and got a ChannelNotFound
             try {
-                inst = wrapped.getInstrumentation(chan.getId());
+                inst = getWrapped().getInstrumentation(chan.getId());
                 NetworkDB.getSingleton().putInstrumentation(chan, inst);
             } catch (ChannelNotFound e) {
                 NetworkDB.getSingleton().putInstrumentation(chan, null);
@@ -51,35 +44,4 @@ public class InstrumentationFromDB implements NetworkSource {
         return inst;
     }
     
-    private AbstractNetworkSource wrapped;
-
-    @Override
-    public List<? extends ChannelImpl> getChannels(StationImpl station) {
-        return wrapped.getChannels(station);
-    }
-
-    @Override
-    public CacheNetworkAccess getNetwork(NetworkAttrImpl attr) {
-        return wrapped.getNetwork(attr);
-    }
-
-    @Override
-    public List<? extends CacheNetworkAccess> getNetworkByName(String name) throws NetworkNotFound {
-        return wrapped.getNetworkByName(name);
-    }
-
-    @Override
-    public List<? extends CacheNetworkAccess> getNetworks() {
-        return wrapped.getNetworks();
-    }
-
-    @Override
-    public List<? extends StationImpl> getStations(NetworkId net) {
-        return wrapped.getStations(net);
-    }
-
-    @Override
-    public String[] getConstrainingNetworkCodes() {
-        return wrapped.getConstrainingNetworkCodes();
-    }
 }
