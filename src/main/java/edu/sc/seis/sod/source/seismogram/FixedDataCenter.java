@@ -10,7 +10,7 @@ import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.subsetter.AbstractSource;
+import edu.sc.seis.sod.source.AbstractSource;
 
 public class FixedDataCenter extends AbstractSource implements SodElement,
         SeismogramSourceLocator {

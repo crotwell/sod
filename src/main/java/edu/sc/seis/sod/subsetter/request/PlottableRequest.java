@@ -16,9 +16,9 @@ import edu.sc.seis.fissuresUtil.display.PlottableDisplay;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.source.AbstractSource;
 import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
-import edu.sc.seis.sod.subsetter.AbstractSource;
 
 public class PlottableRequest extends AbstractSource  implements RequestSubsetter {
 

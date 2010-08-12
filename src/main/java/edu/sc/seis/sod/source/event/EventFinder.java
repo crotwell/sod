@@ -18,7 +18,7 @@ import edu.sc.seis.sod.QueryTime;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.hibernate.SodDB;
-import edu.sc.seis.sod.subsetter.AbstractSource;
+import edu.sc.seis.sod.source.AbstractSource;
 
 public class EventFinder extends AbstractSource implements EventSource {
 
