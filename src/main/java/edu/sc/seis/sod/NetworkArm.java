@@ -118,7 +118,6 @@ public class NetworkArm implements Arm {
                 loadConfigElement(SodUtil.load((Element)node, PACKAGES));
             } // end of if (node instanceof Element)
         } // end of for (int i=0; i<children.getSize(); i++)
-        getInternalNetworkSource().setConstrainingNetworkCodes(getConstrainingNetworkCodes(attrSubsetter));
         configureEffectiveTimeCheckers();
     }
 
@@ -149,6 +148,7 @@ public class NetworkArm implements Arm {
     private void loadConfigElement(Object sodElement)
             throws ConfigurationException {
         if(sodElement instanceof NetworkSource) {
+            internalFinder = (NetworkSource)sodElement;
             finder = (NetworkSource)sodElement;
         } else if(sodElement instanceof NetworkSubsetter) {
             attrSubsetter = (NetworkSubsetter)sodElement;
@@ -293,11 +293,11 @@ public class NetworkArm implements Arm {
      * network codes this subsetter accepts. If it doesn't constrain network
      * codes, an empty array is returned.
      */
-    public static String[] getConstrainingNetworkCodes(NetworkSubsetter ns) {
-        if(ns == null) {
+    public String[] getConstrainingNetworkCodes() {
+        if(attrSubsetter == null) {
             return new String[0];
-        } else if(ns instanceof NetworkOR) {
-            NetworkSubsetter[] kids = ((NetworkOR)ns).getSubsetters();
+        } else if(attrSubsetter instanceof NetworkOR) {
+            NetworkSubsetter[] kids = ((NetworkOR)attrSubsetter).getSubsetters();
             String[] codes = new String[kids.length];
             for(int i = 0; i < kids.length; i++) {
                 if(kids[i] instanceof NetworkCode) {
@@ -307,8 +307,8 @@ public class NetworkArm implements Arm {
                 }
             }
             return codes;
-        } else if(ns instanceof NetworkCode) {
-            return new String[] {((NetworkCode)ns).getCode()};
+        } else if(attrSubsetter instanceof NetworkCode) {
+            return new String[] {((NetworkCode)attrSubsetter).getCode()};
         } else {
             return new String[0];
         }
@@ -664,7 +664,7 @@ public class NetworkArm implements Arm {
         }
     }
 
-    private AbstractNetworkSource internalFinder = new NetworkFinder("edu/iris/dmc", "IRIS_NetworkDC", -1);
+    private NetworkSource internalFinder = new NetworkFinder("edu/iris/dmc", "IRIS_NetworkDC", -1);
 
     private NetworkSource finder = new InstrumentationFromDB(internalFinder);
     
@@ -687,7 +687,7 @@ public class NetworkArm implements Arm {
         return finder;
     }
 
-     protected AbstractNetworkSource getInternalNetworkSource() {
+     protected NetworkSource getInternalNetworkSource() {
         return internalFinder;
     }
     
