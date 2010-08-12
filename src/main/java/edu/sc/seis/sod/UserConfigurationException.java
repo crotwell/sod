@@ -13,4 +13,7 @@ public class UserConfigurationException extends ConfigurationException {
     public UserConfigurationException(String s) {
         super(s);
     }
+    public UserConfigurationException(String s, Throwable t) {
+        super(s, t);
+    }
 }
