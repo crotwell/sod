@@ -25,21 +25,10 @@ time, magnitude, latitude, longitude, depth
         <printlineEventProcess/>
     </eventArm>
     <networkArm>
-        <winstonNetworkSource>
-            <stations>
-net.code, code, start, latitude, longitude, elevation, depth
-CO, JSC, 2009-04-13T00:00:00.000Z, 34.2816, -81.2597, 103, 1
-CO, CASEE, 2009-04-13T00:00:00.000Z, 34.993, -82.9317, 385, 2
-CO, RGR, 2009-04-13T00:00:00.000Z, 32.9074, -80.1939, 10, 51
-CO, CSB, 2009-04-13T00:00:00.000Z, 32.987, -80.0715, 6, 76.3
-CO, HODGE, 2009-04-13T00:00:00.000Z, 34.2314, -82.2585, 155, 1
-CO, BIRD, 2009-04-13T00:00:00.000Z, 34.6449, -80.4614, 132, 1
-CO, PAULI, 2009-04-13T00:00:00.000Z, 34.2816, -81.259752, 103, 1
-CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
-            </stations>
-            <host>eeyore.seis.sc.edu</host>
-            <port>16022</port>
-        </winstonNetworkSource>
+        <CSVNetworkSource>
+            <stationFile>scsnStations.csv</stationFile>
+            <channelFile>scsnChannels.csv</channelFile>
+        </CSVNetworkSource>
         <networkCode>CO</networkCode>
         <printlineChannelProcess/>
     </networkArm>
