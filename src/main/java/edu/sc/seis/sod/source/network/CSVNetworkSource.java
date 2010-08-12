@@ -155,7 +155,6 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
                                                   loadString(headers, csvReader, COMMENT, ""),
                                                   new NetworkAttrImpl(netId, "", "", ""));
             stations.add(station);
-            System.out.println("Foudn station: "+StationIdUtil.toStringNoDates(station.getId()));
         }
         return stations;
     }
