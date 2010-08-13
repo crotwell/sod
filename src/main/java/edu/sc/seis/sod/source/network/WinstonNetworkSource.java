@@ -38,7 +38,7 @@ public class WinstonNetworkSource extends CSVNetworkSource {
             String netCode = scnl[2];
             String staCode = scnl[0];
             String chanCode = scnl[1];
-            String siteCode = scnl.length==3?"  ":scnl[3];
+            String siteCode = scnl.length==3?"  ":scnl[3]; // if no 'l', just scn, then use space-space for site code
             StationImpl curStation = getStationForChannel(netCode, staCode);
             if (curStation == null) {
                 logger.warn("Can't find station for "+netCode+"."+ staCode+", skipping");
