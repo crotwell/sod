@@ -54,7 +54,7 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
     
     protected void initStations(Element config) throws ConfigurationException {
         if (DOMHelper.hasElement(config, "stationFile")) {
-            String filename = DOMHelper.extractText(config, "filename");
+            String filename = DOMHelper.extractText(config, "stationFile");
             this.csvFilename = filename;
             try {
                 stations = getStationsFromReader(AreaSubsetter.makeRelativeOrRecipeDirReader(csvFilename));
