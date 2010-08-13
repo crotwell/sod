@@ -27,13 +27,12 @@ public class AreaSubsetter {
 
     public AreaSubsetter(Element config) throws ConfigurationException {
         String fileLocation = DOMHelper.extractText(config, "polygonFile", "");
-        if(fileLocation.equals("")) {
+        if (fileLocation.equals("")) {
             NodeList children = config.getChildNodes();
-            for(int i = 0; i < children.getLength(); i++) {
+            for (int i = 0; i < children.getLength(); i++) {
                 Node node = children.item(i);
-                if(node instanceof Element) {
-                    area = (edu.iris.Fissures.Area)SodUtil.load((Element)node,
-                                                                "");
+                if (node instanceof Element) {
+                    area = (edu.iris.Fissures.Area)SodUtil.load((Element)node, "");
                     break;
                 }
             }
@@ -42,54 +41,54 @@ public class AreaSubsetter {
         }
     }
 
-    public static Location[] extractPolygon(String fileLocation)
-            throws ConfigurationException {
+    public static Location[] extractPolygon(String fileLocation) throws ConfigurationException {
         Location[] locs;
         try {
             locs = AreaUtil.loadPolygon(makeRelativeOrRecipeDirReader(fileLocation));
         } catch(FileNotFoundException e) {
-            throw new UserConfigurationException(e.getMessage()
-                    + " as a polygon file.");
+            throw new UserConfigurationException(e.getMessage() + " as a polygon file.");
         } catch(IOException e) {
-            throw new ConfigurationException("Problem reading from file "
-                    + fileLocation, e);
+            throw new ConfigurationException("Problem reading from file " + fileLocation, e);
         }
-        for(int i = 0; i < locs.length; i++) {
+        for (int i = 0; i < locs.length; i++) {
             LatitudeRange.check(locs[i].latitude, fileLocation);
             LongitudeRange.sanitize(locs[i].longitude, fileLocation);
         }
         return locs;
     }
 
-    public static BufferedReader makeRelativeOrRecipeDirReader(String fileLocation)
-            throws FileNotFoundException {
-        try {
-            URI uri = new URI(fileLocation);
-            return new BufferedReader(new InputStreamReader(uri.toURL().openStream()));
-        } catch(URISyntaxException e1) {
-            // not a uri, try as simple file
-        } catch(IOException e) {
-            // not a uri, try as simple file
+    public static BufferedReader makeRelativeOrRecipeDirReader(String fileLocation) throws FileNotFoundException {
+        fileLocation = fileLocation.trim();
+        if (fileLocation.contains(":")) {
+            try {
+                URI uri = new URI(fileLocation);
+                if (uri.getScheme() != null && uri.isAbsolute()) {
+                    return new BufferedReader(new InputStreamReader(uri.toURL().openStream()));
+                }
+            } catch(URISyntaxException e1) {
+                // not a uri, try as simple file
+            } catch(IOException e) {
+                // not a uri, try as simple file
+            }
         }
-        File simpleLocation = new File(fileLocation.trim());
+        File simpleLocation = new File(fileLocation);
         Reader fileInput;
         try {
             fileInput = new FileReader(simpleLocation);
         } catch(FileNotFoundException e) {
-            File inConfigDir = new File(new File(Start.getConfigFileName()).getParentFile(),
-                                        fileLocation);
+            File inConfigDir = new File(new File(Start.getConfigFileName()).getParentFile(), fileLocation);
             try {
                 fileInput = new FileReader(inConfigDir);
             } catch(FileNotFoundException e2) {
-                throw new FileNotFoundException("Unable to find as URL or '"
-                        + simpleLocation + "' or '" + inConfigDir + "'");
+                throw new FileNotFoundException("Unable to find as URL or '" + simpleLocation + "' or '" + inConfigDir
+                        + "'");
             }
         }
         return new BufferedReader(fileInput);
     }
 
     public boolean accept(Location loc) {
-        if(locationArray != null) {
+        if (locationArray != null) {
             return AreaUtil.inArea(locationArray, loc);
         }
         return AreaUtil.inArea(area, loc);
