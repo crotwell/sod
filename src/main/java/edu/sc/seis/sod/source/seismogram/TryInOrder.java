@@ -35,7 +35,7 @@ public class TryInOrder implements SeismogramSourceLocator {
             node = childNodes.item(counter);
             if(node instanceof Element) {
                 SodElement sodElement = (SodElement)SodUtil.load((Element)node,
-                                                                 new String[] {"dataCenter"});
+                                                                 new String[] {"seismogram"});
                 if(sodElement instanceof SeismogramSourceLocator) {
                     choices.add((SeismogramSourceLocator)sodElement);
                 }
