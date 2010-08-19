@@ -20,6 +20,10 @@ public class Validator {
         this.schemaLoc = schemaLoc;
     }
 
+    public Validator() {
+        this(SOD_SCHEMA_LOC);
+    }
+
     public String getErrorMessage() {
         return errorMessage;
     }
@@ -48,11 +52,11 @@ public class Validator {
     }
 
     private ValidationDriver createDriver(boolean verbose) {
-        PropertyMap pm = null;
+        PropertyMap pm;
         if(!verbose) {
-            pm = new SinglePropertyMap(ValidateProperty.ERROR_HANDLER, quietEH);
+            pm = SinglePropertyMap.newInstance(ValidateProperty.ERROR_HANDLER, quietEH);
         } else {
-            pm = new SinglePropertyMap(ValidateProperty.ERROR_HANDLER,
+            pm = SinglePropertyMap.newInstance(ValidateProperty.ERROR_HANDLER,
                                        verboseEH);
         }
         ValidationDriver newDriver = new ValidationDriver(pm);
@@ -72,7 +76,9 @@ public class Validator {
 
     private InputSource getSchemaSource() {
         ClassLoader loader = (Validator.class).getClassLoader();
-        return new InputSource(loader.getResourceAsStream(schemaLoc));
+        InputSource inSource = new InputSource(loader.getResourceAsStream(schemaLoc));
+        inSource.setSystemId(loader.getResource(schemaLoc).toString());
+        return inSource;
     }
 
     private ErrorHandler quietEH = new ErrorHandler() {
