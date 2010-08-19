@@ -149,7 +149,7 @@ public class NetworkArm implements Arm {
             throws ConfigurationException {
         if(sodElement instanceof NetworkSource) {
             internalFinder = (NetworkSource)sodElement;
-            finder = (NetworkSource)sodElement;
+            finder = new InstrumentationFromDB(internalFinder);
         } else if(sodElement instanceof NetworkSubsetter) {
             attrSubsetter = (NetworkSubsetter)sodElement;
         } else if(sodElement instanceof StationSubsetter) {
@@ -419,7 +419,7 @@ public class NetworkArm implements Arm {
                         change(currStation, Status.get(Stage.NETWORK_SUBSETTER,
                                                        Standing.REJECT));
                         failLogger.info(StationIdUtil.toString(currStation.get_id())
-                                + " was rejected based on its effective time not matching the range of requested events: "
+                                + " was rejected because the station was not active during the time range of requested events: "
                                 + effResult);
                     }
                 }
@@ -526,8 +526,8 @@ public class NetworkArm implements Arm {
                     } else {
                         change(chan, Status.get(Stage.NETWORK_SUBSETTER,
                                                 Standing.REJECT));
-                        failLogger.info("Reject based on effective time not matching the range of requested events: "
-                                + ChannelIdUtil.toString(chan.get_id())
+                        failLogger.info(ChannelIdUtil.toString(chan.get_id())
+                                + " was rejected because the channel was not active during the time range of requested events: "
                                 + effectiveTimeResult);
                     }
                 }
@@ -594,7 +594,7 @@ public class NetworkArm implements Arm {
             }
             for (ChannelImpl failchan : failures) {
                 failLogger.info(ChannelIdUtil.toString(failchan.get_id())
-                        + "  Channel not grouped.");
+                        + "  Channel not grouped into 3 components.");
             }
             return chanGroups;
         }
