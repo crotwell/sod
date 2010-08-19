@@ -220,6 +220,7 @@ public class Start {
     protected void initDatabase() throws Exception {
         loadRunProps(getConfig());
         ConnMgr.installDbProperties(props, args.getInitialArgs());
+        warnIfDatabaseExists();
         synchronized(HibernateUtil.class) {
             
             HibernateUtil.setUpFromConnMgr(props, getClass().getResource("/edu/sc/seis/sod/data/ehcache.xml"));
@@ -241,6 +242,24 @@ public class Start {
         }
         SodDB.rollback();
         CommonAccess.initialize(props, args.getInitialArgs());
+    }
+    
+    protected String HSQL_FILE_URL = "jdbc:hsqldb:file:";
+    
+    protected void warnIfDatabaseExists() {
+        if (getRunProps().warnIfDatabaseExists()) {
+            System.out.println("warnIfDatabaseExists:"+ConnMgr.getURL().substring(HSQL_FILE_URL.length()));
+            // only matters if hsql???
+            if (ConnMgr.getURL().startsWith(HSQL_FILE_URL)) {
+                File dbFile = new File(ConnMgr.getURL().substring(HSQL_FILE_URL.length())+".log");
+                if (dbFile.exists()) {
+                    allHopeAbandon("The database for this run, "+dbFile
+                                   +" appears to already exist. This is fine if you want to restart a run that crashed,"
+                                   +" but if you are trying to start a fresh SOD run, you may wish to delete this database directory first."
+                                   +" Otherwise, SOD will consider any work in this database as already completed and will not redo it.");
+                }
+            }
+        }
     }
 
     private void loadProps() throws IOException {
@@ -402,7 +421,7 @@ public class Start {
     }
 
     public void allHopeAbandon(String message) {
-        logger.warn("All hope abandon: " + message);
+        logger.info("All hope abandon: " + message);
         System.err.println();
         System.err.println("******************************************************************");
         System.err.println();
