@@ -1,6 +1,5 @@
 package edu.sc.seis.sod.process.waveform;
 
-import edu.iris.Fissures.Time;
 import edu.iris.Fissures.Unit;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
@@ -11,10 +10,10 @@ import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
-import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Threadable;
+import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
 /**
@@ -23,7 +22,7 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
  * deconvolution, merely a constant multiplier. Created: Wed Nov 6 17:58:10 2002
  * 
  * @author <a href="mailto:www@seis.sc.edu">Philip Crotwell </a>
- * @version $Id: ResponseGain.java 21405 2010-06-18 15:30:36Z crotwell $
+ * @version $Id: ResponseGain.java 21609 2010-08-19 01:49:37Z crotwell $
  */
 public class ResponseGain implements WaveformProcess, Threadable {
 
@@ -39,13 +38,11 @@ public class ResponseGain implements WaveformProcess, Threadable {
                                   CookieJar cookieJar) throws Exception {
         LocalSeismogramImpl[] out = new LocalSeismogramImpl[seismograms.length];
         if(seismograms.length > 0) {
-            ProxyNetworkAccess na = Start.getNetworkArm()
-                    .getNetwork(channel.get_id().network_id);
+            NetworkSource na = Start.getNetworkArm().getNetworkSource();
             try {
                 ChannelId chanId = channel.get_id();
-                Time seisTime = seismograms[0].begin_time;
-                Sensitivity sens = na.retrieve_sensitivity(chanId, seisTime);
-                Unit recordedUnits = na.retrieve_initial_units(chanId, seisTime);
+                Sensitivity sens = na.getSensitivity(chanId);
+                Unit recordedUnits = na.getInstrumentation(chanId).the_response.stages[0].input_units;
                 for(int i = 0; i < seismograms.length; i++) {
                     out[i] = edu.sc.seis.fissuresUtil.bag.ResponseGain.apply(seismograms[i],
                                                                              sens,
