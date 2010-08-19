@@ -15,6 +15,7 @@
             <ref name="filterFinder"/>
             <ref name="CSVNetworkSource"/>
             <ref name="winstonNetworkSource"/>
+            <ref name="combineNetworkSource"/>
         </choice>
     </define>
     <define name="finder">
@@ -42,8 +43,10 @@
                     </example>
                 </xsd:documentation>
             </xsd:annotation>
-            <ref name="name"/>
-            <ref name="dns"/>
+            <optional>
+                <ref name="name"/>
+                <ref name="dns"/>
+            </optional>
 	    <optional>
 	      <element name="retries">
 		<xsd:annotation>
@@ -87,6 +90,40 @@
             <element name="filterURL">
                 <data type="string"/>
             </element>
+        </element>
+    </define>
+    <define name="combineNetworkSource">
+        <element name="combineNetworkSource">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>combines the networks from several sources, allowing for example the DMC and a local 
+                    winston wave server to both contribute to a SOD run.</summary>
+                    <description>The combination is on a per network basis, so the first network source that contains
+                    a given network is used.
+                    </description>
+                    <example>
+                      <combineNetworkSource>
+                        <winstonNetworkSource>
+                            <stationFile>winstonStations.csv</stationFile>
+                            <host>winston.seismo.univ.edu</host>
+                            <port>16022</port>
+                        </winstonNetworkSource>
+                        <networkFinder>
+                            <name>IRIS_NetworkDC</name>
+                            <dns>edu/iris/dmc</dns>
+                            <refreshInterval>
+                                <unit>MINUTE</unit>
+                                <value>3000</value>
+                            </refreshInterval>
+                            <filterURL>http://seis.sc.edu/GEE/Dynamic/GEE_2.1/configs/filterStations.txt</filterURL>
+                        </networkFinder>
+                      </combineNetworkSource>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <oneOrMore>
+                <ref name="source"/>
+            </oneOrMore>
         </element>
     </define>
     <define name="CSVNetworkSource">
