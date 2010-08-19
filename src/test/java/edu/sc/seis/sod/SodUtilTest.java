@@ -9,6 +9,8 @@ import junit.framework.TestCase;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
+import edu.iris.Fissures.model.UnitImpl;
+
 
 public class SodUtilTest extends TestCase {
 
@@ -41,6 +43,12 @@ public class SodUtilTest extends TestCase {
         t = SodUtil.loadTime(el, true);
         assertEquals("year without month end: "+t.load().getFissuresTime().date_time, "20041231T"+DAY_END, t.load().getFissuresTime().date_time);
         
+    }
+    
+    public void testLoadUnit() throws Exception {
+        Element el = XMLConfigUtil.parse("<unit>HOUR</unit>"); 
+        UnitImpl u = SodUtil.loadUnit(el);
+        assertTrue(u.isConvertableTo(UnitImpl.SECOND));
     }
     
     static String DAY_START = "00:00:00.000Z";
