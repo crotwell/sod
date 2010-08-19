@@ -30,13 +30,29 @@ public class ValidatorTest extends TestCase{
         }
     }
     
+    public void testSimpleSod() throws IOException, SAXException {
+        Validator v = new Validator("edu/sc/seis/sod/data/relax/sod.rng");
+        v.validate(getIS(simpleSod), true);
+        
+    }
+
+    public void testSimpleSod_msv() throws IOException, SAXException {
+        Validator v = new Validator("edu/sc/seis/sod/data/sod.rng");
+        v.validate(getIS(simpleSod), true);
+        
+    }
+    
     private InputSource getIS(String jarLoc){
-        return new InputSource(loader.getResourceAsStream(jarLoc));
+        InputSource inSource = new InputSource(loader.getResourceAsStream(jarLoc));
+        inSource.setSystemId(loader.getResource(jarLoc).toString());
+        return inSource;
     }
     
     private ClassLoader loader = this.getClass().getClassLoader();
-    
+
     private String malformed = "edu/sc/seis/sod/data/validator/malformed.xml";
+    
+    private String simpleSod = "edu/sc/seis/sod/data/validator/simpleSod.xml";
     
     private String valid = "edu/sc/seis/sod/data/validator/valid.xml";
     
