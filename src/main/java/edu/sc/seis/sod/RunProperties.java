@@ -75,6 +75,9 @@ public class RunProperties {
 			if (SodUtil.isTrue(el, "removeDatabase")) {
 				removeDatabase = true;
 			}
+            if ( ! SodUtil.isTrue(el, "warnIfDatabaseExists")) {
+                warnIfDatabaseExists = false;   // default is true
+            }
 			if (SodUtil.isTrue(el, "statusPages")) {
 				statusPages = true;
 			}
@@ -138,6 +141,10 @@ public class RunProperties {
 	public boolean removeDatabase() {
 		return removeDatabase;
 	}
+
+    public boolean warnIfDatabaseExists() {
+        return warnIfDatabaseExists;
+    }
 
 	public String getEventChannelPairProcessing() {
 		return evChanPairProc;
@@ -204,7 +211,9 @@ public class RunProperties {
 
 	private boolean reopenEvents = false;
 
-	private boolean removeDatabase = false;
+    private boolean removeDatabase = false;
+    
+    private boolean warnIfDatabaseExists = true;
 
 	private boolean statusPages = false;
 
