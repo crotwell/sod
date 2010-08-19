@@ -17,6 +17,8 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.subsetter.Subsetter;
+import edu.sc.seis.sod.subsetter.eventChannel.EventChannelLogicalSubsetter;
 import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
 
 /**
@@ -55,16 +57,18 @@ public class ChoiceSource implements SeismogramSourceLocator {
             Node node;
             for(int counter = 0; counter < childNodes.getLength(); counter++) {
                 node = childNodes.item(counter);
-                if(node instanceof Element) {
-                    SodElement sodElement = (SodElement)SodUtil.load((Element)node,
-                                                                     new String[] {"dataCenter",
-                                                                                   "eventChannel"});
-                    if(sodElement instanceof SeismogramSourceLocator) {
-                        locator = (SeismogramSourceLocator)sodElement;
-                    } else if(sodElement instanceof EventChannelSubsetter) {
-                        eventChannelSubsetter = (EventChannelSubsetter)sodElement;
-                    }
-                } // end of else
+                SodElement sodElement = (SodElement)SodUtil.load((Element)node,
+                                                                 new String[] {"seismogram",
+                                                                               "eventChannel",
+                                                                               "channel",
+                                                                               "station",
+                                                                               "network",
+                                                                               "origin"});
+                if(sodElement instanceof SeismogramSourceLocator) {
+                    locator = (SeismogramSourceLocator)sodElement;
+                } else  {
+                    eventChannelSubsetter = EventChannelLogicalSubsetter.createSubsetter((Subsetter)sodElement);
+                }
             }
         }
 
