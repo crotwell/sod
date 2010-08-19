@@ -2,7 +2,6 @@ package edu.sc.seis.sod.process.waveform;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.Time;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
@@ -13,7 +12,6 @@ import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.bag.Transfer;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
-import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.sac.FissuresToSac;
 import edu.sc.seis.fissuresUtil.sac.SacPoleZero;
@@ -21,6 +19,7 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Threadable;
+import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
 
@@ -44,13 +43,11 @@ public class TransferResponse implements WaveformProcess, Threadable {
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) throws Exception {
         LocalSeismogramImpl[] out = new LocalSeismogramImpl[seismograms.length];
-        ProxyNetworkAccess na = Start.getNetworkArm()
-                .getNetwork(channel.get_id().network_id);
+        NetworkSource na = Start.getNetworkArm().getNetworkSource();
         if(seismograms.length > 0) {
             try {
                 ChannelId chanId = channel.get_id();
-                Time seisTime = seismograms[0].begin_time;
-                Instrumentation inst = na.retrieve_instrumentation(chanId, seisTime);
+                Instrumentation inst = na.getInstrumentation(chanId);
                 SacPoleZero polezero = FissuresToSac.getPoleZero(inst.the_response);
                 Transfer transfer = new Transfer();
                 for(int i = 0; i < seismograms.length; i++) {
