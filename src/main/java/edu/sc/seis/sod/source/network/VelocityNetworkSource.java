@@ -32,29 +32,14 @@ public class VelocityNetworkSource extends WrappingNetworkSource implements Netw
     }
 
     @Override
-    public Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InstrumentationInvalid {
-        return getWrapped().getInstrumentation(chanId);
-    }
-
-    @Override
     public CacheNetworkAccess getNetwork(NetworkAttrImpl attr) {
         return getWrapped().getNetwork(attr);
-    }
-
-    @Override
-    public List<? extends CacheNetworkAccess> getNetworkByName(String name) throws NetworkNotFound {
-        return getWrapped().getNetworkByName(name);
     }
 
     @Override
     public List<? extends CacheNetworkAccess> getNetworks() {
         // TODO: this is not really what we want as it is not a Velocity
         return getWrapped().getNetworks();
-    }
-
-    @Override
-    public Sensitivity getSensitivity(ChannelId chanId) throws ChannelNotFound, InstrumentationInvalid {
-        return getWrapped().getSensitivity(chanId);
     }
 
     @Override

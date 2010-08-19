@@ -2,13 +2,18 @@ package edu.sc.seis.sod.source.network;
 
 import java.util.List;
 
+import edu.iris.Fissures.IfNetwork.ChannelId;
+import edu.iris.Fissures.IfNetwork.ChannelNotFound;
+import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.IfNetwork.NetworkNotFound;
+import edu.iris.Fissures.IfNetwork.Sensitivity;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
+import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
 
 public abstract class WrappingNetworkSource implements NetworkSource {
 
@@ -45,6 +50,16 @@ public abstract class WrappingNetworkSource implements NetworkSource {
     @Override
     public List<? extends StationImpl> getStations(NetworkId net) {
         return getWrapped().getStations(net);
+    }
+
+    @Override
+    public Sensitivity getSensitivity(ChannelId chanId) throws ChannelNotFound, InstrumentationInvalid {
+        return getWrapped().getSensitivity(chanId);
+    }
+
+    @Override
+    public Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InstrumentationInvalid {
+        return getWrapped().getInstrumentation(chanId);
     }
 
     @Override
