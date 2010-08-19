@@ -16,12 +16,12 @@ dependencies {
     compile project(':cormorant') { transitive = true }
     
     compile "jline:jline:0.9.91"
+    compile "thaiopensource:jing:20091111"
     compile "rngconvUSC:rngconv:20030225"
     compile "msv:msv:20030807"
     compile "msv:isorelax:20030807"
     compile "msv:relaxngDatatype:20030807"
     compile "msv:xsdlib:20030807"
-    compile "thaiopensource:jing:20030619"
     compile ("org.apache.velocity:velocity-tools:2.0") {
         exclude group: 'xml-apis',  module: 'xml-apis'
         exclude group: 'org.apache.struts',  module: 'struts-taglib'
