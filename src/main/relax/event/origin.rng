@@ -45,6 +45,9 @@
             <ref name="originScript"/>
         </choice>
     </define>
+    <define name="latLonUnitRange">
+        <externalRef href="../base/externalRef/latLonUnitRange.rng"/>
+    </define>
     <define name="name">
         <element name="eventAttrName">
             <xsd:annotation>
@@ -229,7 +232,7 @@
                     </originPointDistance>
                 </example>
             </xsd:annotation>
-            <externalRef href="../base/externalRef/latLonUnitRange.rng"/>
+            <ref name="latLonUnitRange"/>
         </element>
     </define>
     <define name="pointLinearDistanceMagnitude">
@@ -240,7 +243,7 @@
                     event point distance, then the event is accepted. To reverse and take events smaller than the linear
                     interpolation, enclose this in an originNOT. </description>
             </xsd:annotation>
-            <externalRef href="../base/externalRef/latLonUnitRange.rng"/>
+            <ref name="latLonUnitRange"/>
             <externalRef href="../base/externalRef/magnitudeRange.rng"/>
         </element>
     </define>
@@ -261,7 +264,7 @@
                     </example>
                 </xsd:documentation>
             </xsd:annotation>
-            <externalRef href="../base/externalRef/latLonUnitRange.rng"/>
+            <ref name="latLonUnitRange"/>
         </element>
     </define>
     <define name="originPointBackAzimuth">
@@ -281,7 +284,7 @@
                     </example>
                 </xsd:documentation>
             </xsd:annotation>
-            <externalRef href="../base/externalRef/latLonUnitRange.rng"/>
+            <ref name="latLonUnitRange"/>
         </element>
     </define>
     <define name="removeEventDuplicate">
