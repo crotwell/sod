@@ -20,7 +20,7 @@
         </optional>
         <optional>
             <element name="fileDir">
-                <externalRef href="../externalRef/anyXML.rng"/>
+                <ref name="anyXML"/>
             </element>
         </optional>
         <optional>
@@ -36,13 +36,13 @@
                 </element>
                 <element name="outputLocationCreators">
                     <element name="eventDir">
-                        <externalRef href="../externalRef/anyXML.rng"/>
+                        <ref name="anyXML"/>
                     </element>
                     <element name="stationDir">
-                        <externalRef href="../externalRef/anyXML.rng"/>
+                        <ref name="anyXML"/>
                     </element>
                     <element name="picName">
-                        <externalRef href="../externalRef/anyXML.rng"/>
+                        <ref name="anyXML"/>
                     </element>
                 </element>
             </choice>
@@ -103,5 +103,8 @@
                 </oneOrMore>
             </element>
         </optional>
+    </define>
+    <define name="anyXML">
+        <externalRef href="../externalRef/anyXML.rng"/>
     </define>
 </grammar>

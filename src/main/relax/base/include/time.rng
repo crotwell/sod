@@ -3,6 +3,9 @@
     <start combine="choice">
         <notAllowed/>
     </start>
+    <define name="timeInterval" combine="choice">
+        <externalRef href="../externalRef/timeInterval.rng"/>
+    </define>
     <define name="time" combine="choice">
         <choice>
             <data type="string">
@@ -21,10 +24,10 @@
                 </xsd:annotation>
             </data>
             <element name="earlier">
-                <externalRef href="../externalRef/timeInterval.rng"/>
+                <ref name="timeInterval"/>
             </element>
             <element name="later">
-                <externalRef href="../externalRef/timeInterval.rng"/>
+                <ref name="timeInterval"/>
             </element>
             <element name="now">
                 <empty/>

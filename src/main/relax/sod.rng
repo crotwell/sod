@@ -14,18 +14,24 @@
                 <externalRef href="properties.rng"/>
             </optional>
             <choice>
-                <externalRef href="event/arm.rng"/>
-                <externalRef href="network/arm.rng"/>
+                <ref name="eventArm"/>
+                <ref name="networkArm"/>
                 <group>
-                    <externalRef href="event/arm.rng"/>
-                    <externalRef href="network/arm.rng"/>
+                    <ref name="eventArm"/>
+                    <ref name="networkArm"/>
                 </group>
                 <group>
-                    <externalRef href="event/arm.rng"/>
-                    <externalRef href="network/arm.rng"/>
+                    <ref name="eventArm"/>
+                    <ref name="networkArm"/>
                     <externalRef href="waveform/arm.rng"/>
                 </group>
             </choice>
         </element>
     </start>
+    <define name="eventArm">
+      <externalRef href="event/arm.rng"/>
+    </define>
+    <define name="networkArm">
+      <externalRef href="network/arm.rng"/>
+    </define>
 </grammar>
