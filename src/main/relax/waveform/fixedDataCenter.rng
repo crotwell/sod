@@ -44,6 +44,7 @@
                 <value>IRIS_PondDataCenter</value>
                 <value>IRIS_ArchiveDataCenter</value>
                 <value>NCEDC_DataCenter</value>
+                <value>SCEDC_DataCenter</value>
                 <value>SCEPPSeismogramDC</value>
                 <data type="string"/>
             </choice>
@@ -59,6 +60,7 @@
             <choice>
                 <value>edu/iris/dmc</value>
                 <value>edu/berkley/geo/quake</value>
+                <value>edu/caltech/scedc</value>
                 <value>edu/sc/seis</value>
                 <data type="string"/>
             </choice>

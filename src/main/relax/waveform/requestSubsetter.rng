@@ -23,6 +23,12 @@
             <ref name="external"/>
         </choice>
     </define>
+    <define name="requestPlus">
+        <externalRef href="eventChannel.rng"/>
+        <externalRef href="eventStation.rng"/>
+        <externalRef href="../network/channel.rng"/>
+        <externalRef href="../event/origin.rng"/>
+    </define>
     <define name="requestAND">
         <element name="requestAND">
             <xsd:annotation>
@@ -40,7 +46,7 @@
                 </example>
             </xsd:annotation>
             <oneOrMore>
-                <ref name="request"/>
+                <ref name="requestPlus"/>
             </oneOrMore>
         </element>
     </define>
@@ -59,7 +65,7 @@
                 </example>
             </xsd:annotation>
             <oneOrMore>
-                <ref name="request"/>
+                <ref name="requestPlus"/>
             </oneOrMore>
         </element>
     </define>
@@ -70,7 +76,7 @@
                 <description>The output is the logical NOT of the output of the included request. This mean that it will
                     evaluate to false if the enclosed request evaluates to true, and vice versa.</description>
             </xsd:annotation>
-            <ref name="request"/>
+            <ref name="requestPlus"/>
         </element>
     </define>
     <define name="requestPrint">

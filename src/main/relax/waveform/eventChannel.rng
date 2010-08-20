@@ -22,6 +22,17 @@
             <ref name="external"/>
         </choice>
     </define>
+    <define name="channel">
+        <externalRef href="../network/channel.rng"/>
+    </define>
+    <define name="eventChannelPlus">
+        <choice>
+            <ref name="eventChannel"/>
+            <externalRef href="eventStation.rng"/>
+            <ref name="channel"/>
+            <externalRef href="../event/origin.rng"/>
+        </choice>
+    </define>
     <define name="bestChannelAtStation">
         <element name="bestChannelAtStation">
             <xsd:annotation>
@@ -112,7 +123,7 @@
                     </example>
                 </xsd:documentation>
             </xsd:annotation>
-            <externalRef href="../network/channel.rng"/>
+            <ref name="channel"/>
         </element>
     </define>
     <define name="eventChannelAND">
@@ -139,7 +150,7 @@
                 </xsd:documentation>
             </xsd:annotation>
             <oneOrMore>
-                <ref name="eventChannel"/>
+                <ref name="eventChannelPlus"/>
             </oneOrMore>
         </element>
     </define>
@@ -167,7 +178,7 @@
                 </xsd:documentation>
             </xsd:annotation>
             <oneOrMore>
-                <ref name="eventChannel"/>
+                <ref name="eventChannelPlus"/>
             </oneOrMore>
         </element>
     </define>
@@ -191,7 +202,7 @@
                     </example>
                 </xsd:documentation>
             </xsd:annotation>
-            <ref name="eventChannel"/>
+            <ref name="eventChannelPlus"/>
         </element>
     </define>
     <define name="jythonEventChannel">

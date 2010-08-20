@@ -33,6 +33,14 @@
             <ref name="external"/>
         </choice>
     </define>
+    <define name="station">
+        <externalRef href="../network/station.rng"/>
+    </define>
+    <define name="eventStationPlus">
+        <ref name="eventStation"/>
+        <ref name="station"/>
+        <externalRef href="../event/origin.rng"/>
+    </define>
     <define name="printlineEventStation">
         <element name="printlineEventStation">
             <xsd:annotation>
@@ -98,8 +106,7 @@
                     on the station.</description>
             </xsd:annotation>
             <choice>
-                <externalRef href="../network/station.rng"/>
-                <externalRef href="../network/network.rng"/>
+                <ref name="station"/>
             </choice>
         </element>
     </define>
@@ -185,7 +192,7 @@
                 </example>
             </xsd:annotation>
             <oneOrMore>
-                <ref name="eventStation"/>
+                <ref name="eventStationPlus"/>
             </oneOrMore>
         </element>
     </define>
@@ -212,7 +219,7 @@
                 </example>
             </xsd:annotation>
             <oneOrMore>
-                <ref name="eventStation"/>
+                <ref name="eventStationPlus"/>
             </oneOrMore>
         </element>
     </define>
@@ -232,7 +239,7 @@
                     </eventStationNOT>
                 </example>
             </xsd:annotation>
-            <ref name="eventStation"/>
+            <ref name="eventStationPlus"/>
         </element>
     </define>
     <define name="phaseExists">

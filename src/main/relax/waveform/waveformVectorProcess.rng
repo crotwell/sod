@@ -25,7 +25,7 @@
             <ref name="waveformVectorAlwaysSuccess"/>
             <!-- local seismogramProcesses directly in the motion vector arm
               are treaded as if they are in a ANDWaveformProcessWrapper -->
-            <externalRef href="waveformProcess.rng"/>
+            <ref name="waveformProcess"/>
             <ref name="external"/>
             <ref name="vectorImageProcess"/>
             <ref name="vectorForkProcess"/>
@@ -37,6 +37,9 @@
             <ref name="jythonVectorProcess"/>
             <ref name="vectorScript"/>
         </choice>
+    </define>
+    <define name="waveformProcess">
+        <externalRef href="waveformProcess.rng"/>
     </define>
     <define name="threeComponentData">
         <element name="threeComponentData">
@@ -56,7 +59,7 @@
                     waveformProcess and the results are ANDed together. This operation short circuits, so no waveforms
                     after the first failure are processed.</description>
             </xsd:annotation>
-            <externalRef href="waveformProcess.rng"/>
+            <ref name="waveformProcess"/>
         </element>
     </define>
     <define name="ORWaveformProcessWrapper">
@@ -67,7 +70,7 @@
                     waveformProcess and the results are ORed together. This operation short circuits, so no waveforms
                     after the first success are processed.</description>
             </xsd:annotation>
-            <externalRef href="waveformProcess.rng"/>
+            <ref name="waveformProcess"/>
         </element>
     </define>
     <define name="legacyVectorExecute">

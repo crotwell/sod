@@ -21,6 +21,14 @@
             <ref name="external"/>
         </choice>
     </define>
+    <define name="eventVectorPlus">
+        <choice>
+            <ref name="eventVector"/>
+            <externalRef href="eventStation.rng"/>
+            <externalRef href="../network/station.rng"/>
+            <externalRef href="../event/origin.rng"/>
+        </choice>
+    </define>
     <define name="bestChannelAtStation">
         <element name="bestChannelAtStation">
             <xsd:annotation>
