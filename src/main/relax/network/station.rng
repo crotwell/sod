@@ -38,27 +38,9 @@
             <ref name="stationScript"/>
         </choice>
     </define>
-    <define name="stationLogical">
+    <define name="stationPlus">
         <choice>
-            <ref name="code"/>
-            <ref name="regExp"/>
-            <ref name="name"/>
-            <ref name="operator"/>
-            <ref name="depthRange"/>
-            <ref name="effectiveTimeOverlap"/>
-            <ref name="area"/>
-            <ref name="stationBoxArea"/>
-            <ref name="stationPolygonFile"/>
-            <ref name="stationPointDistance"/>
-            <ref name="stationPointAzimuth"/>
-            <ref name="printlineStationProcess"/>
-            <ref name="stationPointBackAzimuth"/>
-            <ref name="AND"/>
-            <ref name="OR"/>
-            <ref name="NOT"/>
-            <ref name="externalStationSubsetter"/>
-            <ref name="belongsToVirtual"/>
-            <ref name="jythonStationSubsetter"/>
+            <ref name="station"/>
             <ref name="stationScript"/>
             <externalRef href="network.rng"/>
         </choice>
@@ -247,7 +229,7 @@
                 </example>
             </xsd:annotation>
             <oneOrMore>
-                <ref name="stationLogical"/>
+                <ref name="stationPlus"/>
             </oneOrMore>
         </element>
     </define>
@@ -281,7 +263,7 @@
                 </example>
             </xsd:annotation>
             <oneOrMore>
-                <ref name="stationLogical"/>
+                <ref name="stationPlus"/>
             </oneOrMore>
         </element>
     </define>

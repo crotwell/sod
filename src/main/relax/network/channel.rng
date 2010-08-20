@@ -71,61 +71,9 @@
             <ref name="channelScript"/>
         </choice>
     </define>
-    <define name="channelLogical">
+    <define name="channelPlus">
         <choice>
-            <ref name="siteCode"/>
-            <ref name="siteDepthRange"/>
-            <ref name="siteEffectiveTimeOverlap"/>
-            <ref name="siteArea"/>
-            <ref name="siteBoxArea"/>
-            <ref name="sitePolygonFile"/>
-            <ref name="channelCode"/>
-            <ref name="bandCode"/>
-            <ref name="gainCode"/>
-            <ref name="orientationCode"/>
-            <ref name="sampling"/>
-            <ref name="effectiveTimeOverlap"/>
-            <ref name="orientationRange"/>
-            <ref name="orientationAzimuthRange"/>
-            <ref name="orientationDipRange"/>
-            <ref name="AND"/>
-            <ref name="OR"/>
-            <ref name="NOT"/>
-            <ref name="externalChannelSubsetter"/>
-            <ref name="hadDataLastWeek"/>
-            <ref name="printline"/>
-            <ref name="responseWriter"/>
-            <ref name="sacPoleZeroWriter"/>
-            <ref name="stationHas"/>
-            <ref name="alwaysSuccess"/>
-            <ref name="hasResponse"/>
-            <ref name="hasSensitivity"/>
-            <ref name="repairSensitivity"/>
-            <ref name="responseFilterType"/>
-            <ref name="stageTransferType"/>
-            <ref name="stageInputUnit"/>
-            <ref name="stageOutputUnit"/>
-            <ref name="clockId"/>
-            <ref name="clockManufacturer"/>
-            <ref name="clockModel"/>
-            <ref name="clockSerial"/>
-            <ref name="clockType"/>
-            <ref name="dasId"/>
-            <ref name="dasManufacturer"/>
-            <ref name="dasModel"/>
-            <ref name="dasSerial"/>
-            <ref name="dasStyle"/>
-            <ref name="sensorId"/>
-            <ref name="sensorManufacturer"/>
-            <ref name="sensorModel"/>
-            <ref name="sensorSerial"/>
-            <ref name="sensorNominalHighFreq"/>
-            <ref name="sensorNominalLowFreq"/>
-            <ref name="hasNegativeSensitivity"/>
-            <ref name="isFlipped"/>
-            <ref name="isGroupable"/>
-            <ref name="jythonChannelSubsetter"/>
-            <ref name="channelScript"/>
+            <ref name="channel"/>
             <externalRef href="station.rng"/>
             <externalRef href="network.rng"/>
         </choice>
@@ -307,7 +255,7 @@
                 </example>
             </xsd:annotation>
             <oneOrMore>
-                <ref name="channelLogical"/>
+                <ref name="channelPlus"/>
             </oneOrMore>
         </element>
     </define>
@@ -336,7 +284,7 @@
                 </example>
             </xsd:annotation>
             <oneOrMore>
-                <ref name="channelLogical"/>
+                <ref name="channelPlus"/>
             </oneOrMore>
         </element>
     </define>
@@ -347,7 +295,7 @@
                 <description>The output is the logical NOT of the output of the enclosed channel subsetter. This means
                     that it will evaluate to false if the enclosed channel subsetter evaluates to true, and vice versa.</description>
             </xsd:annotation>
-            <ref name="channelLogical"/>
+            <ref name="channelPlus"/>
         </element>
     </define>
     <define name="sampling">
@@ -700,7 +648,7 @@
                     criteria, but you want the waveform arm to process it regardless.</description>
             </xsd:annotation>
             <zeroOrMore>
-                <ref name="channelLogical"/>
+                <ref name="channelPlus"/>
             </zeroOrMore>
         </element>
     </define>
