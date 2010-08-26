@@ -67,7 +67,7 @@ public class find_stationsTest extends TestCase {
     public void testDefaultBoxArea() throws JSAPException {
         find_stations ls = new find_stations(new String[] {});
         VelocityContext vc = ls.getContext();
-        assertFalse(vc.containsKey("box"));
+        assertFalse("should not contain box", vc.containsKey("box"));
     }
 
     public void testSuppliedBoxArea() throws JSAPException {
