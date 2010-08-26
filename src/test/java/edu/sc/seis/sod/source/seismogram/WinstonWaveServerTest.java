@@ -10,6 +10,7 @@ import org.junit.Test;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.network.ChannelIdUtil;
@@ -48,13 +49,14 @@ public class WinstonWaveServerTest extends TestCase {
     @Test
     public void testSeismograms() throws Exception {
         WinstonWaveServer wws = new WinstonWaveServer("eeyore.seis.sc.edu", 16022);
+        MicroSecondDate requestStart = new MicroSecondDate("2010-08-10T12:34:56Z");
         RequestFilter rf = new RequestFilter(new ChannelId(new NetworkId("CO", ClockUtil.wayPast().getFissuresTime()),
                                                            "JSC",
                                                            "00",
                                                            "BHZ",
-                                                           ClockUtil.wayPast().getFissuresTime()), ClockUtil.now()
-                .subtract(new TimeInterval(10, UnitImpl.MINUTE))
-                .getFissuresTime(), ClockUtil.now().getFissuresTime());
+                                                           ClockUtil.wayPast().getFissuresTime()), 
+                                                           requestStart.getFissuresTime(),
+                                                           requestStart.add(new TimeInterval(10, UnitImpl.MINUTE)).getFissuresTime());
         List<RequestFilter> in = new ArrayList<RequestFilter>();
         in.add(rf);
         List<LocalSeismogramImpl> out = wws.getSeismogramSource(null, null, null, null).retrieveData(in); // null
