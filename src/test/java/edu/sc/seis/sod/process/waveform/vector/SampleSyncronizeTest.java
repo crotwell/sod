@@ -13,8 +13,8 @@ import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.fissuresUtil.display.SimplePlotUtil;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannelId;
+import edu.sc.seis.fissuresUtil.mockFissures.IfSeismogramDC.MockSeismogram;
 
 
 
@@ -64,7 +64,7 @@ public class SampleSyncronizeTest extends TestCase {
         TimeInterval seisWidth = new TimeInterval(10, UnitImpl.MINUTE);
         for(int i = 0; i < seisTimes.length; i++) {
             MicroSecondDate start = new MicroSecondDate(timeFormat.parse(seisTimes[i]));
-            vector[i] = SimplePlotUtil.createRaggedSpike(start,
+            vector[i] = MockSeismogram.createRaggedSpike(start,
                                                             seisWidth,
                                                             20,
                                                             0,

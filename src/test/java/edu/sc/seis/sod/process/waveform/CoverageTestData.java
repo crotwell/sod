@@ -6,7 +6,7 @@ import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.fissuresUtil.display.SimplePlotUtil;
+import edu.sc.seis.fissuresUtil.mockFissures.IfSeismogramDC.MockSeismogram;
 
 /**
  * @author groves Created on Sep 8, 2004
@@ -56,7 +56,7 @@ public class CoverageTestData {
         TimeInterval period = spikeSeis.getSampling().getPeriod();
         MicroSecondDate spikeSeisEnd = spikeSeis.getEndTime();
         MicroSecondDate contigousDataStart = new MicroSecondDate(spikeSeisEnd.add(period));
-        LocalSeismogramImpl contigousBit = SimplePlotUtil.createSpike(contigousDataStart);
+        LocalSeismogramImpl contigousBit = MockSeismogram.createSpike(contigousDataStart);
         LocalSeismogramImpl[] data = new LocalSeismogramImpl[] {firstBit,
                                                                 contigousBit};
         return new CoverageTestData(data, timeSpikeBegin, timeSpikeEnd);
@@ -67,7 +67,7 @@ public class CoverageTestData {
         TimeInterval twoPeriod = (TimeInterval)spikeSeis.getSampling().getPeriod().multiplyBy(2);
         MicroSecondDate spikeSeisEnd = spikeSeis.getEndTime();
         MicroSecondDate uncontigousDataStart = new MicroSecondDate(spikeSeisEnd.add(twoPeriod));
-        LocalSeismogramImpl uncontigousBit = SimplePlotUtil.createSpike(uncontigousDataStart);
+        LocalSeismogramImpl uncontigousBit = MockSeismogram.createSpike(uncontigousDataStart);
         LocalSeismogramImpl[] data = new LocalSeismogramImpl[] {firstBit,
                                                                 uncontigousBit};
         return new CoverageTestData(data, timeSpikeBegin, timeSpikeEnd);
@@ -77,13 +77,13 @@ public class CoverageTestData {
         LocalSeismogramImpl firstBit = spikeSeis;
         MicroSecondDate spikeSeisEnd = spikeSeis.getEndTime();
         MicroSecondDate otherDataStart = new MicroSecondDate(spikeSeisEnd.subtract(ONE_SECOND));
-        LocalSeismogramImpl otherBit = SimplePlotUtil.createSpike(otherDataStart);
+        LocalSeismogramImpl otherBit = MockSeismogram.createSpike(otherDataStart);
         LocalSeismogramImpl[] data = new LocalSeismogramImpl[] {firstBit,
                                                                 otherBit};
         return new CoverageTestData(data, timeSpikeBegin, timeSpikeEnd);
     }
 
-    private static LocalSeismogramImpl spikeSeis = SimplePlotUtil.createSpike(new MicroSecondDate(20));
+    private static LocalSeismogramImpl spikeSeis = MockSeismogram.createSpike(new MicroSecondDate(20));
 
     private static LocalSeismogramImpl[] spikeArray = {spikeSeis};
 

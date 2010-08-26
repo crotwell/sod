@@ -22,9 +22,9 @@ import edu.sc.seis.TauP.SeismicPhase;
 import edu.sc.seis.TauP.TauModelException;
 import edu.sc.seis.fissuresUtil.bag.DistAz;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
-import edu.sc.seis.fissuresUtil.display.SimplePlotUtil;
 import edu.sc.seis.fissuresUtil.mockFissures.IfEvent.MockEventAccessOperations;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannel;
+import edu.sc.seis.fissuresUtil.mockFissures.IfSeismogramDC.MockSeismogram;
 import edu.sc.seis.fissuresUtil.sac.FissuresToSac;
 import edu.sc.seis.seisFile.sac.SacTimeSeries;
 import edu.sc.seis.sod.ConfigurationException;
@@ -111,7 +111,7 @@ public class SacWriterTest extends TestCase {
 
     ChannelImpl chan = MockChannel.createChannel();
 
-    LocalSeismogramImpl seis = SimplePlotUtil.createSpike();
+    LocalSeismogramImpl seis = MockSeismogram.createSpike();
 
     SacTimeSeries sts;
 }

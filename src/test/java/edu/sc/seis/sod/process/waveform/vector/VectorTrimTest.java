@@ -15,8 +15,8 @@ import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.bag.Cut;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
-import edu.sc.seis.fissuresUtil.display.SimplePlotUtil;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannelId;
+import edu.sc.seis.fissuresUtil.mockFissures.IfSeismogramDC.MockSeismogram;
 import edu.sc.seis.fissuresUtil.sac.SacToFissures;
 
 public class VectorTrimTest extends TestCase {
@@ -171,7 +171,7 @@ public class VectorTrimTest extends TestCase {
     }
 
     public void testSamplingNormalization() {
-        LocalSeismogramImpl seis = SimplePlotUtil.createSpike();
+        LocalSeismogramImpl seis = MockSeismogram.createSpike();
         LocalSeismogramImpl other = resample(seis, seis.getNumPoints() + 1);
         trimmer.normalizeSampling(new LocalSeismogramImpl[][] { {seis}, {other}});
         assertEquals(seis.getSampling(), other.getSampling());
@@ -201,7 +201,7 @@ public class VectorTrimTest extends TestCase {
         for(int i = 0; i < seisTimes.length; i++) {
             MicroSecondDate start = new MicroSecondDate(timeFormat.parse(seisTimes[i][0]));
             MicroSecondDate end = new MicroSecondDate(timeFormat.parse(seisTimes[i][1]));
-            vector[i][0] = SimplePlotUtil.createRaggedSpike(start,
+            vector[i][0] = MockSeismogram.createRaggedSpike(start,
                                                             end.subtract(start),
                                                             20,
                                                             0,
@@ -227,7 +227,7 @@ public class VectorTrimTest extends TestCase {
         TimeInterval seisWidth = new TimeInterval(10, UnitImpl.MINUTE);
         for(int i = 0; i < seisTimes.length; i++) {
             MicroSecondDate start = new MicroSecondDate(timeFormat.parse(seisTimes[i]));
-            vector[i][0] = SimplePlotUtil.createRaggedSpike(start,
+            vector[i][0] = MockSeismogram.createRaggedSpike(start,
                                                             seisWidth,
                                                             20,
                                                             0,
@@ -271,7 +271,7 @@ public class VectorTrimTest extends TestCase {
     }
 
     private LocalSeismogramImpl createSpike(int mins, int minsPastStart) {
-        return SimplePlotUtil.createSpike(baseTime.add(new TimeInterval(minsPastStart,
+        return MockSeismogram.createSpike(baseTime.add(new TimeInterval(minsPastStart,
                                                                         UnitImpl.MINUTE)),
                                           new TimeInterval(mins,
                                                            UnitImpl.MINUTE));

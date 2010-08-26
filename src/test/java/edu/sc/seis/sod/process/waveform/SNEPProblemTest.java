@@ -3,15 +3,15 @@ package edu.sc.seis.sod.process.waveform;
 import junit.framework.TestCase;
 import edu.iris.Fissures.IfSeismogramDC.Property;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.fissuresUtil.display.SimplePlotUtil;
+import edu.sc.seis.fissuresUtil.mockFissures.IfSeismogramDC.MockSeismogram;
 
 public class SNEPProblemTest extends TestCase {
 
     public SNEPProblemTest() {
-        clean = new LocalSeismogramImpl[] {SimplePlotUtil.createSineWave()};
-        noType = new LocalSeismogramImpl[] {SimplePlotUtil.createSineWave()};
+        clean = new LocalSeismogramImpl[] {MockSeismogram.createSineWave()};
+        noType = new LocalSeismogramImpl[] {MockSeismogram.createSineWave()};
         noType[0].properties = new Property[] {new Property("snep.problem", "")};
-        typed = new LocalSeismogramImpl[] {SimplePlotUtil.createSineWave()};
+        typed = new LocalSeismogramImpl[] {MockSeismogram.createSineWave()};
         typed[0].properties = new Property[] {new Property("snep.problem",
                                                            "flatline")};
     }
