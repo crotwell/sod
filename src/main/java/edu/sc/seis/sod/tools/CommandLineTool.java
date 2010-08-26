@@ -134,7 +134,7 @@ public class CommandLineTool {
                     if(paramResult.length > 0) {
                         vc.put(param.getID(), paramResult);
                     }
-                } else {
+                } else if (result.getObject(param.getID()) != null) {
                     vc.put(param.getID(), result.getObject(param.getID()));
                 }
             }
