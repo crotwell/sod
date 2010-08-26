@@ -28,6 +28,8 @@ public class PhaseHeaderProcess implements SacProcess {
         this.phaseName = phaseName;
         this.tHeader = tHeader;
         this.arrivalIndex = arrivalIndex;
+        // shift to zero based index, so positive index minus one, neg index stays same
+        if (this.arrivalIndex > 0) { this.arrivalIndex -= 1; }
     }
 
     public PhaseHeaderProcess(Element phaseEl) {
