@@ -35,12 +35,6 @@ public class ValidatorTest extends TestCase{
         v.validate(getIS(simpleSod), true);
         
     }
-
-    public void testSimpleSod_msv() throws IOException, SAXException {
-        Validator v = new Validator("edu/sc/seis/sod/data/sod.rng");
-        v.validate(getIS(simpleSod), true);
-        
-    }
     
     private InputSource getIS(String jarLoc){
         InputSource inSource = new InputSource(loader.getResourceAsStream(jarLoc));
