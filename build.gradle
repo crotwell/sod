@@ -22,6 +22,7 @@ dependencies {
     compile "msv:isorelax:20030807"
     compile "msv:relaxngDatatype:20030807"
     compile "msv:xsdlib:20030807"
+
     compile ("org.apache.velocity:velocity-tools:2.0") {
         exclude group: 'xml-apis',  module: 'xml-apis'
         exclude group: 'org.apache.struts',  module: 'struts-taglib'
@@ -79,6 +80,7 @@ distFiles = copySpec {
     }
 }
 task tarDist(type: Tar, dependsOn: ['makeScript', 'createBuildScript', 'wrapper', 'copySodSite', 'buildSchema']) {
+    group = 'dist'
     compression = Compression.GZIP
     longfile = 'gnu'
     into(dirName) {
@@ -87,10 +89,12 @@ task tarDist(type: Tar, dependsOn: ['makeScript', 'createBuildScript', 'wrapper'
 }
 
 task explodeBin(type: Sync, dependsOn: ['makeScript', 'createBuildScript', 'buildSchema']) {
+    group = 'dist'
     with binDistFiles
     into file("$buildDir/explode")
 }
 task explodeDist(type: Sync, dependsOn: ['makeScript', 'createBuildScript', 'wrapper', 'copySodSite', 'buildSchema']) {
+    group = 'dist'
     with distFiles
     into file("$buildDir/explode")
 }
@@ -109,6 +113,7 @@ def getDExtras() {
 }
 
 task makeScript(dependsOn: copyToLib) << { task ->
+    group = 'build'
     dExtras = getDExtras()
     doBat = true
 //    ScriptBuilder.create('sod', 'edu.sc.seis.sod.Start', task.project, dExtras:dExtras, yourkit:true)
@@ -128,15 +133,18 @@ task printRT << { task ->
 
 
 task copySodSite(dependsOn: ['copySchemaDocs', ':seiswww:makeSodSite'], type: Sync) {
+    group = 'dist'
     from project.file('../seiswww/build/sod/')
     into project.file('build/doc/')
 }
 task copySchemaDocs(dependsOn: 'buildSchemaDocs', type: Sync) {
+    group = 'dist'
     from project.file('build/velocity/sod/ingredients')
     into project.file('../seiswww/velocity/sod/ingredients/')
 }
 
 task buildSchemaDocs(dependsOn: ['buildSchema', 'classes'])  { 
+    group = 'dist'
     inputs.dir 'src/main/relax'
     inputs.files 'site/elementPage.vm'
     outDir = project.file('build/velocity/sod/ingredients/')
@@ -157,14 +165,15 @@ task buildSchemaDocs(dependsOn: ['buildSchema', 'classes'])  {
 }
 
 task buildSchema(dependsOn: 'compileJava')  {
+    group = 'build'
     inputs.dir 'src/main/relax/'
     outputs.files 'src/main/resources/edu/sc/seis/sod/data/sod.rng'
     doLast{
     outDir = project.file('build/output')
     outDir.mkdirs()
-    relaxArgs = project.projectDir.path+'/src/main/relax/sod.rng'
+    relaxArgs = '-s '+project.projectDir.path+'/src/main/relax/sod.rng'
     ant.java(dir:outDir, 
-             classname:'com.sun.msv.writer.relaxng.Driver', 
+             classname:'com.thaiopensource.relaxng.util.Driver', 
              args:relaxArgs,
              maxmemory:'512m',
              fork:true,
