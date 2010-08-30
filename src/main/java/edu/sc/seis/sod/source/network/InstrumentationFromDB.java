@@ -38,10 +38,16 @@ public class InstrumentationFromDB extends WrappingNetworkSource implements Netw
                 inst = getWrapped().getInstrumentation(chan.getId());
                 NetworkDB.getSingleton().putInstrumentation(chan, inst);
             } catch (ChannelNotFound e) {
+                logger.warn(e);
+                NetworkDB.getSingleton().putInstrumentation(chan, null);
+            } catch(InvalidResponse e) {
+                logger.warn(e);
                 NetworkDB.getSingleton().putInstrumentation(chan, null);
             }
         }
         return inst;
     }
+    
+    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(InstrumentationFromDB.class);
     
 }
