@@ -51,7 +51,7 @@ public class StAXModelBuilder implements XMLStreamConstants {
             } else {
                 ClassLoader cl = getClass().getClassLoader();
                 InputStream relaxSource = Start.createInputStream(cl, relaxLoc);
-                reader = XMLUtil.staxInputFactory.createXMLStreamReader(relaxSource);
+                reader = XMLUtil.getStaxInputFactory().createXMLStreamReader(relaxSource);
                 definedGrammar = new Grammar(relaxLoc);
                 reader.next();// SKIP SPACE
                 reader.next();// GET TO GRAMMAR START TAG

@@ -224,7 +224,7 @@ public class VelocityEvent extends ProxyEventAccessOperations {
 
     public String toXML() throws XMLStreamException {
         StringWriter writer = new StringWriter();
-        XMLStreamWriter xmlWriter = XMLUtil.staxOutputFactory.createXMLStreamWriter(writer);
+        XMLStreamWriter xmlWriter = XMLUtil.getStaxOutputFactory().createXMLStreamWriter(writer);
         XMLEvent.insert(xmlWriter, this);
         return writer.toString();
     }
