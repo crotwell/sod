@@ -15,6 +15,7 @@ import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.iris.dmc.seedcodec.CodecException;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.NSSeismogramDC;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
@@ -27,6 +28,7 @@ import edu.sc.seis.sod.process.waveform.WaveformResult;
 import edu.sc.seis.sod.source.seismogram.DataCenterSource;
 import edu.sc.seis.sod.source.seismogram.SeismogramSource;
 import edu.sc.seis.sod.source.seismogram.SeismogramSourceLocator;
+import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
@@ -303,6 +305,8 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                                                  outfilters,
                                                  result.getSeismograms(),
                                                  ecp.getCookieJar());
+            } catch(CodecException e) {
+                result = new WaveformResult(localSeismograms, new Fail(processor, "Unable to decompress data", e));
             } catch(Throwable e) {
                 handle(ecp, Stage.PROCESSOR, e);
                 return;
