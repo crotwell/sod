@@ -37,9 +37,11 @@
         <externalRef href="../network/station.rng"/>
     </define>
     <define name="eventStationPlus">
-        <ref name="eventStation"/>
-        <ref name="station"/>
-        <externalRef href="../event/origin.rng"/>
+        <choice>
+            <ref name="eventStation"/>
+            <ref name="station"/>
+            <externalRef href="../event/origin.rng"/>
+        </choice>
     </define>
     <define name="printlineEventStation">
         <element name="printlineEventStation">
