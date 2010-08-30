@@ -5,9 +5,9 @@ import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.Sensitivity;
 import edu.iris.Fissures.network.ChannelImpl;
-import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
+import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
 
 public class InstrumentationFromDB extends WrappingNetworkSource implements NetworkSource {
 
@@ -16,7 +16,7 @@ public class InstrumentationFromDB extends WrappingNetworkSource implements Netw
     }
     
     @Override
-    public Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InstrumentationInvalid {
+    public Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
         try {
             return getInstrumentation(NetworkDB.getSingleton().getChannel(chanId));
         } catch(NotFound e) {
@@ -25,7 +25,7 @@ public class InstrumentationFromDB extends WrappingNetworkSource implements Netw
     }
 
     @Override
-    public Sensitivity getSensitivity(ChannelId chanId) throws ChannelNotFound, InstrumentationInvalid {
+    public Sensitivity getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
         return getInstrumentation(chanId).the_response.the_sensitivity;
     }
     

@@ -31,7 +31,7 @@ public class ValidatorTest extends TestCase{
     }
     
     public void testSimpleSod() throws IOException, SAXException {
-        Validator v = new Validator("edu/sc/seis/sod/data/relax/sod.rng");
+        Validator v = new Validator();
         v.validate(getIS(simpleSod), true);
         
     }

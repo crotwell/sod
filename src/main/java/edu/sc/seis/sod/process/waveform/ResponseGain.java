@@ -3,13 +3,15 @@ package edu.sc.seis.sod.process.waveform;
 import edu.iris.Fissures.Unit;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
+import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.Sensitivity;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
+import edu.sc.seis.fissuresUtil.cache.InstrumentationLoader;
+import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Threadable;
@@ -22,7 +24,7 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
  * deconvolution, merely a constant multiplier. Created: Wed Nov 6 17:58:10 2002
  * 
  * @author <a href="mailto:www@seis.sc.edu">Philip Crotwell </a>
- * @version $Id: ResponseGain.java 21609 2010-08-19 01:49:37Z crotwell $
+ * @version $Id: ResponseGain.java 21665 2010-08-30 17:42:06Z crotwell $
  */
 public class ResponseGain implements WaveformProcess, Threadable {
 
@@ -41,8 +43,10 @@ public class ResponseGain implements WaveformProcess, Threadable {
             NetworkSource na = Start.getNetworkArm().getNetworkSource();
             try {
                 ChannelId chanId = channel.get_id();
+                Instrumentation inst = na.getInstrumentation(chanId);
+                InstrumentationLoader.checkResponse(inst.the_response);
                 Sensitivity sens = na.getSensitivity(chanId);
-                Unit recordedUnits = na.getInstrumentation(chanId).the_response.stages[0].input_units;
+                Unit recordedUnits = inst.the_response.stages[0].input_units;
                 for(int i = 0; i < seismograms.length; i++) {
                     out[i] = edu.sc.seis.fissuresUtil.bag.ResponseGain.apply(seismograms[i],
                                                                              sens,
@@ -57,12 +61,12 @@ public class ResponseGain implements WaveformProcess, Threadable {
                                                              false,
                                                              "No instrumentation found for time "
                                                                      + seismograms[0].begin_time.date_time));
-            } catch(InstrumentationInvalid e) {
+            } catch(InvalidResponse e) {
                 return new WaveformResult(out,
                                           new StringTreeLeaf(this,
                                                              false,
                                                              "Invalid instrumentation for "
-                                                                     + ChannelIdUtil.toString(channel.get_id())));
+                                                                     + ChannelIdUtil.toString(channel.get_id())+": "+e.getMessage()));
             }
         }
         return new WaveformResult(true, seismograms, this);

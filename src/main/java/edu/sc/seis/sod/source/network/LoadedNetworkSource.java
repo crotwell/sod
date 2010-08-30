@@ -14,7 +14,7 @@ import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.iris.Fissures.network.StationImpl;
-import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
+import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
 
 
 public class LoadedNetworkSource extends WrappingNetworkSource implements NetworkSource {
@@ -37,13 +37,13 @@ public class LoadedNetworkSource extends WrappingNetworkSource implements Networ
     }
 
     @Override
-    public Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InstrumentationInvalid {
+    public Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
         instrumentationLoaded.add(ChannelIdUtil.toString(chanId));
         return getWrapped().getInstrumentation(chanId);
     }
 
     @Override
-    public Sensitivity getSensitivity(ChannelId chanId) throws ChannelNotFound, InstrumentationInvalid {
+    public Sensitivity getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
         instrumentationLoaded.add(ChannelIdUtil.toString(chanId));
         return getWrapped().getSensitivity(chanId);
     }

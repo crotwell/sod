@@ -5,7 +5,7 @@ import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.SeismicHardware;
-import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
+import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
 import edu.sc.seis.sod.source.network.NetworkSource;
 
 /**
@@ -17,7 +17,7 @@ public abstract class InstrumentationSubsetter implements ChannelSubsetter {
 
     protected SeismicHardware getSeismicHardware(Channel channel,
                                                  NetworkSource network)
-            throws ChannelNotFound, InstrumentationInvalid {
+            throws ChannelNotFound, InvalidResponse {
         ChannelId chanId = channel.get_id();
         return getSeismicHardware(network.getInstrumentation(chanId));
     }
@@ -32,7 +32,7 @@ public abstract class InstrumentationSubsetter implements ChannelSubsetter {
         } catch(ChannelNotFound ex) {
             handleChannelNotFound(ex);
             return false;
-        } catch(InstrumentationInvalid ex) {
+        } catch(InvalidResponse ex) {
             handle(ex);
             return false;
         }
@@ -46,7 +46,7 @@ public abstract class InstrumentationSubsetter implements ChannelSubsetter {
         } catch(ChannelNotFound ex) {
             handleChannelNotFound(ex);
             return false;
-        } catch(InstrumentationInvalid ex) {
+        } catch(InvalidResponse ex) {
             handle(ex);
             return false;
         }
@@ -60,7 +60,7 @@ public abstract class InstrumentationSubsetter implements ChannelSubsetter {
         } catch(ChannelNotFound ex) {
             handleChannelNotFound(ex);
             return false;
-        } catch(InstrumentationInvalid ex) {
+        } catch(InvalidResponse ex) {
             handle(ex);
             return false;
         }
@@ -74,7 +74,7 @@ public abstract class InstrumentationSubsetter implements ChannelSubsetter {
         } catch(ChannelNotFound ex) {
             handleChannelNotFound(ex);
             return false;
-        } catch(InstrumentationInvalid ex) {
+        } catch(InvalidResponse ex) {
             handle(ex);
             return false;
         }
@@ -92,7 +92,7 @@ public abstract class InstrumentationSubsetter implements ChannelSubsetter {
     public static  String getInstrumentationInvalidMsg() {
         return "Invalid instrumentation ";
     }
-    public static void handle(InstrumentationInvalid e) {
+    public static void handle(InvalidResponse e) {
         logger.info(getInstrumentationInvalidMsg(), e);
     }
     

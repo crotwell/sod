@@ -8,8 +8,8 @@ import edu.iris.Fissures.IfNetwork.Response;
 import edu.iris.Fissures.IfNetwork.Stage;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
-import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
 import edu.sc.seis.fissuresUtil.cache.InstrumentationLoader;
+import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
@@ -25,8 +25,8 @@ public class RepairSensitivity implements ChannelSubsetter {
             instrumentation = network.getInstrumentation(channel.get_id());
         } catch(ChannelNotFound e) {
             return new Fail(this, "No instrumentation");
-        } catch (InstrumentationInvalid e) {
-            return new Fail(this, "Invalid instrumentation", e);
+        } catch (InvalidResponse e) {
+            return new Fail(this, "Invalid instrumentation: "+ e.getMessage());
         }
         if(InstrumentationLoader.isValid(instrumentation)) {
             return new Pass(this);

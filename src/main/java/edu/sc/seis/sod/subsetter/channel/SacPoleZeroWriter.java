@@ -10,9 +10,9 @@ import edu.iris.Fissures.IfNetwork.FilterType;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
-import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.sac.FissuresToSac;
+import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
@@ -42,8 +42,8 @@ public class SacPoleZeroWriter implements ChannelSubsetter {
             inst = network.getInstrumentation(channel_id);
         } catch(ChannelNotFound e) {
             return new Fail(this, "No instrumentation");
-        } catch(InstrumentationInvalid e) {
-            return new Fail(this, "Invalid instrumentation", e);
+        } catch(InvalidResponse e) {
+            return new Fail(this, "Invalid instrumentation: "+e.getMessage());
         }
         if(inst.the_response.stages[0].filters[0].discriminator().value() != FilterType._POLEZERO) {
             String filter;

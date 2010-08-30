@@ -4,7 +4,7 @@ import org.w3c.dom.Element;
 
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.network.ChannelImpl;
-import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
+import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.StringTree;
@@ -33,7 +33,7 @@ public class SensorModel extends SensorSubsetter {
             }
         } catch(ChannelNotFound ex) {
             return new StringTreeLeaf(this, false, getChannelNotFoundMsg());
-        } catch(InstrumentationInvalid ex) {
+        } catch(InvalidResponse ex) {
             return new StringTreeLeaf(this, false, getInstrumentationInvalidMsg());
         }
     }

@@ -13,7 +13,7 @@ import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
-import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
+import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
 import edu.sc.seis.sod.source.Source;
 
 public interface NetworkSource extends Source {
@@ -30,7 +30,7 @@ public interface NetworkSource extends Source {
 
     public abstract List<? extends ChannelImpl> getChannels(StationImpl station);
 
-    public abstract Sensitivity getSensitivity(ChannelId chanId) throws ChannelNotFound, InstrumentationInvalid;
+    public abstract Sensitivity getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse;
 
-    public abstract Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InstrumentationInvalid;
+    public abstract Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InvalidResponse;
 }

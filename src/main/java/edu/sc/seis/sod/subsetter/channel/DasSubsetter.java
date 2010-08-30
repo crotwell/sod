@@ -5,7 +5,7 @@ import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.DataAcqSys;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.SeismicHardware;
-import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
+import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
 import edu.sc.seis.sod.source.network.NetworkSource;
 
 
@@ -28,7 +28,7 @@ public abstract class DasSubsetter extends InstrumentationSubsetter {
         } catch(ChannelNotFound ex) {
             handleChannelNotFound(ex);
             return false;
-        } catch(InstrumentationInvalid ex) {
+        } catch(InvalidResponse ex) {
             handle(ex);
             return false;
         }

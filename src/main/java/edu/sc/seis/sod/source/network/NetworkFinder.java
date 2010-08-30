@@ -22,10 +22,10 @@ import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
-import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
 import edu.sc.seis.fissuresUtil.cache.LazyNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
 import edu.sc.seis.fissuresUtil.cache.VestingNetworkDC;
+import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
 import edu.sc.seis.sod.Start;
 
 public class NetworkFinder extends AbstractNetworkSource {
@@ -155,12 +155,12 @@ public class NetworkFinder extends AbstractNetworkSource {
     }
 
     @Override
-    public Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InstrumentationInvalid {
+    public Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
         return getNetwork(chanId.network_id).retrieve_instrumentation(chanId, chanId.begin_time);
     }
 
     @Override
-    public Sensitivity getSensitivity(ChannelId chanId) throws ChannelNotFound, InstrumentationInvalid {
+    public Sensitivity getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
         return getNetwork(chanId.network_id).retrieve_sensitivity(chanId, chanId.begin_time);
     }
 

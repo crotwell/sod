@@ -21,7 +21,7 @@ import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
-import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
+import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 
@@ -124,7 +124,7 @@ public class CombineNetworkSource implements NetworkSource {
     }
 
     @Override
-    public Sensitivity getSensitivity(ChannelId chanId) throws ChannelNotFound, InstrumentationInvalid {
+    public Sensitivity getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
         NetworkSource source = getSourceForCode(NetworkIdUtil.toStringNoDates(chanId.network_id));
         if (source != null) {
             Sensitivity out = source.getSensitivity(chanId);
@@ -136,7 +136,7 @@ public class CombineNetworkSource implements NetworkSource {
     }
 
     @Override
-    public Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InstrumentationInvalid {
+    public Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
         NetworkSource source = getSourceForCode(NetworkIdUtil.toStringNoDates(chanId.network_id));
         if (source != null) {
             Instrumentation out = source.getInstrumentation(chanId);
