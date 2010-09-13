@@ -756,7 +756,7 @@
             <xsd:annotation>
                 <summary>Accepts or rejects seismograms based on their signal to noise ratio</summary>
                 <description>This calculates the signal to noise ratio (short/long) in the time window described by the offsets
-                    around the given phases and passes if the ratio is less than the given ratio. See the documentation
+                    around the given phases and passes if the ratio is greater than the given ratio. See the documentation
                     for the TauP Toolkit, http://www.seis.sc.edu/TauP for the phase naming convention. SOD uses the TauP
                     Toolkit internally.</description>
                 <example>
