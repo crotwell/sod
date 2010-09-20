@@ -641,8 +641,17 @@ public class Start {
     // initialization exceptions so they are not lost in the log file
     private static SystemOutReporter sysOutReporter = new SystemOutReporter();
 
+    public static void checkGCJ() {
+        if (System.getProperty("java.vm.name").equals("GNU libgcj")) {
+            System.err
+                    .println("You are running GNU's version of Java, gcj, which doesn't have all the features SOD requires.  Instead, use Sun's Java from http://java.sun.com.");
+            System.exit(-1);
+        }
+    }
+    
     public static void main(String[] args) {
         try {
+            checkGCJ();
             GlobalExceptionHandler.add(new WindowConnectionInterceptor());
             GlobalExceptionHandler.add(sysOutReporter);
             // start up log4j before read props so at least there is some

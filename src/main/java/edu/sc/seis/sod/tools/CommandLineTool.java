@@ -184,6 +184,7 @@ public class CommandLineTool {
     private String commandName;
 
     public static void run(CommandLineTool ls) throws Exception {
+        Start.checkGCJ();
         if(ls.shouldPrintRecipe()) {
             /*
              * Sad, sad, sad, sad, sad hack to get piping system.in to work in
