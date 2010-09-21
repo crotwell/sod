@@ -22,6 +22,18 @@
             <externalRef href="availableData.rng"/>
         </choice>
     </define>
+    <define name="vectorAvailableDataPlus">
+        <choice>
+            <ref name="vectorAvailableData"/>
+            <externalRef href="eventVector.rng"/>
+            <externalRef href="vectorRequestSubsetter.rng"/>
+            <externalRef href="eventChannel.rng"/>
+            <externalRef href="eventStation.rng"/>
+            <externalRef href="requestSubsetter.rng"/>
+            <externalRef href="../network/channel.rng"/>
+            <externalRef href="../event/origin.rng"/>
+        </choice>
+    </define>
     <define name="ANDAvailableDataWrapper">
         <element name="ANDAvailableDataWrapper">
             <xsd:annotation>
@@ -78,7 +90,7 @@
                 </example>
             </xsd:annotation>
             <oneOrMore>
-                <ref name="vectorAvailableData"/>
+                <ref name="vectorAvailableDataPlus"/>
             </oneOrMore>
         </element>
     </define>
@@ -102,7 +114,7 @@
                 </example>
             </xsd:annotation>
             <oneOrMore>
-                <ref name="vectorAvailableData"/>
+                <ref name="vectorAvailableDataPlus"/>
             </oneOrMore>
         </element>
     </define>
@@ -121,7 +133,7 @@
                     </vectorAvailableDataNOT>
                 </example>
             </xsd:annotation>
-            <ref name="vectorAvailableData"/>
+            <ref name="vectorAvailableDataPlus"/>
         </element>
     </define>
     <define name="vectorAvailableDataScript">

@@ -24,10 +24,13 @@
         </choice>
     </define>
     <define name="requestPlus">
-        <externalRef href="eventChannel.rng"/>
-        <externalRef href="eventStation.rng"/>
-        <externalRef href="../network/channel.rng"/>
-        <externalRef href="../event/origin.rng"/>
+        <choice>
+            <ref name="request"/>
+            <externalRef href="eventChannel.rng"/>
+            <externalRef href="eventStation.rng"/>
+            <externalRef href="../network/channel.rng"/>
+            <externalRef href="../event/origin.rng"/>
+        </choice>
     </define>
     <define name="requestAND">
         <element name="requestAND">

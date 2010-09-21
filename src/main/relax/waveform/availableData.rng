@@ -33,11 +33,14 @@ The default is <someCoverage/>.</description>
         </choice>
     </define>
     <define name="availableDataPlus">
-        <externalRef href="eventChannel.rng"/>
-        <externalRef href="eventStation.rng"/>
-        <externalRef href="requestSubsetter.rng"/>
-        <externalRef href="../network/channel.rng"/>
-        <externalRef href="../event/origin.rng"/>
+        <choice>
+          <ref name="availableData"/>
+          <externalRef href="eventChannel.rng"/>
+          <externalRef href="eventStation.rng"/>
+          <externalRef href="requestSubsetter.rng"/>
+          <externalRef href="../network/channel.rng"/>
+          <externalRef href="../event/origin.rng"/>
+        </choice>
     </define>
     <define name="availableDataAND">
         <element name="availableDataAND">
