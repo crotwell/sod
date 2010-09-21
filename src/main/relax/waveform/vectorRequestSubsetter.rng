@@ -8,7 +8,7 @@
     <define name="vectorRequest">
         <choice>
             <xsd:annotation>
-                <summary>Tactics for handling vector data requests</summary>
+                <summary>Ingredients for handling vector data requests</summary>
                 <velocity>#waveformVectorArmPage()</velocity>
             </xsd:annotation>
             <ref name="ANDRequestWrapper"/>
