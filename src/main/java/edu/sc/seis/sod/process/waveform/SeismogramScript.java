@@ -36,7 +36,6 @@ public class SeismogramScript extends AbstractScriptSubsetter implements Wavefor
         engine.put("available", available);
         engine.put("seismograms", seismograms);
         engine.put("cookieJar", cookieJar);
-        engine.eval("import bag");
         // seismogram process return WaveformResult instead of StringTree, so we can't simply use super.eval()
         Object result = preeval();
         if (result == null) {
