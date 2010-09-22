@@ -5,9 +5,9 @@ import java.io.File;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.sac.FissuresToSac;
@@ -62,7 +62,7 @@ public class SacWriter extends AbstractSeismogramWriter {
     public void write(String location,
                       LocalSeismogramImpl seis,
                       ChannelImpl chan,
-                      EventAccessOperations ev) throws Exception {
+                      CacheEvent ev) throws Exception {
         SacTimeSeries writer = FissuresToSac.getSAC(seis,
                                                     chan,
                                                     EventUtil.extractOrigin(ev));
@@ -76,7 +76,7 @@ public class SacWriter extends AbstractSeismogramWriter {
     }
 
     public void applyProcessors(SacTimeSeries writer,
-                                EventAccessOperations ev,
+                                CacheEvent ev,
                                 ChannelImpl chan) {
         for(int i = 0; i < processors.length; i++) {
             processors[i].process(writer, ev, chan);

@@ -4,9 +4,9 @@ import java.io.File;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.xml.SeismogramFileTypes;
 import edu.sc.seis.fissuresUtil.xml.URLDataSetSeismogram;
@@ -26,7 +26,7 @@ public class MseedWriter extends AbstractSeismogramWriter {
     public void write(String loc,
                       LocalSeismogramImpl seis,
                       ChannelImpl chan,
-                      EventAccessOperations ev) throws Exception {
+                      CacheEvent ev) throws Exception {
         AbstractSeismogramWriter.addBytesWritten(URLDataSetSeismogram.writeMSeed(seis,
                                                                              new File(loc))
                 .length());

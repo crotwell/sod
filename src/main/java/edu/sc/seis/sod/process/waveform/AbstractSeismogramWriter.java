@@ -6,7 +6,6 @@ import java.util.regex.Pattern;
 import org.apache.velocity.VelocityContext;
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelIdUtil;
@@ -47,7 +46,7 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
         new PrintlineVelocitizer(new String[] {fileTemplate});
     }
 
-    public void removeExisting(EventAccessOperations event,
+    public void removeExisting(CacheEvent event,
                                ChannelImpl channel,
                                LocalSeismogramImpl representativeSeismogram) {
         for(int i = 0; true; i++) {
@@ -59,7 +58,7 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
         }
     }
 
-    public String generate(EventAccessOperations event,
+    public String generate(CacheEvent event,
                            ChannelImpl channel,
                            LocalSeismogramImpl representativeSeismogram,
                            int index) {
@@ -112,7 +111,7 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
     public abstract void write(String loc,
                                LocalSeismogramImpl seis,
                                ChannelImpl chan,
-                               EventAccessOperations ev) throws Exception;
+                               CacheEvent ev) throws Exception;
 
     public static void addBytesWritten(long bytes) {
         bytesWritten += bytes;
