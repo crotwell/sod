@@ -184,6 +184,13 @@ task buildSchema(dependsOn: 'compileJava')  {
     }
 }
 
+task transform(type: XSLT) { 
+    destDir=new File(project.buildDir, 'generated-src/xsltout')
+    stylesheetFile = new File(project.projectDir, 'src/main/xslt/simplifyRNG.xslt')
+    source new File(project.projectDir, 'src/main/relax/sod.rng')
+    source new File(project.projectDir, 'src/main/relax/test.xml')
+}
+
 assemble.dependsOn(tarDist)
 processResources.dependsOn(buildSchema)
 
