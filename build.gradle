@@ -4,13 +4,10 @@ apply plugin: RelaxSimplifier
 group = 'edu.sc.seis'
 version = '3.0.0beta11'
 
-project.sourceSets {
-            relax {
-                java {
-                    srcDir 'src/main/relax'
-                }
-            }
-        }
+apply plugin:'java'
+apply plugin:RelaxSimplifier
+
+
         
 dependencies {
     compile project(':bag') { transitive = true }
@@ -182,6 +179,12 @@ task buildSchema(dependsOn: 'compileJava')  {
              classpath:configurations.runtime.asPath,
              output:project.projectDir.path+'/src/main/resources/edu/sc/seis/sod/data/sod.rng') 
     }
+}
+
+task xsltest(type: XSLT) { 
+    destDir=new File(project.buildDir, 'generated-src/xsltout')
+    stylesheetFile = new File(project.projectDir, 'src/main/xslt/test.xslt')
+    source new File(project.projectDir, 'src/main/relax/test.rng')
 }
 
 task transform(type: XSLT) { 
