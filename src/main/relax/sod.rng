@@ -23,15 +23,135 @@
                 <group>
                     <ref name="eventArm"/>
                     <ref name="networkArm"/>
-                    <externalRef href="waveform/arm.rng"/>
+                    <ref name="waveformArm"/>
                 </group>
             </choice>
         </element>
     </start>
+
     <define name="eventArm">
-      <externalRef href="event/arm.rng"/>
+        <element name="eventArm">
+            <xsd:annotation>
+                <description> The event arm gathers events from the server specified in the event
+                    finder. If there are any origin subsetters present, the event arm then runs
+                    those over the events returned by the finder. The events that pass through the
+                    subsetters are then run through any event processors present. After this point,
+                    the events are marked as accepted and the waveform arm begins to work on them.
+                    If there are any event status items present, they generate status information
+                    about the events as they step through the process described above. </description>
+                <summary>Selects and processes events</summary>
+                <velocity>#eventArmPage()</velocity>
+            </xsd:annotation>
+            <oneOrMore>
+                <externalRef href="event/eventSource.rng"/>
+            </oneOrMore>
+            <zeroOrMore>
+                <externalRef href="event/origin.rng"/>
+            </zeroOrMore>
+        </element>
     </define>
+
+<!-- Network Arm -->
     <define name="networkArm">
-      <externalRef href="network/arm.rng"/>
+        <element name="networkArm">
+            <xsd:annotation>
+                <summary>Selects and processes networks, stations, sites and channels</summary>
+                <description>The network arm goes out to the server specified in the network finder,
+                    and retrieves all the networks, stations sites, and channels that server knows
+                    about that pass the subsetters contained in the arm. It then runs those
+                    successful items through the processors, all the while keeping the network
+                    status items abreast of the process. If a source is not given, it defaults to the
+                    IRIS_NetworkDC at the DMC.</description>
+                    <velocity>#networkArmPage()</velocity>
+            </xsd:annotation>
+            <optional>
+                <externalRef href="network/networkSource.rng"/>
+            </optional>
+            <optional>
+                <externalRef href="network/network.rng"/>
+            </optional>
+            <optional>
+                <externalRef href="network/station.rng"/>
+            </optional>
+            <zeroOrMore>
+                <externalRef href="network/channel.rng"/>
+            </zeroOrMore>
+        </element>
+    </define>
+
+
+
+    <define name="waveformArm">
+        <choice>
+            <xsd:annotation>
+                <summary>Operates on the networks and events returned by the network and event arms</summary>
+                <description>Both types of waveform arm take the items returned by the network and
+                    event arms and generate the necessary requests to retrieve seismograms. The data
+                    received are then processed. The regular waveformArm takes each channel from the
+                    network arm and runs it through its subsetters and processors individually. The
+                    waveformVectorArm takes the channels from the network arm, groups them as
+                    motion vectors, and runs them through its items as a group.</description>
+            </xsd:annotation>
+            <ref name="localSeismogram"/>
+            <ref name="waveformVectorArm"/>
+        </choice>
+    </define>
+
+
+    <define name="localSeismogram" >
+        <element name="waveformArm">
+            <xsd:annotation>
+                <summary>Downloads and processes waveforms individually</summary>
+                <velocity>#waveformArmPage()</velocity>
+            </xsd:annotation>
+            <optional>
+                <externalRef href="waveform/eventStation.rng"/>
+            </optional>
+            <optional>
+                <externalRef href="waveform/eventChannel.rng"/>
+            </optional>
+            <externalRef href="waveform/requestGenerator.rng"/>
+            <optional>
+                <externalRef href="waveform/requestSubsetter.rng"/>
+            </optional>
+            <optional>
+                <externalRef href="waveform/seismogramSource.rng"/>
+            </optional>
+            <optional>
+                <externalRef href="waveform/availableData.rng"/>
+            </optional>
+            <zeroOrMore>
+                <externalRef href="waveform/waveformProcess.rng"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="waveformVectorArm" >
+        <element name="waveformVectorArm">
+            <xsd:annotation>
+                <summary>Downloads and processes wavforms by channel groups</summary>
+                <description>The waveformVectorArm groups three orthogonal components from a site
+                    and then does its processing on them as a group.</description>
+                <velocity>#waveformVectorArmPage()</velocity>
+            </xsd:annotation>
+            <optional>
+                <externalRef href="waveform/eventStation.rng"/>
+            </optional>
+            <optional>
+                <externalRef href="waveform/eventVector.rng"/>
+            </optional>
+            <externalRef href="waveform/requestGenerator.rng"/>
+            <optional>
+                <externalRef href="waveform/vectorRequestSubsetter.rng"/>
+            </optional>
+            <optional>
+                <externalRef href="waveform/seismogramSource.rng"/>
+            </optional>
+            <optional>
+                <externalRef href="waveform/vectorAvailableData.rng"/>
+            </optional>
+            <zeroOrMore>
+                <externalRef href="waveform/waveformVectorProcess.rng"/>
+            </zeroOrMore>
+        </element>
     </define>
 </grammar>
