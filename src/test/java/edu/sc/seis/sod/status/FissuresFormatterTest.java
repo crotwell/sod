@@ -7,7 +7,10 @@ package edu.sc.seis.sod.status;
 
 import junit.framework.TestCase;
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannel;
+import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockStation;
+import edu.sc.seis.sod.velocity.network.VelocityStation;
 
 public class FissuresFormatterTest extends TestCase {
 
@@ -34,5 +37,12 @@ public class FissuresFormatterTest extends TestCase {
                      FissuresFormatter.filize("12442/ham/cheese/  .BHZ"));
     }
 
+    public void testOneLineAndClean() {
+        StationImpl sta = MockStation.createStation();
+        sta.setName("  Long name\nwith\r\nnewlines  ");
+        VelocityStation vsta = new VelocityStation(sta);
+        assertEquals("Long name with newlines", vsta.getName());
+    }
+    
     private Channel chan;
 }
