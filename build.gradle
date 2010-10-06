@@ -78,6 +78,7 @@ distFiles = copySpec {
         include('doc/**')
     }
 }
+
 task tarDist(type: Tar, dependsOn: ['makeScript', 'createBuildScript', 'wrapper', 'copySodSite', 'buildSchema']) {
     group = 'dist'
     compression = Compression.GZIP
