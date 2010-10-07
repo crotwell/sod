@@ -16,7 +16,7 @@ import edu.sc.seis.fissuresUtil.cache.InstrumentationLoader;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.sac.FissuresToSac;
 import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
-import edu.sc.seis.fissuresUtil.sac.SacPoleZero;
+import edu.sc.seis.seisFile.sac.SacPoleZero;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.Start;
