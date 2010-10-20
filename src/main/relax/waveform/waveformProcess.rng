@@ -353,6 +353,22 @@
                     </xsd:annotation>
                     <ref name="phaseTimeContents"/>
                 </element>
+                <element name="sacHeaderScript">
+                    <xsd:annotation>
+                        <summary>Runs a script to set arbitrary SAC headers, or do other customization of the SAC file.</summary>
+                <example>
+                    <sacHeaderScript type="jython" >
+                        sac.idep=sac.IDISP
+                        sac.ivtyp=sac.IEQ
+                        sac.iqual=sac.IGOOD
+                     </sacHeaderScript>
+                </example>
+            </xsd:annotation>
+            <attribute name="type">
+                    <text/>
+            </attribute>
+            <data type="string"/>
+                </element>
             </zeroOrMore>
             <optional>
                 <element name="littleEndian">
