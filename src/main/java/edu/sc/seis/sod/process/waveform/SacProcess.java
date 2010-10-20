@@ -8,5 +8,5 @@ interface SacProcess {
 
     public void process(SacTimeSeries sac,
                         CacheEvent event,
-                        ChannelImpl channel);
+                        ChannelImpl channel) throws Exception;
 }

@@ -18,7 +18,7 @@ public class SacHeaderScript extends AbstractScriptSubsetter implements SacProce
         super(config);
     }
 
-    public void process(SacTimeSeries sac, CacheEvent event, ChannelImpl channel) {
+    public void process(SacTimeSeries sac, CacheEvent event, ChannelImpl channel) throws Exception {
         engine.put("event",  new VelocityEvent(event));
         engine.put("channel",  new VelocityChannel(channel));
         engine.put("sac",  sac);

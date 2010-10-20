@@ -77,7 +77,7 @@ public class SacWriter extends AbstractSeismogramWriter {
 
     public void applyProcessors(SacTimeSeries writer,
                                 CacheEvent ev,
-                                ChannelImpl chan) {
+                                ChannelImpl chan) throws Exception {
         for(int i = 0; i < processors.length; i++) {
             processors[i].process(writer, ev, chan);
         }
