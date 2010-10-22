@@ -20,6 +20,7 @@ import edu.sc.seis.fissuresUtil.display.RecordSectionDisplay;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.display.configuration.SeismogramDisplayConfiguration;
 import edu.sc.seis.fissuresUtil.display.registrar.CustomLayOutConfig;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.hibernate.EventSeismogramFileReference;
 import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
 import edu.sc.seis.fissuresUtil.hibernate.SeismogramFileRefDB;
@@ -134,14 +135,19 @@ public class RSChannelInfoPopulator implements WaveformProcess {
 
     public MemoryDataSetSeismogram[] wrap(DataSetSeismogram[] dss)
             throws Exception {
-        MemoryDataSetSeismogram[] memDss = new MemoryDataSetSeismogram[dss.length];
-        for(int i = 0; i < memDss.length; i++) {
-            memDss[i] = new MemoryDataSetSeismogram(((URLDataSetSeismogram)dss[i]).getSeismograms(),
+        List<MemoryDataSetSeismogram> memDss = new ArrayList<MemoryDataSetSeismogram>(dss.length);
+        for(int i = 0; i < dss.length; i++) {
+            try {
+            memDss.add( new MemoryDataSetSeismogram(((URLDataSetSeismogram)dss[i]).getSeismograms(),
                                                     dss[i].getDataSet(),
                                                     dss[i].getName(),
-                                                    dss[i].getRequestFilter());
+                                                    dss[i].getRequestFilter()));
+            } catch (Exception e) {
+                // oops, skip this one
+                GlobalExceptionHandler.handle("Error loading "+i+"th seismogram, skipping.", e);
+            }
         }
-        return memDss;
+        return memDss.toArray(new MemoryDataSetSeismogram[0]);
     }
 
     public WaveformResult accept(CacheEvent event,
