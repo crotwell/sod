@@ -383,7 +383,7 @@
             <xsd:annotation>
                 <summary>Accepts events that are similar to one in the included event source.</summary>
             </xsd:annotation>
-            <externalRef href="source.rng"/>
+            <externalRef href="eventSource.rng"/>
         </element>
     </define>
     <define name="jythonOriginSubsetter">
