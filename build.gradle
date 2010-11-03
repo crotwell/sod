@@ -108,7 +108,7 @@ def getDExtras() {
                 'swing.volatileImageBufferEnabled':'false', 
                 'java.endorsed.dirs':'${LIB}/endorsed', 
                 'jacorb.connection.client.pending_reply_timeout':'120000',
-                'jacorb.home':'.' ,
+                'jacorb.home':'${SOD_HOME}' ,
                 'jacorb.log.default.verbosity':'2' ]
 }
 
@@ -143,24 +143,19 @@ task copySchemaDocs(dependsOn: 'buildSchemaDocs', type: Sync) {
     into project.file('../seiswww/velocity/sod/ingredients/')
 }
 
-task buildSchemaDocs(dependsOn: ['buildSchema', 'classes'])  { 
+task buildSchemaDocs(type: JavaExec, dependsOn: ['buildSchema', 'compileJava'])  { 
     group = 'dist'
     inputs.dir 'src/main/relax'
     inputs.files 'site/elementPage.vm'
     outDir = project.file('build/velocity/sod/ingredients/')
     outputs.dir outDir
-    doLast{
-    outDir.mkdirs()
-    schemaDocArgs = project.projectDir.path+'/ '+outDir+'/'
-    print schemaDocArgs
-    cp = configurations.runtime.asPath+":"+project.projectDir.path+"/build/classes/main"
-    ant.java(dir:outDir, 
-             classname:'edu.sc.seis.sod.validator.documenter.SchemaDocumenter', 
-             args:schemaDocArgs,
-             fork:true,
-             maxmemory:'512m',
-             output:'build/ant_java.out',
-             classpath:cp) 
+    workingDir = outDir
+    args = [ project.projectDir.path, outDir]
+    classpath = configurations.runtime
+    classpath project.file("build/classes/main")
+    setMain "edu.sc.seis.sod.validator.documenter.SchemaDocumenter"
+    doFirst {
+        println outDir.mkdirs()
     }
 }
 
