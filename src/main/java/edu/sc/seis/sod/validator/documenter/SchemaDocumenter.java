@@ -37,7 +37,9 @@ public class SchemaDocumenter {
             return;
         }
         base = args[0];
+        if (base.length() != 0 && ! base.endsWith("/")) { base += "/"; }
         outputdir = args[1];
+        if (outputdir.length() != 0 && ! outputdir.endsWith("/")) { outputdir += "/"; }
         StAXModelBuilder handler = new StAXModelBuilder(base + "src/main/relax/sod.rng");
         //Setup velocity
         VelocityEngine ve = new VelocityEngine();
@@ -67,9 +69,11 @@ public class SchemaDocumenter {
 //                continue;
 //            }
             render(c, ve, def);
+            System.out.println(def.getName());
             System.out.print('.');
         }
         System.out.println();
+        System.out.println("Finish successfully");
     }
 
     public static void render(VelocityContext c,
@@ -86,6 +90,7 @@ public class SchemaDocumenter {
         c.put("contained", tourist.getResult());
         ve.mergeTemplate("elementPage.vm", new VelocityContext(c), w);
         w.close();
+        System.out.println("wrote "+velFile.getCanonicalPath());
     }
 
     public static Definition getNearestDef(Form f) {
