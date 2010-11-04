@@ -48,7 +48,7 @@ public class find_stations extends CommandLineTool {
         addDefaultParams();
         String lonPrinter = "$station.getLongitude(' ##0.0000;-##0.0000')";
         String latPrinter = "$station.getLatitude(' ##0.0000;-##0.0000')";
-        String theRest = "$station.getElevation('###0.') $station.code";
+        String theRest = "$station.getElevation('###0.') ${station.netCode}.${station.code}";
         outputFormatFlag = OutputFormatParser.createParam(lonPrinter + " "
                 + latPrinter + " " + theRest, latPrinter + " " + lonPrinter
                 + " " + theRest);
