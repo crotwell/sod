@@ -248,7 +248,6 @@ public class Start {
     
     protected void warnIfDatabaseExists() {
         if (getRunProps().warnIfDatabaseExists()) {
-            System.out.println("warnIfDatabaseExists:"+ConnMgr.getURL().substring(HSQL_FILE_URL.length()));
             // only matters if hsql???
             if (ConnMgr.getURL().startsWith(HSQL_FILE_URL)) {
                 File dbFile = new File(ConnMgr.getURL().substring(HSQL_FILE_URL.length())+".log");
