@@ -24,7 +24,7 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
  * deconvolution, merely a constant multiplier. Created: Wed Nov 6 17:58:10 2002
  * 
  * @author <a href="mailto:www@seis.sc.edu">Philip Crotwell </a>
- * @version $Id: ResponseGain.java 21665 2010-08-30 17:42:06Z crotwell $
+ * @version $Id: ResponseGain.java 21814 2010-11-11 15:59:53Z crotwell $
  */
 public class ResponseGain implements WaveformProcess, Threadable {
 
@@ -44,6 +44,7 @@ public class ResponseGain implements WaveformProcess, Threadable {
             try {
                 ChannelId chanId = channel.get_id();
                 Instrumentation inst = na.getInstrumentation(chanId);
+                if (inst == null) {throw new ChannelNotFound();}
                 InstrumentationLoader.checkResponse(inst.the_response);
                 Sensitivity sens = na.getSensitivity(chanId);
                 Unit recordedUnits = inst.the_response.stages[0].input_units;
