@@ -66,10 +66,10 @@ public class SodDB extends AbstractHibernateDB {
                                                           "datediff(?1, ?2, ?3)"));
             config.addSqlFunction("milliseconds_between",
                                   new SQLFunctionTemplate(Hibernate.LONG,
-                                                          "datediff('millisecond', ?1, ?2)"));
+                                                          "datediff('ms', ?1, ?2)"));
             config.addSqlFunction("seconds_between",
                                   new SQLFunctionTemplate(Hibernate.LONG,
-                                                          "datediff('second', ?1, ?2)"));
+                                                          "datediff('ss', ?1, ?2)"));
         } else if(ConnMgr.getURL().startsWith("jdbc:postgresql")) {
             config.addSqlFunction("milliseconds_between",
                                   new SQLFunctionTemplate(Hibernate.LONG,
