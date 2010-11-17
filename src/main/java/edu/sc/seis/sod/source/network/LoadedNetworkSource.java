@@ -7,6 +7,7 @@ import java.util.List;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
+import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.IfNetwork.Sensitivity;
 import edu.iris.Fissures.network.ChannelIdUtil;
@@ -19,16 +20,18 @@ import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
 
 public class LoadedNetworkSource extends WrappingNetworkSource implements NetworkSource {
 
-    public LoadedNetworkSource(NetworkSource wrapped, StationImpl sta) {
+    public LoadedNetworkSource(NetworkSource wrapped, List<? extends StationImpl> allStations, StationImpl sta) {
         super(wrapped);
         this.sta = sta;
-        this.chans = getWrapped().getChannels(sta);
-        this.allStations = getWrapped().getStations(sta.getId().network_id);
+        this.allStations = allStations;
     }
 
     @Override
     public List<? extends ChannelImpl> getChannels(StationImpl station) {
         if (StationIdUtil.areEqual(station, sta)) {
+            if (chans == null) {
+                this.chans = getWrapped().getChannels(sta);
+            }
             ArrayList<ChannelImpl> out = new ArrayList<ChannelImpl>();
             out.addAll(chans);
             return out;
@@ -62,6 +65,6 @@ public class LoadedNetworkSource extends WrappingNetworkSource implements Networ
     
     StationImpl sta;
     List<? extends StationImpl> allStations;
-    List<? extends ChannelImpl> chans;
+    List<? extends ChannelImpl> chans = null;
     HashSet<String> instrumentationLoaded = new HashSet<String>();
 }
