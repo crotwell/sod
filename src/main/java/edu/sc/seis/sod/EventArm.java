@@ -66,12 +66,12 @@ public class EventArm implements Arm {
     public void run() {
         try {
             for (EventSource source : sources) {
-                logger.debug(source + " covers events from " + source.getEventTimeRange());
+                logger.info(source + " covers events from " + source.getEventTimeRange());
             }
             while (!Start.isArmFailure() && atLeastOneSourceHasNext()) {
                 getEvents();
             }
-            logger.debug("Finished processing the event arm.");
+            logger.info("Finished processing the event arm.");
         } catch(Throwable e) {
             Start.armFailure(this, e);
         }
@@ -112,7 +112,7 @@ public class EventArm implements Arm {
             if ((lastTime.get(source) == null || lastTime.get(source).add(wait).before(ClockUtil.now()))
                     && source.hasNext()) {
                 CacheEvent[] next = source.next();
-                logger.debug("Handling " + next.length + " events from " + source.getDescription());
+                logger.info("Handling " + next.length + " events from " + source.getDescription());
                 handle(next);
                 lastTime.put(source, ClockUtil.now());
                 waitForProcessing();
@@ -273,6 +273,7 @@ public class EventArm implements Arm {
             storedEvent.setStatus(ECPOP_INIT);
             change(storedEvent);
             lastEvent = event;
+            logger.info("Successful Event: " + event);
         }
     }
 
