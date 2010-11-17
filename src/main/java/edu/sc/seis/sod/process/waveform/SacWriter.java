@@ -17,7 +17,7 @@ import edu.sc.seis.sod.ConfigurationException;
 
 public class SacWriter extends AbstractSeismogramWriter {
 
-    public static final String DEFAULT_FILE_TEMPLATE = "Event_${event.getTime('yyyy_DDD_HH_mm_ss')}/${channel.codes}${index}.sac";
+    public static final String DEFAULT_FILE_TEMPLATE = DEFAULT_FILE_TEMPLATE_WO_EXT+".sac";
 
     public SacWriter(Element el) throws ConfigurationException {
         this(extractWorkingDir(el),

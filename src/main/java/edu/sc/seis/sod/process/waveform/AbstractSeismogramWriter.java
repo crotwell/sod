@@ -26,6 +26,8 @@ import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
 public abstract class AbstractSeismogramWriter implements WaveformProcess {
 
+    public static final String DEFAULT_FILE_TEMPLATE_WO_EXT = "Event_${event.getTime('yyyy_MM_dd_HH_mm_ss')}/${channel.codes}${index}";
+ 
     protected static final String DEFAULT_PREFIX = "";
 
     public static final String DEFAULT_WORKING_DIR = "seismograms/";
