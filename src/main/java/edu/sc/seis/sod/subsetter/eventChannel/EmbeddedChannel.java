@@ -29,7 +29,9 @@ public class EmbeddedChannel implements EventChannelSubsetter {
             node = childNodes.item(counter);
             if(node instanceof Element) {
                 channelSubsetter = (ChannelSubsetter)SodUtil.load((Element)node,
-                                                                  "channel");
+                                                                  new String[] {"channel",
+                                                                                "station",
+                                                                                "network"});
                 break;
             }
         }
