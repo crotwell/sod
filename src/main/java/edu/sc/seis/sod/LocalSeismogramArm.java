@@ -12,6 +12,7 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.LocalSeismogram;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
@@ -186,8 +187,10 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                 logger.debug("Empty request generated for " + ChannelIdUtil.toString(ecp.getChannel().get_id()));
             }
             logger.debug("before available_data call retries=");
+            MicroSecondDate before = new MicroSecondDate();
             outfilters = DataCenterSource.toArray(dataCenter.available_data(DataCenterSource.toList(infilters)));
-            logger.debug("after successful available_data call retries=");
+            MicroSecondDate after = new MicroSecondDate();
+            logger.info("After successful available_data call, time taken=" + after.subtract(before).getValue(UnitImpl.SECOND)+" sec");
             if(outfilters.length != 0) {
                 logger.debug("Got available_data for " + ChannelIdUtil.toString(outfilters[0].channel_id) + " from "
                         + outfilters[0].start_time.date_time + " to " + outfilters[0].end_time.date_time);
@@ -250,7 +253,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                 localSeismograms = new LocalSeismogram[0];
             } // end of else
             MicroSecondDate after = new MicroSecondDate();
-            logger.info("After getting seismograms, time taken=" + after.subtract(before));
+            logger.info("After getting seismograms, time taken=" + after.subtract(before).getValue(UnitImpl.SECOND)+" sec");
             LinkedList tempForCast = new LinkedList();
             for(int i = 0; i < localSeismograms.length; i++) {
                 if(localSeismograms[i] == null) {
