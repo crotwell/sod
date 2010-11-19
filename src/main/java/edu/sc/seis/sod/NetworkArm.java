@@ -210,7 +210,7 @@ public class NetworkArm implements Arm {
             // this is for the side effect of creating
             // networkInfoTemplate stuff
             // avoids a null ptr later
-            DBCacheNetworkAccess outNet = new DBCacheNetworkAccess(getNetworkSource().getNetwork(net));
+            DBCacheNetworkAccess outNet = new DBCacheNetworkAccess(getNetworkSource().getNetwork(net), net);
             change(outNet,
                    Status.get(Stage.NETWORK_SUBSETTER,
                               Standing.SUCCESS));
