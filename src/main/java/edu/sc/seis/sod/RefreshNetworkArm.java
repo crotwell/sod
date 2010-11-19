@@ -16,6 +16,7 @@ import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
 import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
 import edu.sc.seis.sod.source.network.LoadedNetworkSource;
+import edu.sc.seis.sod.source.network.NetworkFinder;
 
 public class RefreshNetworkArm extends TimerTask {
 
@@ -29,6 +30,9 @@ public class RefreshNetworkArm extends TimerTask {
             List<CacheNetworkAccess> nets;
             List<CacheNetworkAccess> needReload = new LinkedList<CacheNetworkAccess>();
             synchronized(this) {
+                if (netArm.getInternalNetworkSource() instanceof NetworkFinder) {
+                    ((NetworkFinder)netArm.getInternalNetworkSource()).reset();
+                }
                 nets = netArm.getSuccessfulNetworksFromServer();
                 // maybe previous update has not yet finished, only reload nets
                 // not already in list???
@@ -65,15 +69,19 @@ public class RefreshNetworkArm extends TimerTask {
     }
 
     void processNetwork(CacheNetworkAccess net) {
-
-        // how do we refresh instrumentation???
+logger.debug("refresh "+NetworkIdUtil.toString(net.get_attributes()));
+// how do we refresh instrumentation???
         
         try {
             StationImpl[] stas = netArm.getSuccessfulStationsFromServer(net);
+            List<StationImpl> allStations = new ArrayList<StationImpl>();
+            for (int s = 0; s < stas.length; s++) {
+                allStations.add(stas[s]);
+            }
             logger.info("found "+stas.length+" stations in "+NetworkIdUtil.toString(net.get_attributes()));
             if (Start.getWaveformRecipe() != null || netArm.getChannelSubsetters().size() != 0) {
                 for (int s = 0; s < stas.length; s++) {
-                    LoadedNetworkSource loadSource = new LoadedNetworkSource(netArm.getInternalNetworkSource(), stas[s]);
+                    LoadedNetworkSource loadSource = new LoadedNetworkSource(netArm.getInternalNetworkSource(), allStations, stas[s]);
                     if (Start.getWaveformRecipe() instanceof MotionVectorArm) {
                         List<ChannelGroup> cg = netArm.getSuccessfulChannelGroupsFromServer(stas[s], loadSource);
                         for (ChannelGroup channelGroup : cg) {
