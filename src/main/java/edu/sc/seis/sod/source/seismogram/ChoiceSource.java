@@ -26,10 +26,15 @@ import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
  */
 public class ChoiceSource implements SeismogramSourceLocator {
 
+    public ChoiceSource(List<ChoiceSourceItem> choices, SeismogramSourceLocator otherwise) {
+        this.choices = choices;
+        this.otherwise = otherwise;
+    }
+    
     public ChoiceSource(Element config) throws ConfigurationException {
         NodeList choiceNodes = DOMHelper.extractNodes(config, "choice");
         for(int i = 0; i < choiceNodes.getLength(); i++) {
-            choices.add(new Choice((Element)choiceNodes.item(i)));
+            choices.add(new ChoiceSourceItem((Element)choiceNodes.item(i)));
         }
         Element otherwiseEl = DOMHelper.extractElement(config, "otherwise/*");
         otherwise = (SeismogramSourceLocator)SodUtil.load(otherwiseEl, "seismogram");
@@ -40,9 +45,9 @@ public class ChoiceSource implements SeismogramSourceLocator {
                                              RequestFilter[] infilters,
                                              CookieJar cookieJar)
             throws Exception {
-        Iterator<Choice> it = choices.iterator();
+        Iterator<ChoiceSourceItem> it = choices.iterator();
         while(it.hasNext()) {
-            Choice cur = it.next();
+            ChoiceSourceItem cur = it.next();
             if(cur.accept(event, channel, cookieJar).isSuccess()) {
                 return cur.getSeismogramSource(event, channel, infilters, cookieJar);
             }
@@ -50,48 +55,7 @@ public class ChoiceSource implements SeismogramSourceLocator {
         return otherwise.getSeismogramSource(event, channel, infilters, cookieJar);
     }
 
-    private class Choice implements EventChannelSubsetter, SeismogramSourceLocator {
-
-        Choice(Element config) throws ConfigurationException {
-            NodeList childNodes = config.getChildNodes();
-            Node node;
-            for(int counter = 0; counter < childNodes.getLength(); counter++) {
-                node = childNodes.item(counter);
-                SodElement sodElement = (SodElement)SodUtil.load((Element)node,
-                                                                 new String[] {"seismogram",
-                                                                               "eventChannel",
-                                                                               "channel",
-                                                                               "station",
-                                                                               "network",
-                                                                               "origin"});
-                if(sodElement instanceof SeismogramSourceLocator) {
-                    locator = (SeismogramSourceLocator)sodElement;
-                } else  {
-                    eventChannelSubsetter = EventChannelLogicalSubsetter.createSubsetter((Subsetter)sodElement);
-                }
-            }
-        }
-
-        public SeismogramSource getSeismogramSource(CacheEvent event,
-                                                 ChannelImpl channel,
-                                                 RequestFilter[] infilters,
-                                                 CookieJar cookieJar)
-                throws Exception {
-            return locator.getSeismogramSource(event, channel, infilters, cookieJar);
-        }
-
-        public StringTree accept(CacheEvent event,
-                                 ChannelImpl channel,
-                                 CookieJar cookieJar) throws Exception {
-            return eventChannelSubsetter.accept(event, channel, cookieJar);
-        }
-
-        SeismogramSourceLocator locator;
-
-        EventChannelSubsetter eventChannelSubsetter;
-    }
-
-    private List<Choice> choices = new ArrayList<Choice>();
+    private List<ChoiceSourceItem> choices = new ArrayList<ChoiceSourceItem>();
 
     private SeismogramSourceLocator otherwise;
 }
