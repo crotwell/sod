@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.source.network;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.omg.CORBA.BAD_PARAM;
@@ -19,10 +20,10 @@ import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.NetworkAttrImpl;
+import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
-import edu.sc.seis.fissuresUtil.cache.LazyNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
 import edu.sc.seis.fissuresUtil.cache.VestingNetworkDC;
 import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
@@ -49,7 +50,15 @@ public class NetworkFinder extends AbstractNetworkSource {
     }
 
     public CacheNetworkAccess getNetwork(NetworkAttrImpl attr) {
-        return new LazyNetworkAccess(attr, getNetworkDC());
+        return getNetwork(attr.getId());
+    }
+
+    public CacheNetworkAccess getNetwork(NetworkId netId)  {
+        CacheNetworkAccess net = checkCache(netId);
+        if (net == null) {
+            throw new RuntimeException("can't find net, should neven happen: "+NetworkIdUtil.toString(netId));
+        }
+        return net;
     }
 
     public List<CacheNetworkAccess> getNetworkByName(String name) throws NetworkNotFound {
@@ -63,13 +72,20 @@ public class NetworkFinder extends AbstractNetworkSource {
 
     @Override
     public synchronized List<CacheNetworkAccess> getNetworks() {
+        if (recentNetworksCache == null) {
+            getNetworksInternal();
+        }
+        return recentNetworksCache;
+    }
+
+    public synchronized List<CacheNetworkAccess> getNetworksInternal() {
         String[] constrainingCodes = Start.getNetworkArm().getConstrainingNetworkCodes();
         ProxyNetworkDC netDC = getNetworkDC();
         // purge cache before loading from server
         netDC.reset();
+        ArrayList<CacheNetworkAccess> goodNets = new ArrayList<CacheNetworkAccess>();
         if (constrainingCodes.length > 0) {
             edu.iris.Fissures.IfNetwork.NetworkFinder netFinder = netDC.a_finder();
-            List<CacheNetworkAccess> constrainedNets = new ArrayList<CacheNetworkAccess>();
             for (int i = 0; i < constrainingCodes.length; i++) {
                 CacheNetworkAccess[] found = null;
                 // this is a bit of a hack as names could be one or two
@@ -86,13 +102,11 @@ public class NetworkFinder extends AbstractNetworkSource {
                     Start.informUserOfBadNetworkAndExit(constrainingCodes[i], e);
                 }
                 for (int j = 0; j < found.length; j++) {
-                    constrainedNets.add(found[j]);
+                    goodNets.add(found[j]);
                 }
             }
-            return constrainedNets;
         } else {
             NetworkAccess[] tmpNets = netDC.a_finder().retrieve_all();
-            ArrayList<CacheNetworkAccess> goodNets = new ArrayList<CacheNetworkAccess>();
             for (int i = 0; i < tmpNets.length; i++) {
                 try {
                     VirtualNetworkHelper.narrow(tmpNets[i]);
@@ -104,8 +118,9 @@ public class NetworkFinder extends AbstractNetworkSource {
                     goodNets.add((CacheNetworkAccess)tmpNets[i]);
                 }
             }
-            return goodNets;
         }
+        this.recentNetworksCache = goodNets;
+        return goodNets;
     }
 
     @Override
@@ -121,39 +136,12 @@ public class NetworkFinder extends AbstractNetworkSource {
 
     @Override
     public List<ChannelImpl> getChannels(StationImpl station) {
-        CacheNetworkAccess net = getNetwork(station.getId().network_id);
+        if (station == null) {throw new NullPointerException("station cannot be null");}
+        CacheNetworkAccess net = getNetwork(station.getNetworkAttrImpl());
         Channel[] tmpChannels = net.retrieve_for_station(station.get_id());
-        MicroSecondDate stationBegin = new MicroSecondDate(station.getBeginTime());
-        // dmc network server ignores date in station id in
-        // retrieve_for_station, so all channels for station code are
-        // returned. This checks to make sure the station is the same.
-        // ProxyNetworkAccess already interns stations in channels
-        // so as long as station begin times are the same, they are
-        // equal...we hope
-        ArrayList<ChannelImpl> chansAtStation = new ArrayList<ChannelImpl>();
-        for (int i = 0; i < tmpChannels.length; i++) {
-            if (new MicroSecondDate(tmpChannels[i].getSite().getStation().getBeginTime()).equals(stationBegin)) {
-                chansAtStation.add((ChannelImpl)tmpChannels[i]);
-            } else {
-                logger.info("Channel " + ChannelIdUtil.toString(tmpChannels[i].get_id())
-                        + " has a station that is not the same as the requested station: req="
-                        + StationIdUtil.toString(station.get_id()) + "  chan sta="
-                        + StationIdUtil.toString(tmpChannels[i].getSite().getStation()) + "  "
-                        + tmpChannels[i].getSite().getStation().getBeginTime().date_time + " != "
-                        + station.getBeginTime().date_time);
-            }
-        }
-        return chansAtStation;
+        return checkStationTimeOverlap(station, tmpChannels);
     }
     
-    public CacheNetworkAccess getNetwork(NetworkId netId)  {
-        try {
-        return (CacheNetworkAccess)getNetworkDC().a_finder().retrieve_by_id(netId);
-        } catch (NetworkNotFound e) {
-            throw new RuntimeException("don't think this should happen as we must have gotten the netid from the server", e);
-        }
-    }
-
     @Override
     public Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
         return getNetwork(chanId.network_id).retrieve_instrumentation(chanId, chanId.begin_time);
@@ -163,6 +151,48 @@ public class NetworkFinder extends AbstractNetworkSource {
     public Sensitivity getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
         return getNetwork(chanId.network_id).retrieve_sensitivity(chanId, chanId.begin_time);
     }
+    
+    protected List<ChannelImpl> checkStationTimeOverlap(StationImpl station, Channel[] inChannels) {
+        MicroSecondDate stationBegin = new MicroSecondDate(station.getBeginTime());
+        // dmc network server ignores date in station id in
+        // retrieve_for_station, so all channels for station code are
+        // returned. This checks to make sure the station is the same.
+        // ProxyNetworkAccess already interns stations in channels
+        // so as long as station begin times are the same, they are
+        // equal...we hope
+        ArrayList<ChannelImpl> chansAtStation = new ArrayList<ChannelImpl>();
+        for (int i = 0; i < inChannels.length; i++) {
+            if (new MicroSecondDate(inChannels[i].getSite().getStation().getBeginTime()).equals(stationBegin)) {
+                chansAtStation.add((ChannelImpl)inChannels[i]);
+            } else {
+                logger.info("Channel " + ChannelIdUtil.toString(inChannels[i].get_id())
+                        + " has a station that is not the same as the requested station: req="
+                        + StationIdUtil.toString(station.get_id()) + "  chan sta="
+                        + StationIdUtil.toString(inChannels[i].getSite().getStation()) + "  "
+                        + inChannels[i].getSite().getStation().getBeginTime().date_time + " != "
+                        + station.getBeginTime().date_time);
+            }
+        }
+        return chansAtStation;
+    }
+    
+    protected CacheNetworkAccess checkCache(NetworkId netId) {
+        if (recentNetworksCache == null) {
+            getNetworksInternal();
+        }
+        for (CacheNetworkAccess net : recentNetworksCache) {
+            if (NetworkIdUtil.areEqual(netId, net.get_attributes().getId())) {
+                return net;
+            }
+        }
+        return null;
+    }
+    
+    public void reset() {
+        recentNetworksCache = null;
+    }
+    
+    protected List<CacheNetworkAccess> recentNetworksCache = new LinkedList<CacheNetworkAccess>();
 
     protected VestingNetworkDC netDC;
 
