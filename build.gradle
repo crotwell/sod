@@ -146,6 +146,8 @@ task copySchemaDocs(dependsOn: 'buildSchemaDocs', type: Sync) {
 }
 
 task buildSchemaDocs(type: JavaExec, dependsOn: ['buildSchema', 'compileJava'])  { 
+//    jvmArgs = ['-agentlib:yjpagent', '-XX:+HeapDumpOnOutOfMemoryError', '-Xmx512m']
+    jvmArgs = ['-Xmx512m']
     group = 'dist'
     inputs.dir 'src/main/relax'
     inputs.files 'site/elementPage.vm'
