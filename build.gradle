@@ -53,6 +53,9 @@ binDistFiles = copySpec {
     from('scripts') {
         include('cwg.prop')
     }
+    from('.') {
+        include('etc/**')
+    }
 }
 
 distFiles = copySpec {
@@ -64,7 +67,6 @@ distFiles = copySpec {
         include('jythonExample/**')
         include('src/**')
         include('lib/**')
-        include('etc/**')
         include('gradleWrapper/**')
         include('gradlew')
         include('gradlew.bat')
@@ -116,7 +118,7 @@ task makeScript(dependsOn: copyToLib) << { task ->
     group = 'build'
     dExtras = getDExtras()
     doBat = true
-//    ScriptBuilder.create('sod', 'edu.sc.seis.sod.Start', task.project, dExtras:dExtras, yourkit:true)
+    ScriptBuilder.create('psod', 'edu.sc.seis.sod.Start', task.project, dExtras:dExtras, yourkit:true)
     ScriptBuilder.create('sod', 'edu.sc.seis.sod.Start', task.project, dExtras:dExtras, bat:true)
     ScriptBuilder.create('bgsod', 'edu.sc.seis.sod.Start', task.project, dExtras:dExtras, bat:doBat, background:true)
     ScriptBuilder.create('find_events', 'edu.sc.seis.sod.tools.find_events', task.project, dExtras:dExtras, bat:doBat)
