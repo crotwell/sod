@@ -40,6 +40,18 @@ public class StatefulEventDB {
         Query query = trans.getSession().createQuery(q);
         return query.list();
     }
+    
+    public int getNumEventsOfStatus(Standing standing) {
+        String q = "select count(*) from " + StatefulEvent.class.getName()
+        + " e where e.status.standingInt = "+standing.getVal();
+        Query query = getSession().createQuery(q);
+        query.setMaxResults(1);
+        List result = query.list();
+        if(result.size() > 0) {
+            return ((Number)result.get(0)).intValue();
+        }
+        return 0;
+    }
 
     public StatefulEvent getEvent(int dbid) throws NotFound {
         return (StatefulEvent)trans.getEvent(dbid);
