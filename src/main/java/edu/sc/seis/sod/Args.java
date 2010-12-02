@@ -296,6 +296,14 @@ public class Args {
             return f;
         }
     }
+    
+    public String toString() {
+        String out = "";
+        for (int i = 0; i < args.length; i++) {
+            out += " "+args[i];
+        }
+        return out;
+    }
 
     public static final String CLEAN_SWITCH = "clean";
     public static final String QUIT_ON_ERROR_SWITCH = "quitOnError";
