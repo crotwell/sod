@@ -149,11 +149,26 @@ public class Start {
         if(props == null) {
             loadProps();
         } else {
+            // this is for command line tools and unit tests
             Start.props = props;
         }
+        logger.info("logging configured");
+        logger.info("SOD version "+Version.current().getVersion());
+        logger.info("Args: "+args.toString());
         Alohomora.insertOrbProp(Start.props);
         if (args.isQuickAndDirty()) {
             Start.props.put("fissuresUtil.database.url", "jdbc:hsqldb:mem:SodDB");
+            logger.info("Database: memory");
+        } else {
+            logger.info("Database: "+Start.props.get("fissuresUtil.database.url"));
+            if (ConnMgr.getURL().startsWith(HSQL_FILE_URL)) {
+                File dbFile = new File(ConnMgr.getURL().substring(HSQL_FILE_URL.length())+".log");
+                if (dbFile.exists()) {
+                    logger.info("Database file exists: "+dbFile.getPath());
+                } else {
+                    logger.info("Database file does not exist, clean start.");
+                }
+            }
         }
         logger.info("Recipe: "+configFileName);
         if (args.isPrintRecipe()) {
@@ -276,8 +291,6 @@ public class Start {
             }
         }
         PropertyConfigurator.configure(props);
-        logger.info("logging configured");
-        logger.info("SOD version "+Version.current().getVersion());
         // Error html dir and output should be set up now, so remove the
         // Std out reporter
         GlobalExceptionHandler.remove(sysOutReporter);
