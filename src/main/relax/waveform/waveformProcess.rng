@@ -353,6 +353,8 @@
                     </xsd:annotation>
                     <ref name="phaseTimeContents"/>
                 </element>
+            </zeroOrMore>
+            <zeroOrMore>
                 <element name="sacHeaderScript">
                     <xsd:annotation>
                         <summary>Runs a script to set arbitrary SAC headers, or do other customization of the SAC file.</summary>
