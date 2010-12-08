@@ -29,10 +29,14 @@ $additionalArms#end
                 <value>$end.offset</value>
             </endOffset>
         </phaseRequest>
+#if($server.name && $server.dns)
         <fixedDataCenter>
             <name>$server.name</name>
             <dns>$server.dns</dns>
         </fixedDataCenter>
+#else
+        <bestIRISDataCenter/>
+#end
         <someCoverage/>
         <responseGain/>
         <sacWriter>
