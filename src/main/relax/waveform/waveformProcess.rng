@@ -28,6 +28,7 @@
             <ref name="printlineSeismogramProcess"/>
             <ref name="sacWriter"/>
             <ref name="mseedWriter"/>
+            <ref name="asciiWriter"/>
             <ref name="recordSectionDisplayGenerator"/>
             <ref name="responseGain"/>
             <ref name="phaseCut"/>
@@ -392,6 +393,24 @@
                         <workingDir>seismograms</workingDir>
                         <location>${channel.code}/${event.filizedTime}/${network.code}.${station.code}.${site.code}.mseed</location>
                     </mseedWriter>
+                </example>
+            </xsd:annotation>
+            <ref name="seisWriterBase"/>
+        </element>
+    </define>
+    <define name="asciiWriter">
+        <element name="asciiWriter">
+            <xsd:annotation>
+                <summary>Writes ascii files from seismograms</summary>
+                <description>The seismograms are written to ascii files in the location indicated by location. If
+                    multiple seismograms are found for a channel seismograms past the first will be written out with a
+                    number appended to their file name. ie the second seismogram will be filename.1 and the third will
+                    be filename.2</description>
+                <example>
+                    <asciiWriter>
+                        <workingDir>seismograms</workingDir>
+                        <location>${channel.code}/${event.filizedTime}/${network.code}.${station.code}.${site.code}.txt</location>
+                    </asciiWriter>
                 </example>
             </xsd:annotation>
             <ref name="seisWriterBase"/>
