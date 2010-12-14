@@ -38,7 +38,9 @@ public class SacWriter extends AbstractSeismogramWriter {
             out.add( new PhaseHeaderProcess((Element)nl.item(i)));
         }
         Element sacScript = SodUtil.getElement(el, "sacHeaderScript");
-        out.add( new SacHeaderScript(sacScript));
+        if (sacScript != null) {
+            out.add( new SacHeaderScript(sacScript));
+        }
         return out;
     }
 
