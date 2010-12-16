@@ -45,8 +45,8 @@ log4j.appender.FailFile.layout.ConversionPattern=%d{ISO8601} %p %t %c{2} - %m%n
 #    corbaloc:iiop:host.domain:port/NameService
 # You should put your own choices for host.domain and port
 #
-# for pooh
-#edu.sc.seis.fissuresUtil.nameServiceCorbaLoc=corbaloc:iiop:pooh.seis.sc.edu:6371/NameService
+# for usc
+#edu.sc.seis.fissuresUtil.nameServiceCorbaLoc=corbaloc:iiop:nameservice.seis.sc.edu:6371/NameService
 # for iris
 edu.sc.seis.fissuresUtil.nameServiceCorbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService
 
