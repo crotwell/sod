@@ -904,11 +904,13 @@ public class SodDB extends AbstractHibernateDB {
     public Class<? extends AbstractEventChannelPair> ecpClass = null;
 
     public static SodDB getSingleton() {
-        if(singleton == null) {
-            if (defaultEcpClass == null) {
-                setDefaultEcpClass(discoverDbEcpClass());
+        synchronized(SodDB.class) {
+            if(singleton == null) {
+                if (defaultEcpClass == null) {
+                    setDefaultEcpClass(discoverDbEcpClass());
+                }
+                singleton = new SodDB(defaultEcpClass);
             }
-            singleton = new SodDB(defaultEcpClass);
         }
         return singleton;
     }
