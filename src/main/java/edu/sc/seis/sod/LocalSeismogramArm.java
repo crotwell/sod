@@ -253,7 +253,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                 localSeismograms = new LocalSeismogram[0];
             } // end of else
             MicroSecondDate after = new MicroSecondDate();
-            logger.info("After getting seismograms, time taken=" + after.subtract(before).getValue(UnitImpl.SECOND)+" sec");
+            logger.info("After getting "+localSeismograms.length+" seismograms, time taken=" + after.subtract(before).getValue(UnitImpl.SECOND)+" sec");
             LinkedList tempForCast = new LinkedList();
             for(int i = 0; i < localSeismograms.length; i++) {
                 if(localSeismograms[i] == null) {
