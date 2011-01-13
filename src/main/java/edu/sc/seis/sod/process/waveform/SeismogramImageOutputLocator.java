@@ -100,6 +100,12 @@ public class SeismogramImageOutputLocator {
         return getLocation(event, channel, configuredFileType);
     }
 
+    public String getLocation(VelocityEvent event,
+                              Channel channel,
+                              String fileType) {
+        return getLocation(event.getCacheEvent(), channel, fileType);
+    }
+    
     public String getLocation(CacheEvent event,
                               Channel channel,
                               String fileType) {
