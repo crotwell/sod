@@ -37,7 +37,8 @@ public class WaveformArm extends Thread implements Arm {
                 while(next == null
                         && (possibleToContinue()
                                 || SodDB.getSingleton().getNumWorkUnits(Standing.RETRY) != 0 || SodDB.getSingleton()
-                                .getNumWorkUnits(Standing.IN_PROG) != 0)) {
+                                .getNumWorkUnits(Standing.IN_PROG) != 0  || SodDB.getSingleton()
+                                .getNumWorkUnits(Standing.INIT) != 0)) {
                     logger.debug("Processor waiting for work unit to show up");
                     try {
                         // sleep, but wake up if eventArm does notifyAll()
@@ -56,6 +57,18 @@ public class WaveformArm extends Thread implements Arm {
                     } catch(InterruptedException e) {}
                     logger.debug("done waiting on event arm");
                     next = getNext();
+                }
+                if(next == null) {
+                    // lets sleep for a couple of seconds just to make sure
+                    // in case another thread has the  last/only event-network
+                    // and we can help out once the stations are retrieved
+                    for (int i = 0; i < 5; i++) {
+                        next = getNext();
+                        if (next != null) {
+                            break;
+                        }
+                        Thread.sleep(1000);
+                    }
                 }
                 if(next != null) {
                     processorStartWork();
@@ -109,7 +122,7 @@ public class WaveformArm extends Thread implements Arm {
             if (SodDB.getSingleton().isESPTodo()) {
                 EventStationPair esp = SodDB.getSingleton().getNextESPFromCache();
                 if(esp != null) {
-                    esp.update(Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.INIT));
+                    esp.update(Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.IN_PROG));
                     SodDB.commit();
                     SodDB.getSession().update(esp);
                     return esp;
@@ -119,7 +132,7 @@ public class WaveformArm extends Thread implements Arm {
             if (SodDB.getSingleton().isENPTodo()) {
                 EventNetworkPair enp = SodDB.getSingleton().getNextENPFromCache();
                 if(enp != null) {
-                    enp.update(Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.INIT));
+                    enp.update(Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.IN_PROG));
                     SodDB.commit();
                     // reattach to new session
                     SodDB.getSession().update(enp);
@@ -136,7 +149,7 @@ public class WaveformArm extends Thread implements Arm {
         if((retryRandom < ecpPercentage || (ClockUtil.now().subtract(lastECP).lessThan(ECP_WINDOW))) ) {
             ecp = SodDB.getSingleton().getNextECP();
             if(ecp != null) {
-                ecp.update(Status.get(Stage.EVENT_CHANNEL_SUBSETTER, Standing.INIT));
+                ecp.update(Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.IN_PROG));
                 SodDB.commit();
                 ecp = (AbstractEventChannelPair)SodDB.getSession().get(ecp.getClass(), ecp.getDbid());
                 lastECP = ClockUtil.now();
@@ -146,7 +159,7 @@ public class WaveformArm extends Thread implements Arm {
         // no ecp/evp try e-station
         EventStationPair esp = SodDB.getSingleton().getNextESP();
         if(esp != null) {
-            esp.update(Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.INIT));
+            esp.update(Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.IN_PROG));
             SodDB.commit();
             SodDB.getSession().update(esp);
             return esp;
@@ -154,7 +167,7 @@ public class WaveformArm extends Thread implements Arm {
         // no e-station try e-network
         EventNetworkPair enp = SodDB.getSingleton().getNextENP();
         if(enp != null) {
-            enp.update(Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.INIT));
+            enp.update(Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.IN_PROG));
             SodDB.commit();
             // reattach to new session
             SodDB.getSession().update(enp);
@@ -166,7 +179,7 @@ public class WaveformArm extends Thread implements Arm {
             createEventNetworkPairs(ev);
             enp = SodDB.getSingleton().getNextENP();
             if(enp != null) {
-                enp.update(Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.INIT));
+                enp.update(Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.IN_PROG));
                 SodDB.commit();
                 // reattach to new session
                 SodDB.getSession().update(enp);
