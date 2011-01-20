@@ -2,14 +2,13 @@
 <grammar xmlns="http://relaxng.org/ns/structure/1.0"
     datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
     xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
-    <include href="range.rng"/>
     <start combine="choice">
         <notAllowed/>
     </start>
     <define name="area">
         <choice>
             <xsd:annotation>
-                <summary>Accepts events that occur within a particular area</summary>
+                <summary>Accepts items that are within a particular area</summary>
             </xsd:annotation>
             <ref name="boxArea"/>
             <ref name="globalArea"/>
@@ -31,8 +30,8 @@
                 <description>Accepts events that occur within the latitude longitude box defined
                     here</description>
             </xsd:annotation>
-            <externalRef href="../externalRef/latitudeRange.rng"/>
-            <externalRef href="../externalRef/longitudeRange.rng"/>
+            <ref name="latitudeRange"/>
+            <ref name="longitudeRange"/>
         </element>
     </define>
     <define name="pointDistance">
@@ -51,7 +50,7 @@
                     </pointDistance>
                 </example>
             </xsd:annotation>
-            <externalRef href="../externalRef/latLonUnitRange.rng"/>
+            <ref name="latLonUnitRange"/>
         </element>
     </define>
     <define name="polygonFile">
@@ -68,5 +67,12 @@
             </xsd:annotation>
             <data type="string"/>
         </element>
+    </define>
+    <define name="latLonUnitRange">
+            <interleave>
+                <ref name="lat"/>
+                <ref name="lon"/>
+                <ref name="range"/>
+            </interleave>
     </define>
 </grammar>

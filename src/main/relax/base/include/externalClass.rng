@@ -8,7 +8,7 @@
             <data type="string"/>
         </element>
         <zeroOrMore>
-            <externalRef href="../externalRef/anyXML.rng"/>
+            <ref name="anyXML"/>
         </zeroOrMore>
     </define>
 </grammar>

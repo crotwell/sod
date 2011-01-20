@@ -104,7 +104,4 @@
             </element>
         </optional>
     </define>
-    <define name="anyXML">
-        <externalRef href="../externalRef/anyXML.rng"/>
-    </define>
 </grammar>

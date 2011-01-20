@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
-    <include href="../base/include/externalClass.rng"/>
-    <include href="../base/include/seismogramImage.rng"/>
+    
     <start>
         <ref name="waveformVectorProcess"/>
     </start>
-    <include href="../base/include/eventLabel.rng"/>
-    <include href="../base/include/quantity.rng"/>
-    <include href="../base/include/seismogramDisplay.rng"/>
     <define name="waveformVectorProcess">
         <choice>
             <xsd:annotation>
@@ -25,21 +21,15 @@
             <ref name="waveformVectorAlwaysSuccess"/>
             <!-- local seismogramProcesses directly in the motion vector arm
               are treaded as if they are in a ANDWaveformProcessWrapper -->
-            <ref name="waveformProcess"/>
-            <ref name="external"/>
+            <ref name="seismogramProcess"/>
+            <ref name="externalVectorProcess"/>
             <ref name="vectorImageProcess"/>
             <ref name="vectorForkProcess"/>
             <ref name="sampleSyncronize"/>
             <ref name="rotateGCP"/>
             <ref name="vectorTrim"/>
-            <ref name="embeddedEventVector"/>
-            <ref name="embeddedEventStation"/>
-            <ref name="jythonVectorProcess"/>
             <ref name="vectorScript"/>
         </choice>
-    </define>
-    <define name="waveformProcess">
-        <externalRef href="waveformProcess.rng"/>
     </define>
     <define name="threeComponentData">
         <element name="threeComponentData">
@@ -56,10 +46,10 @@
             <xsd:annotation>
                 <summary>Allows a waveform processor to be used in a waveformVector as an AND</summary>
                 <description>Each of the components of the waveformVector are processed independently by the
-                    waveformProcess and the results are ANDed together. This operation short circuits, so no waveforms
+                    seismogramProcess and the results are ANDed together. This operation short circuits, so no waveforms
                     after the first failure are processed.</description>
             </xsd:annotation>
-            <ref name="waveformProcess"/>
+            <ref name="seismogramProcess"/>
         </element>
     </define>
     <define name="ORWaveformProcessWrapper">
@@ -67,10 +57,10 @@
             <xsd:annotation>
                 <summary>Allows a waveform processor to be used in a waveformVector as an OR</summary>
                 <description>Each of the components of the waveformVector are processed independently by the
-                    waveformProcess and the results are ORed together. This operation short circuits, so no waveforms
+                    seismogramProcess and the results are ORed together. This operation short circuits, so no waveforms
                     after the first success are processed.</description>
             </xsd:annotation>
-            <ref name="waveformProcess"/>
+            <ref name="seismogramProcess"/>
         </element>
     </define>
     <define name="legacyVectorExecute">
@@ -210,7 +200,7 @@
             <ref name="waveformVectorProcess"/>
         </element>
     </define>
-    <define name="external">
+    <define name="externalVectorProcess">
         <element name="externalWaveformVectorProcess">
             <xsd:annotation>
                 <summary>Use a WaveformVectorProcess external to SOD</summary>
@@ -277,22 +267,6 @@
             <empty/>
         </element>
     </define>
-    <define name="embeddedEventVector">
-        <element name="embeddedEventVector">
-            <xsd:annotation>
-                <summary>Allows any event vector subsetter to be embedded here</summary>
-            </xsd:annotation>
-            <externalRef href="eventVector.rng"/>
-        </element>
-    </define>
-    <define name="embeddedEventStation">
-        <element name="embeddedEventStation">
-            <xsd:annotation>
-                <summary>Allows any event station subsetter to be embedded here</summary>
-            </xsd:annotation>
-            <externalRef href="eventStation.rng"/>
-        </element>
-    </define>
     <define name="sampleSyncronize">
         <element name="sampleSyncronize">
             <xsd:annotation>
@@ -357,39 +331,6 @@
                     <text/>
             </attribute>
             <data type="string"/>
-        </element>
-    </define>
-    <define name="jythonVectorProcess">
-        <element name="jythonWaveformVectorProcess">
-            <xsd:annotation>
-                <summary>Runs an externally defined Jython vector processor</summary>
-                <description>$jythonWaveformProcessInfo.getRelaxHTML('../../../')</description>
-                <example>
-                    <jythonWaveformVectorProcess>
-                        <module>helloSod</module>
-                        <class>helloSod</class>
-                        <dataDirectory>PutItHere</dataDirectory>
-                        <extraParam>1.7</extraParam>
-                    </jythonWaveformVectorProcess>
-                </example>
-            </xsd:annotation>
-            
-            <choice>
-                <group>
-                    <element name="module">
-                        <data type="string"/>
-                    </element>
-                    <element name="class">
-                        <data type="string"/>
-                    </element>
-                    <zeroOrMore>
-                        <externalRef href="../base/externalRef/anyXML.rng"/>
-                    </zeroOrMore>
-                </group>
-                <element name="inline">
-                    <data type="string"/>
-                </element>
-            </choice>
         </element>
     </define>
 </grammar>

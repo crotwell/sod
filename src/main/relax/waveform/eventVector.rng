@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
-    <include href="../base/include/externalClass.rng"/>
     <start>
         <ref name="eventVector"/>
     </start>
@@ -10,13 +9,12 @@
                 <summary>Ingredients for selecting channel groups for events</summary>
                 <velocity>#waveformVectorArmPage()</velocity>
             </xsd:annotation>
-            <ref name="bestChannelAtStation"/>
+            <ref name="bestChannelGroupAtStation"/>
             <ref name="ANDEventChannelWrapper"/>
             <ref name="OREventChannelWrapper"/>
             <ref name="eventVectorAND"/>
             <ref name="eventVectorOR"/>
             <ref name="eventVectorNOT"/>
-            <ref name="jythonEventVector"/>
             <ref name="eventVectorScript"/>
             <ref name="external"/>
         </choice>
@@ -24,12 +22,12 @@
     <define name="eventVectorPlus">
         <choice>
             <ref name="eventVector"/>
-            <externalRef href="eventStation.rng"/>
-            <externalRef href="../network/station.rng"/>
-            <externalRef href="../event/origin.rng"/>
+            <ref name="eventStation"/>
+            <ref name="station"/>
+            <ref name="origin"/>
         </choice>
     </define>
-    <define name="bestChannelAtStation">
+    <define name="bestChannelGroupAtStation">
         <element name="bestChannelAtStation">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
@@ -85,13 +83,11 @@
                     vector arm.</description>
                 <example>
                     <ANDEventChannelWrapper>
-                        <embeddedChannel>
                             <bandCode>B</bandCode>
-                        </embeddedChannel>
                     </ANDEventChannelWrapper>
                 </example>
             </xsd:annotation>
-            <externalRef href="eventChannel.rng"/>
+            <ref name="eventChannelPlus"/>
         </element>
     </define>
     <define name="OREventChannelWrapper">
@@ -103,13 +99,11 @@
                     vector arm.</description>
                 <example>
                     <OREventChannelWrapper>
-                        <embeddedChannel>
                             <bandCode>B</bandCode>
-                        </embeddedChannel>
                     </OREventChannelWrapper>
                 </example>
             </xsd:annotation>
-            <externalRef href="eventChannel.rng"/>
+            <ref name="eventChannelPlus"/>
         </element>
     </define>
     <define name="eventVectorAND">
@@ -170,39 +164,6 @@
                     <text/>
             </attribute>
             <data type="string"/>
-        </element>
-    </define>
-    <define name="jythonEventVector">
-        <element name="jythonEventVectorSubsetter">
-            <xsd:annotation>
-                <summary>Runs an externally defined Jython processor</summary>
-                <description>$jythonWaveformProcessInfo.getRelaxHTML('../../../')</description>
-                <example>
-                    <jythonEventVectorSubsetter>
-                        <module>helloSod</module>
-                        <class>helloSod</class>
-                        <dataDirectory>PutItHere</dataDirectory>
-                        <extraParam>1.7</extraParam>
-                    </jythonEventVectorSubsetter>
-                </example>
-            </xsd:annotation>
-            
-            <choice>
-                <group>
-                    <element name="module">
-                        <data type="string"/>
-                    </element>
-                    <element name="class">
-                        <data type="string"/>
-                    </element>
-                    <zeroOrMore>
-                        <externalRef href="../base/externalRef/anyXML.rng"/>
-                    </zeroOrMore>
-                </group>
-                <element name="inline">
-                    <data type="string"/>
-                </element>
-            </choice>
         </element>
     </define>
     <define name="external">

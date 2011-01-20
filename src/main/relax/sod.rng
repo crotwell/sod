@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    xmlns="http://relaxng.org/ns/structure/1.0" 
+    xmlns:xsd="http://http://www.w3.org/2001/XMLSchema"
+    xmlns:xi="http://www.w3.org/2001/XInclude">
     <start>
         <element name="sod">
             <xsd:annotation>
@@ -11,7 +13,7 @@
                 </description>
             </xsd:annotation>
             <optional>
-                <externalRef href="properties.rng"/>
+                <ref name="properties"/>
             </optional>
             <choice>
                 <ref name="eventArm"/>
@@ -29,6 +31,32 @@
         </element>
     </start>
 
+<!-- Common includes -->
+    <xi:include href="properties.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/area.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/anyXML.rng" />
+    <xi:include href="base/include/catalog.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/contributor.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/eventLabel.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/externalClass.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/latLon.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/magnitudeRange.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/originDepthRange.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/originTimeRange.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/phaseWindow.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/quantity.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/range.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/samplingRange.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/seismogramDisplay.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/seismogramImage.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/source.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/taup.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/time.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/timeRange.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/units.rng" parse="xml" xpointer="xpointer(//define)"/>
+
+    
+<!--  Event Arm -->
     <define name="eventArm">
         <element name="eventArm">
             <xsd:annotation>
@@ -43,13 +71,15 @@
                 <velocity>#eventArmPage()</velocity>
             </xsd:annotation>
             <oneOrMore>
-                <externalRef href="event/eventSource.rng"/>
+                <ref name="eventSource"/>
             </oneOrMore>
             <zeroOrMore>
-                <externalRef href="event/origin.rng"/>
+                <ref name="origin"/>
             </zeroOrMore>
         </element>
     </define>
+    <xi:include href="event/eventSource.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="event/origin.rng" parse="xml" xpointer="xpointer(//define)"/>
 
 <!-- Network Arm -->
     <define name="networkArm">
@@ -65,21 +95,25 @@
                     <velocity>#networkArmPage()</velocity>
             </xsd:annotation>
             <optional>
-                <externalRef href="network/networkSource.rng"/>
+                <ref name="networkSource"/>
             </optional>
             <optional>
-                <externalRef href="network/network.rng"/>
+                <ref name="network"/>
             </optional>
             <optional>
-                <externalRef href="network/station.rng"/>
+                <ref name="station"/>
             </optional>
             <zeroOrMore>
-                <externalRef href="network/channel.rng"/>
+                <ref name="channel"/>
             </zeroOrMore>
         </element>
     </define>
+    <xi:include href="network/networkSource.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="network/network.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="network/station.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="network/channel.rng" parse="xml" xpointer="xpointer(//define)"/>
 
-
+<!-- seismogram arm -->
 
     <define name="waveformArm">
         <choice>
@@ -97,6 +131,7 @@
         </choice>
     </define>
 
+<!-- Single seismogram arm -->
 
     <define name="localSeismogram" >
         <element name="waveformArm">
@@ -105,53 +140,69 @@
                 <velocity>#waveformArmPage()</velocity>
             </xsd:annotation>
             <optional>
-                <externalRef href="waveform/eventStation.rng"/>
+                <ref name="eventStation"/>
             </optional>
             <optional>
-                <externalRef href="waveform/eventChannel.rng"/>
+                <ref name="eventChannel"/>
             </optional>
-            <externalRef href="waveform/requestGenerator.rng"/>
+            <ref name="requestGenerator"/>
             <optional>
-                <externalRef href="waveform/requestSubsetter.rng"/>
-            </optional>
-            <optional>
-                <externalRef href="waveform/seismogramSource.rng"/>
+                <ref name="request"/>
             </optional>
             <optional>
-                <externalRef href="waveform/availableData.rng"/>
+                <ref name="seismogramSource"/>
+            </optional>
+            <optional>
+                <ref name="availableData"/>
             </optional>
             <zeroOrMore>
-                <externalRef href="waveform/waveformProcess.rng"/>
+                <ref name="seismogramProcess"/>
             </zeroOrMore>
         </element>
     </define>
+    <xi:include href="waveform/eventStation.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="waveform/eventChannel.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="waveform/requestGenerator.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="waveform/requestSubsetter.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="waveform/seismogramSource.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="waveform/availableData.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="waveform/waveformProcess.rng" parse="xml" xpointer="xpointer(//define)"/>
+    
+    
     <define name="waveformVectorArm" >
         <element name="waveformVectorArm">
             <xsd:annotation>
-                <summary>Downloads and processes wavforms by channel groups</summary>
+                <summary>Downloads and processes waveforms by channel groups</summary>
                 <description>The waveformVectorArm groups three orthogonal components from a site
                     and then does its processing on them as a group.</description>
                 <velocity>#waveformVectorArmPage()</velocity>
             </xsd:annotation>
             <optional>
-                <externalRef href="waveform/eventStation.rng"/>
+                <ref name="eventStation"/>
             </optional>
             <optional>
-                <externalRef href="waveform/eventVector.rng"/>
+                <ref name="eventVector"/>
             </optional>
-            <externalRef href="waveform/requestGenerator.rng"/>
+            <ref name="requestGenerator"/>
             <optional>
-                <externalRef href="waveform/vectorRequestSubsetter.rng"/>
-            </optional>
-            <optional>
-                <externalRef href="waveform/seismogramSource.rng"/>
+                <ref name="vectorRequest"/>
             </optional>
             <optional>
-                <externalRef href="waveform/vectorAvailableData.rng"/>
+                <ref name="seismogramSource"/>
+            </optional>
+            <optional>
+                <ref name="vectorAvailableData"/>
             </optional>
             <zeroOrMore>
-                <externalRef href="waveform/waveformVectorProcess.rng"/>
+                <ref name="waveformVectorProcess"/>
             </zeroOrMore>
         </element>
     </define>
+    <!-- eventStation include above -->
+    <xi:include href="waveform/eventVector.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <!-- requestGenerator include above -->
+    <xi:include href="waveform/vectorRequestSubsetter.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <!-- seismogramSource include above -->
+    <xi:include href="waveform/vectorAvailableData.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="waveform/waveformVectorProcess.rng" parse="xml" xpointer="xpointer(//define)"/>
 </grammar>

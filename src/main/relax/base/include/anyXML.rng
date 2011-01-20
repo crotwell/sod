@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar xmlns="http://relaxng.org/ns/structure/1.0">
-        <start>
-                <ref name="any"/>
-        </start>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+    datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <start combine="choice">
+        <notAllowed/>
+    </start>
         <define name="any">
                 <oneOrMore>
                         <choice>
                                 <text/>
-                                <ref name="xml"/>
+                                <ref name="anyXML"/>
                         </choice>
                 </oneOrMore>
         </define>
-        <define name="xml">
+        <define name="anyXML">
                 <element>
                         <anyName/>
                         <zeroOrMore>
@@ -20,7 +22,7 @@
                                                 <anyName/>
                                         </attribute>
                                         <text/>
-                                        <ref name="xml"/>
+                                        <ref name="anyXML"/>
                                 </choice>
                         </zeroOrMore>
                 </element>

@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
     xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
-    <include href="../base/include/externalClass.rng"/>
     <start>
         <ref name="eventStation"/>
     </start>
-    <include href="../base/include/range.rng"/>
-    <include href="../base/include/quantity.rng"/>
-    <include href="../base/include/taup.rng"/>
     <define name="eventStation">
         <choice>
             <xsd:annotation>
@@ -16,31 +12,25 @@
             </xsd:annotation>
             <ref name="printlineEventStation"/>
             <ref name="distanceRange"/>
-            <ref name="embeddedOriginSubsetter"/>
-            <ref name="embeddedStationSubsetter"/>
             <ref name="azimuthRange"/>
             <ref name="backAzimuthRange"/>
             <ref name="linearDistanceMagnitudeRange"/>
-            <ref name="AND"/>
-            <ref name="OR"/>
-            <ref name="NOT"/>
+            <ref name="eventStationAND"/>
+            <ref name="eventStationOR"/>
+            <ref name="eventStationNOT"/>
             <ref name="midPoint"/>
             <ref name="removeStationDuplicate"/>
             <ref name="phaseExists"/>
             <ref name="phaseWithoutInterference"/>
-            <ref name="jythonEventStation"/>
             <ref name="eventStationScript"/>
-            <ref name="external"/>
+            <ref name="externalEventStation"/>
         </choice>
-    </define>
-    <define name="station">
-        <externalRef href="../network/station.rng"/>
     </define>
     <define name="eventStationPlus">
         <choice>
             <ref name="eventStation"/>
             <ref name="station"/>
-            <externalRef href="../event/origin.rng"/>
+            <ref name="origin"/>
         </choice>
     </define>
     <define name="printlineEventStation">
@@ -86,30 +76,6 @@
                 </example>
             </xsd:annotation>
             <ref name="range"/>
-        </element>
-    </define>
-    <define name="embeddedOriginSubsetter">
-        <element name="embeddedOriginSubsetter">
-            <xsd:annotation>
-                <summary>Allows the embedding of an origin subsetter into a EventStation location</summary>
-                <description>Allows the embedding of an origin subsetter into a EventStation
-                    location. This is mainly used with an AND or OR where one condition depends on
-                    the origin alone.</description>
-            </xsd:annotation>
-            <externalRef href="../event/origin.rng"/>
-        </element>
-    </define>
-    <define name="embeddedStationSubsetter">
-        <element name="embeddedStationSubsetter">
-            <xsd:annotation>
-                <summary>Allows the embedding of a station subsetter into a EventStation location</summary>
-                <description> Allows the embedding of a station subsetter into a EventStation
-                    location. This is mainly used with an AND or OR where one condition only depends
-                    on the station.</description>
-            </xsd:annotation>
-            <choice>
-                <ref name="station"/>
-            </choice>
         </element>
     </define>
     <define name="azimuthRange">
@@ -167,11 +133,11 @@
                     </linearDistanceMagnitudeRange>
                 </example>
             </xsd:annotation>
-            <externalRef href="../base/externalRef/magnitudeRange.rng"/>
+            <ref name="magnitudeRange"/>
             <ref name="range"/>
         </element>
     </define>
-    <define name="AND">
+    <define name="eventStationAND">
         <element name="eventStationAND">
             <xsd:annotation>
                 <summary>Matches all enclosed EventStation subsetters</summary>
@@ -198,7 +164,7 @@
             </oneOrMore>
         </element>
     </define>
-    <define name="OR">
+    <define name="eventStationOR">
         <element name="eventStationOR">
             <xsd:annotation>
                 <summary>Matches at least one enclosed EventStation subsetter</summary>
@@ -225,7 +191,7 @@
             </oneOrMore>
         </element>
     </define>
-    <define name="NOT">
+    <define name="eventStationNOT">
         <element name="eventStationNOT">
             <xsd:annotation>
                 <summary>Matches the negated output of the enclosed EventStation subsetter</summary>
@@ -320,7 +286,7 @@
                 <description>Accepts an event-station pair if the midPoint between them is within
                     the given area. Areas can be any valid area, including BoxArea, and GlobalArea.</description>
             </xsd:annotation>
-            <externalRef href="../base/externalRef/area.rng"/>
+            <ref name="area"/>
         </element>
     </define>
     <define name="removeStationDuplicate">
@@ -341,40 +307,7 @@
             </optional>
         </element>
     </define>
-    <define name="jythonEventStation">
-        <element name="jythonEventStationSubsetter">
-            <xsd:annotation>
-                <summary>Runs an externally defined Jython event-station subsetter</summary>
-                <description>$jythonWaveformProcessInfo.getRelaxHTML('../../../')</description>
-                <example>
-                    <jythonEventStationSubsetter>
-                        <module>helloSod</module>
-                        <class>helloSod</class>
-                        <dataDirectory>PutItHere</dataDirectory>
-                        <extraParam>1.7</extraParam>
-                    </jythonEventStationSubsetter>
-                </example>
-            </xsd:annotation>
-            
-            <choice>
-                <group>
-                    <element name="module">
-                        <data type="string"/>
-                    </element>
-                    <element name="class">
-                        <data type="string"/>
-                    </element>
-                    <zeroOrMore>
-                        <externalRef href="../base/externalRef/anyXML.rng"/>
-                    </zeroOrMore>
-                </group>
-                <element name="inline">
-                    <data type="string"/>
-                </element>
-            </choice>
-        </element>
-    </define>
-    <define name="external">
+    <define name="externalEventStation">
         <element name="externalEventStationSubsetter">
             <xsd:annotation>
                 <summary>Use an EventStation subsetter external to SOD</summary>

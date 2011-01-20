@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0">
-    <include href="../include/area.rng"/>
-    <start combine="choice">
-        <ref name="area"/>
-    </start>
-</grammar>

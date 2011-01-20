@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
-    <include href="../base/include/externalClass.rng"/>
     <start>
         <ref name="origin"/>
     </start>
-    <include href="../base/include/timeRange.rng"/>
-    <include href="../base/include/area.rng"/>
-    <include href="../base/include/quantity.rng"/>
     <define name="origin">
         <choice>
             <xsd:annotation>
@@ -15,12 +11,12 @@
                 <velocity>#eventArmPage()</velocity>
             </xsd:annotation>
             <ref name="removeEventDuplicate"/>
-            <ref name="name"/>
+            <ref name="eventAttrName"/>
             <ref name="geographicalRegion"/>
             <ref name="seismicRegion"/>
-            <externalRef href="../base/externalRef/originTimeRange.rng"/>
-            <externalRef href="../base/externalRef/magnitudeRange.rng"/>
-            <externalRef href="../base/externalRef/originDepthRange.rng"/>
+            <ref name="originTimeRange"/>
+            <ref name="magnitudeRange"/>
+            <ref name="originDepthRange"/>
             <ref name="originPointDistance"/>
             <ref name="originPointAzimuth"/>
             <ref name="originPointBackAzimuth"/>
@@ -28,9 +24,9 @@
             <ref name="eventArea"/>
             <ref name="eventBoxArea"/>
             <ref name="eventPolygonFile"/>
-            <externalRef href="catalog.rng"/>
-            <externalRef href="contributor.rng"/>
-            <externalRef href="networkTimeRange.rng"/>
+            <ref name="catalog"/>
+            <ref name="contributor"/>
+            <ref name="networkTimeRange"/>
             <ref name="arrayAND"/>
             <ref name="arrayOR"/>
             <ref name="AND"/>
@@ -41,14 +37,10 @@
             <ref name="printline"/>
             <ref name="CSVEventPrinter"/>
             <ref name="similarEvent"/>
-            <ref name="jythonOriginSubsetter"/>
             <ref name="originScript"/>
         </choice>
     </define>
-    <define name="latLonUnitRange">
-        <externalRef href="../base/externalRef/latLonUnitRange.rng"/>
-    </define>
-    <define name="name">
+    <define name="eventAttrName">
         <element name="eventAttrName">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
@@ -117,8 +109,8 @@
                 <description>Accepts events that occur within the latitude longitude box defined
                     here</description>
             </xsd:annotation>
-            <externalRef href="../base/externalRef/latitudeRange.rng"/>
-            <externalRef href="../base/externalRef/longitudeRange.rng"/>
+            <ref name="latitudeRange"/>
+            <ref name="longitudeRange"/>
         </element>
     </define>
     <define name="eventPolygonFile">
@@ -244,7 +236,7 @@
                     interpolation, enclose this in an originNOT. </description>
             </xsd:annotation>
             <ref name="latLonUnitRange"/>
-            <externalRef href="../base/externalRef/magnitudeRange.rng"/>
+            <ref name="magnitudeRange"/>
         </element>
     </define>
     <define name="originPointAzimuth">
@@ -383,40 +375,7 @@
             <xsd:annotation>
                 <summary>Accepts events that are similar to one in the included event source.</summary>
             </xsd:annotation>
-            <externalRef href="eventSource.rng"/>
-        </element>
-    </define>
-    <define name="jythonOriginSubsetter">
-        <element name="jythonOriginSubsetter">
-            <xsd:annotation>
-                <summary>Runs an externally defined Jython origin subsetter</summary>
-                <description>$jythonWaveformProcessInfo.getRelaxHTML('../../../')</description>
-                <example>
-                    <jythonOriginSubsetter>
-                        <module>helloSod</module>
-                        <class>helloSod</class>
-                        <dataDirectory>PutItHere</dataDirectory>
-                        <extraParam>1.7</extraParam>
-                    </jythonOriginSubsetter>
-                </example>
-            </xsd:annotation>
-            
-            <choice>
-                <group>
-                    <element name="module">
-                        <data type="string"/>
-                    </element>
-                    <element name="class">
-                        <data type="string"/>
-                    </element>
-                    <zeroOrMore>
-                        <externalRef href="../base/externalRef/anyXML.rng"/>
-                    </zeroOrMore>
-                </group>
-                <element name="inline">
-                    <data type="string"/>
-                </element>
-            </choice>
+            <ref name="eventSource"/>
         </element>
     </define>
     <define name="originScript">

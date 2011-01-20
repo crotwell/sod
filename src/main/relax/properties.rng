@@ -2,8 +2,10 @@
 <grammar xmlns="http://relaxng.org/ns/structure/1.0"
     xmlns:xsd="http://http://www.w3.org/2001/XMLSchema"
     datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
-    <include href="base/include/quantity.rng"/>
-    <start>
+    <start combine="choice">
+        <notAllowed/>
+    </start>
+    <define name="properties">
         <element name="properties">
             <xsd:annotation>
                 <summary>Various non arm specific SOD run settings</summary>
@@ -62,7 +64,7 @@
                 </optional>
             </interleave>
         </element>
-    </start>
+    </define>
     <define name="trueOrFalse">
         <choice>
             <value>TRUE</value>

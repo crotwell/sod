@@ -34,4 +34,48 @@
             <param name="maxInclusive">360</param>
         </data>
     </define>
+    <define name="latitudeRange">
+        <element name="latitudeRange">
+            <optional>
+                <element name="min">
+                    <xsd:annotation>
+                        <include/>
+                    </xsd:annotation>
+                    <ref name="latitudeData"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="max">
+                    <xsd:annotation>
+                        <include/>
+                    </xsd:annotation>
+                    <ref name="latitudeData"/>
+                </element>
+            </optional>
+        </element>
+    </define>
+    <define name="longitudeRange">
+        <element name="longitudeRange">
+            <xsd:annotation>
+                <summary>A range of degrees longitude</summary>
+                <description>From min to max longitude measured in degrees from the Grenwich meridian, positive is east</description>
+            </xsd:annotation>
+            <optional>
+                <element name="min">
+                    <xsd:annotation>
+                        <include/>
+                    </xsd:annotation>
+                    <ref name="longitudeData"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="max">
+                    <xsd:annotation>
+                        <include/>
+                    </xsd:annotation>
+                    <ref name="longitudeData"/>
+                </element>
+            </optional>
+        </element>
+    </define>
 </grammar>

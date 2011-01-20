@@ -4,7 +4,9 @@
         <notAllowed/>
     </start>
     <define name="timeInterval" combine="choice">
-        <externalRef href="../externalRef/timeInterval.rng"/>
+        <element name="timeInterval">
+            <ref name="time"/>
+        </element>
     </define>
     <define name="time" combine="choice">
         <choice>

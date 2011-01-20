@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
     xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
-    <include href="../base/include/externalClass.rng"/>
-    <include href="../base/include/quantity.rng"/>
     <start>
         <ref name="availableData"/>
     </start>
-    <include href="../base/include/eventLabel.rng"/>
     <define name="availableData">
         <choice>
             <xsd:annotation>
@@ -27,7 +24,6 @@ The default is <someCoverage/>.</description>
             <ref name="availableDataOR"/>
             <ref name="availableDataNOT"/>
             <ref name="availableDataScript"/>
-            <ref name="jythonAvailableData"/>
             <ref name="externalAvailable"/>
             <ref name="printlineAvailableDataProcess"/>
         </choice>
@@ -35,11 +31,11 @@ The default is <someCoverage/>.</description>
     <define name="availableDataPlus">
         <choice>
           <ref name="availableData"/>
-          <externalRef href="eventChannel.rng"/>
-          <externalRef href="eventStation.rng"/>
-          <externalRef href="requestSubsetter.rng"/>
-          <externalRef href="../network/channel.rng"/>
-          <externalRef href="../event/origin.rng"/>
+          <ref name="eventChannel"/>
+          <ref name="eventStation"/>
+          <ref name="request"/>
+          <ref name="channel"/>
+          <ref name="origin"/>
         </choice>
     </define>
     <define name="availableDataAND">
@@ -131,7 +127,7 @@ The default is <someCoverage/>.</description>
                 subsetter is defined in this element, it is used to check the generated request.  If none is specified 
                 fullCoverage is used.</description>
             </xsd:annotation>
-            <externalRef href="requestGenerator.rng"/>
+            <ref name="requestGenerator"/>
             <optional>
                 <ref name="availableData"/>
             </optional>
@@ -219,39 +215,6 @@ The default is <someCoverage/>.</description>
                     <text/>
             </attribute>
             <data type="string"/>
-        </element>
-    </define>
-    <define name="jythonAvailableData">
-        <element name="jythonAvailableDataSubsetter">
-            <xsd:annotation>
-                <summary>Runs an externally defined Jython available data</summary>
-                <description>$jythonWaveformProcessInfo.getRelaxHTML('../../../')</description>
-                <example>
-                    <jythonAvailableDataSubsetter>
-                        <module>helloSod</module>
-                        <class>helloSod</class>
-                        <dataDirectory>PutItHere</dataDirectory>
-                        <extraParam>1.7</extraParam>
-                    </jythonAvailableDataSubsetter>
-                </example>
-            </xsd:annotation>
-            
-            <choice>
-                <group>
-                    <element name="module">
-                        <data type="string"/>
-                    </element>
-                    <element name="class">
-                        <data type="string"/>
-                    </element>
-                    <zeroOrMore>
-                        <externalRef href="../base/externalRef/anyXML.rng"/>
-                    </zeroOrMore>
-                </group>
-                <element name="inline">
-                    <data type="string"/>
-                </element>
-            </choice>
         </element>
     </define>
 </grammar>

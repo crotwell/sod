@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
     xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
-    <include href="../base/include/externalClass.rng"/>
     <start>
         <ref name="station"/>
     </start>
-    <include href="../base/include/timeRange.rng"/>
-    <include href="../base/include/range.rng"/>
-    <include href="../base/include/latLon.rng"/>
     <define name="station">
         <choice>
             <xsd:annotation>
@@ -16,25 +12,24 @@
                     of a station.</description>
                 <velocity>#networkArmPage()</velocity>
             </xsd:annotation>
-            <ref name="code"/>
+            <ref name="stationCode"/>
             <ref name="regExp"/>
-            <ref name="name"/>
+            <ref name="stationName"/>
             <ref name="operator"/>
             <ref name="depthRange"/>
-            <ref name="effectiveTimeOverlap"/>
-            <ref name="area"/>
+            <ref name="stationEffectiveTimeOverlap"/>
+            <ref name="stationArea"/>
             <ref name="stationBoxArea"/>
             <ref name="stationPolygonFile"/>
             <ref name="stationPointDistance"/>
             <ref name="stationPointAzimuth"/>
             <ref name="printlineStationProcess"/>
             <ref name="stationPointBackAzimuth"/>
-            <ref name="AND"/>
-            <ref name="OR"/>
-            <ref name="NOT"/>
+            <ref name="stationAND"/>
+            <ref name="stationOR"/>
+            <ref name="stationNOT"/>
             <ref name="externalStationSubsetter"/>
             <ref name="belongsToVirtual"/>
-            <ref name="jythonStationSubsetter"/>
             <ref name="stationScript"/>
         </choice>
     </define>
@@ -42,10 +37,10 @@
         <choice>
             <ref name="station"/>
             <ref name="stationScript"/>
-            <externalRef href="network.rng"/>
+            <ref name="network"/>
         </choice>
     </define>
-    <define name="code">
+    <define name="stationCode">
         <element name="stationCode">
             <xsd:annotation>
                 <summary>Matches a station code</summary>
@@ -73,7 +68,7 @@
             </element>
         </element>
     </define>
-    <define name="name">
+    <define name="stationName">
         <element name="stationName">
             <xsd:annotation>
                 <summary>Matches the name of a station</summary>
@@ -117,7 +112,7 @@
             <ref name="range"/>
         </element>
     </define>
-    <define name="effectiveTimeOverlap">
+    <define name="stationEffectiveTimeOverlap">
         <element name="stationEffectiveTimeOverlap">
             <xsd:annotation>
                 <summary>Matches if the station effective time overlaps the given time range</summary>
@@ -130,7 +125,7 @@
             <ref name="timeRange"/>
         </element>
     </define>
-    <define name="area">
+    <define name="stationArea">
         <element name="stationArea">
             <xsd:annotation>
                 <summary>Matches stations that are within a given area</summary>
@@ -138,7 +133,7 @@
                 <a href="stationBoxArea.html">stationBoxArea</a> if it contains boxArea or <a href="stationPolygonFile.html">stationPolygonFile</a> 
                 if it contains polygonFile.</deprecated>
             </xsd:annotation>
-            <externalRef href="../base/externalRef/area.rng"/>
+            <ref name="area"/>
         </element>
     </define>
     <define name="stationBoxArea">
@@ -148,8 +143,8 @@
                 <description>Accepts stations that occur within the latitude longitude box defined
                     here</description>
             </xsd:annotation>
-            <externalRef href="../base/externalRef/latitudeRange.rng"/>
-            <externalRef href="../base/externalRef/longitudeRange.rng"/>
+            <ref name="latitudeRange"/>
+            <ref name="longitudeRange"/>
         </element>
     </define>
     <define name="stationPolygonFile">
@@ -174,7 +169,7 @@
                 <description> True if the station is within the given distance range of the given
                     lat and lon. </description>
             </xsd:annotation>
-            <externalRef href="../base/externalRef/latLonUnitRange.rng"/>
+            <ref name="latLonUnitRange"/>
         </element>
     </define>
     <define name="stationPointAzimuth">
@@ -185,7 +180,7 @@
                     and lon. In keeping with common seismic terminology, azimuth is measured from
                     the point to the station.</description>
             </xsd:annotation>
-            <externalRef href="../base/externalRef/latLonUnitRange.rng"/>
+            <ref name="latLonUnitRange"/>
         </element>
     </define>
     <define name="stationPointBackAzimuth">
@@ -196,10 +191,10 @@
                     given lat and lon. In keeping with common seismic terminology, back azimuth is
                     measured from the station to the point. </description>
             </xsd:annotation>
-            <externalRef href="../base/externalRef/latLonUnitRange.rng"/>
+            <ref name="latLonUnitRange"/>
         </element>
     </define>
-    <define name="AND">
+    <define name="stationAND">
         <element name="stationAND">
             <xsd:annotation>
                 <summary>Matches all enclosed Station subsetters</summary>
@@ -233,7 +228,7 @@
             </oneOrMore>
         </element>
     </define>
-    <define name="OR">
+    <define name="stationOR">
         <element name="stationOR">
             <xsd:annotation>
                 <summary>Matches at least one enclosed Station subsetter</summary>
@@ -267,7 +262,7 @@
             </oneOrMore>
         </element>
     </define>
-    <define name="NOT">
+    <define name="stationNOT">
         <element name="stationNOT">
             <xsd:annotation>
                 <summary>Matches the negated output of the enclosed Station subsetter</summary>
@@ -327,38 +322,6 @@
                     </element>
                 </optional>
             </interleave>
-        </element>
-    </define>
-    <define name="jythonStationSubsetter">
-        <element name="jythonStationSubsetter">
-            <xsd:annotation>
-                <summary>Runs an externally defined Jython station subsetter</summary>
-                <description>$jythonWaveformProcessInfo.getRelaxHTML('../../../')</description>
-                <example>
-                    <jythonStationSubsetter>
-                        <module>helloSod</module>
-                        <class>helloSod</class>
-                        <dataDirectory>PutItHere</dataDirectory>
-                        <extraParam>1.7</extraParam>
-                    </jythonStationSubsetter>
-                </example>
-            </xsd:annotation>
-            <choice>
-                <group>
-                    <element name="module">
-                        <data type="string"/>
-                    </element>
-                    <element name="class">
-                        <data type="string"/>
-                    </element>
-                    <zeroOrMore>
-                        <externalRef href="../base/externalRef/anyXML.rng"/>
-                    </zeroOrMore>
-                </group>
-                <element name="inline">
-                    <data type="string"/>
-                </element>
-            </choice>
         </element>
     </define>
     <define name="stationScript">

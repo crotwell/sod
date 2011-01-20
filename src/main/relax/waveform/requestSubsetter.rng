@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
-    <include href="../base/include/externalClass.rng"/>
     <start>
         <ref name="request"/>
     </start>
-    <include href="../base/include/eventLabel.rng"/>
     <define name="request">
         <choice>
             <xsd:annotation>
@@ -18,18 +16,17 @@
             <ref name="breqFastRequest"/>
             <ref name="netDCRequest"/>
             <ref name="plottableRequest"/>
-            <ref name="jythonRequestSubsetter"/>
             <ref name="requestScript"/>
-            <ref name="external"/>
+            <ref name="externalRequestSubsetter"/>
         </choice>
     </define>
     <define name="requestPlus">
         <choice>
             <ref name="request"/>
-            <externalRef href="eventChannel.rng"/>
-            <externalRef href="eventStation.rng"/>
-            <externalRef href="../network/channel.rng"/>
-            <externalRef href="../event/origin.rng"/>
+            <ref name="eventChannel"/>
+            <ref name="eventStation"/>
+            <ref name="channel"/>
+            <ref name="origin"/>
         </choice>
     </define>
     <define name="requestAND">
@@ -452,40 +449,7 @@
             <data type="string"/>
         </element>
     </define>
-    <define name="jythonRequestSubsetter">
-        <element name="jythonRequestSubsetter">
-            <xsd:annotation>
-                <summary>Runs an externally defined Jython request subsetter</summary>
-                <description>$jythonWaveformProcessInfo.getRelaxHTML('../../../')</description>
-                <example>
-                    <jythonRequestSubsetter>
-                        <module>helloSod</module>
-                        <class>helloSod</class>
-                        <dataDirectory>POND_II</dataDirectory>
-                        <extraParam>1.7</extraParam>
-                    </jythonRequestSubsetter>
-                </example>
-            </xsd:annotation>
-            
-            <choice>
-                <group>
-                    <element name="module">
-                        <data type="string"/>
-                    </element>
-                    <element name="class">
-                        <data type="string"/>
-                    </element>
-                    <zeroOrMore>
-                        <externalRef href="../base/externalRef/anyXML.rng"/>
-                    </zeroOrMore>
-                </group>
-                <element name="inline">
-                    <data type="string"/>
-                </element>
-            </choice>
-        </element>
-    </define>
-    <define name="external">
+    <define name="externalRequestSubsetter">
         <element name="externalRequestSubsetter">
             <xsd:annotation>
                 <summary>Use a request subsetter external to SOD</summary>

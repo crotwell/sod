@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
     xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
-    <include href="../base/include/externalClass.rng"/>
     <start>
         <ref name="vectorRequest"/>
     </start>
@@ -17,9 +16,8 @@
             <ref name="vectorRequestOR"/>
             <ref name="vectorRequestNOT"/>
             <ref name="vectorRequestScript"/>
-            <ref name="jythonVectorRequestSubsetter"/>
-            <ref name="external"/>
-            <externalRef href="requestSubsetter.rng"/>
+            <ref name="externalVectorRequest"/>
+            <ref name="request"/>
         </choice>
     </define>
     <define name="ANDRequestWrapper">
@@ -37,7 +35,7 @@
                     </ANDRequestWrapper>
                 </example>
             </xsd:annotation>
-            <externalRef href="requestSubsetter.rng"/>
+            <ref name="request"/>
         </element>
     </define>
     <define name="ORRequestWrapper">
@@ -55,7 +53,7 @@
                     </ORRequestWrapper>
                 </example>
             </xsd:annotation>
-            <externalRef href="requestSubsetter.rng"/>
+            <ref name="request"/>
         </element>
     </define>
     <define name="vectorRequestAND">
@@ -128,40 +126,7 @@
             <data type="string"/>
         </element>
     </define>
-    <define name="jythonVectorRequestSubsetter">
-        <element name="jythonVectorRequestSubsetter">
-            <xsd:annotation>
-                <summary>Runs an externally defined Jython vector request subsetter</summary>
-                <description>$jythonWaveformProcessInfo.getRelaxHTML('../../../')</description>
-                <example>
-                    <jythonVectorRequestSubsetter>
-                        <module>helloSod</module>
-                        <class>helloSod</class>
-                        <dataDirectory>POND_II</dataDirectory>
-                        <extraParam>1.7</extraParam>
-                    </jythonVectorRequestSubsetter>
-                </example>
-            </xsd:annotation>
-            
-            <choice>
-                <group>
-                    <element name="module">
-                        <data type="string"/>
-                    </element>
-                    <element name="class">
-                        <data type="string"/>
-                    </element>
-                    <zeroOrMore>
-                        <externalRef href="../base/externalRef/anyXML.rng"/>
-                    </zeroOrMore>
-                </group>
-                <element name="inline">
-                    <data type="string"/>
-                </element>
-            </choice>
-        </element>
-    </define>
-    <define name="external">
+    <define name="externalVectorRequest">
         <element name="externalVectorRequest">
             <xsd:annotation>
                 <summary>Use a VectorRequest external to SOD</summary>

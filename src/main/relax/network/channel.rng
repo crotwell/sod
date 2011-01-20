@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
-    <include href="../base/include/externalClass.rng"/>
     <start>
         <ref name="channel"/>
     </start>
-    <include href="../base/include/timeRange.rng"/>
-    <include href="../base/include/range.rng"/>
-    <include href="../base/include/quantity.rng"/>
-    <include href="../base/include/samplingRange.rng"/>
-    <include href="../base/include/units.rng"/>
     <define name="channel">
         <choice>
             <xsd:annotation>
@@ -27,16 +21,16 @@
             <ref name="gainCode"/>
             <ref name="orientationCode"/>
             <ref name="sampling"/>
-            <ref name="effectiveTimeOverlap"/>
+            <ref name="channelEffectiveTimeOverlap"/>
             <ref name="orientationRange"/>
             <ref name="orientationAzimuthRange"/>
             <ref name="orientationDipRange"/>
-            <ref name="AND"/>
-            <ref name="OR"/>
-            <ref name="NOT"/>
+            <ref name="channelAND"/>
+            <ref name="channelOR"/>
+            <ref name="channelNOT"/>
             <ref name="externalChannelSubsetter"/>
             <ref name="hadDataLastWeek"/>
-            <ref name="printline"/>
+            <ref name="printlineChannelProcess"/>
             <ref name="responseWriter"/>
             <ref name="sacPoleZeroWriter"/>
             <ref name="stationHas"/>
@@ -67,15 +61,14 @@
             <ref name="hasNegativeSensitivity"/>
             <ref name="isFlipped"/>
             <ref name="isGroupable"/>
-            <ref name="jythonChannelSubsetter"/>
             <ref name="channelScript"/>
         </choice>
     </define>
     <define name="channelPlus">
         <choice>
             <ref name="channel"/>
-            <externalRef href="station.rng"/>
-            <externalRef href="network.rng"/>
+            <ref name="station"/>
+            <ref name="network"/>
         </choice>
     </define>
     <define name="siteCode">
@@ -136,7 +129,7 @@
                     <a href="siteBoxArea.html">siteBoxArea</a> if it contains boxArea or <a href="sitePolygonFile.html">sitePolygonFile</a> if it contains polygonFile.</deprecated>
                 </xsd:documentation>
             </xsd:annotation>
-            <externalRef href="../base/externalRef/area.rng"/>
+            <ref name="area"/>
         </element>
     </define>
     <define name="siteBoxArea">
@@ -146,8 +139,8 @@
                 <description>Accepts sites that occur within the latitude longitude box defined
                     here</description>
             </xsd:annotation>
-            <externalRef href="../base/externalRef/latitudeRange.rng"/>
-            <externalRef href="../base/externalRef/longitudeRange.rng"/>
+            <ref name="latitudeRange"/>
+            <ref name="longitudeRange"/>
         </element>
     </define>
     <define name="sitePolygonFile">
@@ -230,7 +223,7 @@
             <ref name="singleLetterOrNumber"/>
         </element>
     </define>
-    <define name="AND">
+    <define name="channelAND">
         <element name="channelAND">
             <xsd:annotation>
                 <summary>Matches all enclosed channel subsetters</summary>
@@ -259,7 +252,7 @@
             </oneOrMore>
         </element>
     </define>
-    <define name="OR">
+    <define name="channelOR">
         <element name="channelOR">
             <xsd:annotation>
                 <summary>Matches at least one enclosed channel subsetter</summary>
@@ -284,11 +277,14 @@
                 </example>
             </xsd:annotation>
             <oneOrMore>
+<!--
+                <ref name="channel"/>
+-->
                 <ref name="channelPlus"/>
             </oneOrMore>
         </element>
     </define>
-    <define name="NOT">
+    <define name="channelNOT">
         <element name="channelNOT">
             <xsd:annotation>
                 <summary>Matches the negated output of the enclosed channel subsetter</summary>
@@ -318,7 +314,7 @@
             <ref name="samplingRange"/>
         </element>
     </define>
-    <define name="effectiveTimeOverlap">
+    <define name="channelEffectiveTimeOverlap">
         <element name="channelEffectiveTimeOverlap">
             <xsd:annotation>
                 <summary>Matches if the channel effective time overlaps the given time range</summary>
@@ -426,7 +422,7 @@
             <xsd:annotation>
                 <summary>Checks if a data center has data for a channel for the past week</summary>
             </xsd:annotation>
-            <externalRef href="../waveform/fixedDataCenter.rng"/>
+            <ref name="seismogramSource"/>
         </element>
     </define>
     <define name="stageTransferType">
@@ -600,7 +596,7 @@
             </optional>
         </element>
     </define>
-    <define name="printline">
+    <define name="printlineChannelProcess">
         <element name="printlineChannelProcess">
             <xsd:annotation>
                 <summary>Prints every successful channel to the console or to the specified file</summary>
@@ -826,39 +822,6 @@
                 <summary>Passes channels that can be grouped with other channels at the site to make 3 components of motion.</summary>
             </xsd:annotation>
             <empty/>
-        </element>
-    </define>
-    <define name="jythonChannelSubsetter">
-        <element name="jythonChannelSubsetter">
-            <xsd:annotation>
-                <summary>Runs an externally defined Jython channel subsetter</summary>
-                <description>$jythonWaveformProcessInfo.getRelaxHTML('../../../')</description>
-                <example>
-                    <jythonChannelSubsetter>
-                        <module>helloSod</module>
-                        <class>helloSod</class>
-                        <dataDirectory>PutItHere</dataDirectory>
-                        <extraParam>1.7</extraParam>
-                    </jythonChannelSubsetter>
-                </example>
-            </xsd:annotation>
-            
-            <choice>
-                <group>
-                    <element name="module">
-                        <data type="string"/>
-                    </element>
-                    <element name="class">
-                        <data type="string"/>
-                    </element>
-                    <zeroOrMore>
-                        <externalRef href="../base/externalRef/anyXML.rng"/>
-                    </zeroOrMore>
-                </group>
-                <element name="inline">
-                    <data type="string"/>
-                </element>
-            </choice>
         </element>
     </define>
     <define name="channelScript">

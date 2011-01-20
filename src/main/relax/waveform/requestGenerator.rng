@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
     xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
-    <include href="../base/include/phaseWindow.rng"/>
-    <include href="../base/include/quantity.rng"/>
     <start combine="choice">
         <ref name="requestGenerator"/>
     </start>
@@ -16,7 +14,7 @@
             <ref name="originOffsetRequest"/>
             <ref name="choiceRequest"/>
             <ref name="combineRequest"/>
-            <ref name="jythonRequestGenerator"/>
+            <ref name="requestGeneratorScript"/>
         </choice>
     </define>
     <define name="phaseRequest">
@@ -68,7 +66,7 @@
             </xsd:annotation>
             <oneOrMore>
                 <element name="choice">
-                    <externalRef href="eventChannel.rng"/>
+                    <ref name="eventChannelPlus"/>
                     <ref name="requestGenerator"/>
                 </element>
             </oneOrMore>
@@ -92,29 +90,27 @@
             </oneOrMore>
         </element>
     </define>
-    <define name="jythonRequestGenerator">
-        <element name="jythonRequestGenerator">
+    <define name="requestGeneratorScript">
+        <element name="requestGeneratorScript">
             <xsd:annotation>
-                <summary>Runs an externally defined Jython request generator</summary>
-                <description>$jythonWaveformProcessInfo.getRelaxHTML('../../../')</description>
+                <summary>Runs a script to generate the request</summary>
+                <description>Runs a request generater script via JSR223. The event is put as "event" and the channel
+                as "channel". The channel and event objects are a
+                VelocityChannel and VelocityEvent, respectively, the same classes used in the <a href="../../templates.html">templates</a> for the printlineChannelProcess.
+                The result is expected to be put as "request" by the script as a List or an array of RequestFilter objects.
+                See the <a href="../../scripting.html">scripting tutorial</a> for more information on inlining scripts
+                into a SOD recipe.</description>
                 <example>
-                    <jythonRequestGenerator>
-                        <module>helloSod</module>
-                        <class>helloSod</class>
-                        <extraThing>True</extraThing>
-                        <extraParam>1.7</extraParam>
-                    </jythonRequestGenerator>
+                    <availableDataScript type="jython">
+                        result = len(request) == len(available)
+                    
+                    </availableDataScript>
                 </example>
             </xsd:annotation>
-            <element name="module">
-                <data type="string"/>
-            </element>
-            <element name="class">
-                <data type="string"/>
-            </element>
-            <zeroOrMore>
-                <externalRef href="../base/externalRef/anyXML.rng"/>
-            </zeroOrMore>
+            <attribute name="type">
+                    <text/>
+            </attribute>
+            <data type="string"/>
         </element>
     </define>
 </grammar>

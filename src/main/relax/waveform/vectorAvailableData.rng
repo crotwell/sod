@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
     xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
-    <include href="../base/include/externalClass.rng"/>
     <start>
         <ref name="vectorAvailableData"/>
     </start>
@@ -17,21 +16,20 @@
             <ref name="vectorAvailableDataOR"/>
             <ref name="vectorAvailableDataNOT"/>
             <ref name="vectorAvailableDataScript"/>
-            <ref name="jythonVectorAvailableData"/>
-            <ref name="external"/>
-            <externalRef href="availableData.rng"/>
+            <ref name="externalVectorAvailableData"/>
+            <ref name="availableData"/>
         </choice>
     </define>
     <define name="vectorAvailableDataPlus">
         <choice>
             <ref name="vectorAvailableData"/>
-            <externalRef href="eventVector.rng"/>
-            <externalRef href="vectorRequestSubsetter.rng"/>
-            <externalRef href="eventChannel.rng"/>
-            <externalRef href="eventStation.rng"/>
-            <externalRef href="requestSubsetter.rng"/>
-            <externalRef href="../network/channel.rng"/>
-            <externalRef href="../event/origin.rng"/>
+            <ref name="eventVector"/>
+            <ref name="vectorRequest"/>
+            <ref name="eventChannel"/>
+            <ref name="eventStation"/>
+            <ref name="request"/>
+            <ref name="channel"/>
+            <ref name="origin"/>
         </choice>
     </define>
     <define name="ANDAvailableDataWrapper">
@@ -49,7 +47,7 @@
                     </ANDAvailableDataWrapper>
                 </example>
             </xsd:annotation>
-            <externalRef href="availableData.rng"/>
+            <ref name="availableData"/>
         </element>
     </define>
     <define name="ORAvailableDataWrapper">
@@ -67,7 +65,7 @@
                     </ORAvailableDataWrapper>
                 </example>
             </xsd:annotation>
-            <externalRef href="availableData.rng"/>
+            <ref name="availableData"/>
         </element>
     </define>
     <define name="vectorAvailableDataAND">
@@ -164,40 +162,7 @@
             <data type="string"/>
         </element>
     </define>
-    <define name="jythonVectorAvailableData">
-        <element name="jythonVectorAvailableDataSubsetter">
-            <xsd:annotation>
-                <summary>Runs an externally defined Jython available data processor</summary>
-                <description>$jythonWaveformProcessInfo.getRelaxHTML('../../../')</description>
-                <example>
-                    <jythonVectorAvailableDataSubsetter>
-                        <module>helloSod</module>
-                        <class>helloSod</class>
-                        <dataDirectory>POND_II</dataDirectory>
-                        <extraParam>1.7</extraParam>
-                    </jythonVectorAvailableDataSubsetter>
-                </example>
-            </xsd:annotation>
-            
-            <choice>
-                <group>
-                    <element name="module">
-                        <data type="string"/>
-                    </element>
-                    <element name="class">
-                        <data type="string"/>
-                    </element>
-                    <zeroOrMore>
-                        <externalRef href="../base/externalRef/anyXML.rng"/>
-                    </zeroOrMore>
-                </group>
-                <element name="inline">
-                    <data type="string"/>
-                </element>
-            </choice>
-        </element>
-    </define>
-    <define name="external">
+    <define name="externalVectorAvailableData">
         <element name="externalVectorAvailableDataSubsetter">
             <xsd:annotation>
                 <summary>Use a VectorAvailableData subsetter external to sod</summary>

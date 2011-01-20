@@ -3,13 +3,6 @@
     <start>
         <ref name="seismogramProcess"/>
     </start>
-    <include href="../base/include/eventLabel.rng"/>
-    <include href="../base/include/quantity.rng"/>
-    <include href="../base/include/range.rng"/>
-    <include href="../base/include/taup.rng"/>
-    <include href="../base/include/seismogramImage.rng"/>
-    <include href="../base/include/seismogramDisplay.rng"/>
-    <include href="../base/include/samplingRange.rng"/>
     <define name="seismogramProcess">
         <choice>
             <xsd:annotation>
@@ -38,12 +31,11 @@
             <ref name="rTrend"/>
             <ref name="taper"/>
             <ref name="externalWaveformProcess"/>
-            <ref name="jythonWaveformProcess"/>
             <ref name="seismogramScript"/>
             <ref name="localSeismogramStatus"/>
             <ref name="filter"/>
             <ref name="forkProcess"/>
-            <ref name="alwaysSuccess"/>
+            <ref name="seismogramAlwaysSuccess"/>
             <ref name="phaseSignalToNoise"/>
             <ref name="compoundPhaseSignalToNoise"/>
             <ref name="seismogramImageProcess"/>
@@ -56,14 +48,6 @@
             <ref name="fullDataCoverage"/>
             <ref name="integrate"/>
             <ref name="differentiate"/>
-            <ref name="embeddedNetwork"/>
-            <ref name="embeddedStation"/>
-            <ref name="embeddedChannel"/>
-            <ref name="embeddedEventStation"/>
-            <ref name="embeddedEventChannel"/>
-            <ref name="embeddedRequest"/>
-            <ref name="embeddedEventStationProcessor"/> <!--depricated-->
-            <ref name="embeddedEventChannelProcessor"/> <!--depricated-->
             <ref name="transferResponse"/>
             <ref name="collapseOverlaps"/>
             <ref name="div"/>
@@ -546,7 +530,7 @@
                 <ref name="seisFileLocation"/>
             </optional>
             <optional>
-                <ref name="embeddedEventChannelProcessor"/>
+                <ref name="eventChannelPlus"/>
             </optional>
             <optional>
                 <element name="fileNameBase">
@@ -625,12 +609,7 @@
                     </externalWaveformProcess>
                 </example>
             </xsd:annotation>
-            <element name="classname">
-                <data type="string"/>
-            </element>
-            <zeroOrMore>
-                <externalRef href="../base/externalRef/anyXML.rng"/>
-            </zeroOrMore>
+            <ref name="externalClass"/>
         </element>
     </define>
     <define name="seismogramScript">
@@ -667,39 +646,6 @@ result = util.waveformResult(True, out)
                     <text/>
             </attribute>
             <data type="string"/>
-        </element>
-    </define>
-    <define name="jythonWaveformProcess">
-        <element name="jythonWaveformProcess">
-            <xsd:annotation>
-                <summary>Runs an externally defined Jython processor</summary>
-                <description>$jythonWaveformProcessInfo.getRelaxHTML('../../../')</description>
-                <example>
-                    <jythonWaveformProcess>
-                        <module>helloSod</module>
-                        <class>helloSod</class>
-                        <dataDirectory>PutItHere</dataDirectory>
-                        <extraParam>1.7</extraParam>
-                    </jythonWaveformProcess>
-                </example>
-            </xsd:annotation>
-            
-            <choice>
-                <group>
-                    <element name="module">
-                        <data type="string"/>
-                    </element>
-                    <element name="class">
-                        <data type="string"/>
-                    </element>
-                    <zeroOrMore>
-                        <externalRef href="../base/externalRef/anyXML.rng"/>
-                    </zeroOrMore>
-                </group>
-                <element name="inline">
-                    <data type="string"/>
-                </element>
-            </choice>
         </element>
     </define>
     <define name="printlineSeismogramProcess">
@@ -771,7 +717,7 @@ result = util.waveformResult(True, out)
             </oneOrMore>
         </element>
     </define>
-    <define name="alwaysSuccess">
+    <define name="seismogramAlwaysSuccess">
         <element name="alwaysSuccess">
             <xsd:annotation>
                 <summary>Executes a subprocessor, but always returns true</summary>
@@ -1002,72 +948,6 @@ result = util.waveformResult(True, out)
                     used to change displacement to velocity. </description>
             </xsd:annotation>
             <empty/>
-        </element>
-    </define>
-    <define name="embeddedNetwork">
-        <element name="embeddedNetwork">
-            <xsd:annotation>
-                <summary>Allows any network subsetter to be embedded here</summary>
-            </xsd:annotation>
-            <externalRef href="../network/network.rng"/>
-        </element>
-    </define>
-    <define name="embeddedStation">
-        <element name="embeddedStation">
-            <xsd:annotation>
-                <summary>Allows any station subsetter to be embedded here</summary>
-            </xsd:annotation>
-            <externalRef href="../network/station.rng"/>
-        </element>
-    </define>
-    <define name="embeddedChannel">
-        <element name="embeddedChannel">
-            <xsd:annotation>
-                <summary>Allows any  channel subsetter to be embedded here</summary>
-            </xsd:annotation>
-            <externalRef href="../network/channel.rng"/>
-        </element>
-    </define>
-    <define name="embeddedEventStation">
-        <element name="embeddedEventChannel">
-            <xsd:annotation>
-                <summary>Allows any event channel subsetter to be embedded here</summary>
-            </xsd:annotation>
-            <externalRef href="eventStation.rng"/>
-        </element>
-    </define>
-    <define name="embeddedEventChannel">
-        <element name="embeddedEventChannel">
-            <xsd:annotation>
-                <summary>Allows any event channel subsetter to be embedded here</summary>
-            </xsd:annotation>
-            <externalRef href="eventChannel.rng"/>
-        </element>
-    </define>
-    <define name="embeddedRequest">
-        <element name="embeddedRequest">
-            <xsd:annotation>
-                <summary>Allows any request subsetter to be embedded here</summary>
-            </xsd:annotation>
-            <externalRef href="requestSubsetter.rng"/>
-        </element>
-    </define>
-    <define name="embeddedEventStationProcessor"><!-- depricated-->
-        <element name="embeddedEventChannelProcessor">
-            <xsd:annotation>
-                <summary>Allows any event channel subsetter to be embedded here</summary>
-                <description>Depricated, use embeddedEventStation</description>
-            </xsd:annotation>
-            <externalRef href="eventStation.rng"/>
-        </element>
-    </define>
-    <define name="embeddedEventChannelProcessor"><!-- depricated-->
-        <element name="embeddedEventChannelProcessor">
-            <xsd:annotation>
-                <summary>Allows any event channel subsetter to be embedded here</summary>
-                <description>Depricated, use embeddedEventChannel</description>
-            </xsd:annotation>
-            <externalRef href="eventChannel.rng"/>
         </element>
     </define>
     <define name="transferResponse">

@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
     xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
-    <include href="../base/include/externalClass.rng"/>
     <start>
         <ref name="network"/>
     </start>
-    <include href="../base/include/timeRange.rng"/>
     <define name="network">
         <choice>
             <xsd:annotation>
@@ -15,16 +13,15 @@
                 <velocity>#networkArmPage()</velocity>
             </xsd:annotation>
             <ref name="code"/>
-            <ref name="name"/>
+            <ref name="networkName"/>
             <ref name="owner"/>
-            <ref name="effectiveTimeOverlap"/>
-            <ref name="AND"/>
-            <ref name="OR"/>
-            <ref name="NOT"/>
+            <ref name="networkEffectiveTimeOverlap"/>
+            <ref name="networkAND"/>
+            <ref name="networkOR"/>
+            <ref name="networkNOT"/>
             <ref name="externalNetworkSubsetter"/>
             <ref name="temporaryNetwork"/>
             <ref name="printlineNetworkProcess"/>
-            <ref name="jythonNetworkSubsetter"/>
             <ref name="networkScript"/>
         </choice>
     </define>
@@ -56,7 +53,7 @@
             <empty/>
         </element>
     </define>
-    <define name="name">
+    <define name="networkName">
         <element name="networkName">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
@@ -88,7 +85,7 @@
             </data>
         </element>
     </define>
-    <define name="effectiveTimeOverlap">
+    <define name="networkEffectiveTimeOverlap">
         <element name="networkEffectiveTimeOverlap">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
@@ -103,7 +100,7 @@
             <ref name="timeRange"/>
         </element>
     </define>
-    <define name="AND">
+    <define name="networkAND">
         <element name="networkAND">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
@@ -128,7 +125,7 @@
             </oneOrMore>
         </element>
     </define>
-    <define name="OR">
+    <define name="networkOR">
         <element name="networkOR">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
@@ -153,7 +150,7 @@
             </oneOrMore>
         </element>
     </define>
-    <define name="NOT">
+    <define name="networkNOT">
         <element name="networkNOT">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
@@ -201,45 +198,6 @@
                     </element>
                 </optional>
             </interleave>
-        </element>
-    </define>
-    <define name="jythonNetworkSubsetter">
-        <element name="jythonNetworkSubsetter">
-            <xsd:annotation>
-                <summary>Runs an externally defined Jython network subsetter</summary>
-                <description>$jythonWaveformProcessInfo.getRelaxHTML('../../../')</description>
-                <example>
-                    <jythonNetworkSubsetter>
-                        <module>helloSod</module>
-                        <class>helloSod</class>
-                        <dataDirectory>PutItHere</dataDirectory>
-                        <extraParam>1.7</extraParam>
-                    </jythonNetworkSubsetter>
-                </example>
-                <example>
-                    <jythonNetworkSubsetter>
-                        <inline>
-                            print networkAttr.get_code()+"\n"
-                        </inline>
-                    </jythonNetworkSubsetter>
-                </example>
-            </xsd:annotation>
-            <choice>
-                <group>
-                    <element name="module">
-                        <data type="string"/>
-                    </element>
-                    <element name="class">
-                        <data type="string"/>
-                    </element>
-                    <zeroOrMore>
-                        <externalRef href="../base/externalRef/anyXML.rng"/>
-                    </zeroOrMore>
-                </group>
-                <element name="inline">
-                    <data type="string"/>
-                </element>
-            </choice>
         </element>
     </define>
     <define name="networkScript">
