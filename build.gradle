@@ -163,14 +163,14 @@ task buildSchemaDocs(type: JavaExec, dependsOn: ['buildSchema', 'compileJava']) 
     }
 }
 
-task buildSchema(dependsOn: 'compileJava')  {
+task buildSchema(dependsOn: ['transform', 'compileJava'])  {
     group = 'build'
-    inputs.dir 'src/main/relax/'
+    inputs.dir new File(project.buildDir, 'generated-src/relax')
     outputs.files 'src/main/resources/edu/sc/seis/sod/data/sod.rng'
     doLast{
     outDir = project.file('build/output')
     outDir.mkdirs()
-    relaxArgs = '-s '+project.projectDir.path+'/src/main/relax/sod.rng'
+    relaxArgs = '-s '+project.buildDir.path+'/generated-src/relax/sod.rng'
     ant.java(dir:outDir, 
              classname:'com.thaiopensource.relaxng.util.Driver', 
              args:relaxArgs,
@@ -181,17 +181,10 @@ task buildSchema(dependsOn: 'compileJava')  {
     }
 }
 
-task xsltest(type: XSLT) { 
-    destDir=new File(project.buildDir, 'generated-src/xsltout')
-    stylesheetFile = new File(project.projectDir, 'src/main/xslt/test.xslt')
-    source new File(project.projectDir, 'src/main/relax/test.rng')
-}
-
 task transform(type: XSLT) { 
-    destDir=new File(project.buildDir, 'generated-src/xsltout')
-    stylesheetFile = new File(project.projectDir, 'src/main/xslt/simplifyRNG.xslt')
+    destDir=new File(project.buildDir, 'generated-src/relax')
+    stylesheetFile = new File(project.projectDir, 'src/main/xslt/simpleXInclude.xslt')
     source new File(project.projectDir, 'src/main/relax/sod.rng')
-    source new File(project.projectDir, 'src/main/relax/test.xml')
 }
 
 assemble.dependsOn(tarDist)
