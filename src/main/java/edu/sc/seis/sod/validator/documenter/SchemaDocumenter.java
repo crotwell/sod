@@ -33,14 +33,15 @@ public class SchemaDocumenter {
     public static void main(String[] args) throws Exception {
         BasicConfigurator.configure();
         if (args.length != 2) {
-            System.err.println("Usage: schemaDocumenter base outputdir");
+            System.err.println("Usage: schemaDocumenter rng velocitydir outputdir");
             return;
         }
-        base = args[0];
+        String sod_rng = args[0];
+        base = new File(sod_rng).getParent();
         if (base.length() != 0 && ! base.endsWith("/")) { base += "/"; }
         outputdir = args[1];
         if (outputdir.length() != 0 && ! outputdir.endsWith("/")) { outputdir += "/"; }
-        StAXModelBuilder handler = new StAXModelBuilder(base + "src/main/relax/sod.rng");
+        StAXModelBuilder handler = new StAXModelBuilder(base + "sod.rng");
         //Setup velocity
         VelocityEngine ve = new VelocityEngine();
         ve.setProperty("file.resource.loader.path", base + "site");
