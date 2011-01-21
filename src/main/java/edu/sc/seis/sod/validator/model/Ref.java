@@ -53,7 +53,11 @@ public class Ref implements FormProvider {
     }
 
     public Definition getDef() {
-        return owner.getDef(name);
+        Definition d = owner.getDef(name);
+        if (d == null) {
+            throw new NullPointerException("definition of '"+name+"' should not be null");
+        }
+        return d;
     }
 
     public int getMin() {
