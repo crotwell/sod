@@ -139,28 +139,37 @@ task copySodSite(dependsOn: ['copySchemaDocs', ':seiswww:makeSodSite'], type: Sy
     from project.file('../seiswww/build/sod/')
     into project.file('build/doc/')
 }
+
+task staticSchemaDocs(type: Copy) {
+    group = 'dist'
+    outDir = project.file('build/velocity/sod/ingredients/')
+    from project.file('site/schemaDocs/docs')
+    into outDir
+    doFirst {
+        println outDir.mkdirs()
+    }
+}
+
 task copySchemaDocs(dependsOn: 'buildSchemaDocs', type: Sync) {
     group = 'dist'
     from project.file('build/velocity/sod/ingredients')
+    from project.file('site/schemaDocs/docs')
     into project.file('../seiswww/velocity/sod/ingredients/')
 }
 
-task buildSchemaDocs(type: JavaExec, dependsOn: ['buildSchema', 'compileJava'])  { 
+task buildSchemaDocs(type: JavaExec, dependsOn: ['staticSchemaDocs', 'buildSchema', 'compileJava'])  { 
 //    jvmArgs = ['-agentlib:yjpagent', '-XX:+HeapDumpOnOutOfMemoryError', '-Xmx512m']
     jvmArgs = ['-Xmx512m']
     group = 'dist'
-    inputs.dir 'src/main/relax'
+    inputs.dir new File(project.buildDir, 'generated-src/relax')
     inputs.files 'site/elementPage.vm'
     outDir = project.file('build/velocity/sod/ingredients/')
     outputs.dir outDir
     workingDir = outDir
-    args = [ project.projectDir.path, outDir]
+    args = [ project.buildDir.path+'generated-src/relax/sod.rng', project.projectDir.path, outDir]
     classpath = configurations.runtime
     classpath project.file("build/classes/main")
     setMain "edu.sc.seis.sod.validator.documenter.SchemaDocumenter"
-    doFirst {
-        println outDir.mkdirs()
-    }
 }
 
 task buildSchema(dependsOn: ['transform', 'compileJava'])  {
