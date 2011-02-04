@@ -6,9 +6,9 @@ import edu.iris.Fissures.event.EventAttrImpl;
 import edu.iris.Fissures.event.OriginImpl;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.network.ChannelImpl;
+import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.sod.Arm;
 import edu.sc.seis.sod.ArmListener;
@@ -70,9 +70,9 @@ public class NetworkTimeRange implements OriginSubsetter, ArmListener,
                 }
             }
         }
-        List<CacheNetworkAccess> nets = arm.getSuccessfulNetworks();
-        for (CacheNetworkAccess net : nets) {
-            StationImpl[] stas = arm.getSuccessfulStations(net.get_attributes());
+        List<NetworkAttrImpl> nets = arm.getSuccessfulNetworks();
+        for (NetworkAttrImpl net : nets) {
+            StationImpl[] stas = arm.getSuccessfulStations(net);
             for(int j = 0; j < stas.length; j++) {
                 List<ChannelImpl> chans = arm.getSuccessfulChannels(stas[j]);
                 for(ChannelImpl c : chans) {

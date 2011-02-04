@@ -18,6 +18,7 @@ import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.IfNetwork.Site;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.SiteIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
@@ -92,13 +93,13 @@ public class NetworkInfoTemplateGenerator implements NetworkMonitor {
                                                 netsOutputFileName);
     }
 
-    public void change(CacheNetworkAccess net, Status status) {
+    public void change(NetworkAttrImpl net, Status status) {
         try {
             netTemplate.change(net, status);
-            getStationsInNetworkTemplate(net.get_attributes());
+            getStationsInNetworkTemplate(net);
         } catch(ConfigurationException e) {
             String msg = "Got an ConfigurationException changing station status: ";
-            msg += NetworkIdUtil.toString(net.get_attributes().get_id());
+            msg += NetworkIdUtil.toString(net.get_id());
             msg += " status=" + status.toString();
             GlobalExceptionHandler.handle(msg, e);
         }

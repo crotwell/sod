@@ -14,6 +14,7 @@ import org.w3c.dom.Element;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.Site;
 import edu.iris.Fissures.IfNetwork.Station;
+import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.iris.Fissures.network.StationImpl;
@@ -92,7 +93,7 @@ public class WaveformStationStatus extends AbstractVelocityStatus implements Wav
     public void change(Channel channel, Status s) {
     }
 
-    public void change(CacheNetworkAccess net, Status status){
+    public void change(NetworkAttrImpl net, Status status){
     }
 
     public void change(Site site, Status s) {

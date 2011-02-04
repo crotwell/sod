@@ -14,6 +14,7 @@ import java.util.List;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.GenericTemplate;
@@ -30,11 +31,11 @@ public class NetworkStatusTemplate extends NetworkInfoTemplate{
         write();
     }
 
-    public void change(NetworkAccess networkAccess, Status status) {
+    public void change(NetworkAttrImpl net, Status status) {
         Iterator it = networkListeners.iterator();
         while (it.hasNext()){
             NetworkGroupTemplate ngt = (NetworkGroupTemplate)it.next();
-            ngt.change(networkAccess, status);
+            ngt.change(net, status);
         }
         write();
     }

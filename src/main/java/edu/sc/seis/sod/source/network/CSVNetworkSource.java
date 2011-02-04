@@ -13,6 +13,7 @@ import org.w3c.dom.Element;
 
 import com.csvreader.CsvReader;
 
+import edu.emory.mathcs.backport.java.util.Collections;
 import edu.iris.Fissures.Location;
 import edu.iris.Fissures.LocationType;
 import edu.iris.Fissures.Orientation;
@@ -303,12 +304,8 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
     }
 
     @Override
-    public List<? extends CacheNetworkAccess> getNetworks() {
-        List<CacheNetworkAccess> nets = new ArrayList<CacheNetworkAccess>();
-        for (NetworkAttrImpl net : networks) {
-            nets.add(new CacheNetworkAccess(null, net));
-        }
-        return nets;
+    public List<? extends NetworkAttrImpl> getNetworks() {
+        return Collections.unmodifiableList(networks);
     }
 
     @Override

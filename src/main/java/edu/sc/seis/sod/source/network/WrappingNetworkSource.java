@@ -43,7 +43,7 @@ public abstract class WrappingNetworkSource implements NetworkSource {
     }
 
     @Override
-    public List<? extends CacheNetworkAccess> getNetworks() {
+    public List<? extends NetworkAttrImpl> getNetworks() {
         return getWrapped().getNetworks();
     }
 

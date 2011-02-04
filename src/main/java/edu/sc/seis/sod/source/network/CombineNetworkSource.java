@@ -88,16 +88,16 @@ public class CombineNetworkSource implements NetworkSource {
     }
 
     @Override
-    public synchronized List<? extends CacheNetworkAccess> getNetworks() {
-        List<CacheNetworkAccess> out = new ArrayList<CacheNetworkAccess>();
+    public synchronized List<? extends NetworkAttrImpl> getNetworks() {
+        List<NetworkAttrImpl> out = new ArrayList<NetworkAttrImpl>();
         for (NetworkSource source : wrapped) {
-            List<? extends CacheNetworkAccess> subOut = source.getNetworks();
+            List<? extends NetworkAttrImpl> subOut = source.getNetworks();
             if (subOut != null) {
-                for (CacheNetworkAccess cacheNetworkAccess : subOut) {
-                    String code = NetworkIdUtil.toStringNoDates(cacheNetworkAccess.get_attributes());
+                for (NetworkAttrImpl n : subOut) {
+                    String code = NetworkIdUtil.toStringNoDates(n);
                     if (! codeToSource.containsKey(code)) {
                         codeToSource.put(code, source);
-                        out.add(cacheNetworkAccess);
+                        out.add(n);
                     }
                 }
             }
@@ -153,9 +153,9 @@ public class CombineNetworkSource implements NetworkSource {
         } else {
             // try and find from source
             for (NetworkSource source : wrapped) {
-                List<? extends CacheNetworkAccess> sublist = source.getNetworks();
-                for (CacheNetworkAccess cacheNetworkAccess : sublist) {
-                    if (code.equals(NetworkIdUtil.toStringNoDates(cacheNetworkAccess.get_attributes().get_id()))) {
+                List<? extends NetworkAttrImpl> sublist = source.getNetworks();
+                for (NetworkAttrImpl net : sublist) {
+                    if (code.equals(NetworkIdUtil.toStringNoDates(net.get_id()))) {
                         codeToSource.put(code, source);
                         return source;
                     }

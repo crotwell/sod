@@ -16,6 +16,7 @@ import org.w3c.dom.NodeList;
 
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
+import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
@@ -108,11 +109,11 @@ public class NetworkGroupTemplate extends Template implements GenericTemplate {
         return buf.toString();
     }
 
-    public void change(NetworkAccess net, Status status) {
+    public void change(NetworkAttrImpl net, Status status) {
         synchronized(networkMap) {
-            String id = NetworkIdUtil.toString(net.get_attributes().get_id());
+            String id = NetworkIdUtil.toString(net.get_id());
             statusMap.put(id, status);
-            networkMap.put(id, net.get_attributes());
+            networkMap.put(id, net);
         }
     }
 

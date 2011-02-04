@@ -16,6 +16,7 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Site;
 import edu.iris.Fissures.IfNetwork.Station;
+import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
@@ -65,8 +66,8 @@ public class WaveformNetworkStatus extends AbstractVelocityStatus implements Wav
     public void change(Station station, Status s) {
         try {
             VelocityContext context = new VelocityContext();
-            NetworkAccess networkAccess = Start.getNetworkArm().getNetwork(station.getNetworkAttr().get_id());
-            context.put("network", networkAccess);
+            NetworkAttrImpl net = Start.getNetworkArm().getNetwork(station.getNetworkAttr().get_id());
+            context.put("network", net);
             context.put("stations", new VelocityStationGetter(station.getNetworkAttr().get_id()));
             String id = NetworkIdUtil.toStringNoDates(station.getNetworkAttr().get_id());
             scheduleOutput("waveformStations/"+ id +".html", context);
@@ -77,11 +78,11 @@ public class WaveformNetworkStatus extends AbstractVelocityStatus implements Wav
 
     public void change(Channel channel, Status s) {}
 
-    public void change(CacheNetworkAccess networkAccess, Status s) {
+    public void change(NetworkAttrImpl net, Status s) {
         if (s.getStanding().equals(Standing.SUCCESS)) {
             // update the index list
             VelocityContext context = new VelocityContext();
-            context.put("network", networkAccess);
+            context.put("network", net);
             scheduleOutput("waveformStations/waveformNetworks.html",
                            context,
                            networkListTemplate);

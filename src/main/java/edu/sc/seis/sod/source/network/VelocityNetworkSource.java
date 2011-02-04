@@ -28,7 +28,7 @@ public class VelocityNetworkSource extends WrappingNetworkSource implements Netw
     }
 
     @Override
-    public List<? extends CacheNetworkAccess> getNetworks() {
+    public List<? extends NetworkAttrImpl> getNetworks() {
         // TODO: this is not really what we want as it is not a Velocity
         return getWrapped().getNetworks();
     }

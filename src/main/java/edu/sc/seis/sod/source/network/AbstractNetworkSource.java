@@ -60,7 +60,7 @@ public abstract class AbstractNetworkSource extends AbstractSource implements Ne
     /* (non-Javadoc)
      * @see edu.sc.seis.sod.source.network.NetworkSource#getNetworks()
      */
-    public abstract List<? extends CacheNetworkAccess> getNetworks();
+    public abstract List<? extends NetworkAttrImpl> getNetworks();
     
     /* (non-Javadoc)
      * @see edu.sc.seis.sod.source.network.NetworkSource#getStations(edu.iris.Fissures.IfNetwork.NetworkId)

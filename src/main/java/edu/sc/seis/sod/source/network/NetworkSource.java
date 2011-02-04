@@ -24,7 +24,7 @@ public interface NetworkSource extends Source {
 
     public abstract List<? extends CacheNetworkAccess> getNetworkByName(String name) throws NetworkNotFound;
 
-    public abstract List<? extends CacheNetworkAccess> getNetworks();
+    public abstract List<? extends NetworkAttrImpl> getNetworks();
 
     public abstract List<? extends StationImpl> getStations(NetworkId net);
 

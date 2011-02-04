@@ -71,11 +71,15 @@ public class NetworkFinder extends AbstractNetworkSource {
     }
 
     @Override
-    public synchronized List<CacheNetworkAccess> getNetworks() {
+    public synchronized List<? extends NetworkAttrImpl> getNetworks() {
         if (recentNetworksCache == null) {
             getNetworksInternal();
         }
-        return recentNetworksCache;
+        List<NetworkAttrImpl> out = new ArrayList<NetworkAttrImpl>();
+        for (CacheNetworkAccess netAccess : recentNetworksCache) {
+            out.add(netAccess.get_attributes());
+        }
+        return out;
     }
 
     public synchronized List<CacheNetworkAccess> getNetworksInternal() {

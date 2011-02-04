@@ -14,6 +14,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.w3c.dom.Element;
 
+import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
@@ -160,7 +161,7 @@ public class IndexTemplate extends FileWritingTemplate implements
             WaveformNetworkStatus wns = new WaveformNetworkStatus(waveformNetworkEl);
             waveformArm.addStatusMonitor(wns);
             //in case all the networks have been processed already
-            wns.change((CacheNetworkAccess)null, Status.get(Stage.PROCESSOR, Standing.SUCCESS));
+            wns.change((NetworkAttrImpl)null, Status.get(Stage.PROCESSOR, Standing.SUCCESS));
         }
     }
 
