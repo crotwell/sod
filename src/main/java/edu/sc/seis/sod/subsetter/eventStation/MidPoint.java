@@ -50,7 +50,9 @@ public class MidPoint extends AreaSubsetter  implements EventStationSubsetter {
                                                   originLoc.longitude,
                                                   dist,
                                                   azimuth);
-        return new StringTreeLeaf(this, accept(new Location((float)latitude, (float)longitude, ZERO, ZERO, originLoc.type)));
+        return new StringTreeLeaf(this,
+                                  accept(new Location((float)latitude, (float)longitude, ZERO, ZERO, originLoc.type)),
+                                  "mid=("+latitude+", "+longitude+")");
     }
 
     Area area;
