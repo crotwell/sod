@@ -6,8 +6,8 @@ import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
+import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.NetworkIdUtil;
-import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
@@ -213,9 +213,9 @@ public class WaveformArm extends Thread implements Arm {
         } catch(NoPreferredOrigin e) {
             throw new RuntimeException("Should never happen...", e);
         }
-        List<CacheNetworkAccess> networks = Start.getNetworkArm().getSuccessfulNetworks();
-        for (CacheNetworkAccess net : networks) {
-            if(overlap.overlaps(net.get_attributes())) {
+        List<NetworkAttrImpl> networks = Start.getNetworkArm().getSuccessfulNetworks();
+        for (NetworkAttrImpl net : networks) {
+            if(overlap.overlaps(net)) {
                 EventNetworkPair p = new EventNetworkPair(ev,
                                                           net,
                                                           Status.get(Stage.EVENT_CHANNEL_POPULATION,
@@ -223,7 +223,7 @@ public class WaveformArm extends Thread implements Arm {
                 sodDb.put(p);
             } else {
                 failLogger.info("Network "
-                        + NetworkIdUtil.toStringNoDates(net.get_attributes())
+                        + NetworkIdUtil.toStringNoDates(net)
                         + " does not overlap event " + ev);
             }
         }
