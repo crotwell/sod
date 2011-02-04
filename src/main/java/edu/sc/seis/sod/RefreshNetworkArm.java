@@ -8,6 +8,7 @@ import java.util.TimerTask;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.network.ChannelImpl;
+import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
@@ -27,8 +28,8 @@ public class RefreshNetworkArm extends TimerTask {
     public void run() {
         logger.info("Refreshing Network Arm");
         try {
-            List<CacheNetworkAccess> nets;
-            List<CacheNetworkAccess> needReload = new LinkedList<CacheNetworkAccess>();
+            List<NetworkAttrImpl> nets;
+            List<NetworkAttrImpl> needReload = new LinkedList<NetworkAttrImpl>();
             synchronized(this) {
                 if (netArm.getInternalNetworkSource() instanceof NetworkFinder) {
                     ((NetworkFinder)netArm.getInternalNetworkSource()).reset();
@@ -36,24 +37,24 @@ public class RefreshNetworkArm extends TimerTask {
                 nets = netArm.getSuccessfulNetworksFromServer();
                 // maybe previous update has not yet finished, only reload nets
                 // not already in list???
-                for (CacheNetworkAccess net : nets) {
-                    if (!isNetworkBeingReloaded(net.get_attributes().getDbid())) {
-                        networksBeingReloaded.add(new Integer(net.get_attributes().getDbid()));
+                for (NetworkAttrImpl net : nets) {
+                    if (!isNetworkBeingReloaded(net.getDbid())) {
+                        networksBeingReloaded.add(new Integer(net.getDbid()));
                         needReload.add(net);
                     } else {
-                        logger.info("net already in processing list, skipping..."+NetworkIdUtil.toString(net.get_attributes()));
+                        logger.info("net already in processing list, skipping..."+NetworkIdUtil.toString(net));
                     }
                 }
             }
 
-            for (CacheNetworkAccess cacheNetworkAccess : needReload) {
-                NetworkDB.getSingleton().put(cacheNetworkAccess.get_attributes());
+            for (NetworkAttrImpl cacheNetwork : needReload) {
+                NetworkDB.getSingleton().put(cacheNetwork);
             }
             NetworkDB.commit();
-            for (CacheNetworkAccess cacheNetworkAccess : needReload) {
+            for (NetworkAttrImpl cacheNetworkAccess : needReload) {
                 processNetwork(cacheNetworkAccess);
                 synchronized(this) {
-                    networksBeingReloaded.remove(new Integer(cacheNetworkAccess.get_attributes().getDbid()));
+                    networksBeingReloaded.remove(new Integer(cacheNetworkAccess.getDbid()));
                     // in case networkArm methods are waiting on this network to be refreshed 
                     notifyAll();
                     if (Start.getWaveformRecipe() != null) {
@@ -68,8 +69,8 @@ public class RefreshNetworkArm extends TimerTask {
         }
     }
 
-    void processNetwork(CacheNetworkAccess net) {
-logger.debug("refresh "+NetworkIdUtil.toString(net.get_attributes()));
+    void processNetwork(NetworkAttrImpl net) {
+logger.debug("refresh "+NetworkIdUtil.toString(net));
 // how do we refresh instrumentation???
         
         try {
@@ -78,7 +79,7 @@ logger.debug("refresh "+NetworkIdUtil.toString(net.get_attributes()));
             for (int s = 0; s < stas.length; s++) {
                 allStations.add(stas[s]);
             }
-            logger.info("found "+stas.length+" stations in "+NetworkIdUtil.toString(net.get_attributes()));
+            logger.info("found "+stas.length+" stations in "+NetworkIdUtil.toString(net));
             if (Start.getWaveformRecipe() != null || netArm.getChannelSubsetters().size() != 0) {
                 for (int s = 0; s < stas.length; s++) {
                     LoadedNetworkSource loadSource = new LoadedNetworkSource(netArm.getInternalNetworkSource(), allStations, stas[s]);
@@ -100,7 +101,7 @@ logger.debug("refresh "+NetworkIdUtil.toString(net.get_attributes()));
             NetworkDB.rollback(); // oops
             String netstr = "unknown";
             try {
-                netstr = NetworkIdUtil.toString(net.get_attributes());
+                netstr = NetworkIdUtil.toString(net);
             } catch(Throwable tt) {}
             GlobalExceptionHandler.handle("Problem with network: " + netstr, t);
         }
