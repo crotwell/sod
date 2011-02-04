@@ -34,7 +34,6 @@ import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.bag.OrientationUtil;
-import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.subsetter.channel.ChannelSubsetter;
@@ -133,13 +132,13 @@ public class ChannelGrouper {
                                                                     NetworkArm.PACKAGES);
                                     if(subsetter instanceof NetworkSubsetter) {
                                         NetworkId netId = chn.get(0).get_id().network_id;
-                                        List<CacheNetworkAccess> networks = Start.getNetworkArm()
+                                        List<NetworkAttrImpl> networks = Start.getNetworkArm()
                                                 .getSuccessfulNetworks();
                                         NetworkAttrImpl netAttr = null;
-                                        for (CacheNetworkAccess net : networks) {
-                                            if(NetworkIdUtil.areEqual(net.get_attributes().get_id(),
+                                        for (NetworkAttrImpl net : networks) {
+                                            if(NetworkIdUtil.areEqual(net.get_id(),
                                                                       netId)) {
-                                                netAttr = net.get_attributes();
+                                                netAttr = net;
                                             }
                                             NetworkSubsetter netSubsetter = (NetworkSubsetter)subsetter;
                                             if(!netSubsetter.accept(netAttr).isSuccess()) {
