@@ -11,7 +11,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.iris.Fissures.IfNetwork.Station;
@@ -24,8 +23,6 @@ import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.iris.Fissures.network.StationImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
-import edu.sc.seis.fissuresUtil.cache.DBCacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
@@ -37,7 +34,6 @@ import edu.sc.seis.sod.source.event.EventSource;
 import edu.sc.seis.sod.source.network.InstrumentationFromDB;
 import edu.sc.seis.sod.source.network.LoadedNetworkSource;
 import edu.sc.seis.sod.source.network.NetworkFinder;
-import edu.sc.seis.sod.source.network.AbstractNetworkSource;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.StringTree;
@@ -94,16 +90,15 @@ public class NetworkArm implements Arm {
         return "NetworkArm";
     }
 
-    public CacheNetworkAccess getNetwork(NetworkId network_id)
+    public NetworkAttrImpl getNetwork(NetworkId network_id)
             throws NetworkNotFound {
-        List<CacheNetworkAccess> netDbs = getSuccessfulNetworks();
+        List<NetworkAttrImpl> netDbs = getSuccessfulNetworks();
         MicroSecondDate beginTime = new MicroSecondDate(network_id.begin_time);
         String netCode = network_id.network_code;
-        for (CacheNetworkAccess net : netDbs) {
-            NetworkAttr attr = net.get_attributes();
+        for (NetworkAttrImpl attr : netDbs) {
             if(netCode.equals(attr.get_code())
                     && new MicroSecondTimeRange(attr.getEffectiveTime()).contains(beginTime)) {
-                return net;
+                return attr;
             }
         }
         throw new NetworkNotFound("No network for id: "
@@ -185,10 +180,10 @@ public class NetworkArm implements Arm {
      * NetworkDbObjects.
      * 
      */
-    public List<CacheNetworkAccess> getSuccessfulNetworks() {
+    public List<NetworkAttrImpl> getSuccessfulNetworks() {
         synchronized(refresh) {
             /** null means that we have not yet gotten nets from the server, so wait. */
-            List<CacheNetworkAccess> cacheNets = loadNetworksFromDB();
+            List<NetworkAttrImpl> cacheNets = loadNetworksFromDB();
             while (cacheNets == null && lastQueryTime == null && ! Start.isArmFailure()) {
                 // still null, maybe first time through
                 logger.info("Waiting on initial network load");
@@ -203,34 +198,29 @@ public class NetworkArm implements Arm {
         }
     }
     
-    List<CacheNetworkAccess> loadNetworksFromDB() {
+    List<NetworkAttrImpl> loadNetworksFromDB() {
         List<NetworkAttrImpl> fromDB = getNetworkDB().getAllNetworks();
-        List<CacheNetworkAccess> out = new ArrayList<CacheNetworkAccess>();
         for (NetworkAttrImpl net : fromDB) {
             // this is for the side effect of creating
             // networkInfoTemplate stuff
             // avoids a null ptr later
-            DBCacheNetworkAccess outNet = new DBCacheNetworkAccess(getNetworkSource().getNetwork(net), net);
-            change(outNet,
+            change(net,
                    Status.get(Stage.NETWORK_SUBSETTER,
                               Standing.SUCCESS));
-            out.add(outNet);
         }
-        return out;
+        return fromDB;
     }
 
-    List<CacheNetworkAccess> getSuccessfulNetworksFromServer() {
+    List<NetworkAttrImpl> getSuccessfulNetworksFromServer() {
         synchronized(netGetSync) {
             statusChanged("Getting networks");
             logger.info("Getting networks");
-            ArrayList<CacheNetworkAccess> successes = new ArrayList<CacheNetworkAccess>();
-            List<? extends CacheNetworkAccess> allNets = getInternalNetworkSource().getNetworks();
+            ArrayList<NetworkAttrImpl> successes = new ArrayList<NetworkAttrImpl>();
+            List<? extends NetworkAttrImpl> allNets = getInternalNetworkSource().getNetworks();
             logger.info("Found " + allNets.size() + " networks");
             int i=0;
-            for (CacheNetworkAccess currNet : allNets) {
-                NetworkAttrImpl attr = null;
+            for (NetworkAttrImpl attr : allNets) {
                 try {
-                    attr = (NetworkAttrImpl)currNet.get_attributes();
                     if(netEffectiveSubsetter.accept(attr).isSuccess()) {
                         StringTree result;
                         try {
@@ -244,22 +234,22 @@ public class NetworkArm implements Arm {
                             NetworkDB.commit();
                             logger.info("store network: " + attr.getDbid()
                                     + " " + dbid);
-                            successes.add(currNet);
-                            change(currNet,
+                            successes.add(attr);
+                            change(attr,
                                    Status.get(Stage.NETWORK_SUBSETTER,
                                               Standing.SUCCESS));
                         } else {
-                            change(currNet,
+                            change(attr,
                                    Status.get(Stage.NETWORK_SUBSETTER,
                                               Standing.REJECT));
-                            failLogger.info(NetworkIdUtil.toString(currNet.get_attributes()
+                            failLogger.info(NetworkIdUtil.toString(attr
                                     .get_id())
                                     + " was rejected. "+result);
                         }
                     } else {
-                        change(currNet, Status.get(Stage.NETWORK_SUBSETTER,
+                        change(attr, Status.get(Stage.NETWORK_SUBSETTER,
                                                       Standing.REJECT));
-                        failLogger.info(NetworkIdUtil.toString(currNet.get_attributes()
+                        failLogger.info(NetworkIdUtil.toString(attr
                                 .get_id())
                                 + " was rejected because it wasn't active during the time range of requested events");
                     }
@@ -332,14 +322,6 @@ public class NetworkArm implements Arm {
         }
     }
 
-    /**
-     * @return stations for the given network object that pass this arm's
-     *         station subsetter
-     */
-    public StationImpl[] getSuccessfulStations(CacheNetworkAccess net) {
-        return getSuccessfulStations(net.get_attributes());
-    }
-
     public StationImpl[] getSuccessfulStations(NetworkAttrImpl net) {
         String netCode = net.get_code();
         logger.debug("getSuccessfulStations: "+net.get_code());
@@ -366,18 +348,17 @@ public class NetworkArm implements Arm {
         }
     }
     
-    StationImpl[] getSuccessfulStationsFromServer(CacheNetworkAccess net) {
+    StationImpl[] getSuccessfulStationsFromServer(NetworkAttrImpl net) {
         synchronized(this) {
             NetworkAttrImpl netAttr;
             try {
-                netAttr = NetworkDB.getSingleton().getNetwork(net.get_attributes().getDbid());
+                netAttr = NetworkDB.getSingleton().getNetwork(net.getDbid());
             } catch(NotFound e1) {
                 // must not be in db yet???
-                throw new RuntimeException("Network not in db yet: "+NetworkIdUtil.toString(net.get_attributes()));
+                throw new RuntimeException("Network not in db yet: "+NetworkIdUtil.toString(net));
             }
-            net = new CacheNetworkAccess(net, netAttr);
             statusChanged("Getting stations for "
-                    + net.get_attributes().getName());
+                    + net.getName());
             ArrayList<Station> arrayList = new ArrayList<Station>();
             try {
                 List<? extends StationImpl> stations = getInternalNetworkSource().getStations(netAttr.getId());
@@ -426,19 +407,19 @@ public class NetworkArm implements Arm {
                 NetworkDB.commit();
             } catch(Exception e) {
                 GlobalExceptionHandler.handle("Problem in method getSuccessfulStations for net "
-                                                      + NetworkIdUtil.toString(net.get_attributes().get_id()),
+                                                      + NetworkIdUtil.toString(net.get_id()),
                                               e);
                 NetworkDB.rollback();
             }
             StationImpl[] rtnValues = new StationImpl[arrayList.size()];
             rtnValues = (StationImpl[])arrayList.toArray(rtnValues);
             statusChanged("Waiting for a request");
-            logger.debug("getSuccessfulStations " + NetworkIdUtil.toStringNoDates(net.get_attributes()) + " - from server "
+            logger.debug("getSuccessfulStations " + NetworkIdUtil.toStringNoDates(net) + " - from server "
                     + rtnValues.length);
             if(rtnValues.length == 0) {
-                allStationFailureNets.add(NetworkIdUtil.toStringNoDates(net.get_attributes()));
+                allStationFailureNets.add(NetworkIdUtil.toStringNoDates(net));
             } else {
-                allStationFailureNets.remove(NetworkIdUtil.toStringNoDates(net.get_attributes()));
+                allStationFailureNets.remove(NetworkIdUtil.toStringNoDates(net));
             }
             return rtnValues;
         }
@@ -648,7 +629,7 @@ public class NetworkArm implements Arm {
         }
     }
 
-    private void change(CacheNetworkAccess na, Status newStatus) {
+    private void change(NetworkAttrImpl na, Status newStatus) {
         synchronized(statusMonitors) {
             for (NetworkMonitor netMon : statusMonitors) {
                 try {

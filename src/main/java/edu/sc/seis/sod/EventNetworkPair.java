@@ -1,13 +1,10 @@
 package edu.sc.seis.sod;
 
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
-import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.iris.Fissures.network.StationImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
-import edu.sc.seis.fissuresUtil.cache.DBCacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.StatefulEvent;
@@ -18,16 +15,16 @@ public class EventNetworkPair extends AbstractEventPair {
     /** for hibernate */
     protected EventNetworkPair() {}
 
-    public EventNetworkPair(StatefulEvent event, CacheNetworkAccess net) {
+    public EventNetworkPair(StatefulEvent event, NetworkAttrImpl net) {
         super(event);
-        setNetworkAccess(net);
+        setNetwork(net);
     }
 
     public EventNetworkPair(StatefulEvent event,
-                            CacheNetworkAccess net,
+                            NetworkAttrImpl net,
                             Status status) {
         super(event, status);
-        setNetworkAccess(net);
+        setNetwork(net);
     }
 
     public void run() {
@@ -102,27 +99,14 @@ public class EventNetworkPair extends AbstractEventPair {
         return getNetwork().getDbid();
     }
 
-    public CacheNetworkAccess getNetworkAccess() throws NetworkNotFound {
-        if (network == null) {
-            network = new DBCacheNetworkAccess(getNetwork(), CommonAccess.getNameService());
-        }
-        return network;
-    }
-
     public NetworkAttrImpl getNetwork() {
         return networkAttr;
     }
-
-    protected void setNetworkAccess(CacheNetworkAccess net) {
-        this.network = net;
-        setNetwork(net.get_attributes());
-    }
+    
     /** for use by hibernate */
     protected void setNetwork(NetworkAttrImpl attr) {
         this.networkAttr = attr;
     }
-
-    private CacheNetworkAccess network;
     
     private NetworkAttrImpl networkAttr;
     
