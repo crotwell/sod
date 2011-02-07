@@ -214,7 +214,7 @@ public class NetworkArm implements Arm {
     List<NetworkAttrImpl> getSuccessfulNetworksFromServer() {
         synchronized(netGetSync) {
             statusChanged("Getting networks");
-            logger.info("Getting networks");
+            logger.info("Getting networks from server");
             ArrayList<NetworkAttrImpl> successes = new ArrayList<NetworkAttrImpl>();
             List<? extends NetworkAttrImpl> allNets = getInternalNetworkSource().getNetworks();
             logger.info("Found " + allNets.size() + " networks");
@@ -433,7 +433,8 @@ public class NetworkArm implements Arm {
      */
     public List<ChannelImpl> getSuccessfulChannels(StationImpl station) {
         synchronized(refresh) {
-            while(refresh.isNetworkBeingReloaded(((NetworkAttrImpl)station.getNetworkAttr()).getDbid())) {
+            while(refresh.isNetworkBeingReloaded(((NetworkAttrImpl)station.getNetworkAttr()).getDbid())
+                    && refresh.isStationBeingReloaded(station.getDbid())) {
                 try {
                     refresh.notifyAll();
                     refresh.wait();
@@ -537,7 +538,8 @@ public class NetworkArm implements Arm {
             return new ArrayList<ChannelGroup>(0);
         }
         synchronized(refresh) {
-            while(refresh.isNetworkBeingReloaded(((NetworkAttrImpl)station.getNetworkAttr()).getDbid())) {
+            while(refresh.isNetworkBeingReloaded(((NetworkAttrImpl)station.getNetworkAttr()).getDbid())
+                    && refresh.isStationBeingReloaded(station.getDbid())) {
                 try {
                     refresh.notifyAll();
                     refresh.wait();
