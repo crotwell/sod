@@ -7,7 +7,7 @@ import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.IfNetwork.NetworkNotFound;
-import edu.iris.Fissures.IfNetwork.Sensitivity;
+import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.NetworkAttrImpl;
@@ -30,7 +30,7 @@ public interface NetworkSource extends Source {
 
     public abstract List<? extends ChannelImpl> getChannels(StationImpl station);
 
-    public abstract Sensitivity getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse;
+    public abstract QuantityImpl getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse;
 
     public abstract Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InvalidResponse;
 }

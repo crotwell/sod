@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Sensitivity;
+import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.cache.InstrumentationLoader;
 import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
@@ -16,8 +17,8 @@ public class HasSensitivity implements ChannelSubsetter {
 
     public StringTree accept(ChannelImpl channel, NetworkSource network) {
         try {
-            Sensitivity sens = network.getSensitivity(channel.get_id());
-            return new StringTreeLeaf(this, InstrumentationLoader.isValid(sens));
+            QuantityImpl sens = network.getSensitivity(channel.get_id());
+            return new StringTreeLeaf(this, InstrumentationLoader.isValidSensitivity(sens));
         } catch(ChannelNotFound e) {
             return new Fail(this, "No instrumentation");
         } catch (InvalidResponse e) {

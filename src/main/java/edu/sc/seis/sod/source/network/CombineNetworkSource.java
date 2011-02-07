@@ -14,6 +14,7 @@ import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.iris.Fissures.IfNetwork.Sensitivity;
+import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelImpl;
@@ -124,10 +125,10 @@ public class CombineNetworkSource implements NetworkSource {
     }
 
     @Override
-    public Sensitivity getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
+    public QuantityImpl getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
         NetworkSource source = getSourceForCode(NetworkIdUtil.toStringNoDates(chanId.network_id));
         if (source != null) {
-            Sensitivity out = source.getSensitivity(chanId);
+            QuantityImpl out = source.getSensitivity(chanId);
             if (out != null) {
                 return out;
             }

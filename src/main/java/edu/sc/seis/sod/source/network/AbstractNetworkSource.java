@@ -9,7 +9,7 @@ import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.IfNetwork.NetworkNotFound;
-import edu.iris.Fissures.IfNetwork.Sensitivity;
+import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelImpl;
@@ -75,7 +75,7 @@ public abstract class AbstractNetworkSource extends AbstractSource implements Ne
     /* (non-Javadoc)
      * @see edu.sc.seis.sod.source.network.NetworkSource#getSensitivity(edu.iris.Fissures.IfNetwork.ChannelId)
      */
-    public abstract Sensitivity getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse;
+    public abstract QuantityImpl getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse;
     
     /* (non-Javadoc)
      * @see edu.sc.seis.sod.source.network.NetworkSource#getInstrumentation(edu.iris.Fissures.IfNetwork.ChannelId)

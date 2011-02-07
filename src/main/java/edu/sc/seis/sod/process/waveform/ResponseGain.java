@@ -6,6 +6,7 @@ import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.Sensitivity;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
@@ -24,7 +25,7 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
  * deconvolution, merely a constant multiplier. Created: Wed Nov 6 17:58:10 2002
  * 
  * @author <a href="mailto:www@seis.sc.edu">Philip Crotwell </a>
- * @version $Id: ResponseGain.java 21814 2010-11-11 15:59:53Z crotwell $
+ * @version $Id: ResponseGain.java 21996 2011-02-07 23:24:06Z crotwell $
  */
 public class ResponseGain implements WaveformProcess, Threadable {
 
@@ -43,15 +44,21 @@ public class ResponseGain implements WaveformProcess, Threadable {
             NetworkSource na = Start.getNetworkArm().getNetworkSource();
             try {
                 ChannelId chanId = channel.get_id();
+                QuantityImpl sensitivity = na.getSensitivity(chanId);
+                if (sensitivity == null) {
+                    throw new ChannelNotFound();
+                }
+                /*
                 Instrumentation inst = na.getInstrumentation(chanId);
                 if (inst == null) {throw new ChannelNotFound();}
                 InstrumentationLoader.checkResponse(inst.the_response);
                 Sensitivity sens = na.getSensitivity(chanId);
                 Unit recordedUnits = inst.the_response.stages[0].input_units;
+                 */
                 for(int i = 0; i < seismograms.length; i++) {
                     out[i] = edu.sc.seis.fissuresUtil.bag.ResponseGain.apply(seismograms[i],
-                                                                             sens,
-                                                                             recordedUnits);
+                                                                             (float)sensitivity.value,
+                                                                             sensitivity.the_units);
                 } // end of for (int i=0; i<seismograms.length; i++)
                 return new WaveformResult(out, new StringTreeLeaf(this, true));
             } catch(ChannelNotFound e) {

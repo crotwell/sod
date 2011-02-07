@@ -25,7 +25,6 @@ import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.IfNetwork.NetworkNotFound;
-import edu.iris.Fissures.IfNetwork.Sensitivity;
 import edu.iris.Fissures.IfNetwork.SiteId;
 import edu.iris.Fissures.IfNetwork.StationId;
 import edu.iris.Fissures.model.QuantityImpl;
@@ -309,7 +308,7 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
     }
 
     @Override
-    public Sensitivity getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
+    public QuantityImpl getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
         throw new ChannelNotFound();
     }
 

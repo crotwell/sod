@@ -17,6 +17,7 @@ import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.iris.Fissures.IfNetwork.Sensitivity;
 import edu.iris.Fissures.IfNetwork.VirtualNetworkHelper;
 import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.NetworkAttrImpl;
@@ -27,6 +28,7 @@ import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
 import edu.sc.seis.fissuresUtil.cache.VestingNetworkDC;
 import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
+import edu.sc.seis.seisFile.stationxml.InstrumentSensitivity;
 import edu.sc.seis.sod.Start;
 
 public class NetworkFinder extends AbstractNetworkSource {
@@ -152,8 +154,10 @@ public class NetworkFinder extends AbstractNetworkSource {
     }
 
     @Override
-    public Sensitivity getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
-        return getNetwork(chanId.network_id).retrieve_sensitivity(chanId, chanId.begin_time);
+    public QuantityImpl getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
+        CacheNetworkAccess cna = getNetwork(chanId.network_id);
+        Sensitivity s = cna.retrieve_sensitivity(chanId, chanId.begin_time);
+        return new QuantityImpl(s.sensitivity_factor, cna.retrieve_initial_units(chanId, chanId.begin_time));
     }
     
     protected List<ChannelImpl> checkStationTimeOverlap(StationImpl station, Channel[] inChannels) {

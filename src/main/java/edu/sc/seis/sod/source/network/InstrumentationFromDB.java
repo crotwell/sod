@@ -3,7 +3,7 @@ package edu.sc.seis.sod.source.network;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
-import edu.iris.Fissures.IfNetwork.Sensitivity;
+import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
@@ -25,8 +25,10 @@ public class InstrumentationFromDB extends WrappingNetworkSource implements Netw
     }
 
     @Override
-    public Sensitivity getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
-        return getInstrumentation(chanId).the_response.the_sensitivity;
+    public QuantityImpl getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
+        Instrumentation inst =  getInstrumentation(chanId);
+        return new QuantityImpl(inst.the_response.the_sensitivity.sensitivity_factor,
+                                inst.the_response.stages[0].input_units);
     }
     
     public Instrumentation getInstrumentation(ChannelImpl chan) throws ChannelNotFound {
