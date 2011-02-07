@@ -17,6 +17,7 @@
             <ref name="CSVNetworkSource"/>
             <ref name="winstonNetworkSource"/>
             <ref name="combineNetworkSource"/>
+            <ref name="stationXML"/>
         </choice>
     </define>
     <define name="finder">
@@ -308,6 +309,37 @@ CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
                 <element name="port">
                     <data type="integer"/>
                 </element>
+            </optional>
+        </element>
+    </define>
+    <define name="stationXML">
+        <element name="stationXML">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Loads network metadata from StationXML</summary>
+                    <description>A network source that makes the metadata loaded from a StationXML file available to
+                    SOD. While a local file could be used, the more useful way is to access the ws-station web service
+                    at the IRIS DMC, http://www.iris.edu/ws/ws-station. SOD can download the stationXML automaticially
+                    and reconnect to periodically get updates. For a fill SOD run (that retrieves waveforms) 
+                    the level in the IRIS url should be either chan or resp
+                    as otherwise no channels will be found and so no data will be downloaded.</description>
+                    <velocity>#networkArmPage()</velocity>
+                    <example>
+                        <stationXML>
+                            <url>http://www.iris.edu/ws/station/query?net=II&amp;sta=AAK&amp;chan=BHZ,BHN,BHE,BH1,BH2&amp;loc=00,--&amp;level=chan</url>
+                            <refreshInterval>
+                                <unit>DAY</unit>
+                                <value>10</value>
+                            </refreshInterval>
+                        </stationXML>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <element name="url">
+                <data type="string"/>
+            </element>
+            <optional>
+                <ref name="refreshInterval"/>
             </optional>
         </element>
     </define>
