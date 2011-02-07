@@ -119,7 +119,7 @@ public class EventStationPair extends CookieEventPair {
                     }
                     logger.info(ChannelIdUtil.toString(c.getId()) + "' passed");
                 }
-                for(ChannelImpl c : channels) {
+                for(ChannelImpl c : overlapList) {
                     // use Standing.IN_PROG as we are going to do event-channel
                     // processing here
                     // don't want another thread to pull the ECP from the DB
