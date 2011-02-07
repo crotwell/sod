@@ -33,7 +33,7 @@ public abstract class AbstractNetworkSource extends AbstractSource implements Ne
     
     public AbstractNetworkSource(Element config) throws Exception {
         super(config, "IRIS_NetworkDC");
-        Element subElement = SodUtil.getElement(config, "refreshInterval");
+        Element subElement = SodUtil.getElement(config, REFRESH_ELEMENT);
         if(subElement != null) {
             refreshInterval = SodUtil.loadTimeInterval(subElement);
         } else {
@@ -81,5 +81,7 @@ public abstract class AbstractNetworkSource extends AbstractSource implements Ne
      * @see edu.sc.seis.sod.source.network.NetworkSource#getInstrumentation(edu.iris.Fissures.IfNetwork.ChannelId)
      */
     public abstract Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InvalidResponse;
+    
+    public static final String REFRESH_ELEMENT = "refreshInterval";
     
 }
