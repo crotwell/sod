@@ -34,7 +34,7 @@ public class TotalLoserEventCleaner extends TimerTask {
         try {
             logger.debug("Working");
             MicroSecondDate ageAgo = ClockUtil.now().subtract(lagInterval);
-            Query q = eventdb.getSession().createQuery(" from "+StatefulEvent.class.getName()+" e  where e.statusAsShort = 258 and e.preferred.originTime.time < :ageAgo");
+            Query q = eventdb.getSession().createQuery(" from "+StatefulEvent.class.getName()+" e  where e.status.standingint = 2 and e.preferred.originTime.time < :ageAgo");
             q.setTimestamp("ageAgo", ageAgo.getTimestamp());
             Iterator<StatefulEvent> it = q.iterate();
             int counter=0;
