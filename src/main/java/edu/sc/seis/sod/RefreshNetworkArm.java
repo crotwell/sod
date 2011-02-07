@@ -1,6 +1,7 @@
 package edu.sc.seis.sod;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TimerTask;
@@ -51,17 +52,29 @@ public class RefreshNetworkArm extends TimerTask {
                 NetworkDB.getSingleton().put(cacheNetwork);
             }
             NetworkDB.commit();
-            for (NetworkAttrImpl cacheNetworkAccess : needReload) {
-                processNetwork(cacheNetworkAccess);
-                synchronized(this) {
-                    networksBeingReloaded.remove(new Integer(cacheNetworkAccess.getDbid()));
-                    // in case networkArm methods are waiting on this network to be refreshed 
-                    notifyAll();
-                    if (Start.getWaveformRecipe() != null) {
-                        // maybe worker threads need to run
-                        wait(10);
+            while (needReload.size() != 0) {
+                // in case of comm failures, we move to the next network, but
+                // keep trying until all networks have been reloaded
+                Iterator<NetworkAttrImpl> it = needReload.iterator();
+                while (it.hasNext()) {
+                    NetworkAttrImpl net = it.next();
+                    if (processNetwork(net)) {
+                        synchronized(this) {
+                            networksBeingReloaded.remove(new Integer(net.getDbid()));
+                            it.remove();
+                            logger.debug("Successful reload of "+NetworkIdUtil.toStringNoDates(net));
+                            // in case networkArm methods are waiting on this network to be refreshed 
+                            notifyAll();
+                            if (Start.getWaveformRecipe() != null) {
+                                // maybe worker threads need to run
+                                wait(10);
+                            }
+                        }
+                    } else {
+                        logger.debug("reload not successful, will do again "+NetworkIdUtil.toStringNoDates(net));
                     }
                 }
+                Thread.sleep(1000); // don't retry over and over as fast as possible
             }
             netArm.finish();
         } catch(Throwable t) {
@@ -69,7 +82,7 @@ public class RefreshNetworkArm extends TimerTask {
         }
     }
 
-    void processNetwork(NetworkAttrImpl net) {
+    boolean processNetwork(NetworkAttrImpl net) {
 logger.debug("refresh "+NetworkIdUtil.toString(net));
 // how do we refresh instrumentation???
         
@@ -79,24 +92,23 @@ logger.debug("refresh "+NetworkIdUtil.toString(net));
             for (int s = 0; s < stas.length; s++) {
                 allStations.add(stas[s]);
             }
+            synchronized(this) {
+                for (int s = 0; s < stas.length; s++) {
+                    stationsBeingReloaded.add(stas[s].getDbid());
+                }
+            }
             logger.info("found "+stas.length+" stations in "+NetworkIdUtil.toString(net));
             if (Start.getWaveformRecipe() != null || netArm.getChannelSubsetters().size() != 0) {
                 for (int s = 0; s < stas.length; s++) {
                     LoadedNetworkSource loadSource = new LoadedNetworkSource(netArm.getInternalNetworkSource(), allStations, stas[s]);
-                    if (Start.getWaveformRecipe() instanceof MotionVectorArm) {
-                        List<ChannelGroup> cg = netArm.getSuccessfulChannelGroupsFromServer(stas[s], loadSource);
-                        for (ChannelGroup channelGroup : cg) {
-                            checkInstLoaded(channelGroup, loadSource);
-                        }
-                    } else {
-                        List<ChannelImpl> chans = netArm.getSuccessfulChannelsFromServer(stas[s], loadSource);
-                        for (ChannelImpl channelImpl : chans) {
-                            checkInstLoaded(channelImpl, loadSource);
-                        }
+                    processStation(loadSource, stas[s]);
+                    synchronized(this) {
+                        stationsBeingReloaded.remove(new Integer(stas[s].getDbid()));
                     }
                 }
             }
             NetworkDB.commit(); // make sure session is clear
+            return true;
         } catch(Throwable t) {
             NetworkDB.rollback(); // oops
             String netstr = "unknown";
@@ -104,6 +116,21 @@ logger.debug("refresh "+NetworkIdUtil.toString(net));
                 netstr = NetworkIdUtil.toString(net);
             } catch(Throwable tt) {}
             GlobalExceptionHandler.handle("Problem with network: " + netstr, t);
+            return false;
+        }
+    }
+    
+    void processStation(LoadedNetworkSource loadSource, StationImpl sta) {
+        if (Start.getWaveformRecipe() instanceof MotionVectorArm) {
+            List<ChannelGroup> cg = netArm.getSuccessfulChannelGroupsFromServer(sta, loadSource);
+            for (ChannelGroup channelGroup : cg) {
+                checkInstLoaded(channelGroup, loadSource);
+            }
+        } else {
+            List<ChannelImpl> chans = netArm.getSuccessfulChannelsFromServer(sta, loadSource);
+            for (ChannelImpl channelImpl : chans) {
+                checkInstLoaded(channelImpl, loadSource);
+            }
         }
     }
     
@@ -136,7 +163,16 @@ logger.debug("refresh "+NetworkIdUtil.toString(net));
         return networksBeingReloaded.contains(new Integer(dbid));
     }
 
+    public synchronized boolean isStationBeingReloaded(int dbid) {
+        if (dbid == 0) {
+            throw new IllegalArgumentException("dbid = 0 is not legal, Station must not be in db yet");
+        }
+        return stationsBeingReloaded.contains(new Integer(dbid));
+    }
+
     private List<Integer> networksBeingReloaded = new ArrayList<Integer>();
+    
+    private List<Integer> stationsBeingReloaded = new ArrayList<Integer>();
 
     NetworkArm netArm;
 
