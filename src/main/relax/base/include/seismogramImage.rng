@@ -20,7 +20,7 @@
         </optional>
         <optional>
             <element name="fileDir">
-                <ref name="anyXML"/>
+                <ref name="any"/>
             </element>
         </optional>
         <optional>
@@ -36,13 +36,13 @@
                 </element>
                 <element name="outputLocationCreators">
                     <element name="eventDir">
-                        <ref name="anyXML"/>
+                        <ref name="any"/>
                     </element>
                     <element name="stationDir">
-                        <ref name="anyXML"/>
+                        <ref name="any"/>
                     </element>
                     <element name="picName">
-                        <ref name="anyXML"/>
+                        <ref name="any"/>
                     </element>
                 </element>
             </choice>
