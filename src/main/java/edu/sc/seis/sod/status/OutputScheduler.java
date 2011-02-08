@@ -71,7 +71,7 @@ public class OutputScheduler extends Thread implements ArmListener {
         } catch(InterruptedException e) {}
         while(true) {
             runAll(runnables);
-            if(!anyArmsActive()) {
+            if(Start.isArmFailure() || !anyArmsActive()) {
                 runAll(runnables);
                 runAll(onExitRunnables);
                 if (Start.getRunProps().checkpointPeriodically()) {
@@ -98,7 +98,9 @@ public class OutputScheduler extends Thread implements ArmListener {
             }
             try {
                 synchronized(this) {
+                    if ( ! Start.isArmFailure()) {
                     wait(ACTION_INTERVAL_MILLIS);
+                    }
                 }
             } catch(InterruptedException e) {}
         }
@@ -110,7 +112,7 @@ public class OutputScheduler extends Thread implements ArmListener {
             currentRunnables = (Runnable[])toRun.toArray(currentRunnables);
             toRun.clear();
         }
-        for(int i = 0; i < currentRunnables.length; i++) {
+        for(int i = 0; i < currentRunnables.length && ! Start.isArmFailure(); i++) {
             try {
                 currentRunnables[i].run();
             } catch(Throwable t) {
@@ -144,8 +146,8 @@ public class OutputScheduler extends Thread implements ArmListener {
         return DEFAULT;
     }
 
-    private static final TimeInterval ACTION_INTERVAL = new TimeInterval(2,
-                                                                         UnitImpl.MINUTE);
+    private static final TimeInterval ACTION_INTERVAL = new TimeInterval(10,
+                                                                         UnitImpl.SECOND);
 
     private static final long ACTION_INTERVAL_MILLIS = (long)ACTION_INTERVAL.convertTo(UnitImpl.MILLISECOND)
             .get_value();
