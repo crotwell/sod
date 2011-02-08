@@ -56,7 +56,7 @@
             <ref name="seismogramSampling"/>
             <ref name="decimate"/>
             <ref name="compressionType"/>
-            <ref name="SNEPProblem"/>
+            <ref name="availableDataPlus"/>
         </choice>
     </define>
     <define name="seismogramAND">
