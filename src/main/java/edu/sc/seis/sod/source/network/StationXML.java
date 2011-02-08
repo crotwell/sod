@@ -64,7 +64,6 @@ public class StationXML implements NetworkSource {
         } else {
             refreshInterval = new TimeInterval(1, UnitImpl.FORTNIGHT);
         }
-        System.out.println("StationXML: url="+url);
     }
 
     
@@ -89,15 +88,12 @@ public class StationXML implements NetworkSource {
     }
 
     public List<? extends NetworkAttrImpl> getNetworks() {
-        System.out.println("StationXML: getNetworks()");
         if (networks == null) {
-
             try {
                 parse();
             } catch(Exception e) {
                 throw new RuntimeException(e);
             }
-            System.out.println("StationXML: getNetworks() done parse() "+networks.size());
         }
         return Collections.unmodifiableList(networks);
     }
@@ -130,7 +126,7 @@ public class StationXML implements NetworkSource {
         for (StationChannelBundle b : bundles) {
             if (chanId.station_code.equals( b.getStation().get_code())) {
                 for (ChannelSensitivityBundle chanSens : b.getChanList()) {
-                    if (ChannelIdUtil.areEqual(chanId, chanSens.getChan().get_id())) {
+                    if (ChannelIdUtil.areEqual(chanId, chanSens.getChan().get_id()) && chanSens.getSensitivity() != null) {
                         return chanSens.getSensitivity();
                     }
                 }
@@ -158,7 +154,6 @@ public class StationXML implements NetworkSource {
         XMLEventReader r = factory.createXMLEventReader(in);
         XMLEvent e = r.peek();
         while(! e.isStartElement()) {
-            System.out.println(e);
             e = r.nextEvent(); // eat this one
             e = r.peek();  // peek at the next
         }
@@ -167,23 +162,37 @@ public class StationXML implements NetworkSource {
         StationIterator it = staMessage.getStations();
         while(it.hasNext()) {
             Station s = it.next();
-            System.out.println("XML Station: "+s.getNetCode()+"."+s.getStaCode()+" "+s.getStationEpochs().size()+" knownnets="+knownNetworks.size());
-            
-            List<StationChannelBundle> bundles = StationXMLToFissures.convert(s, knownNetworks, true);
-            for (StationChannelBundle b : bundles) {
-                if (!networks.contains(b.getStation().getNetworkAttrImpl())) {
-                    networks.add(b.getStation().getNetworkAttrImpl());
-                }
-                String staKey = NetworkIdUtil.toStringNoDates(b.getStation().getNetworkAttr());
-                if ( ! staChanMap.containsKey(staKey)) {
-                    staChanMap.put(staKey, new ArrayList<StationChannelBundle>());
-                }
-                staChanMap.get(staKey).add(b);
+            try {
+                processStation(s);
+            } catch (StationXMLException ee) {
+                logger.error("Skipping "+s.getNetCode());
             }
         }
-        System.out.println("StationXML found "+networks.size()+" networks after parse (known network="+knownNetworks.size()+")");
         logger.info("found "+networks.size()+" networks after parse (known network="+knownNetworks.size()+")");
     }
+    
+    void processStation(Station s) throws StationXMLException {
+        for (String ignore : ignoreNets) {
+            if (s.getNetCode().equals(ignore)) {
+            // not sure what AB network is, skip it for now
+            System.err.println("WARNING: Skipping "+ignore+" network");
+            return;
+            }
+        }
+        List<StationChannelBundle> bundles = StationXMLToFissures.convert(s, knownNetworks, true);
+        for (StationChannelBundle b : bundles) {
+            if (!networks.contains(b.getStation().getNetworkAttrImpl())) {
+                networks.add(b.getStation().getNetworkAttrImpl());
+            }
+            String staKey = NetworkIdUtil.toStringNoDates(b.getStation().getNetworkAttr());
+            if ( ! staChanMap.containsKey(staKey)) {
+                staChanMap.put(staKey, new ArrayList<StationChannelBundle>());
+            }
+            staChanMap.get(staKey).add(b);
+        }
+    }
+    
+    static String[] ignoreNets = new String[] {"AB", "AI"};
     
     List<NetworkAttrImpl> knownNetworks = new ArrayList<NetworkAttrImpl>();;
     
