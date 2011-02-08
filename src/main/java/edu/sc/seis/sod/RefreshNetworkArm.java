@@ -78,6 +78,7 @@ public class RefreshNetworkArm extends TimerTask {
             }
             netArm.finish();
         } catch(Throwable t) {
+            Start.armFailure(netArm, t);
             GlobalExceptionHandler.handle(t);
         }
     }
