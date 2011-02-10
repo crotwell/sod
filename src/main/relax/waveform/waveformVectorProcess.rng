@@ -24,7 +24,6 @@
             <ref name="seismogramProcess"/>
             <ref name="externalVectorProcess"/>
             <ref name="vectorImageProcess"/>
-            <ref name="vectorForkProcess"/>
             <ref name="sampleSyncronize"/>
             <ref name="rotateGCP"/>
             <ref name="vectorTrim"/>
@@ -246,13 +245,6 @@
                     <ref name="basicSeismogramDisplayContents"/>
                 </element>
             </optional>
-        </element>
-    </define>
-    <define name="vectorForkProcess">
-        <element name="vectorForkProcess">
-            <oneOrMore>
-                <ref name="waveformVectorProcess"/>
-            </oneOrMore>
         </element>
     </define>
     <define name="rotateGCP">
