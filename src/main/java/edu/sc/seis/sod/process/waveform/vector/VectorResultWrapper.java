@@ -6,6 +6,8 @@ import org.w3c.dom.NodeList;
 
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.MotionVectorArm;
+import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.subsetter.Subsetter;
 
 public abstract class VectorResultWrapper implements
         WaveformVectorProcessWrapper {
@@ -15,7 +17,7 @@ public abstract class VectorResultWrapper implements
         for(int i = 0; i < children.getLength(); i++) {
             Node node = children.item(i);
             if(node instanceof Element && !node.getLocalName().equals("classname")) {
-                subProcess = MotionVectorArm.loadAndWrap((Element)node);
+                subProcess = WaveformVectorFork.load((Element)node);
             } // end of if (node instanceof Element)
         } // end of for (int i=0; i<children.getSize(); i++)
     }

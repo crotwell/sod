@@ -32,22 +32,18 @@ public class WaveformVectorNOT extends WaveformVectorFork {
                                         RequestFilter[][] available,
                                         LocalSeismogramImpl[][] seismograms,
                                         CookieJar cookieJar) throws Exception {
-        LocalSeismogramImpl[][] out = copySeismograms(seismograms);
         // pass originals to the contained processors
         WaveformVectorProcess processor;
-        Iterator it = cgProcessList.iterator();
-        WaveformVectorResult result = new WaveformVectorResult(seismograms,
-                                                               new StringTreeLeaf(this,
-                                                                                  true));
+        Iterator it = processes.iterator();
         processor = (WaveformVectorProcess)it.next();
-        result = MotionVectorArm.runProcessorThreadCheck(processor,
+        WaveformVectorResult result = MotionVectorArm.runProcessorThreadCheck(processor,
                                                          event,
                                                          channelGroup,
                                                          original,
                                                          available,
-                                                         copySeismograms(seismograms),
+                                                         seismograms,
                                                          cookieJar);
-        return new WaveformVectorResult(out,
+        return new WaveformVectorResult(result.getSeismograms(),
                                         new StringTreeBranch(this,
                                                              !result.isSuccess(),
                                                              new StringTree[] {result.getReason()}));

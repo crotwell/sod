@@ -10,8 +10,9 @@ import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.subsetter.Subsetter;
 
-public interface WaveformVectorProcess {
+public interface WaveformVectorProcess extends Subsetter {
 
     public WaveformVectorResult accept(CacheEvent event,
                                                      ChannelGroup channelGroup,

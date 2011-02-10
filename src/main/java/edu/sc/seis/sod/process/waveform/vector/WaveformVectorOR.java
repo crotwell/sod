@@ -34,13 +34,12 @@ public class WaveformVectorOR extends WaveformVectorFork {
                                                      RequestFilter[][] available,
                                                      LocalSeismogramImpl[][] seismograms,
                                                      CookieJar cookieJar) throws Exception {
-        LocalSeismogramImpl[][] out = copySeismograms(seismograms);
 
         // pass originals to the contained processors
         WaveformVectorProcess processor;
-        LinkedList reasons = new LinkedList();
-        Iterator it = cgProcessList.iterator();
-        WaveformVectorResult result = new WaveformVectorResult(seismograms, new StringTreeLeaf(this, true));
+        LinkedList<StringTree> reasons = new LinkedList<StringTree>();
+        Iterator it = processes.iterator();
+        WaveformVectorResult result = new WaveformVectorResult(seismograms, new StringTreeLeaf(this, false));
         boolean orResult = false;
         while (it.hasNext()  && ! orResult) {
             processor = (WaveformVectorProcess)it.next();
@@ -49,15 +48,12 @@ public class WaveformVectorOR extends WaveformVectorFork {
                                                              channelGroup,
                                                              original,
                                                              available,
-                                                             copySeismograms(seismograms),
+                                                             result.getSeismograms(),
                                                              cookieJar);
             orResult |= result.isSuccess();
             reasons.addLast(result.getReason());
         } // end of while (it.hasNext())
-        if (reasons.size() < cgProcessList.size()) {
-            reasons.addLast(new StringTreeLeaf("ShortCurcit", result.isSuccess()));
-        }
-        return new WaveformVectorResult(out,
+        return new WaveformVectorResult(result.getSeismograms(),
                                                      new StringTreeBranch(this,
                                                                           orResult,
                                                                               (StringTree[])reasons.toArray(new StringTree[0])));

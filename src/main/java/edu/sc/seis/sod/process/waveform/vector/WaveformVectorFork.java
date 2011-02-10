@@ -20,6 +20,7 @@ import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Threadable;
 import edu.sc.seis.sod.process.waveform.ForkProcess;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
+import edu.sc.seis.sod.process.waveform.WaveformResult;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.status.StringTreeLeaf;
@@ -94,37 +95,50 @@ public class WaveformVectorFork implements WaveformVectorProcess, Threadable {
     }
     public WaveformVectorResult accept(CacheEvent event,
                                         ChannelGroup channelGroup,
-                                        RequestFilter[][] original,
+                                        RequestFilter[][] request,
                                         RequestFilter[][] available,
                                         LocalSeismogramImpl[][] seismograms,
                                         CookieJar cookieJar) throws Exception {
-        LocalSeismogramImpl[][] out = copySeismograms(seismograms);
-        LinkedList reasons = new LinkedList();
+        return new WaveformVectorResult(copySeismograms(seismograms),
+                                  doAND(event,
+                                        channelGroup,
+                                        request,
+                                        available,
+                                        seismograms,
+                                        cookieJar).getReason());
+        
+    }
+    
+
+    public WaveformVectorResult doAND(CacheEvent event,
+                                        ChannelGroup channelGroup,
+                                        RequestFilter[][] request,
+                                        RequestFilter[][] available,
+                                        LocalSeismogramImpl[][] seismograms,
+                                        CookieJar cookieJar) throws Exception { 
+        LinkedList<StringTree> reasons = new LinkedList<StringTree>();
         Iterator it = processes.iterator();
         WaveformVectorResult result = new WaveformVectorResult(seismograms,
                                                                new StringTreeLeaf(this,
                                                                                   true));
-        logger.info("start vectorFork");
         while(it.hasNext() && result.isSuccess()) {
             WaveformVectorProcess processor = (WaveformVectorProcess)it.next();
-            logger.info("vectorFork processing "
-                    + processor.getClass().getName());
             result = MotionVectorArm.runProcessorThreadCheck(processor,
                                                              event,
                                                              channelGroup,
-                                                             original,
+                                                             request,
                                                              available,
                                                              result.getSeismograms(),
                                                              cookieJar);
             reasons.addLast(result.getReason());
         } // end of while (it.hasNext())
-        return new WaveformVectorResult(out,
+        return new WaveformVectorResult(result.getSeismograms(),
                                         new StringTreeBranch(this,
                                                              result.isSuccess(),
-                                                             (StringTree[])reasons.toArray(new StringTree[0])));
+                                                             reasons.toArray(new StringTree[0])));
     }
 
-    private LocalSeismogramImpl[][] copySeismograms(LocalSeismogramImpl[][] seismograms) {
+    public static LocalSeismogramImpl[][] copySeismograms(LocalSeismogramImpl[][] seismograms) {
         LocalSeismogramImpl[][] out = new LocalSeismogramImpl[seismograms.length][];
         for(int i = 0; i < out.length; i++) {
             out[i] = ForkProcess.copySeismograms(seismograms[i]);
@@ -142,5 +156,5 @@ public class WaveformVectorFork implements WaveformVectorProcess, Threadable {
     
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(WaveformVectorFork.class);
 
-    private List processes = new ArrayList();
+    protected List<WaveformVectorProcess> processes = new ArrayList<WaveformVectorProcess>();
 }
