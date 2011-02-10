@@ -130,13 +130,7 @@
             </xsd:annotation>
             <oneOrMore>
                 <element name="choice">
-                    <choice>
-                       <ref name="network"/>
-                       <ref name="station"/>
-                       <ref name="channel"/>
-                       <ref name="eventChannel"/>
-                       <ref name="eventStation"/>
-                    </choice>
+                    <ref name="eventChannelPlus"/>
                     <ref name="seismogramSource"/>
                 </element>
             </oneOrMore>
