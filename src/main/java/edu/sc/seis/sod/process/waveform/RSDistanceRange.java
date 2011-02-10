@@ -5,16 +5,16 @@ import org.w3c.dom.Element;
 import edu.sc.seis.sod.SodUtil;
 
 
-class DistanceRange {
+class RSDistanceRange {
 
-    public DistanceRange(Element el) {
+    public RSDistanceRange(Element el) {
         minDistance = new Double(SodUtil.getText(SodUtil.getElement(el,
                                                                     "min"))).doubleValue();
         maxDistance = new Double(SodUtil.getText(SodUtil.getElement(el,
                                                                     "max"))).doubleValue();
     }
 
-    public DistanceRange(double minDistance, double maxDistance) {
+    public RSDistanceRange(double minDistance, double maxDistance) {
         this.minDistance = minDistance;
         this.maxDistance = maxDistance;
     }

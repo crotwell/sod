@@ -18,14 +18,14 @@ import edu.sc.seis.fissuresUtil.xml.DataSetSeismogram;
 public class RecordSectionSpacer {
 
     public RecordSectionSpacer() {
-        this(new DistanceRange(0, 180));
+        this(new RSDistanceRange(0, 180));
     }
 
-    public RecordSectionSpacer(DistanceRange range) {
+    public RecordSectionSpacer(RSDistanceRange range) {
         this(range, 15, 21);
     }
 
-    public RecordSectionSpacer(DistanceRange range,
+    public RecordSectionSpacer(RSDistanceRange range,
                                int idealSeismograms,
                                int maximumSeismogram) {
         double r = range.getMaxDistance() - range.getMinDistance();

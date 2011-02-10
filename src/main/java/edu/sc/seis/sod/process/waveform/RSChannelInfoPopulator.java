@@ -82,7 +82,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
             maxNumberOfSeismograms = new Integer(maxSeisText).intValue();
         }
         if(DOMHelper.hasElement(config, "distanceRange")) {
-            distRange = new DistanceRange(SodUtil.getElement(config,
+            distRange = new RSDistanceRange(SodUtil.getElement(config,
                                                              "distanceRange"));
         }
         if(DOMHelper.hasElement(config, "recordSectionSize")) {
@@ -342,7 +342,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
 
     private String orientationId, saveSeisId, recordSectionId;
 
-    private DistanceRange distRange;// = new DistanceRange(0, 180);
+    private RSDistanceRange distRange;// = new DistanceRange(0, 180);
 
     private double percentSeisHeight = 10;
 
