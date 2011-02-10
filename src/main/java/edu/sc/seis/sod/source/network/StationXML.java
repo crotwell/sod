@@ -165,7 +165,7 @@ public class StationXML implements NetworkSource {
             try {
                 processStation(s);
             } catch (StationXMLException ee) {
-                logger.error("Skipping "+s.getNetCode());
+                logger.error("Skipping "+s.getNetCode()+"."+s.getStaCode(), ee);
             }
         }
         logger.info("found "+networks.size()+" networks after parse (known network="+knownNetworks.size()+")");
@@ -192,7 +192,7 @@ public class StationXML implements NetworkSource {
         }
     }
     
-    static String[] ignoreNets = new String[] {"AB", "AI"};
+    static String[] ignoreNets = new String[] {"AB", "AI", "BN"};
     
     List<NetworkAttrImpl> knownNetworks = new ArrayList<NetworkAttrImpl>();;
     
