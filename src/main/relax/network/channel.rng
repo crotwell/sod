@@ -67,8 +67,7 @@
     <define name="channelPlus">
         <choice>
             <ref name="channel"/>
-            <ref name="station"/>
-            <ref name="network"/>
+            <ref name="stationPlus"/>
         </choice>
     </define>
     <define name="siteCode">
@@ -277,9 +276,6 @@
                 </example>
             </xsd:annotation>
             <oneOrMore>
-<!--
-                <ref name="channel"/>
--->
                 <ref name="channelPlus"/>
             </oneOrMore>
         </element>

@@ -59,6 +59,12 @@
             <ref name="availableDataPlus"/>
         </choice>
     </define>
+    <define name="seismogramPlus">
+        <choice>
+            <ref name = "seismogramProcess"/>
+            <ref name = "availableDataPlus"/>
+        </choice>
+    </define>
     <define name="seismogramAND">
         <element name="seismogramAND">
             <xsd:annotation>
@@ -77,7 +83,7 @@
                 </example>
             </xsd:annotation>
             <oneOrMore>
-                <ref name="seismogramProcess"/>
+                <ref name="seismogramPlus"/>
             </oneOrMore>
         </element>
     </define>
@@ -99,7 +105,7 @@
                 </example>
             </xsd:annotation>
             <oneOrMore>
-                <ref name="seismogramProcess"/>
+                <ref name="seismogramPlus"/>
             </oneOrMore>
         </element>
     </define>
@@ -119,7 +125,7 @@
                     </seismogramNOT>
                 </example>
             </xsd:annotation>
-            <ref name="seismogramProcess"/>
+            <ref name="seismogramPlus"/>
         </element>
     </define>
     <define name="phaseCut">
@@ -729,7 +735,7 @@ result = util.waveformResult(True, out)
                     </alwaysSuccess>
                 </example>
             </xsd:annotation>
-            <ref name="seismogramProcess"/>
+            <ref name="seismogramPlus"/>
         </element>
     </define>
     <define name="phaseSignalToNoise">
@@ -1086,21 +1092,6 @@ result = util.waveformResult(True, out)
                     <data type="integer"/>
                 </element>
             </oneOrMore>
-        </element>
-    </define>
-    <define name="SNEPProblem">
-        <element name="SNEPProblem">
-            <xsd:annotation>
-                <summary>A SNEP-project-specific waveform process that passes data if it is tagged as having a problem.</summary>
-                <description>This processor checks the seismograms' properties and passes the data if a property with
-                    the name "snep.problem" exists and, optionally, if it is of a specified type. This is only used
-                    within the SNEP project and is fairly useless to anyone not working with its data.</description>
-            </xsd:annotation>
-            <optional>
-                <element name="type">
-                    <data type="string"/>
-                </element>
-            </optional>
         </element>
     </define>
 </grammar>

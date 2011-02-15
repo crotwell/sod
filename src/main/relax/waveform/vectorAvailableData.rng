@@ -23,13 +23,7 @@
     <define name="vectorAvailableDataPlus">
         <choice>
             <ref name="vectorAvailableData"/>
-            <ref name="eventVector"/>
-            <ref name="vectorRequest"/>
-            <ref name="eventChannel"/>
-            <ref name="eventStation"/>
-            <ref name="request"/>
-            <ref name="channel"/>
-            <ref name="origin"/>
+            <ref name="vectorRequestPlus"/>
         </choice>
     </define>
     <define name="ANDAvailableDataWrapper">

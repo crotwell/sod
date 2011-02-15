@@ -22,7 +22,7 @@
         <choice>
             <ref name="eventChannel"/>
             <ref name="eventStation"/>
-            <ref name="channel"/>
+            <ref name="channelPlus"/>
             <ref name="origin"/>
         </choice>
     </define>

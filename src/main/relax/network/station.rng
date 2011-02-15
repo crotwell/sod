@@ -36,7 +36,6 @@
     <define name="stationPlus">
         <choice>
             <ref name="station"/>
-            <ref name="stationScript"/>
             <ref name="network"/>
         </choice>
     </define>
@@ -270,7 +269,7 @@
                     Station subsetter. This means that it will evaluate to false if the enclosed
                     Station subsetter evaluates to true, and vice versa.</description>
             </xsd:annotation>
-            <ref name="station"/>
+            <ref name="stationPlus"/>
         </element>
     </define>
     <define name="externalStationSubsetter">

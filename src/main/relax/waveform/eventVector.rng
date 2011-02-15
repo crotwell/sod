@@ -17,14 +17,13 @@
             <ref name="eventVectorNOT"/>
             <ref name="eventVectorScript"/>
             <ref name="external"/>
+            <ref name="eventChannel"/>
         </choice>
     </define>
     <define name="eventVectorPlus">
         <choice>
             <ref name="eventVector"/>
-            <ref name="eventStation"/>
-            <ref name="station"/>
-            <ref name="origin"/>
+            <ref name="eventStationPlus"/>
         </choice>
     </define>
     <define name="bestChannelGroupAtStation">
@@ -115,7 +114,7 @@
                     subsetters after the first false outputted are not evaluated.</description>
             </xsd:annotation>
             <oneOrMore>
-                <ref name="eventVector"/>
+                <ref name="eventVectorPlus"/>
             </oneOrMore>
         </element>
     </define>
@@ -128,7 +127,7 @@
                     true. The subsetters after the first true outputted are not evaluated.</description>
             </xsd:annotation>
             <oneOrMore>
-                <ref name="eventVector"/>
+                <ref name="eventVectorPlus"/>
             </oneOrMore>
         </element>
     </define>
@@ -139,7 +138,7 @@
                 <description>The output is the logical NOT of the output of the included subsetter. This means that the
                     included subsetter must evaluate to false for this subsetter to evaluate to true, and vice versa.</description>
             </xsd:annotation>
-            <ref name="eventVector"/>
+            <ref name="eventVectorPlus"/>
         </element>
     </define>
     <define name="eventVectorScript">

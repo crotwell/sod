@@ -30,6 +30,12 @@
             <ref name="vectorScript"/>
         </choice>
     </define>
+    <define name="waveformVectorProcessPlus">
+        <choice>
+            <ref name="waveformVectorProcess"/>
+            <ref name="vectorAvailableDataPlus"/>
+        </choice>
+    </define>
     <define name="threeComponentData">
         <element name="threeComponentData">
             <xsd:annotation>
@@ -107,7 +113,7 @@
                 </example>
             </xsd:annotation>
             <zeroOrMore>
-                <ref name="waveformVectorProcess"/>
+                <ref name="waveformVectorProcessPlus"/>
             </zeroOrMore>
         </element>
     </define>
@@ -132,7 +138,7 @@
                 </example>
             </xsd:annotation>
             <oneOrMore>
-                <ref name="waveformVectorProcess"/>
+                <ref name="waveformVectorProcessPlus"/>
             </oneOrMore>
         </element>
     </define>
@@ -157,7 +163,7 @@
                 </example>
             </xsd:annotation>
             <oneOrMore>
-                <ref name="waveformVectorProcess"/>
+                <ref name="waveformVectorProcessPlus"/>
             </oneOrMore>
         </element>
     </define>
@@ -175,7 +181,7 @@
                     </waveformVectorNOT>
                 </example>
             </xsd:annotation>
-            <ref name="waveformVectorProcess"/>
+            <ref name="waveformVectorProcessPlus"/>
         </element>
     </define>
     <define name="waveformVectorAlwaysSuccess">
@@ -196,7 +202,7 @@
                     </waveformVectorAlwaysSuccess>
                 </example>
             </xsd:annotation>
-            <ref name="waveformVectorProcess"/>
+            <ref name="waveformVectorProcessPlus"/>
         </element>
     </define>
     <define name="externalVectorProcess">

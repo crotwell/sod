@@ -20,6 +20,12 @@
             <ref name="request"/>
         </choice>
     </define>
+    <define name="vectorRequestPlus">
+        <choice>
+            <ref name="vectorRequest"/>
+            <ref name="eventVectorPlus"/>
+        </choice>
+    </define>
     <define name="ANDRequestWrapper">
         <element name="ANDRequestWrapper">
             <xsd:annotation>
@@ -66,7 +72,7 @@
                     evaluated.</description>
             </xsd:annotation>
             <oneOrMore>
-                <ref name="vectorRequest"/>
+                <ref name="vectorRequestPlus"/>
             </oneOrMore>
         </element>
     </define>
@@ -80,7 +86,7 @@
                     evaluated.</description>
             </xsd:annotation>
             <oneOrMore>
-                <ref name="vectorRequest"/>
+                <ref name="vectorRequestPlus"/>
             </oneOrMore>
         </element>
     </define>
@@ -92,7 +98,7 @@
                     This mean that it will evaluate to false if the enclosed request evaluates to
                     true, and vice versa.</description>
             </xsd:annotation>
-            <ref name="vectorRequest"/>
+            <ref name="vectorRequestPlus"/>
         </element>
     </define>
     <define name="vectorRequestScript">
