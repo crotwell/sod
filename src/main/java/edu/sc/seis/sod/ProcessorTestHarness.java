@@ -8,8 +8,8 @@ import edu.sc.seis.fissuresUtil.hibernate.EventDB;
 import edu.sc.seis.sod.process.waveform.ForkProcess;
 import edu.sc.seis.sod.process.waveform.RecordSectionDisplayGenerator;
 import edu.sc.seis.sod.process.waveform.vector.ORWaveformProcessWrapper;
-import edu.sc.seis.sod.process.waveform.vector.VectorForkProcess;
 import edu.sc.seis.sod.process.waveform.vector.WaveformVectorAlwaysSuccess;
+import edu.sc.seis.sod.process.waveform.vector.WaveformVectorFork;
 
 public class ProcessorTestHarness {
 
@@ -18,7 +18,7 @@ public class ProcessorTestHarness {
         Start.main(args);
         AbstractWaveformRecipe arm = Start.getWaveformRecipe();
         WaveformVectorAlwaysSuccess alwaysSuccess = (WaveformVectorAlwaysSuccess)((MotionVectorArm)arm).getProcesses()[20];
-        VectorForkProcess fork = (VectorForkProcess)alwaysSuccess.getWrappedProcessors()[0];
+        WaveformVectorFork fork = (WaveformVectorFork)alwaysSuccess.getWrappedProcessors()[0];
         WaveformVectorAlwaysSuccess internalSuccess = (WaveformVectorAlwaysSuccess)fork.getWrappedProcessors()[1];
         ORWaveformProcessWrapper orWrapper = (ORWaveformProcessWrapper)internalSuccess.getWrappedProcessors()[0];
         ForkProcess internalFork = (ForkProcess)orWrapper.getWrappedProcess();
