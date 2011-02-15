@@ -40,22 +40,22 @@ public class AvailableDataLogicalSubsetter extends LogicalSubsetter {
 
 
     @Override
-    protected Subsetter getSubsetter(final Subsetter s) {
+    protected Subsetter getSubsetter(final Subsetter s) throws ConfigurationException {
         return createSubsetter(s);
     }
     
-    public static AvailableDataSubsetter createSubsetter(final Subsetter s) {
+    public static AvailableDataSubsetter createSubsetter(final Subsetter s) throws ConfigurationException {
         if (s instanceof AvailableDataSubsetter) {
             return (AvailableDataSubsetter)s;
         } else {
+            final RequestSubsetter subsetter = (RequestSubsetter)RequestLogical.createSubsetter(s);
             return new AvailableDataSubsetter() {
-                
                 public StringTree accept(CacheEvent event,
                                          ChannelImpl channel,
                                          RequestFilter[] request,
                                          RequestFilter[] available,
                                          CookieJar cookieJar) throws Exception {
-                    return ((RequestSubsetter)RequestLogical.createSubsetter(s)).accept(event, channel, request, cookieJar);
+                    return subsetter.accept(event, channel, request, cookieJar);
                 }
             };
         }
