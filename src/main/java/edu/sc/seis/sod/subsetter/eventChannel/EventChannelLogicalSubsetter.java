@@ -39,6 +39,7 @@ public class EventChannelLogicalSubsetter extends LogicalSubsetter {
     static {
         packages = new LinkedList<String>();
         packages.add("eventChannel");
+        packages.add("eventStation");
         packages.addAll(ChannelLogicalSubsetter.packages);
         packages.addAll(EventLogicalSubsetter.packages);
     }
