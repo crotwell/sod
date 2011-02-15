@@ -17,7 +17,11 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.subsetter.Subsetter;
+import edu.sc.seis.sod.subsetter.channel.ChannelLogicalSubsetter;
+import edu.sc.seis.sod.subsetter.eventChannel.EventChannelLogicalSubsetter;
 import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
+import edu.sc.seis.sod.subsetter.origin.EventLogicalSubsetter;
 
 public class ChoiceRequest implements RequestGenerator {
 
@@ -57,8 +61,7 @@ public class ChoiceRequest implements RequestGenerator {
     protected RequestGenerator otherwise = null;
 
     class Choice implements RequestGenerator, EventChannelSubsetter {
-
-        RequestGenerator requestGenerator;
+        
 
         Choice(Element config) throws ConfigurationException {
             NodeList childNodes = config.getChildNodes();
@@ -67,12 +70,11 @@ public class ChoiceRequest implements RequestGenerator {
                 node = childNodes.item(counter);
                 if(node instanceof Element) {
                     SodElement sodElement = (SodElement)SodUtil.load((Element)node,
-                                                                     new String[] {"requestGenerator",
-                                                                                   "eventChannel"});
+                                                                     packages.toArray(new String[0]));
                     if(sodElement instanceof RequestGenerator) {
                         requestGenerator = (RequestGenerator)sodElement;
-                    } else if(sodElement instanceof EventChannelSubsetter) {
-                        eventChannelSubsetter = (EventChannelSubsetter)sodElement;
+                    } else if(sodElement instanceof Subsetter) {
+                        eventChannelSubsetter = EventChannelLogicalSubsetter.createSubsetter((Subsetter)sodElement);
                     }
                 } // end of else
             }
@@ -91,8 +93,21 @@ public class ChoiceRequest implements RequestGenerator {
             return eventChannelSubsetter.accept(event, channel, cookieJar);
         }
 
+        RequestGenerator requestGenerator;
+        
         EventChannelSubsetter eventChannelSubsetter;
     }
 
+    public static final List<String> packages;
+    
+    static {
+        packages = new LinkedList<String>();
+        packages.add("requestGenerator");
+        packages.add("eventChannel");
+        packages.add("eventStation");
+        packages.addAll(ChannelLogicalSubsetter.packages);
+        packages.addAll(EventLogicalSubsetter.packages);
+    }
+    
     private static Logger logger = Logger.getLogger(ChoiceRequest.class);
 }// PhaseRequest
