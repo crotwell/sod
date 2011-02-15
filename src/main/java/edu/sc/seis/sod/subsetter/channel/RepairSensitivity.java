@@ -6,6 +6,7 @@ import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.Response;
 import edu.iris.Fissures.IfNetwork.Stage;
+import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.cache.InstrumentationLoader;
@@ -22,6 +23,11 @@ public class RepairSensitivity implements ChannelSubsetter {
             throws Exception {
         Instrumentation instrumentation;
         try {
+            QuantityImpl sensitivity = network.getSensitivity(channel.getId());
+            if(InstrumentationLoader.isValidSensitivity(sensitivity)) {
+                return new Pass(this);
+            }
+            // try via instrumentation
             instrumentation = network.getInstrumentation(channel.get_id());
         } catch(ChannelNotFound e) {
             return new Fail(this, "No instrumentation");
