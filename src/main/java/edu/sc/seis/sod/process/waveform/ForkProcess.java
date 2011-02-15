@@ -7,6 +7,7 @@ package edu.sc.seis.sod.process.waveform;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.w3c.dom.Element;
@@ -25,23 +26,61 @@ import edu.sc.seis.sod.Threadable;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.status.StringTreeLeaf;
+import edu.sc.seis.sod.subsetter.Subsetter;
+import edu.sc.seis.sod.subsetter.availableData.AvailableDataLogicalSubsetter;
+import edu.sc.seis.sod.subsetter.availableData.AvailableDataSubsetter;
+import edu.sc.seis.sod.subsetter.channel.ChannelLogicalSubsetter;
+import edu.sc.seis.sod.subsetter.origin.EventLogicalSubsetter;
+import edu.sc.seis.sod.subsetter.request.RequestLogical;
+import edu.sc.seis.sod.subsetter.request.RequestSubsetter;
 
 public class ForkProcess implements WaveformProcess, Threadable {
 
     public ForkProcess(Element config) throws ConfigurationException {
         NodeList children = config.getChildNodes();
         Node node;
+        String [] packageArray = packages.toArray(new String[0]);
         for(int i = 0; i < children.getLength(); i++) {
             node = children.item(i);
             if(node instanceof Element) {
-                Object sodElement = SodUtil.load((Element)node, "waveform");
-                localSeisProcessList.add(sodElement);
+                Object sodElement = SodUtil.load((Element)node, packageArray);
+                if (sodElement instanceof Subsetter) {
+                    localSeisProcessList.add(createSubsetter((Subsetter)sodElement));
+                }
             } // end of if (node instanceof Element)
         } // end of for (int i=0; i<children.getSize(); i++)
     }
 
     public boolean isThreadSafe() {
         return true;
+    }
+
+    public static final List<String> packages;
+    
+    static {
+        packages = new LinkedList<String>();
+        packages.add("waveform");
+        packages.addAll(AvailableDataLogicalSubsetter.packages);
+    }
+
+    public static WaveformProcess createSubsetter(final Subsetter s) throws ConfigurationException {
+        if (s instanceof WaveformProcess) {
+            return (WaveformProcess)s;
+        } else {
+            final AvailableDataSubsetter subsetter = (AvailableDataSubsetter)AvailableDataLogicalSubsetter.createSubsetter(s);
+            return new WaveformProcess() {
+
+                public WaveformResult accept(CacheEvent event,
+                                             ChannelImpl channel,
+                                             RequestFilter[] request,
+                                             RequestFilter[] available,
+                                             LocalSeismogramImpl[] seismograms,
+                                             CookieJar cookieJar) throws Exception {
+                    return new WaveformResult(seismograms,
+                                              subsetter.accept(event, channel, request, available, cookieJar));
+                }
+            };
+        }
     }
 
     /**
@@ -52,14 +91,14 @@ public class ForkProcess implements WaveformProcess, Threadable {
      */
     public WaveformResult accept(CacheEvent event,
                                   ChannelImpl channel,
-                                  RequestFilter[] original,
+                                  RequestFilter[] request,
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) throws Exception {
         return new WaveformResult(copySeismograms(seismograms),
                                   doAND(event,
                                         channel,
-                                        original,
+                                        request,
                                         available,
                                         seismograms,
                                         cookieJar).getReason());
@@ -67,7 +106,7 @@ public class ForkProcess implements WaveformProcess, Threadable {
 
     protected WaveformResult doAND(CacheEvent event,
                                    ChannelImpl channel,
-                                   RequestFilter[] original,
+                                   RequestFilter[] request,
                                    RequestFilter[] available,
                                    LocalSeismogramImpl[] seismograms,
                                    CookieJar cookieJar) throws Exception {
@@ -82,7 +121,7 @@ public class ForkProcess implements WaveformProcess, Threadable {
             result = LocalSeismogramArm.runProcessorThreadCheck(processor, 
                                                                 event,
                                                                 channel,
-                                                                original,
+                                                                request,
                                                                 available,
                                                                 result.getSeismograms(),
                                                                 cookieJar);
