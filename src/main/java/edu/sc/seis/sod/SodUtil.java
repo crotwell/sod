@@ -30,6 +30,7 @@ import org.python.core.PyJavaType;
 import org.python.core.PyObject;
 import org.python.util.PythonInterpreter;
 import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -113,6 +114,11 @@ public class SodUtil {
             throws ConfigurationException {
         return load(config, new String[] {armName});
     }
+    
+    public static synchronized Object load(Element config, List<String> armNames)
+    throws ConfigurationException {
+        return load(config, armNames.toArray(new String[0]));
+    }
 
     public static synchronized Object load(Element config, String[] armNames)
             throws ConfigurationException {
@@ -169,8 +175,15 @@ public class SodUtil {
             //Just rethrow config exceptions 
             throw ce;
         } catch(Exception e) {
-            throw new ConfigurationException("Problem understanding " + config.getTagName(), e);
+            throw new ConfigurationException("Problem understanding " + elementPath(config), e);
         } // end of try-catch
+    }
+    
+    public static String elementPath(Element e) {
+        if (e.getParentNode() instanceof Document) {
+            return "/";
+        }
+        return elementPath((Element)e.getParentNode())+"/"+e.getTagName();
     }
 
     private static Class load(String tagName, String[] armNames) throws ClassNotFoundException {
