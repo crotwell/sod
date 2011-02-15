@@ -371,18 +371,6 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
         }
     }
 
-    public static WaveformVectorProcess loadAndWrap(Element element) throws ConfigurationException {
-        Object sodElement = SodUtil.load(element, new String[] {"waveform", "waveform.vector"});
-        if (sodElement instanceof WaveformProcess && !(sodElement instanceof WaveformVectorProcess)) {
-            return new ANDWaveformProcessWrapper((WaveformProcess)sodElement);
-        } else if (sodElement instanceof WaveformVectorProcess) {
-            return (WaveformVectorProcess)sodElement;
-        } else {
-            throw new ConfigurationException("Element " + element.getLocalName()
-                    + " is not a WaveformProcess or a WaveformVectorProcess");
-        }
-    }
-
     private LocalSeismogram[][] getData(EventVectorPair ecp, RequestFilter[][] rf, SeismogramSource seismogramSource)
             throws FissuresException {
         LocalSeismogram[][] localSeismograms = new LocalSeismogram[rf.length][];
