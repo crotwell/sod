@@ -3,6 +3,7 @@ package edu.sc.seis.sod.status;
 public abstract class StringTree {
 
     public StringTree(String actorName, boolean status) {
+        if (actorName == null || actorName.length() == 0) {throw new IllegalArgumentException("actorName cannot be empty");}
         this.actorName = actorName;
         this.status = status;
     }
