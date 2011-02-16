@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.subsetter.channel;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.network.ChannelImpl;
@@ -23,5 +24,5 @@ public class HasResponse implements ChannelSubsetter {
         }
     }
 
-    private Logger logger = Logger.getLogger(HasResponse.class);
+    private Logger logger = LoggerFactory.getLogger(HasResponse.class);
 }

@@ -90,7 +90,7 @@ public class DataSelectWebService implements SeismogramSourceLocator {
     
     public static SimpleDateFormat longFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(DataSelectWebService.class);
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(DataSelectWebService.class);
 }
 
 class MyAuthenticator extends Authenticator {

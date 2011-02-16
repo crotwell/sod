@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.subsetter.availableData;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
@@ -47,5 +48,5 @@ public class NoGaps implements AvailableDataSubsetter, SodElement {
         return new StringTreeLeaf(this, true);
     }
 
-    private static Logger logger = Logger.getLogger(NoGaps.class);
+    private static Logger logger = LoggerFactory.getLogger(NoGaps.class);
 }// NoGaps

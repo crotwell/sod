@@ -8,7 +8,8 @@ package edu.sc.seis.sod.status.networkArm;
 import java.io.IOException;
 import java.util.HashMap;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -49,7 +50,7 @@ public class NetworkInfoTemplateGenerator implements NetworkMonitor {
     private HashMap channelTemplates = new HashMap(); //channel templates by
 
     // station id string
-    private Logger logger = Logger.getLogger(NetworkInfoTemplateGenerator.class);
+    private Logger logger = LoggerFactory.getLogger(NetworkInfoTemplateGenerator.class);
 
     private Element netConfig, staConfig, chanConfig;
 

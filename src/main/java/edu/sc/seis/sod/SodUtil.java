@@ -898,5 +898,5 @@ public class SodUtil {
 
     public static final UnitImpl[] FREQ_UNITS = {UnitImpl.HERTZ};
     
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(SodUtil.class);
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(SodUtil.class);
 }// SubsetterUtil

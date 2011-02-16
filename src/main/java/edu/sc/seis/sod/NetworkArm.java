@@ -5,7 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Timer;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -688,9 +689,9 @@ public class NetworkArm implements Arm {
 
     private List<ArmListener> armListeners = new ArrayList<ArmListener>();
 
-    private static Logger logger = Logger.getLogger(NetworkArm.class);
+    private static Logger logger = LoggerFactory.getLogger(NetworkArm.class);
 
-    private static final org.apache.log4j.Logger failLogger = org.apache.log4j.Logger.getLogger("Fail.NetworkArm");
+    private static final org.slf4j.Logger failLogger = org.slf4j.LoggerFactory.getLogger("Fail.NetworkArm");
 
     private boolean armFinished = false;
     

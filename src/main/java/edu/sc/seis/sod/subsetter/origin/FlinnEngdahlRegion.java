@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.subsetter.origin;
 
-import org.apache.log4j.Category;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.FlinnEngdahlType;
@@ -31,5 +32,5 @@ public abstract class FlinnEngdahlRegion implements OriginSubsetter {
 
     private int region;
 
-    static Category logger = Category.getInstance(FlinnEngdahlRegion.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(FlinnEngdahlRegion.class.getName());
 }// FlinnEngdahlRegion

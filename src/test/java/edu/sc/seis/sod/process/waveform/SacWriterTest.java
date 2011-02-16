@@ -8,8 +8,10 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.varia.NullAppender;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.iris.Fissures.Location;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
@@ -40,10 +42,6 @@ public class SacWriterTest extends TestCase {
 
     public void setUp() throws CodecException {
         sts = FissuresToSac.getSAC(seis, chan, EventUtil.extractOrigin(ev));
-    }
-
-    static {
-        BasicConfigurator.configure(new NullAppender());
     }
 
     public void testGenerate() throws ConfigurationException {

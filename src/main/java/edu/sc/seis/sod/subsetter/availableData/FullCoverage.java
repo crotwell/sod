@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.subsetter.availableData;
 
-import org.apache.log4j.Category;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelImpl;
@@ -26,5 +27,5 @@ public class FullCoverage implements AvailableDataSubsetter, SodElement {
 
     private PercentCoverage pc = new PercentCoverage(100);
 
-    static Category logger = Category.getInstance(FullCoverage.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(FullCoverage.class.getName());
 }// FullCoverage

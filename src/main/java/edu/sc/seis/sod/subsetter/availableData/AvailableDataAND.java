@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.subsetter.availableData;
 
-import org.apache.log4j.Category;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
@@ -38,5 +39,5 @@ public final class AvailableDataAND extends AvailableDataLogicalSubsetter
         return new StringTreeBranch(this, true, result);
     }
 
-    static Category logger = Category.getInstance(AvailableDataAND.class.getName());
+    static Logger logger = LoggerFactory.getLogger(AvailableDataAND.class.getName());
 }// AvailableDataAND

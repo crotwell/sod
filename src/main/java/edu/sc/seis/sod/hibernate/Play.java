@@ -3,8 +3,6 @@ package edu.sc.seis.sod.hibernate;
 import java.sql.SQLException;
 
 import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.hibernate.LockMode;
 
 import edu.iris.Fissures.model.TimeInterval;
@@ -25,7 +23,6 @@ public class Play extends edu.sc.seis.fissuresUtil.hibernate.Play {
     public static void main(String[] args) throws SQLException {
         try {
             BasicConfigurator.configure();
-            Logger.getRootLogger().setLevel(Level.INFO);
             HibernateUtil.setUpFromConnMgr(System.getProperties());
             Play mgr = new Play();
             TimeOMatic.start();
@@ -105,5 +102,5 @@ public class Play extends edu.sc.seis.fissuresUtil.hibernate.Play {
         db.commit();
     }
     
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(Play.class);
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(Play.class);
 }

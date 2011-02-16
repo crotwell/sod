@@ -2,7 +2,8 @@ package edu.sc.seis.sod.subsetter;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -29,6 +30,6 @@ public abstract class LogicalSubsetter implements Subsetter {
 
     protected List<Subsetter> filterList = new LinkedList<Subsetter>();
 
-    private static Logger logger = Logger.getLogger(LogicalSubsetter.class);
+    private static Logger logger = LoggerFactory.getLogger(LogicalSubsetter.class);
 
 }// LogicalSubsetter

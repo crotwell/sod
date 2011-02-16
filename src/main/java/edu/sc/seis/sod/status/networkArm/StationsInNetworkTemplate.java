@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
@@ -27,7 +28,7 @@ public class StationsInNetworkTemplate extends NetworkInfoTemplate {
 
     private List stationListeners = new ArrayList();
 
-    private Logger logger = Logger.getLogger(StationsInNetworkTemplate.class);
+    private Logger logger = LoggerFactory.getLogger(StationsInNetworkTemplate.class);
 
     public StationsInNetworkTemplate(Element el,
                                      String baseDir,

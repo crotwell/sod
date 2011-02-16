@@ -34,5 +34,5 @@ public class QuitOnce implements WaveformProcess {
         return new WaveformResult(seismograms, new Pass(this));
     }
 
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(QuitOnce.class);
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(QuitOnce.class);
 }

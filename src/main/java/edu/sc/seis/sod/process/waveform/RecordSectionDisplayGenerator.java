@@ -6,7 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.apache.log4j.Category;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
@@ -170,5 +171,5 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
 
     private static final ParseRegions PR = ParseRegions.getInstance();
 
-    private static Category logger = Category.getInstance(RecordSectionDisplayGenerator.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(RecordSectionDisplayGenerator.class.getName());
 }

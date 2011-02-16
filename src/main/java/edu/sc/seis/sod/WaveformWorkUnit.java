@@ -16,7 +16,7 @@ public abstract class WaveformWorkUnit implements Runnable {
     protected int numRetries;
     protected Timestamp lastQuery;
     
-    public static final org.apache.log4j.Logger failLogger = org.apache.log4j.Logger.getLogger("Fail.WaveformArm");
+    public static final org.slf4j.Logger failLogger = org.slf4j.LoggerFactory.getLogger("Fail.WaveformArm");
 
     public void updateRetries() {
         // use setters for hibernate auto-dirty checking

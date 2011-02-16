@@ -94,5 +94,5 @@ public class UserReportRetryStrategy extends ClassicRetryStrategy {
 
     public static final String WILY_NS_URL = "http://www.seis.sc.edu/wily/GetAllServers?corbaLoc=";
 
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(UserReportRetryStrategy.class);
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(UserReportRetryStrategy.class);
 }

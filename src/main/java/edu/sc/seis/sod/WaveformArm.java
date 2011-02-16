@@ -287,8 +287,8 @@ public class WaveformArm extends Thread implements Arm {
 
     private static TimeInterval ECP_WINDOW = new TimeInterval(5, UnitImpl.MINUTE);
     
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(WaveformArm.class);
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(WaveformArm.class);
     
-    private static final org.apache.log4j.Logger failLogger = org.apache.log4j.Logger.getLogger("Fail.WaveformArm");
+    private static final org.slf4j.Logger failLogger = org.slf4j.LoggerFactory.getLogger("Fail.WaveformArm");
 
 }

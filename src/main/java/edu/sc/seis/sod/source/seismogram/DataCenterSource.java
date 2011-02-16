@@ -98,5 +98,5 @@ public class DataCenterSource implements SeismogramSource {
 
     public static final String NO_DATA = "no_data";
 
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(DataCenterSource.class);
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(DataCenterSource.class);
 }

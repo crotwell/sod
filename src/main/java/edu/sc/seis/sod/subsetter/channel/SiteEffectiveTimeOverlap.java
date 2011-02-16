@@ -27,5 +27,5 @@ public class SiteEffectiveTimeOverlap extends EffectiveTimeOverlap implements
         return new StringTreeLeaf(this, overlaps(channel.getSite().getEffectiveTime()));
     }
     
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(SiteEffectiveTimeOverlap.class);
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(SiteEffectiveTimeOverlap.class);
 }// SiteEffectiveTimeOverlap

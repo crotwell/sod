@@ -309,5 +309,5 @@ public class Args {
     public static final String QUIT_ON_ERROR_SWITCH = "quitOnError";
     public static final String PRINT_RECIPE_SWITCH = "print-recipe";
     
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(Args.class);
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(Args.class);
 }

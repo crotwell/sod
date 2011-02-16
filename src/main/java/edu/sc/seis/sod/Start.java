@@ -22,8 +22,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -213,7 +214,7 @@ public class Start {
     }
 
     public static void informUserOfBadNetworkAndExit(String networkCode, NetworkNotFound nnf) {
-        logger.fatal("Can't find "+networkCode+" network from server", nnf);
+        logger.error("Can't find "+networkCode+" network from server", nnf);
         System.err.println("You told SOD to use the '"
                 + networkCode + "' network, but the server does not think it exists. SOD is now cowardly quitting.");
         armFailure = true;
@@ -602,7 +603,7 @@ public class Start {
                         + "Continuing this sod run is not advisable!");
             }
         } catch(Exception e) {
-            logger.error(e);
+            logger.error("exception", e);
             SodDB.rollback();
             GlobalExceptionHandler.handle("Trouble checking database version",
                                           e);
@@ -696,7 +697,7 @@ public class Start {
     public static void cataclysmicFailureOfUnbelievableProportions() {
         try {
             System.err.println("Oh boy, this is really bad. No, it is even worse then that.");
-            logger.fatal("horror of horrors...");
+            logger.error("horror of horrors...");
         } catch(Throwable t) {
         }
         System.exit(1);
@@ -709,7 +710,7 @@ public class Start {
                                               + ", SOD is exiting abnormally. "
                                               + "Please email this to the sod development team at sod@seis.sc.edu",
                                       t);
-        logger.fatal("Arm " + arm.getName()
+        logger.error("Arm " + arm.getName()
                 + " failed. Sod is giving up and quiting", t);
         wakeUpAllArms();
     }
@@ -739,7 +740,7 @@ public class Start {
 
     private static Element config;
 
-    private static Logger logger = Logger.getLogger(Start.class);
+    private static Logger logger = LoggerFactory.getLogger(Start.class);
     
     private static WaveformArm[] waveforms;
     

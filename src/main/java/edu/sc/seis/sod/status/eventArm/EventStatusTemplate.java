@@ -6,7 +6,8 @@ import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -119,7 +120,7 @@ public class EventStatusTemplate extends FileWritingTemplate implements
 
     private boolean addedToWaveformArm = false;
 
-    private Logger logger = Logger.getLogger(EventStatusTemplate.class);
+    private Logger logger = LoggerFactory.getLogger(EventStatusTemplate.class);
 
     private String armStatus = "";
 }

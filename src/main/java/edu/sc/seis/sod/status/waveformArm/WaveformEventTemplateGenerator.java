@@ -4,7 +4,8 @@ import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
@@ -83,5 +84,5 @@ public class WaveformEventTemplateGenerator implements EventMonitor,
 
     private String fileDir, filename;
 
-    private static Logger logger = Logger.getLogger(WaveformEventTemplateGenerator.class);
+    private static Logger logger = LoggerFactory.getLogger(WaveformEventTemplateGenerator.class);
 }

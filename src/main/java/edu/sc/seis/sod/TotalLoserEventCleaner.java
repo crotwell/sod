@@ -58,7 +58,7 @@ public class TotalLoserEventCleaner extends TimerTask {
     TimeInterval lagInterval ;
     StatefulEventDB eventdb;
 
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(TotalLoserEventCleaner.class);
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(TotalLoserEventCleaner.class);
 
     private static final long ONE_WEEK = 7 * 24 * 60 * 60 * 1000;
 }

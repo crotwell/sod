@@ -1,6 +1,7 @@
 package edu.sc.seis.sod;
 
-import org.apache.log4j.Category;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXParseException;
 
@@ -44,5 +45,5 @@ public class SimpleErrorHandler implements ErrorHandler {
 
     private String filename;
 
-    private static Category logger = Category.getInstance(SimpleErrorHandler.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(SimpleErrorHandler.class.getName());
 }

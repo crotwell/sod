@@ -115,5 +115,5 @@ public class AbstractScriptSubsetter implements Subsetter {
 
     protected static ScriptEngineManager factory = new ScriptEngineManager();
 
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(AbstractScriptSubsetter.class);
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(AbstractScriptSubsetter.class);
 }

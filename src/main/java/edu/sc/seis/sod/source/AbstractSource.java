@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.source;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
@@ -52,5 +53,5 @@ public abstract class AbstractSource implements Source{
 
     private int retries = -1;
     
-    private static Logger logger = Logger.getLogger(AbstractSource.class);
+    private static Logger logger = LoggerFactory.getLogger(AbstractSource.class);
 }// AbstractSource

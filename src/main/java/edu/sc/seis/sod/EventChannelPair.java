@@ -6,7 +6,8 @@
 
 package edu.sc.seis.sod;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
@@ -83,5 +84,5 @@ public class EventChannelPair extends AbstractEventChannelPair {
 
     public static final String BIG_ERROR_MSG = "An exception occured that would've croaked a waveform worker thread!  These types of exceptions are certainly possible, but they shouldn't be allowed to percolate this far up the stack.  If you are one of those esteemed few working on SOD, it behooves you to attempt to trudge down the stack trace following this message and make certain that whatever threw this exception is no longer allowed to throw beyond its scope.  If on the other hand, you are a user of SOD it would be most appreciated if you would send an email containing the text immediately following this mesage to sod@seis.sc.edu";
 
-    private static Logger logger = Logger.getLogger(EventChannelPair.class);
+    private static Logger logger = LoggerFactory.getLogger(EventChannelPair.class);
 }

@@ -44,4 +44,4 @@ public final class RequestAND extends RequestLogical implements RequestSubsetter
         return new StringTreeBranch(this, true, result);
     }
 
-private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(RequestAND.class);}// RequestSubsetterAND
+private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(RequestAND.class);}// RequestSubsetterAND

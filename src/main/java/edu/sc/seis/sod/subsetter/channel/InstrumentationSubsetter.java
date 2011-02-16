@@ -96,5 +96,5 @@ public abstract class InstrumentationSubsetter implements ChannelSubsetter {
         logger.info(getInstrumentationInvalidMsg(), e);
     }
     
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(InstrumentationSubsetter.class);
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(InstrumentationSubsetter.class);
 }

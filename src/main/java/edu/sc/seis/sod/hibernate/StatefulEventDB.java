@@ -185,7 +185,7 @@ public class StatefulEventDB {
         return singleton;
     }
     
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(StatefulEventDB.class);
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(StatefulEventDB.class);
 
     public CacheEvent[] getByName(String name) {
         String q = baseSuccessfulQuery+" AND " + "e.attr.name = :name";

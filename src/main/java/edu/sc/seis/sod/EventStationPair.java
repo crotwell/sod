@@ -59,10 +59,10 @@ public class EventStationPair extends CookieEventPair {
                     updateRetries();
                     failLogger.info("Network or server problem, SOD will continue to retry this item periodically: ("
                             + e.getClass().getName() + ") " + this);
-                    logger.debug(this, e);
+                    logger.debug(this.toString(), e);
                 } else {
                     update(e, Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.SYSTEM_FAILURE));
-                    failLogger.warn(this, e);
+                    failLogger.warn(this.toString(), e);
                 }
                 SodDB.commit();
                 logger.debug("Finish (fail) EStaP: " + this);
@@ -196,5 +196,5 @@ public class EventStationPair extends CookieEventPair {
 
     private StationImpl station;
 
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(EventStationPair.class);
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(EventStationPair.class);
 }

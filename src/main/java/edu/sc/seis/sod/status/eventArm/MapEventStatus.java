@@ -2,7 +2,8 @@ package edu.sc.seis.sod.status.eventArm;
 
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
@@ -60,5 +61,5 @@ public class MapEventStatus implements SodElement, EventMonitor, Runnable {
 
     private static MapPool pool = MapPool.getDefaultPool();
 
-    private static Logger logger = Logger.getLogger(MapEventStatus.class);
+    private static Logger logger = LoggerFactory.getLogger(MapEventStatus.class);
 }

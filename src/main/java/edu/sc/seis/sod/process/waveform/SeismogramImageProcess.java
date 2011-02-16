@@ -11,7 +11,8 @@ import java.util.List;
 
 import javax.swing.SwingUtilities;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -389,5 +390,5 @@ public class SeismogramImageProcess implements WaveformProcess {
 
     private static Dimension DEFAULT_DIMENSION = new Dimension(500, 200);
 
-    private Logger logger = Logger.getLogger(SeismogramImageProcess.class);
+    private Logger logger = LoggerFactory.getLogger(SeismogramImageProcess.class);
 }

@@ -5,7 +5,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.LazyInitializationException;
 import org.w3c.dom.Element;
 
@@ -232,7 +233,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
             processAvailableDataSubsetter(ecp, dataCenter, infilters, outfilters);
         } else {
             ecp.update(Status.get(Stage.REQUEST_SUBSETTER, Standing.REJECT));
-            failLogger.info(ecp);
+            failLogger.info(ecp.toString());
         }
     }
 
@@ -440,9 +441,9 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
             failLogger.info("Network or server problem, SOD will continue to retry this item periodically: ("
                         + t.getClass().getName() + ") " + ecp);
             
-            logger.debug(ecp, t);
+            logger.debug(ecp.toString(), t);
         } else {
-            failLogger.warn(ecp, t);
+            failLogger.warn(ecp.toString(), t);
         }
         } catch (LazyInitializationException lazy) {
             logger.error("LazyInitializationException after exception, so I can't print the evp", t);
@@ -461,7 +462,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
 
     private LinkedList<WaveformVectorProcess> processes = new LinkedList<WaveformVectorProcess>();
 
-    private static final Logger logger = Logger.getLogger(MotionVectorArm.class);
+    private static final Logger logger = LoggerFactory.getLogger(MotionVectorArm.class);
 
-    private static final org.apache.log4j.Logger failLogger = org.apache.log4j.Logger.getLogger("Fail.WaveformVector");
+    private static final org.slf4j.Logger failLogger = org.slf4j.LoggerFactory.getLogger("Fail.WaveformVector");
 }

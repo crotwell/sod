@@ -148,10 +148,10 @@ logger.debug("refresh "+NetworkIdUtil.toString(net));
                 inst = loadSource.getInstrumentation(chan.getId());
                 NetworkDB.getSingleton().putInstrumentation(chan, inst);
             } catch(ChannelNotFound e) {
-                logger.warn(e);
+                logger.warn("exception", e);
                 NetworkDB.getSingleton().putInstrumentation(chan, null);
             } catch(InvalidResponse e) {
-                logger.warn(e);
+                logger.warn("exception", e);
                 NetworkDB.getSingleton().putInstrumentation(chan, null);
             }
         }
@@ -177,5 +177,5 @@ logger.debug("refresh "+NetworkIdUtil.toString(net));
 
     NetworkArm netArm;
 
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(RefreshNetworkArm.class);
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(RefreshNetworkArm.class);
 }

@@ -4,7 +4,8 @@ package edu.sc.seis.sod.status;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -137,5 +138,5 @@ public abstract class Template{
 
     protected List templates = new ArrayList();
 
-    private static Logger logger = Logger.getLogger(Template.class);
+    private static Logger logger = LoggerFactory.getLogger(Template.class);
 }

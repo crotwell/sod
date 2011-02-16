@@ -41,6 +41,6 @@ public class StationEffectiveTimeOverlap extends EffectiveTimeOverlap implements
         return overlaps(station.getEffectiveTime());
     }
 
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(StationEffectiveTimeOverlap.class);
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(StationEffectiveTimeOverlap.class);
     
 }// StationEffectiveTimeOverlap

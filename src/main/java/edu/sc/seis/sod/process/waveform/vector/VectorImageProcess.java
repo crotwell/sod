@@ -163,5 +163,5 @@ public class VectorImageProcess extends SeismogramImageProcess implements
 
     private SeismogramDisplayConfiguration ndc = new SeismogramDisplayConfiguration();
 
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(VectorImageProcess.class);
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(VectorImageProcess.class);
 }

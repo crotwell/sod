@@ -8,7 +8,8 @@ package edu.sc.seis.sod.process.waveform;
 import java.io.File;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.w3c.dom.Element;
@@ -36,7 +37,7 @@ public class LocalSeismogramTemplateGenerator implements WaveformProcess {
 
     private String fileName;
 
-    private static Logger logger = Logger.getLogger(LocalSeismogramTemplateGenerator.class);
+    private static Logger logger = LoggerFactory.getLogger(LocalSeismogramTemplateGenerator.class);
 
     public LocalSeismogramTemplateGenerator(Element el) throws Exception {
         Element waveformSeismogramConfig = TemplateFileLoader.getTemplate(el);

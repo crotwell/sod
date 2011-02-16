@@ -7,10 +7,10 @@ import java.io.IOException;
 import java.io.StringWriter;
 
 import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.exception.ParseErrorException;
+import org.slf4j.LoggerFactory;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
@@ -57,20 +57,27 @@ public class PrintlineVelocitizer {
     }
     
     public static Level quietLogger(){
-        String prop = (String)Velocity.getProperty(SQLLoader.VELOCITY_LOGGER_NAME);
+    	System.err.println("quietLogger not working with slf4j, fix me!");
+        /*
+    	String prop = (String)Velocity.getProperty(SQLLoader.VELOCITY_LOGGER_NAME);
         Level current = null;
         if(prop != null) {
-            current = Logger.getLogger(prop).getEffectiveLevel();
-            Logger.getLogger(prop).setLevel(Level.FATAL);
+            current = LoggerFactory.getLogger(prop).getEffectiveLevel();
+            LoggerFactory.getLogger(prop).setLevel(Level.ERROR);
         }
         return current;
+        */
+        return Level.DEBUG;
     }
     
     public static void reinstateLogger(Level level){
+    	System.err.println("quietLogger not working with slf4j, fix me!");
+    	/*
         String prop = (String)Velocity.getProperty(SQLLoader.VELOCITY_LOGGER_NAME);
         if(prop != null) {
-            Logger.getLogger(prop).setLevel(level);
+            LoggerFactory.getLogger(prop).setLevel(level);
         }
+        */
     }
 
     public String evaluate(String fileTemplate,

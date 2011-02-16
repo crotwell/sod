@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.IfNetwork.Channel;
@@ -27,7 +28,7 @@ public class ChannelsInSiteTemplate extends NetworkInfoTemplate{
 
     private Site site;
     private List channelListeners = new ArrayList();
-    private Logger logger = Logger.getLogger(ChannelsInSiteTemplate.class);
+    private Logger logger = LoggerFactory.getLogger(ChannelsInSiteTemplate.class);
 
     public ChannelsInSiteTemplate(Element el, String baseDir, String outputLocation, Site site)  throws ConfigurationException  , IOException{
         super(baseDir, outputLocation);

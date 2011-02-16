@@ -41,7 +41,7 @@ import edu.sc.seis.sod.Version;
 
 public class SodDB extends AbstractHibernateDB {
 
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(SodDB.class);
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(SodDB.class);
 
     static String configFile = "edu/sc/seis/sod/hibernate/sod.hbm.xml";
 
@@ -886,7 +886,7 @@ public class SodDB extends AbstractHibernateDB {
                 return EventVectorPair.class;
             }
         } catch(Throwable e) {
-            logger.warn(e);
+            logger.warn("Exception", e);
         }
         return EventChannelPair.class;
     }

@@ -31,6 +31,6 @@ public class ChannelEffectiveTimeOverlap extends EffectiveTimeOverlap implements
         return new StringTreeLeaf(this, overlaps(channel.getEffectiveTime()));
     }
 
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(ChannelEffectiveTimeOverlap.class);
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(ChannelEffectiveTimeOverlap.class);
 
 }// ChannelEffectiveTimeOverlap

@@ -15,7 +15,8 @@ import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -277,7 +278,7 @@ public class ChannelGrouper {
         return Start.createInputSource(loader, configFileLoc);
     }
 
-    private static Logger logger = Logger.getLogger(ChannelGrouper.class);
+    private static Logger logger = LoggerFactory.getLogger(ChannelGrouper.class);
 
     private Element[] defaultRules;
 

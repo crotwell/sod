@@ -41,5 +41,5 @@ public class PeriodicCheckpointer extends TimerTask {
 
     private static final int ONE_HOUR = 60 * 60 * 1000;
 
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(PeriodicCheckpointer.class);
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(PeriodicCheckpointer.class);
 }

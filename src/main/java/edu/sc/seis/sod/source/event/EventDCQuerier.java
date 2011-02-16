@@ -6,7 +6,8 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -206,5 +207,5 @@ public class EventDCQuerier {
     
     private int numRetries;
 
-    private static Logger logger = Logger.getLogger(EventDCQuerier.class);
+    private static Logger logger = LoggerFactory.getLogger(EventDCQuerier.class);
 }

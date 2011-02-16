@@ -60,8 +60,8 @@ public class SacExecute implements WaveformProcess {
         Properties props = new Properties();
         ClassLoader cl = SQLLoader.class.getClassLoader();
         props.setProperty(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS,
-                          "org.apache.velocity.runtime.log.SimpleLog4JLogSystem");
-        props.setProperty("runtime.log.logsystem.log4j.category",
+                          "org.apache.velocity.runtime.log.Log4JLogChute");
+        props.setProperty("runtime.log.logsystem.log4j.logger",
                           logger.getName());
         ve.init(props);
     }
@@ -174,5 +174,5 @@ public class SacExecute implements WaveformProcess {
 
     String stderrBuffer = "";
 
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(SacExecute.class);
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(SacExecute.class);
 }

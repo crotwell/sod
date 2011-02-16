@@ -6,7 +6,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
@@ -160,5 +161,5 @@ public class OutputScheduler extends Thread implements ArmListener {
 
     private Set onExitRunnables = Collections.synchronizedSet(new HashSet());
 
-    private static final Logger logger = Logger.getLogger(OutputScheduler.class);
+    private static final Logger logger = LoggerFactory.getLogger(OutputScheduler.class);
 }

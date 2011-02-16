@@ -204,5 +204,5 @@ public class NetworkFinder extends AbstractNetworkSource {
 
     protected VestingNetworkDC netDC;
 
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(NetworkFinder.class);
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(NetworkFinder.class);
 }// NetworkFinder

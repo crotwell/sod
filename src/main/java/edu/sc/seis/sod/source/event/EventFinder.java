@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.source.event;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.omg.CORBA.SystemException;
 import org.w3c.dom.Element;
 
@@ -195,7 +196,7 @@ public class EventFinder extends AbstractSource implements EventSource {
 
 	private MicroSecondTimeRangeSupplier eventTimeRange;
 
-	private static Logger logger = Logger.getLogger(EventFinder.class);
+	private static Logger logger = LoggerFactory.getLogger(EventFinder.class);
 
 	protected TimeInterval increment, lag, refreshInterval;
 

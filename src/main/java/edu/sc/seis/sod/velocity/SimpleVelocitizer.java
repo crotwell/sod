@@ -104,7 +104,7 @@ public class SimpleVelocitizer {
         return string;
     }
 
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(SimpleVelocitizer.class);
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(SimpleVelocitizer.class);
     static {
         try {
             Properties props = new Properties();

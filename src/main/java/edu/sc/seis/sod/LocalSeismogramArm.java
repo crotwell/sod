@@ -3,7 +3,8 @@ package edu.sc.seis.sod;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.omg.CORBA.SystemException;
 import org.w3c.dom.Element;
 
@@ -200,7 +201,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
             processAvailableDataSubsetter(ecp, dataCenter, infilters, SortTool.byBeginTimeAscending(outfilters));
         } else {
             ecp.update(Status.get(Stage.REQUEST_SUBSETTER, Standing.REJECT));
-            failLogger.info(ecp);
+            failLogger.info(ecp.toString());
         }
     }
 
@@ -358,7 +359,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                 //can't do much useful, at least get the stack trace before anything else as other
                 // code might trigger further OutofMem
                 t.printStackTrace(System.err);
-                logger.fatal("", t);
+                logger.error("", t);
             }
             if(t instanceof org.omg.CORBA.SystemException) {
                 // don't log exception here, let RetryStragtegy do it
@@ -376,9 +377,9 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                 } else {
                     failLogger.info("Network or server problem: (" + t.getClass().getName() + ") " + ecp);
                 }
-                logger.debug(ecp, t);
+                logger.debug(ecp.toString(), t);
             } else {
-                failLogger.warn(ecp, t);
+                failLogger.warn(ecp.toString(), t);
             }
         } catch(Throwable tt) {
             GlobalExceptionHandler.handle("Caught " + tt + " while handling " + t, t);
@@ -395,7 +396,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
 
     private LinkedList<WaveformProcess> processes = new LinkedList<WaveformProcess>();
 
-    private static final Logger logger = Logger.getLogger(LocalSeismogramArm.class);
+    private static final Logger logger = LoggerFactory.getLogger(LocalSeismogramArm.class);
 
-    private static final org.apache.log4j.Logger failLogger = org.apache.log4j.Logger.getLogger("Fail.Waveform");
+    private static final org.slf4j.Logger failLogger = org.slf4j.LoggerFactory.getLogger("Fail.Waveform");
 }// LocalSeismogramArm

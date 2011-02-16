@@ -13,7 +13,8 @@ import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -51,7 +52,7 @@ public class WaveformStatusTemplate extends FileWritingTemplate implements Wavef
             fileDir = SodUtil.getElement(el, "fileDir").getFirstChild().getNodeValue();
         }
         catch(NullPointerException e){
-            Logger.getLogger(EventStatusTemplate.class).debug("fileDir element is null! using default");
+            LoggerFactory.getLogger(EventStatusTemplate.class).debug("fileDir element is null! using default");
         }
         if (fileDir == null){
             fileDir = FileWritingTemplate.getBaseDirectoryName();

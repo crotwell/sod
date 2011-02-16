@@ -5,7 +5,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.HibernateException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -328,7 +329,7 @@ public class EventArm implements Arm {
 
     private CacheEvent lastEvent;
 
-    private static Logger logger = Logger.getLogger(EventArm.class);
+    private static Logger logger = LoggerFactory.getLogger(EventArm.class);
 
-    private static final org.apache.log4j.Logger failLogger = org.apache.log4j.Logger.getLogger("Fail.EventArm");
+    private static final org.slf4j.Logger failLogger = org.slf4j.LoggerFactory.getLogger("Fail.EventArm");
 }// EventArm

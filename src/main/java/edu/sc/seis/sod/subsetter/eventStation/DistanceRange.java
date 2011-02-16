@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.subsetter.eventStation;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.event.OriginImpl;
@@ -38,5 +39,5 @@ public class DistanceRange extends DistanceRangeSubsetter implements
         }
     }
 
-    private static final Logger logger = Logger.getLogger(DistanceRange.class);
+    private static final Logger logger = LoggerFactory.getLogger(DistanceRange.class);
 }// EventStationDistance

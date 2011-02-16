@@ -206,7 +206,7 @@ public class StationXML implements NetworkSource {
     
     String lastLoadDate;
     
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(StationXML.class);
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(StationXML.class);
     
     public static final String URL_ELEMENT = "url";
 }

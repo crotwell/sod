@@ -3,7 +3,8 @@ package edu.sc.seis.sod.subsetter.requestGenerator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -98,6 +99,8 @@ public class ChoiceRequest implements RequestGenerator {
         EventChannelSubsetter eventChannelSubsetter;
     }
 
+    private static Logger logger = LoggerFactory.getLogger(ChoiceRequest.class);
+
     public static final List<String> packages;
     
     static {
@@ -109,5 +112,4 @@ public class ChoiceRequest implements RequestGenerator {
         packages.addAll(EventLogicalSubsetter.packages);
     }
     
-    private static Logger logger = Logger.getLogger(ChoiceRequest.class);
 }// PhaseRequest

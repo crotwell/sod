@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.subsetter.channel;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
@@ -47,5 +48,5 @@ public class RepairSensitivity implements ChannelSubsetter {
         return new StringTreeLeaf(this, InstrumentationLoader.isValid(instrumentation.the_response));
     }
 
-    private Logger logger = Logger.getLogger(RepairSensitivity.class);
+    private Logger logger = LoggerFactory.getLogger(RepairSensitivity.class);
 }

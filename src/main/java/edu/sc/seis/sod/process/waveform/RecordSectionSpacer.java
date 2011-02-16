@@ -110,7 +110,7 @@ public class RecordSectionSpacer {
         return (DataSetSeismogram[])accepted.toArray(new DataSetSeismogram[accepted.size()]);
     }
 
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(RecordSectionSpacer.class);
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(RecordSectionSpacer.class);
 
     private double minimumDegreesBetweenSeis, idealDegreesBetweenSeis;
 }

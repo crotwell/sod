@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.subsetter;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.model.MicroSecondDate;
@@ -61,5 +62,5 @@ public abstract class EffectiveTimeOverlap implements Subsetter{
 
     private MicroSecondTimeRangeSupplier timeRange;
 
-    private static Logger logger = Logger.getLogger(EffectiveTimeOverlap.class);
+    private static Logger logger = LoggerFactory.getLogger(EffectiveTimeOverlap.class);
 }// EffectiveTimeOverlap

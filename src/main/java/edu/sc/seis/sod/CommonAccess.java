@@ -2,7 +2,8 @@ package edu.sc.seis.sod;
 
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.iris.Fissures.model.AllVTFactory;
 import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
@@ -91,5 +92,5 @@ public class CommonAccess {
     
     private static String nsLoc;
 
-    private static Logger logger = Logger.getLogger(CommonAccess.class);
+    private static Logger logger = LoggerFactory.getLogger(CommonAccess.class);
 }// CommonAccess

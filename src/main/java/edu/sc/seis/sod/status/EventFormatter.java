@@ -5,7 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.TimeZone;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.IfEvent.Magnitude;
@@ -278,5 +279,5 @@ public class EventFormatter extends Template implements EventTemplate {
 
     static ParseRegions regions = ParseRegions.getInstance();
 
-    private static Logger logger = Logger.getLogger(EventFormatter.class);
+    private static Logger logger = LoggerFactory.getLogger(EventFormatter.class);
 } // NameGenerator

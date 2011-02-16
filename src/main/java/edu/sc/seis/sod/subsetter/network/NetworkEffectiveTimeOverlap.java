@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.subsetter.network;
 
-import org.apache.log4j.Category;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.TimeRange;
@@ -26,5 +27,5 @@ public class NetworkEffectiveTimeOverlap extends EffectiveTimeOverlap implements
         return new StringTreeLeaf(this, overlaps(network.getEffectiveTime()));
     }
 
-    static Category logger = Category.getInstance(NetworkEffectiveTimeOverlap.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(NetworkEffectiveTimeOverlap.class.getName());
 }// NetworkEffectiveTimeOverlap

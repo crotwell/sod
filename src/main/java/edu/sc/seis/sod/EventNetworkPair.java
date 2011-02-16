@@ -56,7 +56,7 @@ public class EventNetworkPair extends AbstractEventPair {
             GlobalExceptionHandler.handle(e);
             update(Status.get(Stage.EVENT_CHANNEL_POPULATION,
                               Standing.SYSTEM_FAILURE));
-            failLogger.warn(this, e);
+            failLogger.warn(this.toString(), e);
         }
         logger.debug("End EventNetworkPair ("+getEvent().getDbid()+",s "+getNetworkDbId()+") "+this);
         SodDB.commit();
@@ -110,5 +110,5 @@ public class EventNetworkPair extends AbstractEventPair {
     
     private NetworkAttrImpl networkAttr;
     
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(EventNetworkPair.class);
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(EventNetworkPair.class);
 }

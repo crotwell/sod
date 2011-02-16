@@ -3,7 +3,8 @@ package edu.sc.seis.sod.process.waveform;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.log4j.Category;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.FissuresException;
@@ -22,7 +23,7 @@ import edu.sc.seis.sod.subsetter.requestGenerator.PhaseRequest;
  * Cuts seismograms relative to phases. Created: Wed Nov 6 17:58:10 2002
  * 
  * @author <a href="mailto:crotwell@seis.sc.edu">Philip Crotwell </a>
- * @version $Id: PhaseCut.java 21405 2010-06-18 15:30:36Z crotwell $
+ * @version $Id: PhaseCut.java 22054 2011-02-16 16:51:38Z crotwell $
  */
 public class PhaseCut implements WaveformProcess {
 
@@ -56,8 +57,7 @@ public class PhaseCut implements WaveformProcess {
         for(int i = 0; i < cuts.length; i++) {
             Cut cut = new Cut(new MicroSecondDate(cuts[i].start_time),
                               new MicroSecondDate(cuts[i].end_time));
-            logger.debug(cut);
-            for(int j = 0; j < seismograms.length; j++) {
+           for(int j = 0; j < seismograms.length; j++) {
                 // cut returns null if the time interval doesn't overlap
                 LocalSeismogramImpl tempSeis = cut.apply(seismograms[j]);
                 if(tempSeis != null) {
@@ -72,5 +72,5 @@ public class PhaseCut implements WaveformProcess {
 
     PhaseRequest phaseRequest;
 
-    static Category logger = Category.getInstance(PhaseRequest.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(PhaseRequest.class.getName());
 }// PhaseCut
