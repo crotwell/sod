@@ -12,7 +12,6 @@ import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.SeismicPhase;
 import edu.sc.seis.TauP.TauModelException;
-import edu.sc.seis.TauP.TauP_SetSac;
 import edu.sc.seis.fissuresUtil.bag.DistAz;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;

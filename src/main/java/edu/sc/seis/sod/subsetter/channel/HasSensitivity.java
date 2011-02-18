@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
-import edu.iris.Fissures.IfNetwork.Sensitivity;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.cache.InstrumentationLoader;

@@ -3,16 +3,11 @@ package edu.sc.seis.sod.subsetter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-
 import org.w3c.dom.Element;
 
 import edu.sc.seis.bag.Bag;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
