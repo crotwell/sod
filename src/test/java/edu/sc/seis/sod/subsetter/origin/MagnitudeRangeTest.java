@@ -9,9 +9,7 @@ import junit.framework.TestCase;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Magnitude;
-import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.event.EventAttrImpl;
 import edu.iris.Fissures.event.OriginImpl;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;

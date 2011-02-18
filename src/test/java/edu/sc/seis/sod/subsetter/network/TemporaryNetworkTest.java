@@ -1,7 +1,6 @@
 package edu.sc.seis.sod.subsetter.network;
 
 import junit.framework.TestCase;
-import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockNetworkAttr;
 

@@ -12,23 +12,19 @@ import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
-import edu.sc.seis.fissuresUtil.mockFissures.IfEvent.MockEventAccess;
 import edu.sc.seis.fissuresUtil.mockFissures.IfEvent.MockEventAccessOperations;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannel;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockStation;
 import edu.sc.seis.sod.Args;
-import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.EventStationPair;
 import edu.sc.seis.sod.Stage;
 import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Status;
-import edu.sc.seis.sod.Start.InputSourceCreator;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.StatefulEvent;
 import edu.sc.seis.sod.hibernate.StatefulEventDB;
-import edu.sc.seis.sod.mock.MockECP;
 
 
 public class RemoveStationDuplicateTest extends TestCase {
