@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
@@ -14,12 +13,7 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.status.StringTree;
-import edu.sc.seis.sod.subsetter.Subsetter;
-import edu.sc.seis.sod.subsetter.eventChannel.EventChannelLogicalSubsetter;
-import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
 
 /**
  * @author groves Created on May 4, 2005

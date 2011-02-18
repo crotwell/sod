@@ -4,7 +4,6 @@ import org.w3c.dom.Element;
 
 import edu.sc.seis.TauP.TauModelException;
 import edu.sc.seis.fissuresUtil.bag.CompoundPhaseStoN;
-import edu.sc.seis.fissuresUtil.bag.SimplePhaseStoN;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 

@@ -5,9 +5,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.MotionVectorArm;
-import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.subsetter.Subsetter;
 
 public abstract class VectorResultWrapper implements
         WaveformVectorProcessWrapper {

@@ -1,8 +1,5 @@
 package edu.sc.seis.sod.source.seismogram;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import edu.iris.Fissures.FissuresException;
 import edu.iris.Fissures.Time;
 import edu.iris.Fissures.IfNetwork.ChannelId;
@@ -18,6 +15,9 @@ import gov.usgs.earthworm.Menu;
 import gov.usgs.earthworm.MenuItem;
 import gov.usgs.earthworm.TraceBuf;
 import gov.usgs.winston.server.WWSClient;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class WinstonWaveServerSource implements SeismogramSource {
      

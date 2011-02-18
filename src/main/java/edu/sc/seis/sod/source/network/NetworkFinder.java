@@ -28,7 +28,6 @@ import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
 import edu.sc.seis.fissuresUtil.cache.VestingNetworkDC;
 import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
-import edu.sc.seis.seisFile.stationxml.InstrumentSensitivity;
 import edu.sc.seis.sod.Start;
 
 public class NetworkFinder extends AbstractNetworkSource {

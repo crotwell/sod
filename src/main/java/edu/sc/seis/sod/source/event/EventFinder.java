@@ -1,8 +1,8 @@
 package edu.sc.seis.sod.source.event;
 
+import org.omg.CORBA.SystemException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.omg.CORBA.SystemException;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.model.MicroSecondDate;

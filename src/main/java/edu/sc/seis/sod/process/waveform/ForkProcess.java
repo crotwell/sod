@@ -29,10 +29,6 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.Subsetter;
 import edu.sc.seis.sod.subsetter.availableData.AvailableDataLogicalSubsetter;
 import edu.sc.seis.sod.subsetter.availableData.AvailableDataSubsetter;
-import edu.sc.seis.sod.subsetter.channel.ChannelLogicalSubsetter;
-import edu.sc.seis.sod.subsetter.origin.EventLogicalSubsetter;
-import edu.sc.seis.sod.subsetter.request.RequestLogical;
-import edu.sc.seis.sod.subsetter.request.RequestSubsetter;
 
 public class ForkProcess implements WaveformProcess, Threadable {
 

@@ -18,7 +18,6 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.MotionVectorArm;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
-import edu.sc.seis.sod.status.StringTreeLeaf;
 
 public class WaveformVectorNOT extends WaveformVectorFork {
 
