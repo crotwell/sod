@@ -40,9 +40,6 @@ dirName = project.name+'-'+version
 
 binDistFiles = copySpec {
 
-    from('build') {
-        include('build.gradle')
-    }
     from('build/output') {
         fileMode=0755
         include('bin/**')
@@ -78,10 +75,11 @@ distFiles = copySpec {
     }
     from('build') {
         include('doc/**')
+        include('build.gradle')
     }
 }
 
-task tarDist(type: Tar, dependsOn: ['makeScript', 'createBuildScript', 'wrapper', 'copySodSite', 'buildSchema']) {
+task tarDist(type: Tar, dependsOn: ['explodeDist']) {
     group = 'dist'
     compression = Compression.GZIP
     longfile = 'gnu'
@@ -95,7 +93,7 @@ task explodeBin(type: Sync, dependsOn: ['makeScript', 'createBuildScript', 'buil
     with binDistFiles
     into file("$buildDir/explode")
 }
-task explodeDist(type: Sync, dependsOn: ['makeScript', 'createBuildScript', 'wrapper', 'copySodSite', 'buildSchema']) {
+task explodeDist(type: Sync, dependsOn: ['explodeBin', 'wrapper', 'copySodSite']) {
     group = 'dist'
     with distFiles
     into file("$buildDir/explode")
