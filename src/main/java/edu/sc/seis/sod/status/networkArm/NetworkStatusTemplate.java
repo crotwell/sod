@@ -13,7 +13,6 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.Status;
