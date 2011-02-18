@@ -490,9 +490,13 @@ public class NetworkArm implements Arm {
                                     change(chan,
                                            Status.get(Stage.NETWORK_SUBSETTER,
                                                       Standing.REJECT));
+                                    String resultToString = result.toString();
+                                    if (result.toString().trim().length() == 0) {
+                                        resultToString = cur.getClass().getName();
+                                    }
                                     failLogger.info("Rejected "
                                             + ChannelIdUtil.toString(chan.get_id())
-                                            + ": " + result);
+                                            + ": " + resultToString);
                                     accepted = false;
                                     break;
                                 }
