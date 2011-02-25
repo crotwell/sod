@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.IfEvent.Origin;
@@ -20,9 +22,7 @@ import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.Stage;
 import edu.sc.seis.sod.Standing;
-import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.hibernate.StatefulEvent;
 import edu.sc.seis.sod.hibernate.StatefulEventDB;
 import edu.sc.seis.sod.status.StringTree;
@@ -100,31 +100,26 @@ public class RemoveEventDuplicate implements OriginSubsetter {
         QuantityImpl depthRangeImpl = QuantityImpl.createQuantityImpl(depthVariance);
         QuantityImpl minDepth = originDepth.subtract(depthRangeImpl);
         QuantityImpl maxDepth = originDepth.add(depthRangeImpl);
-        List inProgEvents = getEventStatusTable().getEventInTimeRange(new MicroSecondTimeRange(minTime,
-                                                                                               maxTime),
-                                                                                               Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                                                                                                          Standing.INIT));
         List timeEvents = 
-            getEventStatusTable().getEventInTimeRange(new MicroSecondTimeRange(minTime,
-                                                                maxTime),
-                                                                Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                                                                           Standing.SUCCESS));
+            getEventStatusTable().getEventInTimeRangeRegardlessOfStatus(new MicroSecondTimeRange(minTime,
+                                                                maxTime));
         List out = new ArrayList();
-        Iterator it = inProgEvents.iterator();
-        while(it.hasNext()) {
-        	StatefulEvent e = (StatefulEvent)it.next();
-        	QuantityImpl depth = (QuantityImpl)e.getOrigin().getLocation().depth;
-        	if (depth.greaterThanEqual(minDepth) && depth.lessThanEqual(maxDepth)) {
-        		out.add(e);
-        	}
-        }
-        it = timeEvents.iterator();
+        Iterator it = timeEvents.iterator();
         while(it.hasNext()) {
             StatefulEvent e = (StatefulEvent)it.next();
-            QuantityImpl depth = (QuantityImpl)e.getOrigin().getLocation().depth;
-            if (depth.greaterThanEqual(minDepth) && depth.lessThanEqual(maxDepth)) {
-                out.add(e);
-            } 
+            if (e.getStatus().getStanding().equals(Standing.INIT) ||
+                    e.getStatus().getStanding().equals(Standing.IN_PROG) ||
+                    e.getStatus().getStanding().equals(Standing.SUCCESS)) {
+                QuantityImpl depth = (QuantityImpl)e.getOrigin().getLocation().depth;
+                if (depth.greaterThanEqual(minDepth) && depth.lessThanEqual(maxDepth)) {
+                    out.add(e);
+                    logger.debug("Considering for RemoveEventDup: "+e);
+                } else {
+                    logger.debug("Not considering (depth="+depth+") for RemoveEventDup: "+e);
+                }
+            } else {
+                logger.debug("Not considering (status="+e.getStatus()+") for RemoveEventDup: "+e);
+            }
         }
         return out;
     }
@@ -157,5 +152,7 @@ public class RemoveEventDuplicate implements OriginSubsetter {
     protected QuantityImpl depthVariance = new QuantityImpl(100, UnitImpl.KILOMETER);
     
     private StatefulEventDB eventTable;
+    
+    private static Logger logger = LoggerFactory.getLogger(RemoveEventDuplicate.class);
 }
 

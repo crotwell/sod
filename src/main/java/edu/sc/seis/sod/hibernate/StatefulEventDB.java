@@ -71,6 +71,10 @@ public class StatefulEventDB {
         query.setTimestamp("maxTime", range.getEndTime().getTimestamp());
         return query.list();
     }
+     
+    public List<StatefulEvent> getEventInTimeRangeRegardlessOfStatus(MicroSecondTimeRange range) {
+        return getEventInTimeRange(range, (Status)null);
+    }
 
     public List<StatefulEvent> query(EventFinderQuery q) {
         List<CacheEvent> ans = trans.query(q);
