@@ -7,10 +7,20 @@ import java.util.List;
 import java.util.TimerTask;
 
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
+import edu.iris.Fissures.IfNetwork.DataAcqSys;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
+import edu.iris.Fissures.IfNetwork.RecordingStyle;
+import edu.iris.Fissures.IfNetwork.Response;
+import edu.iris.Fissures.IfNetwork.Sensitivity;
+import edu.iris.Fissures.model.QuantityImpl;
+import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
+import edu.iris.Fissures.network.ClockImpl;
+import edu.iris.Fissures.network.DataAcqSysImpl;
+import edu.iris.Fissures.network.InstrumentationImpl;
 import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.NetworkIdUtil;
+import edu.iris.Fissures.network.SensorImpl;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
@@ -124,33 +134,41 @@ logger.debug("refresh "+NetworkIdUtil.toString(net));
         if (Start.getWaveformRecipe() instanceof MotionVectorArm) {
             List<ChannelGroup> cg = netArm.getSuccessfulChannelGroupsFromServer(sta, loadSource);
             for (ChannelGroup channelGroup : cg) {
-                checkInstLoaded(channelGroup, loadSource);
+                checkSensitivityLoaded(channelGroup, loadSource);
             }
         } else {
             List<ChannelImpl> chans = netArm.getSuccessfulChannelsFromServer(sta, loadSource);
             for (ChannelImpl channelImpl : chans) {
-                checkInstLoaded(channelImpl, loadSource);
+                checkSensitivityLoaded(channelImpl, loadSource);
             }
         }
     }
     
-    void checkInstLoaded(ChannelGroup cg, LoadedNetworkSource loadSource) {
-        checkInstLoaded(cg.getChannel1(), loadSource);
-        checkInstLoaded(cg.getChannel2(), loadSource);
-        checkInstLoaded(cg.getChannel3(), loadSource);
+    void checkSensitivityLoaded(ChannelGroup cg, LoadedNetworkSource loadSource) {
+        checkSensitivityLoaded(cg.getChannel1(), loadSource);
+        checkSensitivityLoaded(cg.getChannel2(), loadSource);
+        checkSensitivityLoaded(cg.getChannel3(), loadSource);
     }
     
-    void checkInstLoaded(ChannelImpl chan, LoadedNetworkSource loadSource) {
+    void checkSensitivityLoaded(ChannelImpl chan, LoadedNetworkSource loadSource) {
         if (loadSource.isInstrumentationLoaded(chan.getId())) {
-            Instrumentation inst;
+            QuantityImpl sens;
             try {
-                inst = loadSource.getInstrumentation(chan.getId());
+                
+                sens = loadSource.getSensitivity(chan.getId());
+                Sensitivity dhiSensitivity = new Sensitivity((float)sens.getValue(), 0);
+                Instrumentation inst = new InstrumentationImpl(new Response(dhiSensitivity,
+                                                                            new edu.iris.Fissures.IfNetwork.Stage[0]),
+                                                               chan.getEffectiveTime(),
+                                                               new ClockImpl(0, "", "", "", ""),
+                                                               new SensorImpl(0, "", "", "", 0, 0),
+                                                               new DataAcqSysImpl(0, "", "", "", RecordingStyle.UNKNOWN));
                 NetworkDB.getSingleton().putInstrumentation(chan, inst);
             } catch(ChannelNotFound e) {
-                logger.warn("exception", e);
+                logger.warn("No Instrumentation for "+ChannelIdUtil.toStringFormatDates(chan.getId()));
                 NetworkDB.getSingleton().putInstrumentation(chan, null);
             } catch(InvalidResponse e) {
-                logger.warn("exception", e);
+                logger.warn("Invalid Instrumentation for "+ChannelIdUtil.toStringFormatDates(chan.getId()));
                 NetworkDB.getSingleton().putInstrumentation(chan, null);
             }
         }
