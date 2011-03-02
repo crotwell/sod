@@ -3,9 +3,9 @@ package edu.sc.seis.sod;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import org.omg.CORBA.SystemException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.omg.CORBA.SystemException;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.FissuresException;
@@ -19,7 +19,6 @@ import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.iris.dmc.seedcodec.CodecException;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.cache.NSSeismogramDC;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
@@ -47,6 +46,16 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
 
     public LocalSeismogramArm(Element config) throws ConfigurationException {
         processConfig(config);
+        logger.info("EventStation: "+getEventStationSubsetter().getClass().getName());
+        logger.info("EventChannel: "+getEventChannelSubsetter().getClass().getName());
+        logger.info("RequestGenerator: "+getRequestGenerator().getClass().getName());
+        logger.info("RequestSubsetter: "+getRequestSubsetter().getClass().getName());
+        logger.info("SeismogramSourceLocator: "+getSeismogramDCLocator().getClass().getName());
+        logger.info("AvailableDataSubsetter: "+getAvailableDataSubsetter().getClass().getName());
+        WaveformProcess[] p = getProcesses();
+        for (WaveformProcess process : p) {
+            logger.info("WaveformProcess: "+process.getClass().getName());
+        }
     }
 
     public void handle(Element el) throws ConfigurationException {
