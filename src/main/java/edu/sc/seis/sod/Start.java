@@ -428,7 +428,9 @@ public class Start {
                 new PeriodicCheckpointer();
             }
             if(runProps.loserEventCleaner()) {
-                new TotalLoserEventCleaner(getRunProps().getEventLag());
+                TotalLoserEventCleaner loserCleaner = new TotalLoserEventCleaner(getRunProps().getEventLag());
+                Timer t = new Timer("TotalLoserCleaner", true);
+                t.schedule(loserCleaner, 0, 7*24*60*60*1000);
             }
         }
     }
