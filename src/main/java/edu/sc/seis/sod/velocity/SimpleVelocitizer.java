@@ -12,6 +12,8 @@ import java.util.TimeZone;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.exception.ParseErrorException;
+import org.apache.velocity.runtime.RuntimeConstants;
+import org.slf4j.Logger;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
@@ -104,11 +106,21 @@ public class SimpleVelocitizer {
         return string;
     }
 
+    public static final String VELOCITY_LOGGER_NAME = "runtime.log.logsystem.log4j.logger";
+    
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(SimpleVelocitizer.class);
+
+    public static void setupVelocityLogger(Properties velocityProps,  Logger velocityLogger) {
+        velocityProps.setProperty(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS,
+                          "org.apache.velocity.runtime.log.Log4JLogChute");
+        velocityProps.setProperty(VELOCITY_LOGGER_NAME,
+                          logger.getName());
+    }
+    
     static {
         try {
             Properties props = new Properties();
-            SQLLoader.setupVelocityLogger(props, logger);
+            setupVelocityLogger(props, logger);
             props.setProperty("velocimacro.library", "");
             Velocity.init(props);
         } catch(Exception e) {
