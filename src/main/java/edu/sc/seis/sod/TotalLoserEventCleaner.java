@@ -3,12 +3,16 @@ package edu.sc.seis.sod;
 import java.util.Iterator;
 import java.util.TimerTask;
 
+import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
 
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.StatefulEvent;
 import edu.sc.seis.sod.hibernate.StatefulEventDB;
 
@@ -34,17 +38,11 @@ public class TotalLoserEventCleaner extends TimerTask {
         try {
             logger.debug("Working");
             MicroSecondDate ageAgo = ClockUtil.now().subtract(lagInterval);
-            Query q = eventdb.getSession().createQuery(" from "+StatefulEvent.class.getName()+" e  where e.status.standingint = 2 and e.preferred.originTime.time < :ageAgo");
-            q.setTimestamp("ageAgo", ageAgo.getTimestamp());
-            Iterator<StatefulEvent> it = q.iterate();
-            int counter=0;
-            while(it.hasNext()) {
-                StatefulEvent se = it.next();
-                eventdb.getSession().delete(se);
-                counter++;
-            }
-            eventdb.commit();
-            logger.debug("Done, deleted "+counter+" events.");
+            cleanEvents(ageAgo);
+            cleanESP(ageAgo);
+            cleanENP(ageAgo);
+            cleanECP(ageAgo);
+            cleanEVP(ageAgo);
         } catch(Throwable e) {
             try {
                 eventdb.rollback();
@@ -53,6 +51,48 @@ public class TotalLoserEventCleaner extends TimerTask {
             }
             GlobalExceptionHandler.handle(e);
         }
+    }
+    
+    public static void cleanEvents(MicroSecondDate ageAgo) {
+        Query q = StatefulEventDB.getSingleton().getSession().createQuery(" from "+StatefulEvent.class.getName()+
+                                                                          " e  where e.status.standingInt = "+Standing.REJECT.getVal()+
+                                                                          " and e.preferred.originTime.time < :ageAgo");
+        q.setTimestamp("ageAgo", ageAgo.getTimestamp());
+        Iterator<StatefulEvent> it = q.iterate();
+        int counter=0;
+        while(it.hasNext()) {
+            StatefulEvent se = it.next();
+            StatefulEventDB.getSingleton().getSession().delete(se);
+            counter++;
+        }
+        StatefulEventDB.getSingleton().commit();
+        logger.debug("Done, deleted "+counter+" events.");
+    }
+    
+    public static void cleanESP(MicroSecondDate ageAgo) {
+        clean(EventStationPair.class, ageAgo);
+    }
+    
+    public static void cleanENP(MicroSecondDate ageAgo) {
+        clean(EventNetworkPair.class, ageAgo);
+    }
+    
+    public static void cleanECP(MicroSecondDate ageAgo) {
+        clean(EventChannelPair.class, ageAgo);
+    }
+
+    public static void cleanEVP(MicroSecondDate ageAgo) {
+        clean(EventVectorPair.class, ageAgo);
+    }
+    
+    public static void clean(Class eventPairClass, MicroSecondDate ageAgo) {
+        Query q = SodDB.getSingleton().getSession().createQuery("delete "+eventPairClass.getName()+
+                                                                " ep where ep.status.standingInt = "+Standing.REJECT.getVal()+
+                                                                " and ep.lastQuery < :ageAgo");
+        q.setTimestamp("ageAgo", ageAgo.getTimestamp());
+        int deleted = q.executeUpdate();
+        SodDB.getSingleton().commit();
+        logger.info("delete "+deleted+" old "+eventPairClass.getName());
     }
     
     TimeInterval lagInterval ;
