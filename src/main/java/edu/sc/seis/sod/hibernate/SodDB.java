@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.hibernate;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -169,7 +170,13 @@ public class SodDB extends AbstractHibernateDB {
     public synchronized EventNetworkPair getNextENPFromCache() {
         EventNetworkPair enp;
         synchronized(enpToDo) {
+            List<EventNetworkPair> beingLoaded = new ArrayList<EventNetworkPair>();
             enp = enpToDo.poll();
+            while (enp != null && Start.getNetworkArm().isBeingRefreshed(enp.getNetwork())) {
+                beingLoaded.add(enp);
+                enp = enpToDo.poll();
+            }
+            enpToDo.addAll(beingLoaded); // put ones being reloaded back on queue
         }
         if (enp != null) {
             // might be new thread
