@@ -23,6 +23,7 @@ import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.gmt.GenericCommandExecute;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.StringTreeLeaf;
+import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
 /**
  * @author crotwell Created on May 20, 2005
@@ -58,11 +59,7 @@ public class SacExecute implements WaveformProcess {
         expect("SAC>");
         ve = new VelocityEngine();
         Properties props = new Properties();
-        ClassLoader cl = SQLLoader.class.getClassLoader();
-        props.setProperty(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS,
-                          "org.apache.velocity.runtime.log.Log4JLogChute");
-        props.setProperty("runtime.log.logsystem.log4j.logger",
-                          logger.getName());
+        SimpleVelocitizer.setupVelocityLogger(props, logger);
         ve.init(props);
     }
 
