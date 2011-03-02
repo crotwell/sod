@@ -57,8 +57,9 @@ public class EventFinder extends AbstractSource implements EventSource {
 						+ getQueryStart()
 						+ " and we're querying to "
 						+ queryEnd);
-		return  quitDate.after(ClockUtil.now())
-				|| !getQueryStart().equals(queryEnd);
+		return  quitDate.equals(ClockUtil.now())
+		    || quitDate.after(ClockUtil.now())
+            || !getQueryStart().equals(queryEnd);
 	}
 
 	private CacheEvent[] internalNext() {
