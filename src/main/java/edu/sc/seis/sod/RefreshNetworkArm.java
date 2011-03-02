@@ -8,11 +8,17 @@ import java.util.TimerTask;
 
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.DataAcqSys;
+import edu.iris.Fissures.IfNetwork.Decimation;
+import edu.iris.Fissures.IfNetwork.Filter;
+import edu.iris.Fissures.IfNetwork.Gain;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
+import edu.iris.Fissures.IfNetwork.Normalization;
 import edu.iris.Fissures.IfNetwork.RecordingStyle;
 import edu.iris.Fissures.IfNetwork.Response;
 import edu.iris.Fissures.IfNetwork.Sensitivity;
+import edu.iris.Fissures.IfNetwork.TransferType;
 import edu.iris.Fissures.model.QuantityImpl;
+import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.ClockImpl;
@@ -157,8 +163,11 @@ logger.debug("refresh "+NetworkIdUtil.toString(net));
                 
                 sens = loadSource.getSensitivity(chan.getId());
                 Sensitivity dhiSensitivity = new Sensitivity((float)sens.getValue(), 0);
+                edu.iris.Fissures.IfNetwork.Stage[] stages = new edu.iris.Fissures.IfNetwork.Stage[] {
+                     new edu.iris.Fissures.IfNetwork.Stage(TransferType.ANALOG, sens.getUnit(), UnitImpl.COUNT, new Normalization[0], new Gain(), new Decimation[0], new Filter[0])
+                };
                 Instrumentation inst = new InstrumentationImpl(new Response(dhiSensitivity,
-                                                                            new edu.iris.Fissures.IfNetwork.Stage[0]),
+                                                                            stages),
                                                                chan.getEffectiveTime(),
                                                                new ClockImpl(0, "", "", "", ""),
                                                                new SensorImpl(0, "", "", "", 0, 0),
