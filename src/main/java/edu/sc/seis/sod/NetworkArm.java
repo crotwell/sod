@@ -227,13 +227,14 @@ public class NetworkArm implements Arm {
                         try {
                             result = attrSubsetter.accept(attr);
                         } catch(Throwable t) {
+                            logger.debug("Network subsetter exception: ", t);
                             result = new Fail(attrSubsetter, "Exception", t);
                         }
                         if(result.isSuccess()) {
                             NetworkDB ndb = getNetworkDB();
                             int dbid = ndb.put(attr);
                             NetworkDB.commit();
-                            logger.info("store network: " + attr.getDbid()
+                            logger.info("store network: " + NetworkIdUtil.toStringNoDates(attr)+" " + attr.getDbid()
                                     + " " + dbid);
                             successes.add(attr);
                             change(attr,
@@ -380,6 +381,7 @@ public class NetworkArm implements Arm {
                             staResult = stationSubsetter.accept(currStation,
                                                                 getNetworkSource());
                         } catch(Throwable t) {
+                            logger.debug("Station subsetter exception: ", t);
                             staResult = new Fail(stationSubsetter, "Exception", t);
                         }
                         if(staResult.isSuccess()) {
@@ -484,6 +486,7 @@ public class NetworkArm implements Arm {
                                     result = cur.accept(chan,
                                                         loadedNetworkSource);
                                 } catch(Throwable t) {
+                                    logger.debug("Channel subsetter exception: ", t);
                                     result = new Fail(cur, "Exception", t);
                                 }
                                 if(!result.isSuccess()) {
@@ -681,6 +684,18 @@ public class NetworkArm implements Arm {
     
     protected NetworkDB getNetworkDB() {
         return NetworkDB.getSingleton();
+    }
+    
+    public boolean isBeingRefreshed(NetworkAttrImpl net) {
+        return refresh.isNetworkBeingReloaded(net.getDbid());
+    }
+    
+    public boolean isBeingRefreshed(StationImpl sta) {
+        return refresh.isStationBeingReloaded(sta.getDbid());
+    }
+    
+    public RefreshNetworkArm getRefresher() {
+        return refresh;
     }
 
     private HashSet<String> allStationFailureNets = new HashSet<String>();
