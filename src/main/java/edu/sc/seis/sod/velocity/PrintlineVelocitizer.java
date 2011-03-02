@@ -55,7 +55,7 @@ public class PrintlineVelocitizer {
     }
     
     public static Level quietLogger(){
-    	System.err.println("quietLogger not working with slf4j, fix me!");
+    	System.err.println("PrintlineVelocitizer: quietLogger not working with slf4j, fix me!");
         /*
     	String prop = (String)Velocity.getProperty(SQLLoader.VELOCITY_LOGGER_NAME);
         Level current = null;
@@ -69,7 +69,7 @@ public class PrintlineVelocitizer {
     }
     
     public static void reinstateLogger(Level level){
-    	System.err.println("quietLogger not working with slf4j, fix me!");
+    	System.err.println("PrintlineVelocitizer: quietLogger not working with slf4j, fix me!");
     	/*
         String prop = (String)Velocity.getProperty(SQLLoader.VELOCITY_LOGGER_NAME);
         if(prop != null) {
