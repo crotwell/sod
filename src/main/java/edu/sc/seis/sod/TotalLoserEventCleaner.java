@@ -10,6 +10,7 @@ import org.hibernate.criterion.Restrictions;
 
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
+import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.hibernate.SodDB;
@@ -29,23 +30,41 @@ public class TotalLoserEventCleaner extends TimerTask {
 
     public TotalLoserEventCleaner(TimeInterval lag) {
         this.lagInterval = lag;
-        eventdb = StatefulEventDB.getSingleton();
        // Timer t = new Timer(true);
        // t.schedule(this, 0, ONE_WEEK);
     }
 
     public void run() {
         try {
-            logger.debug("Working");
+            logger.info("Working");
             MicroSecondDate ageAgo = ClockUtil.now().subtract(lagInterval);
+            // stations will process slightly before channels, so give a little time
+            // to avoid database forgein key violations
+            TimeInterval littleSkip = new TimeInterval(10, UnitImpl.MINUTE);
             cleanEvents(ageAgo);
-            cleanESP(ageAgo);
-            cleanENP(ageAgo);
+            StatefulEventDB.getSingleton().commit();
+            logger.info("Cleaned events");
+            ageAgo = ageAgo.add(littleSkip);
+            
             cleanECP(ageAgo);
+            SodDB.getSingleton().commit();
+            logger.info("Cleaned event-channel pairs");
             cleanEVP(ageAgo);
+            SodDB.getSingleton().commit();
+            logger.info("Cleaned event-vector pairs");
+            
+            ageAgo = ageAgo.add(littleSkip);
+            cleanESP(ageAgo);
+            SodDB.getSingleton().commit();
+            logger.info("Cleaned event-station pairs");
+            
+            ageAgo = ageAgo.add(littleSkip);
+            cleanENP(ageAgo);
+            SodDB.getSingleton().commit();
+            logger.info("Cleaned event-network pairs");
         } catch(Throwable e) {
             try {
-                eventdb.rollback();
+                StatefulEventDB.getSingleton().rollback();
             } catch(Throwable e1) {
                 GlobalExceptionHandler.handle(e1);
             }
@@ -96,7 +115,6 @@ public class TotalLoserEventCleaner extends TimerTask {
     }
     
     TimeInterval lagInterval ;
-    StatefulEventDB eventdb;
 
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(TotalLoserEventCleaner.class);
 
