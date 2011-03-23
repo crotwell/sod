@@ -5,7 +5,6 @@
  */
 package edu.sc.seis.sod.status;
 
-import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
 import org.w3c.dom.Element;
@@ -13,13 +12,13 @@ import org.w3c.dom.Element;
 import edu.iris.Fissures.Time;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
+import edu.sc.seis.fissuresUtil.chooser.ThreadSafeSimpleDateFormat;
 import edu.sc.seis.sod.SodUtil;
 
 public class TimeTemplate implements GenericTemplate {
 
     public TimeTemplate(Element config, boolean representTimeInFuture) {
         sdf = createSDF(config);
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
         this.representTimeInFuture = representTimeInFuture;
     }
 
@@ -28,12 +27,12 @@ public class TimeTemplate implements GenericTemplate {
         setTime(time);
     }
 
-    public static SimpleDateFormat createSDF(Element el) {
+    public static ThreadSafeSimpleDateFormat createSDF(Element el) {
         if(el != null) {
             String nestedText = SodUtil.getNestedText(el);
-            if(nestedText != null) return new SimpleDateFormat(nestedText);
+            if(nestedText != null) return new ThreadSafeSimpleDateFormat(nestedText, TimeZone.getTimeZone("GMT"));
         }
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
+        return new ThreadSafeSimpleDateFormat("yyyy-MM-dd HH:mm:ss z", TimeZone.getTimeZone("GMT"));
     }
 
     public void setTime(Time t) {
@@ -50,7 +49,7 @@ public class TimeTemplate implements GenericTemplate {
         return sdf.format(time);
     }
 
-    private SimpleDateFormat sdf;
+    private ThreadSafeSimpleDateFormat sdf;
 
     private MicroSecondDate time;
 

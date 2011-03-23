@@ -45,7 +45,6 @@ public class find_responses extends find_stations {
                              "channels",
                              "The codes of channels to retrieve",
                              "BH*"));
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         add(new FlaggedOption(FILE_TEMPLATE_OPTION,
                               JSAP.STRING_PARSER,
                               DEFAULT_TEMPLATE,

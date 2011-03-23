@@ -2,8 +2,6 @@ package edu.sc.seis.sod.subsetter.request;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
 import org.w3c.dom.Element;
@@ -12,13 +10,13 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
+import edu.sc.seis.fissuresUtil.chooser.ThreadSafeSimpleDateFormat;
 import edu.sc.seis.sod.ConfigurationException;
 
 public class NetDCRequest extends BreqFastRequest {
 
     public NetDCRequest(Element config) throws ConfigurationException {
         super(config);
-        netDCTimeFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
 
     protected void insertRequest(Channel channel,
@@ -64,5 +62,5 @@ public class NetDCRequest extends BreqFastRequest {
         return "${event.getTime('yyyy.DDD.HH.mm.ss.SSSS')}.netdc";
     }
     
-    private DateFormat netDCTimeFormat = new SimpleDateFormat("'\"'yyyy MM dd HH mm ss.SSSS'\"'");
+    private ThreadSafeSimpleDateFormat netDCTimeFormat = new ThreadSafeSimpleDateFormat("'\"'yyyy MM dd HH mm ss.SSSS'\"'", TimeZone.getTimeZone("GMT"));
 }

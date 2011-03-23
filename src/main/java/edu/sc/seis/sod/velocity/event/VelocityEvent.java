@@ -1,10 +1,8 @@
 package edu.sc.seis.sod.velocity.event;
 
 import java.io.StringWriter;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -22,6 +20,7 @@ import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.ProxyEventAccessOperations;
+import edu.sc.seis.fissuresUtil.chooser.ThreadSafeSimpleDateFormat;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.fissuresUtil.xml.XMLEvent;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
@@ -240,18 +239,19 @@ public class VelocityEvent extends ProxyEventAccessOperations {
         return new CacheEvent(event);
     }
 
-    private static DateFormat fullDateIdentifier = new SimpleDateFormat("yyyy/MM/dd/HH/mm/ss");
-    static {
-        fullDateIdentifier.setTimeZone(TimeZone.getTimeZone("GMT"));
-    }
+    private static ThreadSafeSimpleDateFormat fullDateIdentifier = new ThreadSafeSimpleDateFormat("yyyy/MM/dd/HH/mm/ss", TimeZone.getTimeZone("GMT"));
 
     public static String makeDateIdentifier(VelocityEvent event) {
+        synchronized(fullDateIdentifier) {
         return fullDateIdentifier.format(new MicroSecondDate(event.getOrigin().getOriginTime()));
+        }
     }
 
     public static MicroSecondDate parseDateIdentifier(String eqIdentifier)
             throws ParseException {
+        synchronized(fullDateIdentifier) {
         return new MicroSecondDate(fullDateIdentifier.parse(eqIdentifier));
+        }
     }
 
     private Origin origin;

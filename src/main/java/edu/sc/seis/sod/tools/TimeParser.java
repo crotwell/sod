@@ -106,11 +106,9 @@ public class TimeParser extends StringParser {
 
     private boolean ceiling;
 
-    private static DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-
     public static final String FIRST_SEISMOGRAM = "1889-04-17";
 
-    private static final String PREVIOUS_DAY = df.format(ClockUtil.now()
+    private static final String PREVIOUS_DAY = new SimpleDateFormat("yyyy-MM-dd").format(ClockUtil.now()
             .subtract(new TimeInterval(1, UnitImpl.DAY)));
 
     private static String PREVIOUS_DAY_BEGIN = "the previous day, "

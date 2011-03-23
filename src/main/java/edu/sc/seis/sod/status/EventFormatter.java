@@ -15,6 +15,7 @@ import edu.iris.Fissures.event.MagnitudeUtil;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
+import edu.sc.seis.fissuresUtil.chooser.ThreadSafeSimpleDateFormat;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.fissuresUtil.display.UnitDisplayUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
@@ -200,8 +201,7 @@ public class EventFormatter extends Template implements EventTemplate {
         }
 
         public Time(String format) {
-            sdf = new SimpleDateFormat(format);
-            sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+            sdf = new ThreadSafeSimpleDateFormat(format, TimeZone.getTimeZone("GMT"));
         }
 
         public String getResult(CacheEvent ev) {
@@ -213,7 +213,7 @@ public class EventFormatter extends Template implements EventTemplate {
             }
         }
 
-        private SimpleDateFormat sdf;
+        private ThreadSafeSimpleDateFormat sdf;
     }
 
     private class EventStatusFormatter implements EventTemplate {

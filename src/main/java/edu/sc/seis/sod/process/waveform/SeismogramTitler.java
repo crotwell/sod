@@ -1,7 +1,5 @@
 package edu.sc.seis.sod.process.waveform;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
@@ -10,6 +8,7 @@ import org.apache.velocity.VelocityContext;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.sc.seis.fissuresUtil.chooser.ThreadSafeSimpleDateFormat;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.display.configuration.BorderConfiguration;
 import edu.sc.seis.fissuresUtil.display.configuration.BorderTitleConfiguration;
@@ -20,7 +19,6 @@ import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 public class SeismogramTitler {
 
     public SeismogramTitler(BorderConfiguration titleBorder) {
-        df.setTimeZone(TimeZone.getTimeZone("GMT"));
         this.titleBorder = titleBorder;
         sv = new SimpleVelocitizer();
         BorderTitleConfiguration[] titles = titleBorder.getTitles();
@@ -51,7 +49,7 @@ public class SeismogramTitler {
         return (BorderConfiguration[])borderConfigs.toArray(new BorderConfiguration[0]);
     }
     
-    private DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
+    private ThreadSafeSimpleDateFormat df = new ThreadSafeSimpleDateFormat("yyyy-MM-dd HH:mm:ss z", TimeZone.getTimeZone("GMT"));
 
     private SimpleVelocitizer sv;
 

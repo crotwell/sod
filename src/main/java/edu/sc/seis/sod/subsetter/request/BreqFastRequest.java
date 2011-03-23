@@ -22,6 +22,7 @@ import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
+import edu.sc.seis.fissuresUtil.chooser.ThreadSafeSimpleDateFormat;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
@@ -52,7 +53,6 @@ public class BreqFastRequest implements RequestSubsetter {
                                               "${event.getTime('yyyy.DDD.HH.mm.ss.SSSS')}");
         fullTemplate = parser.getTemplate();
         regions = ParseRegions.getInstance();
-        format.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
 
     public StringTree accept(CacheEvent event,
@@ -195,9 +195,9 @@ public class BreqFastRequest implements RequestSubsetter {
 
     static final String nl = "\n";
 
-    SimpleDateFormat format = new SimpleDateFormat("yyyy MM dd HH mm ss.");
+    ThreadSafeSimpleDateFormat format = new ThreadSafeSimpleDateFormat("yyyy MM dd HH mm ss.", TimeZone.getTimeZone("GMT"));
 
-    SimpleDateFormat tenths = new SimpleDateFormat("SSS");
+    ThreadSafeSimpleDateFormat tenths = new ThreadSafeSimpleDateFormat("SSS", TimeZone.getTimeZone("GMT"));
 
     ParseRegions regions;
 

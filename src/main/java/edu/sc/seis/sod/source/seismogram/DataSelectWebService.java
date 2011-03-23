@@ -5,9 +5,9 @@ import java.net.Authenticator;
 import java.net.MalformedURLException;
 import java.net.PasswordAuthentication;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.w3c.dom.Element;
 
@@ -18,6 +18,7 @@ import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
+import edu.sc.seis.fissuresUtil.chooser.ThreadSafeSimpleDateFormat;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.mseed.FissuresConvert;
 import edu.sc.seis.seisFile.dataSelectWS.DataSelectException;
@@ -88,7 +89,7 @@ public class DataSelectWebService implements SeismogramSourceLocator {
 
     public static final String DEFAULT_WS_URL = "http://www.iris.edu/ws/dataselect/query";
     
-    public static SimpleDateFormat longFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    public static ThreadSafeSimpleDateFormat longFormat = new ThreadSafeSimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", TimeZone.getTimeZone("GMT"));
 
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(DataSelectWebService.class);
 }
