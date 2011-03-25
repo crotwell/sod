@@ -30,6 +30,7 @@ import edu.iris.Fissures.network.SensorImpl;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
+import edu.sc.seis.fissuresUtil.hibernate.InstrumentationBlob;
 import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
 import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
 import edu.sc.seis.sod.source.network.LoadedNetworkSource;
@@ -39,6 +40,7 @@ public class RefreshNetworkArm extends TimerTask {
 
     public RefreshNetworkArm(NetworkArm netArm) {
         this.netArm = netArm;
+        InstrumentationBlob.setORB(CommonAccess.getORB());
     }
 
     public void run() {
