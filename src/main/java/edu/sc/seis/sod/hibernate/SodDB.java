@@ -292,7 +292,7 @@ public class SodDB extends AbstractHibernateDB {
         }
     }
 
-    public void populateRetryToDo() {
+    public List<AbstractEventChannelPair> getRetryToDo() {
         logger.debug("Getting retry from db");
         String q = "from "
                 + getEcpClass().getName()
@@ -309,7 +309,14 @@ public class SodDB extends AbstractHibernateDB {
         query.setFloat("minDelay", (float)getMinRetryDelay().getValue(UnitImpl.SECOND));
         query.setFloat("maxDelay", maxRetryDelay);
         query.setMaxResults(10000);
+        logger.info("retry query: "+q);
         List<AbstractEventChannelPair> result = query.list();
+        logger.debug("retry query: "+q);
+        return result;
+    }
+
+    public void populateRetryToDo() {
+        List<AbstractEventChannelPair> result = getRetryToDo();
         for (AbstractEventChannelPair abstractEventChannelPair : result) {
             synchronized(retryToDo) {
                 retryToDo.offer(abstractEventChannelPair);
@@ -903,18 +910,22 @@ public class SodDB extends AbstractHibernateDB {
     }
     
     public static Class<? extends AbstractEventChannelPair> discoverDbEcpClass() {
+        Class<? extends AbstractEventChannelPair> out;
         try {
             String q = "from " + EventVectorPair.class.getName();
             Query query = getSession().createQuery(q);
             query.setMaxResults(1);
             List<EventChannelPair> result = query.list();
             if(result.size() > 0) {
-                return EventVectorPair.class;
+                out = EventVectorPair.class;
             }
         } catch(Throwable e) {
             logger.warn("Exception", e);
+        } finally {
+            rollback();
         }
-        return EventChannelPair.class;
+        out = EventChannelPair.class;
+        return out;
     }
     
     public static void setDefaultEcpClass(Class<? extends AbstractEventChannelPair> ecpClass) {
