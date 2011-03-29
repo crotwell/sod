@@ -82,13 +82,7 @@ public class StationXML implements NetworkSource {
     }
 
     public List<? extends NetworkAttrImpl> getNetworks() {
-        if (networks == null) {
-            try {
-                parse();
-            } catch(Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
+        checkLoaded();
         return Collections.unmodifiableList(networks);
     }
 
@@ -102,6 +96,7 @@ public class StationXML implements NetworkSource {
     }
 
     public List<? extends ChannelImpl> getChannels(StationImpl station) {
+        checkLoaded();
         List<StationChannelBundle> bundles = staChanMap.get(NetworkIdUtil.toStringNoDates(station.getNetworkAttr()));
         for (StationChannelBundle b : bundles) {
             if (StationIdUtil.areEqual(station, b.getStation())) {
@@ -116,6 +111,7 @@ public class StationXML implements NetworkSource {
     }
 
     public QuantityImpl getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
+        checkLoaded();
         List<StationChannelBundle> bundles = staChanMap.get(NetworkIdUtil.toStringNoDates(chanId.network_id));
         for (StationChannelBundle b : bundles) {
             if (chanId.station_code.equals( b.getStation().get_code())) {
@@ -133,13 +129,24 @@ public class StationXML implements NetworkSource {
         throw new ChannelNotFound();
     }
     
+
+    void checkLoaded() {
+        if (networks == null) {
+            try {
+                parse();
+            } catch(Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+    
     synchronized void parse() throws XMLStreamException, StationXMLException, IOException {
         networks = new ArrayList<NetworkAttrImpl>();
         // load networks via DHI service as StationXML does not have networks other than a code in stations
         NetworkFinder finder = new NetworkFinder("edu/iris/dmc", "IRIS_NetworkDC", 2);
         finder.reset();
         knownNetworks.addAll(finder.getNetworks());
-        staChanMap = new HashMap<String, List<StationChannelBundle>>();
+        staChanMap.clear();
         logger.info("Parsing network from "+url);
         URL u = new URL(url);
         InputStream in  = new BufferedInputStream(u.openStream());
@@ -159,7 +166,7 @@ public class StationXML implements NetworkSource {
             try {
                 processStation(s);
             } catch (StationXMLException ee) {
-                logger.error("Skipping "+s.getNetCode()+"."+s.getStaCode(), ee);
+                logger.error("Skipping "+s.getNetCode()+"."+s.getStaCode()+" "+ ee.getMessage());
             }
         }
         logger.info("found "+networks.size()+" networks after parse (known network="+knownNetworks.size()+")");
@@ -192,7 +199,7 @@ public class StationXML implements NetworkSource {
     
     List<NetworkAttrImpl> networks;
     
-    Map<String, List<StationChannelBundle>> staChanMap;
+    Map<String, List<StationChannelBundle>> staChanMap = new HashMap<String, List<StationChannelBundle>>();
     
     String url;
     
