@@ -30,6 +30,7 @@ import edu.iris.Fissures.network.SensorImpl;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
+import edu.sc.seis.fissuresUtil.hibernate.ChannelSensitivity;
 import edu.sc.seis.fissuresUtil.hibernate.InstrumentationBlob;
 import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
 import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
@@ -159,29 +160,14 @@ logger.debug("refresh "+NetworkIdUtil.toString(net));
     }
     
     void checkSensitivityLoaded(ChannelImpl chan, LoadedNetworkSource loadSource) {
-        if (loadSource.isInstrumentationLoaded(chan.getId())) {
-            QuantityImpl sens;
-            try {
-                
-                sens = loadSource.getSensitivity(chan.getId());
-                Sensitivity dhiSensitivity = new Sensitivity((float)sens.getValue(), 0);
-                edu.iris.Fissures.IfNetwork.Stage[] stages = new edu.iris.Fissures.IfNetwork.Stage[] {
-                     new edu.iris.Fissures.IfNetwork.Stage(TransferType.ANALOG, sens.getUnit(), UnitImpl.COUNT, new Normalization[0], new Gain(), new Decimation[0], new Filter[0])
-                };
-                Instrumentation inst = new InstrumentationImpl(new Response(dhiSensitivity,
-                                                                            stages),
-                                                               chan.getEffectiveTime(),
-                                                               new ClockImpl(0, "", "", "", ""),
-                                                               new SensorImpl(0, "", "", "", 0, 0),
-                                                               new DataAcqSysImpl(0, "", "", "", RecordingStyle.UNKNOWN));
-                NetworkDB.getSingleton().putInstrumentation(chan, inst);
-            } catch(ChannelNotFound e) {
-                logger.warn("No Instrumentation for "+ChannelIdUtil.toStringFormatDates(chan.getId()));
-                NetworkDB.getSingleton().putInstrumentation(chan, null);
-            } catch(InvalidResponse e) {
-                logger.warn("Invalid Instrumentation for "+ChannelIdUtil.toStringFormatDates(chan.getId()));
-                NetworkDB.getSingleton().putInstrumentation(chan, null);
-            }
+        try {
+            QuantityImpl sens = loadSource.getSensitivity(chan.getId());
+        } catch(ChannelNotFound e) {
+            logger.warn("No Instrumentation for "+ChannelIdUtil.toStringFormatDates(chan.getId()));
+            NetworkDB.getSingleton().putSensitivity( ChannelSensitivity.createNonChannelSensitivity(chan));
+        } catch(InvalidResponse e) {
+            logger.warn("Invalid Instrumentation for "+ChannelIdUtil.toStringFormatDates(chan.getId()));
+            NetworkDB.getSingleton().putSensitivity( ChannelSensitivity.createNonChannelSensitivity(chan));
         }
     }
 
