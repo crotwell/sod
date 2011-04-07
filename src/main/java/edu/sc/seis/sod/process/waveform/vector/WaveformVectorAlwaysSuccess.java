@@ -10,14 +10,12 @@ import org.w3c.dom.Element;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.MotionVectorArm;
 import edu.sc.seis.sod.Threadable;
 import edu.sc.seis.sod.status.StringTreeBranch;
-import edu.sc.seis.sod.status.StringTreeLeaf;
 
 public class WaveformVectorAlwaysSuccess extends VectorResultWrapper implements Threadable {
 
@@ -31,8 +29,7 @@ public class WaveformVectorAlwaysSuccess extends VectorResultWrapper implements 
                                         RequestFilter[][] original,
                                         RequestFilter[][] available,
                                         LocalSeismogramImpl[][] seismograms,
-                                        CookieJar cookieJar) {
-        try {
+                                        CookieJar cookieJar) throws Exception {
             WaveformVectorResult result = MotionVectorArm.runProcessorThreadCheck(subProcess,
                                                                                   event,
                                                                                   channel,
@@ -44,12 +41,6 @@ public class WaveformVectorAlwaysSuccess extends VectorResultWrapper implements 
                                             new StringTreeBranch(this,
                                                                  true,
                                                                  result.getReason()));
-        } catch(Exception e) {
-            GlobalExceptionHandler.handle("Caught an exception inside Always Success and moving on ...",
-                                          e);
-            return new WaveformVectorResult(seismograms,
-                                            new StringTreeLeaf(this, true));
-        }
     }
 
     public String toString() {

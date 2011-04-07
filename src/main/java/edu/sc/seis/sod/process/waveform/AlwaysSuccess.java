@@ -11,7 +11,6 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.StringTreeBranch;
@@ -28,7 +27,6 @@ public class AlwaysSuccess extends ResultWrapper {
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) throws Exception {
-        try {
             WaveformResult result = subprocess.accept(event,
                                                        channel,
                                                        original,
@@ -39,11 +37,6 @@ public class AlwaysSuccess extends ResultWrapper {
                                       new StringTreeBranch(this,
                                                            true,
                                                            result.getReason()));
-        } catch(Exception e) {
-            GlobalExceptionHandler.handle("Caught an exception inside Always Success and moving on ...",
-                                          e);
-            return new WaveformResult(true, seismograms, this);
-        }
     }
 
     public String toString() {
