@@ -130,7 +130,7 @@ public class StationXML implements NetworkSource {
     }
     
 
-    void checkLoaded() {
+    synchronized void checkLoaded() {
         if (networks == null) {
             try {
                 parse();
