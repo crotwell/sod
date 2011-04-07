@@ -30,26 +30,32 @@ public class InstrumentationFromDB extends WrappingNetworkSource implements Netw
 
     @Override
     public QuantityImpl getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
-        String key = ChannelIdUtil.toStringNoDates(chanId);
-        if (sensitivityMap.containsKey(key)) {
-            return sensitivityMap.get(key);
-        }
+       // String key = ChannelIdUtil.toStringNoDates(chanId);
+        //if (sensitivityMap.containsKey(key)) {
+        //    return sensitivityMap.get(key);
+       // }
         ChannelImpl chan;
         try {
             chan = NetworkDB.getSingleton().getChannel(chanId);
             ChannelSensitivity dbSensitivity = NetworkDB.getSingleton().getSensitivity(chan);
             if (dbSensitivity != null) {
-                QuantityImpl out = new QuantityImpl(dbSensitivity.getOverallGain(), dbSensitivity.getInputUnits());
-                sensitivityMap.put(key, out);
-                return out;
+                if ( ! ChannelSensitivity.isNonChannelSensitivity(dbSensitivity)) {
+                    QuantityImpl out = new QuantityImpl(dbSensitivity.getOverallGain(), dbSensitivity.getInputUnits());
+     //               sensitivityMap.put(key, out);
+                    return out;
+                } else {
+                    // is in database, but marked as not existing, so 
+                    throw new ChannelNotFound(chanId);
+                }
             }
+            // go to server?
             QuantityImpl sense = getWrapped().getSensitivity(chanId);
-            sensitivityMap.put(key, sense);
+          //.put(key, sense);
             dbSensitivity = new ChannelSensitivity(chan, (float)sense.getValue(), 0, sense.getUnit());
             NetworkDB.getSingleton().putSensitivity(dbSensitivity);
             return sense;
         } catch(NotFound e) {
-            // must not be in db
+            // Channel must not be in db???
             throw new ChannelNotFound(chanId);
         }
         // should probalby try to get from db, maybe convert from instrumentation like:
