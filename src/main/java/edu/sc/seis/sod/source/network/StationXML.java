@@ -37,6 +37,8 @@ import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
 import edu.sc.seis.fissuresUtil.stationxml.ChannelSensitivityBundle;
 import edu.sc.seis.fissuresUtil.stationxml.StationChannelBundle;
 import edu.sc.seis.fissuresUtil.stationxml.StationXMLToFissures;
+import edu.sc.seis.seisFile.stationxml.Network;
+import edu.sc.seis.seisFile.stationxml.NetworkIterator;
 import edu.sc.seis.seisFile.stationxml.StaMessage;
 import edu.sc.seis.seisFile.stationxml.Station;
 import edu.sc.seis.seisFile.stationxml.StationIterator;
@@ -160,19 +162,23 @@ public class StationXML implements NetworkSource {
         }
         StaMessage staMessage = new StaMessage(r);
         lastLoadDate = staMessage.getSentDate();
-        StationIterator it = staMessage.getStations();
-        while(it.hasNext()) {
-            Station s = it.next();
-            try {
-                processStation(s);
-            } catch (StationXMLException ee) {
-                logger.error("Skipping "+s.getNetCode()+"."+s.getStaCode()+" "+ ee.getMessage());
+        NetworkIterator netIt = staMessage.getNetworks();
+        while (netIt.hasNext()) {
+            Network net = netIt.next();
+            StationIterator it = net.getStations();
+            while(it.hasNext()) {
+                Station s = it.next();
+                try {
+                    processStation(net, s);
+                } catch (StationXMLException ee) {
+                    logger.error("Skipping "+s.getNetCode()+"."+s.getStaCode()+" "+ ee.getMessage());
+                }
             }
         }
         logger.info("found "+networks.size()+" networks after parse (known network="+knownNetworks.size()+")");
     }
     
-    void processStation(Station s) throws StationXMLException {
+    void processStation(Network net, Station s) throws StationXMLException {
         for (String ignore : ignoreNets) {
             if (s.getNetCode().equals(ignore)) {
             // not sure what AB network is, skip it for now
