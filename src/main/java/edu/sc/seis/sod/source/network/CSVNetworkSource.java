@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,6 @@ import org.w3c.dom.Element;
 
 import com.csvreader.CsvReader;
 
-import edu.emory.mathcs.backport.java.util.Collections;
 import edu.iris.Fissures.Location;
 import edu.iris.Fissures.LocationType;
 import edu.iris.Fissures.Orientation;
