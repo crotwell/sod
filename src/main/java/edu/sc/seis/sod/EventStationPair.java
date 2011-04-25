@@ -146,6 +146,8 @@ public class EventStationPair extends CookieEventPair {
             update(Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.SYSTEM_FAILURE));
             SodDB.commit();
             return;
+        } finally {
+            SodDB.commit();
         }
     }
 
