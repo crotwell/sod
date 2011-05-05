@@ -142,7 +142,7 @@ public class StAXModelBuilder implements XMLStreamConstants {
         def.set(result);
         if(result instanceof Ref) {
             Ref ref = (Ref)result;
-            def = ref.getDef();
+           // def = ref.getDef();
             waiters.put(name, ref.getName());
         }
         return def;
@@ -173,6 +173,10 @@ public class StAXModelBuilder implements XMLStreamConstants {
                 kids.add(handleRef());
             } else if(tag.equals("externalRef")) {
                 kids.add(handleExtRef());
+            } else if(tag.equals("anyName")) {
+                // ignore...
+                nextTag();
+                nextTag();
             } else if(isData(tag)) {
                 kids.add(handleData());
             } else {
@@ -322,6 +326,17 @@ public class StAXModelBuilder implements XMLStreamConstants {
      * object calling this.
      */
     private FormProvider handleElement() throws XMLStreamException {
+        if (reader.getAttributeCount() == 0) {
+            // no attributes, so no name specified in attribute
+            // we only do this (hopefully) for cases where any xml is valid
+            nextTag();
+            AnyXMLElement out = new AnyXMLElement(1, 1);
+            out.setNamespace(ModelWalker.getNamespaceFromAncestors(out));
+            out.setAnnotation(handleAnn());
+            out.setChild(handleAll());
+            nextTag();
+            return out;
+        }
         String name = reader.getAttributeValue(0);
         String ns = reader.getAttributeValue(null, "ns");
         nextTag();
@@ -337,7 +352,12 @@ public class StAXModelBuilder implements XMLStreamConstants {
     }
 
     private Object handleAttr() throws XMLStreamException {
-        String name = reader.getAttributeValue(0);
+        String name;
+        if (reader.getAttributeCount() == 0) {
+            name = "anyAttribute";
+        } else {
+            name = reader.getAttributeValue(0);
+        }
         String ns = reader.getAttributeValue(null, "ns");
         nextTag();
         Attribute result = new Attribute(1, 1, name);
