@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
 
 import org.apache.log4j.Level;
 import org.apache.velocity.VelocityContext;
@@ -15,12 +16,23 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.StationImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
+import edu.sc.seis.fissuresUtil.hibernate.AbstractHibernateDB;
+import edu.sc.seis.fissuresUtil.mockFissures.IfEvent.MockEventAccess;
+import edu.sc.seis.fissuresUtil.mockFissures.IfEvent.MockEventAccessOperations;
+import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannel;
+import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockStation;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.UserConfigurationException;
 import edu.sc.seis.sod.status.FissuresFormatter;
+import edu.sc.seis.sod.velocity.event.VelocityEvent;
+import edu.sc.seis.sod.velocity.network.VelocityChannel;
+import edu.sc.seis.sod.velocity.network.VelocityNetwork;
+import edu.sc.seis.sod.velocity.network.VelocityStation;
 
 /**
  * Handles getting stuff in the context and directing output to System.out or a
@@ -36,14 +48,21 @@ public class PrintlineVelocitizer {
      * Evaluates the templates such that errors might be discovered
      */
     public PrintlineVelocitizer(String[] strings) throws ConfigurationException {
+        VelocityContext context = new VelocityContext();
+        context.put("event", new VelocityEvent(MockEventAccessOperations.createEvent()));
+        context.put("channel", new VelocityChannel(MockChannel.createChannel()));
+        context.put("station", new VelocityStation(MockStation.createStation()));
+        context.put("network", new VelocityNetwork((NetworkAttrImpl)MockChannel.createChannel().getNetworkAttr()));
+        context.put("seismograms", new ArrayList<LocalSeismogramImpl>());
+        context.put("index", new Integer(1));
         for(int i = 0; i < strings.length; i++) {
             try {
-                Level cur = quietLogger();
-                Velocity.evaluate(new VelocityContext(),
-                                  new StringWriter(),
+                StringWriter stringWriter = new StringWriter();
+                Velocity.evaluate(context,
+                                  stringWriter,
                                   "PrintlineTest",
                                   strings[i]);
-                reinstateLogger(cur);
+                logger.debug("PrintlineVelocitizer: "+strings[i]+" Result: "+stringWriter.toString());
             } catch(ParseErrorException e) {
                 throw new UserConfigurationException("Malformed Velocity '"
                         + strings[i] + "'.  " + e.getMessage());
@@ -69,7 +88,7 @@ public class PrintlineVelocitizer {
     }
     
     public static void reinstateLogger(Level level){
-    	System.err.println("PrintlineVelocitizer: quietLogger not working with slf4j, fix me!");
+    	System.err.println("PrintlineVelocitizer: reinstateLogger not working with slf4j, fix me!");
     	/*
         String prop = (String)Velocity.getProperty(SQLLoader.VELOCITY_LOGGER_NAME);
         if(prop != null) {
@@ -202,4 +221,6 @@ public class PrintlineVelocitizer {
     }
 
     private SimpleVelocitizer simple = new SimpleVelocitizer();
+
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(PrintlineVelocitizer.class);
 }
