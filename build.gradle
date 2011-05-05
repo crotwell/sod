@@ -8,7 +8,14 @@ apply plugin:'java'
 apply plugin:RelaxSimplifier
 
 
-        
+sourceSets {
+    relax {
+        resources {
+            srcDir new File(project.buildDir, 'generated-src/relax')
+        }
+    }
+}
+ 
 dependencies {
     compile project(':bag') { transitive = true }
     compile project(':seiswww') { transitive = false }
@@ -156,15 +163,16 @@ task copySchemaDocs(dependsOn: 'buildSchemaDocs', type: Sync) {
 }
 
 task buildSchemaDocs(type: JavaExec, dependsOn: ['staticSchemaDocs', 'buildSchema', 'compileJava'])  { 
+    inRNGFile = new File(project.buildDir, 'generated-src/relax/resources/edu/sc/seis/sod/data/sod.rng')
 //    jvmArgs = ['-agentlib:yjpagent', '-XX:+HeapDumpOnOutOfMemoryError', '-Xmx512m']
-    jvmArgs = ['-Xmx512m']
+    jvmArgs  ['-Xmx512m']
     group = 'dist'
-    inputs.dir new File(project.buildDir, 'generated-src/relax')
+    inputs.files inRNGFile
     inputs.files 'site/elementPage.vm'
     outDir = project.file('build/velocity/sod/ingredients/')
     outputs.dir outDir
     workingDir = outDir
-    args = [ project.buildDir.path+'generated-src/relax/sod.rng', project.projectDir.path, outDir]
+    args  inRNGFile, project.projectDir.path, outDir
     classpath = configurations.runtime
     classpath project.file("build/classes/main")
     setMain "edu.sc.seis.sod.validator.documenter.SchemaDocumenter"
@@ -172,24 +180,25 @@ task buildSchemaDocs(type: JavaExec, dependsOn: ['staticSchemaDocs', 'buildSchem
 
 task buildSchema(dependsOn: ['transform', 'compileJava'])  {
     group = 'build'
-    inputs.dir new File(project.buildDir, 'generated-src/relax')
-    outputs.files 'src/main/resources/edu/sc/seis/sod/data/sod.rng'
+    inFile = new File(project.buildDir.path, 'generated-src/relaxInclude/sod.rng')
+    inputs.files inFile
+    outFile = new File(project.buildDir, 'generated-src/relax/resources/edu/sc/seis/sod/data/sod.rng')
+    outputs.files outFile
     doLast{
-    outDir = project.file('build/output')
-    outDir.mkdirs()
-    relaxArgs = '-s '+project.buildDir.path+'/generated-src/relax/sod.rng'
-    ant.java(dir:outDir, 
+    outFile.getParentFile().mkdirs()
+    relaxArgs = '-s '+inFile
+    ant.java(dir:outFile.getParentFile(), 
              classname:'com.thaiopensource.relaxng.util.Driver', 
              args:relaxArgs,
              maxmemory:'512m',
              fork:true,
              classpath:configurations.runtime.asPath,
-             output:project.projectDir.path+'/src/main/resources/edu/sc/seis/sod/data/sod.rng') 
+             output:outFile) 
     }
 }
 
 task transform(type: XSLT) { 
-    destDir=new File(project.buildDir, 'generated-src/relax')
+    destDir=new File(project.buildDir, 'generated-src/relaxInclude')
     stylesheetFile = new File(project.projectDir, 'src/main/xslt/simpleXInclude.xslt')
     source new File(project.projectDir, 'src/main/relax/sod.rng')
 }
