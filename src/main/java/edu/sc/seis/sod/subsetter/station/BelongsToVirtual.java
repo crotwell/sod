@@ -39,7 +39,7 @@ public class BelongsToVirtual implements StationSubsetter {
     }
 
     public BelongsToVirtual(Element el) throws ConfigurationException {
-        this(SodUtil.getNestedText(el), Start.getNetworkArm().getRefreshInterval());
+        this(SodUtil.getNestedText(el), null);
     }
 
     public BelongsToVirtual(String virtualNetName,
@@ -59,11 +59,18 @@ public class BelongsToVirtual implements StationSubsetter {
     }
 
     private void refreshStations(NetworkSource network) throws ConfigurationException {
-        if(ClockUtil.now().subtract(refreshInterval).after(lastQuery)) {
+        if(ClockUtil.now().subtract(getRefreshInterval()).after(lastQuery)) {
             lastQuery = ClockUtil.now();
             NetworkAccess virtual = getVirtual(network, name);
             stations = network.getStations(virtual.get_attributes().getId());
         }
+    }
+    
+    public TimeInterval getRefreshInterval() {
+        if (refreshInterval == null) {
+            refreshInterval = Start.getNetworkArm().getRefreshInterval();
+        }
+        return refreshInterval;
     }
     
     private String name;
