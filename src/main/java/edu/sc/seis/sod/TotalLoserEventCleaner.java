@@ -3,10 +3,7 @@ package edu.sc.seis.sod;
 import java.util.Iterator;
 import java.util.TimerTask;
 
-import org.hibernate.Criteria;
 import org.hibernate.Query;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Restrictions;
 
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
