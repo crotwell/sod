@@ -32,16 +32,21 @@ public class SchemaDocumenter {
 
     public static void main(String[] args) throws Exception {
         BasicConfigurator.configure();
-        if (args.length != 2) {
-            System.err.println("Usage: schemaDocumenter rng velocitydir outputdir");
+        if (args.length != 3) {
+            System.err.println("Usage: schemaDocumenter rng basedir outputdir");
+            System.err.print("       ");
+            for (int i = 0; i < args.length; i++) {
+                System.err.print(args[i]+" ");
+            }
+            System.err.println();
             return;
         }
         String sod_rng = args[0];
-        base = new File(sod_rng).getParent();
+        base = args[1];
         if (base.length() != 0 && ! base.endsWith("/")) { base += "/"; }
-        outputdir = args[1];
+        outputdir = args[2];
         if (outputdir.length() != 0 && ! outputdir.endsWith("/")) { outputdir += "/"; }
-        StAXModelBuilder handler = new StAXModelBuilder(base + "sod.rng");
+        StAXModelBuilder handler = new StAXModelBuilder(sod_rng);
         //Setup velocity
         VelocityEngine ve = new VelocityEngine();
         ve.setProperty("file.resource.loader.path", base + "site");
