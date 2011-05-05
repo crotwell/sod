@@ -521,7 +521,10 @@
                     </recordSectionDisplayGenerator>
                 </example>
             </xsd:annotation>
-            <element name="id">
+            <element name="orientationId">
+                <data type="string"/>
+            </element>
+            <element name="recordSectionId">
                 <data type="string"/>
             </element>
             <optional>
