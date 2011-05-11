@@ -151,37 +151,49 @@ task staticSchemaDocs(type: Copy) {
     from project.file('site/schemaDocs/docs')
     into outDir
     doFirst {
-        println outDir.mkdirs()
+        outDir.mkdirs()
     }
 }
 
-task copySchemaDocs(dependsOn: 'buildSchemaDocs', type: Sync) {
+task copySchemaDocs(dependsOn: 'buildSchemaDocs', type: Copy) {
     group = 'dist'
-    from project.file('build/velocity/sod/ingredients')
-    from project.file('site/schemaDocs/docs')
-    into project.file('../seiswww/velocity/sod/ingredients/')
+    inDirA = new File(project.buildDir, 'generated-src/velocity/sod/ingredients')
+    //from project.file('build/velocity/sod/ingredients')
+    inDirB = project.file('site/schemaDocs/docs')
+    from inDirA
+    from inDirB
+    inputs.dir inDirB
+    inputs.dir inDirA
+    outDir = project.file('../seiswww/build/velocity/sod/ingredients/')
+    into outDir
+    outputs.dir outDir
 }
 
 task buildSchemaDocs(type: JavaExec, dependsOn: ['staticSchemaDocs', 'buildSchema', 'compileJava'])  { 
-    inRNGFile = new File(project.buildDir, 'generated-src/relax/resources/edu/sc/seis/sod/data/sod.rng')
+    inRNGFile = new File(project.buildDir.path, 'generated-src/relaxInclude/sod.rng')
+//    inRNGFile = new File(project.buildDir, 'generated-src/relax/resources/edu/sc/seis/sod/data/sod.rng')
 //    jvmArgs = ['-agentlib:yjpagent', '-XX:+HeapDumpOnOutOfMemoryError', '-Xmx512m']
     jvmArgs  ['-Xmx512m']
     group = 'dist'
-    inputs.files inRNGFile
+    inputs.dir inRNGFile.getParentFile()
     inputs.files 'site/elementPage.vm'
-    outDir = project.file('build/velocity/sod/ingredients/')
+//    outDir = project.file('build/velocity/sod/ingredients')
+    outDir = new File(project.buildDir, 'generated-src/velocity/sod/ingredients')
     outputs.dir outDir
     workingDir = outDir
     args  inRNGFile, project.projectDir.path, outDir
-    classpath = configurations.runtime
+    classpath configurations.runtime
     classpath project.file("build/classes/main")
     setMain "edu.sc.seis.sod.validator.documenter.SchemaDocumenter"
+    doFirst {
+        outDir.mkdirs()
+    }
 }
 
 task buildSchema(dependsOn: ['transform', 'compileJava'])  {
     group = 'build'
     inFile = new File(project.buildDir.path, 'generated-src/relaxInclude/sod.rng')
-    inputs.files inFile
+    inputs.dir inFile.getParentFile()
     outFile = new File(project.buildDir, 'generated-src/relax/resources/edu/sc/seis/sod/data/sod.rng')
     outputs.files outFile
     doLast{
