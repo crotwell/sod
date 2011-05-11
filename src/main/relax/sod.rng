@@ -25,7 +25,7 @@
                 <group>
                     <ref name="eventArm"/>
                     <ref name="networkArm"/>
-                    <ref name="waveformArm"/>
+                    <ref name="waveformArmChoice"/>
                 </group>
             </choice>
         </element>
@@ -115,7 +115,7 @@
 
 <!-- seismogram arm -->
 
-    <define name="waveformArm">
+    <define name="waveformArmChoice">
         <choice>
             <xsd:annotation>
                 <summary>Operates on the networks and events returned by the network and event arms</summary>
@@ -126,14 +126,14 @@
                     waveformVectorArm takes the channels from the network arm, groups them as
                     motion vectors, and runs them through its items as a group.</description>
             </xsd:annotation>
-            <ref name="localSeismogram"/>
+            <ref name="waveformArm"/>
             <ref name="waveformVectorArm"/>
         </choice>
     </define>
 
 <!-- Single seismogram arm -->
 
-    <define name="localSeismogram" >
+    <define name="waveformArm" >
         <element name="waveformArm">
             <xsd:annotation>
                 <summary>Downloads and processes waveforms individually</summary>

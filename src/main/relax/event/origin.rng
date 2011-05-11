@@ -27,11 +27,11 @@
             <ref name="catalog"/>
             <ref name="contributor"/>
             <ref name="networkTimeRange"/>
-            <ref name="arrayAND"/>
-            <ref name="arrayOR"/>
-            <ref name="AND"/>
-            <ref name="OR"/>
-            <ref name="NOT"/>
+            <ref name="originArrayAND"/>
+            <ref name="originArrayOR"/>
+            <ref name="originAND"/>
+            <ref name="originOR"/>
+            <ref name="originNOT"/>
             <ref name="externalOriginSubsetter"/>
             <ref name="youngerThan"/>
             <ref name="printline"/>
@@ -128,7 +128,7 @@
             <data type="string"/>
         </element>
     </define>
-    <define name="arrayAND">
+    <define name="originArrayAND">
         <element name="originArrayAND">
             <xsd:annotation>
                 <summary>Enclosed subsetter matches all origins for an event</summary>
@@ -138,7 +138,7 @@
             <ref name="origin"/>
         </element>
     </define>
-    <define name="arrayOR">
+    <define name="originArrayOR">
         <element name="originArrayOR">
             <xsd:annotation>
                 <summary>Enclosed subsetter matches at least one origin for an event</summary>
@@ -148,7 +148,7 @@
             <ref name="origin"/>
         </element>
     </define>
-    <define name="AND">
+    <define name="originAND">
         <element name="originAND">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
@@ -169,7 +169,7 @@
             </oneOrMore>
         </element>
     </define>
-    <define name="OR">
+    <define name="originOR">
         <element name="originOR">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
@@ -190,7 +190,7 @@
             </oneOrMore>
         </element>
     </define>
-    <define name="NOT">
+    <define name="originNOT">
         <element name="originNOT">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
