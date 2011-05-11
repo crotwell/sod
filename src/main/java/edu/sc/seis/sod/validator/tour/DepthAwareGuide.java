@@ -3,9 +3,16 @@
  */
 package edu.sc.seis.sod.validator.tour;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import edu.sc.seis.sod.validator.model.Attribute;
 import edu.sc.seis.sod.validator.model.Choice;
 import edu.sc.seis.sod.validator.model.Data;
+import edu.sc.seis.sod.validator.model.Definition;
 import edu.sc.seis.sod.validator.model.Form;
 import edu.sc.seis.sod.validator.model.Group;
 import edu.sc.seis.sod.validator.model.Interleave;
@@ -70,8 +77,22 @@ public class DepthAwareGuide implements TourGuide {
 
     private void handleKids(Tourist visitor, MultigenitorForm f, boolean sort) {
         Form[] children = f.getChildren();
-        for(int i = 0; i < children.length; i++) {
-            internalLead(visitor, children[i]);
+        List<Form> tosort = Arrays.asList(children);
+        if (sort) {
+            Collections.sort(tosort, new Comparator<Form>() {
+                @Override
+                public int compare(Form o1, Form o2) {
+                    if (o1.isFromDef() && o2.isFromDef()) {
+                        return o1.getDef().getName().toLowerCase().compareTo(o2.getDef().getName().toLowerCase());
+                    } else {
+                        return 0;
+                    }
+                }
+                
+            });
+        }
+        for (Form form : tosort) {
+            internalLead(visitor, form);
         }
     }
 

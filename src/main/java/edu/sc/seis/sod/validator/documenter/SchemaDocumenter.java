@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.velocity.VelocityContext;
@@ -46,6 +47,7 @@ public class SchemaDocumenter {
         if (base.length() != 0 && ! base.endsWith("/")) { base += "/"; }
         outputdir = args[2];
         if (outputdir.length() != 0 && ! outputdir.endsWith("/")) { outputdir += "/"; }
+
         StAXModelBuilder handler = new StAXModelBuilder(sod_rng);
         //Setup velocity
         VelocityEngine ve = new VelocityEngine();
@@ -53,8 +55,9 @@ public class SchemaDocumenter {
         ve.setProperty("runtime.log.logsystem.log4j.logger", "schemaDocumenter");
         ve.init();
         VelocityContext c = new VelocityContext();
+        walker = new ModelWalker(handler.getRoot());
         c.put("root", handler.getRoot());
-        c.put("walker", new ModelWalker(handler.getRoot()));
+        c.put("walker", walker);
         c.put("util", new SodUtil());
         c.put("helper", new VelocityModelHelper());
         c.put("doc", new SchemaDocumenter());
@@ -75,7 +78,6 @@ public class SchemaDocumenter {
 //                continue;
 //            }
             render(c, ve, def);
-            System.out.println(def.getName());
             System.out.print('.');
         }
         System.out.println();
@@ -96,7 +98,6 @@ public class SchemaDocumenter {
         c.put("contained", tourist.getResult());
         ve.mergeTemplate("elementPage.vm", new VelocityContext(c), w);
         w.close();
-        System.out.println("wrote "+velFile.getCanonicalPath());
     }
 
     public static Definition getNearestDef(Form f) {
@@ -112,14 +113,17 @@ public class SchemaDocumenter {
 
     public static String makePath(Definition def) {
         String rngLoc = def.getGrammar().getLoc();
+       // System.out.println("SchemaDocumenter.makePath: "+rngLoc+"  "+def.getForm().getXPath());
         String path = rngLoc.substring(rngLoc.indexOf("relax") + 6,
                                        rngLoc.length() - 4);
-        path += "/" + def.getName();
+        //path += "/" + def.getName();
+        path = "/" + def.getName();
         if(def.getName().equals("")) {
             path += "start";
         }
         return path;
     }
 
+    static ModelWalker walker;
     static String base, outputdir;
 }

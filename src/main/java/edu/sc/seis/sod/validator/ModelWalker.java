@@ -7,6 +7,8 @@ package edu.sc.seis.sod.validator;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -30,31 +32,41 @@ public class ModelWalker {
         defsToInstance.put(root.getDef(), root);
     }
 
-    public Collection getContainingDefs(Definition def) {
+    public Collection<Definition> getContainingDefs(Definition def) {
         if(!defsToContainment.containsKey(def)) {
-            defsToContainment.put(def, new HashSet());
+            defsToContainment.put(def, new HashSet<Definition>());
         }
-        return (Set)defsToContainment.get(def);
+        ArrayList out = new ArrayList<Definition>();
+        out.addAll(defsToContainment.get(def));
+
+        Collections.sort(out, new Comparator<Definition>() {
+            @Override
+            public int compare(Definition o1, Definition o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+            
+        });
+        return out;
     }
 
     public Form getInstance(Form root, Definition def) {
         return (Form)defsToInstance.get(def);
     }
 
-    private Map defsToContainment = new HashMap();
+    private Map<Definition, Set<Definition>> defsToContainment = new HashMap<Definition, Set<Definition>>();
 
-    private Map defsToInstance = new HashMap();
+    private Map<Definition, Form> defsToInstance = new HashMap<Definition, Form>();
 
     private void populateMapCaches(Form root) {
         if(root.isFromDef() && root.getParent() != null) {
             Definition def = root.getDef();
             if(!defsToContainment.containsKey(def)) {
-                defsToContainment.put(def, new HashSet());
+                defsToContainment.put(def, new HashSet<Definition>());
             }
             defsToInstance.put(root.getDef(), root);
-            ((Set)defsToContainment.get(def)).add(SchemaDocumenter.getNearestDef(root.getParent()));
+            defsToContainment.get(def).add(SchemaDocumenter.getNearestDef(root.getParent()));
         }
-        if(!isSelfReferential(root)) {
+        if(!isSelfReferential(root) &&  (getLineage(root).length <= 9)) {
             if(root instanceof GenitorForm) {
                 populateMapCaches(((GenitorForm)root).getChild());
             } else if(root instanceof MultigenitorForm) {

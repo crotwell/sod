@@ -82,6 +82,7 @@ public abstract class AbstractForm implements Form {
     }
 
     public String getXPath() {
+        if (parent == null) { return "/";}
         return getParent().getXPath();
     }
 

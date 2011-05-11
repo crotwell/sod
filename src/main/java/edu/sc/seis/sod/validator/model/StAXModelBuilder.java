@@ -81,7 +81,10 @@ public class StAXModelBuilder implements XMLStreamConstants {
             switch(reader.next()){
                 case START_ELEMENT:
                     String tag = reader.getLocalName();
-                    if(tag.equals("start") || tag.equals("define")) {
+                    if(tag.equals("start")) {
+                        Definition root = handleStart();
+                        definedGrammar.add(root);
+                    } else if (tag.equals("define")) {
                         Definition def = handleDef();
                         if(def != null) {
                             definedGrammar.add(def);
@@ -121,6 +124,15 @@ public class StAXModelBuilder implements XMLStreamConstants {
         definedGrammar.include(getGrammar(getAbsPath()));
     }
 
+
+    private Definition handleStart() throws XMLStreamException {
+        Definition def = new Definition("", definedGrammar);
+        nextTag();
+        FormProvider result = handleAll();
+        def.set(result);
+        return def;
+    }
+    
     private Definition handleDef() throws XMLStreamException {
         int combo = Definition.UNDEFINED;
         String name = "";
@@ -142,7 +154,7 @@ public class StAXModelBuilder implements XMLStreamConstants {
         def.set(result);
         if(result instanceof Ref) {
             Ref ref = (Ref)result;
-           // def = ref.getDef();
+            def = ref.getDef();
             waiters.put(name, ref.getName());
         }
         return def;
