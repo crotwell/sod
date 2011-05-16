@@ -453,7 +453,8 @@ public class SodUtil {
     
     public static MicroSecondDateSupplier nowSupplier() {
         return new MicroSecondDateSupplier() {
-            public MicroSecondDate load() { return ClockUtil.now(); }
+            private MicroSecondDate now = ClockUtil.now();
+            public MicroSecondDate load() { return now; }
         };
     }
 
