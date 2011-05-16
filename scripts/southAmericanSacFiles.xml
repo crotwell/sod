@@ -51,9 +51,7 @@
             <min>30</min>
         </distanceRange>
         <OREventChannelWrapper>
-            <embeddedChannel>
-                <channelCode>BHZ</channelCode>
-            </embeddedChannel>
+            <channelCode>BHZ</channelCode>
         </OREventChannelWrapper>
         <phaseRequest>
             <model>prem</model>

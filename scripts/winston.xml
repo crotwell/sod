@@ -77,9 +77,7 @@ CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
         </phaseRequest>
         <choiceSource>
             <choice>
-                <embeddedChannel>
-                    <networkCode>CO</networkCode>
-                </embeddedChannel>
+                <networkCode>CO</networkCode>
                 <winstonWaveServer>
                     <host>eeyore.seis.sc.edu</host>
                     <port>16022</port>

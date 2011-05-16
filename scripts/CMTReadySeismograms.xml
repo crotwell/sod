@@ -62,9 +62,7 @@
     <waveformArm>
         <choiceRequest>
             <choice>
-                <embeddedChannel>
-                    <bandCode>B</bandCode>
-                </embeddedChannel>
+                <bandCode>B</bandCode>
                 <phaseRequest>
                     <model>prem</model>
                     <beginPhase>origin</beginPhase>

@@ -66,25 +66,21 @@
         </phaseRequest>
         <choiceDataCenter>
             <choice>
-                <embeddedEventStation>
-                    <embeddedOriginSubsetter>
-                        <originTimeRange>
-                            <startTime>
-                                <year>2004</year>
-                                <month>12</month>
-                                <day>25</day>
-                            </startTime>
-                            <endTime>
-                                <earlier>
-                                    <timeInterval>
-                                        <value>2</value>
-                                        <unit>WEEK</unit>
-                                    </timeInterval>
-                                </earlier>
-                            </endTime>
-                        </originTimeRange>
-                    </embeddedOriginSubsetter>
-                </embeddedEventStation>
+                <originTimeRange>
+                    <startTime>
+                        <year>2004</year>
+                        <month>12</month>
+                        <day>25</day>
+                    </startTime>
+                    <endTime>
+                        <earlier>
+                            <timeInterval>
+                                <value>2</value>
+                                <unit>WEEK</unit>
+                            </timeInterval>
+                        </earlier>
+                    </endTime>
+                </originTimeRange>
                 <fixedDataCenter>
                     <name>IRIS_PondDataCenter</name>
                     <dns>edu/iris/dmc</dns>

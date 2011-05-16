@@ -108,12 +108,10 @@
     <waveformArm>
         <choiceRequest>
             <choice>
-                <embeddedEventStation>
-                    <distanceRange>
-                        <unit>DEGREE</unit>
-                        <max>15</max>
-                    </distanceRange>
-                </embeddedEventStation>
+                <distanceRange>
+                    <unit>DEGREE</unit>
+                    <max>15</max>
+                </distanceRange>
                 <phaseRequest>
                     <model>prem</model>
                     <beginPhase>origin</beginPhase>
