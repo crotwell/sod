@@ -219,7 +219,6 @@ public class CommandLineTool {
         }
         VelocityContext ctx = ls.getContext();
         SimpleVelocitizer sv = new SimpleVelocitizer();
-        Level current = PrintlineVelocitizer.quietLogger();
         // Wait three seconds before checking for input on system in to allow
         // sluggardly pipers to do their work
         try {
@@ -254,9 +253,10 @@ public class CommandLineTool {
             ctx.put("additionalArms", buff.toString());
         } else if(ls.requiresStdin) {
             Start.exit("This tool requires that a recipe be piped into it.");
+        } else {
+            ctx.put("additionalArms", "");
         }
         final String result = sv.evaluate(ls.getTemplate(), ctx);
-        PrintlineVelocitizer.reinstateLogger(current);
         if(ls.shouldPrintRecipe()) {
             System.out.println(result);
             System.exit(0);
