@@ -174,7 +174,7 @@
                 </xsd:documentation>
             </xsd:annotation>
             <oneOrMore>
-                <ref name="source"/>
+                <ref name="networkSource"/>
             </oneOrMore>
         </element>
     </define>
