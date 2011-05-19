@@ -72,30 +72,6 @@ public class PrintlineVelocitizer {
             }
         }
     }
-    
-    public static Level quietLogger(){
-    	System.err.println("PrintlineVelocitizer: quietLogger not working with slf4j, fix me!");
-        /*
-    	String prop = (String)Velocity.getProperty(SQLLoader.VELOCITY_LOGGER_NAME);
-        Level current = null;
-        if(prop != null) {
-            current = LoggerFactory.getLogger(prop).getEffectiveLevel();
-            LoggerFactory.getLogger(prop).setLevel(Level.ERROR);
-        }
-        return current;
-        */
-        return Level.DEBUG;
-    }
-    
-    public static void reinstateLogger(Level level){
-    	System.err.println("PrintlineVelocitizer: reinstateLogger not working with slf4j, fix me!");
-    	/*
-        String prop = (String)Velocity.getProperty(SQLLoader.VELOCITY_LOGGER_NAME);
-        if(prop != null) {
-            LoggerFactory.getLogger(prop).setLevel(level);
-        }
-        */
-    }
 
     public String evaluate(String fileTemplate,
                            String template,
