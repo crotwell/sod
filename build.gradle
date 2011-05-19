@@ -1,20 +1,21 @@
 
-apply plugin: RelaxSimplifier
 
 group = 'edu.sc.seis'
 version = '3.0.0beta11'
 
 apply plugin:'java'
-apply plugin:RelaxSimplifier
+//apply plugin:RelaxSimplifier
 
 
 sourceSets {
     relax {
         resources {
-            srcDir new File(project.buildDir, 'generated-src/relax')
+            srcDir new File(project.buildDir, 'generated-src/relax/resources')
         }
     }
+    main { compileClasspath += relax.classes } 
 }
+
  
 dependencies {
     compile project(':bag') { transitive = true }
@@ -175,8 +176,8 @@ task buildSchemaDocs(type: JavaExec, dependsOn: ['staticSchemaDocs', 'buildSchem
 //    jvmArgs = ['-agentlib:yjpagent', '-XX:+HeapDumpOnOutOfMemoryError', '-Xmx512m']
     jvmArgs  ['-Xmx512m']
     group = 'dist'
+//   inputs.files 'site/elementPage.vm', inRNGFile.getParentFile()
     inputs.dir inRNGFile.getParentFile()
-    inputs.files 'site/elementPage.vm'
 //    outDir = project.file('build/velocity/sod/ingredients')
     outDir = new File(project.buildDir, 'generated-src/velocity/sod/ingredients')
     outputs.dir outDir
@@ -186,7 +187,9 @@ task buildSchemaDocs(type: JavaExec, dependsOn: ['staticSchemaDocs', 'buildSchem
     classpath project.file("build/classes/main")
     setMain "edu.sc.seis.sod.validator.documenter.SchemaDocumenter"
     doFirst {
-        outDir.mkdirs()
+        if (!outDir.exists() ) {
+            outDir.mkdirs()
+        }
     }
 }
 
@@ -194,7 +197,8 @@ task buildSchema(dependsOn: ['transform', 'compileJava'])  {
     group = 'build'
     inFile = new File(project.buildDir.path, 'generated-src/relaxInclude/sod.rng')
     inputs.dir inFile.getParentFile()
-    outFile = new File(project.buildDir, 'generated-src/relax/resources/edu/sc/seis/sod/data/sod.rng')
+    resourcesDir = new File(project.buildDir, 'generated-src/relax/resources')
+    outFile = new File(resourcesDir, 'edu/sc/seis/sod/data/sod.rng')
     outputs.files outFile
     doLast{
     outFile.getParentFile().mkdirs()
@@ -202,7 +206,7 @@ task buildSchema(dependsOn: ['transform', 'compileJava'])  {
     ant.java(dir:outFile.getParentFile(), 
              classname:'com.thaiopensource.relaxng.util.Driver', 
              args:relaxArgs,
-             maxmemory:'512m',
+             maxmemory:'1512m',
              fork:true,
              classpath:configurations.runtime.asPath,
              output:outFile) 
@@ -217,4 +221,4 @@ task transform(type: XSLT) {
 
 assemble.dependsOn(tarDist)
 processResources.dependsOn(buildSchema)
-
+processResources{ from(buildSchema.resourcesDir)}
