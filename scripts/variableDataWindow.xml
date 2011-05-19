@@ -103,7 +103,7 @@
             </stationPointDistance>
         </stationOR>
         <bandCode>B</bandCode>
-        <printlineChannelProcessor/>
+        <printlineChannelProcess/>
     </networkArm>
     <waveformArm>
         <choiceRequest>

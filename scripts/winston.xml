@@ -58,10 +58,15 @@ CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
                 <max>-76</max>
             </longitudeRange>
         </stationBoxArea>
-        <bestChannelAtStation/>
+        <channelOR>
+            <bandCode>B</bandCode>
+            <bandCode>H</bandCode>
+            <bandCode>E</bandCode>
+        </channelOR>
         <printlineChannelProcess/>
     </networkArm>
     <waveformArm>
+        <bestChannelAtStation/>
         <phaseRequest>
             <model>prem</model>
             <beginPhase>ttp</beginPhase>

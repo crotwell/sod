@@ -43,7 +43,7 @@
         </networkFinder>
         <bandCode>B</bandCode>
         <gainCode>H</gainCode>
-        <printlineChannelProcessor/>
+        <printlineChannelProcess/>
     </networkArm>
     <waveformVectorArm>
         <distanceRange>

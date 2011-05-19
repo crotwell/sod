@@ -64,7 +64,7 @@
                 <value>60</value>
             </endOffset>
         </phaseRequest>
-        <choiceDataCenter>
+        <choiceSource>
             <choice>
                 <originTimeRange>
                     <startTime>
@@ -92,7 +92,7 @@
                     <dns>edu/iris/dmc</dns>
                 </fixedDataCenter>
             </otherwise>
-        </choiceDataCenter>
+        </choiceSource>
         <someCoverage/>
         <phaseSignalToNoise>
             <modelName>prem</modelName>

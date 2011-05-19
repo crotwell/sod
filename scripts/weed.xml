@@ -78,8 +78,8 @@
         </channelNOT>
         <responseWriter>
             <directory>responses</directory>
-            <filePattern>
-                <networkCode/>.<stationCode/> .<siteCode/> .<channelCode/> .resp </filePattern>
+            <location>
+                $networkCode.$stationCode.$siteCode.$channelCode.resp</location>
         </responseWriter>
     </networkArm>
     <waveformArm>

@@ -104,7 +104,7 @@
                 </stationHas>
             </channelNOT>
         </channelOR>
-        <printlineChannelProcessor/>
+        <printlineChannelProcess/>
     </networkArm>
     <waveformArm>
         <phaseRequest>
