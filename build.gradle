@@ -216,7 +216,10 @@ task buildSchema(dependsOn: ['transform', 'compileJava'])  {
 task transform(type: XSLT) { 
     destDir=new File(project.buildDir, 'generated-src/relaxInclude')
     stylesheetFile = new File(project.projectDir, 'src/main/xslt/simpleXInclude.xslt')
-    source new File(project.projectDir, 'src/main/relax/sod.rng')
+    rngFile = new File(project.projectDir, 'src/main/relax/sod.rng')
+    source rngFile
+    inputs.dir rngFile.getParentFile()
+    outputs.dir destDir
 }
 
 assemble.dependsOn(tarDist)
