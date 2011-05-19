@@ -4,7 +4,6 @@ group = 'edu.sc.seis'
 version = '3.0.0beta11'
 
 apply plugin:'java'
-//apply plugin:RelaxSimplifier
 
 
 sourceSets {
@@ -13,7 +12,6 @@ sourceSets {
             srcDir new File(project.buildDir, 'generated-src/relax/resources')
         }
     }
-    main { compileClasspath += relax.classes } 
 }
 
  
@@ -224,4 +222,5 @@ task transform(type: XSLT) {
 
 assemble.dependsOn(tarDist)
 processResources.dependsOn(buildSchema)
-processResources{ from(buildSchema.resourcesDir)}
+processResources{ from(project.sourceSets.main.resources)
+                  from(buildSchema.resourcesDir)}
