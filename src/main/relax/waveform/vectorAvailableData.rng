@@ -134,10 +134,10 @@
                 <summary>Runs a script vector available data subsetter</summary>
                 <description>Runs a vector available data subsetter script via JSR223. The event is put as "event" and the channelGroup
                 as "channelGroup". The channelGroup and event objects are a
-                VelocityChannelGroup and VelocityEvent, respectively, the same classes used in the <a href="../../templates.html">templates</a> for the printlineChannelProcess.
+                VelocityChannelGroup and VelocityEvent, respectively, the same classes used in the <a href="templates.html">templates</a> for the printlineChannelProcess.
                 The original request is put as "request" and the returned available data, also as an array of RequestFilter objects,
                 is put as "available".
-                See the <a href="../../scripting.html">scripting tutorial</a> for more information on inlining scripts
+                See the <a href="../scripting.html">scripting tutorial</a> for more information on inlining scripts
                 into a SOD recipe.</description>
                 <example>
                     <availableDataScript type="jython">
@@ -160,7 +160,7 @@
         <element name="externalVectorAvailableDataSubsetter">
             <xsd:annotation>
                 <summary>Use a VectorAvailableData subsetter external to sod</summary>
-                <description>$externalVectorAvailableDataSubsetterInfo.getRelaxHTML('../../../')</description>
+                <description>$externalVectorAvailableDataSubsetterInfo.getRelaxHTML('../')</description>
                 <example>
                     <externalVectorAvailableData>
                         <classname>edu.somewhere.seis.sodExt.subsetter.waveformVector.MyVectorAvailableData</classname>

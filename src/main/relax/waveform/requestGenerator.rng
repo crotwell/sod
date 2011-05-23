@@ -96,9 +96,9 @@
                 <summary>Runs a script to generate the request</summary>
                 <description>Runs a request generater script via JSR223. The event is put as "event" and the channel
                 as "channel". The channel and event objects are a
-                VelocityChannel and VelocityEvent, respectively, the same classes used in the <a href="../../templates.html">templates</a> for the printlineChannelProcess.
+                VelocityChannel and VelocityEvent, respectively, the same classes used in the <a href="templates.html">templates</a> for the printlineChannelProcess.
                 The result is expected to be put as "request" by the script as a List or an array of RequestFilter objects.
-                See the <a href="../../scripting.html">scripting tutorial</a> for more information on inlining scripts
+                See the <a href="../scripting.html">scripting tutorial</a> for more information on inlining scripts
                 into a SOD recipe.</description>
                 <example>
                     <availableDataScript type="jython">

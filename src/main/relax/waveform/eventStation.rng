@@ -39,10 +39,10 @@
                 <summary>Prints a line to std out for each event-station pair processed</summary>
                 <description>This simply prints a line to standard out or a file for each event-station pair to be processed. It
                     can be used as a simple status monitor. Both filename and template are 
-                    <a href="../../templates.html">Velocity templates</a>. They contain 
-                    <a href="../../templateTypes.html#site">site</a>, 
-                    <a href="../../templateTypes.html#station">station</a>, <a href="../../templateTypes.html#net">net</a>
-                    and <a href="../../templateTypes.html#event">event</a> variables. If no template element is given,
+                    <a href="templates.html">Velocity templates</a>. They contain 
+                    <a href="templateTypes.html#site">site</a>, 
+                    <a href="templateTypes.html#station">station</a>, <a href="templateTypes.html#net">net</a>
+                    and <a href="templateTypes.html#event">event</a> variables. If no template element is given,
                     it defaults to "Got $seismograms.size() seismograms for $channel.codes for eq on $event.time". If no
                     filename is given, the output goes to standard out.</description>
                 <include/>
@@ -311,7 +311,7 @@
         <element name="externalEventStationSubsetter">
             <xsd:annotation>
                 <summary>Use an EventStation subsetter external to SOD</summary>
-                <description>$externalEventStationSubsetterInfo.getRelaxHTML('../../../')</description>
+                <description>$externalEventStationSubsetterInfo.getRelaxHTML('../')</description>
                 <example>
                     <externalEventStationSubsetter>
                         <classname>edu.somewhere.seis.sodExt.subsetter.eventStation.MyEventStationSubsetter</classname>
@@ -327,8 +327,8 @@
                 <summary>Runs a script eventStation subsetter</summary>
                 <description>Runs a eventStation subsetter script via JSR223. The event is put as "event" and the station
                 as "station". The station and event objects are a
-                VelocityStation and VelocityEvent, respectively, the same classes used in the <a href="../../templates.html">templates</a> for the printlineChannelProcess.
-                See the <a href="../../scripting.html">scripting tutorial</a> for more information on inlining scripts
+                VelocityStation and VelocityEvent, respectively, the same classes used in the <a href="templates.html">templates</a> for the printlineChannelProcess.
+                See the <a href="../scripting.html">scripting tutorial</a> for more information on inlining scripts
                 into a SOD recipe.</description>
                 <example>
                     <eventStationScript type="jython">

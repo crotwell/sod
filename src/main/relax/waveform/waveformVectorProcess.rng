@@ -209,7 +209,7 @@
         <element name="externalWaveformVectorProcess">
             <xsd:annotation>
                 <summary>Use a WaveformVectorProcess external to SOD</summary>
-                <description>$externalWaveformVectorProcessInfo.getRelaxHTML('../../../')</description>
+                <description>$externalWaveformVectorProcessInfo.getRelaxHTML('../')</description>
                 <example>
                     <externalWaveformVectorProcess>
                         <classname>edu.somewhere.seis.sodExt.process.waveformVector.MyWaveformVectorProcess</classname>
@@ -296,10 +296,10 @@
                 <summary>Runs a script waveform subsetter</summary>
                 <description>Runs a waveform subsetter script via JSR223. The event is put as "event" and the channel
                 as "channel". The channel and event objects are a
-                VelocityChannel and VelocityEvent, respectively, the same classes used in the <a href="../../templates.html">templates</a> for the printlineChannelProcess.
+                VelocityChannel and VelocityEvent, respectively, the same classes used in the <a href="templates.html">templates</a> for the printlineChannelProcess.
                 The original request is put as "request" and the returned available data, also as an array of RequestFilter objects,
                 is put as "available".  The seismograms are put as "seismograms" as a two dimensional array of LocalSeismogramImpl objects.
-                See the <a href="../../scripting.html">scripting tutorial</a> for more information on inlining scripts
+                See the <a href="../scripting.html">scripting tutorial</a> for more information on inlining scripts
                 into a SOD recipe.</description>
                 <example>
         <vectorScript type="jython" >

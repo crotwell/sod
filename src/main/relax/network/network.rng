@@ -167,7 +167,7 @@
         <element name="externalNetworkSubsetter">
             <xsd:annotation>
                 <summary>Use a Network subsetter external to SOD</summary>
-                <description>$externalNetworkSubsetterInfo.getRelaxHTML('../../../')</description>
+                <description>$externalNetworkSubsetterInfo.getRelaxHTML('../')</description>
                 <example>
                     <externalNetworkSubsetter>
                         <classname>edu.somewhere.seis.sodExt.subsetter.network.MyNetworkSubsetter</classname>
@@ -182,8 +182,8 @@
             <xsd:annotation>
                 <summary>Prints every successful network to the console or to the specified file</summary>
                 <description>Prints out each network on a new line. The template and filename elements are both <a
-                    href="../../templates.html">Velocity templates</a> containing <a
-                            href="../../templateTypes.html#net">net</a> variables. If no template element is given, it defaults
+                    href="templates.html">Velocity templates</a> containing <a
+                            href="templateTypes.html#net">net</a> variables. If no template element is given, it defaults
                     to "Network: $net". If no filename is given, the output goes to standard out.</description>
             </xsd:annotation>
             <interleave>
@@ -205,8 +205,8 @@
             <xsd:annotation>
                 <summary>Runs an script network subsetter</summary>
                 <description>Runs a network subsetter script via JSR223. The network is put as "network" and is a
-                VelocityNetwork, the same class used in the <a href="../../templates.html">templates</a> for the printlineNetworkProcess.
-                See the <a href="../../scripting.html">scripting tutorial</a> for more information on inlining scripts
+                VelocityNetwork, the same class used in the <a href="templates.html">templates</a> for the printlineNetworkProcess.
+                See the <a href="../scripting.html">scripting tutorial</a> for more information on inlining scripts
                 into a SOD recipe.</description>
                 <example>
                     <networkScript type="jython">

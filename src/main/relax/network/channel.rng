@@ -149,7 +149,7 @@
                     the shape they create</summary>
                 <description>Reads the file at the location given and parses out a shape based on
                     the points listed in the file. The points should be given as a longitude value, 
-                    a space then a latitude value as in <a href="../../pentagon.txt">this example</a>.
+                    a space then a latitude value as in <a href="pentagon.txt">this example</a>.
                     Longitude values range from -180 to 180 and latitudes range from -90 to 90.
                     The file can contain as many points as
                     necessary to create the shape. Any point landing inside the shape is accepted.</description>
@@ -403,7 +403,7 @@
         <element name="externalChannelSubsetter">
             <xsd:annotation>
                 <summary>Use a channel subsetter external to SOD</summary>
-                <description>$externalChannelSubsetterInfo.getRelaxHTML('../../../')</description>
+                <description>$externalChannelSubsetterInfo.getRelaxHTML('../')</description>
                 <example>
                     <externalChannelSubsetter>
                         <classname>edu.somewhere.seis.sodExt.subsetter.channel.MyChannelSubsetter</classname>
@@ -541,11 +541,11 @@
                         <xsd:annotation>
                             <summary>Configures which files to write responses in</summary>
                             <description>Each response is put in a separate file by appending the results of this <a
-                                    href="../../templates.html">Velocity template</a> to the value in
-                                workingDir to determine the file name. The template contains <a href="../../templateTypes.html#channel">channel</a>
-                                <a href="../../templateTypes.html#site">site</a>, <a
-                                href="../../templateTypes.html#station">station</a> and <a
-                                href="../../templateTypes.html#net">net</a> variables. If no location element is given,
+                                    href="templates.html">Velocity template</a> to the value in
+                                workingDir to determine the file name. The template contains <a href="templateTypes.html#channel">channel</a>
+                                <a href="templateTypes.html#site">site</a>, <a
+                                href="templateTypes.html#station">station</a> and <a
+                                href="templateTypes.html#net">net</a> variables. If no location element is given,
                                 it defaults to "${channel.codes}.${channel.getStart('yyyy_DDD_HH_mm_ss')}.resp.resp".
                                 Since every response should be in a different file, the template should produce unique
                                 values for all successful channels in the run.</description>
@@ -577,11 +577,11 @@
                         <xsd:annotation>
                             <summary>Configures which files to write pole zeros in</summary>
                             <description>Each pole zero is put in a separate file by appending this<a
-                                    href="../../templates.html">Velocity template</a> to the value in
-                                workingDir to determine the file name. The template contains <a href="../../templateTypes.html#channel">channel</a>
-                                <a href="../../templateTypes.html#site">site</a>, <a
-                                href="../../templateTypes.html#station">station</a> and <a
-                                href="../../templateTypes.html#net">net</a> variables. If no location element is given,
+                                    href="templates.html">Velocity template</a> to the value in
+                                workingDir to determine the file name. The template contains <a href="templateTypes.html#channel">channel</a>
+                                <a href="templateTypes.html#site">site</a>, <a
+                                href="templateTypes.html#station">station</a> and <a
+                                href="templateTypes.html#net">net</a> variables. If no location element is given,
                                 it defaults to "${channel.codes}.${channel.getStart('yyyy_DDD_HH_mm_ss')}.resp.sacpz".
                                 Since every response should be in a different file, the template should produce unique
                                 values for all successful channels in the run.</description>
@@ -597,10 +597,10 @@
             <xsd:annotation>
                 <summary>Prints every successful channel to the console or to the specified file</summary>
                 <description>Prints out each channel on a new line. The template and filename elements are both <a
-                        href="../../templates.html">Velocity templates</a> containing <a href="../../templateTypes.html#channel">channel</a>
-                    <a href="../../templateTypes.html#site">site</a>, <a
-                    href="../../templateTypes.html#station">station</a> and <a
-                    href="../../templateTypes.html#net">net</a> variables. If no template element is given, it defaults
+                        href="templates.html">Velocity templates</a> containing <a href="templateTypes.html#channel">channel</a>
+                    <a href="templateTypes.html#site">site</a>, <a
+                    href="templateTypes.html#station">station</a> and <a
+                    href="templateTypes.html#net">net</a> variables. If no template element is given, it defaults
                     to "Channel: $channel". If no filename is given, the output goes to standard out.</description>
             </xsd:annotation>
             <interleave>
@@ -826,8 +826,8 @@
                 <summary>Runs an script channel subsetter</summary>
                 <description>Runs a channel subsetter script via JSR223. The networkSource is put as "networkSource" and the channel
                 as "channel". The channel object is a
-                VelocityChannel, the same class used in the <a href="../../templates.html">templates</a> for the printlineChannelProcess.
-                See the <a href="../../scripting.html">scripting tutorial</a> for more information on inlining scripts
+                VelocityChannel, the same class used in the <a href="templates.html">templates</a> for the printlineChannelProcess.
+                See the <a href="../scripting.html">scripting tutorial</a> for more information on inlining scripts
                 into a SOD recipe.</description>
                 <example>
                     <channelScript type="jython">

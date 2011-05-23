@@ -147,8 +147,8 @@
                 <summary>Runs a script eventVector subsetter</summary>
                 <description>Runs a eventVector subsetter script via JSR223. The event is put as "event" and the channelGroup
                 as "channelGroup". The channel and event objects are a
-                VelocityChannelGroup and VelocityEvent, respectively, the same classes used in the <a href="../../templates.html">templates</a> for the printlineChannelProcess.
-                See the <a href="../../scripting.html">scripting tutorial</a> for more information on inlining scripts
+                VelocityChannelGroup and VelocityEvent, respectively, the same classes used in the <a href="templates.html">templates</a> for the printlineChannelProcess.
+                See the <a href="../scripting.html">scripting tutorial</a> for more information on inlining scripts
                 into a SOD recipe.</description>
                 <example>
                     <eventVectorScript type="jython">
@@ -169,7 +169,7 @@
         <element name="externalEventVectorSubsetter">
             <xsd:annotation>
                 <summary>Use an EventVector subsetter external to SOD</summary>
-                <description>$externalEventVectorSubsetterInfo.getRelaxHTML('../../../')</description>
+                <description>$externalEventVectorSubsetterInfo.getRelaxHTML('../')</description>
                 <example>
                     <externalEventVectorSubsetter>
                         <classname>edu.somewhere.seis.sodExt.subsetter.waveformVector.MyEventVectorSubsetter</classname>

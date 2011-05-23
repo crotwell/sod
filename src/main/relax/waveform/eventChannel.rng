@@ -148,8 +148,8 @@
                 <summary>Runs a script eventChannel subsetter</summary>
                 <description>Runs a eventChannel subsetter script via JSR223. The event is put as "event" and the channel
                 as "channel". The channel and event objects are a
-                VelocityChannel and VelocityEvent, respectively, the same classes used in the <a href="../../templates.html">templates</a> for the printlineChannelProcess.
-                See the <a href="../../scripting.html">scripting tutorial</a> for more information on inlining scripts
+                VelocityChannel and VelocityEvent, respectively, the same classes used in the <a href="templates.html">templates</a> for the printlineChannelProcess.
+                See the <a href="../scripting.html">scripting tutorial</a> for more information on inlining scripts
                 into a SOD recipe.</description>
                 <example>
                     <eventChannelScript type="jython">
@@ -168,7 +168,7 @@
         <element name="externalEventChannelSubsetter">
             <xsd:annotation>
                 <summary>Use an EventChannel subsetter external to SOD</summary>
-                <description>$externalEventChannelSubsetterInfo.getRelaxHTML('../../../')</description>
+                <description>$externalEventChannelSubsetterInfo.getRelaxHTML('../')</description>
                 <example>
                     <externalEventChannelSubsetter>
                         <classname>edu.somewhere.seis.sodExt.subsetter.eventChannel.MyEventChannelSubsetter</classname>

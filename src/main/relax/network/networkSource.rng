@@ -187,7 +187,7 @@
                         to be used in creating the channels for use in the SOD run. Each field, of course, is separated by
                         a comma. From the second line on, each line represents an channel, and the values are filled in
                         the same order as the fields in the first line. For more information on how to use this, <a
-                            href="../../csvEvents.html">look here</a>.</description>
+                            href="csvEvents.html">look here</a>.</description>
                 </xsd:documentation>
             </xsd:annotation>
                     <choice>
@@ -269,7 +269,7 @@ CO, CSB, 00, EHE, 100
                         to be used in creating the channels for use in the SOD run. Each field, of course, is separated by
                         a comma. From the second line on, each line represents an channel, and the values are filled in
                         the same order as the fields in the first line. For more information on how to use this, <a
-                            href="../../csvEvents.html">look here</a>.</description>
+                            href="csvEvents.html">look here</a>.</description>
                 </xsd:documentation>
             </xsd:annotation>
                     <choice>
