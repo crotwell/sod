@@ -75,8 +75,20 @@ distFiles = copySpec {
         include('gradlew.bat')
         exclude('**/*.svn')
     }
-    from('scripts/tutorial') {
-        include('**')
+    from('scripts') {
+        include('tutorial/**')
+        include('CMTReadySeismograms.xml')
+        include('ammonChannels.xml')
+        include('breqfast.xml')
+        include('dmcWebService.xml')
+        include('preferBroadband.xml')
+        include('realtime.xml')
+        include('sAndSKSInTanzania.xml')
+        include('southAmericanSacFiles.xml')
+        include('variableDataWindow.xml')
+        include('vector.xml')
+        include('weed.xml')
+        include('winston.xml')
         into 'recipes'
     }
     from('build') {
