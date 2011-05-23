@@ -60,10 +60,7 @@
                 <value>360</value>
             </endOffset>
         </phaseRequest>
-        <dataSelectWebService>
-            <user>ws</user>
-            <password>cheese</password>
-        </dataSelectWebService>
+        <dataSelectWebService/>
         <someCoverage/>
         <merge/>
         <printlineSeismogramProcess/>
