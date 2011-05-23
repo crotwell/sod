@@ -138,7 +138,7 @@ task printRT << { task ->
        
 
 
-task copySodSite(dependsOn: ['copySchemaDocs', ':seiswww:makeSodSite'], type: Sync) {
+task copySodSite(dependsOn: [':seiswww:makeSodSite'], type: Sync) {
     group = 'dist'
     from project.file('../seiswww/build/sod/')
     into project.file('build/doc/')
@@ -152,20 +152,6 @@ task staticSchemaDocs(type: Copy) {
     doFirst {
         outDir.mkdirs()
     }
-}
-
-task copySchemaDocs(dependsOn: 'buildSchemaDocs', type: Copy) {
-    group = 'dist'
-    inDirA = new File(project.buildDir, 'generated-src/velocity/sod/ingredients')
-    //from project.file('build/velocity/sod/ingredients')
-    inDirB = project.file('site/schemaDocs/docs')
-    from inDirA
-    from inDirB
-    inputs.dir inDirB
-    inputs.dir inDirA
-    outDir = project.file('../seiswww/build/velocity/sod/ingredients/')
-    into outDir
-    outputs.dir outDir
 }
 
 task buildSchemaDocs(type: JavaExec, dependsOn: ['staticSchemaDocs', 'buildSchema', 'compileJava'])  { 
