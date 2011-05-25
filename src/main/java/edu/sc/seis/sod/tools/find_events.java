@@ -49,6 +49,10 @@ public class find_events extends CommandLineTool {
                              'c',
                              "catalogs",
                              "A comma separated list of catalogs to search"));
+        add(createListOption("contributors",
+                             'C',
+                             "contributors",
+                             "A comma separated list of contributors to search"));
         add(createListOption("seismicRegions",
                              JSAP.NO_SHORTFLAG,
                              "seis-regions",

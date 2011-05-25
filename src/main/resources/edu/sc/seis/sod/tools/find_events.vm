@@ -58,6 +58,11 @@
 #else
             <catalog>PREF</catalog>
 #end
+#if($contributors)
+#foreach($con in $contributors)
+            <contributor>$cat</contributor>
+#end
+#end
         </eventFinder>
 #if(!$allowDupes)
         <removeEventDuplicate/>
