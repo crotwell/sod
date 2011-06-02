@@ -23,6 +23,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.PropertyConfigurator;
+import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -34,7 +35,9 @@ import org.xml.sax.SAXException;
 import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
+import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.Alohomora;
+import edu.sc.seis.fissuresUtil.Dissendium;
 import edu.sc.seis.fissuresUtil.cache.RetryStrategy;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
@@ -95,7 +98,11 @@ public class Start {
                     out += mie.getMessage();
                     out += "\nSQL: "+mie.getSQL();
                     out += "\nSQLState: "+mie.getSQLState();
+                    if (AbstractHibernateDB.isSessionOpen()) {
                     out += "\n\nSession:\n"+AbstractHibernateDB.getSession().toString();
+                    } else {
+                        out+="\nSession: none\n";
+                    }
                 }
                 return out;
             }
@@ -144,9 +151,6 @@ public class Start {
         } catch(Exception e) {
             GlobalExceptionHandler.handle("Trouble creating xml document", e);
         }
-        if(!commandLineToolRun) {
-            validate(sourceMaker);
-        }
         if(props == null) {
             loadProps();
         } else {
@@ -156,7 +160,20 @@ public class Start {
         logger.info("logging configured");
         logger.info("SOD version "+Version.current().getVersion());
         logger.info("Args: "+args.toString());
-        Alohomora.insertOrbProp(Start.props);
+        logger.info("Recipe: "+configFileName);
+        if(!commandLineToolRun) {
+            validate(sourceMaker);
+        }
+        if (args.isPrintRecipe()) {
+            BufferedReader in = new BufferedReader(new InputStreamReader(createInputStream(configFileName)));
+            String line;
+            while((line = in.readLine()) != null) {
+                System.out.println(line);
+            }
+            System.out.flush();
+            System.exit(0);
+        }
+        Dissendium.insertOrbProp(Start.props);
         if (args.isQuickAndDirty()) {
             Start.props.put("fissuresUtil.database.url", "jdbc:hsqldb:mem:SodDB");
             logger.info("Database: memory");
@@ -171,25 +188,19 @@ public class Start {
                 }
             }
         }
-        logger.info("Recipe: "+configFileName);
-        if (args.isPrintRecipe()) {
-            BufferedReader in = new BufferedReader(new InputStreamReader(createInputStream(configFileName)));
-            String line;
-            while((line = in.readLine()) != null) {
-                System.out.println(line);
-            }
-            System.out.flush();
-            System.exit(0);
-        }
         initDatabase();
     }
 
     private void validate(InputSourceCreator sourceMaker) {
         try {
+            logger.info("validating recipe...");
             Validator validator = new Validator(Validator.SOD_SCHEMA_LOC);
             if(!validator.validate(sourceMaker.create())) {
                 logger.info("Invalid recipe file!");
                 allHopeAbandon(validator.getErrorMessage());
+            } else {
+                logger.info("Congratulations, valid recipe.");
+                System.out.println("Congratulations, valid recipe.");
             }
             if(args.onlyValidate()) {
                 System.exit(0);
@@ -251,12 +262,7 @@ public class Start {
         AbstractHibernateDB.deploySchema();
         // check that hibernate is ok
         SodDB sodDb = SodDB.getSingleton();
-        logger.debug("SodDB in init document:" + sodDb);
-        Object s = SodDB.getSession();
-        if(s == null) {
-            logger.warn("Session is null");
-        }
-        SodDB.rollback();
+        sodDb.commit();
         CommonAccess.initialize(props, args.getInitialArgs());
     }
     
