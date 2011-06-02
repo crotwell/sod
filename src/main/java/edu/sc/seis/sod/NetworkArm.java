@@ -29,6 +29,7 @@ import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
+import edu.sc.seis.fissuresUtil.hibernate.NetworkConsistencyCheck;
 import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.source.event.EventSource;
@@ -364,12 +365,17 @@ public class NetworkArm implements Arm {
             ArrayList<Station> arrayList = new ArrayList<Station>();
             try {
                 List<? extends StationImpl> stations = getInternalNetworkSource().getStations(netAttr.getId());
-
+                if( ! NetworkConsistencyCheck.isConsistent(stations)) {
+                    failLogger.warn("Inconsistent stations for network: "+NetworkIdUtil.toString(net));
+                }
                 for (StationImpl stationImpl : stations) {
                     logger.debug("Station in NetworkArm: "
                             + StationIdUtil.toString(stationImpl));
                 }
                 for (StationImpl currStation : stations) {
+                    if (! NetworkConsistencyCheck.isConsistent(net, currStation)) {
+                        failLogger.warn("Not consistent: "+StationIdUtil.toString(currStation.getId()));
+                    }
                     // hibernate gets angry if the network isn't the same object
                     // as the one already in the thread's session
                     currStation.setNetworkAttr(netAttr);
@@ -470,6 +476,9 @@ public class NetworkArm implements Arm {
                 boolean needCommit = false;
                 StationImpl dbSta = NetworkDB.getSingleton().getStation(station.getDbid());
                 for (ChannelImpl chan : chansAtStation) {
+                    if (! NetworkConsistencyCheck.isConsistent(station, chan)) {
+                        failLogger.warn("Not consistent: "+ChannelIdUtil.toString(chan.getId()));
+                    }
                     // make the assumption that the station in the channel is the same as the station retrieved earlier
                     chan.getSite().setStation(dbSta);
                     change(chan, inProg);
