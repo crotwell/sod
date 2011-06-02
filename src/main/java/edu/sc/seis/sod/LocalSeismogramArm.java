@@ -196,16 +196,20 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
             } else {
                 logger.debug("Empty request generated for " + ChannelIdUtil.toString(ecp.getChannel().get_id()));
             }
-            logger.debug("before available_data call retries=");
-            MicroSecondDate before = new MicroSecondDate();
-            outfilters = DataCenterSource.toArray(dataCenter.available_data(DataCenterSource.toList(infilters)));
-            MicroSecondDate after = new MicroSecondDate();
-            logger.info("After successful available_data call, time taken=" + after.subtract(before).getValue(UnitImpl.SECOND)+" sec");
-            if(outfilters.length != 0) {
-                logger.debug("Got available_data for " + ChannelIdUtil.toString(outfilters[0].channel_id) + " from "
-                        + outfilters[0].start_time.date_time + " to " + outfilters[0].end_time.date_time);
+            if (Start.getRunProps().isSkipAvailableData()) {
+                outfilters = infilters;
             } else {
-                logger.debug("No available_data for " + ChannelIdUtil.toString(ecp.getChannel().get_id()));
+                logger.debug("before available_data call retries=");
+                MicroSecondDate before = new MicroSecondDate();
+                outfilters = DataCenterSource.toArray(dataCenter.available_data(DataCenterSource.toList(infilters)));
+                MicroSecondDate after = new MicroSecondDate();
+                logger.info("After successful available_data call, time taken=" + after.subtract(before).getValue(UnitImpl.SECOND)+" sec");
+                if(outfilters.length != 0) {
+                    logger.debug("Got available_data for " + ChannelIdUtil.toString(outfilters[0].channel_id) + " from "
+                                 + outfilters[0].start_time.date_time + " to " + outfilters[0].end_time.date_time);
+                } else {
+                    logger.debug("No available_data for " + ChannelIdUtil.toString(ecp.getChannel().get_id()));
+                }
             }
             processAvailableDataSubsetter(ecp, dataCenter, infilters, SortTool.byBeginTimeAscending(outfilters));
         } else {

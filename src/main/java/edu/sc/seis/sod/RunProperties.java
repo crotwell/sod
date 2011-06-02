@@ -91,6 +91,10 @@ public class RunProperties {
 					.hasElement(el, "allowNetworksOutsideEventRequestTime")) {
 				allowDeadNets = true;
 			}
+            if (DOMHelper
+                    .hasElement(el, "skipAvailableData")) {
+                skipAvailableData = true;
+            }
 			Element hibernateExtraConfig = SodUtil.getElement(el, "hibernateConfig");
 			if (hibernateExtraConfig != null) {
 			    hibernateConfig.add(SodUtil.getText(hibernateExtraConfig));
@@ -174,7 +178,15 @@ public class RunProperties {
 		return allowDeadNets;
 	}
 	
-	public List getHibernateConfig() {
+    public boolean isSkipAvailableData() {
+        return skipAvailableData;
+    }
+
+    public void setSkipAvailableData(boolean skipAvailableData) {
+        this.skipAvailableData = skipAvailableData;
+    }
+
+    public List getHibernateConfig() {
 	    return hibernateConfig;
 	}
 
@@ -230,6 +242,8 @@ public class RunProperties {
 	private boolean loserEventCleaner = false;
 
 	private boolean allowDeadNets;
+	
+	private boolean skipAvailableData = false;
 	
 	private List hibernateConfig = new ArrayList();
 }

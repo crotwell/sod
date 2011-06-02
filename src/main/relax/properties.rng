@@ -62,6 +62,9 @@
                 <optional>
                     <ref name="hibernateConfig"/>
                 </optional>
+                <optional>
+                    <ref name="skipAvailableData"/>
+                </optional>
             </interleave>
         </element>
     </define>
@@ -269,6 +272,24 @@
                     that isn't active during the requested event interval in the event arm. By
                     adding this tag, SOD will ignore effective times and work on every item returned
                     by the network arm.</description>
+            </xsd:annotation>
+            <ref name="trueOrFalse"/>
+        </element>
+    </define>
+    <define name="skipAvailableData">
+        <element name="skipAvailableData">
+            <xsd:annotation>
+                <summary>Instructs SOD to skip the available data check.</summary>
+                <description>SOD makes two calls to the server in order to get data. The first call is available_data()
+                    which returns time windows for which the server does, or is likely to, have data. Depending on the server
+                    and the likelyhood of data not being present, it can be a speed advantage to check for data existing
+                    before asking for it. On the other hand, for some servers, the available_data call is just as costly as
+                    actually getting the data. In this case, skipping the available data check can be a speed improvement.
+                    This property allows the choice of whether SOD will make the extra call on the server. By default it is
+                    false and the call is made. Setting this to true will skip the call. Regardless of the setting of this
+                    property, the available data subsetters will be run, but in the case of skipping the call, the time
+                    windows will be a copy of the original request, as if the server thinks it has all the data requested.
+                    </description>
             </xsd:annotation>
             <ref name="trueOrFalse"/>
         </element>

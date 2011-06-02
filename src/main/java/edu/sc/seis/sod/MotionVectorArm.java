@@ -209,24 +209,30 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                     return;
                 }
             }
-            RequestFilter[][] outfilters = new RequestFilter[ecp.getChannelGroup().getChannels().length][];
-            for (int i = 0; i < outfilters.length; i++) {
-                logger.debug("Trying available_data for " + ChannelIdUtil.toString(infilters[0][0].channel_id)
-                        + " from " + infilters[0][0].start_time.date_time + " to " + infilters[0][0].end_time.date_time);
-                logger.debug("before available_data call");
-                try {
-                outfilters[i] = DataCenterSource.toArray(dataCenter.available_data(DataCenterSource.toList(infilters[i])));
-                logger.debug("after successful available_data call");
-                } catch(org.omg.CORBA.SystemException e) {
-                    handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e, dataCenter);
-                    return;
-                }
-                if (outfilters[i].length != 0) {
-                    logger.debug("Got available_data for " + ChannelIdUtil.toString(outfilters[i][0].channel_id)
-                            + " from " + outfilters[i][0].start_time.date_time + " to "
-                            + outfilters[i][0].end_time.date_time);
-                } else {
-                    logger.debug("No available_data for " + ChannelIdUtil.toString(infilters[i][0].channel_id));
+            RequestFilter[][] outfilters = null;
+
+            if (Start.getRunProps().isSkipAvailableData()) {
+                outfilters = infilters;
+            } else {
+                outfilters = new RequestFilter[ecp.getChannelGroup().getChannels().length][];
+                for (int i = 0; i < outfilters.length; i++) {
+                    logger.debug("Trying available_data for " + ChannelIdUtil.toString(infilters[0][0].channel_id)
+                                 + " from " + infilters[0][0].start_time.date_time + " to " + infilters[0][0].end_time.date_time);
+                    logger.debug("before available_data call");
+                    try {
+                        outfilters[i] = DataCenterSource.toArray(dataCenter.available_data(DataCenterSource.toList(infilters[i])));
+                        logger.debug("after successful available_data call");
+                    } catch(org.omg.CORBA.SystemException e) {
+                        handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e, dataCenter);
+                        return;
+                    }
+                    if (outfilters[i].length != 0) {
+                        logger.debug("Got available_data for " + ChannelIdUtil.toString(outfilters[i][0].channel_id)
+                                     + " from " + outfilters[i][0].start_time.date_time + " to "
+                                     + outfilters[i][0].end_time.date_time);
+                    } else {
+                        logger.debug("No available_data for " + ChannelIdUtil.toString(infilters[i][0].channel_id));
+                    }
                 }
             }
             processAvailableDataSubsetter(ecp, dataCenter, infilters, outfilters);
