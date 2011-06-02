@@ -19,7 +19,7 @@
             <magnitudeRange>
                 <min>6</min>
             </magnitudeRange>
-            <catalog>WHDF</catalog>
+            <catalog>MHDF</catalog>
         </eventFinder>
         <originOR>
             <originAND>
