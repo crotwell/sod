@@ -52,18 +52,14 @@ public class OriginTimeRange implements OriginSubsetter, MicroSecondTimeRangeSup
         }
     }
 
+    // should this float????
     public synchronized MicroSecondTimeRange getMSTR() {
-        if(range == null) {
-            range = new MicroSecondTimeRange(begin.load(), end.load());
-        }
-        return range;
+        return new MicroSecondTimeRange(begin.load(), end.load());
     }
 
     public StringTree accept(CacheEvent event, EventAttrImpl eventAttr, OriginImpl origin) {
         return new StringTreeLeaf(this, getMSTR().contains(new MicroSecondDate(origin.getOriginTime())));
     }
-
-    private MicroSecondTimeRange range;
 
     private MicroSecondDateSupplier begin, end;
 }// EventTimeRange
