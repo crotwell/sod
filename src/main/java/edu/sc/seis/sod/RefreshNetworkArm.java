@@ -142,14 +142,16 @@ logger.debug("refresh "+NetworkIdUtil.toString(net));
     void processStation(LoadedNetworkSource loadSource, StationImpl sta) {
         if (Start.getWaveformRecipe() instanceof MotionVectorArm) {
             List<ChannelGroup> cg = netArm.getSuccessfulChannelGroupsFromServer(sta, loadSource);
-            for (ChannelGroup channelGroup : cg) {
-                checkSensitivityLoaded(channelGroup, loadSource);
-            }
+            // need to figure out how to update sensitivity/response, but only when it is actually used
+            // as this is a time consuming task
+            //   for (ChannelGroup channelGroup : cg) {
+            //        checkSensitivityLoaded(channelGroup, loadSource);
+            //    }
         } else {
             List<ChannelImpl> chans = netArm.getSuccessfulChannelsFromServer(sta, loadSource);
-            for (ChannelImpl channelImpl : chans) {
-                checkSensitivityLoaded(channelImpl, loadSource);
-            }
+            //    for (ChannelImpl channelImpl : chans) {
+            //        checkSensitivityLoaded(channelImpl, loadSource);
+            //    }
         }
     }
     
