@@ -21,6 +21,7 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.chooser.ThreadSafeSimpleDateFormat;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.mseed.FissuresConvert;
+import edu.sc.seis.seisFile.MSeedQueryReader;
 import edu.sc.seis.seisFile.dataSelectWS.DataSelectException;
 import edu.sc.seis.seisFile.dataSelectWS.DataSelectReader;
 import edu.sc.seis.seisFile.mseed.DataRecord;
@@ -57,7 +58,7 @@ public class DataSelectWebService implements SeismogramSourceLocator {
             public List<LocalSeismogramImpl> retrieveData(List<RequestFilter> request) throws FissuresException {
                 try {
                     List<LocalSeismogramImpl> out = new ArrayList<LocalSeismogramImpl>();
-                    DataSelectReader dsReader = new DataSelectReader(url);
+                    MSeedQueryReader dsReader = new DataSelectReader(url);
                     for (RequestFilter rf : request) {
                         MicroSecondDate start = new MicroSecondDate(rf.start_time);
                         URL requestURL = dsReader.createQuery(rf.channel_id.network_id.network_code,
