@@ -61,7 +61,7 @@ public class DataSelectWebService implements SeismogramSourceLocator {
                     MSeedQueryReader dsReader = new DataSelectReader(url);
                     for (RequestFilter rf : request) {
                         MicroSecondDate start = new MicroSecondDate(rf.start_time);
-                        URL requestURL = dsReader.createQuery(rf.channel_id.network_id.network_code,
+                        String requestURL = dsReader.createQuery(rf.channel_id.network_id.network_code,
                                                               rf.channel_id.station_code,
                                                               rf.channel_id.site_code, 
                                                               rf.channel_id.channel_code, 
