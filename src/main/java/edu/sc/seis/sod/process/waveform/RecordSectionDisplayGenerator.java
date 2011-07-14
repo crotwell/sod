@@ -69,10 +69,6 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
             DataSetSeismogram[] dss = extractSeismograms(event);
             String regionName = PR.getRegionName(event.get_attributes().region);
             String dateTime = event.get_preferred_origin().getOriginTime().date_time;
-            String msg = "Got " + dss.length
-                    + " DataSetSeismograms from DSML file for event in "
-                    + regionName + " at " + dateTime;
-            logger.debug(msg);
             outputBestRecordSection(event, dss);
         } catch(IOException e) {
             throw new IOException("Problem opening dsml file in RecordSectionDisplayGenerator"
@@ -129,8 +125,10 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
             SeismogramImageProcess.setTimeWindow(rsDisplay.getTimeConfig(),
                                                  dataSeis[0]);
         }
-        logger.debug("Added " + dataSeis.length
-                + " seismograms to RecordSectionDisplay");
+        if (dataSeis[0].getChannelId().channel_code.endsWith("Z")) {
+            logger.debug("Added " + dataSeis.length
+                         + " seismograms to RecordSectionDisplay");
+        }
         if (isPDF) {
             rsDisplay.outputToPDF(out);
         } else {
