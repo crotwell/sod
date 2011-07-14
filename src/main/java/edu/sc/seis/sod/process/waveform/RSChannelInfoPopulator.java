@@ -189,7 +189,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
                 return false;
             }
             if (channel.get_code().endsWith("Z")) {
-                logger.debug("RecordSection to db: "+ChannelIdUtil.toString(channel.get_id()), new Exception("just to get stack trace"));
+                logger.debug("RecordSection to db: "+orientationId+" "+recordSectionId+" "+ChannelIdUtil.toString(channel.get_id()));
             }
             soddb.put(new RecordSectionItem(orientationId,
                                                            recordSectionId,
