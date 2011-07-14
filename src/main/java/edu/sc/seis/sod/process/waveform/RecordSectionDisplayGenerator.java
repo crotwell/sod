@@ -68,7 +68,7 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
         try {
             DataSetSeismogram[] dss = extractSeismograms(event);
             String regionName = PR.getRegionName(event.get_attributes().region);
-            String dateTime = event.get_preferred_origin().getOriginTime().date_time;
+            String dateTime = event.get_preferred_origin().getOriginTime().date_time; 
             outputBestRecordSection(event, dss);
         } catch(IOException e) {
             throw new IOException("Problem opening dsml file in RecordSectionDisplayGenerator"
