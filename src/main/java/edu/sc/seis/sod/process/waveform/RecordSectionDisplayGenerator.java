@@ -142,9 +142,11 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
                               EventAccessOperations event,
                               boolean isPDF) throws Exception {
         String fileLoc = getFileLoc(event);
-        logger.debug("RecordSection: "+fileLoc);
-        for (int i = 0; i < dataSeis.length; i++) {
-            logger.debug("RecordSection: "+i+" "+dataSeis[i].getName());
+        if (dataSeis[0].getChannelId().channel_code.endsWith("Z")) {
+            logger.debug("RecordSection: "+fileLoc);
+            for (int i = 0; i < dataSeis.length; i++) {
+                logger.debug("RecordSection: "+i+" "+dataSeis[i].getName());
+            }
         }
         try {
             File outFile = new File(getFileBaseDir() + "/" + fileLoc);
