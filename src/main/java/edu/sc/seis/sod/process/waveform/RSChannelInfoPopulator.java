@@ -188,6 +188,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
                                           recordSectionId, event, channel) != null) {
                 return false;
             }
+            logger.debug("RecordSection to db: "+ChannelIdUtil.toString(channel.get_id()));
             soddb.put(new RecordSectionItem(orientationId,
                                                            recordSectionId,
                                                            event,
