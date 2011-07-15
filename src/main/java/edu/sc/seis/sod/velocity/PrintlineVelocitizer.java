@@ -52,7 +52,7 @@ public class PrintlineVelocitizer {
         context.put("event", new VelocityEvent(MockEventAccessOperations.createEvent()));
         context.put("channel", new VelocityChannel(MockChannel.createChannel()));
         context.put("station", new VelocityStation(MockStation.createStation()));
-        context.put("network", new VelocityNetwork((NetworkAttrImpl)MockChannel.createChannel().getNetworkAttr()));
+        context.put("net", new VelocityNetwork((NetworkAttrImpl)MockChannel.createChannel().getNetworkAttr()));
         context.put("seismograms", new ArrayList<LocalSeismogramImpl>());
         context.put("index", new Integer(1));
         for(int i = 0; i < strings.length; i++) {
