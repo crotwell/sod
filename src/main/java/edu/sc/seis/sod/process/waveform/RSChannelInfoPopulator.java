@@ -185,27 +185,29 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         }
             SodDB soddb = SodDB.getSingleton();
             if(soddb.getRecordSectionItem(orientationId,
-                                          recordSectionId, event, channel) != null) {
-                return false;
+                                          recordSectionId, event, channel) == null) {
+                if (channel.get_code().endsWith("Z")) {
+                    logger.debug("RecordSection to db: "+orientationId+" "+recordSectionId+" "+ChannelIdUtil.toString(channel.get_id()));
+                }
+                soddb.put(new RecordSectionItem(orientationId,
+                                                recordSectionId,
+                                                event,
+                                                channel,
+                                                false));
+            } else {
+                if (channel.get_code().endsWith("Z")) {
+                    logger.debug("RecordSection already in db: "+orientationId+" "+recordSectionId+" "+ChannelIdUtil.toString(channel.get_id()));
+                }
             }
-            if (channel.get_code().endsWith("Z")) {
-                logger.debug("RecordSection to db: "+orientationId+" "+recordSectionId+" "+ChannelIdUtil.toString(channel.get_id()));
-            }
-            soddb.put(new RecordSectionItem(orientationId,
-                                                           recordSectionId,
-                                                           event,
-                                                           channel,
-                                                           false));
             DataSetSeismogram[] bestSeismos = dss;
             if(spacer != null) {
                 bestSeismos = spacer.spaceOut(dss);
             }
             ChannelId[] bestChans = getChannelIds(bestSeismos);
-            soddb.updateBestForRecordSection(orientationId,
-                                                            recordSectionId,
-                                                            event,
-                                                            bestChans);
-            return true;
+            return soddb.updateBestForRecordSection(orientationId,
+                                             recordSectionId,
+                                             event,
+                                             bestChans);
     }
 
     public ChannelId[] getChannelIds(DataSetSeismogram[] dss)
