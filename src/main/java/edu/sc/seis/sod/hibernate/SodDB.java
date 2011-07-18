@@ -656,18 +656,6 @@ public class SodDB extends AbstractHibernateDB {
     }
 
     public List<StationImpl> getStationsForRecordSection(String orientationId,
-                                                         CacheEvent event,
-                                                         boolean best) {
-        Query q = getSession().createQuery("select distinct channel.site.station from "
-                + RecordSectionItem.class.getName()
-                + " where orientationId = :orientationId and event = :event and inBest = :best");
-        q.setEntity("event", event);
-        q.setString("orientationId", orientationId);
-        q.setBoolean("best", best);
-        return q.list();
-    }
-
-    public List<StationImpl> getStationsForRecordSection(String orientationId,
                                                          String recordSectionId,
                                                          CacheEvent event,
                                                          boolean best) {
