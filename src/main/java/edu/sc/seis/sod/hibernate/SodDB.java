@@ -666,6 +666,7 @@ public class SodDB extends AbstractHibernateDB {
         q.setString("recsecid", recordSectionId);
         q.setString("orientationId", orientationId);
         q.setBoolean("best", best);
+        System.out.println("getStationsForRecordSection: "+q+"  event:"+event.getDbid()+" rsid:"+recordSectionId+" orient:"+orientationId+" "+best);
         return q.list();
     }
 
@@ -697,6 +698,11 @@ public class SodDB extends AbstractHibernateDB {
                                               String recordSectionId,
                                               CacheEvent event,
                                               ChannelId[] channelIds) {
+        String msg = "updateBestForRecordSection("+ orientationId+", "+ recordSectionId+", "+ event+", "+channelIds.length;
+        for (int i = 0; i < channelIds.length; i++) {
+            msg+= " "+ChannelIdUtil.toStringNoDates(channelIds[i]);
+        }
+        logger.debug(msg);
         List<RecordSectionItem> best = getBestForRecordSection(orientationId,
                                                                recordSectionId,
                                                                event);
