@@ -635,6 +635,15 @@ public class SodDB extends AbstractHibernateDB {
         }
         return null;
     }
+    
+    /** Finds the recordsectionids for this event */
+    public List<String> getRecordSectionId(CacheEvent event) {
+        String q = "select distinct recordsectionid from "+ RecordSectionItem.class.getName()
+        + " where event = :event";
+        Query query = getSession().createQuery(q);
+        query.setEntity("event", event);
+        return query.list();
+    }
 
     public RecordSectionItem getRecordSectionItem(String orientationId,
                                                   String recordSectionId,
