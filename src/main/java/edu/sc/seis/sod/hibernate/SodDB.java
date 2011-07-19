@@ -715,7 +715,7 @@ public class SodDB extends AbstractHibernateDB {
         List<RecordSectionItem> best = getBestForRecordSection(orientationId,
                                                                recordSectionId,
                                                                event);
-        msg = "Cur Best RecordSection: "+ orientationId+", "+ recordSectionId+", "+ event+", "+channelIds.length;
+        msg = "Cur Best RecordSection: "+ orientationId+", "+ recordSectionId+", "+ event+", "+best.size();
         for (RecordSectionItem rs : best) {
             msg += " "+rs.getChannel().getId().network_id.network_code+"."+rs.getChannel().getId().station_code;
         }
@@ -801,7 +801,7 @@ public class SodDB extends AbstractHibernateDB {
         best = getBestForRecordSection(orientationId,
                                        recordSectionId,
                                        event);
-        msg = "after update Best RecordSection: "+ orientationId+", "+ recordSectionId+", "+ event+", "+channelIds.length;
+        msg = "after update Best RecordSection: "+ orientationId+", "+ recordSectionId+", "+ event+", "+best.size();
         for (RecordSectionItem rs : best) {
             msg += " "+rs.getChannel().getId().network_id.network_code+"."+rs.getChannel().getId().station_code;
         }
