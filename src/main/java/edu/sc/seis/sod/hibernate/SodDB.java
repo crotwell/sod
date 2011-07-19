@@ -709,12 +709,17 @@ public class SodDB extends AbstractHibernateDB {
                                               ChannelId[] channelIds) {
         String msg = "updateBestForRecordSection("+ orientationId+", "+ recordSectionId+", "+ event+", "+channelIds.length;
         for (int i = 0; i < channelIds.length; i++) {
-            msg+= " "+ChannelIdUtil.toStringNoDates(channelIds[i]);
+            msg+= " "+channelIds[i].network_id.network_code+"."+channelIds[i].station_code;
         }
         logger.debug(msg);
         List<RecordSectionItem> best = getBestForRecordSection(orientationId,
                                                                recordSectionId,
                                                                event);
+        msg = "Cur Best RecordSection: "+ orientationId+", "+ recordSectionId+", "+ event+", "+channelIds.length;
+        for (RecordSectionItem rs : best) {
+            msg += " "+rs.getChannel().getId().network_id.network_code+"."+rs.getChannel().getId().station_code;
+        }
+        logger.debug(msg);
         HashMap<String, ChannelId> removes = new HashMap<String, ChannelId>();
         Iterator<RecordSectionItem> it = best.iterator();
         while(it.hasNext()) {
@@ -793,6 +798,14 @@ public class SodDB extends AbstractHibernateDB {
                 getSession().update(item);
             }
         }
+        best = getBestForRecordSection(orientationId,
+                                       recordSectionId,
+                                       event);
+        msg = "after update Best RecordSection: "+ orientationId+", "+ recordSectionId+", "+ event+", "+channelIds.length;
+        for (RecordSectionItem rs : best) {
+            msg += " "+rs.getChannel().getId().network_id.network_code+"."+rs.getChannel().getId().station_code;
+        }
+        logger.debug(msg);
         return true;
     }
 
