@@ -65,7 +65,7 @@ public class WaveformVectorFork implements WaveformVectorProcess, Threadable {
         if (o instanceof Subsetter) {
         return createSubsetter((Subsetter)o);
         } else {
-            throw new ConfigurationException("Not an Element: "+o.getClass().getName());
+            throw new ConfigurationException("Not a Subsetter: "+o.getClass().getName());
         }
     }
     public static WaveformVectorProcess createSubsetter(final Subsetter s) throws ConfigurationException {
