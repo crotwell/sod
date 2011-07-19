@@ -156,25 +156,30 @@ public class RSChannelInfoPopulator implements WaveformProcess {
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) throws Exception {
-        boolean out = updateTable(event,
+        DataSetSeismogram[] best = updateTable(event,
                                   chan,
                                   original,
                                   available,
                                   seismograms,
                                   cookieJar);
+
+        boolean out = best.length != 0;
         return new WaveformResult(seismograms, new StringTreeLeaf(this, out));
     }
 
-    public boolean updateTable(CacheEvent event,
+    public DataSetSeismogram[] updateTable(CacheEvent event,
                                ChannelImpl channel,
                                RequestFilter[] original,
                                RequestFilter[] available,
                                LocalSeismogramImpl[] seismograms,
                                CookieJar cookieJar) throws Exception {
+        if (orientationId.equals("main") && ! channel.get_code().endsWith("Z")) {
+            throw new Exception("Try to put non-Z channel in main record section: "+ChannelIdUtil.toStringNoDates(channel));
+        }
         if( ! channelAcceptor.accept(event,
                                    channel,
                                    cookieJar).isSuccess()) {
-            return false;
+            return new DataSetSeismogram[0];
         }
         URLDataSetSeismogram[] dss;
         synchronized(this) {
@@ -204,10 +209,15 @@ public class RSChannelInfoPopulator implements WaveformProcess {
                 bestSeismos = spacer.spaceOut(dss);
             }
             ChannelId[] bestChans = getChannelIds(bestSeismos);
-            return soddb.updateBestForRecordSection(orientationId,
+            boolean isUpdateBest = soddb.updateBestForRecordSection(orientationId,
                                              recordSectionId,
                                              event,
                                              bestChans);
+            if (isUpdateBest) {
+                return bestSeismos;
+            } else {
+                return new DataSetSeismogram[0];
+            }
     }
 
     public ChannelId[] getChannelIds(DataSetSeismogram[] dss)

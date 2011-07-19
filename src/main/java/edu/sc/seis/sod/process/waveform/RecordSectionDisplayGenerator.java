@@ -49,17 +49,17 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) throws Exception {
-        boolean out = updateTable(event,
+        DataSetSeismogram[] best = updateTable(event,
                                   chan,
                                   original,
                                   available,
                                   seismograms,
                                   cookieJar);
-        if(!out) {
+        if(best.length == 0) {
             return new WaveformResult(seismograms,
-                                      new StringTreeLeaf(this, out));
+                                      new StringTreeLeaf(this, false));
         }
-        makeRecordSection(event);
+        outputBestRecordSection(event, best);
         return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
     }
 
