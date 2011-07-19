@@ -767,7 +767,7 @@ public class SodDB extends AbstractHibernateDB {
             Iterator dbit = q.iterate();
             while(dbit.hasNext()) {
                 RecordSectionItem item = (RecordSectionItem)dbit.next();
-                logger.debug("update false for "+ChannelIdUtil.toString(item.getChannel().get_id()));
+                logger.debug("RecordSection update false for "+ChannelIdUtil.toString(item.getChannel().get_id()));
                 item.setInBest(false);
                 getSession().update(item);
             }
@@ -777,6 +777,7 @@ public class SodDB extends AbstractHibernateDB {
                 + " where inBest = false and event = :event and recordSectionId = :recsecid and orientationid = :orientationid and "
                 + MATCH_CHANNEL_CODES);
         chanIt = adders.keySet().iterator();
+        logger.debug("RecordSection adds.size()="+adders.size());
         while(chanIt.hasNext()) {
             ChannelId c = adders.get(chanIt.next());
             logger.debug("RecordSection adds  " + event.getDbid() + "  "
