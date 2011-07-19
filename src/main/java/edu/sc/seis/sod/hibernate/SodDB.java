@@ -727,9 +727,9 @@ public class SodDB extends AbstractHibernateDB {
             removes.put(ChannelIdUtil.toString(cId), cId);
         }
         HashMap<String, ChannelId> adders = new HashMap<String, ChannelId>();
-        logger.debug("updating "+channelIds.length+" recordSectionItems for "+recordSectionId+" for event "+event);
+        logger.debug("RecordSection updating "+channelIds.length+" recordSectionItems for "+recordSectionId+" for event "+event);
         for(int i = 0; i < channelIds.length; i++) {
-            logger.debug("channelid: "+ChannelIdUtil.toString(channelIds[i]));
+            logger.debug("RecordSection channelid: "+ChannelIdUtil.toString(channelIds[i]));
             adders.put(ChannelIdUtil.toString(channelIds[i]), channelIds[i]);
         }
         Iterator<String> chanIt = adders.keySet().iterator();
@@ -743,7 +743,7 @@ public class SodDB extends AbstractHibernateDB {
         }
         Query q;
         if(removes.size() == 0 && adders.size() == 0) {
-            logger.debug("No adds and no removes");
+            logger.debug("RecordSection No adds and no removes");
             return false;
         }
         q = getSession().createQuery("from "
@@ -753,7 +753,7 @@ public class SodDB extends AbstractHibernateDB {
         chanIt = removes.keySet().iterator();
         while(chanIt.hasNext()) {
             ChannelId c = removes.get(chanIt.next());
-            logger.debug("remove: " + q + "  " + event.getDbid() + "  "
+            logger.debug("RecordSection remove: " + q + "  " + event.getDbid() + "  "
                     + recordSectionId + " " + c.channel_code + " "
                     + c.site_code + " " + c.station_code + " "
                     + c.network_id.network_code);
@@ -779,7 +779,7 @@ public class SodDB extends AbstractHibernateDB {
         chanIt = adders.keySet().iterator();
         while(chanIt.hasNext()) {
             ChannelId c = adders.get(chanIt.next());
-            logger.debug("adds  " + event.getDbid() + "  "
+            logger.debug("RecordSection adds  " + event.getDbid() + "  "
                     + recordSectionId + " " + c.channel_code + " "
                     + c.site_code + " " + c.station_code + " "
                     + c.network_id.network_code);
@@ -793,7 +793,7 @@ public class SodDB extends AbstractHibernateDB {
             Iterator dbit = q.iterate();
             while(dbit.hasNext()) {
                 RecordSectionItem item = (RecordSectionItem)dbit.next();
-                logger.debug("update true for "+ChannelIdUtil.toString(item.getChannel().get_id()));
+                logger.debug("RecordSection update true for "+ChannelIdUtil.toString(item.getChannel().get_id()));
                 item.setInBest(true);
                 getSession().update(item);
             }
