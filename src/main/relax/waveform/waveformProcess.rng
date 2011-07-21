@@ -539,7 +539,9 @@
                 <ref name="seisFileLocation"/>
             </optional>
             <optional>
-                <ref name="eventChannelPlus"/>
+                <element name="eventChannelSubsetter">
+                    <ref name="eventChannelPlus"/>
+                </element>
             </optional>
             <optional>
                 <element name="fileNameBase">
