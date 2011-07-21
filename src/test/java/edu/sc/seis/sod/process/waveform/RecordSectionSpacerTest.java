@@ -1,5 +1,8 @@
 package edu.sc.seis.sod.process.waveform;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import junit.framework.TestCase;
 import edu.iris.Fissures.AuditInfo;
 import edu.iris.Fissures.Location;
@@ -22,41 +25,41 @@ public class RecordSectionSpacerTest extends TestCase {
     private static final AuditInfo[] NO_AUDIT = new AuditInfo[0];
 
     public void testNoSeis() {
-        DataSetSeismogram[] empty = new DataSetSeismogram[0];
-        assertEquals(empty.length, spacer.spaceOut(empty).length);
+        List<DataSetSeismogram> empty = new ArrayList<DataSetSeismogram>();
+        assertEquals(empty.size(), spacer.spaceOut(empty).size());
     }
 
     public void testOneSeis() {
-        DataSetSeismogram[] seis = create(new Channel[] {MockChannel.createChannel()});
-        assertEquals(seis.length, spacer.spaceOut(seis).length);
+        List<DataSetSeismogram> seis = create(new Channel[] {MockChannel.createChannel()});
+        assertEquals(seis.size(), spacer.spaceOut(seis).size());
     }
 
     public void testTwoSeis() {
-        DataSetSeismogram[] seis = create(new Channel[] {MockChannel.createChannel(),
+        List<DataSetSeismogram> seis = create(new Channel[] {MockChannel.createChannel(),
                                                          MockChannel.createOtherNetChan()});
-        assertEquals(seis.length, spacer.spaceOut(seis).length);
+        assertEquals(seis.size(), spacer.spaceOut(seis).size());
     }
 
     public void testSimpleCluster() {
-        DataSetSeismogram[] seis = create(new Channel[] {MockChannel.createChannel(),
+        List<DataSetSeismogram> seis = create(new Channel[] {MockChannel.createChannel(),
                                                          MockChannel.createChannel()});
-        assertEquals(1, spacer.spaceOut(seis).length);
+        assertEquals(1, spacer.spaceOut(seis).size());
     }
 
     public void testDoubleCluster() {
-        DataSetSeismogram[] seis = create(new Channel[] {MockChannel.createChannel(),
+        List<DataSetSeismogram> seis = create(new Channel[] {MockChannel.createChannel(),
                                                          MockChannel.createOtherNetChan(),
                                                          MockChannel.createOtherNetChan(),
                                                          MockChannel.createChannel()});
-        assertEquals(2, spacer.spaceOut(seis).length);
+        assertEquals(2, spacer.spaceOut(seis).size());
     }
 
     public void testEvenlySpacedLine() {
         for(int i = 30; i < 90; i++) {
             Location[] locs = MockLocation.create(1, i, 0, 0, 0, 180);
             Channel[] chans = MockChannel.createChannelsAtLocs(locs);
-            DataSetSeismogram[] seis = create(chans);
-            int results = spacer.spaceOut(seis).length;
+            List<DataSetSeismogram> seis = create(chans);
+            int results = spacer.spaceOut(seis).size();
             if(results < 15 || results > 21) {
                 assertTrue("There were "
                                    + results
@@ -70,8 +73,8 @@ public class RecordSectionSpacerTest extends TestCase {
         }
     }
 
-    public DataSetSeismogram[] create(Channel[] chans) {
-        DataSetSeismogram[] seis = new DataSetSeismogram[chans.length];
+    public List<DataSetSeismogram> create(Channel[] chans) {
+        List<DataSetSeismogram> seis = new ArrayList<DataSetSeismogram>(chans.length);
         MemoryDataSet ds = new MemoryDataSet("Test Id",
                                              "Test Data Set",
                                              "The Tester",
@@ -89,7 +92,7 @@ public class RecordSectionSpacerTest extends TestCase {
             rf.channel_id = chan.get_id();
             DataSetSeismogram dss = new MemoryDataSetSeismogram(rf, chanIdStr);
             ds.addDataSetSeismogram(dss, NO_AUDIT);
-            seis[i] = dss;
+            seis.add(dss);
         }
         return seis;
     }
