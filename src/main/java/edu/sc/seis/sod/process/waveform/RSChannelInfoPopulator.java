@@ -3,10 +3,12 @@ package edu.sc.seis.sod.process.waveform;
 import java.awt.Dimension;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.w3c.dom.Element;
 
+import java.util.Arrays;
 import edu.iris.Fissures.AuditInfo;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
@@ -59,8 +61,8 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         orientationId = SodUtil.getText(SodUtil.getElement(config, "orientationId"));
         recordSectionId = SodUtil.getText(SodUtil.getElement(config, "recordSectionId"));
         saveSeisId = DOMHelper.extractText(config, "writerName", orientationId);
-        if(DOMHelper.hasElement(config, "embeddedEventChannelProcessor")) {
-            channelAcceptor = (EventChannelSubsetter)SodUtil.load(SodUtil.getFirstEmbeddedElement(SodUtil.getElement(config, "embeddedEventChannelProcessor")),
+        if(DOMHelper.hasElement(config, "eventChannelSubsetter")) {
+            channelAcceptor = (EventChannelSubsetter)SodUtil.load(SodUtil.getFirstEmbeddedElement(SodUtil.getElement(config, "eventChannelSubsetter")),
             "eventChannel");
         } else {
             channelAcceptor = new PassEventChannel();
@@ -133,21 +135,21 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         return (AbstractSeismogramWriter) SodUtil.load(saveSeisConf, "waveform");
     }
 
-    public MemoryDataSetSeismogram[] wrap(DataSetSeismogram[] dss)
+    public List<MemoryDataSetSeismogram> wrap(List<? extends DataSetSeismogram> dss)
             throws Exception {
-        List<MemoryDataSetSeismogram> memDss = new ArrayList<MemoryDataSetSeismogram>(dss.length);
-        for(int i = 0; i < dss.length; i++) {
+        List<MemoryDataSetSeismogram> memDss = new ArrayList<MemoryDataSetSeismogram>(dss.size());
+        for(DataSetSeismogram curr: dss) {
             try {
-            memDss.add( new MemoryDataSetSeismogram(((URLDataSetSeismogram)dss[i]).getSeismograms(),
-                                                    dss[i].getDataSet(),
-                                                    dss[i].getName(),
-                                                    dss[i].getRequestFilter()));
+            memDss.add( new MemoryDataSetSeismogram(((URLDataSetSeismogram)curr).getSeismograms(),
+                                                    curr.getDataSet(),
+                                                    curr.getName(),
+                                                    curr.getRequestFilter()));
             } catch (Exception e) {
                 // oops, skip this one
-                GlobalExceptionHandler.handle("Error loading "+i+"th seismogram, skipping.", e);
+                GlobalExceptionHandler.handle("Error loading seismogram, skipping. "+curr, e);
             }
         }
-        return memDss.toArray(new MemoryDataSetSeismogram[0]);
+        return memDss;
     }
 
     public WaveformResult accept(CacheEvent event,
@@ -156,18 +158,18 @@ public class RSChannelInfoPopulator implements WaveformProcess {
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) throws Exception {
-        DataSetSeismogram[] best = updateTable(event,
+        List<DataSetSeismogram> best = updateTable(event,
                                   chan,
                                   original,
                                   available,
                                   seismograms,
                                   cookieJar);
 
-        boolean out = best.length != 0;
+        boolean out = best.size() != 0;
         return new WaveformResult(seismograms, new StringTreeLeaf(this, out));
     }
 
-    public DataSetSeismogram[] updateTable(CacheEvent event,
+    public List<DataSetSeismogram> updateTable(CacheEvent event,
                                ChannelImpl channel,
                                RequestFilter[] original,
                                RequestFilter[] available,
@@ -179,7 +181,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         if( ! channelAcceptor.accept(event,
                                    channel,
                                    cookieJar).isSuccess()) {
-            return new DataSetSeismogram[0];
+            return new ArrayList<DataSetSeismogram>();
         }
         URLDataSetSeismogram[] dss;
         synchronized(this) {
@@ -204,9 +206,14 @@ public class RSChannelInfoPopulator implements WaveformProcess {
                     logger.debug("RecordSection already in db: "+orientationId+" "+recordSectionId+" "+ChannelIdUtil.toString(channel.get_id()));
                 }
             }
-            DataSetSeismogram[] bestSeismos = dss;
+            List<DataSetSeismogram> bestSeismos = new ArrayList<DataSetSeismogram>();
+            for (int i = 0; i < dss.length; i++) {
+                if (channelAcceptor.accept(event, (ChannelImpl)dss[i].getChannel(), cookieJar).isSuccess()) {
+                    bestSeismos.add(dss[i]);
+                }
+            }
             if(spacer != null) {
-                bestSeismos = spacer.spaceOut(dss);
+                bestSeismos = spacer.spaceOut(bestSeismos);
             }
             ChannelId[] bestChans = getChannelIds(bestSeismos);
             boolean isUpdateBest = soddb.updateBestForRecordSection(orientationId,
@@ -216,20 +223,20 @@ public class RSChannelInfoPopulator implements WaveformProcess {
             if (isUpdateBest) {
                 return bestSeismos;
             } else {
-                return new DataSetSeismogram[0];
+                return new ArrayList<DataSetSeismogram>();
             }
     }
 
-    public ChannelId[] getChannelIds(DataSetSeismogram[] dss)
+    public ChannelId[] getChannelIds(List<DataSetSeismogram> dss)
             throws SQLException, NotFound {
-        ChannelId[] channelIds = new ChannelId[dss.length];
-        for(int j = 0; j < dss.length; j++) {
-            channelIds[j] = dss[j].getRequestFilter().channel_id;
+        ChannelId[] channelIds = new ChannelId[dss.size()];
+        for(int j = 0; j < dss.size(); j++) {
+            channelIds[j] = dss.get(j).getRequestFilter().channel_id;
         }
         return channelIds;
     }
 
-    public  URLDataSetSeismogram[] extractSeismograms(CacheEvent event)
+    public  List<URLDataSetSeismogram>  extractSeismograms(CacheEvent event)
             throws Exception {
         List<URLDataSetSeismogram> copy = extractSeismogramsFromDB(event);
         List<URLDataSetSeismogram> out = new ArrayList<URLDataSetSeismogram>();
@@ -239,7 +246,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
                 out.add(urlDSS);
             }
         }
-        return out.toArray(new URLDataSetSeismogram[0]);
+        return out;
     }
 
     private synchronized static List<URLDataSetSeismogram> addToCache(CacheEvent event, ChannelImpl chan, URLDataSetSeismogram dss) throws Exception {

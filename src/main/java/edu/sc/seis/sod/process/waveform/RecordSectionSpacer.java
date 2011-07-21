@@ -33,21 +33,21 @@ public class RecordSectionSpacer {
         idealDegreesBetweenSeis = r / (idealSeismograms + 1);
     }
 
-    public DataSetSeismogram[] spaceOut(DataSetSeismogram[] dataSeis) {
-        final Map dists = new HashMap();
-        List remaining = new ArrayList();
-        for(int i = 0; i < dataSeis.length; i++) {
-            QuantityImpl dist = DisplayUtils.calculateDistance(dataSeis[i]);
+    public List<DataSetSeismogram> spaceOut(List<? extends DataSetSeismogram> dataSeis) {
+        final Map<DataSetSeismogram, QuantityImpl> dists = new HashMap<DataSetSeismogram, QuantityImpl>();
+        List<DataSetSeismogram> remaining = new ArrayList<DataSetSeismogram>();
+        for (DataSetSeismogram curr: dataSeis) {
+            QuantityImpl dist = DisplayUtils.calculateDistance(curr);
             if(dist != null) {
-                remaining.add(dataSeis[i]);
-                dists.put(dataSeis[i], dist);
+                remaining.add(curr);
+                dists.put(curr, dist);
             } else {
-                logger.debug("Unable to calculate distance for " + dataSeis[i]);
+                logger.debug("Unable to calculate distance for " + curr);
             }
         }
-        Collections.sort(remaining, new Comparator() {
+        Collections.sort(remaining, new Comparator<DataSetSeismogram>() {
 
-            public int compare(Object o1, Object o2) {
+            public int compare(DataSetSeismogram o1, DataSetSeismogram o2) {
                 QuantityImpl dist1 = (QuantityImpl)dists.get(o1);
                 QuantityImpl dist2 = (QuantityImpl)dists.get(o2);
                 if(dist1.lessThan(dist2)) {
@@ -59,12 +59,12 @@ public class RecordSectionSpacer {
                 }
             }
         });
-        List accepted = new ArrayList();
+        List<DataSetSeismogram> accepted = new ArrayList<DataSetSeismogram>();
         double nextSlot = 0;
         while(remaining.size() > 0) {
             double leastPossibleDist = nextSlot
                     - (idealDegreesBetweenSeis - minimumDegreesBetweenSeis);
-            ListIterator it = remaining.listIterator();
+            ListIterator<DataSetSeismogram> it = remaining.listIterator();
             DataSetSeismogram closest = null;
             double closestVal = Double.MAX_VALUE;
             double closestSToN = Double.MAX_VALUE;
@@ -107,7 +107,7 @@ public class RecordSectionSpacer {
                 accepted.add(closest);
             }
         }
-        return (DataSetSeismogram[])accepted.toArray(new DataSetSeismogram[accepted.size()]);
+        return accepted;
     }
 
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(RecordSectionSpacer.class);

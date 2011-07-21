@@ -22,7 +22,6 @@ public class SeismogramScript extends AbstractScriptSubsetter implements Wavefor
         super(config);
     }
 
-    @Override
     public WaveformResult accept(CacheEvent event,
                                  ChannelImpl channel,
                                  RequestFilter[] original,

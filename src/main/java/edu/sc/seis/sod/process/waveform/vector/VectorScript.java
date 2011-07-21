@@ -22,7 +22,6 @@ public class VectorScript extends AbstractScriptSubsetter implements WaveformVec
         super(config);
     }
 
-    @Override
     public WaveformVectorResult accept(CacheEvent event,
                                        ChannelGroup channelGroup,
                                        RequestFilter[][] original,

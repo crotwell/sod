@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import org.w3c.dom.Element;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
@@ -20,6 +22,8 @@ import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.fissuresUtil.display.RecordSectionDisplay;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.xml.DataSetSeismogram;
+import edu.sc.seis.fissuresUtil.xml.MemoryDataSetSeismogram;
+import edu.sc.seis.fissuresUtil.xml.URLDataSetSeismogram;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
@@ -49,24 +53,29 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) throws Exception {
-        DataSetSeismogram[] best = updateTable(event,
+        logger.debug("BEGIN RecordSectionDisplay accept");
+        if (getOrientationId().equals("main") && ! chan.get_code().endsWith("Z")) {
+            throw new Exception("Non-Z channel in main RecordSection: "+ChannelIdUtil.toStringNoDates(chan));
+        }
+        List<DataSetSeismogram> best = updateTable(event,
                                   chan,
                                   original,
                                   available,
                                   seismograms,
                                   cookieJar);
-        if(best.length == 0) {
+        if(best.size() == 0) {
             return new WaveformResult(seismograms,
                                       new StringTreeLeaf(this, false));
         }
-        outputBestRecordSection(event, best);
+        writeImage(wrap(best), event, false);
+        logger.debug("END RecordSectionDisplay accept");
         return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
     }
 
     public void makeRecordSection(CacheEvent event)
             throws Exception, NoPreferredOrigin, IOException {
         try {
-            DataSetSeismogram[] dss = extractSeismograms(event);
+            List<URLDataSetSeismogram> dss = extractSeismograms(event);
             outputBestRecordSection(event, dss);
         } catch(IOException e) {
             throw new IOException("Problem opening dsml file in RecordSectionDisplayGenerator"
@@ -91,7 +100,7 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
     }
 
     public void outputBestRecordSection(EventAccessOperations event,
-                                        DataSetSeismogram[] dataSeis)
+                                        List<URLDataSetSeismogram> dataSeis)
             throws Exception {
         if(spacer != null) {
             writeImage(wrap(spacer.spaceOut(dataSeis)), event, false);
@@ -100,31 +109,31 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
         }
     }
     
-    public void outputRecordSection(DataSetSeismogram[] dataSeis,
+    public void outputRecordSection(List<URLDataSetSeismogram> dataSeis,
                                     EventAccessOperations event,
                                     OutputStream out) throws Exception {
         outputRecordSection(dataSeis, event, out, false);
     }
 
-    public void outputRecordSection(DataSetSeismogram[] dataSeis,
+    public void outputRecordSection(List<URLDataSetSeismogram> dataSeis,
                                     EventAccessOperations event,
                                     OutputStream out, 
                                     boolean isPDF) throws Exception {
         writeImage(wrap(dataSeis), event, out, isPDF);
     }
 
-    protected void writeImage(DataSetSeismogram[] dataSeis,
+    protected void writeImage(List<MemoryDataSetSeismogram> dataSeis,
                               EventAccessOperations event,
                               OutputStream out,
                               boolean isPDF) throws Exception {
         RecordSectionDisplay rsDisplay = getConfiguredRSDisplay();
-        rsDisplay.add(dataSeis);
-        if(dataSeis.length > 0) {
+        rsDisplay.add(dataSeis.toArray(new DataSetSeismogram[0]));
+        if(dataSeis.size() > 0) {
             SeismogramImageProcess.setTimeWindow(rsDisplay.getTimeConfig(),
-                                                 dataSeis[0]);
+                                                 dataSeis.get(0));
         }
-        if (dataSeis[0].getChannelId().channel_code.endsWith("Z")) {
-            logger.debug("Added " + dataSeis.length
+        if (dataSeis.get(0).getChannelId().channel_code.endsWith("Z")) {
+            logger.debug("Added " + dataSeis.size()
                          + " seismograms to RecordSectionDisplay");
         }
         if (isPDF) {
@@ -134,14 +143,14 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
         }
     }
 
-    protected void writeImage(DataSetSeismogram[] dataSeis,
+    protected void writeImage(List<MemoryDataSetSeismogram> dataSeis,
                               EventAccessOperations event,
                               boolean isPDF) throws Exception {
         String fileLoc = getFileLoc(event);
-        if (dataSeis[0].getChannelId().channel_code.endsWith("Z")) {
-            logger.debug("RecordSection: "+fileLoc);
-            for (int i = 0; i < dataSeis.length; i++) {
-                logger.debug("RecordSection: "+i+" "+dataSeis[i].getName());
+        if (dataSeis.get(0).getChannelId().channel_code.endsWith("Z")) {
+            logger.debug("RecordSection writeImage: "+fileLoc);
+            for (int i = 0; i < dataSeis.size(); i++) {
+                logger.debug("RecordSection writeImage: "+i+" "+dataSeis.get(i).getName());
             }
         }
         try {
