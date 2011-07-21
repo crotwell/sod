@@ -127,6 +127,7 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
                               OutputStream out,
                               boolean isPDF) throws Exception {
         RecordSectionDisplay rsDisplay = getConfiguredRSDisplay();
+        rsDisplay.clear();
         rsDisplay.add(dataSeis.toArray(new DataSetSeismogram[0]));
         if(dataSeis.size() > 0) {
             SeismogramImageProcess.setTimeWindow(rsDisplay.getTimeConfig(),
