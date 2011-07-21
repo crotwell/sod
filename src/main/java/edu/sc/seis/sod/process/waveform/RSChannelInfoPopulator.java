@@ -3,12 +3,10 @@ package edu.sc.seis.sod.process.waveform;
 import java.awt.Dimension;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.w3c.dom.Element;
 
-import java.util.Arrays;
 import edu.iris.Fissures.AuditInfo;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
@@ -42,6 +40,7 @@ import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.hibernate.RecordSectionItem;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.status.StringTreeLeaf;
+import edu.sc.seis.sod.subsetter.eventChannel.EventChannelLogicalSubsetter;
 import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
 import edu.sc.seis.sod.subsetter.eventChannel.PassEventChannel;
 import edu.sc.seis.sod.subsetter.requestGenerator.vector.RequestGeneratorWrapper;
@@ -63,7 +62,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         saveSeisId = DOMHelper.extractText(config, "writerName", orientationId);
         if(DOMHelper.hasElement(config, "eventChannelSubsetter")) {
             channelAcceptor = (EventChannelSubsetter)SodUtil.load(SodUtil.getFirstEmbeddedElement(SodUtil.getElement(config, "eventChannelSubsetter")),
-            "eventChannel");
+                                                                  EventChannelLogicalSubsetter.packages);
         } else {
             channelAcceptor = new PassEventChannel();
         }
