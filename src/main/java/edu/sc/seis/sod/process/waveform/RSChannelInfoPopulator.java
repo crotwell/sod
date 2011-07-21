@@ -40,6 +40,7 @@ import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.hibernate.RecordSectionItem;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.status.StringTreeLeaf;
+import edu.sc.seis.sod.subsetter.Subsetter;
 import edu.sc.seis.sod.subsetter.eventChannel.EventChannelLogicalSubsetter;
 import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
 import edu.sc.seis.sod.subsetter.eventChannel.PassEventChannel;
@@ -61,8 +62,8 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         recordSectionId = SodUtil.getText(SodUtil.getElement(config, "recordSectionId"));
         saveSeisId = DOMHelper.extractText(config, "writerName", orientationId);
         if(DOMHelper.hasElement(config, "eventChannelSubsetter")) {
-            channelAcceptor = (EventChannelSubsetter)SodUtil.load(SodUtil.getFirstEmbeddedElement(SodUtil.getElement(config, "eventChannelSubsetter")),
-                                                                  EventChannelLogicalSubsetter.packages);
+            channelAcceptor = EventChannelLogicalSubsetter.createSubsetter((Subsetter)SodUtil.load(SodUtil.getFirstEmbeddedElement(SodUtil.getElement(config, "eventChannelSubsetter")),
+                                                                  EventChannelLogicalSubsetter.packages));
         } else {
             channelAcceptor = new PassEventChannel();
         }
