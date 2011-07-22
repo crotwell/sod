@@ -3,6 +3,7 @@ package edu.sc.seis.sod.process.waveform.vector;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.Location;
+import edu.iris.Fissures.Orientation;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelIdUtil;
@@ -48,10 +49,13 @@ public class RotateGCP implements WaveformVectorProcess, Threadable {
         // find x & y channel, y should be x+90 degrees and horizontal
         Channel[] horizontal = channelGroup.getHorizontalXY();
         if(horizontal.length == 0) {
+            Orientation o1 = channelGroup.getChannel1().getOrientation();
+            Orientation o2 = channelGroup.getChannel2().getOrientation();
+            Orientation o3 = channelGroup.getChannel3().getOrientation();
             return new WaveformVectorResult(seismograms,
                                             new StringTreeLeaf(this,
                                                                false,
-                                                               "Channels not rotatable."));
+                                                               "Channels not rotatable, unable to find horizontals with 90 deg separation: "+o1.azimuth+"/"+o1.dip+" "+o2.azimuth+"/"+o2.dip+" "+o3.azimuth+"/"+o3.dip+" "));
         }
         int xIndex = -1, yIndex = -1;
         for(int i = 0; i < seismograms.length; i++) {
