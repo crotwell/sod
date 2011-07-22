@@ -175,13 +175,13 @@ public class RSChannelInfoPopulator implements WaveformProcess {
                                RequestFilter[] available,
                                LocalSeismogramImpl[] seismograms,
                                CookieJar cookieJar) throws Exception {
-        if (orientationId.equals("main") && ! channel.get_code().endsWith("Z")) {
-            throw new Exception("Try to put non-Z channel in main record section: "+ChannelIdUtil.toStringNoDates(channel));
-        }
         if( ! channelAcceptor.accept(event,
                                    channel,
                                    cookieJar).isSuccess()) {
             return new ArrayList<DataSetSeismogram>();
+        }
+        if (orientationId.equals("main") && ! channel.get_code().endsWith("Z")) {
+            throw new Exception("Try to put non-Z channel in main record section: "+ChannelIdUtil.toStringNoDates(channel));
         }
         URLDataSetSeismogram[] dss;
         synchronized(this) {
@@ -215,7 +215,13 @@ public class RSChannelInfoPopulator implements WaveformProcess {
             if(spacer != null) {
                 bestSeismos = spacer.spaceOut(bestSeismos);
             }
+            for (DataSetSeismogram dataSetSeismogram : bestSeismos) {
+                logger.debug("RecordSection best: "+dataSetSeismogram);
+            }
             ChannelId[] bestChans = getChannelIds(bestSeismos);
+            for (ChannelId channelId : bestChans) {
+                logger.debug("RecordSection best chan: "+ChannelIdUtil.toStringNoDates(channelId));
+            }
             boolean isUpdateBest = soddb.updateBestForRecordSection(orientationId,
                                              recordSectionId,
                                              event,

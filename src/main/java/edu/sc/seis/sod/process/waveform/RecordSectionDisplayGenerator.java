@@ -54,9 +54,6 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) throws Exception {
         logger.debug("BEGIN RecordSectionDisplay accept");
-        if (getOrientationId().equals("main") && ! chan.get_code().endsWith("Z")) {
-            throw new Exception("Non-Z channel in main RecordSection: "+ChannelIdUtil.toStringNoDates(chan));
-        }
         List<DataSetSeismogram> best = updateTable(event,
                                   chan,
                                   original,
