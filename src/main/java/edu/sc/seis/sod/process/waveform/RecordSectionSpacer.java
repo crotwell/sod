@@ -32,7 +32,6 @@ public class RecordSectionSpacer {
         double r = range.getMaxDistance() - range.getMinDistance();
         minimumDegreesBetweenSeis = r / (maximumSeismogram + 1);
         idealDegreesBetweenSeis = r / (idealSeismograms + 1);
-        System.out.println("minimumDegreesBetweenSeis="+minimumDegreesBetweenSeis+"  idealDegreesBetweenSeis="+idealDegreesBetweenSeis);
     }
 
     public List<DataSetSeismogram> spaceOut(List<? extends DataSetSeismogram> dataSeis) {
