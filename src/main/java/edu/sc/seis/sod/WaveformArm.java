@@ -31,6 +31,7 @@ public class WaveformArm extends Thread implements Arm {
     }
     
     public void run() {
+        logger.info("Starting WaveformArm");
         try {
             while(true) {
                 AbstractEventPair next = getNext();
