@@ -3,6 +3,8 @@ package edu.sc.seis.sod.process.waveform;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.BasicConfigurator;
+
 import junit.framework.TestCase;
 import edu.iris.Fissures.AuditInfo;
 import edu.iris.Fissures.Location;
@@ -24,7 +26,8 @@ import edu.sc.seis.fissuresUtil.xml.StdDataSetParamNames;
  * @author groves Created on Apr 8, 2005
  */
 public class RecordSectionSpacerTest extends TestCase {
-
+    static {BasicConfigurator.configure();}
+    
     private static final AuditInfo[] NO_AUDIT = new AuditInfo[0];
 
     public void testNoSeis() {
@@ -62,9 +65,11 @@ public class RecordSectionSpacerTest extends TestCase {
             Channel[] chans = MockChannel.createChannelsAtLocs(locs);
             List<DataSetSeismogram> seis = create(chans);
             int results = spacer.spaceOut(seis).size();
-            if (results < 15 || results > 21) {
+            int fewest = (int)Math.floor(180/spacer.getIdealDegreesBetweenSeis())-1;
+            int most = (int)Math.ceil(180/spacer.getMinimumDegreesBetweenSeis())+1;
+            if (results < fewest || results > most) {
                 assertTrue("There were " + results + " seismograms with " + i
-                        + " given to it in the spacers results but only 15 through 21 were requested", false);
+                        + " given to it in the spacers results but only "+fewest+" through "+most+" were requested", false);
             } else {
                 assertTrue(true);
             }
@@ -72,13 +77,13 @@ public class RecordSectionSpacerTest extends TestCase {
     }
 
     public void testThreeCloseStations() {
-        Location[] locs = new Location[] {MockLocation.create(-29.01, -70.70), //II.LCO
-                                          MockLocation.create(-64.77, -64.05), //IU.PMSA
-                                          MockLocation.create(42.51, -71.56),  //IU.HRV
-                                          MockLocation.create(41.61, -111.57), //US.HWUT
-                                          MockLocation.create(42.77, -109.56), // US.BW06
-                                          MockLocation.create(42.77, -111.10)}; //US.AHID
-        CacheEvent event = MockEventAccessOperations.createEvent(Defaults.WALL_FALL, -33.8f, -72.1f);
+        Location[] locs = new Location[] {MockLocation.create(-29.0110, -70.7004), //IU.LCO
+                                          MockLocation.create(-64.0489, -64.7744), //IU.PMSA
+                                          MockLocation.create(42.5064, -71.5583),  //IU.HRV
+                                        //  MockLocation.create(41.6069, -111.5652), //US.HWUT
+                                          MockLocation.create(42.7667, -109.5583), // US.BW06
+                                          MockLocation.create(42.7654, -111.1004)}; //US.AHID
+        CacheEvent event = MockEventAccessOperations.createEvent(Defaults.WALL_FALL, -33.8f, -72.07f);
         Channel[] chans = MockChannel.createChannelsAtLocs(locs);
         List<DataSetSeismogram> seis = create(chans, event);
         List<DataSetSeismogram> best = spacer.spaceOut(seis);
