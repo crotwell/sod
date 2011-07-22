@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 
 import edu.iris.Fissures.model.QuantityImpl;
+import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.display.DisplayUtils;
 import edu.sc.seis.fissuresUtil.xml.DataSetSeismogram;
 
@@ -31,6 +32,7 @@ public class RecordSectionSpacer {
         double r = range.getMaxDistance() - range.getMinDistance();
         minimumDegreesBetweenSeis = r / (maximumSeismogram + 1);
         idealDegreesBetweenSeis = r / (idealSeismograms + 1);
+        System.out.println("minimumDegreesBetweenSeis="+minimumDegreesBetweenSeis+"  idealDegreesBetweenSeis="+idealDegreesBetweenSeis);
     }
 
     public List<DataSetSeismogram> spaceOut(List<? extends DataSetSeismogram> dataSeis) {
@@ -61,55 +63,78 @@ public class RecordSectionSpacer {
         });
         List<DataSetSeismogram> accepted = new ArrayList<DataSetSeismogram>();
         double nextSlot = 0;
-        while(remaining.size() > 0) {
-            double leastPossibleDist = nextSlot
-                    - (idealDegreesBetweenSeis - minimumDegreesBetweenSeis);
-            ListIterator<DataSetSeismogram> it = remaining.listIterator();
-            DataSetSeismogram closest = null;
-            double closestVal = Double.MAX_VALUE;
-            double closestSToN = Double.MAX_VALUE;
-            while(it.hasNext()) {
-                DataSetSeismogram cur = (DataSetSeismogram)it.next();
-                double dist = ((QuantityImpl)dists.get(cur)).getValue();
-                double sToN = Double.MAX_VALUE;
-                if(cur.getAuxillaryData(AbstractSeismogramWriter.SVN_PARAM) != null) {
-                    sToN = Double.parseDouble((String)cur.getAuxillaryData(AbstractSeismogramWriter.SVN_PARAM));
-                }
-                if(dist >= nextSlot
-                        && (closest == null || dist <= nextSlot
-                                + minimumDegreesBetweenSeis)) {
-                    if(closest != null
-                            && nextSlot - closestVal <= dist - nextSlot
-                            && closestSToN >= sToN) {
-                        accepted.add(closest);
-                        nextSlot = closestVal + idealDegreesBetweenSeis;
-                    } else {
-                        if(closest != null
-                                && nextSlot - closestVal > dist - nextSlot) {
-                            logger.debug("Rec sec seis chosen for StoN");
+        List<DataSetSeismogram> distBin = new ArrayList<DataSetSeismogram>();
+        for(DataSetSeismogram cur: remaining) {
+            double dist = ((QuantityImpl)dists.get(cur)).getValue();
+            if (dist < nextSlot - idealDegreesBetweenSeis + minimumDegreesBetweenSeis) {
+                // too close to last added
+                continue;
+            } else if (dist < nextSlot + idealDegreesBetweenSeis) {
+                // possible winner
+                distBin.add(cur);
+            } else {
+                // too far away, accept best in bin and go to next bin
+                while (distBin.size() > 0 && dist > nextSlot + idealDegreesBetweenSeis) {
+                    DataSetSeismogram best = bestFromBin(distBin, nextSlot, dists);
+                    accepted.add(best);
+                    double bestDist = dists.get(best).getValue(UnitImpl.DEGREE);
+                    System.out.println("Winner: "+bestDist+"  "+best);
+                    Iterator<DataSetSeismogram> binIter = distBin.iterator();
+                    while (binIter.hasNext()) {
+                        DataSetSeismogram dss = binIter.next();
+                        if (dists.get(dss).getValue(UnitImpl.DEGREE) < bestDist+minimumDegreesBetweenSeis) {
+                            binIter.remove();
                         }
-                        it.remove();
-                        accepted.add(cur);
-                        nextSlot = dist + idealDegreesBetweenSeis;
                     }
-                    break;
-                } else if(dist > leastPossibleDist) {
-                    if(sToN >= closestSToN) {
-                        closest = cur;
-                        closestVal = dist;
-                    } else {
-                        logger.debug("Rec sec seis rejected for StoN");
-                    }
+                    nextSlot = bestDist + idealDegreesBetweenSeis;
                 }
-                it.remove();
+                while (dist > nextSlot + idealDegreesBetweenSeis) {
+                    nextSlot += idealDegreesBetweenSeis/2;
+                }
+                distBin.add(cur);
             }
-            if(remaining.size() == 0 && closest != null) {
-                accepted.add(closest);
-            }
+        }
+        // get best from last bin
+        if (distBin.size() > 0) {
+            DataSetSeismogram best = bestFromBin(distBin, nextSlot, dists);
+            accepted.add(best);
         }
         return accepted;
     }
+    
+    
+    public double getMinimumDegreesBetweenSeis() {
+        return minimumDegreesBetweenSeis;
+    }
 
+    
+    public double getIdealDegreesBetweenSeis() {
+        return idealDegreesBetweenSeis;
+    }
+
+    protected DataSetSeismogram bestFromBin(List<DataSetSeismogram> distBin, double nextSlot, Map<DataSetSeismogram, QuantityImpl> dists) {
+        DataSetSeismogram best = distBin.get(0);
+        double bestScore = calcScore(best, dists.get(best), nextSlot);
+        for (DataSetSeismogram dss : distBin) {
+            double curScore = calcScore(dss, dists.get(dss), nextSlot);
+            if (curScore > bestScore) {
+                best = dss;
+                bestScore = curScore;
+            }
+        }
+        return best;
+    }
+    
+    protected double calcScore(DataSetSeismogram dss, QuantityImpl dist, double nextSlot) {
+        double sToN = 0;
+        if(dss.getAuxillaryData(AbstractSeismogramWriter.SVN_PARAM) != null) {
+            sToN = Double.parseDouble((String)dss.getAuxillaryData(AbstractSeismogramWriter.SVN_PARAM));
+        }
+        double distMetric = 1-Math.abs(nextSlot-dist.getValue(UnitImpl.DEGREE))/idealDegreesBetweenSeis;
+        System.out.println("Score: distMetric"+distMetric+"  ston:"+(sToN-1)+"  "+dss);
+        return distMetric + distMetric * (sToN-1);
+    }
+            
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(RecordSectionSpacer.class);
 
     private double minimumDegreesBetweenSeis, idealDegreesBetweenSeis;
