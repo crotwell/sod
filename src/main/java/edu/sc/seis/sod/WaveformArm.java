@@ -222,12 +222,15 @@ public class WaveformArm extends Thread implements Arm {
         if (networks.size() == 0 && ! Start.isArmFailure()) {
              throw new RuntimeException("No successful networks!");
         }
+        int numENP = 0;
         for (NetworkAttrImpl net : networks) {
             if(overlap.overlaps(net)) {
                 EventNetworkPair p = new EventNetworkPair(ev,
                                                           net,
                                                           Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                                                      Standing.INIT));
+                numENP++;
+                logger.debug("Put EventNetworkPair: "+p);
                 sodDb.put(p);
             } else {
                 failLogger.info("Network "
@@ -235,6 +238,7 @@ public class WaveformArm extends Thread implements Arm {
                         + " does not overlap event " + ev);
             }
         }
+        logger.debug("Insert "+numENP+" EventNetworkPairs for "+ev);
         // set the status of the event to be SUCCESS implying that
         // that all the network information for this particular event is
         // inserted

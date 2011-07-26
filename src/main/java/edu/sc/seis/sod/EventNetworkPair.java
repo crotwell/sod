@@ -35,6 +35,7 @@ public class EventNetworkPair extends AbstractEventPair {
             StationImpl[] stations = Start.getNetworkArm()
                     .getSuccessfulStations(getNetwork());
             logger.debug("Begin EventNetworkPair ("+getEvent().getDbid()+",s "+getNetworkDbId()+") "+this);
+            logger.debug(stations.length+" successful stations for "+this);
             for(int i = 0; i < stations.length; i++) {
                 logger.debug("Station successful ("+stations[i].getDbid()+") "+StationIdUtil.toString(stations[i]));
             }
