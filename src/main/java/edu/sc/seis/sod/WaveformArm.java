@@ -40,7 +40,7 @@ public class WaveformArm extends Thread implements Arm {
             while(true) {
                 AbstractEventPair next = getNext();
                 while(next == null
-                        && (possibleToContinue()
+                        && (possibleToContinue() || SodDB.getSingleton().isENPTodo() || SodDB.getSingleton().isESPTodo()
                                 || SodDB.getSingleton().getNumWorkUnits(Standing.RETRY) != 0 || SodDB.getSingleton()
                                 .getNumWorkUnits(Standing.IN_PROG) != 0  || SodDB.getSingleton()
                                 .getNumWorkUnits(Standing.INIT) != 0)) {
