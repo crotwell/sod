@@ -201,6 +201,7 @@ public class NetworkArm implements Arm {
     }
     
     List<NetworkAttrImpl> loadNetworksFromDB() {
+        synchronized(netGetSync) { // don't get nets while being reloaded
         List<NetworkAttrImpl> fromDB = getNetworkDB().getAllNetworks();
         for (NetworkAttrImpl net : fromDB) {
             // this is for the side effect of creating
@@ -211,6 +212,7 @@ public class NetworkArm implements Arm {
                               Standing.SUCCESS));
         }
         return fromDB;
+        }
     }
 
     List<NetworkAttrImpl> getSuccessfulNetworksFromServer() {
