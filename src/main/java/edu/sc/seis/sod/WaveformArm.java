@@ -32,6 +32,10 @@ public class WaveformArm extends Thread implements Arm {
     
     public void run() {
         logger.info("Starting WaveformArm");
+        // wait on Network arm startup
+        while( ! Start.getNetworkArm().isInitialStartupFinished()) {
+            try { Thread.sleep(10);  } catch(InterruptedException e) { }
+        }
         try {
             while(true) {
                 AbstractEventPair next = getNext();
@@ -215,6 +219,9 @@ public class WaveformArm extends Thread implements Arm {
             throw new RuntimeException("Should never happen...", e);
         }
         List<NetworkAttrImpl> networks = Start.getNetworkArm().getSuccessfulNetworks();
+        if (networks.size() == 0 && ! Start.isArmFailure()) {
+             throw new RuntimeException("No successful networks!");
+        }
         for (NetworkAttrImpl net : networks) {
             if(overlap.overlaps(net)) {
                 EventNetworkPair p = new EventNetworkPair(ev,

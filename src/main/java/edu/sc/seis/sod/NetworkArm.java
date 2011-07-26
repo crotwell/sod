@@ -72,16 +72,21 @@ public class NetworkArm implements Arm {
                 long firstDelay = lastQueryTime==null ? 0 : lastQueryTime.delayUntilNextRefresh(getRefreshInterval());
                 logger.debug("Refresh timer startup: period: "+period+"  firstDelay: "+firstDelay+"  last query: "+(lastQueryTime==null ? "null" : lastQueryTime.getTime()));
                 timer.schedule(refresh, firstDelay, period);
+                if (period == 0) {
+                    try { Thread.sleep(10);  } catch(InterruptedException e) { } // give refresh time to start up
+                }
+                initialStartupFinished = true;
             } else {
                 // no refresh, so do net arm in this thread once
+                initialStartupFinished = true;
                 refresh.run();
             }
+            // make sure any open read only db connetion is closed (ie from lastQueryTime above)
+            SodDB.rollback();
         } catch(Throwable e) {
             armFinished = true;
             Start.armFailure(this, e);
         }
-        // make sure any open read only db connetion is closed (ie from lastQueryTime above)
-        SodDB.rollback();
     }
 
     public boolean isActive() {
@@ -725,6 +730,13 @@ public class NetworkArm implements Arm {
 
     private boolean armFinished = false;
     
+    private boolean initialStartupFinished = false;
+    
+    
+    public boolean isInitialStartupFinished() {
+        return initialStartupFinished;
+    }
+
     RefreshNetworkArm refresh;
     
     private QueryTime lastQueryTime = null;
