@@ -937,15 +937,16 @@ public class SodDB extends AbstractHibernateDB {
             query.setMaxResults(1);
             List<EventChannelPair> result = query.list();
             if(result.size() > 0) {
-                out = EventVectorPair.class;
+                return EventVectorPair.class;
+            } else {
+                return EventChannelPair.class;
             }
         } catch(Throwable e) {
-            logger.warn("Exception", e);
+            logger.warn("Exception in SodDB.discoverDbEcpClass()", e);
+            throw new RuntimeException("Exception in SodDB.discoverDbEcpClass()", e);
         } finally {
             rollback();
         }
-        out = EventChannelPair.class;
-        return out;
     }
     
     public static void setDefaultEcpClass(Class<? extends AbstractEventChannelPair> ecpClass) {
