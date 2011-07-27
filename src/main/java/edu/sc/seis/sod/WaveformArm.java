@@ -44,10 +44,10 @@ public class WaveformArm extends Thread implements Arm {
                                 || SodDB.getSingleton().getNumWorkUnits(Standing.RETRY) != 0 || SodDB.getSingleton()
                                 .getNumWorkUnits(Standing.IN_PROG) != 0  || SodDB.getSingleton()
                                 .getNumWorkUnits(Standing.INIT) != 0)) {
-                    logger.debug("Processor waiting for work unit to show up");
+                    //logger.debug("Processor waiting for work unit to show up");
                     try {
                         // sleep, but wake up if eventArm does notifyAll()
-                        logger.debug("waiting on event arm");
+                        //logger.debug("waiting on event arm");
                         synchronized(Start.getEventArm()) {
                             Start.getEventArm().notifyAll();
                         }
@@ -60,7 +60,7 @@ public class WaveformArm extends Thread implements Arm {
                                 }
                             }
                     } catch(InterruptedException e) {}
-                    logger.debug("done waiting on event arm");
+                    //logger.debug("done waiting on event arm");
                     next = getNext();
                 }
                 if(next == null) {
