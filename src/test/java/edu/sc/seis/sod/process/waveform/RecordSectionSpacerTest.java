@@ -93,6 +93,24 @@ public class RecordSectionSpacerTest extends TestCase {
         assertEquals("There were " + best.size() + " seismograms with " + locs.length
                 + " given to it in the spacers results but 4 should be in the result.", 4, best.size());
     }
+    
+    public void testMindinao() {
+       Location[] locs = new Location[] {MockLocation.create(1.47, 110.31), //MY.  KSM
+                                          MockLocation.create(26.84, 128.27), //JP.  JOW
+                                          MockLocation.create(7.07, 125.58),  //IU.  DAV
+                                          MockLocation.create(24.17, 121.59), //TW. NACB
+                                          MockLocation.create(24.46, 118.39) // TW. KMNB
+                                          }; //US.AHID
+        CacheEvent event = MockEventAccessOperations.createEvent(Defaults.WALL_FALL, 7.4f, 126.44f);
+        Channel[] chans = MockChannel.createChannelsAtLocs(locs);
+        List<DataSetSeismogram> seis = create(chans, event);
+        List<DataSetSeismogram> best = spacer.spaceOut(seis);
+        for (DataSetSeismogram curr : best) {
+            System.out.println(""+DisplayUtils.calculateDistance(curr));
+        }
+        assertEquals("There were " + best.size() + " seismograms with " + locs.length
+                + " given to it in the spacers results but 2 should be in the result.", 2, best.size());
+    }
 
     public List<DataSetSeismogram> create(Channel[] chans) {
         return create(chans, MockEventAccessOperations.createEvent());
