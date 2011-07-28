@@ -14,6 +14,7 @@ import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.fissuresUtil.bag.LongShortTrigger;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.display.RecordSectionDisplay;
@@ -196,10 +197,20 @@ public class RSChannelInfoPopulator implements WaveformProcess {
                 if (channel.get_code().endsWith("Z")) {
                     logger.debug("RecordSection to db: "+orientationId+" "+recordSectionId+" "+ChannelIdUtil.toString(channel.get_id()));
                 }
+                float ston = 0;
+                Object[] cookieKeys = cookieJar.getKeys();
+                for (int i = 0; i < cookieKeys.length; i++) {
+                    if (cookieKeys[i] instanceof String && ((String)cookieKeys[i]).startsWith(PhaseSignalToNoise.PHASE_STON_PREFIX)) {
+                        // found StoN
+                        ston = ((LongShortTrigger)cookieJar.get((String)cookieKeys[i])).getValue();
+                        break;
+                    }
+                }
                 soddb.put(new RecordSectionItem(orientationId,
                                                 recordSectionId,
                                                 event,
                                                 channel,
+                                                ston,
                                                 false));
             } else {
                 if (channel.get_code().endsWith("Z")) {

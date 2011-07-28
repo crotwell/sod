@@ -109,6 +109,7 @@
 		<property name="orientationId"  index="rec_best_eq_index" />
 		<property name="recordSectionId"/>
 		<property name="inBest" type="boolean" index="rec_best_eq_index" />
+        <property name="sToN" type="float" />
 	</class>
 
 	<class name="edu.sc.seis.sod.SodConfig">

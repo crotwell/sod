@@ -9,6 +9,7 @@ public class RecordSectionItem {
                              String recordSectionId,
                              CacheEvent event,
                              Channel channel,
+                             float sToN,
                              boolean inBest) {
         super();
         this.event = event;
@@ -16,6 +17,7 @@ public class RecordSectionItem {
         this.recordSectionId = recordSectionId;
         this.orientationId = orientationId;
         this.inBest = inBest;
+        this.sToN = sToN;
     }
 
     /** for hibernate */
@@ -32,6 +34,10 @@ public class RecordSectionItem {
     protected String orientationId;
 
     protected boolean inBest;
+    
+    protected float sToN;
+
+    
 
     public long getDbid() {
         return dbid;
@@ -45,7 +51,7 @@ public class RecordSectionItem {
         return event;
     }
 
-    public void setEvent(CacheEvent event) {
+    protected void setEvent(CacheEvent event) {
         this.event = event;
     }
 
@@ -53,7 +59,7 @@ public class RecordSectionItem {
         return channel;
     }
 
-    public void setChannel(Channel channel) {
+    protected void setChannel(Channel channel) {
         this.channel = channel;
     }
 
@@ -61,7 +67,7 @@ public class RecordSectionItem {
         return recordSectionId;
     }
 
-    public void setRecordSectionId(String recordSectionId) {
+    protected void setRecordSectionId(String recordSectionId) {
         this.recordSectionId = recordSectionId;
     }
 
@@ -69,7 +75,7 @@ public class RecordSectionItem {
         return orientationId;
     }
 
-    public void setOrientationId(String orientationId) {
+    protected void setOrientationId(String orientationId) {
         this.orientationId = orientationId;
     }
 
@@ -79,5 +85,13 @@ public class RecordSectionItem {
 
     public void setInBest(boolean inBest) {
         this.inBest = inBest;
+    }
+    
+    public float getsToN() {
+        return sToN;
+    }
+    
+    protected void setsToN(float sToN) {
+        this.sToN = sToN;
     }
 }
