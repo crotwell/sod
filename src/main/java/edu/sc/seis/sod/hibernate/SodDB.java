@@ -644,6 +644,15 @@ public class SodDB extends AbstractHibernateDB {
         query.setEntity("event", event);
         return query.list();
     }
+    
+    /** Finds the recordsection orientationids for this event */
+    public List<String> getRecordSectionOrientations(CacheEvent event) {
+        String q = "select distinct orientationId from "+ RecordSectionItem.class.getName()
+        + " where event = :event";
+        Query query = getSession().createQuery(q);
+        query.setEntity("event", event);
+        return query.list();
+    }
 
     public RecordSectionItem getRecordSectionItem(String orientationId,
                                                   String recordSectionId,
