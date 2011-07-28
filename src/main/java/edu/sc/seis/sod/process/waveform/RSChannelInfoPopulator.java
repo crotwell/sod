@@ -135,6 +135,20 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         }
         return (AbstractSeismogramWriter) SodUtil.load(saveSeisConf, "waveform");
     }
+    
+    public List<MemoryDataSetSeismogram> getDSSForRecordSectionItems(List<RecordSectionItem> rsList) throws Exception {
+        List<MemoryDataSetSeismogram> out = new ArrayList<MemoryDataSetSeismogram>();
+        for (RecordSectionItem rsi : rsList) {
+            synchronized(this) {
+                URLDataSetSeismogram dss = extractSeismogramsFromDB(rsi);
+                out.add(new MemoryDataSetSeismogram(dss.getSeismograms(),
+                                                    dss.getDataSet(),
+                                                    dss.getName(),
+                                                    dss.getRequestFilter()));
+            }
+        }
+        return out;
+    }
 
     public List<MemoryDataSetSeismogram> wrap(List<? extends DataSetSeismogram> dss)
             throws Exception {
@@ -159,7 +173,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) throws Exception {
-        List<DataSetSeismogram> best = updateTable(event,
+        List<RecordSectionItem> best = updateTable(event,
                                   chan,
                                   original,
                                   available,
@@ -170,7 +184,10 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         return new WaveformResult(seismograms, new StringTreeLeaf(this, out));
     }
 
-    public List<DataSetSeismogram> updateTable(CacheEvent event,
+    /** if new channel is in the record section, best RecordSectionItems are returned. If
+     * the new channel does not make the best list, then an empty list is returned.
+     */
+    public List<RecordSectionItem> updateTable(CacheEvent event,
                                ChannelImpl channel,
                                RequestFilter[] original,
                                RequestFilter[] available,
@@ -179,7 +196,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         if( ! channelAcceptor.accept(event,
                                    channel,
                                    cookieJar).isSuccess()) {
-            return new ArrayList<DataSetSeismogram>();
+            return new ArrayList<RecordSectionItem>();
         }
         if (orientationId.equals("main") && ! channel.get_code().endsWith("Z")) {
             throw new Exception("Try to put non-Z channel in main record section: "+ChannelIdUtil.toStringNoDates(channel));
@@ -191,57 +208,65 @@ public class RSChannelInfoPopulator implements WaveformProcess {
                                                                                                    ReduceTool.cover(original));
             dss = addToCache(event, channel, chanDSS).toArray(new URLDataSetSeismogram[0]);
         }
-            SodDB soddb = SodDB.getSingleton();
-            if(soddb.getRecordSectionItem(orientationId,
-                                          recordSectionId, event, channel) == null) {
-                if (channel.get_code().endsWith("Z")) {
-                    logger.debug("RecordSection to db: "+orientationId+" "+recordSectionId+" "+ChannelIdUtil.toString(channel.get_id()));
-                }
-                float ston = 0;
-                Object[] cookieKeys = cookieJar.getKeys();
-                for (int i = 0; i < cookieKeys.length; i++) {
-                    if (cookieKeys[i] instanceof String && ((String)cookieKeys[i]).startsWith(PhaseSignalToNoise.PHASE_STON_PREFIX)) {
-                        // found StoN
-                        ston = ((LongShortTrigger)cookieJar.get((String)cookieKeys[i])).getValue();
-                        break;
+        float ston = 0;
+        Object[] cookieKeys = cookieJar.getKeys();
+        for (int i = 0; i < cookieKeys.length; i++) {
+            if (cookieKeys[i] instanceof String && ((String)cookieKeys[i]).startsWith(PhaseSignalToNoise.PHASE_STON_PREFIX)) {
+                // found StoN
+                ston = ((LongShortTrigger)cookieJar.get((String)cookieKeys[i])).getValue();
+                break;
+            }
+        }
+        SodDB soddb = SodDB.getSingleton();
+        RecordSectionItem current = soddb.getRecordSectionItem(orientationId,
+                                                               recordSectionId, event, channel);
+        if(current == null) {
+            current = new RecordSectionItem(orientationId,
+                                            recordSectionId,
+                                            event,
+                                            channel,
+                                            ston,
+                                            false);
+            soddb.put(current);
+        }
+                
+        List<RecordSectionItem> bestRSList = soddb.getBestForRecordSection(orientationId, recordSectionId, event);
+        List<RecordSectionItem> newBestRSList = spacer.spaceOut(bestRSList);
+        if (newBestRSList.contains(current)) {
+            // new rsi made the cut
+            if (newBestRSList.size() <= bestRSList.size()) {
+                // current is in best and knocked one out, should recalculate
+                List<RecordSectionItem> allRSI = soddb.getRecordSectionItemList(orientationId, recordSectionId, event);
+                newBestRSList = spacer.spaceOut(bestRSList);
+                List<RecordSectionItem> needUpdate = new ArrayList<RecordSectionItem>();
+
+                for (RecordSectionItem rsi : allRSI) {
+                    if (rsi.isInBest() == true && ! newBestRSList.contains(rsi)) {
+                        //was in best, but not any more
+                        rsi.setInBest(false);
+                        needUpdate.add(rsi);
                     }
                 }
-                soddb.put(new RecordSectionItem(orientationId,
-                                                recordSectionId,
-                                                event,
-                                                channel,
-                                                ston,
-                                                false));
-            } else {
-                if (channel.get_code().endsWith("Z")) {
-                    logger.debug("RecordSection already in db: "+orientationId+" "+recordSectionId+" "+ChannelIdUtil.toString(channel.get_id()));
+                for (RecordSectionItem rsi : newBestRSList) {
+                    if (rsi.isInBest() == false) {
+                        // was not in best but is now
+                        rsi.setInBest(true);
+                        needUpdate.add(rsi);
+                    }
                 }
-            }
-            List<DataSetSeismogram> bestSeismos = new ArrayList<DataSetSeismogram>();
-            for (int i = 0; i < dss.length; i++) {
-                if (channelAcceptor.accept(event, (ChannelImpl)dss[i].getChannel(), cookieJar).isSuccess()) {
-                    bestSeismos.add(dss[i]);
+                for (RecordSectionItem rsi : needUpdate) {
+                    soddb.getSession().update(rsi);
                 }
+            } else  {
+                // just added a new one, so done
+                current.setInBest(true);
+                soddb.getSession().update(current);
             }
-            if(spacer != null) {
-                bestSeismos = spacer.spaceOut(bestSeismos);
-            }
-            for (DataSetSeismogram dataSetSeismogram : bestSeismos) {
-                logger.debug("RecordSection best: "+dataSetSeismogram);
-            }
-            ChannelId[] bestChans = getChannelIds(bestSeismos);
-            for (ChannelId channelId : bestChans) {
-                logger.debug("RecordSection best chan: "+ChannelIdUtil.toStringNoDates(channelId));
-            }
-            boolean isUpdateBest = soddb.updateBestForRecordSection(orientationId,
-                                             recordSectionId,
-                                             event,
-                                             bestChans);
-            if (isUpdateBest) {
-                return bestSeismos;
-            } else {
-                return new ArrayList<DataSetSeismogram>();
-            }
+            return newBestRSList;
+        } else {
+            // current not good enough, no change
+            return new ArrayList<RecordSectionItem>();
+        }
     }
 
     public ChannelId[] getChannelIds(List<DataSetSeismogram> dss)
@@ -318,6 +343,24 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         List<URLDataSetSeismogram> copy = new ArrayList<URLDataSetSeismogram>(lastDSS.size());
         copy.addAll(lastDSS);
         return copy;
+    }
+    private static  URLDataSetSeismogram extractSeismogramsFromDB(RecordSectionItem rsi) throws Exception {
+        DataSet ds = new MemoryDataSet("fake id", "temp name", "RSChannelInfoPopulator", new AuditInfo[0]);
+        ds.addParameter(StdDataSetParamNames.EVENT, rsi.getEvent(), new AuditInfo[0]);
+        ds.addParameter(StdDataSetParamNames.CHANNEL, rsi.getChannel(), new AuditInfo[0]);
+        RequestFilter[] rf = null;
+        if (Start.getWaveformRecipe() instanceof LocalSeismogramArm) {
+            rf = ((LocalSeismogramArm)Start.getWaveformRecipe()).getRequestGenerator().generateRequest(rsi.getEvent(), 
+                                                                                                       (ChannelImpl)rsi.getChannel(), null);
+        } else {
+            VectorRequestGenerator vrg = ((MotionVectorArm)Start.getWaveformRecipe()).getRequestGenerator();
+            if (vrg instanceof RequestGeneratorWrapper) {
+                rf = ((RequestGeneratorWrapper)vrg).getRequestGenerator().generateRequest(rsi.getEvent(), (ChannelImpl)rsi.getChannel(), null);
+            }
+        }
+        return SeismogramFileRefDB.getSingleton().getDataSetSeismogram(rsi.getChannel().getId(),
+                                                                                                                  rsi.getEvent(),
+                                                                                                                  ReduceTool.cover(rf));
     }
 
     public RecordSectionDisplay getConfiguredRSDisplay() {

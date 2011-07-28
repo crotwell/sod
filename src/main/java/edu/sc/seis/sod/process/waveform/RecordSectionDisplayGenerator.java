@@ -27,6 +27,8 @@ import edu.sc.seis.fissuresUtil.xml.URLDataSetSeismogram;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.hibernate.RecordSectionItem;
+import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
@@ -54,7 +56,7 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) throws Exception {
         logger.debug("BEGIN RecordSectionDisplay accept");
-        List<DataSetSeismogram> best = updateTable(event,
+        List<RecordSectionItem> best = updateTable(event,
                                   chan,
                                   original,
                                   available,
@@ -64,20 +66,9 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
             return new WaveformResult(seismograms,
                                       new StringTreeLeaf(this, false));
         }
-        writeImage(wrap(best), event, false);
+        writeImage(getDSSForRecordSectionItems(best), event, false);
         logger.debug("END RecordSectionDisplay accept");
         return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
-    }
-
-    public void makeRecordSection(CacheEvent event)
-            throws Exception, NoPreferredOrigin, IOException {
-        try {
-            List<URLDataSetSeismogram> dss = extractSeismograms(event);
-            outputBestRecordSection(event, dss);
-        } catch(IOException e) {
-            throw new IOException("Problem opening dsml file in RecordSectionDisplayGenerator"
-                    + e);
-        }
     }
 
     public String getFileLoc(EventAccessOperations event) throws Exception {
@@ -96,30 +87,7 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
         return workingDirName;
     }
 
-    public void outputBestRecordSection(EventAccessOperations event,
-                                        List<URLDataSetSeismogram> dataSeis)
-            throws Exception {
-        if(spacer != null) {
-            writeImage(wrap(spacer.spaceOut(dataSeis)), event, false);
-        } else {
-            writeImage(wrap(dataSeis), event, false);
-        }
-    }
-    
-    public void outputRecordSection(List<URLDataSetSeismogram> dataSeis,
-                                    EventAccessOperations event,
-                                    OutputStream out) throws Exception {
-        outputRecordSection(dataSeis, event, out, false);
-    }
-
-    public void outputRecordSection(List<URLDataSetSeismogram> dataSeis,
-                                    EventAccessOperations event,
-                                    OutputStream out, 
-                                    boolean isPDF) throws Exception {
-        writeImage(wrap(dataSeis), event, out, isPDF);
-    }
-
-    protected void writeImage(List<MemoryDataSetSeismogram> dataSeis,
+    public void writeImage(List<MemoryDataSetSeismogram> dataSeis,
                               EventAccessOperations event,
                               OutputStream out,
                               boolean isPDF) throws Exception {
@@ -141,7 +109,7 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
         }
     }
 
-    protected void writeImage(List<MemoryDataSetSeismogram> dataSeis,
+    public void writeImage(List<MemoryDataSetSeismogram> dataSeis,
                               EventAccessOperations event,
                               boolean isPDF) throws Exception {
         String fileLoc = getFileLoc(event);

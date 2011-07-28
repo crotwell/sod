@@ -822,6 +822,18 @@ public class SodDB extends AbstractHibernateDB {
         return true;
     }
 
+    public List<RecordSectionItem> getRecordSectionItemList(String orientationId,
+                                                            String recordSectionId,
+                                                            CacheEvent event) {
+        Query q = getSession().createQuery("from "
+                                           + RecordSectionItem.class.getName()
+                                           + " where event = :event and orientationid = :orientationid and recordSectionId = :recsecid");
+                                   q.setEntity("event", event);
+                                   q.setString("orientationid", orientationId);
+                                   q.setString("recsecid", recordSectionId);
+                                   return q.list();
+    }
+
     private static final String MATCH_CHANNEL_CODES = " channel.id.channel_code = :chanCode and channel.id.site_code = :siteCode and "
             + "channel.id.station_code = :staCode and channel.site.station.networkAttr.id.network_code = :netCode";
 

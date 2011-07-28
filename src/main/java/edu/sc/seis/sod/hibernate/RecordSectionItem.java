@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.hibernate;
 
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.sc.seis.fissuresUtil.bag.DistAz;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 
 public class RecordSectionItem {
@@ -18,6 +19,8 @@ public class RecordSectionItem {
         this.orientationId = orientationId;
         this.inBest = inBest;
         this.sToN = sToN;
+        DistAz distAz = new DistAz(channel, event);
+        this.degrees = (float)distAz.getDelta();
     }
 
     /** for hibernate */
@@ -36,8 +39,8 @@ public class RecordSectionItem {
     protected boolean inBest;
     
     protected float sToN;
-
     
+    protected float degrees;
 
     public long getDbid() {
         return dbid;
@@ -93,5 +96,14 @@ public class RecordSectionItem {
     
     protected void setsToN(float sToN) {
         this.sToN = sToN;
+    }
+    
+    /** event to station distance in degrees. */
+    public float getDegrees() {
+        return degrees;
+    }
+    
+    public void setDegrees(float degrees) {
+        this.degrees = degrees;
     }
 }
