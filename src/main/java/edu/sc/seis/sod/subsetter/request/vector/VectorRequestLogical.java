@@ -31,6 +31,7 @@ public class VectorRequestLogical extends LogicalSubsetter {
     static {
         packages = new LinkedList<String>();
         packages.add("request.vector");
+        packages.add("request");
         packages.addAll(EventVectorLogicalSubsetter.packages);
     }
     

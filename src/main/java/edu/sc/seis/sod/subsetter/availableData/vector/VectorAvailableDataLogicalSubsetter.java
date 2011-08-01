@@ -32,6 +32,7 @@ public class VectorAvailableDataLogicalSubsetter extends LogicalSubsetter {
     static {
         packages = new LinkedList<String>();
         packages.add("availableData.vector");
+        packages.add("availableData");
         packages.addAll(VectorRequestLogical.packages);
     }
     
