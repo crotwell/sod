@@ -20,10 +20,14 @@ import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 public class PeriodicCheckpointer extends TimerTask {
 
     public PeriodicCheckpointer() {
+        if (ConnMgr.getDB_TYPE().equals(ConnMgr.HSQL)) {
         Timer t = new Timer(true);
         t.schedule(this,
                    new MicroSecondDate().add(new TimeInterval(1, UnitImpl.HOUR)),
                    ONE_HOUR);
+        } else {
+            logger.warn("Checkpointing only makes sense for HSQLDB, not "+ConnMgr.getDB_TYPE());
+        }
     }
 
     public void run() {
