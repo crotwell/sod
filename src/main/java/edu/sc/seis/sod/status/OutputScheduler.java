@@ -75,7 +75,7 @@ public class OutputScheduler extends Thread implements ArmListener {
             if(Start.isArmFailure() || !anyArmsActive()) {
                 runAll(runnables);
                 runAll(onExitRunnables);
-                if (Start.getRunProps().checkpointPeriodically()) {
+                if (ConnMgr.getDB_TYPE().equals(ConnMgr.HSQL) && Start.getRunProps().checkpointPeriodically()) {
                     new PeriodicCheckpointer().run();
                 }
                 logger.debug("Output Scheduler done.");
