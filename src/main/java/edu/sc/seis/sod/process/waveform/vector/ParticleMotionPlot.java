@@ -149,7 +149,6 @@ public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVe
         Location staLoc = xChan.getSite().getLocation();
         Location eventLoc = EventUtil.extractOrigin(event).getLocation();
         float baz = (float)(180 + Rotate.getRadialAzimuth(staLoc, eventLoc)) % 360;
-        System.out.println("ParticleMotionPlot "+xChan.getOrientation().azimuth+" "+yChan.getOrientation().azimuth);
         DataSource data = new SeisPlotDataSource(XSeis[0],
                                                  xChan.getOrientation().azimuth,
                                                  ySeis[0],
@@ -241,7 +240,6 @@ class SeisPlotDataSource extends AbstractDataSource {
         this.seisY = seisY;
         this.xAz = xAz;
         this.yAz = yAz;
-        System.out.println("ParticleMotionPlot data az x="+xAz+" yAz="+yAz);
     }
 
     LocalSeismogramImpl seisX;
