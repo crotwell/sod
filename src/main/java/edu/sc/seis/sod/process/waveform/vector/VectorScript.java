@@ -34,7 +34,6 @@ public class VectorScript extends AbstractScriptSubsetter implements WaveformVec
         engine.put("available", available);
         engine.put("seismograms", seismograms);
         engine.put("cookieJar", cookieJar);
-        engine.eval("import bag");
         // seismogram process return WaveformVectorResult instead of StringTree, so we can't simply use super.eval()
         Object result = preeval();
         if (result == null) {
