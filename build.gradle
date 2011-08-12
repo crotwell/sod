@@ -27,6 +27,8 @@ dependencies {
     compile "msv:isorelax:20030807"
     compile "msv:relaxngDatatype:20030807"
     compile "msv:xsdlib:20030807"
+    compile "de.erichseifert.gral:VectorGraphics2D:0.9-SNAPSHOT"
+    compile "de.erichseifert.gral:gral-core:0.9-SNAPSHOT"
 
     compile ("org.apache.velocity:velocity-tools:2.0") {
         exclude group: 'xml-apis',  module: 'xml-apis'
