@@ -34,11 +34,13 @@ public class WinstonNetworkSource extends CSVNetworkSource {
         List<gov.usgs.winston.Channel> winstonChannels = getWaveServer().getChannels();
         channels = new ArrayList<ChannelImpl>();
         for (gov.usgs.winston.Channel channel : winstonChannels) {
+            try {
             String[] scnl = channel.getCode().split("\\$");
             String netCode = scnl[2];
             String staCode = scnl[0];
             String chanCode = scnl[1];
             String siteCode = scnl.length==3?"  ":scnl[3]; // if no 'l', just scn, then use space-space for site code
+            try {
             StationImpl curStation = getStationForChannel(netCode, staCode);
             if (curStation == null) {
                 logger.warn("Can't find station for "+netCode+"."+ staCode+", skipping");
@@ -48,8 +50,12 @@ public class WinstonNetworkSource extends CSVNetworkSource {
             float dip = ChannelImpl.getDip(chanCode);
             
             SamplingImpl sampling = new SamplingImpl(1, new TimeInterval(1, UnitImpl.SECOND));
-            TimeRange chanTime = new TimeRange(WinstonWaveServerSource.toDate(channel.getMinTime()).getFissuresTime(),
+//            System.out.println("WinstonNetworkSource: "+channel.getMinTime()+" "+WinstonWaveServerSource.toDate(channel.getMinTime())+" "+WinstonWaveServerSource.toDate(channel.getMinTime()+946728000));
+//            TimeRange chanTime = new TimeRange(WinstonWaveServerSource.toDate(channel.getMinTime()).getFissuresTime(),
+//                                               DEFAULT_END);
+            TimeRange chanTime = new TimeRange(curStation.getBeginTime(),
                                                DEFAULT_END);
+            System.out.println("winstonChannels "+staCode+"."+chanCode+" "+chanTime.start_time.date_time);
             ChannelImpl channelImpl = new ChannelImpl(new ChannelId(curStation.get_id().network_id,
                                                                 staCode,
                                                                 siteCode,
@@ -64,6 +70,12 @@ public class WinstonNetworkSource extends CSVNetworkSource {
                                                                           siteCode,
                                                                           chanTime.start_time), curStation, ""));
             channels.add(channelImpl);
+            } catch (Throwable t) {
+                logger.warn("problem with channel, "+netCode+"."+staCode+"."+siteCode+"."+chanCode+" skipping", t);
+            }
+            } catch (Throwable t) {
+                logger.warn("problem with channel, skipping", t);
+            }
         }
     }
     
