@@ -42,16 +42,31 @@
                     <element name="year">
                         <data type="integer"/>
                     </element>
-                </optional>
-                <optional>
-                    <element name="month">
-                        <data type="integer"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="day">
-                        <data type="integer"/>
-                    </element>
+                    <optional>
+                        <element name="month">
+                            <data type="integer"/>
+                        </element>
+                        <optional>
+                            <element name="day">
+                                <data type="integer"/>
+                            </element>
+                            <optional>
+                                <element name="hour">
+                                    <data type="integer"/>
+                                </element>
+                                <optional>
+                                    <element name="minute">
+                                        <data type="integer"/>
+                                    </element>
+                                    <optional>
+                                        <element name="second">
+                                            <data type="integer"/>
+                                        </element>
+                                    </optional>
+                                </optional>
+                            </optional>
+                        </optional>
+                    </optional>
                 </optional>
             </group>
         </choice>
