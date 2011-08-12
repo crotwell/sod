@@ -3,6 +3,8 @@ package edu.sc.seis.sod.velocity.network;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.velocity.VelocityContext;
+
 import edu.iris.Fissures.Location;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
@@ -111,6 +113,15 @@ public class VelocityChannelGroup {
     
     public VelocityNetwork getNetworkAttr() {
         return new VelocityNetwork(wrapped.getNetworkAttr());
+    }
+    
+    public void insertIntoContext(VelocityContext ctx) {
+        ctx.put("channelGroup", this);
+        getChannel1().getSite().insertIntoContext(ctx);
+    }
+    
+    public ChannelGroup getChannelGroup() {
+        return wrapped;
     }
     
     ChannelGroup wrapped;

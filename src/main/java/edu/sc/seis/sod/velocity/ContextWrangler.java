@@ -8,10 +8,12 @@ import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.StationImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.velocity.event.VelocityEvent;
 import edu.sc.seis.sod.velocity.network.VelocityChannel;
+import edu.sc.seis.sod.velocity.network.VelocityChannelGroup;
 import edu.sc.seis.sod.velocity.network.VelocityNetwork;
 import edu.sc.seis.sod.velocity.network.VelocityStation;
 import edu.sc.seis.sod.velocity.seismogram.VelocitySeismogram;
@@ -71,6 +73,13 @@ public class ContextWrangler {
     public static VelocityChannel insertIntoContext(Channel chan,
                                                     VelocityContext ctx) {
         VelocityChannel velChan = VelocityChannel.wrap(chan);
+        velChan.insertIntoContext(ctx);
+        return velChan;
+    }
+
+    public static VelocityChannelGroup insertIntoContext(ChannelGroup chan,
+                                                         VelocityContext ctx) {
+        VelocityChannelGroup velChan = new VelocityChannelGroup(chan);
         velChan.insertIntoContext(ctx);
         return velChan;
     }
