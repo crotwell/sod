@@ -24,6 +24,7 @@
             <ref name="seismogramProcess"/>
             <ref name="externalVectorProcess"/>
             <ref name="vectorImageProcess"/>
+            <ref name="particleMotionPlot"/>
             <ref name="sampleSyncronize"/>
             <ref name="rotateGCP"/>
             <ref name="vectorTrim"/>
@@ -250,6 +251,22 @@
                 <element name="eastDisplayConfig">
                     <ref name="basicSeismogramDisplayContents"/>
                 </element>
+            </optional>
+        </element>
+    </define>
+    <define name="particleMotionPlot">
+        <element name="particleMotionPlot">
+            <optional>
+                <attribute name="id"/>
+            </optional>
+        <optional>
+            <ref name="workingDir"/>
+        </optional>
+        <optional>
+            <ref name="seisFileLocation"/>
+        </optional>
+            <optional>
+                <ref name="titleBorder"/>
             </optional>
         </element>
     </define>
