@@ -1,10 +1,8 @@
 package edu.sc.seis.sod.process.waveform;
 
 import java.io.File;
-import java.util.regex.Pattern;
 
 import org.apache.velocity.VelocityContext;
-import org.w3c.dom.Element;
 
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
@@ -12,7 +10,6 @@ import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.hibernate.SeismogramFileRefDB;
 import edu.sc.seis.fissuresUtil.xml.SeismogramFileTypes;
 import edu.sc.seis.sod.ConfigurationException;
@@ -22,56 +19,17 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.VelocityFileElementParser;
 import edu.sc.seis.sod.velocity.ContextWrangler;
 import edu.sc.seis.sod.velocity.PrintlineVelocitizer;
-import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
-public abstract class AbstractSeismogramWriter implements WaveformProcess {
+public abstract class AbstractSeismogramWriter extends 
+AbstractFileWriter implements WaveformProcess {
 
-    public static final String DEFAULT_FILE_TEMPLATE_WO_EXT = "Event_${event.getTime('yyyy_MM_dd_HH_mm_ss')}/${channel.codes}${index}";
- 
-    protected static final String DEFAULT_PREFIX = "";
-
-    public static final String DEFAULT_WORKING_DIR = "seismograms/";
-
-    private String template, prefix;
-    
     protected boolean storeSeismogramsInDB = false;
 
     public AbstractSeismogramWriter(String workingDir, String fileTemplate, String prefix, boolean storeSeismogramsInDB)
             throws ConfigurationException {
-        if(!INDEX_VAR.matcher(fileTemplate).matches()) {
-            fileTemplate += "${index}";
-        }
-        VelocityFileElementParser parser = new VelocityFileElementParser(workingDir, fileTemplate);
-        this.template = parser.getTemplate();
-        this.prefix = prefix;
+        super(workingDir, fileTemplate, prefix);
         this.storeSeismogramsInDB = storeSeismogramsInDB;
         new PrintlineVelocitizer(new String[] {fileTemplate});
-    }
-
-    public void removeExisting(CacheEvent event,
-                               ChannelImpl channel,
-                               LocalSeismogramImpl representativeSeismogram) {
-        for(int i = 0; true; i++) {
-            File cur = new File(generate(event, channel, representativeSeismogram, i));
-            if(!cur.exists()) {
-                break;
-            }
-            cur.delete();
-        }
-    }
-
-    public String generate(CacheEvent event,
-                           ChannelImpl channel,
-                           LocalSeismogramImpl representativeSeismogram,
-                           int index) {
-        VelocityContext ctx = ContextWrangler.createContext(event);
-        if(index > 0) {
-            ctx.put("index", "." + index);
-        } else {
-            ctx.put("index", "");
-        }
-        ContextWrangler.insertIntoContext(representativeSeismogram, channel, ctx);
-        return FissuresFormatter.filize(velocitizer.evaluate(template, ctx));
     }
 
     public WaveformResult accept(CacheEvent event,
@@ -103,13 +61,9 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
         }
         return new WaveformResult(true, seismograms, this);
     }
-    
+
     public abstract SeismogramFileTypes getFileType();
     
-    public String getTemplate(){
-        return template;
-    }
-
     public abstract void write(String loc,
                                LocalSeismogramImpl seis,
                                ChannelImpl chan,
@@ -128,26 +82,10 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
                 + i;
     }
 
-    private SimpleVelocitizer velocitizer = new SimpleVelocitizer();
-
     public static final String SVN_PARAM = PhaseSignalToNoise.PHASE_STON_PREFIX
     + "ttp";
 
     static long bytesWritten = 0;
 
     public static final String COOKIE_PREFIX = "SeisFile_";
-
-    protected static String extractFileTemplate(Element el, String def) {
-        return DOMHelper.extractText(el, "location", def);
-    }
-
-    protected static String extractPrefix(Element el) {
-        return DOMHelper.extractText(el, "prefix", DEFAULT_PREFIX);
-    }
-
-    public static String extractWorkingDir(Element el) {
-        return DOMHelper.extractText(el, "workingDir", DEFAULT_WORKING_DIR, true);
-    }
-
-    private static final Pattern INDEX_VAR = Pattern.compile(".*\\$\\{?index\\}?.*");
 }
