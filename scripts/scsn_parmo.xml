@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sod>
+    <eventArm>
+        <eventFinder>
+            <name>IRIS_EventDC</name>
+            <dns>edu/iris/dmc</dns>
+<pointDistance>
+    <latitude>35</latitude>
+    <longitude>-85</longitude>
+    <unit>DEGREE</unit>
+    <min>20</min>
+    <max>90</max>
+</pointDistance>
+            <originTimeRange>
+                <startTime>
+                    <year>2010</year>
+                    <month>10</month>
+                    <day>8</day>
+                </startTime>
+                <endTime>
+                    <year>2010</year>
+                    <month>10</month>
+                    <day>8</day>
+                    <hour>3</hour>
+                    <minute>30</minute>
+                </endTime>
+            </originTimeRange>
+            <magnitudeRange>
+                <min>5</min>
+            </magnitudeRange>
+            <catalog>WHDF</catalog>
+        </eventFinder>
+        <originOR>
+            <originAND>
+                <magnitudeRange>
+                    <min>5</min>
+                </magnitudeRange>
+                <originDepthRange>
+                    <unit>KILOMETER</unit>
+                    <min>100</min>
+                    <max>200</max>
+                </originDepthRange>
+            </originAND>
+            <magnitudeRange>
+                <min>6</min>
+            </magnitudeRange>
+        </originOR>
+        <printlineEventProcess/>
+    </eventArm>
+    <networkArm>
+        <combineNetworkSource>
+            <winstonNetworkSource>
+                <stations>
+net.code, code, start, latitude, longitude, elevation, depth
+CO, JSC, 2009-04-13T00:00:00.000Z, 34.2816, -81.2597, 103, 1
+CO, CASEE, 2009-04-13T00:00:00.000Z, 34.993, -82.9317, 385, 2
+CO, RGR, 2009-04-13T00:00:00.000Z, 32.9074, -80.1939, 10, 51
+CO, CSB, 2009-04-13T00:00:00.000Z, 32.987, -80.0715, 6, 76.3
+CO, HODGE, 2009-04-13T00:00:00.000Z, 34.2314, -82.2585, 155, 1
+CO, BIRD, 2009-04-13T00:00:00.000Z, 34.6449, -80.4614, 132, 1
+CO, PAULI, 2009-04-13T00:00:00.000Z, 34.2816, -81.259752, 103, 1
+CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
+                </stations>
+                <host>eeyore.seis.sc.edu</host>
+                <port>16022</port>
+            </winstonNetworkSource>
+<!--            <networkFinder/> --> <!-- dmc is default network finder-->
+        </combineNetworkSource>
+        <networkOR>
+            <networkCode>CO</networkCode>
+            <networkCode>US</networkCode>
+            <networkCode>TA</networkCode>
+        </networkOR>
+        <stationBoxArea>
+            <latitudeRange>
+                <min>31</min>
+                <max>36</max>
+            </latitudeRange>
+            <longitudeRange>
+                <min>-85</min>
+                <max>-76</max>
+            </longitudeRange>
+        </stationBoxArea>
+        <channelOR>
+            <bandCode>B</bandCode>
+            <bandCode>H</bandCode>
+            <bandCode>E</bandCode>
+        </channelOR>
+        <printlineChannelProcess/>
+    </networkArm>
+    <waveformVectorArm>
+        <distanceRange>
+            <unit>DEGREE</unit>
+            <min>30</min>
+            <max>90</max>
+        </distanceRange>
+<!--
+        <bestChannelAtStation/>
+-->
+        <phaseRequest>
+            <model>prem</model>
+            <beginPhase>ttp</beginPhase>
+            <beginOffset>
+                <unit>SECOND</unit>
+                <value>-2</value>
+            </beginOffset>
+            <endPhase>ttp</endPhase>
+            <endOffset>
+                <unit>SECOND</unit>
+                <value>5</value>
+            </endOffset>
+        </phaseRequest>
+        <choiceSource>
+            <choice>
+                <networkCode>CO</networkCode>
+                <winstonWaveServer>
+                    <host>eeyore.seis.sc.edu</host>
+                    <port>16022</port>
+                </winstonWaveServer>
+            </choice>
+            <otherwise>
+                <fixedDataCenter>
+                    <name>IRIS_DataCenter</name>
+                    <dns>edu/iris/dmc</dns>
+                </fixedDataCenter>
+            </otherwise>
+        </choiceSource>
+        <someCoverage/>
+        <someDataCoverage/>
+<phaseCut>
+            <model>prem</model>
+            <beginPhase>ttp</beginPhase>
+            <beginOffset>
+                <unit>SECOND</unit>
+                <value>0</value>
+            </beginOffset>
+            <endPhase>ttp</endPhase>
+            <endOffset>
+                <unit>SECOND</unit>
+                <value>3</value>
+            </endOffset>
+        </phaseCut>
+        <merge/>
+        <vectorTrim/>
+        <noDataGaps/>
+        <printlineSeismogramProcess/>
+<!--
+        <recordSectionDisplayGenerator>
+<orientationId>Z</orientationId>
+<recordSectionId>abc</recordSectionId>
+<idealNumberOfSeismograms>9999</idealNumberOfSeismograms>
+<maxNumberOfSeismograms>9999</maxNumberOfSeismograms>
+<displayConfig>
+<type>recordSection</type>
+</displayConfig>
+        </recordSectionDisplayGenerator>
+-->
+        <sacWriter/>
+        <particleMotionPlot>
+        </particleMotionPlot>
+        <vectorImageProcess>
+            <prefix>waveforms</prefix>
+            <fileType>pdf</fileType>
+            <dimension><width>800</width><height>800</height>
+            </dimension>
+            <showOnlyFirstArrivals/>
+            <phaseFlags>
+                <phase>P</phase>
+            </phaseFlags>
+        </vectorImageProcess>
+<waveformVectorOR>
+<stationNOT>
+<stationCode>CSB</stationCode>
+</stationNOT>
+<waveformVectorAND>
+        <particleMotionPlot>
+            <workingDir>ParMo</workingDir>
+        </particleMotionPlot>
+        <vectorScript type="jython">
+from edu.sc.seis.sod.process.waveform.vector import ParticleMotionPlot
+pmp = ParticleMotionPlot("ParMo", "Event_${event.getTime('yyyy_MM_dd_HH_mm_ss')}/${yChan.azimuth}_${prefix}${station}_${xChan.get_code()}_${yChan.get_code()}_${index}.pdf", "")
+
+step = 30
+for i in range(0, 360+step, step):
+  for channel in channelGroup.getChannels():
+    if (channel.orientation.dip ==0):
+        channel.orientation.azimuth = (channel.orientation.azimuth + step) % 360;
+        print "Found horizontal CSB %s %f\n"%(channel.get_code(), channel.orientation.azimuth)
+  for channel in channelGroup.getChannels():
+    print "     %s %f\n"%(channel.get_code(), channel.orientation.azimuth)
+  pmp.accept(event.getCacheEvent(), channelGroup.getChannelGroup(), request, available, seismograms, cookieJar)
+        </vectorScript>
+</waveformVectorAND>
+</waveformVectorOR>
+    </waveformVectorArm>
+</sod>
