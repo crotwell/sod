@@ -8,31 +8,33 @@
             <xsd:annotation>
                 <summary>A range of lengths</summary>
             </xsd:annotation>
-            <ref name="lengthUnit"/>
-            <optional>
-                <element name="min">
-                    <xsd:annotation>
-                        <include/>
-                    </xsd:annotation>
-                    <data type="double">
-                        <xsd:annotation>
-                            <example>0</example>
-                        </xsd:annotation>
-                    </data>
-                </element>
-            </optional>
-            <optional>
-                <element name="max">
-                    <xsd:annotation>
-                        <include/>
-                    </xsd:annotation>
-                    <data type="double">
-                        <xsd:annotation>
-                            <example>36</example>
-                        </xsd:annotation>
-                    </data>
-                </element>
-            </optional>
+            <interleave>
+ 	           <ref name="lengthUnit"/>
+    	        <optional>
+        	        <element name="min">
+            	        <xsd:annotation>
+                	        <include/>
+                    	</xsd:annotation>
+	                    <data type="double">
+    	                    <xsd:annotation>
+        	                    <example>0</example>
+            	            </xsd:annotation>
+                	    </data>
+ 	               </element>
+    	        </optional>
+        	    <optional>
+            	    <element name="max">
+                	    <xsd:annotation>
+                    	    <include/>
+ 	                   </xsd:annotation>
+    	                <data type="double">
+        	                <xsd:annotation>
+            	                <example>36</example>
+                	        </xsd:annotation>
+ 	                   </data>
+    	            </element>
+        	    </optional>
+            </interleave>
         </group>
     </define>
     <define name="degreeRange">
