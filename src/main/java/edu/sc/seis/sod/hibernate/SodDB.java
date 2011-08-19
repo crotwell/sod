@@ -186,7 +186,7 @@ public class SodDB extends AbstractHibernateDB {
             // might be new thread
             // ok to use even though might not be committed as hibernate flushes
             // due to native generator for id
-            return (EventNetworkPair)getSession().merge(enp.getDbid());
+            return (EventNetworkPair)getSession().merge(enp);
         }
         return null;
     }
