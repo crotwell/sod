@@ -60,8 +60,8 @@ public class RemoveStationDuplicateTest extends TestCase {
                                                            Standing.SUCCESS));
         StatefulEventDB eventdb = StatefulEventDB.getSingleton();
         eventdb.put(event);
-        EventStationPair esp = new EventStationPair(event, mockOne, Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.SUCCESS));
-        sodDb.put(esp);
+        EventStationPair esp = sodDb.createEventStationPair(event, mockOne);
+        esp.update(Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.SUCCESS));
         EventChannelPair ecp = new EventChannelPair(event, MockChannel.createChannel(mockOne), Status.get(Stage.PROCESSOR, Standing.SUCCESS), esp);
         netdb.put(ecp.getChannel());
         sodDb.put(ecp);

@@ -20,6 +20,7 @@ import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
+import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
@@ -118,36 +119,41 @@ public class SodDB extends AbstractHibernateDB {
         out += getSession().createQuery(query).executeUpdate();
     }
 
-    public EventNetworkPair put(EventNetworkPair eventNetworkPair) {
-        logger.debug("Put "+eventNetworkPair);
+    public EventNetworkPair createEventNetworkPair(StatefulEvent event, NetworkAttrImpl net) {
         Session session = getSession();
-        session.lock(eventNetworkPair.getNetwork(), LockMode.NONE);
-        session.lock(eventNetworkPair.getEvent(), LockMode.NONE);
-        session.saveOrUpdate(eventNetworkPair);
+        EventNetworkPair enp = new EventNetworkPair(event, 
+                                                    (NetworkAttrImpl)session.merge(net),
+                                                    Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                                               Standing.INIT));
+        logger.debug("Put "+enp);
+        session.save(enp);
         synchronized(enpToDo) {
-            enpToDo.offer(eventNetworkPair);
+            enpToDo.offer(enp);
         }
-        return eventNetworkPair;
+        return enp;
     }
 
-    public EventStationPair put(EventStationPair eventStationPair) {
-        logger.debug("Put ("+eventStationPair.getEventDbId()+",s "+eventStationPair.getStationDbId()+") "+eventStationPair);
+    public EventStationPair createEventStationPair(StatefulEvent event, StationImpl station) {
+        logger.debug("Put esp ("+event.getDbid()+",s "+station.getDbid()+") ");
         Session session = getSession();
-        session.lock(eventStationPair.getStation(), LockMode.NONE);
-        session.lock(eventStationPair.getEvent(), LockMode.NONE);
-        session.saveOrUpdate(eventStationPair);
+        EventStationPair esp = new EventStationPair(event, 
+                                                    (StationImpl)session.merge(station),
+                                                    Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                                               Standing.INIT) );
+        session.save(esp);
         synchronized(espToDo) {
-            espToDo.offer(eventStationPair);
+            espToDo.offer(esp);
         }
-        return eventStationPair;
+        return esp;
     }
 
-    public EventChannelPair put(EventChannelPair eventChannelPair) {
-        logger.debug("Put "+eventChannelPair);
+    public EventChannelPair createEventChannelPair(StatefulEvent event, ChannelImpl chan, EventStationPair esp) {
         Session session = getSession();
-        session.lock(eventChannelPair.getChannel(), LockMode.NONE);
-        session.lock(eventChannelPair.getEvent(), LockMode.NONE);
-        session.saveOrUpdate(eventChannelPair);
+        EventChannelPair eventChannelPair = new EventChannelPair(event, 
+                                                                 (ChannelImpl)session.merge(chan),
+                                                                 esp);
+        logger.debug("Put "+eventChannelPair);
+        session.save(eventChannelPair);
         return eventChannelPair;
     }
     
@@ -180,8 +186,7 @@ public class SodDB extends AbstractHibernateDB {
             // might be new thread
             // ok to use even though might not be committed as hibernate flushes
             // due to native generator for id
-            return (EventNetworkPair)getSession().get(EventNetworkPair.class, 
-                                                      new Long(enp.getDbid()));
+            return (EventNetworkPair)getSession().merge(enp.getDbid());
         }
         return null;
     }
@@ -224,8 +229,7 @@ public class SodDB extends AbstractHibernateDB {
             // might be new thread
             // ok to use even though might not be committed as hibernate flushes
             // due to native generator for id
-            return (EventStationPair)getSession().get(EventStationPair.class, 
-                                                      new Long(esp.getDbid()));
+            return (EventStationPair)getSession().merge(esp);
         }
         return null;
     }
@@ -280,8 +284,7 @@ public class SodDB extends AbstractHibernateDB {
             ecp = retryToDo.poll();
         }
         if (ecp != null) {
-            return (AbstractEventChannelPair)getSession().get(ecp.getClass(), 
-                                                             new Long(ecp.getDbid()));
+            return (AbstractEventChannelPair)getSession().merge(ecp);
         }
         return null;
     }

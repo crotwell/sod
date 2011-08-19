@@ -21,8 +21,7 @@ public class EventChannelPair extends AbstractEventChannelPair {
     protected EventChannelPair() {}
     
     public EventChannelPair(StatefulEvent event, ChannelImpl chan, EventStationPair esp) {
-        super(event, esp);
-        setChannel(chan);
+        this(event, chan, Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.INIT), esp);
     }
 
     public EventChannelPair(StatefulEvent event, ChannelImpl chan, Status status, EventStationPair esp) {

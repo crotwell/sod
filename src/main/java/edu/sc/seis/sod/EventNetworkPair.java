@@ -16,8 +16,7 @@ public class EventNetworkPair extends AbstractEventPair {
     protected EventNetworkPair() {}
 
     public EventNetworkPair(StatefulEvent event, NetworkAttrImpl net) {
-        super(event);
-        setNetwork(net);
+        this(event, net, Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.INIT));
     }
 
     public EventNetworkPair(StatefulEvent event,
@@ -44,11 +43,8 @@ public class EventNetworkPair extends AbstractEventPair {
                     failLogger.info(StationIdUtil.toString(stations[i].get_id())
                             + "'s station effective time does not overlap the event time.");
                 } else {
-                    EventStationPair p = new EventStationPair(getEvent(),
-                                                              stations[i],
-                                                              Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                                                                         Standing.INIT));
-                    SodDB.getSingleton().put(p);
+                    EventStationPair p = SodDB.getSingleton().createEventStationPair(getEvent(),
+                                                                                     stations[i]);
                 }
             }
             update(Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.SUCCESS));

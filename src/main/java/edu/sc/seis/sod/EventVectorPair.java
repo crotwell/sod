@@ -17,18 +17,24 @@ public class EventVectorPair extends AbstractEventChannelPair {
     protected EventVectorPair() {}
 
     public EventVectorPair(StatefulEvent event,
-                           ChannelGroup chans,
+                           ChannelGroup channelGroup,
+                           EventStationPair esp) {
+        this(event, channelGroup, Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.INIT), esp);
+    }
+    
+    public EventVectorPair(StatefulEvent event,
+                           ChannelGroup channelGroup,
                            Status status, EventStationPair esp) {
         super(event, status, esp);
-        channels = chans;
+        this.channelGroup = channelGroup;
     }
 
     public ChannelGroup getChannelGroup() {
-        return channels;
+        return channelGroup;
     }
     
     protected void setChannelGroup(ChannelGroup cg) {
-        channels = cg;
+        channelGroup = cg;
     }
 
     public void run() {
@@ -82,7 +88,7 @@ public class EventVectorPair extends AbstractEventChannelPair {
     }
     
 
-    ChannelGroup channels;
+    ChannelGroup channelGroup;
     
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(EventVectorPair.class);
 }

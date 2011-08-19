@@ -9,8 +9,7 @@ public abstract class AbstractEventChannelPair extends CookieEventPair {
     }
 
     public AbstractEventChannelPair(StatefulEvent event, EventStationPair esp) {
-        super(event);
-        setEsp(esp);
+        this(event, Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.INIT), esp);
     }
 
     public AbstractEventChannelPair(StatefulEvent event, Status status, EventStationPair esp) {

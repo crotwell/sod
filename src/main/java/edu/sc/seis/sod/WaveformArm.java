@@ -129,7 +129,7 @@ public class WaveformArm extends Thread implements Arm {
                 if(esp != null) {
                     esp.update(Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.IN_PROG));
                     SodDB.commit();
-                    SodDB.getSession().update(esp);
+                    esp  = (EventStationPair)SodDB.getSession().merge(esp);
                     return esp;
                 }
             }
@@ -140,7 +140,7 @@ public class WaveformArm extends Thread implements Arm {
                     enp.update(Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.IN_PROG));
                     SodDB.commit();
                     // reattach to new session
-                    SodDB.getSession().update(enp);
+                    enp = (EventNetworkPair)SodDB.getSession().merge(enp);
                     return enp;
                 }
             }
@@ -156,7 +156,7 @@ public class WaveformArm extends Thread implements Arm {
             if(ecp != null) {
                 ecp.update(Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.IN_PROG));
                 SodDB.commit();
-                ecp = (AbstractEventChannelPair)SodDB.getSession().get(ecp.getClass(), ecp.getDbid());
+                ecp = (AbstractEventChannelPair)SodDB.getSession().merge(ecp);
                 lastECP = ClockUtil.now();
                 return ecp;
             }
@@ -225,13 +225,9 @@ public class WaveformArm extends Thread implements Arm {
         int numENP = 0;
         for (NetworkAttrImpl net : networks) {
             if(overlap.overlaps(net)) {
-                EventNetworkPair p = new EventNetworkPair(ev,
-                                                          net,
-                                                          Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                                                                     Standing.INIT));
+                EventNetworkPair p = sodDb.createEventNetworkPair(ev, net);
                 numENP++;
                 logger.debug("Put EventNetworkPair: "+p);
-                sodDb.put(p);
             } else {
                 failLogger.info("Network "
                         + NetworkIdUtil.toStringNoDates(net)
