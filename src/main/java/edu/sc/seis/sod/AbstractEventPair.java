@@ -46,16 +46,11 @@ public abstract class AbstractEventPair extends WaveformWorkUnit {
     }
 
     public StatefulEvent getEvent(){ return event; }
-    
-    /** for use by hibernate */
 
     /** for use by hibernate */
     protected void setEvent(StatefulEvent e) {
         this.event = e;
     }
-
-
-    /** for use by hibernate */
     
     private Status status;
     private StatefulEvent event;
