@@ -122,10 +122,9 @@ public class EventStationPair extends CookieEventPair {
                     // use Standing.IN_PROG as we are going to do event-channel
                     // processing here
                     // don't want another thread to pull the ECP from the DB
-                    EventChannelPair p = sodDb.createEventChannelPair(getEvent(), c, Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                                                                                        Standing.IN_PROG), this);
+                    EventChannelPair p = sodDb.createEventChannelPair(getEvent(), c, this);
+                    p.update(Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.IN_PROG));
                     chanPairs.add(p);
-                    sodDb.put(p);
                 }
             }
             update(Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.SUCCESS));
