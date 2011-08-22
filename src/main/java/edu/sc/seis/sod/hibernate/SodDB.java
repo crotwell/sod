@@ -62,20 +62,20 @@ public class SodDB extends AbstractHibernateDB {
         config.addResource(configFile, SodDB.class.getClassLoader());
         if(ConnMgr.getURL().startsWith("jdbc:hsql")) {
             config.addSqlFunction("datediff",
-                                  new SQLFunctionTemplate(Hibernate.LONG,
+                                  new SQLFunctionTemplate(org.hibernate.type.StandardBasicTypes.LONG,
                                                           "datediff(?1, ?2, ?3)"));
             config.addSqlFunction("milliseconds_between",
-                                  new SQLFunctionTemplate(Hibernate.LONG,
+                                  new SQLFunctionTemplate(org.hibernate.type.StandardBasicTypes.LONG,
                                                           "datediff('ms', ?1, ?2)"));
             config.addSqlFunction("seconds_between",
-                                  new SQLFunctionTemplate(Hibernate.LONG,
+                                  new SQLFunctionTemplate(org.hibernate.type.StandardBasicTypes.LONG,
                                                           "datediff('ss', ?1, ?2)"));
         } else if(ConnMgr.getURL().startsWith("jdbc:postgresql")) {
             config.addSqlFunction("milliseconds_between",
-                                  new SQLFunctionTemplate(Hibernate.LONG,
+                                  new SQLFunctionTemplate(org.hibernate.type.StandardBasicTypes.LONG,
                                                           "extract(epoch from (?2 - ?1)) * 1000"));
             config.addSqlFunction("seconds_between",
-                                  new SQLFunctionTemplate(Hibernate.LONG,
+                                  new SQLFunctionTemplate(org.hibernate.type.StandardBasicTypes.LONG,
                                                           "extract(epoch from (?2 - ?1))"));
         }
     }
@@ -133,6 +133,18 @@ public class SodDB extends AbstractHibernateDB {
         return enp;
     }
 
+    public void offerEventNetworkPairs(List<EventNetworkPair> staPairList) {
+        for (EventNetworkPair pair : staPairList) {
+            enpToDo.offer(pair);
+        }
+    }
+
+    public void offerEventStationPair(List<EventStationPair> staPairList) {
+        for (EventStationPair eventStationPair : staPairList) {
+            espToDo.offer(eventStationPair);
+        }
+    }
+    
     public EventStationPair createEventStationPair(StatefulEvent event, StationImpl station) {
         logger.debug("Put esp ("+event.getDbid()+",s "+station.getDbid()+") ");
         Session session = getSession();

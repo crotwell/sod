@@ -1,11 +1,16 @@
 package edu.sc.seis.sod;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.iris.Fissures.network.StationImpl;
+import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.StatefulEvent;
 import edu.sc.seis.sod.subsetter.EventEffectiveTimeOverlap;
@@ -29,6 +34,8 @@ public class EventNetworkPair extends AbstractEventPair {
     public void run() {
         // don't bother with station if effective time does not
         // overlap event time
+
+        List<EventStationPair> staPairList = new ArrayList<EventStationPair>();
         try {
             EventEffectiveTimeOverlap overlap = new EventEffectiveTimeOverlap(getEvent());
             StationImpl[] stations = Start.getNetworkArm()
@@ -43,20 +50,35 @@ public class EventNetworkPair extends AbstractEventPair {
                     failLogger.info(StationIdUtil.toString(stations[i].get_id())
                             + "'s station effective time does not overlap the event time.");
                 } else {
-                    EventStationPair p = SodDB.getSingleton().createEventStationPair(getEvent(),
-                                                                                     stations[i]);
+                    EventStationPair p;
+                    try {
+                        p = new EventStationPair(getEvent(), 
+                                                 NetworkDB.getSingleton().getStation(stations[i].getDbid()));
+                    } catch(NotFound e) {
+                        throw new RuntimeException("Should never happen but I guess it did!", e);
+                    }
+                    staPairList.add(p);
                 }
             }
-            update(Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.SUCCESS));
+            synchronized(WaveformArm.class) {
+                update(Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.SUCCESS));
+                for (EventStationPair p : staPairList) {
+                    SodDB.getSession().save(p);
+                }
+                SodDB.commit();
+            }
+            SodDB.getSingleton().offerEventStationPair(staPairList);
         } catch(NoPreferredOrigin e) {
             // should never happen
             GlobalExceptionHandler.handle(e);
             update(Status.get(Stage.EVENT_CHANNEL_POPULATION,
                               Standing.SYSTEM_FAILURE));
             failLogger.warn(this.toString(), e);
+        } finally {
+            // make sure session is closed in case of exception
+            SodDB.rollback();
         }
         logger.debug("End EventNetworkPair ("+getEvent().getDbid()+",s "+getNetworkDbId()+") "+this);
-        SodDB.commit();
     }
 
     /**

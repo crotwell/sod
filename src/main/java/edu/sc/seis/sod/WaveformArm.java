@@ -1,5 +1,6 @@
 package edu.sc.seis.sod;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
@@ -10,7 +11,9 @@ import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
+import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.StatefulEvent;
 import edu.sc.seis.sod.hibernate.StatefulEventDB;
@@ -223,9 +226,16 @@ public class WaveformArm extends Thread implements Arm {
              throw new RuntimeException("No successful networks!");
         }
         int numENP = 0;
+        List<EventNetworkPair> enpList = new ArrayList<EventNetworkPair>();
         for (NetworkAttrImpl net : networks) {
             if(overlap.overlaps(net)) {
-                EventNetworkPair p = sodDb.createEventNetworkPair(ev, net);
+                EventNetworkPair p;
+                try {
+                    p = new EventNetworkPair(ev, NetworkDB.getSingleton().getNetwork(net.getDbid()));
+                } catch(NotFound e) {
+                    throw new RuntimeException("Should never happen, but I guess it just did!", e);
+                }
+                enpList.add(p);
                 numENP++;
                 logger.debug("Put EventNetworkPair: "+p);
             } else {
@@ -239,9 +249,15 @@ public class WaveformArm extends Thread implements Arm {
         // that all the network information for this particular event is
         // inserted
         // in the waveformDatabase.
-        ev.setStatus(Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                                Standing.SUCCESS));
-        eventDb.commit();
+        synchronized(WaveformArm.class) {
+            ev.setStatus(Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                    Standing.SUCCESS));
+            for (EventNetworkPair pair : enpList) {
+                SodDB.getSession().save(pair);
+            }
+            eventDb.commit();
+            sodDb.offerEventNetworkPairs(enpList);
+        }
         Start.getEventArm().change(ev);
         int numWaiting = eventDb.getNumWaiting();
         if(numWaiting < EventArm.MIN_WAIT_EVENTS) {
