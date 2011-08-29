@@ -29,7 +29,9 @@ import de.erichseifert.gral.util.Insets2D;
 import edu.iris.Fissures.FissuresException;
 import edu.iris.Fissures.Location;
 import edu.iris.Fissures.Orientation;
+import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.event.OriginImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.StationIdUtil;
@@ -160,7 +162,9 @@ public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVe
         plot.setLineRenderer(data, lr1);
         double insetsTop = 20.0, insetsLeft = 60.0, insetsBottom = 60.0, insetsRight = 40.0;
         plot.setInsets(new Insets2D.Double(insetsTop, insetsLeft, insetsBottom, insetsRight));
-        plot.setSetting(Plot.TITLE, StationIdUtil.toStringNoDates(xChan.getStation()) + " Particle Motion: baz=" + baz);
+        OriginImpl preferred = null;
+        try {preferred = (OriginImpl)event.get_preferred_origin();} catch(NoPreferredOrigin e) {}
+        plot.setSetting(Plot.TITLE, StationIdUtil.toStringNoDates(xChan.getStation()) + " Particle Motion: baz=" + baz+" "+preferred.getOriginTime().date_time);
         plot.getAxisRenderer(XYPlot.AXIS_X).setSetting(AxisRenderer.LABEL,
                                                        ChannelIdUtil.toStringNoDates(xChan) + " "
                                                                + xChan.getOrientation().azimuth);
