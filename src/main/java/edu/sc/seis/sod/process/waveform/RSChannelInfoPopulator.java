@@ -136,15 +136,18 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         return (AbstractSeismogramWriter) SodUtil.load(saveSeisConf, "waveform");
     }
     
-    public List<MemoryDataSetSeismogram> getDSSForRecordSectionItems(List<RecordSectionItem> rsList) throws Exception {
+    public List<MemoryDataSetSeismogram> getDSSForRecordSectionItems(List<RecordSectionItem> rsList, CacheEvent event) throws Exception {
+        MemoryDataSet dataSet = new MemoryDataSet("tmp", "tmp", "tmp", new AuditInfo[0]);
+        dataSet.addParameter(MemoryDataSet.EVENT, event, new AuditInfo[0]);
         List<MemoryDataSetSeismogram> out = new ArrayList<MemoryDataSetSeismogram>();
         for (RecordSectionItem rsi : rsList) {
             synchronized(this) {
                 URLDataSetSeismogram dss = extractSeismogramsFromDB(rsi);
                 out.add(new MemoryDataSetSeismogram(dss.getSeismograms(),
-                                                    dss.getDataSet(),
+                                                    dataSet,
                                                     dss.getName(),
                                                     dss.getRequestFilter()));
+                dataSet.addParameter(MemoryDataSet.CHANNEL, rsi.getChannel(), new AuditInfo[0]);
             }
         }
         return out;

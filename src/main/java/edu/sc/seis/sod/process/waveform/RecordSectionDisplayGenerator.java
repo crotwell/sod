@@ -67,7 +67,8 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
             return new WaveformResult(seismograms,
                                       new StringTreeLeaf(this, false));
         }
-        writeImage(getDSSForRecordSectionItems(best), event, false);
+        List<MemoryDataSetSeismogram> dssList = getDSSForRecordSectionItems(best, event);
+        writeImage(dssList, event, false);
         logger.debug("END RecordSectionDisplay accept write image");
         return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
     }
