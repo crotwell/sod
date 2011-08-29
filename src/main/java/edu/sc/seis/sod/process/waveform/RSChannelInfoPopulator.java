@@ -231,7 +231,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         }
                 
         List<RecordSectionItem> bestRSList = soddb.getBestForRecordSection(orientationId, recordSectionId, event);
-        List<RecordSectionItem> newBestRSList = spacer.spaceOut(bestRSList);
+        List<RecordSectionItem> newBestRSList = spacer.spaceOut(soddb.getRecordSectionItemList(orientationId, recordSectionId, event));
         if (newBestRSList.contains(current)) {
             // new rsi made the cut
             if (newBestRSList.size() <= bestRSList.size()) {
