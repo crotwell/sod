@@ -55,7 +55,7 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) throws Exception {
-        logger.debug("BEGIN RecordSectionDisplay accept");
+        logger.debug("BEGIN RecordSectionDisplay accept ");
         List<RecordSectionItem> best = updateTable(event,
                                   chan,
                                   original,
@@ -63,11 +63,12 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
                                   seismograms,
                                   cookieJar);
         if(best.size() == 0) {
+            logger.debug("END RecordSectionDisplay accept best=0 ");
             return new WaveformResult(seismograms,
                                       new StringTreeLeaf(this, false));
         }
         writeImage(getDSSForRecordSectionItems(best), event, false);
-        logger.debug("END RecordSectionDisplay accept");
+        logger.debug("END RecordSectionDisplay accept write image");
         return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
     }
 
