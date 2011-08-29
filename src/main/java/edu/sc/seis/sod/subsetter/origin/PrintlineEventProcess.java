@@ -26,7 +26,7 @@ public class PrintlineEventProcess extends AbstractPrintlineProcess implements O
         return new StringTreeLeaf(this, true);
     }
 
-    public static final String DEFAULT_TEMPLATE = "$event.region ($event.latitude, $event.longitude) $event.time $event.magnitude";
+    public static final String DEFAULT_TEMPLATE = "$event.region ($event.latitude, $event.longitude) $event.depth $event.time $event.magnitude";
 
     public String getDefaultTemplate() {
         return DEFAULT_TEMPLATE;
