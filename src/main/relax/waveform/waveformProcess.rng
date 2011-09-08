@@ -25,6 +25,7 @@
             <ref name="recordSectionDisplayGenerator"/>
             <ref name="responseGain"/>
             <ref name="phaseCut"/>
+            <ref name="requestCut"/>
             <ref name="merge"/>
             <ref name="gapFill"/>
             <ref name="rMean"/>
