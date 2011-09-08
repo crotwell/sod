@@ -148,11 +148,24 @@ public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVe
                                                                                     + " != "
                                                                                     + seismograms[yIndex].length));
         }
+        if (doVerticalPlots && cutAndTrim[xIndex].length != cutAndTrim[zIndex].length) {
+            return new WaveformVectorResult(seismograms, new StringTreeLeaf(this,
+                                                                            false,
+                                                                            "Seismogram lengths for horizontal and vertical channels don't match: "
+                                                                                    + seismograms[xIndex].length
+                                                                                    + " != "
+                                                                                    + seismograms[zIndex].length));
+        }
         for (int i = 0; i < cutAndTrim[xIndex].length; i++) {
             if (cutAndTrim[xIndex][i].getNumPoints() != cutAndTrim[yIndex][i].getNumPoints()) {
                 return new WaveformVectorResult(seismograms, new StringTreeLeaf(this, false, i
                         + " Seismogram num points for horizontal channels don't match: "
                         + cutAndTrim[xIndex][i].getNumPoints() + " != " + cutAndTrim[yIndex][i].getNumPoints()));
+            }
+            if (doVerticalPlots && cutAndTrim[xIndex][i].getNumPoints() != cutAndTrim[zIndex][i].getNumPoints()) {
+                return new WaveformVectorResult(seismograms, new StringTreeLeaf(this, false, i
+                        + " Seismogram num points for horizontal channels don't match: "
+                        + cutAndTrim[xIndex][i].getNumPoints() + " != " + cutAndTrim[zIndex][i].getNumPoints()));
             }
         }
         Map<String, Object> extras = new HashMap<String, Object>();
@@ -160,7 +173,12 @@ public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVe
         extras.put("yChan", new VelocityChannel(horizontal[1]));
         Plot plot = makePlot(cutAndTrim[xIndex], horizontal[0], cutAndTrim[yIndex], horizontal[1], event);
         savePlot(plot, event, channelGroup, extras);
-        
+        if (doVerticalPlots) {
+            plot = makePlot(cutAndTrim[xIndex], horizontal[0], cutAndTrim[zIndex], channelGroup.getVertical(), event);
+            savePlot(plot, event, channelGroup, extras);
+            plot = makePlot(cutAndTrim[yIndex], horizontal[1], cutAndTrim[zIndex], channelGroup.getVertical(), event);
+            savePlot(plot, event, channelGroup, extras);
+        }
         return new WaveformVectorResult(seismograms, new StringTreeLeaf(this, true));
     }
 
@@ -255,6 +273,8 @@ public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVe
         DrawableWriter writer = DrawableWriterFactory.getInstance().get("application/pdf");
         writer.write(plot, new FileOutputStream(f), 800, 800);
     }
+    
+    boolean doVerticalPlots = true;
 
     BorderConfiguration titleBorder;
     
