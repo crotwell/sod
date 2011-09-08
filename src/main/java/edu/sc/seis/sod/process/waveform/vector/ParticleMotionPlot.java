@@ -192,7 +192,7 @@ public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVe
             titler.title(event, xChan, timeWindow);
         }
         DataSource data;
-        if (yChan.getOrientation().dip < 5) {
+        if (yChan.getOrientation().dip > -5) {
             // horizontal (dip 0)
             data = new SeisPlotDataSource(XSeis[0],
                                           xChan.getOrientation().azimuth,
@@ -200,11 +200,11 @@ public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVe
                                           yChan.getOrientation().azimuth);
 
         } else {
-            // vertical
+            // vertical, mul -1 to make dip look like azimuth
             data = new SeisPlotDataSource(XSeis[0],
-                                          90+xChan.getOrientation().dip,
+                                          -1*xChan.getOrientation().dip,
                                           ySeis[0],
-                                          90+yChan.getOrientation().dip);
+                                          -1*yChan.getOrientation().dip);
         }
         XYPlot plot = new XYPlot(data);
         plot.setInsets(new Insets2D.Double(20, 50, 50, 20));
