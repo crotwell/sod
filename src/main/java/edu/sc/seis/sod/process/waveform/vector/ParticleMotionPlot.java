@@ -188,23 +188,26 @@ public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVe
                                 ChannelImpl yChan,
                                 CacheEvent event) throws Exception {
 
-        Location staLoc = xChan.getSite().getLocation();
-        Location eventLoc = EventUtil.extractOrigin(event).getLocation();
-        float baz = (float)(180 + Rotate.getRadialAzimuth(staLoc, eventLoc)) % 360;
-
         MicroSecondTimeRange timeWindow = null;
-        if(XSeis.length > 0) {
-            timeWindow = new MicroSecondTimeRange(phaseWindow.getPhaseRequest().generateRequest(event, xChan));
-            if(titler != null) {
-                titler.title(event, xChan, timeWindow);
-            }
-        } else {
-            // no data
+        timeWindow = new MicroSecondTimeRange(phaseWindow.getPhaseRequest().generateRequest(event, xChan));
+        if(titler != null) {
+            titler.title(event, xChan, timeWindow);
         }
-        DataSource data = new SeisPlotDataSource(XSeis[0],
-                                                 xChan.getOrientation().azimuth,
-                                                 ySeis[0],
-                                                 yChan.getOrientation().azimuth);
+        DataSource data;
+        if (yChan.getOrientation().dip < 5) {
+            // horizontal (dip 0)
+            data = new SeisPlotDataSource(XSeis[0],
+                                          xChan.getOrientation().azimuth,
+                                          ySeis[0],
+                                          yChan.getOrientation().azimuth);
+
+        } else {
+            // vertical
+            data = new SeisPlotDataSource(XSeis[0],
+                                          90+xChan.getOrientation().dip,
+                                          ySeis[0],
+                                          90+yChan.getOrientation().dip);
+        }
         XYPlot plot = new XYPlot(data);
         plot.setInsets(new Insets2D.Double(20, 50, 50, 20));
         LineRenderer lr1 = new DefaultLineRenderer2D();
@@ -238,6 +241,9 @@ public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVe
         plot.getAxisRenderer(XYPlot.AXIS_X).setSetting(AxisRenderer.INTERSECTION, -Double.MAX_VALUE);
         plot.getAxisRenderer(XYPlot.AXIS_Y).setSetting(AxisRenderer.INTERSECTION, -Double.MAX_VALUE);
         if (xChan.getOrientation().dip == 0 && yChan.getOrientation().dip == 0) {
+            Location staLoc = xChan.getSite().getLocation();
+            Location eventLoc = EventUtil.extractOrigin(event).getLocation();
+            float baz = (float)(180 + Rotate.getRadialAzimuth(staLoc, eventLoc)) % 360;
             DataTable bazLine = new DataTable(Float.class, Float.class);
             float xMid = (plot.getAxis(XYPlot.AXIS_X).getMin().floatValue() + plot.getAxis(XYPlot.AXIS_X)
                     .getMax()
