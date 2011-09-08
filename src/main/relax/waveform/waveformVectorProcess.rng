@@ -256,18 +256,25 @@
     </define>
     <define name="particleMotionPlot">
         <element name="particleMotionPlot">
-            <optional>
-                <attribute name="id"/>
-            </optional>
-        <optional>
-            <ref name="workingDir"/>
-        </optional>
-        <optional>
-            <ref name="seisFileLocation"/>
-        </optional>
-            <optional>
-                <ref name="titleBorder"/>
-            </optional>
+            <interleave>
+                <optional>
+                    <attribute name="id"/>
+                </optional>
+                <optional>
+                    <ref name="workingDir"/>
+                </optional>
+                <optional>
+                    <ref name="seisFileLocation"/>
+                </optional>
+                <optional>
+                    <ref name="titleBorder"/>
+                </optional>
+                <optional>
+                    <element name="phaseWindow">
+                        <ref name="phaseWindow"/>
+                    </element>
+                </optional>
+            </interleave>
         </element>
     </define>
     <define name="rotateGCP">
