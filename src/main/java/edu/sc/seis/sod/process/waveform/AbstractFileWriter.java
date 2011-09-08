@@ -16,6 +16,7 @@ import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.subsetter.VelocityFileElementParser;
 import edu.sc.seis.sod.velocity.ContextWrangler;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
+import edu.sc.seis.sod.velocity.network.VelocityChannel;
 
 public abstract class AbstractFileWriter {
 
@@ -48,6 +49,26 @@ public abstract class AbstractFileWriter {
     }
 
     public String generate(CacheEvent event,
+                           ChannelImpl channel,
+                           ChannelImpl otherChannel,
+                           int index,
+                           Map<String, Object> extras) {
+        VelocityContext ctx = ContextWrangler.createContext(event);
+        if(index > 0) {
+            ctx.put("index", "." + index);
+        } else {
+            ctx.put("index", "");
+        }
+        ctx.put("prefix", prefix);
+        ContextWrangler.insertIntoContext(channel, ctx);
+        ctx.put("otherChannel", new VelocityChannel(otherChannel));
+        for (String key : extras.keySet()) {
+            ctx.put(key, extras.get(key));
+        }
+        return FissuresFormatter.filize(velocitizer.evaluate(template, ctx));
+    }
+
+    public String generate(CacheEvent event,
                            ChannelGroup channelGroup,
                            int index,
                            Map<String, Object> extras) {
@@ -70,6 +91,19 @@ public abstract class AbstractFileWriter {
                                LocalSeismogramImpl representativeSeismogram) {
         for(int i = 0; true; i++) {
             File cur = new File(generate(event, channel, representativeSeismogram, i));
+            if(!cur.exists()) {
+                break;
+            }
+            cur.delete();
+        }
+    }
+    
+    public void removeExisting(CacheEvent event,
+                               ChannelImpl channel,
+                               ChannelImpl otherChannel,
+                               Map<String, Object> extras) {
+        for(int i = 0; true; i++) {
+            File cur = new File(generate(event, channel, otherChannel, i, extras));
             if(!cur.exists()) {
                 break;
             }
