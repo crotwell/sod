@@ -2,7 +2,6 @@ package edu.sc.seis.sod.process.waveform.vector;
 
 import java.awt.Color;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collection;
@@ -29,20 +28,24 @@ import de.erichseifert.gral.util.Insets2D;
 import edu.iris.Fissures.FissuresException;
 import edu.iris.Fissures.Location;
 import edu.iris.Fissures.Orientation;
-import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.event.OriginImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.network.StationIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.bag.Rotate;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
+import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.display.SeismogramPDFBuilder;
+import edu.sc.seis.fissuresUtil.display.configuration.BorderConfiguration;
+import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.process.waveform.AbstractFileWriter;
+import edu.sc.seis.sod.process.waveform.PhaseCut;
+import edu.sc.seis.sod.process.waveform.PhaseWindow;
+import edu.sc.seis.sod.process.waveform.SeismogramTitler;
 import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.velocity.network.VelocityChannel;
@@ -53,6 +56,17 @@ public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVe
         this(extractWorkingDir(config),
              extractFileTemplate(config, DEFAULT_FILE_TEMPLATE),
              extractPrefix(config));
+
+        if(DOMHelper.hasElement(config, "titleBorder")) {
+            titleBorder = new BorderConfiguration();
+            titleBorder.configure(DOMHelper.getElement(config, "titleBorder"));
+            titler = new SeismogramTitler(titleBorder);
+        }
+
+        if(DOMHelper.hasElement(config, "phaseWindow")) {
+            phaseWindow = new PhaseWindow(SodUtil.getElement(config, "phaseWindow"));
+            cutter = new PhaseCut(phaseWindow.getPhaseRequest());
+        }
     }
 
     public ParticleMotionPlot(String workingDir, String fileTemplate, String prefix) throws Exception {
@@ -65,18 +79,29 @@ public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVe
                                        RequestFilter[][] available,
                                        LocalSeismogramImpl[][] seismograms,
                                        CookieJar cookieJar) throws Exception {
-        WaveformVectorResult trimResult = trimmer.accept(event,
+        WaveformVectorResult cutResult = new ANDWaveformProcessWrapper(cutter).accept(event,
                                                          channelGroup,
                                                          original,
                                                          available,
                                                          seismograms,
+                                                         cookieJar);
+        if (!cutResult.isSuccess()) {
+            return new WaveformVectorResult(false,
+                                            cutResult.getSeismograms(),
+                                            new StringTreeBranch(this, false, cutResult.getReason()));
+        }
+        WaveformVectorResult trimResult = trimmer.accept(event,
+                                                         channelGroup,
+                                                         original,
+                                                         available,
+                                                         cutResult.getSeismograms(),
                                                          cookieJar);
         if (!trimResult.isSuccess()) {
             return new WaveformVectorResult(false,
                                             trimResult.getSeismograms(),
                                             new StringTreeBranch(this, false, trimResult.getReason()));
         }
-        seismograms = trimResult.getSeismograms();
+        LocalSeismogramImpl[][] cutAndTrim = trimResult.getSeismograms();
             
         // find x & y channel, y should be x+90 degrees and horizontal
         ChannelImpl[] horizontal = channelGroup.getHorizontalXY();
@@ -92,8 +117,8 @@ public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVe
                                                                                     + o3.azimuth + "/" + o3.dip + " "));
         }
         int xIndex = -1, yIndex = -1;
-        for (int i = 0; i < seismograms.length; i++) {
-            if (seismograms[i].length != 0) {
+        for (int i = 0; i < cutAndTrim.length; i++) {
+            if (cutAndTrim[i].length != 0) {
                 if (ChannelIdUtil.areEqual(seismograms[i][0].channel_id, horizontal[0].get_id())) {
                     xIndex = i;
                 }
@@ -115,7 +140,7 @@ public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVe
                                                                             "Can't find seismograms to match horizontal channels: xIndex="
                                                                                     + xIndex + " yIndex=" + yIndex));
         }
-        if (seismograms[xIndex].length != seismograms[yIndex].length) {
+        if (cutAndTrim[xIndex].length != cutAndTrim[yIndex].length) {
             return new WaveformVectorResult(seismograms, new StringTreeLeaf(this,
                                                                             false,
                                                                             "Seismogram lengths for horizontal channels don't match: "
@@ -123,23 +148,19 @@ public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVe
                                                                                     + " != "
                                                                                     + seismograms[yIndex].length));
         }
-        for (int i = 0; i < seismograms[xIndex].length; i++) {
-            if (seismograms[xIndex][i].getNumPoints() != seismograms[yIndex][i].getNumPoints()) {
+        for (int i = 0; i < cutAndTrim[xIndex].length; i++) {
+            if (cutAndTrim[xIndex][i].getNumPoints() != cutAndTrim[yIndex][i].getNumPoints()) {
                 return new WaveformVectorResult(seismograms, new StringTreeLeaf(this, false, i
                         + " Seismogram num points for horizontal channels don't match: "
-                        + seismograms[xIndex][i].getNumPoints() + " != " + seismograms[yIndex][i].getNumPoints()));
+                        + cutAndTrim[xIndex][i].getNumPoints() + " != " + cutAndTrim[yIndex][i].getNumPoints()));
             }
         }
         Map<String, Object> extras = new HashMap<String, Object>();
         extras.put("xChan", new VelocityChannel(horizontal[0]));
         extras.put("yChan", new VelocityChannel(horizontal[1]));
-        Plot plot = makePlot(seismograms[xIndex], horizontal[0], seismograms[yIndex], horizontal[1], event);
+        Plot plot = makePlot(cutAndTrim[xIndex], horizontal[0], cutAndTrim[yIndex], horizontal[1], event);
         savePlot(plot, event, channelGroup, extras);
         
-        // makePlot(seismograms[xIndex], horizontal[0], seismograms[zIndex],
-        // channelGroup.getVertical(), event);
-        // makePlot(seismograms[yIndex], horizontal[1], seismograms[zIndex],
-        // channelGroup.getVertical(), event);
         return new WaveformVectorResult(seismograms, new StringTreeLeaf(this, true));
     }
 
@@ -147,10 +168,21 @@ public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVe
                                 ChannelImpl xChan,
                                 LocalSeismogramImpl[] ySeis,
                                 ChannelImpl yChan,
-                                CacheEvent event) throws FileNotFoundException, IOException {
+                                CacheEvent event) throws Exception {
+
         Location staLoc = xChan.getSite().getLocation();
         Location eventLoc = EventUtil.extractOrigin(event).getLocation();
         float baz = (float)(180 + Rotate.getRadialAzimuth(staLoc, eventLoc)) % 360;
+
+        MicroSecondTimeRange timeWindow = null;
+        if(XSeis.length > 0) {
+            timeWindow = new MicroSecondTimeRange(phaseWindow.getPhaseRequest().generateRequest(event, xChan));
+            if(titler != null) {
+                titler.title(event, xChan, timeWindow);
+            }
+        } else {
+            // no data
+        }
         DataSource data = new SeisPlotDataSource(XSeis[0],
                                                  xChan.getOrientation().azimuth,
                                                  ySeis[0],
@@ -162,9 +194,8 @@ public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVe
         plot.setLineRenderer(data, lr1);
         double insetsTop = 20.0, insetsLeft = 60.0, insetsBottom = 60.0, insetsRight = 40.0;
         plot.setInsets(new Insets2D.Double(insetsTop, insetsLeft, insetsBottom, insetsRight));
-        OriginImpl preferred = null;
-        try {preferred = (OriginImpl)event.get_preferred_origin();} catch(NoPreferredOrigin e) {}
-        plot.setSetting(Plot.TITLE, StationIdUtil.toStringNoDates(xChan.getStation()) + " Particle Motion: baz=" + baz+" "+preferred.getOriginTime().date_time);
+        plot.setSetting(Plot.TITLE,
+                        titleBorder.getTitles()[0].getTitle());
         plot.getAxisRenderer(XYPlot.AXIS_X).setSetting(AxisRenderer.LABEL,
                                                        ChannelIdUtil.toStringNoDates(xChan) + " "
                                                                + xChan.getOrientation().azimuth);
@@ -225,11 +256,19 @@ public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVe
         writer.write(plot, new FileOutputStream(f), 800, 800);
     }
 
+    BorderConfiguration titleBorder;
+    
+    SeismogramTitler titler;
+    
+    PhaseWindow phaseWindow;
+    
     public static String DEFAULT_FILE_TEMPLATE = "Event_${event.getTime('yyyy_MM_dd_HH_mm_ss')}/${prefix}${station}_${xChan.get_code()}_${yChan.get_code()}_${index}.pdf";
     
     SeismogramPDFBuilder pdfBuilder = new SeismogramPDFBuilder();
 
     private VectorTrim trimmer = new VectorTrim();
+    
+    private PhaseCut cutter;
 
     private static Logger logger = LoggerFactory.getLogger(ParticleMotionPlot.class);
 
@@ -240,6 +279,7 @@ class SeisPlotDataSource extends AbstractDataSource {
 
     SeisPlotDataSource(LocalSeismogramImpl seisX, float xAz, LocalSeismogramImpl seisY, float yAz) {
         super(Float.class, Float.class);
+        assert seisX.getNumPoints() == seisY.getNumPoints();
         this.seisX = seisX;
         this.seisY = seisY;
         this.xAz = xAz;
@@ -252,6 +292,8 @@ class SeisPlotDataSource extends AbstractDataSource {
 
     float xAz, yAz;
 
+    MicroSecondTimeRange timeWindow;
+    
     public Number get(int col, int row) {
         try {
             double xRad = Math.toRadians(90 - xAz);
