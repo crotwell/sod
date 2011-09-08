@@ -33,6 +33,10 @@ public class PhaseCut implements WaveformProcess {
         phaseRequest = new PhaseRequest(config);
     }
 
+    public PhaseCut(PhaseRequest phaseRequest) throws ConfigurationException {
+        this.phaseRequest = phaseRequest;
+    }
+
     /**
      * Cuts the seismograms based on phase arrivals.
      */
