@@ -33,6 +33,7 @@ public class SeismogramTitler {
                       MicroSecondTimeRange timeRange) {
         VelocityContext vc = ContextWrangler.createContext(channel);
         ContextWrangler.insertIntoContext(channel, vc);
+        ContextWrangler.insertIntoContext(event, vc);
         vc.put("beginTime", df.format(timeRange.getBeginTime()));
         vc.put("endTime", df.format(timeRange.getEndTime()));
         BorderTitleConfiguration[] titles = titleBorder.getTitles();
