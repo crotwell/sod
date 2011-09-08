@@ -169,8 +169,6 @@ public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVe
             }
         }
         Map<String, Object> extras = new HashMap<String, Object>();
-        extras.put("xChan", new VelocityChannel(horizontal[0]));
-        extras.put("yChan", new VelocityChannel(horizontal[1]));
         Plot plot = makePlot(cutAndTrim[xIndex], horizontal[0], cutAndTrim[yIndex], horizontal[1], event);
         savePlot(plot, event, horizontal[0], horizontal[1], extras);
         if (doVerticalPlots) {
@@ -289,7 +287,7 @@ public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVe
     
     PhaseWindow phaseWindow;
     
-    public static String DEFAULT_FILE_TEMPLATE = "Event_${event.getTime('yyyy_MM_dd_HH_mm_ss')}/${prefix}${station}_${xChan.get_code()}_${yChan.get_code()}_${index}.pdf";
+    public static String DEFAULT_FILE_TEMPLATE = "Event_${event.getTime('yyyy_MM_dd_HH_mm_ss')}/${prefix}${station}_${chan.get_code()}_${otherChannel.get_code()}_${index}.pdf";
     
     SeismogramPDFBuilder pdfBuilder = new SeismogramPDFBuilder();
 
