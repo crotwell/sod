@@ -172,12 +172,12 @@ public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVe
         extras.put("xChan", new VelocityChannel(horizontal[0]));
         extras.put("yChan", new VelocityChannel(horizontal[1]));
         Plot plot = makePlot(cutAndTrim[xIndex], horizontal[0], cutAndTrim[yIndex], horizontal[1], event);
-        savePlot(plot, event, channelGroup, extras);
+        savePlot(plot, event, horizontal[0], horizontal[1], extras);
         if (doVerticalPlots) {
             plot = makePlot(cutAndTrim[xIndex], horizontal[0], cutAndTrim[zIndex], channelGroup.getVertical(), event);
-            savePlot(plot, event, channelGroup, extras);
+            savePlot(plot, event, horizontal[0], channelGroup.getVertical(), extras);
             plot = makePlot(cutAndTrim[yIndex], horizontal[1], cutAndTrim[zIndex], channelGroup.getVertical(), event);
-            savePlot(plot, event, channelGroup, extras);
+            savePlot(plot, event, horizontal[1], channelGroup.getVertical(), extras);
         }
         return new WaveformVectorResult(seismograms, new StringTreeLeaf(this, true));
     }
@@ -259,11 +259,12 @@ public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVe
     
     public void savePlot(Plot plot, 
                          CacheEvent event,
-                         ChannelGroup channelGroup,
+                         ChannelImpl channel,
+                         ChannelImpl otherChannel,
                          Map<String, Object> extras) throws IOException {
-        removeExisting(event, channelGroup, extras);
+        removeExisting(event, channel, otherChannel, extras);
 
-        String picFileName = generate(event, channelGroup, 0, extras);
+        String picFileName = generate(event, channel, otherChannel, 0, extras);
         File f = new File(picFileName);
         File parent = f.getParentFile();
         if(!parent.exists() && !parent.mkdirs()) {
