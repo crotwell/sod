@@ -202,9 +202,9 @@ public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVe
         } else {
             // vertical, mul -1 to make dip look like azimuth
             data = new SeisPlotDataSource(XSeis[0],
-                                          -1*xChan.getOrientation().dip,
+                                          90+xChan.getOrientation().dip,
                                           ySeis[0],
-                                          -1*yChan.getOrientation().dip);
+                                          90+yChan.getOrientation().dip);
         }
         XYPlot plot = new XYPlot(data);
         plot.setInsets(new Insets2D.Double(20, 50, 50, 20));
