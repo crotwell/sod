@@ -192,19 +192,23 @@ public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVe
             titler.title(event, xChan, timeWindow);
         }
         DataSource data;
+        String xAngle, yAngle;
         if (yChan.getOrientation().dip > -5) {
             // horizontal (dip 0)
             data = new SeisPlotDataSource(XSeis[0],
                                           xChan.getOrientation().azimuth,
                                           ySeis[0],
                                           yChan.getOrientation().azimuth);
-
+            xAngle = xChan.getOrientation().azimuth+" az";
+            yAngle = yChan.getOrientation().azimuth+" az";
         } else {
             // vertical, mul -1 to make dip look like azimuth
             data = new SeisPlotDataSource(XSeis[0],
                                           90+xChan.getOrientation().dip,
                                           ySeis[0],
                                           90+yChan.getOrientation().dip);
+            xAngle = xChan.getOrientation().dip+" dip";
+            yAngle = yChan.getOrientation().dip+" dip";
         }
         XYPlot plot = new XYPlot(data);
         plot.setInsets(new Insets2D.Double(20, 50, 50, 20));
@@ -217,10 +221,10 @@ public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVe
                         titleBorder.getTitles()[0].getTitle());
         plot.getAxisRenderer(XYPlot.AXIS_X).setSetting(AxisRenderer.LABEL,
                                                        ChannelIdUtil.toStringNoDates(xChan) + " "
-                                                               + xChan.getOrientation().azimuth);
+                                                               + xAngle);
         plot.getAxisRenderer(XYPlot.AXIS_Y).setSetting(AxisRenderer.LABEL,
                                                        ChannelIdUtil.toStringNoDates(yChan) + " "
-                                                               + yChan.getOrientation().azimuth);
+                                                               + yAngle);
         Statistics dataStats = data.getStatistics();
         dataStats.get(Statistics.MIN);
         Collection<String> axisList = plot.getAxesNames();
