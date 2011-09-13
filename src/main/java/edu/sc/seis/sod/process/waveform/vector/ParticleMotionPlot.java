@@ -318,6 +318,13 @@ class SeisPlotDataSource extends AbstractDataSource {
         this.seisY = seisY;
         this.xAz = xAz;
         this.yAz = yAz;
+        if (Math.abs((yAz-90) % 360 - xAz % 360) < 0.1) {
+            // swapped
+            this.seisY = seisX;
+            this.seisX = seisY;
+            this.yAz = xAz;
+            this.xAz = yAz;
+        }
     }
 
     LocalSeismogramImpl seisX;
@@ -330,13 +337,14 @@ class SeisPlotDataSource extends AbstractDataSource {
     
     public Number get(int col, int row) {
         try {
-            double xRad = Math.toRadians(90 - xAz);
+            double rot = Math.toRadians(xAz-90);
+            double xR = Math.toRadians(90 - xAz);
             double yRad = Math.toRadians(90 - yAz);
             if (col == 0) {
-                return (float)(Math.cos(xRad) * seisX.get_as_floats()[row] + Math.cos(yRad)
+                return (float)(Math.cos(rot) * seisX.get_as_floats()[row] - Math.sin(rot)
                         * seisY.get_as_floats()[row]);
             }
-            return (float)(Math.sin(xRad) * seisX.get_as_floats()[row] + Math.sin(yRad)
+            return (float)(Math.sin(rot) * seisX.get_as_floats()[row] + Math.cos(rot)
                     * seisY.get_as_floats()[row]);
         } catch(FissuresException e) {
             throw new RuntimeException("Should not happen, but I guess it did", e);
