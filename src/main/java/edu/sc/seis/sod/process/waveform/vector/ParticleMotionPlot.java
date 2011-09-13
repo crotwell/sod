@@ -48,7 +48,6 @@ import edu.sc.seis.sod.process.waveform.PhaseWindow;
 import edu.sc.seis.sod.process.waveform.SeismogramTitler;
 import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.status.StringTreeLeaf;
-import edu.sc.seis.sod.velocity.network.VelocityChannel;
 
 public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVectorProcess {
 
@@ -246,23 +245,29 @@ public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVe
             Location staLoc = xChan.getSite().getLocation();
             Location eventLoc = EventUtil.extractOrigin(event).getLocation();
             float baz = (float)(180 + Rotate.getRadialAzimuth(staLoc, eventLoc)) % 360;
-            DataTable bazLine = new DataTable(Float.class, Float.class);
-            float xMid = (plot.getAxis(XYPlot.AXIS_X).getMin().floatValue() + plot.getAxis(XYPlot.AXIS_X)
-                    .getMax()
-                    .floatValue()) / 2;
-            float yMid = (plot.getAxis(XYPlot.AXIS_Y).getMin().floatValue() + plot.getAxis(XYPlot.AXIS_Y)
-                    .getMax()
-                    .floatValue()) / 2;
-            float x = (float)(range / 2 * Math.cos(Math.toRadians(90 - baz)));
-            float y = (float)(range / 2 * Math.sin(Math.toRadians(90 - baz)));
-            bazLine.add(xMid - x, yMid - y);
-            bazLine.add(xMid + x, yMid + y);
-            plot.add(bazLine);
-            LineRenderer bazlr = new DefaultLineRenderer2D();
-            bazlr.setSetting(LineRenderer.COLOR, Color.GREEN);
-            plot.setLineRenderer(bazLine, bazlr);
+            addAzimuthLine(plot, baz, range, Color.GREEN);
+            addAzimuthLine(plot, xChan.getOrientation().azimuth, range/2, Color.BLUE);
+            addAzimuthLine(plot, yChan.getOrientation().azimuth, range/2, Color.BLUE);
         }
         return plot;
+    }
+    
+    void addAzimuthLine(XYPlot plot, double azimuth, float length, Color lineColor) {
+        DataTable bazLine = new DataTable(Float.class, Float.class);
+        float xMid = (plot.getAxis(XYPlot.AXIS_X).getMin().floatValue() + plot.getAxis(XYPlot.AXIS_X)
+                .getMax()
+                .floatValue()) / 2;
+        float yMid = (plot.getAxis(XYPlot.AXIS_Y).getMin().floatValue() + plot.getAxis(XYPlot.AXIS_Y)
+                .getMax()
+                .floatValue()) / 2;
+        float x = (float)(length / 2 * Math.cos(Math.toRadians(90 - azimuth)));
+        float y = (float)(length / 2 * Math.sin(Math.toRadians(90 - azimuth)));
+        bazLine.add(xMid - x, yMid - y);
+        bazLine.add(xMid + x, yMid + y);
+        plot.add(bazLine);
+        LineRenderer bazlr = new DefaultLineRenderer2D();
+        bazlr.setSetting(LineRenderer.COLOR, lineColor);
+        plot.setLineRenderer(bazLine, bazlr);
     }
     
     public void savePlot(Plot plot, 
