@@ -124,7 +124,7 @@ public abstract class AbstractFileWriter {
     }
             
     public static final String DEFAULT_FILE_TEMPLATE_WO_EXT = "Event_${event.getTime('yyyy_MM_dd_HH_mm_ss')}/${prefix}${channel.codes}${index}";
-    protected static final String DEFAULT_PREFIX = "";
+    public static final String DEFAULT_PREFIX = "";
     public static final String DEFAULT_WORKING_DIR = "seismograms/";
     
     protected String workingDir;
