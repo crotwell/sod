@@ -89,6 +89,14 @@ public class PhaseRequest implements RequestGenerator {
         }
     }
 
+    public PhaseRequest(String beginPhase,
+                        TimeInterval beginOffset,
+                        String endPhase,
+                        TimeInterval endOffset,
+                        String model) throws TauModelException {
+        phaseReq = new edu.sc.seis.fissuresUtil.bag.PhaseRequest(beginPhase, beginOffset, endPhase, endOffset, model);
+    }
+
     public RequestFilter[] generateRequest(CacheEvent event,
                                            ChannelImpl channel,
                                            CookieJar jar) throws Exception {
