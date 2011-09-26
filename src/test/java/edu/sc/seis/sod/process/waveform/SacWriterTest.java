@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -20,6 +21,7 @@ import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.SeismicPhase;
 import edu.sc.seis.TauP.TauModelException;
 import edu.sc.seis.fissuresUtil.bag.DistAz;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.mockFissures.MockLocation;
 import edu.sc.seis.fissuresUtil.mockFissures.IfEvent.MockEventAccessOperations;
@@ -52,22 +54,29 @@ public class SacWriterTest extends TestCase {
                      new SacWriter("test", seis.getName()).generate(ev, chan, seis, 0));
     }
 
-    public void testApplyProcessorsWithNoProcessors() throws CodecException, ConfigurationException {
+    public void testApplyProcessorsWithNoProcessors() throws Exception {
         new SacWriter().applyProcessors(sts, ev, chan);
     }
 
-    public void testApplyPhaseHeaderProcessor() throws ConfigurationException {
-        SacWriter sw = new SacWriter(new SacProcess[] {new SacProcess() {
-
-            public void process(SacTimeSeries sac, EventAccessOperations event, Channel channel) {
-                sac.kt0 = "ttp";
+    public void testApplyPhaseHeaderProcessor() throws Exception {
+        ArrayList<SacProcess> processes = new ArrayList<SacProcess>();
+        processes.add(new SacProcess() {
+            @Override
+            public void process(SacTimeSeries sac, CacheEvent event, ChannelImpl channel) throws Exception {
+                sac.getHeader().setKt0("ttp");
             }
-        }});
+        });
+        SacWriter sw = new SacWriter(SacWriter.DEFAULT_WORKING_DIR,
+                                     SacWriter.DEFAULT_FILE_TEMPLATE,
+                                     SacWriter.DEFAULT_PREFIX,
+                                     processes,
+                                     false,
+                                     false);
         sw.applyProcessors(sts, ev, chan);
-        assertEquals(sts.kt0, "ttp");
+        assertEquals(sts.getHeader().getKt0(), "ttp");
     }
     
-    public void testSecondArrival() throws ConfigurationException, NoPreferredOrigin, TauModelException {
+    public void testSecondArrival() throws Exception {
         Location staLoc = chan.getStation().getLocation();
         Location evtLoc = ev.get_preferred_origin().getLocation();
         float evDepth = (float)((QuantityImpl)evtLoc.depth).getValue(UnitImpl.KILOMETER);
@@ -76,9 +85,17 @@ public class SacWriterTest extends TestCase {
         double distDeg = distAz.getDelta();
         List<Arrival> arrivals = sp.calcTime(distDeg);
         assertTrue(2 <= arrivals.size());
-        SacWriter sw = new SacWriter(new SacProcess[] {new PhaseHeaderProcess("prem", "P", 1, 2)});
+
+        ArrayList<SacProcess> processes = new ArrayList<SacProcess>();
+        processes.add(new PhaseHeaderProcess("prem", "P", 1, 2));
+        SacWriter sw = new SacWriter(SacWriter.DEFAULT_WORKING_DIR,
+                                     SacWriter.DEFAULT_FILE_TEMPLATE,
+                                     SacWriter.DEFAULT_PREFIX,
+                                     processes,
+                                     false,
+                                     false);
         sw.applyProcessors(sts, ev, chan);
-        assertEquals(sts.t1, (float)arrivals.get(1).getTime());
+        assertEquals(sts.getHeader().getT1(), (float)arrivals.get(1).getTime());
     }
 
     public void testGenerateLocations() throws ConfigurationException {
@@ -109,7 +126,7 @@ public class SacWriterTest extends TestCase {
         assertEquals("ha${index}rar",new SacWriter("", "ha${index}rar").getTemplate());
     }
 
-    EventAccessOperations ev = MockEventAccessOperations.createEvent();
+    CacheEvent ev = MockEventAccessOperations.createEvent();
 
     ChannelImpl chan = MockChannel.createChannel(MockLocation.create(10.0f, 10.0f));
 

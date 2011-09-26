@@ -11,11 +11,13 @@ import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.VestingNetworkDC;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockNetworkAttr;
+import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockNetworkFinder;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockStation;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.NamedNetDC;
 import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.UserConfigurationException;
+import edu.sc.seis.sod.mock.MockNetworkSource;
 import edu.sc.seis.sod.source.network.NetworkFinder;
 
 public class BelongsToVirtualTest extends TestCase {
@@ -36,16 +38,11 @@ public class BelongsToVirtualTest extends TestCase {
 
 
     
-    private final class CountRetrieveStations extends NetworkFinder {
+    private final class CountRetrieveStations extends MockNetworkSource {
 
         public int callCount;
         
-        public CountRetrieveStations() {
-            super(FissuresNamingService.MOCK_DNS, NamedNetDC.EVERYBODY, 1);
-            this.netDC = new VestingNetworkDC(FissuresNamingService.MOCK_DNS, NamedNetDC.EVERYBODY, new FissuresNamingService());
-        }
-        
-        public  List<StationImpl> getStations(NetworkId net) {
+        public  List<? extends StationImpl> getStations(NetworkId net) {
             callCount++;
             return super.getStations(net);
         }
@@ -81,7 +78,7 @@ public class BelongsToVirtualTest extends TestCase {
     public void testAcceptsAllStationsInAssignedNetwork() throws ConfigurationException {
         CountRetrieveStations na = new CountRetrieveStations();
         BelongsToVirtual btv = new BelongsToVirtual(mockNetName, FORTNIGHT);
-        List<StationImpl> stations = na.getStations(MockNetworkAttr.createMultiSplendoredAttr().getId());
+        List<? extends StationImpl> stations = na.getStations(MockNetworkAttr.createMultiSplendoredAttr().getId());
         for (StationImpl sta : stations) {
             assertTrue(btv.accept(sta, na).isSuccess());
         }

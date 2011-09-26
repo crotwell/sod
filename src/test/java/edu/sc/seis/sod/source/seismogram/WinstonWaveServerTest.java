@@ -29,7 +29,7 @@ public class WinstonWaveServerTest extends TestCase {
         RequestFilter rf = new RequestFilter(new ChannelId(new NetworkId("CO", ClockUtil.wayPast().getFissuresTime()),
                                                            "JSC",
                                                            "00",
-                                                           "BHZ",
+                                                           "HHZ",
                                                            ClockUtil.wayPast().getFissuresTime()),
                                              ClockUtil.yesterday().getFissuresTime(),
                                              ClockUtil.now().getFissuresTime());
@@ -47,11 +47,11 @@ public class WinstonWaveServerTest extends TestCase {
     @Test
     public void testSeismograms() throws Exception {
         WinstonWaveServer wws = new WinstonWaveServer("eeyore.seis.sc.edu", 16022);
-        MicroSecondDate requestStart = new MicroSecondDate("2010-08-10T12:34:56Z");
+        MicroSecondDate requestStart = new MicroSecondDate("2011-08-10T12:34:56Z");
         RequestFilter rf = new RequestFilter(new ChannelId(new NetworkId("CO", ClockUtil.wayPast().getFissuresTime()),
                                                            "JSC",
                                                            "00",
-                                                           "BHZ",
+                                                           "HHZ",
                                                            ClockUtil.wayPast().getFissuresTime()), 
                                                            requestStart.getFissuresTime(),
                                                            requestStart.add(new TimeInterval(10, UnitImpl.MINUTE)).getFissuresTime());
@@ -68,7 +68,8 @@ public class WinstonWaveServerTest extends TestCase {
 
     @Test
     public void testChannel() throws Exception {
-        String host = "localhost";
+        String host = "eeyore.seis.sc.edu";
+        // "localhost";
         // "pubwave.ceri.memphis.edu"
         // "pubavo1.wr.usgs.gov", 16022);
         for (int port = 16022; port <= 16022; port++) {

@@ -10,6 +10,7 @@ import org.xml.sax.InputSource;
 
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
 import edu.sc.seis.fissuresUtil.mockFissures.IfEvent.MockEventAccessOperations;
@@ -62,9 +63,10 @@ public class RemoveStationDuplicateTest extends TestCase {
         eventdb.put(event);
         EventStationPair esp = sodDb.createEventStationPair(event, mockOne);
         esp.update(Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.SUCCESS));
-        EventChannelPair ecp = new EventChannelPair(event, MockChannel.createChannel(mockOne), Status.get(Stage.PROCESSOR, Standing.SUCCESS), esp);
-        netdb.put(ecp.getChannel());
-        sodDb.put(ecp);
+        ChannelImpl chan = MockChannel.createChannel(mockOne);
+        netdb.put(chan);
+        EventChannelPair ecp = sodDb.createEventChannelPair(event, chan, esp);
+        ecp.update(Status.get(Stage.PROCESSOR, Standing.SUCCESS));
         SodDB.commit();
     }
 

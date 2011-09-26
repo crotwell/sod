@@ -88,9 +88,6 @@ public class RecordSectionSpacerTest extends TestCase {
         Channel[] chans = MockChannel.createChannelsAtLocs(locs);
         List<RecordSectionItem> seis = create(chans, event);
         List<RecordSectionItem> best = spacer.spaceOut(seis);
-        for (RecordSectionItem curr : best) {
-            System.out.println(""+DisplayUtils.calculateDistance(curr));
-        }
         assertEquals("There were " + best.size() + " seismograms with " + locs.length
                 + " given to it in the spacers results but 4 should be in the result.", 4, best.size());
     }
@@ -106,9 +103,6 @@ public class RecordSectionSpacerTest extends TestCase {
         Channel[] chans = MockChannel.createChannelsAtLocs(locs);
         List<RecordSectionItem> seis = create(chans, event);
         List<RecordSectionItem> best = spacer.spaceOut(seis);
-        for (RecordSectionItem curr : best) {
-            System.out.println(""+DisplayUtils.calculateDistance(curr));
-        }
         assertEquals("There were " + best.size() + " seismograms with " + locs.length
                 + " given to it in the spacers results but 2 should be in the result.", 2, best.size());
     }
