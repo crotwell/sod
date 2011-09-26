@@ -29,6 +29,8 @@ import edu.iris.Fissures.FissuresException;
 import edu.iris.Fissures.Location;
 import edu.iris.Fissures.Orientation;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.model.TimeInterval;
+import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
@@ -48,6 +50,7 @@ import edu.sc.seis.sod.process.waveform.PhaseWindow;
 import edu.sc.seis.sod.process.waveform.SeismogramTitler;
 import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.status.StringTreeLeaf;
+import edu.sc.seis.sod.subsetter.requestGenerator.PhaseRequest;
 
 public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVectorProcess {
 
@@ -57,7 +60,6 @@ public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVe
              extractPrefix(config));
 
         if(DOMHelper.hasElement(config, "titleBorder")) {
-            titleBorder = new BorderConfiguration();
             titleBorder.configure(DOMHelper.getElement(config, "titleBorder"));
             titler = new SeismogramTitler(titleBorder);
         }
@@ -185,9 +187,9 @@ public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVe
                                 ChannelImpl yChan,
                                 CacheEvent event) throws Exception {
 
-        MicroSecondTimeRange timeWindow = null;
-        timeWindow = new MicroSecondTimeRange(phaseWindow.getPhaseRequest().generateRequest(event, xChan));
         if(titler != null) {
+            MicroSecondTimeRange timeWindow = null;
+            timeWindow = new MicroSecondTimeRange(phaseWindow.getPhaseRequest().generateRequest(event, xChan));
             titler.title(event, xChan, timeWindow);
         }
         DataSource data;
@@ -216,8 +218,10 @@ public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVe
         plot.setLineRenderer(data, lr1);
         double insetsTop = 20.0, insetsLeft = 60.0, insetsBottom = 60.0, insetsRight = 40.0;
         plot.setInsets(new Insets2D.Double(insetsTop, insetsLeft, insetsBottom, insetsRight));
-        plot.setSetting(Plot.TITLE,
-                        titleBorder.getTitles()[0].getTitle());
+        if (titleBorder.getTitles().length != 0) {
+            plot.setSetting(Plot.TITLE,
+                            titleBorder.getTitles()[0].getTitle());
+        }
         plot.getAxisRenderer(XYPlot.AXIS_X).setSetting(AxisRenderer.LABEL,
                                                        ChannelIdUtil.toStringNoDates(xChan) + " "
                                                                + xAngle);
@@ -290,7 +294,7 @@ public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVe
     
     boolean doVerticalPlots = true;
 
-    BorderConfiguration titleBorder;
+    BorderConfiguration titleBorder  = new BorderConfiguration();
     
     SeismogramTitler titler;
     
@@ -302,7 +306,7 @@ public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVe
 
     private VectorTrim trimmer = new VectorTrim();
     
-    private PhaseCut cutter;
+    private PhaseCut cutter = new PhaseCut(new PhaseRequest("P", new TimeInterval(0, UnitImpl.SECOND), "P", new TimeInterval(10, UnitImpl.SECOND), "iasp91"));
 
     private static Logger logger = LoggerFactory.getLogger(ParticleMotionPlot.class);
 
@@ -338,8 +342,6 @@ class SeisPlotDataSource extends AbstractDataSource {
     public Number get(int col, int row) {
         try {
             double rot = Math.toRadians(xAz-90);
-            double xR = Math.toRadians(90 - xAz);
-            double yRad = Math.toRadians(90 - yAz);
             if (col == 0) {
                 return (float)(Math.cos(rot) * seisX.get_as_floats()[row] - Math.sin(rot)
                         * seisY.get_as_floats()[row]);
