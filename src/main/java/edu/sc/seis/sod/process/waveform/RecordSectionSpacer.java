@@ -32,8 +32,8 @@ public class RecordSectionSpacer {
                                int idealSeismograms,
                                int maximumSeismogram) {
         double r = range.getMaxDistance() - range.getMinDistance();
-        minimumDegreesBetweenSeis = r / (maximumSeismogram + 1);
-        idealDegreesBetweenSeis = r / (idealSeismograms + 1);
+        minimumDegreesBetweenSeis = r / (maximumSeismogram - 1);
+        idealDegreesBetweenSeis = r / (idealSeismograms - 1);
     }
 
     public List<RecordSectionItem> spaceOut(List<RecordSectionItem> recordSectionList) {
@@ -67,7 +67,6 @@ public class RecordSectionSpacer {
                 while (distBin.size() > 0 && dist > nextSlot + idealDegreesBetweenSeis) {
                     RecordSectionItem best = bestFromBin(distBin, nextSlot);
                     accepted.add(best);
-                    System.out.println("Winner: "+best.getDegrees()+"  "+ChannelIdUtil.toStringNoDates(best.getChannel()));
                     Iterator<RecordSectionItem> binIter = distBin.iterator();
                     while (binIter.hasNext()) {
                         RecordSectionItem dss = binIter.next();
@@ -90,74 +89,6 @@ public class RecordSectionSpacer {
         }
         return accepted;
     }
-/*
-    public List<DataSetSeismogram> spaceOut(List<? extends DataSetSeismogram> dataSeis) {
-        final Map<DataSetSeismogram, QuantityImpl> dists = new HashMap<DataSetSeismogram, QuantityImpl>();
-        List<DataSetSeismogram> remaining = new ArrayList<DataSetSeismogram>();
-        for (DataSetSeismogram curr: dataSeis) {
-            QuantityImpl dist = DisplayUtils.calculateDistance(curr);
-            if(dist != null) {
-                remaining.add(curr);
-                dists.put(curr, dist);
-            } else {
-                logger.debug("Unable to calculate distance for " + curr);
-            }
-        }
-        Collections.sort(remaining, new Comparator<DataSetSeismogram>() {
-
-            public int compare(DataSetSeismogram o1, DataSetSeismogram o2) {
-                QuantityImpl dist1 = (QuantityImpl)dists.get(o1);
-                QuantityImpl dist2 = (QuantityImpl)dists.get(o2);
-                if(dist1.lessThan(dist2)) {
-                    return -1;
-                } else if(dist1.greaterThan(dist2)) {
-                    return 1;
-                } else {
-                    return 0;
-                }
-            }
-        });
-        List<DataSetSeismogram> accepted = new ArrayList<DataSetSeismogram>();
-        double nextSlot = 0;
-        List<DataSetSeismogram> distBin = new ArrayList<DataSetSeismogram>();
-        for(DataSetSeismogram cur: remaining) {
-            double dist = ((QuantityImpl)dists.get(cur)).getValue();
-            if (dist < nextSlot - idealDegreesBetweenSeis + minimumDegreesBetweenSeis) {
-                // too close to last added
-                continue;
-            } else if (dist < nextSlot + idealDegreesBetweenSeis) {
-                // possible winner
-                distBin.add(cur);
-            } else {
-                // too far away, accept best in bin and go to next bin
-                while (distBin.size() > 0 && dist > nextSlot + idealDegreesBetweenSeis) {
-                    DataSetSeismogram best = bestFromBin(distBin, nextSlot, dists);
-                    accepted.add(best);
-                    double bestDist = dists.get(best).getValue(UnitImpl.DEGREE);
-                    System.out.println("Winner: "+bestDist+"  "+best);
-                    Iterator<DataSetSeismogram> binIter = distBin.iterator();
-                    while (binIter.hasNext()) {
-                        DataSetSeismogram dss = binIter.next();
-                        if (dists.get(dss).getValue(UnitImpl.DEGREE) < bestDist+minimumDegreesBetweenSeis) {
-                            binIter.remove();
-                        }
-                    }
-                    nextSlot = bestDist + idealDegreesBetweenSeis;
-                }
-                while (dist > nextSlot + idealDegreesBetweenSeis) {
-                    nextSlot += idealDegreesBetweenSeis/2;
-                }
-                distBin.add(cur);
-            }
-        }
-        // get best from last bin
-        if (distBin.size() > 0) {
-            DataSetSeismogram best = bestFromBin(distBin, nextSlot, dists);
-            accepted.add(best);
-        }
-        return accepted;
-    }
-    */
     
     public double getMinimumDegreesBetweenSeis() {
         return minimumDegreesBetweenSeis;
@@ -203,6 +134,12 @@ public class RecordSectionSpacer {
         if(dss.getAuxillaryData(AbstractSeismogramWriter.SVN_PARAM) != null) {
             sToN = Double.parseDouble((String)dss.getAuxillaryData(AbstractSeismogramWriter.SVN_PARAM));
         }
+        double percentCoverage = 1;
+        if(dss.getAuxillaryData(PERCENT_COVERAGE) != null) {
+            percentCoverage = Double.parseDouble((String)dss.getAuxillaryData(PERCENT_COVERAGE));
+        } else {
+            
+        }
         return calcScore(dist.getValue(UnitImpl.DEGREE), sToN, nextSlot);
     }
     
@@ -211,6 +148,8 @@ public class RecordSectionSpacer {
         return distMetric + distMetric * (sToN-1);
     }
             
+    protected String PERCENT_COVERAGE = "PercentCoverage";
+    
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(RecordSectionSpacer.class);
 
     private double minimumDegreesBetweenSeis, idealDegreesBetweenSeis;
