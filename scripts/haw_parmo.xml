@@ -10,11 +10,28 @@
     <max>90</max>
 </pointDistance>
 <originTimeRange>
-<!--
-  <startTime>20110201T00:00:00.001Z</startTime>
--->
-  <startTime>20110911T00:00:00.001Z</startTime>
-  <endTime>20120910T00:00:00.001Z</endTime>
+  <startTime>20110225T00:00:00.001Z</startTime>
+  <endTime>20110225T21:00:00.001Z</endTime>
+</originTimeRange>
+
+<magnitudeRange>
+    <magType>mb</magType>
+    <magType>M</magType>
+    <min>5.0</min>
+</magnitudeRange>
+</eventFinder>
+
+<eventFinder>
+     <pointDistance>
+    <latitude>35</latitude>
+    <longitude>-85</longitude>
+    <unit>DEGREE</unit>
+    <min>0</min>
+    <max>90</max>
+</pointDistance>
+<originTimeRange>
+  <startTime>20110407T00:00:00.001Z</startTime>
+  <endTime>20110407T21:00:00.001Z</endTime>
 </originTimeRange>
 
 <magnitudeRange>
@@ -74,6 +91,7 @@ CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
                 <max>-76</max>
             </longitudeRange>
         </stationBoxArea>
+<stationCode>HAW</stationCode>
 </stationAND>
         <channelOR>
             <bandCode>B</bandCode>
@@ -81,7 +99,7 @@ CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
             <bandCode>E</bandCode>
         </channelOR>
 <channelScript type="jython">
-rot=-35
+rot=75
 if channel.orientationCode == "1" or channel.orientationCode == "N":
     channel.getWrapped().orientation.azimuth = rot
     channel.getWrapped().orientation.dip = 0
@@ -97,12 +115,12 @@ if channel.orientationCode == "2" or channel.orientationCode == "E":
             <beginPhase>ttp</beginPhase>
             <beginOffset>
                 <unit>SECOND</unit>
-                <value>-30</value>
+                <value>-300</value>
             </beginOffset>
             <endPhase>ttp</endPhase>
             <endOffset>
                 <unit>SECOND</unit>
-                <value>120</value>
+                <value>720</value>
             </endOffset>
         </phaseRequest>
         <choiceSource>
@@ -136,12 +154,33 @@ if channel.orientationCode == "2" or channel.orientationCode == "E":
                 <phase>S</phase>
             </phaseFlags>
         </vectorImageProcess>
+        <vectorImageProcess>
+            <phaseWindow>
+                <model>iasp91</model>
+                <beginPhase>ttp</beginPhase>
+                <beginOffset>
+                    <unit>SECOND</unit>
+                    <value>-5.0</value>
+                </beginOffset>
+                <endPhase>ttp</endPhase>
+                <endOffset>
+                    <unit>SECOND</unit>
+                    <value>15</value>
+                </endOffset>
+            </phaseWindow>
+            <fileType>pdf</fileType>
+            <prefix>cut</prefix>
+            <phaseFlags>
+                <phase>P</phase>
+                <phase>S</phase>
+            </phaseFlags>
+        </vectorImageProcess>
         <phaseCut>
             <model>iasp91</model>
             <beginPhase>ttp</beginPhase>
             <beginOffset>
                 <unit>SECOND</unit>
-                <value>0</value>
+                <value>-1.0</value>
             </beginOffset>
             <endPhase>ttp</endPhase>
             <endOffset>
@@ -183,11 +222,11 @@ if channel.orientationCode == "2" or channel.orientationCode == "E":
             </phaseWindow>
         </particleMotionPlot>
         <particleMotionPlot>
-            <workingDir>parMoPlots_1.5_2.5</workingDir>
+            <workingDir>parMoPlots_1.5_2.0</workingDir>
             <titleBorder>
                 <type>title</type>
                 <position>bottom</position>
-                <title><text>P+1.5 to P+2.5 sec $station.code $event.time</text></title>
+                <title><text>P+1.5 to P+2.0 sec $station.code $event.time</text></title>
             </titleBorder>
             <phaseWindow>
                 <model>iasp91</model>
@@ -199,7 +238,7 @@ if channel.orientationCode == "2" or channel.orientationCode == "E":
                 <endPhase>ttp</endPhase>
                 <endOffset>
                     <unit>SECOND</unit>
-                    <value>2.5</value>
+                    <value>2.0</value>
                 </endOffset>
             </phaseWindow>
         </particleMotionPlot>
