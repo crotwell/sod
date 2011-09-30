@@ -220,7 +220,7 @@ time, magnitude, latitude, longitude, depth
             	<ref name="time"/>
             </element>
             <element name="interval">
-                <ref name="quantity"/>
+                <ref name="timeInterval"/>
             </element>
             <optional>
             	<element name="numEvents">
@@ -243,7 +243,7 @@ time, magnitude, latitude, longitude, depth
                 </xsd:documentation>
             </xsd:annotation>
             <element name="interval">
-                <ref name="quantity"/>
+                <ref name="timeInterval"/>
             </element>
             <optional>
                 <element name="numEvents">
@@ -263,7 +263,7 @@ time, magnitude, latitude, longitude, depth
                 </xsd:documentation>
             </xsd:annotation>
             <element name="delay">
-                <ref name="quantity"/>
+                <ref name="timeInterval"/>
             </element>
         </element>
     </define>
