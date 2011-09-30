@@ -287,7 +287,6 @@ public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVe
         if(!parent.exists() && !parent.mkdirs()) {
             throw new IOException("Unable to create directory "+ parent);
         }
-        
         DrawableWriter writer = DrawableWriterFactory.getInstance().get("application/pdf");
         writer.write(plot, new FileOutputStream(f), 800, 800);
     }
@@ -341,7 +340,7 @@ class SeisPlotDataSource extends AbstractDataSource {
     
     public Number get(int col, int row) {
         try {
-            double rot = Math.toRadians(xAz-90);
+            double rot = Math.toRadians(90-xAz);
             if (col == 0) {
                 return (float)(Math.cos(rot) * seisX.get_as_floats()[row] - Math.sin(rot)
                         * seisY.get_as_floats()[row]);
