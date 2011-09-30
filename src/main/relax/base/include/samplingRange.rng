@@ -5,18 +5,24 @@
         <notAllowed/>
     </start>
     <define name="samplingRange">
-        <optional>
-            <element name="min">
-                <data type="integer"/>
-            </element>
-        </optional>
-        <optional>
-            <element name="max">
-                <data type="integer"/>
-            </element>
-        </optional>
+        <choice>
+          <element name="min">
+              <data type="integer"/>
+          </element>
+          <element name="max">
+              <data type="integer"/>
+          </element>
+          <group>
+              <element name="min">
+                  <data type="integer"/>
+              </element>
+              <element name="max">
+                  <data type="integer"/>
+              </element>
+          </group>
+        </choice>
         <element name="interval">
-            <ref name="time"/>
+            <ref name="timeInterval"/>
         </element>
     </define>
 </grammar>
