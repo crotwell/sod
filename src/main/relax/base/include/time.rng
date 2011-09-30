@@ -3,11 +3,6 @@
     <start combine="choice">
         <notAllowed/>
     </start>
-    <define name="timeInterval" combine="choice">
-        <element name="timeInterval">
-            <ref name="time"/>
-        </element>
-    </define>
     <define name="time" combine="choice">
         <choice>
             <data type="string">
