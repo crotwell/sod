@@ -295,7 +295,7 @@
             <xsd:annotation>
                 <summary>Matches if the sampling rate of the channel is within the range</summary>
                 <description>Matches if the sampling rate of the channel is within the range. Both the min and max are
-                    optional, although at least one must be given to have any effect</description>
+                    optional, although at least one must be given to have any effect.</description>
                 <example>
                     <sampling>
                         <min>1</min>
