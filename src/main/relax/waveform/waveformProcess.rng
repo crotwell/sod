@@ -195,7 +195,7 @@
             <xsd:annotation>
                 <summary>Apply a Butterworth filter</summary>
                 <description>Applies a Butterworth filter to the seismograms. The filterType can be CAUSAL or NONCAUSAL
-                    or TWOPASS, with the last two being equivalent.</description>
+                    or TWOPASS, with the last two being equivalent and NONCAUSAL being the default. The default number of poles is 2.</description>
             </xsd:annotation>
             <element name="lowFreqCorner">
                 <xsd:annotation>
@@ -219,20 +219,24 @@
                 </xsd:annotation>
                 <ref name="cornerSetting"/>
             </element>
-            <element name="numPoles">
-                <data type="integer">
-                    <xsd:annotation>
-                        <example>2</example>
-                    </xsd:annotation>
-                </data>
-            </element>
-            <element name="filterType">
-                <choice>
-                    <value>NONCAUSAL</value>
-                    <value>CAUSAL</value>
-                    <value>TWOPASS</value>
-                </choice>
-            </element>
+            <optional>
+              <element name="numPoles">
+                  <data type="integer">
+                      <xsd:annotation>
+                          <example>2</example>
+                      </xsd:annotation>
+                  </data>
+              </element>
+            </optional>
+            <optional>
+              <element name="filterType">
+                  <choice>
+                      <value>NONCAUSAL</value>
+                      <value>CAUSAL</value>
+                      <value>TWOPASS</value>
+                  </choice>
+              </element>
+            </optional>
         </element>
     </define>
     <define name="cornerSetting">
