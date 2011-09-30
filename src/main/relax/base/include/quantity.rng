@@ -16,7 +16,7 @@
             </element>
         </interleave>
     </define>
-    <define name="time" combine="choice">
+    <define name="timeInterval" combine="choice">
         <interleave>
             <xsd:annotation>
                 <summary>A length of time</summary>
