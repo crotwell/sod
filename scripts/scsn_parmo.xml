@@ -11,9 +11,9 @@
 </pointDistance>
 <originTimeRange>
 <!--
-  <startTime>20110201T00:00:00.001Z</startTime>
--->
   <startTime>20110911T00:00:00.001Z</startTime>
+-->
+  <startTime>20110201T00:00:00.001Z</startTime>
   <endTime>20120910T00:00:00.001Z</endTime>
 </originTimeRange>
 
