@@ -113,11 +113,13 @@ task explodeBin(type: Sync, dependsOn: ['makeScript', 'createBuildScript', 'buil
     with binDistFiles
     into file("$buildDir/explode")
 }
-task explodeDist(type: Sync, dependsOn: ['explodeBin', 'wrapper', 'copySodSite']) {
+task explodeDist(type: Sync, dependsOn: ['explodeBin', 'wrapper', 'doc']) {
     group = 'dist'
     with distFiles
     into file("$buildDir/explode")
 }
+
+task doc(dependsOn: 'copySodSite') {}
 
 def getDExtras() {
     return [ 'seis.name':'sod'+getVersion(), 
