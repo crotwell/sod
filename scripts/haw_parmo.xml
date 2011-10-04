@@ -1,25 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sod>
     <eventArm>
-<eventFinder>
-     <pointDistance>
-    <latitude>35</latitude>
-    <longitude>-85</longitude>
-    <unit>DEGREE</unit>
-    <min>0</min>
-    <max>90</max>
-</pointDistance>
-<originTimeRange>
-  <startTime>20110225T00:00:00.001Z</startTime>
-  <endTime>20110225T21:00:00.001Z</endTime>
-</originTimeRange>
-
-<magnitudeRange>
-    <magType>mb</magType>
-    <magType>M</magType>
-    <min>5.0</min>
-</magnitudeRange>
-</eventFinder>
 
 <eventFinder>
      <pointDistance>
@@ -30,8 +11,8 @@
     <max>90</max>
 </pointDistance>
 <originTimeRange>
-  <startTime>20110407T00:00:00.001Z</startTime>
-  <endTime>20110407T21:00:00.001Z</endTime>
+  <startTime>20100501T17:00:00.001Z</startTime>
+  <endTime>20110923T21:00:00.001Z</endTime>
 </originTimeRange>
 
 <magnitudeRange>
@@ -40,6 +21,7 @@
     <min>5.0</min>
 </magnitudeRange>
 </eventFinder>
+
 <originOR>
     <originPointDistance>
     <latitude>35</latitude>
@@ -140,6 +122,19 @@ if channel.orientationCode == "2" or channel.orientationCode == "E":
         </choiceSource>
         <someCoverage/>
         <merge/>
+        <rMean/>
+        <rTrend/>
+        <filter>
+            <lowFreqCorner>
+                <value>2</value>
+                <unit>SECOND</unit>
+            </lowFreqCorner>
+            <highFreqCorner>
+                <value>5</value>
+                <unit>HERTZ</unit>
+            </highFreqCorner>
+            <filterType>NONCAUSAL</filterType>
+        </filter>
         <requestCut/>
         <sacWriter>
             <phaseTimeHeader>
@@ -201,11 +196,32 @@ if channel.orientationCode == "2" or channel.orientationCode == "E":
         </vectorScript>
 -->
         <particleMotionPlot>
-            <workingDir>parMoPlots_.5_1.5</workingDir>
+            <workingDir>parMoPlots_0.0_0.5</workingDir>
             <titleBorder>
                 <type>title</type>
                 <position>bottom</position>
-                <title><text>P+.5 to P+1.5 sec $station.code $event.time</text></title>
+                <title><text>P+.0 to P+0.5 sec $station.code $event.time</text></title>
+            </titleBorder>
+            <phaseWindow>
+                <model>iasp91</model>
+                <beginPhase>ttp</beginPhase>
+                <beginOffset>
+                    <unit>SECOND</unit>
+                    <value>0.0</value>
+                </beginOffset>
+                <endPhase>ttp</endPhase>
+                <endOffset>
+                    <unit>SECOND</unit>
+                    <value>0.5</value>
+                </endOffset>
+            </phaseWindow>
+        </particleMotionPlot>
+        <particleMotionPlot>
+            <workingDir>parMoPlots_.5_1.0</workingDir>
+            <titleBorder>
+                <type>title</type>
+                <position>bottom</position>
+                <title><text>P+.5 to P+1.0 sec $station.code $event.time</text></title>
             </titleBorder>
             <phaseWindow>
                 <model>iasp91</model>
@@ -213,6 +229,27 @@ if channel.orientationCode == "2" or channel.orientationCode == "E":
                 <beginOffset>
                     <unit>SECOND</unit>
                     <value>.5</value>
+                </beginOffset>
+                <endPhase>ttp</endPhase>
+                <endOffset>
+                    <unit>SECOND</unit>
+                    <value>1.0</value>
+                </endOffset>
+            </phaseWindow>
+        </particleMotionPlot>
+        <particleMotionPlot>
+            <workingDir>parMoPlots_1.0_1.5</workingDir>
+            <titleBorder>
+                <type>title</type>
+                <position>bottom</position>
+                <title><text>P+1.0 to P+1.5 sec $station.code $event.time</text></title>
+            </titleBorder>
+            <phaseWindow>
+                <model>iasp91</model>
+                <beginPhase>ttp</beginPhase>
+                <beginOffset>
+                    <unit>SECOND</unit>
+                    <value>1.0</value>
                 </beginOffset>
                 <endPhase>ttp</endPhase>
                 <endOffset>
@@ -243,11 +280,11 @@ if channel.orientationCode == "2" or channel.orientationCode == "E":
             </phaseWindow>
         </particleMotionPlot>
         <particleMotionPlot>
-            <workingDir>parMoPlots_-.5_.5</workingDir>
+            <workingDir>parMoPlots_-0.5_0.0</workingDir>
             <titleBorder>
                 <type>title</type>
                 <position>bottom</position>
-                <title><text>P-0.5 to P+0.5 sec $station.code $event.time</text></title>
+                <title><text>P-0.5 to P+0.0 sec $station.code $event.time</text></title>
             </titleBorder>
             <phaseWindow>
                 <model>iasp91</model>
@@ -259,7 +296,7 @@ if channel.orientationCode == "2" or channel.orientationCode == "E":
                 <endPhase>ttp</endPhase>
                 <endOffset>
                     <unit>SECOND</unit>
-                    <value>0.5</value>
+                    <value>0.0</value>
                 </endOffset>
             </phaseWindow>
         </particleMotionPlot>
