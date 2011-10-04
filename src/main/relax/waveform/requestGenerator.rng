@@ -49,10 +49,10 @@
                 </example>
             </xsd:annotation>
             <element name="beginOffset">
-                <ref name="time"/>
+                <ref name="timeInterval"/>
             </element>
             <element name="endOffset">
-                <ref name="time"/>
+                <ref name="timeInterval"/>
             </element>
         </element>
     </define>

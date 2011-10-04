@@ -152,7 +152,7 @@ The default is <someCoverage/>.</description>
                     Considerations</a> for more details on how to use this subsetter in conjunction
                     with the other availableData subsetters.</description>
             </xsd:annotation>
-            <ref name="time"/>
+            <ref name="timeInterval"/>
         </element>
     </define>
     <define name="externalAvailable">

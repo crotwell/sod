@@ -256,7 +256,7 @@
                     </example>
                 </xsd:annotation>
                 <choice>
-                    <ref name="time"/>
+                    <ref name="timeInterval"/>
                 </choice>
             </element>
             <element name="endOffset">
@@ -269,7 +269,7 @@
                     </example>
                 </xsd:annotation>
                 <choice>
-                    <ref name="time"/>
+                    <ref name="timeInterval"/>
                 </choice>
             </element>
             <oneOrMore>

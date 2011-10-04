@@ -291,7 +291,7 @@
             <interleave>
                 <optional>
                     <element name="timeVariance">
-                        <ref name="time"/>
+                        <ref name="timeInterval"/>
                     </element>
                 </optional>
                 <optional>
@@ -326,7 +326,7 @@
             <xsd:annotation>
                 <summary>The event must have occured more recently than now minus the given time interval</summary>
             </xsd:annotation>
-            <ref name="time"/>
+            <ref name="timeInterval"/>
         </element>
     </define>
     <define name="printline">

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
-    <include href="time.rng"/>
     <start combine="choice">
         <notAllowed/>
     </start>

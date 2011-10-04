@@ -307,10 +307,7 @@
             </optional>
             <optional>
                 <element name="advanceInterval">
-                    <ref name="timeUnit"/>
-                    <element name="value">
-                        <data type="double"/>
-                    </element>
+                    <ref name="timeInterval"/>
                 </element>
             </optional>
             <optional>

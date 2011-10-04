@@ -244,7 +244,7 @@
             <xsd:annotation>
                 <summary>Set corners of a filter</summary>
             </xsd:annotation>
-            <ref name="time"/>
+            <ref name="timeInterval"/>
             <ref name="freq"/>
         </choice>
     </define>
@@ -788,16 +788,16 @@ result = util.waveformResult(True, out)
                 <data type="string"/>
             </element>
             <element name="shortOffsetBegin">
-                <ref name="time"/>
+                <ref name="timeInterval"/>
             </element>
             <element name="shortOffsetEnd">
-                <ref name="time"/>
+                <ref name="timeInterval"/>
             </element>
             <element name="longOffsetBegin">
-                <ref name="time"/>
+                <ref name="timeInterval"/>
             </element>
             <element name="longOffsetEnd">
-                <ref name="time"/>
+                <ref name="timeInterval"/>
             </element>
             <element name="ratio">
                 <data type="float"/>
@@ -845,19 +845,19 @@ result = util.waveformResult(True, out)
                 <data type="string"/>
             </element>
             <element name="shortOffsetBegin">
-                <ref name="time"/>
+                <ref name="timeInterval"/>
             </element>
             <element name="shortOffsetEnd">
-                <ref name="time"/>
+                <ref name="timeInterval"/>
             </element>
             <element name="longPhaseName">
                 <data type="string"/>
             </element>
             <element name="longOffsetBegin">
-                <ref name="time"/>
+                <ref name="timeInterval"/>
             </element>
             <element name="longOffsetEnd">
-                <ref name="time"/>
+                <ref name="timeInterval"/>
             </element>
             <element name="ratio">
                 <data type="float"/>

@@ -24,7 +24,7 @@
                 </example>
             </xsd:annotation>
             <choice>
-                <ref name="time"/>
+                <ref name="timeInterval"/>
                 <ref name="randomOffset"/>
             </choice>
         </element>
@@ -41,7 +41,7 @@
                 </example>
             </xsd:annotation>
             <choice>
-                <ref name="time"/>
+                <ref name="timeInterval"/>
                 <ref name="randomOffset"/>
             </choice>
         </element>
@@ -53,7 +53,7 @@
             </element>
         </optional>
         <element name="minimum">
-            <ref name="time"/>
+            <ref name="timeInterval"/>
         </element>
         <optional>
             <element name="negative">

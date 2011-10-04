@@ -118,7 +118,7 @@
                     number of events is returned each time. The default value is 7 days, and this
                     should be fine for most runs.</description>
             </xsd:annotation>
-            <ref name="time"/>
+            <ref name="timeInterval"/>
         </element>
     </define>
     <define name="eventRefreshInterval">
@@ -132,7 +132,7 @@
                     value is 6 minutes, but can be made higher if the run doesn't need events the
                     minute the arrive at the server.</description>
             </xsd:annotation>
-            <ref name="time"/>
+            <ref name="timeInterval"/>
         </element>
     </define>
     <define name="eventLag">
@@ -146,7 +146,7 @@
                     value will have no effect unless adding it to the event arm's end date pushes it
                     past the time the run ends.  The default value is one week.</description>
             </xsd:annotation>
-            <ref name="time"/>
+            <ref name="timeInterval"/>
         </element>
     </define>
     <define name="seismogramLatency">
@@ -157,7 +157,7 @@
                     SOD will periodically retry the item that failed up until this long after the event.
                       The default value is 4 weeks.</description>
             </xsd:annotation>
-            <ref name="time"/>
+            <ref name="timeInterval"/>
         </element>
     </define>
     <define name="maxRetryDelay">
@@ -169,7 +169,7 @@
                     SOD will periodically retry the item that failed up until the first attempt time
                     plus this value.  The default value is 180 days.</description>
             </xsd:annotation>
-            <ref name="time"/>
+            <ref name="timeInterval"/>
         </element>
     </define>
     <define name="waveformWorkerThreads">

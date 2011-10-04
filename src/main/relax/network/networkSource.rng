@@ -397,7 +397,7 @@ CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
                         this value will allow for those new stations to be processed by your run.</description>
                 </xsd:documentation>
             </xsd:annotation>
-            <ref name="time"/>
+            <ref name="timeInterval"/>
         </element>
     </define>
 </grammar>
