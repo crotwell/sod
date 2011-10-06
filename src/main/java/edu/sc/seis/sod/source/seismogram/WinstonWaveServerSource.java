@@ -32,9 +32,17 @@ public class WinstonWaveServerSource implements SeismogramSource {
     public static double toEpochSeconds(Time d) {
         return new MicroSecondDate(d).getMicroSecondTime() / 1000000.0;
     }
-    
+
     public static double toY2KSeconds(Time d) {
-        return new MicroSecondDate(d).getMicroSecondTime() / 1000000.0 - 946728000;
+        return toY2KSeconds(new MicroSecondDate(d));
+    }
+    
+    public static double toY2KSeconds(MicroSecondDate d) {
+        return d.getMicroSecondTime() / 1000000.0 - 946728000;
+    }
+    
+    public static MicroSecondDate y2kSecondsToDate(double d) {
+        return toDate(d + 946728000);
     }
     
     @Override
