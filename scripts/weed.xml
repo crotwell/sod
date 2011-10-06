@@ -77,7 +77,7 @@
             <gainCode>O</gainCode>
         </channelNOT>
         <responseWriter>
-            <directory>responses</directory>
+            <workingDir>responses</workingDir>
             <location>
                 $networkCode.$stationCode.$siteCode.$channelCode.resp</location>
         </responseWriter>

@@ -13,19 +13,15 @@
             <originTimeRange>
                 <startTime>
                     <earlier>
- <timeInterval>
- <unit>DAY</unit>
- <value>1</value>
- </timeInterval>
-</earlier>
+                        <unit>DAY</unit>
+                        <value>1</value>
+                    </earlier>
                 </startTime>
                 <endTime>
-                <later>
-<timeInterval>
-<unit>DAY</unit>
-<value>50</value>
-</timeInterval>
-</later>
+                  <later>
+                    <unit>DAY</unit>
+                    <value>50</value>
+                  </later>
                 </endTime>
             </originTimeRange>
             <magnitudeRange>

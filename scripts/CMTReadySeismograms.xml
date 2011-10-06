@@ -7,18 +7,14 @@
             <originTimeRange>
                 <startTime>
                     <earlier>
-                        <timeInterval>
                             <unit>WEEK</unit>
                             <value>1</value>
-                        </timeInterval>
                     </earlier>
                 </startTime>
                 <endTime>
                     <later>
-                        <timeInterval>
                             <unit>GREGORIAN_YEAR</unit>
                             <value>1000</value>
-                        </timeInterval>
                     </later>
                 </endTime>
             </originTimeRange>

@@ -11,8 +11,8 @@
     <max>90</max>
 </pointDistance>
 <originTimeRange>
-  <startTime>20100501T17:00:00.001Z</startTime>
-  <endTime>20110923T21:00:00.001Z</endTime>
+  <startTime>20101101T17:00:00.001Z</startTime>
+  <endTime>20111006T21:00:00.001Z</endTime>
 </originTimeRange>
 
 <magnitudeRange>
@@ -81,7 +81,7 @@ CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
             <bandCode>E</bandCode>
         </channelOR>
 <channelScript type="jython">
-rot=75
+rot=45
 if channel.orientationCode == "1" or channel.orientationCode == "N":
     channel.getWrapped().orientation.azimuth = rot
     channel.getWrapped().orientation.dip = 0
