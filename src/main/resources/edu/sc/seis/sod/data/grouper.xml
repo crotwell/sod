@@ -3,6 +3,7 @@
         <rule>
                 <threeCharacterRule>ZNE</threeCharacterRule>
                 <threeCharacterRule>Z12</threeCharacterRule>
+                <threeCharacterRule>Z23</threeCharacterRule>
                 <threeCharacterRule>ABC</threeCharacterRule>
                 <threeCharacterRule>123</threeCharacterRule>
                 <threeCharacterRule>UVW</threeCharacterRule>
