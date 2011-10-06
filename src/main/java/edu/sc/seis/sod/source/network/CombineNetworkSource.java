@@ -92,9 +92,11 @@ public class CombineNetworkSource implements NetworkSource {
         List<NetworkAttrImpl> out = new ArrayList<NetworkAttrImpl>();
         for (NetworkSource source : wrapped) {
             List<? extends NetworkAttrImpl> subOut = source.getNetworks();
+            System.out.println("getNetworks: "+source.getDNS()+"/"+source.getName()+"  "+subOut.size());
             if (subOut != null) {
                 for (NetworkAttrImpl n : subOut) {
                     String code = NetworkIdUtil.toStringNoDates(n);
+                    System.out.println("got Network from "+source.getDNS()+"/"+source.getName()+"  "+code);
                     if (! codeToSource.containsKey(code)) {
                         codeToSource.put(code, source);
                         out.add(n);
