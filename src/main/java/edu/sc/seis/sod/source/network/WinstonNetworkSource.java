@@ -6,6 +6,7 @@ import java.util.List;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.Orientation;
+import edu.iris.Fissures.Time;
 import edu.iris.Fissures.TimeRange;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.SiteId;
@@ -15,6 +16,7 @@ import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.SiteImpl;
 import edu.iris.Fissures.network.StationImpl;
+import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.source.seismogram.WinstonWaveServerSource;
@@ -50,12 +52,14 @@ public class WinstonNetworkSource extends CSVNetworkSource {
             float dip = ChannelImpl.getDip(chanCode);
             
             SamplingImpl sampling = new SamplingImpl(1, new TimeInterval(1, UnitImpl.SECOND));
-//            System.out.println("WinstonNetworkSource: "+channel.getMinTime()+" "+WinstonWaveServerSource.toDate(channel.getMinTime())+" "+WinstonWaveServerSource.toDate(channel.getMinTime()+946728000));
-//            TimeRange chanTime = new TimeRange(WinstonWaveServerSource.toDate(channel.getMinTime()).getFissuresTime(),
-//                                               DEFAULT_END);
-            TimeRange chanTime = new TimeRange(curStation.getBeginTime(),
+            Time chanStart = curStation.getBeginTime();
+            if (channel.getMinTime() < WinstonWaveServerSource.toY2KSeconds(ClockUtil.now())) {
+                // sometime non-seismic channels are messed up in winston and have really bizarre times
+                // only use if start time is before now
+                chanStart = WinstonWaveServerSource.y2kSecondsToDate(channel.getMinTime()).getFissuresTime();
+            }
+            TimeRange chanTime = new TimeRange(chanStart,
                                                DEFAULT_END);
-            System.out.println("winstonChannels "+staCode+"."+chanCode+" "+chanTime.start_time.date_time);
             ChannelImpl channelImpl = new ChannelImpl(new ChannelId(curStation.get_id().network_id,
                                                                 staCode,
                                                                 siteCode,
