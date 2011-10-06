@@ -199,7 +199,7 @@ public class NetworkFinder extends AbstractNetworkSource {
         recentNetworksCache = null;
     }
     
-    protected List<CacheNetworkAccess> recentNetworksCache = new LinkedList<CacheNetworkAccess>();
+    protected List<CacheNetworkAccess> recentNetworksCache = null;
 
     protected VestingNetworkDC netDC;
 
