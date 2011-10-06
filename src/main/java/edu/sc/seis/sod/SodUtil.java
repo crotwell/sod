@@ -512,7 +512,11 @@ public class SodUtil {
     }
 
     private static MicroSecondDateSupplier loadRelativeTime(Element el) throws ConfigurationException {
-        final TimeInterval duration = loadTimeInterval(DOMHelper.getElement(el, "timeInterval"));
+        if (DOMHelper.hasElement(el, "timeInterval")) {
+            
+            return loadRelativeTime(DOMHelper.getElement(el, "timeInterval"));
+        }
+        final TimeInterval duration = loadTimeInterval(el);
         if(el.getTagName().equals("earlier")) {
             return getEarlierSupplier(duration);
         }
