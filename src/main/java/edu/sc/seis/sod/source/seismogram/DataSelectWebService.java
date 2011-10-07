@@ -68,8 +68,10 @@ public class DataSelectWebService implements SeismogramSourceLocator {
                                                               start,
                                                               (float)new MicroSecondDate(rf.end_time).subtract(start).getValue(UnitImpl.SECOND));
                         List<DataRecord> records = dsReader.read(requestURL);
-                        LocalSeismogramImpl seis = FissuresConvert.toFissures(records.toArray(new DataRecord[0]));
-                        out.add(seis);
+                        if (records.size() != 0) {
+                            LocalSeismogramImpl seis = FissuresConvert.toFissures(records.toArray(new DataRecord[0]));
+                            out.add(seis);
+                        }
                     }
                     return out;
                 } catch(IOException e) {
