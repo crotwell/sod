@@ -30,8 +30,10 @@
                 <description>Accepts events that occur within the latitude longitude box defined
                     here</description>
             </xsd:annotation>
-            <ref name="latitudeRange"/>
-            <ref name="longitudeRange"/>
+            <interleave>
+              <ref name="latitudeRange"/>
+              <ref name="longitudeRange"/>
+            </interleave>
         </element>
     </define>
     <define name="pointDistance">
