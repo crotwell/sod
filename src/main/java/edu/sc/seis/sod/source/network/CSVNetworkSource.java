@@ -347,7 +347,12 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
                                                                 FE_SEIS_REGION,
                                                                 FE_GEO_REGION,
                                                                 FE_REGION,
-                                                                FE_REGION_TYPE};
+                                                                FE_REGION_TYPE,
+                                                                AZIMUTH,
+                                                                DIP,
+                                                                OPERATOR,
+                                                                COMMENT,
+                                                                DESCRIPTION};
 
     @Override
     public TimeInterval getRefreshInterval() {
