@@ -106,8 +106,6 @@ public class LocalSeismogramTemplate extends Template{
             GlobalExceptionHandler.handle("Problem using Velocity", e);
         } catch (ResourceNotFoundException e) {
             GlobalExceptionHandler.handle("Problem using Velocity", e);
-        } catch (IOException e) {
-            GlobalExceptionHandler.handle("Problem using Velocity", e);
         }
         return template;
     }
