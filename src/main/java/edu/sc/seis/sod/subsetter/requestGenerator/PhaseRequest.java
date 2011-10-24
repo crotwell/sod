@@ -111,6 +111,10 @@ public class PhaseRequest implements RequestGenerator {
                                            Channel channel) throws Exception {
         return phaseReq.generateRequest(event, channel);
     }
+    
+    public edu.sc.seis.fissuresUtil.bag.PhaseRequest getPhaseReq() {
+        return phaseReq;
+    }
 
     private edu.sc.seis.fissuresUtil.bag.PhaseRequest phaseReq;
 }// PhaseRequest
