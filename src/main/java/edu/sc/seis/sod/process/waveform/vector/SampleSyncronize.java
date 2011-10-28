@@ -24,7 +24,7 @@ public class SampleSyncronize implements WaveformVectorProcess {
         TimeInterval firstSampPeriod = seismograms[0][0].getSampling().getPeriod();
         for (int i = 0; i < out.length; i++) {
             out[i] = new LocalSeismogramImpl[seismograms[i].length];
-            for (int j = 0; j < out.length; j++) {
+            for (int j = 0; j < out[i].length; j++) {
                 if (i==0 && j==0) {
                     out[i][j] = seismograms[0][0];
                 } else { 
