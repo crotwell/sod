@@ -19,8 +19,10 @@ import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.chooser.ThreadSafeSimpleDateFormat;
+import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.mseed.FissuresConvert;
+import edu.sc.seis.fissuresUtil.time.RangeTool;
 import edu.sc.seis.seisFile.MSeedQueryReader;
 import edu.sc.seis.seisFile.dataSelectWS.DataSelectException;
 import edu.sc.seis.seisFile.dataSelectWS.DataSelectReader;
@@ -68,9 +70,28 @@ public class DataSelectWebService implements SeismogramSourceLocator {
                                                               start,
                                                               (float)new MicroSecondDate(rf.end_time).subtract(start).getValue(UnitImpl.SECOND));
                         List<DataRecord> records = dsReader.read(requestURL);
-                        if (records.size() != 0) {
-                            LocalSeismogramImpl seis = FissuresConvert.toFissures(records.toArray(new DataRecord[0]));
-                            out.add(seis);
+                        List<DataRecord> contiguous = new ArrayList<DataRecord>();
+                        DataRecord prev = null;
+                        for (DataRecord dr : records) {
+                            if (prev == null) {
+                                contiguous.add(dr);
+                                prev = dr;
+                                continue;
+                            }
+                            // probably should also check for chan match
+                            if (RangeTool.areContiguous(FissuresConvert.getTimeRange(prev.getHeader().getBtimeRange()), 
+                                                        FissuresConvert.getTimeRange(dr.getHeader().getBtimeRange()),
+                                                        FissuresConvert.convertSampleRate(prev).getPeriod())) {
+                                prev = dr;
+                                contiguous.add(dr);
+                            } else {
+                                LocalSeismogramImpl seis = FissuresConvert.toFissures(contiguous);
+                                out.add(seis);
+                                prev = dr;
+                                contiguous.clear();
+                                contiguous.add(dr);
+                            }
+                            
                         }
                     }
                     return out;
