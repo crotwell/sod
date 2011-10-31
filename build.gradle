@@ -1,9 +1,10 @@
 
 
 group = 'edu.sc.seis'
-version = '3.0.0rc1'
+version = '3.0.0rc2'
 
-apply plugin:'java'
+apply plugin:'application'
+mainClassName = "edu.sc.seis.sod.Start"
 
 
 sourceSets {
@@ -17,16 +18,11 @@ sourceSets {
  
 dependencies {
     compile project(':bag') { transitive = true }
-    compile project(':seiswww') { transitive = false }
     compile project(':cormorant') { transitive = true }
     
-    compile "jline:jline:0.9.91"
+    compile "jline:jline:0.9.94"
     compile "thaiopensource:jing:20091111"
     compile "rngconvUSC:rngconv:20030225"
-    compile "msv:msv:20030807"
-    compile "msv:isorelax:20030807"
-    compile "msv:relaxngDatatype:20030807"
-    compile "msv:xsdlib:20030807"
     compile "de.erichseifert.gral:VectorGraphics2D:0.9-SNAPSHOT"
     compile "de.erichseifert.gral:gral-core:0.9-SNAPSHOT"
 
