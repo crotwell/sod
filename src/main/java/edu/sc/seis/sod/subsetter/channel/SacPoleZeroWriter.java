@@ -43,6 +43,7 @@ public class SacPoleZeroWriter implements ChannelSubsetter {
         } catch(ChannelNotFound e) {
             return new Fail(this, "No instrumentation");
         } catch(InvalidResponse e) {
+            logger.warn("Invalid instrumentation: ", e);
             return new Fail(this, "Invalid instrumentation: "+e.getMessage());
         }
         if(inst.the_response.stages[0].filters[0].discriminator().value() != FilterType._POLEZERO) {
@@ -76,4 +77,6 @@ public class SacPoleZeroWriter implements ChannelSubsetter {
     private String template;
 
     private PrintlineVelocitizer velocitizer;
+
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(SacPoleZeroWriter.class);
 }
