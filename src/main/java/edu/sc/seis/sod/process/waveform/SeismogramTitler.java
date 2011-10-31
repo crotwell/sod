@@ -2,6 +2,7 @@ package edu.sc.seis.sod.process.waveform;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 import org.apache.velocity.VelocityContext;
@@ -31,11 +32,23 @@ public class SeismogramTitler {
     public void title(EventAccessOperations event,
                       Channel channel,
                       MicroSecondTimeRange timeRange) {
+        title(event, channel, timeRange, null);
+    }
+
+    public void title(EventAccessOperations event,
+                      Channel channel,
+                      MicroSecondTimeRange timeRange,
+                      Map<String, Object> extras) {
         VelocityContext vc = ContextWrangler.createContext(channel);
         ContextWrangler.insertIntoContext(channel, vc);
         ContextWrangler.insertIntoContext(event, vc);
         vc.put("beginTime", df.format(timeRange.getBeginTime()));
         vc.put("endTime", df.format(timeRange.getEndTime()));
+        if (extras != null) {
+            for (String key : extras.keySet()) {
+                vc.put(key, extras.get(key));
+            }
+        }
         BorderTitleConfiguration[] titles = titleBorder.getTitles();
         for(int j = 0; j < titles.length; j++) {
             titles[j].setText(sv.evaluate(titleFormatStrings[j], vc));
