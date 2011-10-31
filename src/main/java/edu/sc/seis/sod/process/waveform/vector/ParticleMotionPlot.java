@@ -51,6 +51,7 @@ import edu.sc.seis.sod.process.waveform.SeismogramTitler;
 import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.requestGenerator.PhaseRequest;
+import edu.sc.seis.sod.velocity.seismogram.VelocityPhaseRequest;
 
 public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVectorProcess {
 
@@ -190,6 +191,8 @@ public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVe
         if(titler != null) {
             MicroSecondTimeRange timeWindow = null;
             timeWindow = new MicroSecondTimeRange(phaseWindow.getPhaseRequest().generateRequest(event, xChan));
+            Map<String, Object> extras = new HashMap<String, Object>();
+            extras.put("phaseWindow", new VelocityPhaseRequest(phaseWindow.getPhaseRequest()));
             titler.title(event, xChan, timeWindow);
         }
         DataSource data;
