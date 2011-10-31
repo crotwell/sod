@@ -111,7 +111,8 @@ public class Version{
       new Version("3.0beta9", false),
       new Version("3.0beta10", false),
       new Version("3.0beta11", false),
-      new Version("3.0rc1", false)
+      new Version("3.0rc1", false),
+      new Version("3.0rc2", false)
     };
 
 }
