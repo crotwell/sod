@@ -34,14 +34,16 @@
                     <description>Picks the best channels at a station, avoiding processing 00.BHZ and 01.BHZ at the same station. 
                     This can often happen when there are multiple sensors at a station, perhaps a surface seismometer and
                     a borehole seismometer. The processor decides on best based on a simple hueristic based on site
-                    and channel codes. The default is:<br/>
-                    site Code Heuristic = "00", "  ", "01"<br/>
-                    gain Code Heuristic = "H", "L" <br/>
-                    band Code Heuristic = "B", "H", "L", "M", "S", "V", "E", "U" <br/>
-                    orientation Codes = "Z", "N", "E", "1", "2", "3", "U", "V", "W" <br/>
-                    All three components are considered equally best, so in a typical broadband station
+                    and channel codes. The defaults, each specified as a comma separated list, are:<br/>
+                    site Code Heuristic = 00,  ,01,02,03,04,05,06,07,08,09,10<br/>
+                    gain Code Heuristic = H,L <br/>
+                    band Code Heuristic = B,H,L,M,S,V,E,U <br/>
+                    orientation Code Heuristic = Z,N,E,1,2,3,U,V,W <br/>
+                    All three components are considered equally best,
+                    so in a typical broadband station
                     the best channels might be 00.BHE, 00.BHN, 00.BHZ, and this subsetter will pass
-                    all three, while failing every other channel at this station.
+                    all three, while failing every other channel at this station. This means that any channel that is
+                    part of a three components of motion group will be considered "better" than any lone single component. 
                     <br/>
                     See edu.sc.seis.fissuresUtil.chooser.BestChannelUtil for the underlying code.
                     The reason this is an event-channel subsetter is because the "best" channel
@@ -51,26 +53,28 @@
                     </description>
                 </xsd:documentation>
             </xsd:annotation>
-            <zeroOrMore>
-                <element name="siteCodeHeuristic">
-                    <data type="string"/>
-                </element>
-            </zeroOrMore>
-            <zeroOrMore>
-                <element name="gainCodeHeuristic">
-                    <data type="string"/>
-                </element>
-            </zeroOrMore>
-            <zeroOrMore>
-                <element name="bandCodeHeuristic">
-                    <data type="string"/>
-                </element>
-            </zeroOrMore>
-            <zeroOrMore>
-                <element name="orientationCodeHeuristic">
-                    <data type="string"/>
-                </element>
-            </zeroOrMore>
+            <interleave>
+                <optional>
+                    <element name="siteCodeHeuristic">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="gainCodeHeuristic">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="bandCodeHeuristic">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="orientationCodeHeuristic">
+                        <data type="string"/>
+                    </element>
+                </optional>
+            </interleave>
         </element>
     </define>
     <define name="eventChannelAND">
