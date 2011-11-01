@@ -4,28 +4,52 @@
 
 <eventFinder>
      <pointDistance>
-    <latitude>35</latitude>
-    <longitude>-85</longitude>
+    <latitude>33</latitude>
+    <longitude>-81</longitude>
+    <unit>DEGREE</unit>
+    <min>0</min>
+    <max>3</max>
+</pointDistance>
+<originTimeRange>
+<!--
+  <startTime>20101101T17:00:00.001Z</startTime>
+-->
+  <startTime>20111011T17:00:00.001Z</startTime>
+  <endTime>20111116T21:00:00.001Z</endTime>
+</originTimeRange>
+<magnitudeRange>
+    <min>1.0</min>
+</magnitudeRange>
+
+</eventFinder>
+
+<eventFinder>
+     <pointDistance>
+    <latitude>33</latitude>
+    <longitude>-81</longitude>
     <unit>DEGREE</unit>
     <min>0</min>
     <max>90</max>
 </pointDistance>
 <originTimeRange>
+<!--
   <startTime>20101101T17:00:00.001Z</startTime>
-  <endTime>20111006T21:00:00.001Z</endTime>
+-->
+  <startTime>20111011T17:00:00.001Z</startTime>
+  <endTime>20111116T21:00:00.001Z</endTime>
 </originTimeRange>
 
 <magnitudeRange>
     <magType>mb</magType>
     <magType>M</magType>
-    <min>5.0</min>
+    <min>5.2</min>
 </magnitudeRange>
 </eventFinder>
 
 <originOR>
     <originPointDistance>
-    <latitude>35</latitude>
-    <longitude>-85</longitude>
+    <latitude>33</latitude>
+    <longitude>-81</longitude>
     <unit>DEGREE</unit>
     <min>0</min>
     <max>20</max>
@@ -40,7 +64,8 @@
     </eventArm>
     <networkArm>
         <combineNetworkSource>
-            <winstonNetworkSource>
+
+            <CSVNetworkSource>
                 <stations>
 net.code, code, start, latitude, longitude, elevation, depth
 CO, JSC, 2009-04-13T00:00:00.000Z, 34.2816, -81.2597, 103, 1
@@ -52,10 +77,28 @@ CO, BIRD, 2009-04-13T00:00:00.000Z, 34.6449, -80.4614, 132, 1
 CO, PAULI, 2009-04-13T00:00:00.000Z, 34.2816, -81.259752, 103, 1
 CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
                 </stations>
-                <host>eeyore.seis.sc.edu</host>
-                <port>16022</port>
-            </winstonNetworkSource>
-            <networkFinder/>  <!-- dmc is default network finder-->
+                <channels>
+net.code, station.code, site.code, code, start, azimuth, dip, end
+CO, RGR, 00, EH1, 2011-05-17T00:00:00.000Z, 0, 0, 2500-01-01T00:00:00.000Z
+CO, RGR, 00, EH2, 2011-05-17T00:00:00.000Z, 90, 0, 2500-01-01T00:00:00.000Z
+CO, RGR, 00, EHZ, 2011-05-17T00:00:00.000Z, 0, -90, 2500-01-01T00:00:00.000Z
+CO, RGR, 00, EHN, 2009-04-13T00:00:00.000Z, 0, 0, 2011-05-17T00:00:00.000Z
+CO, RGR, 00, EHE, 2009-04-13T00:00:00.000Z, 90, 0, 2011-05-17T00:00:00.000Z
+CO, RGR, 00, EHZ, 2009-04-13T00:00:00.000Z, 0, -90, 2011-05-17T00:00:00.000Z
+CO, CSB, 00, EH1, 2011-05-17T00:00:00.000Z, 0, 0, 2500-01-01T00:00:00.000Z
+CO, CSB, 00, EH2, 2011-05-17T00:00:00.000Z, 90, 0, 2500-01-01T00:00:00.000Z
+CO, CSB, 00, EHZ, 2011-05-17T00:00:00.000Z, 0, -90, 2500-01-01T00:00:00.000Z
+CO, CSB, 00, EHN, 2009-04-13T00:00:00.000Z, 0, 0, 2011-05-17T00:00:00.000Z
+CO, CSB, 00, EHE, 2009-04-13T00:00:00.000Z, 90, 0, 2011-05-17T00:00:00.000Z
+CO, CSB, 00, EHZ, 2009-04-13T00:00:00.000Z, 0, -90, 2011-05-17T00:00:00.000Z
+CO, HAW, 00, HH1, 2011-04-13T00:00:00.000Z, 0, 0, 2500-01-01T00:00:00.000Z
+CO, HAW, 00, HH2, 2011-04-13T00:00:00.000Z, 90, 0, 2500-01-01T00:00:00.000Z
+CO, HAW, 00, HHZ, 2011-04-13T00:00:00.000Z, 0, -90, 2500-01-01T00:00:00.000Z
+CO, HAW, 00, BHN, 2010-11-03T00:00:00.000Z, 0, 0, 2011-04-13T00:00:00.000Z
+CO, HAW, 00, BHE, 2010-11-03T00:00:00.000Z, 90, 0, 2011-04-13T00:00:00.000Z
+CO, HAW, 00, BHZ, 2010-11-03T00:00:00.000Z, 0, -90, 2011-04-13T00:00:00.000Z
+                </channels>
+            </CSVNetworkSource>
         </combineNetworkSource>
         <networkOR>
             <networkCode>CO</networkCode>
