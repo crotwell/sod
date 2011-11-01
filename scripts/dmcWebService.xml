@@ -39,11 +39,10 @@
         <printlineEventProcess/>
     </eventArm>
     <networkArm>
-        <networkFinder>
-            <name>IRIS_NetworkDC</name>
-            <dns>edu/iris/dmc</dns>
-        </networkFinder>
+<stationXML><url>http://www.iris.edu/ws/station/query?net=CO&amp;chan=HH*</url></stationXML>
         <networkCode>CO</networkCode>
+        <sacPoleZeroWriter/>
+        <responseWriter/>
         <printlineChannelProcess/>
     </networkArm>
     <waveformArm>
