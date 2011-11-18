@@ -17,6 +17,9 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.Threadable;
+import edu.sc.seis.sod.process.waveform.CollapseOverlaps;
+import edu.sc.seis.sod.process.waveform.Merge;
+import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
 public class VectorTrim implements WaveformVectorProcess, Threadable {
@@ -30,6 +33,24 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
                                         RequestFilter[][] available,
                                         LocalSeismogramImpl[][] seismograms,
                                         CookieJar cookieJar) throws Exception {
+        WaveformVectorResult collapseResult = collapser.accept(event, channelGroup, original, available, seismograms, cookieJar);
+        if ( ! collapseResult.isSuccess()) {
+            return new WaveformVectorResult(false, collapseResult.getSeismograms(), new StringTreeBranch(this, false, collapseResult.getReason()));
+        }
+        seismograms = collapseResult.getSeismograms();
+        WaveformVectorResult mergeResult = merger.accept(event, channelGroup, original, available, seismograms, cookieJar);
+        if ( ! mergeResult.isSuccess()) {
+            return new WaveformVectorResult(false, mergeResult.getSeismograms(), new StringTreeBranch(this, false, mergeResult.getReason()));
+        }
+        seismograms = mergeResult.getSeismograms();
+
+        if (seismograms[0].length != seismograms[1].length || seismograms[0].length != seismograms[2].length) {
+            return new WaveformVectorResult(seismograms,
+                                            new StringTreeLeaf(this,
+                                                               false,
+                                                               "Unequal number of seismograms in the three components: "+seismograms[0].length+" "+seismograms[1].length+" "+seismograms[2].length));
+
+        }
         for(int i = 0; i < seismograms.length; i++) {
             if(seismograms[i].length == 0) {
                 return new WaveformVectorResult(seismograms,
@@ -179,4 +200,7 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
     public boolean isThreadSafe() {
         return true;
     }
+    
+    private ANDWaveformProcessWrapper merger = new ANDWaveformProcessWrapper(new Merge());
+    private ANDWaveformProcessWrapper collapser = new ANDWaveformProcessWrapper(new CollapseOverlaps());
 }
