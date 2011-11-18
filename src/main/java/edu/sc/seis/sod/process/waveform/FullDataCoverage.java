@@ -3,10 +3,11 @@ package edu.sc.seis.sod.process.waveform;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.iris.Fissures.seismogramDC.RequestFilterUtil;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
+import edu.sc.seis.fissuresUtil.time.CoverageTool;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
@@ -27,39 +28,23 @@ public class FullDataCoverage implements WaveformProcess {
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) {
-        if(seismograms.length > 0) {
-            MicroSecondDate seisBegin = seismograms[0].getBeginTime();
-            MicroSecondDate seisEnd = seismograms[seismograms.length - 1].getEndTime();
-            MicroSecondDate requestBegin = new MicroSecondDate(original[0].start_time);
-            MicroSecondDate requestEnd = new MicroSecondDate(original[original.length - 1].end_time);
-            boolean dataCoversRequestBegin = beforeOrEquals(seisBegin,
-                                                            requestBegin);
-            boolean dataCoversRequestEnd = beforeOrEquals(requestEnd, seisEnd);
-            if(dataCoversRequestBegin && dataCoversRequestEnd) {
-                String reason = "Data returned completly covers the request";
-                return new WaveformResult(seismograms,
-                                          new StringTreeLeaf(this, true, reason));
-            }
-            String reason;
-            if(dataCoversRequestBegin) {
-                reason = "The data returned doesn't reach the end of the request";
-            } else if(dataCoversRequestEnd) {
-                reason = "The data returned doesn't cover the beginning of the request";
-            } else {
-                reason = "The data returned doesn't overlap the request at all";
-            }
-            return new WaveformResult(seismograms, new StringTreeLeaf(this,
-                                                                      false,
-                                                                      reason));
+        if (seismograms.length == 0) {
+            return new WaveformResult(seismograms,
+                                      new StringTreeLeaf(this, false, "No seismograms"));
+        }
+        RequestFilter[] notCovered = CoverageTool.notCovered(original, seismograms);
+        notCovered = RequestFilterUtil.removeSmallRequests(notCovered, seismograms[0].getSampling().getPeriod()); // remove time windows smaller than one sample
+        if (notCovered.length == 0) {
+            String reason = "Data returned completly covers the request";
+            return new WaveformResult(seismograms,
+                                      new StringTreeLeaf(this, true, reason));
+        }
+
+        String reason = "Data does not cover "+notCovered.length+" sections of the request. ";
+        for (int i = 0; i < notCovered.length; i++) {
+            reason += notCovered[i].start_time.date_time + " to " + notCovered[i].end_time.date_time+",  ";
         }
         return new WaveformResult(seismograms,
-                                  new StringTreeLeaf(this,
-                                                     false,
-                                                     "There was no data"));
-    }
-
-    private static boolean beforeOrEquals(MicroSecondDate time,
-                                          MicroSecondDate otherTime) {
-        return time.equals(otherTime) || time.before(otherTime);
+                                  new StringTreeLeaf(this, false, reason));
     }
 }
