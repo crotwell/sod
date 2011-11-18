@@ -282,9 +282,13 @@
             <xsd:annotation>
                 <summary>Rotate the seismograms to Great Circle Path</summary>
                 <description>The horizontal seismograms are rotated to the great circle path. The channel codes are
-                    changed to end in R for radial or T for transverse, so BHN and BHE would become BHR and BHT. If
-                    seismograms are not being rotated, try applying a <a href="vectorTrim.html">vectorTrim</a> to align
-                    all of the seismograms in the vector.</description>
+                    changed to end in R for radial or T for transverse, so BHN and BHE would become BHR and BHT. 
+                    Because the seismograms to be rotated must be aligned and corresponding in number, this 
+                    applies a <a href="collapseOverlaps.html">collapseOverlaps</a> to remove duplications,
+                    applies a <a href="merge.html">merge</a> to join adjacent segments and
+                    a <a href="vectorTrim.html">vectorTrim</a> to align
+                    all of the seismograms in the vector and remove time windows that does not exist for all three
+                    components.</description>
             </xsd:annotation>
             <empty/>
         </element>
