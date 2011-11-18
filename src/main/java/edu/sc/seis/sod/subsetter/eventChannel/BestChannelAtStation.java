@@ -46,12 +46,11 @@ public class BestChannelAtStation implements EventChannelSubsetter, EventVectorS
     }
     
     public StringTree accept(CacheEvent event, ChannelImpl channel, CookieJar cookieJar) throws Exception {
-        String bandCode = channel.get_code().substring(0, 1);
         List<ChannelImpl> staChans = Start.getNetworkArm().getSuccessfulChannels(((StationImpl)channel.getStation()));
         List<ChannelImpl> allChannels = BestChannelUtil.pruneChannels(staChans, event.getOrigin().getTime());
-        ChannelImpl[] bestChannels = bestChanUtil.getBestMotionVector(BestChannelUtil.getAllBand(allChannels, bandCode));
+        ChannelImpl[] bestChannels = bestChanUtil.getBestMotionVector(allChannels);
         if (bestChannels == null) {
-            ChannelImpl bestChan = bestChanUtil.getBestChannel(BestChannelUtil.getAllBand(allChannels, bandCode));
+            ChannelImpl bestChan = bestChanUtil.getBestChannel(allChannels);
             if (bestChan != null) {
                 bestChannels = new ChannelImpl[] {bestChan};
             }
@@ -70,7 +69,6 @@ public class BestChannelAtStation implements EventChannelSubsetter, EventVectorS
     public StringTree accept(CacheEvent event, ChannelGroup channelGroup, CookieJar cookieJar) throws Exception {
         List<ChannelGroup> staChans = Start.getNetworkArm().getSuccessfulChannelGroups(((StationImpl)channelGroup.getStation()));
         List<ChannelImpl> allChannels = new ArrayList<ChannelImpl>(staChans.size()*3);
-        int i=0;
         for (ChannelGroup cg : staChans) {
             ChannelImpl[] cgChans = cg.getChannels();
             allChannels.add(cgChans[0]);
