@@ -3,6 +3,8 @@ package edu.sc.seis.sod.subsetter.eventStation;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.IfEvent.Origin;
@@ -12,6 +14,7 @@ import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.SeismicPhase;
 import edu.sc.seis.TauP.TauModelException;
+import edu.sc.seis.TauP.TauP_Time;
 import edu.sc.seis.fissuresUtil.bag.DistAz;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
@@ -31,12 +34,10 @@ public class PhaseWithoutInterference extends PhaseExists implements EventStatio
         mainPhase = new SeismicPhase(phaseName,
                                      modelName,
                                      0.0);
-        beginOffset = SodUtil.loadTimeInterval(DOMHelper.extractElement(config, "endOffset")).getValue(UnitImpl.SECOND);
+        beginOffset = SodUtil.loadTimeInterval(DOMHelper.extractElement(config, "beginOffset")).getValue(UnitImpl.SECOND);
         endOffset = SodUtil.loadTimeInterval(DOMHelper.extractElement(config, "endOffset")).getValue(UnitImpl.SECOND);
         for (Element element : phElements) {
-            phases.add(new SeismicPhase(SodUtil.getNestedText(element),
-                                        modelName,
-                                        0.0));
+            interferingPhaseNames.addAll(TauP_Time.getPhaseNames(SodUtil.getNestedText(element)));
         }
         arrivalIndex = DOMHelper.extractInt(config, "arrivalIndex", 1);
         // shift to zero based index, so positive index minus one, neg index stays same
@@ -61,14 +62,17 @@ public class PhaseWithoutInterference extends PhaseExists implements EventStatio
         }
         
         double windowBegin = mainTime + beginOffset;
-        double windowEnd = mainTime + beginOffset;
+        double windowEnd = mainTime + endOffset;
         List<List<Arrival>> interfereArrivals = arrivals.subList(1, arrivals.size());
         for (List<Arrival> list : interfereArrivals) {
-            if (onlyFirst) {
-                if (list.size() != 0) {
-                    if (list.get(0).getTime() >= windowBegin && list.get(0).getTime() >= windowEnd ) {
-                        return new Fail(this, list.get(0).getName()+" "+list.get(0).getTime());
-                    }
+            for (Arrival arrival : list) {
+                logger.debug("check: "+arrival.getName()+"  "+windowBegin+" < "+arrival.getTime()+" < "+windowEnd);
+                if (arrival.getTime() >= windowBegin && arrival.getTime() <= windowEnd ) {
+                    return new Fail(this, arrival.getName()+" ("+arrival.getTime()+" s)   interferes with "+ mainPhase.getName()+" ("+mainTime+" s)");
+                }
+                if (onlyFirst) {
+                    // only do first arrival in the list
+                    break;
                 }
             }
         }
@@ -82,13 +86,12 @@ public class PhaseWithoutInterference extends PhaseExists implements EventStatio
             mainPhase = new SeismicPhase(phaseName,
                                          modelName,
                                          depth);
-            List<SeismicPhase> newPhases = new ArrayList<SeismicPhase>();
-            for (SeismicPhase phase : phases) {
-                newPhases.add(new SeismicPhase(phase.getName(),
+            phases.clear();
+            for (String phaseName : interferingPhaseNames) {
+                phases.add(new SeismicPhase(phaseName,
                                               modelName,
                                               depth));
             }
-            phases = newPhases;
         }
         List<List<Arrival>> out = new ArrayList<List<Arrival>>();
         out.add(mainPhase.calcTime(degrees));
@@ -103,6 +106,8 @@ public class PhaseWithoutInterference extends PhaseExists implements EventStatio
     
     SeismicPhase mainPhase;
     int arrivalIndex = 0;
-    List<SeismicPhase> phases; // main phase is index 0, interferring phases are 1 to end
-    List<String> interferingPhaseNames;
+    List<SeismicPhase> phases = new ArrayList<SeismicPhase>(); // main phase is index 0, interferring phases are 1 to end
+    List<String> interferingPhaseNames = new ArrayList<String>();
+    
+    private static Logger logger = LoggerFactory.getLogger(PhaseWithoutInterference.class);
 }
