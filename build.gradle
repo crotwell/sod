@@ -65,7 +65,6 @@ distFiles = copySpec {
         include('gpl-3.0.txt')
         include('defaultProps')
         include('externalExample/**')
-        include('jythonExample/**')
         include('src/**')
         include('lib/**')
         include('gradleWrapper/**')
