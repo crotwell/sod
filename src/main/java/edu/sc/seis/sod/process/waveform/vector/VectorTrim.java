@@ -116,7 +116,7 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
                                              Cut[] c) throws FissuresException {
         LocalSeismogramImpl[][] results = new LocalSeismogramImpl[vector.length][];
         for(int i = 0; i < vector.length; i++) {
-            List iResults = new ArrayList();
+            List<LocalSeismogramImpl> iResults = new ArrayList<LocalSeismogramImpl>();
             for(int j = 0; j < vector[i].length; j++) {
                 for(int k = 0; k < c.length; k++) {
                     LocalSeismogramImpl cutSeis = c[k].apply(vector[i][j]);
