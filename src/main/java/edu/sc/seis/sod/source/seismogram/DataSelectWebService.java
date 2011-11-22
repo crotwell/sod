@@ -38,7 +38,7 @@ public class DataSelectWebService implements SeismogramSourceLocator {
     }
 
     public DataSelectWebService(Element config, String defaultURL) throws MalformedURLException {
-        url = SodUtil.loadText(config, "url", defaultURL);
+        baseUrl = SodUtil.loadText(config, "url", defaultURL);
         String user = SodUtil.loadText(config, "user", "");
         String password = SodUtil.loadText(config, "password", "");
         if (user.length() != 0 && password.length() != 0) {
@@ -60,7 +60,7 @@ public class DataSelectWebService implements SeismogramSourceLocator {
             public List<LocalSeismogramImpl> retrieveData(List<RequestFilter> request) throws FissuresException {
                 try {
                     List<LocalSeismogramImpl> out = new ArrayList<LocalSeismogramImpl>();
-                    MSeedQueryReader dsReader = new DataSelectReader(url);
+                    MSeedQueryReader dsReader = new DataSelectReader(baseUrl);
                     for (RequestFilter rf : request) {
                         MicroSecondDate start = new MicroSecondDate(rf.start_time);
                         String requestURL = dsReader.createQuery(rf.channel_id.network_id.network_code,
@@ -69,30 +69,9 @@ public class DataSelectWebService implements SeismogramSourceLocator {
                                                               rf.channel_id.channel_code, 
                                                               start,
                                                               (float)new MicroSecondDate(rf.end_time).subtract(start).getValue(UnitImpl.SECOND));
+                        logger.debug("requestURL: "+requestURL);
                         List<DataRecord> records = dsReader.read(requestURL);
-                        List<DataRecord> contiguous = new ArrayList<DataRecord>();
-                        DataRecord prev = null;
-                        for (DataRecord dr : records) {
-                            if (prev == null) {
-                                contiguous.add(dr);
-                                prev = dr;
-                                continue;
-                            }
-                            // probably should also check for chan match
-                            if (RangeTool.areContiguous(FissuresConvert.getTimeRange(prev.getHeader().getBtimeRange()), 
-                                                        FissuresConvert.getTimeRange(dr.getHeader().getBtimeRange()),
-                                                        FissuresConvert.convertSampleRate(prev).getPeriod())) {
-                                prev = dr;
-                                contiguous.add(dr);
-                            } else {
-                                LocalSeismogramImpl seis = FissuresConvert.toFissures(contiguous);
-                                out.add(seis);
-                                prev = dr;
-                                contiguous.clear();
-                                contiguous.add(dr);
-                            }
-                            
-                        }
+                        out.addAll(FissuresConvert.toFissures(records));
                     }
                     return out;
                 } catch(IOException e) {
@@ -109,7 +88,7 @@ public class DataSelectWebService implements SeismogramSourceLocator {
         };
     }
     
-    protected String url;
+    protected String baseUrl;
 
     public static final String DEFAULT_WS_URL = "http://www.iris.edu/ws/dataselect/query";
     
