@@ -37,7 +37,14 @@ public class PhaseWithoutInterference extends PhaseExists implements EventStatio
         beginOffset = SodUtil.loadTimeInterval(DOMHelper.extractElement(config, "beginOffset")).getValue(UnitImpl.SECOND);
         endOffset = SodUtil.loadTimeInterval(DOMHelper.extractElement(config, "endOffset")).getValue(UnitImpl.SECOND);
         for (Element element : phElements) {
-            interferingPhaseNames.addAll(TauP_Time.getPhaseNames(SodUtil.getNestedText(element)));
+            List<String> newPhases = TauP_Time.getPhaseNames(SodUtil.getNestedText(element));
+            for (String s : newPhases) {
+                if ( ! s.equals(phaseName)) {
+                    interferingPhaseNames.add(s);
+                } else {
+                    logger.warn("Phase cannot interfer with itself: "+phaseName+", skipping...");
+                }
+            }
         }
         arrivalIndex = DOMHelper.extractInt(config, "arrivalIndex", 1);
         // shift to zero based index, so positive index minus one, neg index stays same
