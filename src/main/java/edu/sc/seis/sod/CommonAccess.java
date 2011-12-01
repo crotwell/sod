@@ -30,6 +30,10 @@ public class CommonAccess {
     }
 
     public static FissuresNamingService getNameService() {
+        logger.info("getNameService() returnes "+ns);
+        if (ns == null) {
+            throw new RuntimeException("Name service is null, init has not yet been called");
+        }
         return ns;
     }
 
@@ -43,6 +47,7 @@ public class CommonAccess {
 
     public static synchronized void initialize(Properties props, String[] args)
             throws UserConfigurationException {
+        logger.info("CommonAccess.initialize");
         if(orb != null) {
             throw new RuntimeException("Initialize should only be called once on CommonAccess");
         }
