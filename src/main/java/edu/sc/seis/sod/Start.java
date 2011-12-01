@@ -244,7 +244,7 @@ public class Start {
         return configFileName;
     }
 
-    protected void initDatabase() throws Exception {
+    protected void initDatabase() throws ConfigurationException {
         loadRunProps(getConfig());
         ConnMgr.installDbProperties(props, args.getInitialArgs());
         warnIfDatabaseExists();
@@ -263,7 +263,6 @@ public class Start {
         // check that hibernate is ok
         SodDB sodDb = SodDB.getSingleton();
         sodDb.commit();
-        CommonAccess.initialize(props, args.getInitialArgs());
     }
     
     protected String HSQL_FILE_URL = "jdbc:hsqldb:file:";
@@ -410,10 +409,14 @@ public class Start {
     public void start() throws Exception {
         // startTime = ClockUtil.now();
         startTime = new MicroSecondDate();
+        if(runProps.removeDatabase() || getArgs().isClean()) {
+            cleanHSQLDatabase();
+        }
+        initDatabase();
+        CommonAccess.initialize(props, args.getInitialArgs());
         if(!commandLineToolRun) {
             new UpdateChecker(false);
             handleStartupRunProperties();
-            initDatabase();
             checkDBVersion();
             checkConfig(creator.create());
         }
@@ -564,31 +567,33 @@ public class Start {
         }
     }
 
+    void cleanHSQLDatabase() {
+        String dbUrl = ConnMgr.getURL();
+        if(!dbUrl.startsWith("jdbc:hsqldb")
+                || dbUrl.indexOf("hsql://") != -1
+                || !(dbUrl.indexOf(DATABASE_DIR) != -1)) {
+            logger.warn("The database isn't the default local hsqldb, so it couldn't be deleted as specified by the properties");
+            return;
+        }
+        File dbDir = new File(DATABASE_DIR);
+        if(dbDir.exists()) {
+            logger.info("Removing old database");
+            File[] dbFiles = dbDir.listFiles();
+            for(int i = 0; i < dbFiles.length; i++) {
+                if(!dbFiles[i].delete()) {
+                    logger.warn("Unable to delete "
+                            + dbFiles[i]
+                            + " when removing the previous database.  The old database might still exist");
+                }
+            }
+            if(!dbDir.delete()) {
+                logger.warn("Unable to delete the database directory.");
+            }
+        }
+    }
+    
     private void handleStartupRunProperties() {
-        if(runProps.removeDatabase() || getArgs().isClean()) {
-            String dbUrl = ConnMgr.getURL();
-            if(!dbUrl.startsWith("jdbc:hsqldb")
-                    || dbUrl.indexOf("hsql://") != -1
-                    || !(dbUrl.indexOf(DATABASE_DIR) != -1)) {
-                logger.warn("The database isn't the default local hsqldb, so it couldn't be deleted as specified by the properties");
-                return;
-            }
-            File dbDir = new File(DATABASE_DIR);
-            if(dbDir.exists()) {
-                logger.info("Removing old database");
-                File[] dbFiles = dbDir.listFiles();
-                for(int i = 0; i < dbFiles.length; i++) {
-                    if(!dbFiles[i].delete()) {
-                        logger.warn("Unable to delete "
-                                + dbFiles[i]
-                                + " when removing the previous database.  The old database might still exist");
-                    }
-                }
-                if(!dbDir.delete()) {
-                    logger.warn("Unable to delete the database directory.");
-                }
-            }
-        } else if(runProps.reopenEvents()) {
+        if(runProps.reopenEvents()) {
             StatefulEventDB eventDb = StatefulEventDB.getSingleton();
             eventDb.restartCompletedEvents();
         }
