@@ -99,10 +99,10 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
         if(dataSeis.size() > 0) {
             SeismogramImageProcess.setTimeWindow(rsDisplay.getTimeConfig(),
                                                  dataSeis.get(0));
-        }
-        if (dataSeis.get(0).getChannelId().channel_code.endsWith("Z")) {
-            logger.debug("Added " + dataSeis.size()
-                         + " seismograms to RecordSectionDisplay");
+            if (dataSeis.get(0).getChannelId().channel_code.endsWith("Z")) {
+                logger.debug("Added " + dataSeis.size()
+                             + " seismograms to RecordSectionDisplay");
+            }
         }
         if (isPDF) {
             rsDisplay.outputToPDF(out);
