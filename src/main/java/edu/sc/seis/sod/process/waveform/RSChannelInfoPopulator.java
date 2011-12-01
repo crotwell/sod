@@ -347,11 +347,13 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         copy.addAll(lastDSS);
         return copy;
     }
-    private static  URLDataSetSeismogram extractSeismogramsFromDB(RecordSectionItem rsi) throws Exception {
+    
+    public static URLDataSetSeismogram extractSeismogramsFromDB(RecordSectionItem rsi) throws Exception {
         DataSet ds = new MemoryDataSet("fake id", "temp name", "RSChannelInfoPopulator", new AuditInfo[0]);
         ds.addParameter(StdDataSetParamNames.EVENT, rsi.getEvent(), new AuditInfo[0]);
         ds.addParameter(StdDataSetParamNames.CHANNEL, rsi.getChannel(), new AuditInfo[0]);
         RequestFilter[] rf = null;
+        if (Start.getWaveformRecipe() == null) {throw new ConfigurationException("WaveformArm is NULL");}
         if (Start.getWaveformRecipe() instanceof LocalSeismogramArm) {
             rf = ((LocalSeismogramArm)Start.getWaveformRecipe()).getRequestGenerator().generateRequest(rsi.getEvent(), 
                                                                                                        (ChannelImpl)rsi.getChannel(), null);
