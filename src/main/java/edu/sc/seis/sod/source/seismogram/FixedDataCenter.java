@@ -17,24 +17,14 @@ public class FixedDataCenter extends AbstractSource implements SodElement,
 
     public FixedDataCenter() {
         super("edu/iris/dmc", DEFAULT_SERVER_NAME);
-        init();
     }
     
     public FixedDataCenter(Element element) {
         super(element, DEFAULT_SERVER_NAME);
-        init();
     }
 
     public FixedDataCenter(String dns, String name) {
         super(dns, name);
-        init();
-    }
-    
-    void init() {
-        dataCenter = new DataCenterSource(BulletproofVestFactory.vestSeismogramDC(getDNS(),
-                                                             getName(),
-                                                             getFissuresNamingService(),
-                                                             Start.createRetryStrategy(getRetries())));
     }
 
     public SeismogramSource getSeismogramSource(CacheEvent event,
@@ -42,14 +32,24 @@ public class FixedDataCenter extends AbstractSource implements SodElement,
                                              RequestFilter[] infilters,
                                              CookieJar cookieJar)
             throws Exception {
-        return dataCenter;
+        return getDataCenterSource();
     }
 
     public ProxySeismogramDC getDataCenter() {
-        return dataCenter.getDataCenter();
+        return getDataCenterSource().getDataCenter();
     }
 
-    private DataCenterSource dataCenter;
+    public DataCenterSource getDataCenterSource() {
+        if (dataCenterSource == null) {
+            dataCenterSource = new DataCenterSource(BulletproofVestFactory.vestSeismogramDC(getDNS(),
+                                                                                      getName(),
+                                                                                      getFissuresNamingService(),
+                                                                                      Start.createRetryStrategy(getRetries())));
+        }
+        return dataCenterSource;
+    }
+    
+    private DataCenterSource dataCenterSource;
     
     public static final String DEFAULT_SERVER_NAME="IRIS_DataCenter";
 
