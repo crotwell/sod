@@ -140,7 +140,7 @@ public class Start {
                  InputSourceCreator sourceMaker,
                  Properties props,
                  boolean commandLineToolRun) throws Exception {
-        this.args = args;
+        Start.args = args;
         this.creator = sourceMaker;
         this.commandLineToolRun = commandLineToolRun;
         configFileName = args.getRecipe();
@@ -188,7 +188,7 @@ public class Start {
                 }
             }
         }
-        initDatabase();
+        parseArms(config.getChildNodes());
     }
 
     private void validate(InputSourceCreator sourceMaker) {
@@ -413,6 +413,7 @@ public class Start {
         if(!commandLineToolRun) {
             new UpdateChecker(false);
             handleStartupRunProperties();
+            initDatabase();
             checkDBVersion();
             checkConfig(creator.create());
         }
@@ -423,7 +424,7 @@ public class Start {
         if(runProps.doStatusPages()) {
             indexTemplate = new IndexTemplate();
         }
-        startArms(getConfig().getChildNodes());
+        startArms();
         if(runProps.doStatusPages()) {
             indexTemplate.performRegistration();
         }
@@ -473,72 +474,75 @@ public class Start {
         System.err.println();
         System.err.println(" ...a brave soul trudges on.");
     }
-
-    private void startArms(NodeList armNodes) throws Exception {
+    
+    static void parseArms(NodeList armNodes) throws Exception {
         waveforms = new WaveformArm[0]; // just in case a non-waveform run
-        for(int i = 0; i < armNodes.getLength(); i++) {
-            if(armNodes.item(i) instanceof Element) {
+        for (int i = 0; i < armNodes.getLength(); i++) {
+            if (armNodes.item(i) instanceof Element) {
                 Element el = (Element)armNodes.item(i);
-                if(el.getTagName().equals("eventArm") && args.doEventArm()) {
+                if (el.getTagName().equals("eventArm") && args.doEventArm()) {
                     event = new EventArm(el);
-                } else if(el.getTagName().equals("networkArm")
-                        && args.doNetArm()) {
+                } else if (el.getTagName().equals("networkArm") && args.doNetArm()) {
                     network = new NetworkArm(el);
-                } else if(el.getTagName().startsWith("waveform")
-                        && args.doWaveformArm()) {
-                    if(el.getTagName().equals("waveformVectorArm")) {
+                } else if (el.getTagName().startsWith("waveform") && args.doWaveformArm()) {
+                    if (el.getTagName().equals("waveformVectorArm")) {
                         SodDB.setDefaultEcpClass(EventVectorPair.class);
                         waveformRecipe = new MotionVectorArm(el);
-                    } else if(el.getTagName().equals("waveformArm")) {
+                    } else if (el.getTagName().equals("waveformArm")) {
                         SodDB.setDefaultEcpClass(EventChannelPair.class);
                         waveformRecipe = new LocalSeismogramArm(el);
                     } else {
-                        throw new ConfigurationException("unknown waveform arm type: "+el.getTagName());
+                        throw new ConfigurationException("unknown waveform arm type: " + el.getTagName());
                     }
-                    if(runProps.reopenSuspended()) {
-                        SodDB.getSingleton().reopenSuspendedEventChannelPairs(Start.getRunProps()
-                                                                       .getEventChannelPairProcessing(),
-                                                                       (waveformRecipe instanceof LocalSeismogramArm));
-                    }
-                    // check for events that are "in progress" due to halt or reset
-                    StatefulEventDB eventDb = StatefulEventDB.getSingleton();
-                    for(StatefulEvent ev = eventDb.getNext(Standing.IN_PROG); ev != null; ev = eventDb.getNext(Standing.IN_PROG)) {
-                        WaveformArm.createEventNetworkPairs(ev);
-                    }
-                    eventDb.commit();
-                    
-                    int poolSize = runProps.getNumWaveformWorkerThreads();
-                    waveforms = new WaveformArm[poolSize];
-                    for(int j = 0; j < waveforms.length; j++) {
-                        waveforms[j] = new WaveformArm(j, waveformRecipe);
-                    }
-                    Timer retryTimer = new Timer("retry loader", true);
-                    retryTimer.schedule(new TimerTask() {
-                        public void run() {
-                            // only run if the retry queue is empty
-                            if ( ! SodDB.getSingleton().isESPTodo()) {
-                                SodDB.getSingleton().populateRetryToDo();
-                                // db connection recycling
-                                SodDB.rollback();
-                            }
-                        }
-                    }, 0, 10*60*1000);
                 }
             }
         }
-        if(waveformRecipe == null && event != null) {
+    }
+
+    private void startArms() throws Exception {
+        if (waveformRecipe != null) {
+            if (runProps.reopenSuspended()) {
+                SodDB.getSingleton().reopenSuspendedEventChannelPairs(Start.getRunProps()
+                                                                              .getEventChannelPairProcessing(),
+                                                                      (waveformRecipe instanceof LocalSeismogramArm));
+            }
+            // check for events that are "in progress" due to halt or reset
+            StatefulEventDB eventDb = StatefulEventDB.getSingleton();
+            for (StatefulEvent ev = eventDb.getNext(Standing.IN_PROG); ev != null; ev = eventDb.getNext(Standing.IN_PROG)) {
+                WaveformArm.createEventNetworkPairs(ev);
+            }
+            eventDb.commit();
+            int poolSize = runProps.getNumWaveformWorkerThreads();
+            waveforms = new WaveformArm[poolSize];
+            for (int j = 0; j < waveforms.length; j++) {
+                waveforms[j] = new WaveformArm(j, waveformRecipe);
+            }
+            Timer retryTimer = new Timer("retry loader", true);
+            retryTimer.schedule(new TimerTask() {
+
+                public void run() {
+                    // only run if the retry queue is empty
+                    if (!SodDB.getSingleton().isESPTodo()) {
+                        SodDB.getSingleton().populateRetryToDo();
+                        // db connection recycling
+                        SodDB.rollback();
+                    }
+                }
+            }, 0, 10 * 60 * 1000);
+        }
+        if (waveformRecipe == null && event != null) {
             event.setWaitForWaveformProcessing(false);
         }
-        if(RUN_ARMS) {
+        if (RUN_ARMS) {
             // Make sure the OutputScheduler exists when the arms are started
             OutputScheduler.getDefault();
             startArm(network, "NetworkArm");
             startArm(event, "EventArm");
-            for(int i = 0; i < waveforms.length; i++) {
+            for (int i = 0; i < waveforms.length; i++) {
                 startArm(waveforms[i], waveforms[i].getName());
             }
         }
-        for(Iterator iter = armListeners.iterator(); iter.hasNext();) {
+        for (Iterator iter = armListeners.iterator(); iter.hasNext();) {
             ((ArmListener)iter.next()).started();
         }
     }
