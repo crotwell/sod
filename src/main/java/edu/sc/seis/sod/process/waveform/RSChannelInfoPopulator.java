@@ -364,8 +364,8 @@ public class RSChannelInfoPopulator implements WaveformProcess {
             }
         }
         return SeismogramFileRefDB.getSingleton().getDataSetSeismogram(rsi.getChannel().getId(),
-                                                                                                                  rsi.getEvent(),
-                                                                                                                  ReduceTool.cover(rf));
+                                                                       rsi.getEvent(),
+                                                                       ReduceTool.cover(rf));
     }
 
     public RecordSectionDisplay getConfiguredRSDisplay() {
