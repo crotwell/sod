@@ -34,5 +34,9 @@ public class VelocityPhaseRequest {
         return sign+ti.value+" "+ti.getUnit();
     }
     
+    public String toString() {
+        return getBeginPhase()+" "+getBeginOffset()+" to "+getEndPhase()+" "+getEndOffset();
+    }
+    
     PhaseRequest pr;
 }
