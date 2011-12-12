@@ -193,7 +193,7 @@ public class ParticleMotionPlot extends AbstractFileWriter implements WaveformVe
             timeWindow = new MicroSecondTimeRange(phaseWindow.getPhaseRequest().generateRequest(event, xChan));
             Map<String, Object> extras = new HashMap<String, Object>();
             extras.put("phaseWindow", new VelocityPhaseRequest(phaseWindow.getPhaseRequest()));
-            titler.title(event, xChan, timeWindow);
+            titler.title(event, xChan, timeWindow, extras);
         }
         DataSource data;
         String xAngle, yAngle;
