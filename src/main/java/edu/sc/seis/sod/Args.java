@@ -100,6 +100,10 @@ public class Args {
                               'f',
                               "recipe",
                               "The recipe to run"));
+        add(new Switch("demo",
+                       JSAP.NO_SHORTFLAG,
+                       "demo",
+                       "Run an demo recipe. Use with -r to see the demo recipe."));
         result = jsap.parse((String[])toParse.toArray(new String[0]));
         if(result.getBoolean("version")) {
             System.out.println("SOD " + Version.current().getVersion());
