@@ -17,10 +17,9 @@ import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 public class RunProperties {
 
 	public RunProperties() throws ConfigurationException {
-		this(null);
 	}
 
-	public RunProperties(Element el) throws ConfigurationException {
+	public void addProperties(Element el) throws ConfigurationException {
 		if (el != null) {
 			Element runNameChild = SodUtil.getElement(el, "runName");
 			if (runNameChild != null) {

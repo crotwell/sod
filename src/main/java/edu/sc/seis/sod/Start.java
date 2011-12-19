@@ -245,7 +245,6 @@ public class Start {
     }
 
     protected void initDatabase() throws ConfigurationException {
-        loadRunProps(getConfig());
         ConnMgr.installDbProperties(props, args.getInitialArgs());
         warnIfDatabaseExists();
         synchronized(HibernateUtil.class) {
@@ -300,17 +299,6 @@ public class Start {
         // Error html dir and output should be set up now, so remove the
         // Std out reporter
         GlobalExceptionHandler.remove(sysOutReporter);
-    }
-
-    public static void loadRunProps(Element doc) throws ConfigurationException {
-        Element propertiesElement = SodUtil.getElement(doc, "properties");
-        if(propertiesElement != null) {
-            // load the properties fromt the configurationfile.
-            runProps = new RunProperties(propertiesElement);
-        } else {
-            logger.debug("No properties specified in the configuration file");
-            runProps = new RunProperties();
-        }
     }
 
     public static InputSource createInputSource(ClassLoader cl, String loc)
@@ -479,11 +467,15 @@ public class Start {
     }
     
     static void parseArms(NodeList armNodes) throws Exception {
+        runProps = new RunProperties();
         waveforms = new WaveformArm[0]; // just in case a non-waveform run
         for (int i = 0; i < armNodes.getLength(); i++) {
             if (armNodes.item(i) instanceof Element) {
                 Element el = (Element)armNodes.item(i);
-                if (el.getTagName().equals("eventArm") && args.doEventArm()) {
+                if (el.getTagName().equals("properties")) {
+                        // load the properties from the configurationfile.
+                        runProps.addProperties(el);
+                } else if (el.getTagName().equals("eventArm") && args.doEventArm()) {
                     event = new EventArm(el);
                 } else if (el.getTagName().equals("networkArm") && args.doNetArm()) {
                     network = new NetworkArm(el);
