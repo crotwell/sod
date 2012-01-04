@@ -297,7 +297,7 @@ public class NetworkArm implements Arm {
         if(attrSubsetter == null) {
             return new String[0];
         } else if(attrSubsetter instanceof NetworkOR) {
-            NetworkSubsetter[] kids = ((NetworkOR)attrSubsetter).getSubsetters();
+            NetworkSubsetter[] kids = ((NetworkOR)attrSubsetter).getNetworkSubsetters();
             String[] codes = new String[kids.length];
             for(int i = 0; i < kids.length; i++) {
                 if(kids[i] instanceof NetworkCode) {
