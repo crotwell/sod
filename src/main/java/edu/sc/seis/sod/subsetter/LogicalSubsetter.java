@@ -1,4 +1,5 @@
 package edu.sc.seis.sod.subsetter;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,6 +23,10 @@ public abstract class LogicalSubsetter implements Subsetter {
                 if(obj instanceof Subsetter){ filterList.add(getSubsetter((Subsetter)obj)); }
             }
         }
+    }
+    
+    public List<Subsetter> getSubsetters() {
+        return Collections.unmodifiableList(filterList);
     }
 
     public abstract List<String> getPackages();

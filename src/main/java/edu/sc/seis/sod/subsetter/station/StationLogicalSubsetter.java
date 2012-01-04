@@ -27,10 +27,6 @@ public abstract class StationLogicalSubsetter extends LogicalSubsetter {
         super(config);
     }
 
-    public StationSubsetter[] getSubsetters() {
-        return (StationSubsetter[])filterList.toArray(new StationSubsetter[0]);
-    }
-
     public static final List<String> packages;
     
     static {

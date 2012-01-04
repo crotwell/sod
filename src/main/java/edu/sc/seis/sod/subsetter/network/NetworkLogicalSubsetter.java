@@ -21,8 +21,8 @@ public abstract class NetworkLogicalSubsetter extends LogicalSubsetter {
         super(config);
     }
 
-    public NetworkSubsetter[] getSubsetters() {
-        return (NetworkSubsetter[])filterList.toArray(new NetworkSubsetter[0]);
+    public NetworkSubsetter[] getNetworkSubsetters() {
+        return (NetworkSubsetter[])getSubsetters().toArray(new NetworkSubsetter[0]);
     }
 
     public static final List<String> packages = Collections.singletonList("network");
