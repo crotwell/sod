@@ -67,7 +67,7 @@ distFiles = copySpec {
         include('externalExample/**')
         include('src/**')
         include('lib/**')
-        include('gradleWrapper/**')
+        include('gradle/**')
         include('gradlew')
         include('gradlew.bat')
         exclude('**/*.svn')
