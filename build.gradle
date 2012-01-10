@@ -217,6 +217,11 @@ task transform(type: XSLT) {
     outputs.dir destDir
 }
 
+javadoc.options.links('http://wiki.fissuresidl.googlecode.com/hg/javadoc/')
+javadoc.options.links('http://wiki.fissuresimpl.googlecode.com/hg/javadoc/')
+javadoc.options.links('http://wiki.seedcodec.googlecode.com/hg/javadoc/')
+javadoc.options.links('http://wiki.seisfile.googlecode.com/hg/javadoc/')
+
 assemble.dependsOn(tarDist)
 processResources.dependsOn(buildSchema)
 processResources{ from(project.sourceSets.main.resources)
