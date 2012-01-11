@@ -16,7 +16,12 @@ public class NetworkScript extends AbstractScriptSubsetter implements NetworkSub
 
     @Override
     public StringTree accept(NetworkAttrImpl network) throws Exception {
-        engine.put("networkAttr", new VelocityNetwork(network));
+        return runScript(new VelocityNetwork(network));
+    }
+    
+    /** Run the script with the arguments as predefined variables. */
+    public StringTree runScript(VelocityNetwork networkAttr) throws Exception {
+        engine.put("networkAttr", networkAttr);
         return eval();
     }
 }

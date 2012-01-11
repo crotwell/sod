@@ -8,9 +8,11 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.AbstractScriptSubsetter;
 import edu.sc.seis.sod.velocity.event.VelocityEvent;
 import edu.sc.seis.sod.velocity.network.VelocityChannel;
+import edu.sc.seis.sod.velocity.seismogram.VelocityRequest;
 
 
 public class RequestGeneratorScript extends AbstractScriptSubsetter implements RequestGenerator {
@@ -20,8 +22,17 @@ public class RequestGeneratorScript extends AbstractScriptSubsetter implements R
     }
 
     public RequestFilter[] generateRequest(CacheEvent event, ChannelImpl channel, CookieJar cookieJar) throws Exception {
-        engine.put("event",  new VelocityEvent(event));
-        engine.put("channel",  new VelocityChannel(channel));
+        return runScript(new VelocityEvent(event),
+                         new VelocityChannel(channel),
+                         cookieJar);
+    }
+
+    /** Run the script with the arguments as predefined variables. */
+    public RequestFilter[] runScript(VelocityEvent event,
+                                VelocityChannel channel,
+                                CookieJar cookieJar) throws Exception {
+        engine.put("event", event);
+        engine.put("channel", channel);
         engine.put("cookieJar", cookieJar);
         Object result = preeval();
         if (result == null) {

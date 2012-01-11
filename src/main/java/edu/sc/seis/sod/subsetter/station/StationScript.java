@@ -18,8 +18,13 @@ public class StationScript extends AbstractScriptSubsetter implements StationSub
 
     @Override
     public StringTree accept(StationImpl station, NetworkSource network) throws Exception {
-        engine.put("station", new VelocityStation(station));
-        engine.put("networkSource", new VelocityNetworkSource(network));
+        return runScript(new VelocityStation(station), new VelocityNetworkSource(network));
+    }
+
+    /** Run the script with the arguments as predefined variables. */
+    public StringTree runScript(VelocityStation station, VelocityNetworkSource network) throws Exception {
+        engine.put("station", station);
+        engine.put("networkSource", network);
         return eval();
     }
 }

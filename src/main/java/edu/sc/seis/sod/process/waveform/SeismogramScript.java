@@ -1,5 +1,7 @@
 package edu.sc.seis.sod.process.waveform;
 
+import java.util.List;
+
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
@@ -14,6 +16,8 @@ import edu.sc.seis.sod.subsetter.AbstractScriptSubsetter;
 import edu.sc.seis.sod.subsetter.UnknownScriptResult;
 import edu.sc.seis.sod.velocity.event.VelocityEvent;
 import edu.sc.seis.sod.velocity.network.VelocityChannel;
+import edu.sc.seis.sod.velocity.seismogram.VelocityRequest;
+import edu.sc.seis.sod.velocity.seismogram.VelocitySeismogram;
 
 
 public class SeismogramScript extends AbstractScriptSubsetter implements WaveformProcess {
@@ -28,9 +32,24 @@ public class SeismogramScript extends AbstractScriptSubsetter implements Wavefor
                                  RequestFilter[] available,
                                  LocalSeismogramImpl[] seismograms,
                                  CookieJar cookieJar) throws Exception {
-        engine.put("event",  new VelocityEvent(event));
-        engine.put("channel",  new VelocityChannel(channel));
-        engine.put("request", original);
+        return runScript(new VelocityEvent(event),
+                         new VelocityChannel(channel),
+                         VelocityRequest.wrap(original, channel),
+                         VelocityRequest.wrap(available, channel),
+                         VelocitySeismogram.wrap(seismograms, channel),
+                         cookieJar);
+    }
+
+    /** Run the script with the arguments as predefined variables. */
+    public WaveformResult runScript(VelocityEvent event,
+                                VelocityChannel channel,
+                                List<VelocityRequest> request,
+                                List<VelocityRequest> available,
+                                List<VelocitySeismogram> seismograms,
+                                CookieJar cookieJar) throws Exception {
+        engine.put("event", event);
+        engine.put("channel", channel);
+        engine.put("request", request);
         engine.put("available", available);
         engine.put("seismograms", seismograms);
         engine.put("cookieJar", cookieJar);

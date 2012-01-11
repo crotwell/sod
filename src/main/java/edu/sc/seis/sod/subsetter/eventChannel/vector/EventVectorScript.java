@@ -8,6 +8,7 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.AbstractScriptSubsetter;
 import edu.sc.seis.sod.velocity.event.VelocityEvent;
+import edu.sc.seis.sod.velocity.network.VelocityChannel;
 import edu.sc.seis.sod.velocity.network.VelocityChannelGroup;
 
 
@@ -19,8 +20,13 @@ public class EventVectorScript extends AbstractScriptSubsetter implements EventV
 
     @Override
     public StringTree accept(CacheEvent event, ChannelGroup channelGroup, CookieJar cookieJar) throws Exception {
-        engine.put("event", new VelocityEvent(event));
-        engine.put("channelGroup", new VelocityChannelGroup(channelGroup));
+        return runScript(new VelocityEvent(event), new VelocityChannelGroup(channelGroup), cookieJar);
+    }
+
+    /** Run the script with the arguments as predefined variables. */
+    public StringTree runScript(VelocityEvent event,  VelocityChannelGroup channelGroup, CookieJar cookieJar) throws Exception {
+        engine.put("event", event);
+        engine.put("channelGroup", channelGroup);
         engine.put("cookieJar", cookieJar);
         return eval();
     }
