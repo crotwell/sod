@@ -144,18 +144,18 @@ public class Start {
         this.creator = sourceMaker;
         this.commandLineToolRun = commandLineToolRun;
         configFileName = args.getRecipe();
+        if(props == null) {
+            loadProps();
+        } else {
+            // this is for command line tools and unit tests
+            Start.props = props;
+        }
         try {
             setConfig(createDoc(sourceMaker.create(), configFileName).getDocumentElement());
         } catch(IOException io) {
             informUserOfBadFileAndExit(configFileName);
         } catch(Exception e) {
             GlobalExceptionHandler.handle("Trouble creating xml document", e);
-        }
-        if(props == null) {
-            loadProps();
-        } else {
-            // this is for command line tools and unit tests
-            Start.props = props;
         }
         logger.info("logging configured");
         logger.info("SOD version "+Version.current().getVersion());
