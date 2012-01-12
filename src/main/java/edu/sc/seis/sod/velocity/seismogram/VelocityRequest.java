@@ -68,7 +68,7 @@ public class VelocityRequest {
         List<List<VelocityRequest>> results = new ArrayList<List<VelocityRequest>>(original.length);
         for (int i = 0; i < channelGroup.getChannels().length; i++) {
             for (int j = 0; j < original.length; j++) {
-                if (ChannelIdUtil.areEqual(channelGroup.getChannels()[i].getId(), original[j][0].channel_id)) {
+                if (original[j].length != 0 && ChannelIdUtil.areEqual(channelGroup.getChannels()[i].getId(), original[j][0].channel_id)) {
                     results.add(wrap(original[j], channelGroup.getChannels()[i]));
                     break;
                 }
