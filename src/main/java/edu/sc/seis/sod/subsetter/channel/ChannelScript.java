@@ -23,9 +23,9 @@ public class ChannelScript extends AbstractScriptSubsetter implements ChannelSub
     }
 
     /** Run the script with the arguments as predefined variables. */
-    public StringTree runScript(VelocityChannel channel, VelocityNetworkSource network) throws Exception {
+    public StringTree runScript(VelocityChannel channel, VelocityNetworkSource networkSource) throws Exception {
         engine.put("channel", channel);
-        engine.put("networkSource", network);
+        engine.put("networkSource", networkSource);
         return eval();
     }
 }
