@@ -18,7 +18,7 @@ sourceSets {
  
 dependencies {
     compile project(':bag') { transitive = true }
-    compile project(':cormorant') { transitive = true }
+//    compile project(':cormorant') { transitive = true }
     
     compile "jline:jline:0.9.94"
     compile "thaiopensource:jing:20091111"
@@ -68,9 +68,12 @@ distFiles = copySpec {
         include('src/**')
         include('lib/**')
         include('gradle/**')
+        exclude('**/*.svn')
+    }
+    from('.') {
+        fileMode=0755
         include('gradlew')
         include('gradlew.bat')
-        exclude('**/*.svn')
     }
     from('scripts') {
         include('tutorial/**')
@@ -91,6 +94,11 @@ distFiles = copySpec {
     from('build') {
         include('doc/**')
         include('build.gradle')
+        include('settings.gradle')
+    }
+    from('build/docs') {
+        include('javadoc/**')
+        into 'doc/documentation'
     }
 }
 
@@ -113,8 +121,6 @@ task explodeDist(type: Sync, dependsOn: ['explodeBin', 'wrapper', 'doc']) {
     with distFiles
     into file("$buildDir/explode")
 }
-
-task doc(dependsOn: 'copySodSite') {}
 
 def getDExtras() {
     return [ 'seis.name':'sod'+getVersion(), 
@@ -219,9 +225,11 @@ task transform(type: XSLT) {
 
 javadoc.options.links('http://wiki.fissuresidl.googlecode.com/hg/javadoc/')
 javadoc.options.links('http://wiki.fissuresimpl.googlecode.com/hg/javadoc/')
+javadoc.options.links('http://wiki.fissuresutil.googlecode.com/hg/javadoc/')
 javadoc.options.links('http://wiki.seedcodec.googlecode.com/hg/javadoc/')
 javadoc.options.links('http://wiki.seisfile.googlecode.com/hg/javadoc/')
 
+doc.dependsOn(copySodSite)
 assemble.dependsOn(tarDist)
 processResources.dependsOn(buildSchema)
 processResources{ from(project.sourceSets.main.resources)
