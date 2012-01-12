@@ -831,12 +831,13 @@
                 into a SOD recipe.</description>
                 <example>
                     <channelScript type="jython">
-                        netCode = channel.getNetworkAttr().get_code()
-                        if netCode == 'IU' or netCode == 'II':
-                          print netCode
-                          result = True
-                        else:
-                          result = False
+                   from edu.sc.seis.fissuresUtil.chooser import ClockUtil
+                   otherChans = networkSource.getChannels(channel.station)
+                   result = util.pass("No BHZ, only LHZ is alive now")
+                   for other in otherChans:
+                       if other.code == "BHZ" and other.getEndDate().after(ClockUtil.now()):
+                           # active BHZ, so reject LHZ
+                           result = util.fail( "Use BHZ instead of LHZ for "+channel.network.code+"."+channel.station.code)
                     </channelScript>
                 </example>
             </xsd:annotation>

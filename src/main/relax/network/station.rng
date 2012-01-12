@@ -334,11 +334,12 @@
                 into a SOD recipe.</description>
                 <example>
                     <stationScript type="jython">
-                        if networkAttr.get_code() == 'IU' or networkAttr.get_code() == 'II':
-                          print networkAttr.get_code()
-                          result = True
-                        else:
-                          result = False
+            from edu.sc.seis.fissuresUtil.chooser import ClockUtil
+            from edu.sc.seis.sod.status import Pass, Fail
+            if station.getEndDate().after(ClockUtil.now()):
+                result = util.pass("Station is alive now")
+            else:
+                result = util.fail("Station is no longer active")
                     </stationScript>
                 </example>
             </xsd:annotation>

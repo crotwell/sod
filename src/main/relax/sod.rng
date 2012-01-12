@@ -181,7 +181,7 @@
             <optional>
                 <ref name="eventVector"/>
             </optional>
-            <ref name="requestGenerator"/>
+            <ref name="vectorRequestGenerator"/>
             <optional>
                 <ref name="vectorRequest"/>
             </optional>
@@ -198,7 +198,7 @@
     </define>
     <!-- eventStation include above -->
     <xi:include href="waveform/eventVector.rng" parse="xml" xpointer="xpointer(//define)"/>
-    <!-- requestGenerator include above -->
+    <xi:include href="waveform/vectorRequestGenerator.rng" parse="xml" xpointer="xpointer(//define)"/>
     <xi:include href="waveform/vectorRequestSubsetter.rng" parse="xml" xpointer="xpointer(//define)"/>
     <!-- seismogramSource include above -->
     <xi:include href="waveform/vectorAvailableData.rng" parse="xml" xpointer="xpointer(//define)"/>

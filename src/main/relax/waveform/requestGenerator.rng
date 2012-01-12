@@ -101,10 +101,17 @@
                 See the <a href="../scripting.html">scripting tutorial</a> for more information on inlining scripts
                 into a SOD recipe.</description>
                 <example>
-                    <availableDataScript type="jython">
-                        result = len(request) == len(available)
-                    
-                    </availableDataScript>
+                    <requestGeneratorScript type="jython">
+                       from java.util import ArrayList
+                       from edu.iris.Fissures.IfSeismogramDC import RequestFilter
+                       from edu.iris.Fissures.model import TimeInterval, UnitImpl
+                       window = TimeInterval(5, UnitImpl.MINUTE)
+                       rf = RequestFilter(channel.id,
+                                          event.preferred.fissuresTime,
+                                          event.preferred.time.add(window).getFissuresTime())
+                       result = ArrayList()
+                       result.add(rf)
+                    </requestGeneratorScript>
                 </example>
             </xsd:annotation>
             <attribute name="type">

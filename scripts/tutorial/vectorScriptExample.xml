@@ -13,7 +13,7 @@
                 <endTime>
                     <year>2003</year>
                     <month>1</month>
-                    <day>7</day>
+                    <day>16</day>
                 </endTime>
             </originTimeRange>
             <magnitudeRange>
@@ -34,11 +34,11 @@
         </networkFinder>
         <networkAND>
             <networkOR>	
-                <networkCode>IC</networkCode>
+                <networkCode>IU</networkCode>
                 <networkCode>II</networkCode>
             </networkOR>	
             <networkScript type="jython" >
-                if networkAttr.get_code() == 'II' or networkAttr.get_code() == 'IC':
+                if networkAttr.get_code() == 'II' or networkAttr.get_code() == 'IU':
                   print networkAttr.get_code()
                   result = True
                 else:

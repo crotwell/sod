@@ -392,7 +392,7 @@
                 into a SOD recipe.</description>
                 <example>
                     <originScript type="jython">
-                        return preferredOrigin.getLocation().depth.getValue() / preferredOrigin.magnitudeList.get(0).value > 10
+result = preferredOrigin.magnitudeList.get(0).value > 5.5
                     </originScript>
                 </example>
             </xsd:annotation>
