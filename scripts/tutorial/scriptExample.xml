@@ -34,11 +34,11 @@
         </networkFinder>
         <networkAND>
             <networkOR>	
-                <networkCode>IC</networkCode>
+                <networkCode>IU</networkCode>
                 <networkCode>II</networkCode>
             </networkOR>	
             <networkScript type="jython" >
-                if networkAttr.get_code() == 'II' or networkAttr.get_code() == 'IC':
+                if networkAttr.get_code() == 'IU' or networkAttr.get_code() == 'II':
                   print networkAttr.get_code()
                   result = True
                 else:
