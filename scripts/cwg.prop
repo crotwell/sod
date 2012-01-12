@@ -51,6 +51,7 @@ log4j.logger.edu.sc.seis.sod.EventStationPair=debug,WaveformFile
 log4j.logger.edu.sc.seis.sod.AbstractEventChannelPair=debug,WaveformFile
 log4j.logger.edu.sc.seis.sod.EventChannelPair=debug,WaveformFile
 log4j.logger.edu.sc.seis.sod.EventVectorPair=debug,WaveformFile
+log4j.logger.edu.sc.seis.sod.source.seismogram=debug,WaveformFile
 log4j.logger.edu.sc.seis.sod.subsetter.waveform=debug,WaveformFile
 log4j.logger.edu.sc.seis.sod.subsetter.eventChannel=debug,WaveformFile
 log4j.logger.edu.sc.seis.sod.subsetter.eventStation=debug,WaveformFile
