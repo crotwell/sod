@@ -342,14 +342,15 @@
         maxLongitude = 160;
         result = False
         box = BoxAreaImpl(minLatitude, maxLatitude, minLongitude, maxLongitude)
-        pkppkp = SeismicPhase('PKPPKP','iasp91',event.getPreferred().getLocation().depth.value)        dist = SphericalCoords.distance(event.getPreferred().getLocation().latitude, event.getP
-referred().getLocation().longitude, station.getFloatLatitude(), station.getFloatLongitude())
+        pkppkp = SeismicPhase('PKPPKP','iasp91',event.getPreferred().getLocation().depth.value)
+        dist = SphericalCoords.distance(event.getPreferred().getLocation().latitude, event.getPreferred().getLocation().longitude, station.getFloatLatitude(), station.getFloatLongitude())
         arrival = pkppkp.getEarliestArrival(dist)
         if arrival != None:
            piercePoints = arrival.getPierce()
            for timeDist in piercePoints:
-              if timeDist.getDistDeg() != 0 and timeDist.getDepth() == 0:                 azimuth = SphericalCoords.azimuth(event.getPreferred().getLocation().latitude, event.getPreferred().getLocation().longitude, station.getFloatLatitude(), station.getFloatLong
-itude())                 bounceLat = SphericalCoords.latFor(station.getFloatLatitude(), station.getFloatLongitude(), timeDist.getDistDeg(), azimuth)
+              if timeDist.getDistDeg() != 0 and timeDist.getDepth() == 0:
+                 azimuth = SphericalCoords.azimuth(event.getPreferred().getLocation().latitude, event.getPreferred().getLocation().longitude, station.getFloatLatitude(), station.getFloatLongitude())
+                 bounceLat = SphericalCoords.latFor(station.getFloatLatitude(), station.getFloatLongitude(), timeDist.getDistDeg(), azimuth)
                  bounceLon = SphericalCoords.lonFor(station.getFloatLatitude(), station.getFloatLongitude(), timeDist.getDistDeg(), azimuth)
                  result = AreaUtil.inArea(box, bounceLat, bounceLon)
                  break
