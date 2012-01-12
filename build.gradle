@@ -1,7 +1,7 @@
 
 
 group = 'edu.sc.seis'
-version = '3.0.0rc4'
+version = '3.0.0'
 
 apply plugin:'application'
 mainClassName = "edu.sc.seis.sod.Start"
