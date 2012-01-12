@@ -122,9 +122,7 @@
         <requestScript type="jython">
             from edu.iris.Fissures.model import MicroSecondDate, UnitImpl
             for rf in request:
-                begin = MicroSecondDate(rf.start_time)
-                end = MicroSecondDate(rf.end_time)
-                width = end.subtract(begin)
+                width = rf.end.subtract(rf.begin)
                 if width.getValue(UnitImpl.SECOND) &lt; 500:
                    result = util.fail("only "+width.getValue(UnitImpl.SECOND)+" seconds")
                 else:

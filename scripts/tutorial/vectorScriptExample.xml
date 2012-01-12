@@ -46,7 +46,6 @@
             </networkScript>
         </networkAND>
         <stationAND>
-            <stationCode>NNA</stationCode>
             <stationScript type="jython">
             from edu.sc.seis.fissuresUtil.chooser import ClockUtil
             from edu.sc.seis.sod.status import Pass, Fail
@@ -105,7 +104,7 @@
         for channel in channelGroup.getChannels():
            if channel.getOrientationCode() == 'N' and abs(channel.getAzimuth()) > 5:
                # reject N channels that are more than 5 degrees from north
-               result = util.fail('channel not really North'+channel.getAzimuth())
+               result = util.fail('channel not really North, %f'%(channel.getAzimuth(),))
         </eventVectorScript>
         <phaseRequest>
             <model>prem</model>
@@ -124,9 +123,7 @@
             from edu.iris.Fissures.model import MicroSecondDate, UnitImpl
             for rfarray in request:
                 for rf in rfarray:
-                   begin = MicroSecondDate(rf.start_time)
-                   end = MicroSecondDate(rf.end_time)
-                   width = end.subtract(begin)
+                   width = rf.end.subtract(rf.begin)
                    if width.getValue(UnitImpl.SECOND) &lt; 500:
                        result = util.fail("only "+width.getValue(UnitImpl.SECOND)+" seconds")
                    else:
