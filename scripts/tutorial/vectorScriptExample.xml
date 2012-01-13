@@ -21,8 +21,8 @@
             </magnitudeRange>
             <catalog>WHDF</catalog>
         </eventFinder>
+        <removeEventDuplicate/>
         <originScript type="jython">
-           # preferredOrigin.getLocation().depth.getValue() / preferredOrigin.magnitudeList.get(0).value > 10
            result = preferredOrigin.magnitudeList.get(0).value > 5.5
         </originScript>
         <printlineEventProcess/>
@@ -87,9 +87,9 @@
         maxLongitude = 160;
         result = False
         box = BoxAreaImpl(minLatitude, maxLatitude, minLongitude, maxLongitude)
-        pkppkp = SeismicPhase('PKPPKP','iasp91',event.getPreferred().getLocation().depth.value)
+        PP = SeismicPhase('PP','iasp91',event.getPreferred().getLocation().depth.value)
         dist = SphericalCoords.distance(event.getPreferred().getLocation().latitude, event.getPreferred().getLocation().longitude, station.getFloatLatitude(), station.getFloatLongitude())
-        arrival = pkppkp.getEarliestArrival(dist)
+        arrival = PP.getEarliestArrival(dist)
         if arrival != None:
            piercePoints = arrival.getPierce()
            for timeDist in piercePoints:
@@ -135,12 +135,14 @@
         </fixedDataCenter>
         <vectorAvailableDataScript type="jython">
              result = True
-             for i in range(len(request)):
-                 if len(request[i]) != len(available[i]):
-                     result = False
-                     break
+             if len(request) != len(available):
+                 result = False
+             else:
+                 for i in range(len(request)):
+                     if len(request[i]) != len(available[i]):
+                         result = False
+                         break
         </vectorAvailableDataScript>
-        <printlineSeismogramProcess/>
         <vectorScript type="jython" >
         from jarray import array
         from bag import rmean, taper, rtrend, stat
