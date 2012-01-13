@@ -62,6 +62,11 @@ binDistFiles = copySpec {
 distFiles = copySpec {
     with(binDistFiles)
     from('.') {
+        fileMode=0755
+        include('gradlew')
+        include('gradlew.bat')
+    }
+    from('.') {
         include('gpl-3.0.txt')
         include('defaultProps')
         include('externalExample/**')
@@ -69,11 +74,6 @@ distFiles = copySpec {
         include('lib/**')
         include('gradle/**')
         exclude('**/*.svn')
-    }
-    from('.') {
-        fileMode=0755
-        include('gradlew')
-        include('gradlew.bat')
     }
     from('scripts') {
         include('tutorial/**')
