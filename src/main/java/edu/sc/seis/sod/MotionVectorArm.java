@@ -17,14 +17,18 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.iris.Fissures.seismogramDC.RequestFilterUtil;
 import edu.iris.dmc.seedcodec.CodecException;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
+import edu.sc.seis.sod.process.waveform.WaveformResult;
 import edu.sc.seis.sod.process.waveform.vector.ANDWaveformProcessWrapper;
 import edu.sc.seis.sod.process.waveform.vector.WaveformProcessWrapper;
 import edu.sc.seis.sod.process.waveform.vector.WaveformVectorProcess;
@@ -223,7 +227,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                         outfilters[i] = DataCenterSource.toArray(dataCenter.available_data(DataCenterSource.toList(infilters[i])));
                         logger.debug("after successful available_data call");
                     } catch(org.omg.CORBA.SystemException e) {
-                        handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e, dataCenter);
+                        handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e, dataCenter, requestToString(infilters, null));
                         return;
                     }
                     if (outfilters[i].length != 0) {
@@ -280,10 +284,10 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                     return;
                 }
             } catch(org.omg.CORBA.SystemException e) {
-                handle(ecp, Stage.DATA_RETRIEVAL, e);
+                handle(ecp, Stage.DATA_RETRIEVAL, e, seismogramSource, requestToString(infilters, outfilters));
                 return;
             } catch(FissuresException e) {
-                handle(ecp, Stage.DATA_RETRIEVAL, e);
+                handle(ecp, Stage.DATA_RETRIEVAL, e, seismogramSource, requestToString(infilters, outfilters));
                 return;
             }
             for (int i = 0; i < localSeismograms.length; i++) {
@@ -307,7 +311,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                 } // end of for (int i=0; i<localSeismograms.length; i++)
                 tempLocalSeismograms[i] = (LocalSeismogramImpl[])tempForCast.toArray(new LocalSeismogramImpl[0]);
             }
-            processSeismograms(ecp, infilters, outfilters, tempLocalSeismograms);
+            processSeismograms(ecp, seismogramSource, infilters, outfilters, tempLocalSeismograms);
         } else {
             if(ClockUtil.now().subtract(Start.getRunProps().getSeismogramLatency()).after(ecp.getEvent()
                                                                                           .getOrigin()
@@ -326,15 +330,16 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
     }
 
     public void processSeismograms(EventVectorPair ecp,
+                                   SeismogramSource seismogramSource,
                                    RequestFilter[][] infilters,
                                    RequestFilter[][] outfilters,
                                    LocalSeismogramImpl[][] localSeismograms) {
-        WaveformVectorProcess processor;
+        WaveformVectorProcess processor = null;
         WaveformVectorResult result = new WaveformVectorResult(localSeismograms, new StringTreeLeaf(this, true));
-        Iterator it = processes.iterator();
-        while (it.hasNext() && result.isSuccess()) {
-            processor = (WaveformVectorProcess)it.next();
-            try {
+        Iterator<WaveformVectorProcess> it = processes.iterator();
+        try {
+            while (it.hasNext() && result.isSuccess()) {
+                processor = it.next();
                 result = runProcessorThreadCheck(processor,
                                                  ecp.getEvent(),
                                                  ecp.getChannelGroup(),
@@ -342,23 +347,21 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                                                  outfilters,
                                                  result.getSeismograms(),
                                                  ecp.getCookieJar());
-                if (!result.isSuccess()) {
-                    logger.info("Processor reject: " + result.getReason());
-                }
-            } catch(CodecException e) {
-                result = new WaveformVectorResult(localSeismograms, new Fail(processor, "Unable to decompress data", e));
-            } catch(Throwable e) {
-                handle(ecp, Stage.PROCESSOR, e);
-                return;
+            } // end of while (it.hasNext())
+            logger.debug("finished with " + ChannelIdUtil.toStringNoDates(ecp.getChannelGroup().getChannels()[0].get_id()) + " success="
+                    + result.isSuccess());
+            if (result.isSuccess()) {
+                ecp.update(Status.get(Stage.PROCESSOR, Standing.SUCCESS));
+            } else {
+                ecp.update(Status.get(Stage.PROCESSOR, Standing.REJECT));
+                failLogger.info(ecp + " " + result.getReason());
             }
-        } // end of while (it.hasNext())
-        logger.debug("finished with " + ChannelIdUtil.toStringNoDates(ecp.getChannelGroup().getChannels()[0].get_id()));
-        if (result.isSuccess()) {
-            ecp.update(Status.get(Stage.PROCESSOR, Standing.SUCCESS));
-        } else {
-            ecp.update(Status.get(Stage.PROCESSOR, Standing.REJECT));
-            failLogger.info(ecp + " " + result.getReason());
+        } catch(Throwable e) {
+            MotionVectorArm.handle(ecp, Stage.PROCESSOR, e, seismogramSource, requestToString(infilters, outfilters));
+            ecp.update(Status.get(Stage.PROCESSOR, Standing.SYSTEM_FAILURE));
+            failLogger.info(ecp + " " + e);
         }
+        logger.debug("finished with " + ChannelIdUtil.toStringNoDates(ecp.getChannelGroup().getChannels()[0].get_id()));
     }
 
     public static WaveformVectorResult runProcessorThreadCheck(WaveformVectorProcess processor,
@@ -369,12 +372,36 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                                                                LocalSeismogramImpl[][] seismograms,
                                                                CookieJar cookieJar) throws Exception {
         if (processor instanceof Threadable && ((Threadable)processor).isThreadSafe()) {
-            return processor.accept(event, channel, original, available, seismograms, cookieJar);
+            return internalRunProcessor(processor, event, channel, original, available, seismograms, cookieJar);
         } else {
             synchronized(processor) {
-                return processor.accept(event, channel, original, available, seismograms, cookieJar);
+                return internalRunProcessor(processor, event, channel, original, available, seismograms, cookieJar);
             }
         }
+    }
+    
+
+    
+    private static WaveformVectorResult internalRunProcessor(WaveformVectorProcess processor,
+                                                       CacheEvent event,
+                                                       ChannelGroup channel,
+                                                       RequestFilter[][] original,
+                                                       RequestFilter[][] available,
+                                                       LocalSeismogramImpl[][] seismograms,
+                                                       CookieJar cookieJar) throws Exception {
+        WaveformVectorResult result;
+        try {
+            result = processor.accept(event, channel, original, available, seismograms, cookieJar);
+        } catch(FissuresException e) {
+            if (e.getCause() instanceof CodecException) {
+                result = new WaveformVectorResult(seismograms, new Fail(processor, "Unable to decompress data", e));
+            } else {
+                throw e;
+            }
+        } catch(CodecException e) {
+            result = new WaveformVectorResult(seismograms, new Fail(processor, "Unable to decompress data", e));
+        }
+        return result;
     }
 
     private LocalSeismogram[][] getData(EventVectorPair ecp, RequestFilter[][] rf, SeismogramSource seismogramSource)
@@ -382,6 +409,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
         LocalSeismogram[][] localSeismograms = new LocalSeismogram[rf.length][];
         for (int i = 0; i < rf.length; i++) {
             if (rf[i].length != 0) {
+                
                 logger.debug("before retrieve_seismograms");
                 localSeismograms[i] = DataCenterSource.toSeisArray(seismogramSource.retrieveData(DataCenterSource.toList(rf[i])));
                 logger.debug("after successful retrieve_seismograms "+localSeismograms[i].length);
@@ -428,31 +456,52 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
     }
 
     private static void handle(EventVectorPair ecp, Stage stage, Throwable t) {
-        handle(ecp, stage, t, null);
+        handle(ecp, stage, t, null, "");
     }
 
-    private static void handle(EventVectorPair ecp, Stage stage, Throwable t, SeismogramSource seismogramSource) {
-        try {
-        if (t instanceof org.omg.CORBA.SystemException) {
-            // don't log exception here, let RetryStragtegy do it
-            ecp.update(Status.get(stage, Standing.CORBA_FAILURE));
-        } else {
-            ecp.update(t, Status.get(stage, Standing.SYSTEM_FAILURE));
-        }
-        if (t instanceof FissuresException) {
-            FissuresException f = (FissuresException)t;
-            failLogger.warn(f.the_error.error_code + " " + f.the_error.error_description + " " + ecp, t);
-        } else if (t instanceof org.omg.CORBA.SystemException) {
-            failLogger.info("Network or server problem, SOD will continue to retry this item periodically: ("
-                        + t.getClass().getName() + ") " + ecp);
-            
-            logger.debug(ecp.toString(), t);
-        } else {
-            failLogger.warn(ecp.toString(), t);
-        }
-        } catch (LazyInitializationException lazy) {
-            logger.error("LazyInitializationException after exception, so I can't print the evp", t);
-        }
+    protected static String requestToString(RequestFilter[][] in, RequestFilter[][] avail) {
+        String message = "";
+        message += "\n in=" + RequestFilterUtil.toString(in);
+        message += "\n avail=" + RequestFilterUtil.toString(avail);
+        return message;
+    }
+    
+    protected static void handle(AbstractEventChannelPair ecp, Stage stage, Throwable t, SeismogramSource seismogramSource, String requestString) {
+       try {
+           if (t instanceof OutOfMemoryError) {
+               //can't do much useful, at least get the stack trace before anything else as other
+               // code might trigger further OutofMem
+               t.printStackTrace(System.err);
+               logger.error("", t);
+           } else if (t instanceof org.omg.CORBA.SystemException) {
+               // don't log exception here, let RetryStragtegy do it
+               ecp.update(Status.get(stage, Standing.CORBA_FAILURE));
+           } else {
+               ecp.update(t, Status.get(stage, Standing.SYSTEM_FAILURE));
+               String message = "";
+               if (t instanceof FissuresException) {
+                   FissuresException f = (FissuresException)t;
+                   message += f.the_error.error_code + " " + f.the_error.error_description ;
+               } else if (t instanceof org.omg.CORBA.SystemException) {
+                   message = "Network or server problem, SOD will continue to retry this item periodically: ("
+                           + t.getClass().getName() + ") " + message;
+               }
+               try {
+                   message += " " + ecp;
+               } catch (LazyInitializationException lazy) {
+                   message += "LazyInitializationException after exception, so I can't print the evp\n";
+               }
+               message += "Source="+seismogramSource+"\n";
+               message += "Request="+requestString+"\n";
+               if (t instanceof org.omg.CORBA.SystemException) {
+                   logger.warn(message, t);
+               } else {
+                   failLogger.warn(message, t);
+               }
+           }
+       } catch(Throwable tt) {
+           GlobalExceptionHandler.handle("Caught " + tt + " while handling " + t, t);
+       }
     }
 
     private EventVectorSubsetter eventChannelGroup = new PassEventChannel();

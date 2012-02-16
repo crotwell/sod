@@ -17,6 +17,7 @@ import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.iris.Fissures.seismogramDC.RequestFilterUtil;
 import edu.iris.dmc.seedcodec.CodecException;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
@@ -130,7 +131,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                                                                                  ecp.getEsp().getCookies(),
                                                                                  ecp.getCookies()));
             } catch(Throwable e) {
-                handle(ecp, Stage.EVENT_CHANNEL_SUBSETTER, e);
+                MotionVectorArm.handle(ecp, Stage.EVENT_CHANNEL_SUBSETTER, e, null, "");
                 return;
             }
         }
@@ -148,7 +149,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
             try {
                 infilters = requestGenerator.generateRequest(ecp.getEvent(), ecp.getChannel(), ecp.getCookieJar());
             } catch(Throwable e) {
-                handle(ecp, Stage.REQUEST_SUBSETTER, e);
+                MotionVectorArm.handle(ecp, Stage.REQUEST_SUBSETTER, e, null, "");
                 return;
             }
         }
@@ -163,7 +164,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
             try {
                 passed = request.accept(ecp.getEvent(), ecp.getChannel(), infilters, ecp.getCookieJar());
             } catch(Throwable e) {
-                handle(ecp, Stage.REQUEST_SUBSETTER, e);
+                MotionVectorArm.handle(ecp, Stage.REQUEST_SUBSETTER, e, null, requestToString(infilters, null));
                 return;
             }
         }
@@ -177,7 +178,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
             return;
         }
         if(passed.isSuccess()) {
-            SeismogramSource dataCenter;
+            SeismogramSource dataCenter = null;
             synchronized(dcLocator) {
                 try {
                     dataCenter = dcLocator.getSeismogramSource(ecp.getEvent(),
@@ -185,7 +186,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                                                            infilters,
                                                            ecp.getCookieJar());
                 } catch(Throwable e) {
-                    handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e);
+                    MotionVectorArm.handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e, dataCenter, requestToString(infilters, null));
                     return;
                 }
             }
@@ -227,7 +228,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
             try {
                 passed = availData.accept(ecp.getEvent(), ecp.getChannel(), infilters, outfilters, ecp.getCookieJar());
             } catch(Throwable e) {
-                handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e);
+                MotionVectorArm.handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e, dataCenter, requestToString(infilters, outfilters));
                 return;
             }
         }
@@ -247,10 +248,10 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                 try {
                     localSeismograms = DataCenterSource.toSeisArray(dataCenter.retrieveData(DataCenterSource.toList(infilters)));
                 } catch(FissuresException e) {
-                    handle(ecp, Stage.DATA_RETRIEVAL, e);
+                    MotionVectorArm.handle(ecp, Stage.DATA_RETRIEVAL, e, dataCenter, requestToString(infilters, outfilters));
                     return;
                 } catch(org.omg.CORBA.SystemException e) {
-                    handle(ecp, Stage.DATA_RETRIEVAL, e);
+                    MotionVectorArm.handle(ecp, Stage.DATA_RETRIEVAL, e, dataCenter, requestToString(infilters, outfilters));
                     return;
                 }
                 logger.debug("after successful retrieve_seismograms");
@@ -287,7 +288,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                 tempForCast.add(localSeismograms[i]);
             } // end of for (int i=0; i<localSeismograms.length; i++)
             LocalSeismogramImpl[] tempLocalSeismograms = (LocalSeismogramImpl[])tempForCast.toArray(new LocalSeismogramImpl[0]);
-            processSeismograms(ecp, infilters, outfilters, SortTool.byBeginTimeAscending(tempLocalSeismograms));
+            processSeismograms(ecp, dataCenter, infilters, outfilters, SortTool.byBeginTimeAscending(tempLocalSeismograms));
         } else {
             if(ClockUtil.now().subtract(Start.getRunProps().getSeismogramLatency()).after(ecp.getEvent()
                     .getOrigin()
@@ -306,15 +307,16 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
     }
 
     public void processSeismograms(EventChannelPair ecp,
+                                   SeismogramSource dataCenter,
                                    RequestFilter[] infilters,
                                    RequestFilter[] outfilters,
                                    LocalSeismogramImpl[] localSeismograms) {
-        WaveformProcess processor;
-        Iterator it = processes.iterator();
+        WaveformProcess processor = null;
+        Iterator<WaveformProcess> it = processes.iterator();
         WaveformResult result = new WaveformResult(true, localSeismograms, this);
-        while(it.hasNext() && result.isSuccess()) {
-            processor = (WaveformProcess)it.next();
-            try {
+        try {
+            while (it.hasNext() && result.isSuccess()) {
+                processor = it.next();
                 result = runProcessorThreadCheck(processor,
                                                  ecp.getEvent(),
                                                  ecp.getChannel(),
@@ -322,21 +324,21 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                                                  outfilters,
                                                  result.getSeismograms(),
                                                  ecp.getCookieJar());
-            } catch(CodecException e) {
-                result = new WaveformResult(localSeismograms, new Fail(processor, "Unable to decompress data", e));
-            } catch(Throwable e) {
-                handle(ecp, Stage.PROCESSOR, e);
-                return;
+            } // end of while (it.hasNext())
+            logger.debug("finished with " + ChannelIdUtil.toStringNoDates(ecp.getChannel().get_id()) + " success="
+                    + result.isSuccess());
+            if (result.isSuccess()) {
+                ecp.update(Status.get(Stage.PROCESSOR, Standing.SUCCESS));
+            } else {
+                ecp.update(Status.get(Stage.PROCESSOR, Standing.REJECT));
+                failLogger.info(ecp + " " + result.getReason());
             }
-        } // end of while (it.hasNext())
-        logger.debug("finished with " + ChannelIdUtil.toStringNoDates(ecp.getChannel().get_id()) + " success="
-                + result.isSuccess());
-        if(result.isSuccess()) {
-            ecp.update(Status.get(Stage.PROCESSOR, Standing.SUCCESS));
-        } else {
-            ecp.update(Status.get(Stage.PROCESSOR, Standing.REJECT));
-            failLogger.info(ecp + " " + result.getReason());
+        } catch(Throwable e) {
+            MotionVectorArm.handle(ecp, Stage.PROCESSOR, e, dataCenter, requestToString(infilters, outfilters));
+            ecp.update(Status.get(Stage.PROCESSOR, Standing.SYSTEM_FAILURE));
+            failLogger.info(ecp + " " + e);
         }
+        logger.debug("finished with " + ChannelIdUtil.toStringNoDates(ecp.getChannel().get_id()));
     }
 
     public static WaveformResult runProcessorThreadCheck(WaveformProcess processor,
@@ -348,10 +350,10 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                                                                CookieJar cookieJar) throws Exception {
         WaveformResult out;
         if (processor instanceof Threadable && ((Threadable)processor).isThreadSafe()) {
-            out = processor.accept(event, channel, original, available, seismograms, cookieJar);
+            out = internalRunProcessor(processor, event, channel, original, available, seismograms, cookieJar);
         } else {
             synchronized(processor) {
-                out = processor.accept(event, channel, original, available, seismograms, cookieJar);
+                out = internalRunProcessor(processor, event, channel, original, available, seismograms, cookieJar);
             }
         }
         if (out == null) {
@@ -362,42 +364,35 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
         return out;
     }
     
-    private static void handle(EventChannelPair ecp, Stage stage, Throwable t) {
-        handle(ecp, stage, t, null);
+    private static WaveformResult internalRunProcessor(WaveformProcess processor,
+                                                       CacheEvent event,
+                                                       ChannelImpl channel,
+                                                       RequestFilter[] original,
+                                                       RequestFilter[] available,
+                                                       LocalSeismogramImpl[] seismograms,
+                                                       CookieJar cookieJar) throws Exception {
+        WaveformResult result;
+        try {
+            result = processor.accept(event, channel, original, available, seismograms, cookieJar);
+        } catch(FissuresException e) {
+            if (e.getCause() instanceof CodecException) {
+                result = new WaveformResult(seismograms, new Fail(processor, "Unable to decompress data", e));
+            } else {
+                throw e;
+            }
+        } catch(CodecException e) {
+            result = new WaveformResult(seismograms, new Fail(processor, "Unable to decompress data", e));
+        }
+        return result;
     }
 
-    private static void handle(EventChannelPair ecp, Stage stage, Throwable t, ProxySeismogramDC server) {
-        try {
-            if (t instanceof OutOfMemoryError) {
-                //can't do much useful, at least get the stack trace before anything else as other
-                // code might trigger further OutofMem
-                t.printStackTrace(System.err);
-                logger.error("", t);
-            }
-            if(t instanceof org.omg.CORBA.SystemException) {
-                // don't log exception here, let RetryStragtegy do it
-                ecp.update(Status.get(stage, Standing.CORBA_FAILURE));
-            } else {
-                ecp.update(t, Status.get(stage, Standing.SYSTEM_FAILURE));
-            }
-            if(t instanceof FissuresException) {
-                FissuresException f = (FissuresException)t;
-                failLogger.warn(f.the_error.error_code + " " + f.the_error.error_description + " " + ecp, t);
-            } else if(t instanceof org.omg.CORBA.SystemException) {
-                // just to generate user message if needed
-                if(server != null) {
-                    Start.createRetryStrategy(-1).shouldRetry((SystemException)t, server, 0);
-                } else {
-                    failLogger.info("Network or server problem: (" + t.getClass().getName() + ") " + ecp);
-                }
-                logger.debug(ecp.toString(), t);
-            } else {
-                failLogger.warn(ecp.toString(), t);
-            }
-        } catch(Throwable tt) {
-            GlobalExceptionHandler.handle("Caught " + tt + " while handling " + t, t);
-        }
+    protected static String requestToString(RequestFilter[] in, RequestFilter[] avail) {
+        String message = "";
+        message += "\n in=" + RequestFilterUtil.toString(in);
+        message += "\n avail=" + RequestFilterUtil.toString(avail);
+        return message;
     }
+    
 
     private EventChannelSubsetter eventChannel = new PassEventChannel();
 
