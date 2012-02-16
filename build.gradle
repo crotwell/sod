@@ -1,7 +1,7 @@
 
 
 group = 'edu.sc.seis'
-version = '3.0.0'
+version = '3.0.1-SNAPSHOT'
 
 apply plugin:'application'
 mainClassName = "edu.sc.seis.sod.Start"
@@ -36,7 +36,7 @@ dependencies {
     compile "edu.sc.seis.mapData:dcwpo_browse:1.0"
     compile "net.sourceforge.javacsv:javacsv:2.0"
     compile "gov.usgs.winston:Winston:1.2svn"
-//    runtime "org.codehaus.groovy:groovy:1.7.3"
+//    runtime "org.codehaus.groovy:groovy:1.8.6"
 //    runtime "org.jruby:jruby:1.5.1"
 }
 
@@ -116,6 +116,8 @@ task explodeBin(type: Sync, dependsOn: ['makeScript', 'createBuildScript', 'buil
     with binDistFiles
     into file("$buildDir/explode")
 }
+explodeBin.doLast { ant.chmod(dir: "$buildDir/explode/bin", perm: "755", includes: "*") }
+
 task explodeDist(type: Sync, dependsOn: ['explodeBin', 'wrapper', 'doc']) {
     group = 'dist'
     with distFiles
