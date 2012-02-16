@@ -970,15 +970,22 @@ result = util.waveformResult(True, out)
         <element name="transferResponse">
             <xsd:annotation>
                 <summary>Applies an instrumentation correction as in the transfer command in SAC</summary>
-                <description>This calculates and applies the polezero response from the sensor (stage 1) in the response
-                    along with the overall gain. Great care should be taken with this processor as the transfer is a
+                <description><p>This calculates and applies the polezero response from the sensor (stage 1) in the response
+                    along with the overall gain. The response will be retrieved from the source in the network arm, but
+                    if the server responds that response does not exist, then this processor will fail. 
+                    </p>
+                    <p>Great care should be taken with this processor as the transfer is a
                     spectral division, and is hence inherently unstable. This basically means that if you allow the
                     frequency limits to be too large, specified in lowCut, lowPass, highPass and highCut, you will be
                     dividing one very small number by another very small number, which due to rounding errors may
                     generate very large amplitudes at long periods which are not real. Also, you should almost always
-                    apply an rmean and taper before applying transferResponse. The defaults are as in the example below.
+                    apply an rmean and taper before applying transferResponse. 
+                    </p>
+                    <p>The defaults are as in the example below.
                     See the sac <a
-                    href="http://www.llnl.gov/sac/SAC_Commands/transfer">manual</a> for more discussion of transfer. </description>
+                    href="http://www.llnl.gov/sac/SAC_Commands/transfer">manual</a> for more in depth discussion of transfer.
+                    SOD does not use SAC directly, but the implementation is modeled on SAC and should have identical results.
+                    </p></description>
                 <example>
                     <transferResponse>
                         <lowCut>0.005</lowCut>
