@@ -35,6 +35,7 @@
             <ref name="seismogramScript"/>
             <ref name="localSeismogramStatus"/>
             <ref name="filter"/>
+            <ref name="oregonDSPFilter"/>
             <ref name="forkProcess"/>
             <ref name="seismogramAlwaysSuccess"/>
             <ref name="phaseSignalToNoise"/>
@@ -56,6 +57,10 @@
             <ref name="invertFlippedChannels"/>
             <ref name="seismogramSampling"/>
             <ref name="decimate"/>
+            <ref name="stddev"/>
+            <ref name="rms"/>
+            <ref name="mean"/>
+            <ref name="minMax"/>
             <ref name="compressionType"/>
             <ref name="availableDataPlus"/>
         </choice>
@@ -237,6 +242,110 @@
                   </choice>
               </element>
             </optional>
+        </element>
+    </define>
+    <define name="oregonDSPFilter">
+        <element name="oregonDSPFilter">
+            <xsd:annotation>
+                <summary>Apply a filter using the OregonDSP library</summary>
+                <description>Applies a filter to the seismograms. 
+                The filter can be <butterworth/>, <chebyshevI/> or <chebyshevII/>
+                with butterworth being the default. The passband is one of <bandpass/>, <lowpass/> or <highpass/> with
+                bandpass being the default. When using a lowpass filter only the highFreqCorner is used, and similarly
+                for highpass only the lowFreqCorner is used. The filterType can be CAUSAL or NONCAUSAL
+                    or TWOPASS, with the last two being equivalent and NONCAUSAL being the default. 
+                    The default number of poles is 2. The epsilon parameter is only used for chebyshevI and II filters.
+                    See the documentation for the OregonDSP package at http://www.iris.edu/pub/programs/OregonDSP.</description>
+            </xsd:annotation>
+            <interleave>
+                <choice>
+                  <group>
+                    <element name="bandpass"><empty/></element>
+                    <interleave>
+                        <element name="lowFreqCorner">
+                            <xsd:annotation>
+                                <example>
+                                    <lowFreqCorner>
+                                        <value>50</value>
+                                        <unit>SECOND</unit>
+                                    </lowFreqCorner>
+                                </example>
+                            </xsd:annotation>
+                            <ref name="cornerSetting"/>
+                        </element>
+                        <element name="highFreqCorner">
+                            <xsd:annotation>
+                                <example>
+                                    <highFreqCorner>
+                                        <value>5</value>
+                                        <unit>HERTZ</unit>
+                                    </highFreqCorner>
+                                </example>
+                            </xsd:annotation>
+                            <ref name="cornerSetting"/>
+                        </element>
+                    </interleave>
+                  </group>
+                  <group>
+                    <element name="highpass"><empty/></element>
+                    <element name="lowFreqCorner">
+                        <xsd:annotation>
+                            <example>
+                                <lowFreqCorner>
+                                    <value>50</value>
+                                    <unit>SECOND</unit>
+                                </lowFreqCorner>
+                            </example>
+                        </xsd:annotation>
+                        <ref name="cornerSetting"/>
+                    </element>
+                  </group>
+                  <group>
+                    <element name="lowpass"><empty/></element>
+                    <element name="highFreqCorner">
+                        <xsd:annotation>
+                            <example>
+                                <highFreqCorner>
+                                    <value>5</value>
+                                    <unit>HERTZ</unit>
+                                </highFreqCorner>
+                            </example>
+                        </xsd:annotation>
+                        <ref name="cornerSetting"/>
+                    </element>
+                  </group>
+                </choice>
+                <optional>
+                  <choice>
+                    <element name="butterworth"><empty/></element>
+                    <element name="chebyshevI"><empty/></element>
+                    <element name="chebyshevII"><empty/></element>
+                  </choice>
+                </optional>
+                <optional>
+                  <element name="numPoles">
+                      <data type="integer">
+                          <xsd:annotation>
+                              <example>2</example>
+                          </xsd:annotation>
+                      </data>
+                  </element>
+                </optional>
+                <optional>
+                  <element name="filterType">
+                      <choice>
+                          <value>NONCAUSAL</value>
+                          <value>CAUSAL</value>
+                          <value>TWOPASS</value>
+                      </choice>
+                  </element>
+                </optional>
+                <optional>
+                    <element name="epsilon">
+                        <data type="float"/>
+                    </element>
+                </optional>
+            </interleave>
         </element>
     </define>
     <define name="cornerSetting">
@@ -1109,6 +1218,66 @@ result = util.waveformResult(True, out)
                     <data type="integer"/>
                 </element>
             </oneOrMore>
+        </element>
+    </define>
+    <define name="minMax">
+        <element name="minMax">
+            <xsd:annotation>
+                <summary>Calculates the minimum and maximum of the seismogram's data and stores it in the cookie jar.</summary>
+                <description>This calculates the minimum and maximum of the samples in the seismograms and saves the results
+                as 'MinMax.min' and 'MinMax.max' in the cookieJar. This can be used by later processors or used within the printlineSeismogramProcess
+                as ${cookieJar.get('MinMax.min')}. The default name is 'MinMax'.</description>
+            </xsd:annotation>
+            <optional>
+                <element name="name">
+                    <data type="string"/>
+                </element>
+            </optional>
+        </element>
+    </define>
+    <define name="mean">
+        <element name="mean">
+            <xsd:annotation>
+                <summary>Calculates the mean of the seismogram's data and stores it in the cookie jar.</summary>
+                <description>This calculates the unbiased mean of the samples in the seismograms and saves the results
+                as name in the cookieJar. This can be used by later processors or used within the printlineSeismogramProcess
+                as ${cookieJar.get('Mean')}. The default name is 'Mean'.</description>
+            </xsd:annotation>
+            <optional>
+                <element name="name">
+                    <data type="string"/>
+                </element>
+            </optional>
+        </element>
+    </define>
+    <define name="rms">
+        <element name="rms">
+            <xsd:annotation>
+                <summary>Calculates the rms of the seismogram's data and stores it in the cookie jar.</summary>
+                <description>This calculates the rms of the samples in the seismograms and saves the results
+                as name in the cookieJar. This can be used by later processors or used within the printlineSeismogramProcess
+                as ${cookieJar.get('Rms')}. The default name is 'Rms'.</description>
+            </xsd:annotation>
+            <optional>
+                <element name="name">
+                    <data type="string"/>
+                </element>
+            </optional>
+        </element>
+    </define>
+    <define name="stddev">
+        <element name="stddev">
+            <xsd:annotation>
+                <summary>Calculates the standard deviation of the seismogram's data and stores it in the cookie jar.</summary>
+                <description>This calculates the unbiased standard deviation of the samples in the seismograms and saves the results
+                as name in the cookieJar. This can be used by later processors or used within the printlineSeismogramProcess
+                as ${cookieJar.get('Stddev')}. The default name is 'Stddev'.</description>
+            </xsd:annotation>
+            <optional>
+                <element name="name">
+                    <data type="string"/>
+                </element>
+            </optional>
         </element>
     </define>
 </grammar>
