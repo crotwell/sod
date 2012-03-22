@@ -40,7 +40,7 @@ public abstract class AbstractWaveformMeasure implements WaveformProcess {
                                    LocalSeismogramImpl[] seismograms,
                                    CookieJar cookieJar) throws Exception;
 
-    protected float[] toFloatArrayAsIfContinuous(LocalSeismogramImpl[] seis) throws FissuresException {
+    protected static float[] toFloatArrayAsIfContinuous(LocalSeismogramImpl[] seis) throws FissuresException {
         int npts = 0;
         for (int i = 0; i < seis.length; i++) {
             npts += seis[i].getNumPoints();
