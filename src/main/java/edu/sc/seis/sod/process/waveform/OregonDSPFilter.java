@@ -47,17 +47,18 @@ public class OregonDSPFilter implements WaveformProcess {
                     } else {
                         filterType = ButterworthFilter.NONCAUSAL;
                     }
-                } else if (element.getTagName().equals("filterName")) {
-                    filterName = XMLUtil.getText(element);
-                } else if (element.getTagName().equals("passband")) {
-                    String passbandStr = XMLUtil.getText(element);
-                    if (passbandStr.equals("bandpass")) {
-                        passband = PassbandType.BANDPASS;
-                    } else if (passbandStr.equals("lowpass")) {
-                        passband = PassbandType.LOWPASS;
-                    } else if (passbandStr.equals("highpass")) {
-                        passband = PassbandType.HIGHPASS;
-                    }
+                } else if (element.getTagName().equals("butterworth")) {
+                    filterName = element.getTagName();
+                } else if (element.getTagName().equals("chebyshevI")) {
+                    filterName = element.getTagName();
+                } else if (element.getTagName().equals("chebyshevII")) {
+                    filterName = element.getTagName();
+                } else if (element.getTagName().equals("bandpass")) {
+                    passband = PassbandType.BANDPASS;
+                } else if (element.getTagName().equals("lowpass")) {
+                    filterName = element.getTagName();
+                } else if (element.getTagName().equals("highpass")) {
+                    passband = PassbandType.HIGHPASS;
                 }
             }
         }
