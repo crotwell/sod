@@ -28,8 +28,10 @@ public abstract class AbstractWaveformMeasure implements WaveformProcess {
                                  RequestFilter[] available,
                                  LocalSeismogramImpl[] seismograms,
                                  CookieJar cookieJar) throws Exception {
-        Measurement m = calculate(event, channel, original, available, seismograms, cookieJar);
-        cookieJar.put(m.getName(), m);
+        if (seismograms.length != 0) {
+            Measurement m = calculate(event, channel, original, available, seismograms, cookieJar);
+            cookieJar.put(m.getName(), m);
+        }
         return new WaveformResult(seismograms, new Pass(this));
     }
     
