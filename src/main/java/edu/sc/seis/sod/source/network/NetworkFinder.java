@@ -57,6 +57,19 @@ public class NetworkFinder extends AbstractNetworkSource {
     public CacheNetworkAccess getNetwork(NetworkId netId)  {
         CacheNetworkAccess net = checkCache(netId);
         if (net == null) {
+            if (netId.network_code.startsWith("_")) {
+                // virtual network?
+                try {
+                    List<CacheNetworkAccess> byName = getNetworkByName(netId.network_code);
+                    if (byName.size() != 0) {
+                        byNameCache.add(byName.get(0));
+                        return byName.get(0);
+                    }
+                    throw new RuntimeException("Can't get network by name: "+netId.network_code);
+                } catch(NetworkNotFound e) {
+                    throw new RuntimeException("Can't get network from cache or by name: "+netId.network_code);
+                }
+            }
             throw new RuntimeException("can't find net, should neven happen: "+NetworkIdUtil.toString(netId));
         }
         return net;
@@ -192,15 +205,23 @@ public class NetworkFinder extends AbstractNetworkSource {
                 return net;
             }
         }
+        for (CacheNetworkAccess net : byNameCache) {
+            if (NetworkIdUtil.areEqual(netId, net.get_attributes().getId())) {
+                return net;
+            }
+        }
         return null;
     }
     
     public void reset() {
         recentNetworksCache = null;
+        byNameCache.clear();
     }
     
     protected List<CacheNetworkAccess> recentNetworksCache = null;
-
+    
+    protected List<CacheNetworkAccess> byNameCache = new ArrayList<CacheNetworkAccess>();
+    
     protected VestingNetworkDC netDC;
 
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(NetworkFinder.class);
