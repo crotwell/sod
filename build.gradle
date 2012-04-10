@@ -16,8 +16,8 @@ sourceSets {
 }
 
 dependencies {
-    compile project(':bag') { transitive = true }
-//    compile project(':cormorant') { transitive = true }
+    compile project(':bag')
+//    compile project(':cormorant')
     
     compile "jline:jline:0.9.94"
     compile "thaiopensource:jing:20091111"
