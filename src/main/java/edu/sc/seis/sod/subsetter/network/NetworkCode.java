@@ -43,6 +43,6 @@ public class NetworkCode implements NetworkSubsetter {
 
     private String year;
 
-    private static final Pattern TEMP_NET = Pattern.compile("([XYZ][A-Z])(\\d{2})");
-    private static final Pattern ANY_NET = Pattern.compile("([A-Z][A-Z]?)(\\d{2})?");
+    private static final Pattern TEMP_NET = Pattern.compile("([XYZ][0-9A-Z])(\\d{2})");
+    private static final Pattern ANY_NET = Pattern.compile("([0-9A-Z][0-9A-Z]?)(\\d{2})?");
 }
