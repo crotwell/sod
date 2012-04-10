@@ -15,7 +15,6 @@ sourceSets {
     }
 }
 
- 
 dependencies {
     compile project(':bag') { transitive = true }
 //    compile project(':cormorant') { transitive = true }
@@ -41,9 +40,9 @@ dependencies {
 //    runtime "org.jruby:jruby:1.5.1"
 }
 
-dirName = project.name+'-'+version
+def dirName = project.name+'-'+version
 
-binDistFiles = copySpec {
+def binDistFiles = copySpec {
 
     from('build/output') {
         fileMode=0755
@@ -60,7 +59,7 @@ binDistFiles = copySpec {
     }
 }
 
-distFiles = copySpec {
+def distFiles = copySpec {
     with(binDistFiles)
     from('.') {
         fileMode=0755
@@ -106,7 +105,6 @@ distFiles = copySpec {
 task tarDist(type: Tar, dependsOn: ['explodeDist']) {
     group = 'dist'
     compression = Compression.GZIP
-    longfile = 'gnu'
     into(dirName) {
         with distFiles
     }
@@ -166,7 +164,7 @@ task copySodSite(dependsOn: [':seiswww:makeSodSite'], type: Sync) {
 
 task staticSchemaDocs(type: Copy) {
     group = 'dist'
-    outDir = project.file('build/velocity/sod/ingredients/')
+    def outDir = project.file('build/velocity/sod/ingredients/')
     from project.file('site/schemaDocs/docs')
     into outDir
     doFirst {
@@ -175,7 +173,7 @@ task staticSchemaDocs(type: Copy) {
 }
 
 task buildSchemaDocs(type: JavaExec, dependsOn: ['staticSchemaDocs', 'buildSchema', 'compileJava'])  { 
-    inRNGFile = new File(project.buildDir.path, 'generated-src/relaxInclude/sod.rng')
+    def inRNGFile = new File(project.buildDir.path, 'generated-src/relaxInclude/sod.rng')
 //    inRNGFile = new File(project.buildDir, 'generated-src/relax/resources/edu/sc/seis/sod/data/sod.rng')
 //    jvmArgs = ['-agentlib:yjpagent', '-XX:+HeapDumpOnOutOfMemoryError', '-Xmx512m']
     jvmArgs  ['-Xmx512m']
@@ -183,7 +181,7 @@ task buildSchemaDocs(type: JavaExec, dependsOn: ['staticSchemaDocs', 'buildSchem
 //   inputs.files 'site/elementPage.vm', inRNGFile.getParentFile()
     inputs.dir inRNGFile.getParentFile()
 //    outDir = project.file('build/velocity/sod/ingredients')
-    outDir = new File(project.buildDir, 'generated-src/velocity/sod/ingredients')
+    def outDir = new File(project.buildDir, 'generated-src/velocity/sod/ingredients')
     outputs.dir outDir
     workingDir = outDir
     args  inRNGFile, project.projectDir.path, outDir
@@ -199,10 +197,10 @@ task buildSchemaDocs(type: JavaExec, dependsOn: ['staticSchemaDocs', 'buildSchem
 
 task buildSchema(dependsOn: ['transform', 'compileJava'])  {
     group = 'build'
-    inFile = new File(project.buildDir.path, 'generated-src/relaxInclude/sod.rng')
+    def inFile = new File(project.buildDir.path, 'generated-src/relaxInclude/sod.rng')
     inputs.dir inFile.getParentFile()
-    resourcesDir = new File(project.buildDir, 'generated-src/relax/resources')
-    outFile = new File(resourcesDir, 'edu/sc/seis/sod/data/sod.rng')
+    ext.resourcesDir = new File(project.buildDir, 'generated-src/relax/resources')
+    def outFile = new File(resourcesDir, 'edu/sc/seis/sod/data/sod.rng')
     outputs.files outFile
     doLast{
     outFile.getParentFile().mkdirs()
@@ -220,7 +218,7 @@ task buildSchema(dependsOn: ['transform', 'compileJava'])  {
 task transform(type: XSLT) { 
     destDir=new File(project.buildDir, 'generated-src/relaxInclude')
     stylesheetFile = new File(project.projectDir, 'src/main/xslt/simpleXInclude.xslt')
-    rngFile = new File(project.projectDir, 'src/main/relax/sod.rng')
+    def rngFile = new File(project.projectDir, 'src/main/relax/sod.rng')
     source rngFile
     inputs.dir rngFile.getParentFile()
     outputs.dir destDir
