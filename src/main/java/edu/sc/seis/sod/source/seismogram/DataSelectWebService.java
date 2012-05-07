@@ -24,6 +24,7 @@ import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.mseed.FissuresConvert;
 import edu.sc.seis.fissuresUtil.time.RangeTool;
 import edu.sc.seis.seisFile.MSeedQueryReader;
+import edu.sc.seis.seisFile.SeisFileException;
 import edu.sc.seis.seisFile.dataSelectWS.DataSelectException;
 import edu.sc.seis.seisFile.dataSelectWS.DataSelectReader;
 import edu.sc.seis.seisFile.mseed.DataRecord;
@@ -63,14 +64,12 @@ public class DataSelectWebService implements SeismogramSourceLocator {
                     MSeedQueryReader dsReader = new DataSelectReader(baseUrl);
                     for (RequestFilter rf : request) {
                         MicroSecondDate start = new MicroSecondDate(rf.start_time);
-                        String requestURL = dsReader.createQuery(rf.channel_id.network_id.network_code,
+                        List<DataRecord> records =  dsReader.read(rf.channel_id.network_id.network_code,
                                                               rf.channel_id.station_code,
                                                               rf.channel_id.site_code, 
                                                               rf.channel_id.channel_code, 
                                                               start,
-                                                              (float)new MicroSecondDate(rf.end_time).subtract(start).getValue(UnitImpl.SECOND));
-                        logger.debug("requestURL: "+requestURL);
-                        List<DataRecord> records = dsReader.read(requestURL);
+                                                              new MicroSecondDate(rf.end_time));
                         out.addAll(FissuresConvert.toFissures(records));
                     }
                     return out;
@@ -80,7 +79,7 @@ public class DataSelectWebService implements SeismogramSourceLocator {
                 } catch(SeedFormatException e) {
                     GlobalExceptionHandler.handle(e);
                     throw new FissuresException(e.getMessage(), new edu.iris.Fissures.Error(1, "SeedFormatException")); 
-                } catch(DataSelectException e) {
+                } catch(SeisFileException e) {
                     GlobalExceptionHandler.handle(e);
                     throw new FissuresException(e.getMessage(), new edu.iris.Fissures.Error(1, "DataSelectException")); 
                 }
