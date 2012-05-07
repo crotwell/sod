@@ -324,6 +324,7 @@ public class FissuresFormatter {
     private static NumberFormat depthFormat = ChoiceDecimalFormat.createTomStyleB();
 
     public static String oneLineAndClean(String in) {
+        if (in == null) { return "";}
         return in.replaceAll("\\s+", " ").trim();
     }
 }
