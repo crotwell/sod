@@ -19,6 +19,7 @@ import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.SamplingImpl;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
+import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.TauP.Arrival;
@@ -27,7 +28,6 @@ import edu.sc.seis.fissuresUtil.bag.IncompatibleSeismograms;
 import edu.sc.seis.fissuresUtil.bag.Rotate;
 import edu.sc.seis.fissuresUtil.bag.TauPUtil;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
@@ -297,6 +297,7 @@ public class IterDeconReceiverFunction implements WaveformVectorProcess {
                                                                recFuncChanId,
                                                                data);
         predSeis.setName(name);
+        System.out.println("Writing sac file for "+ChannelIdUtil.toString(recFuncChanId));
         writer.accept(event, recFuncChan, original[0], available[0], new LocalSeismogramImpl[] {predSeis}, cookieJar);
     }
 
@@ -335,17 +336,17 @@ public class IterDeconReceiverFunction implements WaveformVectorProcess {
 
     public static float DEFAULT_TOL = 0.001f;
 
-    protected float gwidth;
+    protected float gwidth = DEFAULT_GWIDTH;
 
-    protected float tol;
+    protected float tol = DEFAULT_TOL;
 
-    protected int maxBumps;
+    protected int maxBumps = DEFAULT_MAXBUMPS;
     
     protected String modelName = "prem";
     
     protected boolean pWave = true;
 
-    protected TimeInterval shift;
+    protected TimeInterval shift = getDefaultShift();
 
     protected TimeInterval pad = getDefaultShift();
 
