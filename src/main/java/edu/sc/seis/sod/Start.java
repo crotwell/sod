@@ -244,6 +244,10 @@ public class Start {
         return configFileName;
     }
 
+    public void setupDatabaseForUnitTests() throws ConfigurationException {
+        initDatabase();
+    }
+    
     protected void initDatabase() throws ConfigurationException {
         ConnMgr.installDbProperties(props, args.getInitialArgs());
         warnIfDatabaseExists();

@@ -41,7 +41,7 @@ public class RemoveStationDuplicateTest extends TestCase {
     protected void setUp() throws Exception {
         Properties props = new Properties();
         props.put("fissuresUtil.database.url", "jdbc:hsqldb:mem:SodDB");
-        Start s = new Start(new Args(new String[] {"-f", "<stream>"}),
+        Start s = new Start(new Args(new String[] {"-f", "<stream>","-q"}),
                             new Start.InputSourceCreator() {
 
                                 public InputSource create() {
@@ -50,7 +50,8 @@ public class RemoveStationDuplicateTest extends TestCase {
                             },
                             props,
                             true);
-        
+
+        s.setupDatabaseForUnitTests();
         NetworkDB netdb = NetworkDB.getSingleton();
         netdb.put(mockOne);
         netdb.put(mockClose);
