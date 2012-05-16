@@ -201,6 +201,8 @@ public class EventArm implements Arm {
             numENPWaiting = SodDB.getSingleton().getNumEventNetworkWorkUnits(Standing.INIT);
         }
         logger.debug("event arm getting more events, numWaiting:" + numWaiting + " numENPWaiting:" + numENPWaiting);
+
+        eventStatus.rollback(); // free the session
     }
 
     public void handle(CacheEvent[] events) {
