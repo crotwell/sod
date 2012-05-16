@@ -10,6 +10,7 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.measure.Measurement;
+import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
 
 
@@ -31,10 +32,15 @@ public abstract class AbstractWaveformMeasure implements WaveformProcess {
         if (seismograms.length != 0) {
             Measurement m = calculate(event, channel, original, available, seismograms, cookieJar);
             cookieJar.put(m.getName(), m);
+            return new WaveformResult(seismograms, new Pass(this));
         }
-        return new WaveformResult(seismograms, new Pass(this));
+        return new WaveformResult(seismograms, new Fail(this));
     }
     
+    public String getName() {
+        return name;
+    }
+
     abstract Measurement calculate(CacheEvent event,
                                    ChannelImpl channel,
                                    RequestFilter[] original,
