@@ -55,7 +55,7 @@ public class WinstonWaveServerSource implements SeismogramSource {
                 if (item.getChannel().equals(rf.channel_id.channel_code) &&
                         item.getStation().equals(rf.channel_id.station_code) &&
                         item.getNetwork().equals(rf.channel_id.network_id.network_code) &&
-                        item.getLocation().equals(rf.channel_id.site_code)) {
+                        (item.getLocation().equals(rf.channel_id.site_code) || (item.getLocation().equals("--") && rf.channel_id.site_code.equals("  ")))) {
                     MicroSecondDate start = toDate(item.getStartTime());
                     MicroSecondDate end = toDate(item.getEndTime());
                     MicroSecondTimeRange menuRange = new MicroSecondTimeRange(start, end);
