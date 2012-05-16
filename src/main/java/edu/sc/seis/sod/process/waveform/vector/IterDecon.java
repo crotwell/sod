@@ -1,5 +1,7 @@
 package edu.sc.seis.sod.process.waveform.vector;
 
+import com.oregondsp.signalProcessing.fft.RDFT;
+
 import edu.sc.seis.fissuresUtil.freq.Cmplx;
 
 
@@ -210,15 +212,24 @@ public class IterDecon {
         // Handle the nyquist frequency
         omega = Math.PI/dt; // eliminate 2 / 2
         gauss = Math.exp(-omega*omega / gwidth);
-        forward[1] *= gauss;
+        if (useOregonDSPFFT) {
+            forward[forward.length/2] *= gauss;
+        } else {
+            forward[1] *= gauss;
+        }
 
         int j;
         for (int i=1; i<forward.length/2; i++) {
             j  = i*2;
             omega = i*d_omega;
             gauss = Math.exp(-omega*omega / gwidth);
-            forward[j] *= gauss;
-            forward[j+1] *= gauss;
+            if (useOregonDSPFFT) {
+                forward[i] *= gauss;
+                forward[forward.length-i] *= gauss;
+            } else {
+                forward[j] *= gauss;
+                forward[j+1] *= gauss;
+            }
         }
         forward = inverseFFT(forward);
         return forward;
@@ -258,18 +269,28 @@ public class IterDecon {
         double omega;
         //Handle the nyquist frequency
         omega = Math.PI/dt;
-        forward[1] *= (float)Math.cos(omega*shift);
+        if (useOregonDSPFFT) {
+            forward[forward.length/2] *= (float)Math.cos(omega*shift);
+        } else {
+            forward[1] *= (float)Math.cos(omega*shift);
+        }
 
         double a,b,c,d;
-        for (int j=2; j<forward.length-1; j+=2) {
-            omega = (j/2)*d_omega;
-            a = forward[j];
-            b = forward[j+1];
+        for (int j=1; j<forward.length/2; j++) {
+            omega = (j)*d_omega;
             c = Math.cos(omega*shift);
             d = Math.sin(omega*shift);
-
-            forward[j] = (float)(a*c-b*d);
-            forward[j+1] = (float)(a*d+b*c);
+            if (useOregonDSPFFT) {
+                a = forward[j];
+                b = forward[forward.length-j];
+                forward[j] = (float)(a*c-b*d);
+                forward[forward.length-j] = (float)(a*d+b*c);
+            } else {
+                a = forward[2*j];
+                b = forward[2*j+1];
+                forward[2*j] = (float)(a*c-b*d);
+                forward[2*j+1] = (float)(a*d+b*c);
+            }
         }
 
         forward = inverseFFT(forward);
@@ -282,6 +303,8 @@ public class IterDecon {
         if(useNativeFFT) {
            // NativeFFT.forward(forward);
             throw new RuntimeException("NativeFFT not implemented");
+        } else if (useOregonDSPFFT) {
+            forward = OregonDspFFT.forward(x);
         } else {
             // not on mac, so no altavec fft
             float[] javaFFT = new float[forward.length*2];
@@ -301,6 +324,8 @@ public class IterDecon {
         if(useNativeFFT) {
             throw new RuntimeException("NativeFFT not implemented");
             //NativeFFT.inverse(inverse);
+        } else if (useOregonDSPFFT) {
+            inverse = OregonDspFFT.inverse(x);;
         } else {
             // not on mac, so no altavec fft
             float[] tmp = Cmplx.four1Inverse(lengthenFFT(inverse));
@@ -331,6 +356,7 @@ public class IterDecon {
     protected float tol;
     protected float gwidthFactor;
     protected static boolean useNativeFFT = false;
+    protected static boolean useOregonDSPFFT = true;
 //    
 //    static {
 //        try {

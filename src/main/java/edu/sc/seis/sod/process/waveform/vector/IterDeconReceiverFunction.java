@@ -297,7 +297,6 @@ public class IterDeconReceiverFunction implements WaveformVectorProcess {
                                                                recFuncChanId,
                                                                data);
         predSeis.setName(name);
-        System.out.println("Writing sac file for "+ChannelIdUtil.toString(recFuncChanId));
         writer.accept(event, recFuncChan, original[0], available[0], new LocalSeismogramImpl[] {predSeis}, cookieJar);
     }
 
