@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.process.waveform.vector;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -32,14 +33,19 @@ import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.measure.ListMeasurement;
+import edu.sc.seis.sod.measure.Measurement;
+import edu.sc.seis.sod.measure.ScalarMeasurement;
+import edu.sc.seis.sod.measure.SeismogramMeasurement;
 import edu.sc.seis.sod.process.waveform.AbstractSeismogramWriter;
 import edu.sc.seis.sod.process.waveform.MseedWriter;
 import edu.sc.seis.sod.process.waveform.SacWriter;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
-public class IterDeconReceiverFunction implements WaveformVectorProcess {
+public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasurement {
 
     public IterDeconReceiverFunction(Element config) throws ConfigurationException, TauModelException {
+        super(config);
         parseIterDeconConfig(config);
         taup = TauPUtil.getTauPUtil(modelName);
         decon = new IterDecon(maxBumps, true, tol, gwidth);
@@ -91,13 +97,13 @@ public class IterDeconReceiverFunction implements WaveformVectorProcess {
         }
     }
 
-    public WaveformVectorResult accept(CacheEvent event,
-                                       ChannelGroup channelGroup,
-                                       RequestFilter[][] original,
-                                       RequestFilter[][] available,
-                                       LocalSeismogramImpl[][] seismograms,
-                                       CookieJar cookieJar) throws Exception {
-        try {
+    @Override
+    Measurement calculate(CacheEvent event,
+                          ChannelGroup channelGroup,
+                          RequestFilter[][] original,
+                          RequestFilter[][] available,
+                          LocalSeismogramImpl[][] seismograms,
+                          CookieJar cookieJar) throws Exception {
             Channel chan = channelGroup.getChannels()[0];
             Origin origin = event.get_preferred_origin();
             ChannelId[] chanIds = new ChannelId[channelGroup.getChannels().length];
@@ -114,6 +120,7 @@ public class IterDeconReceiverFunction implements WaveformVectorProcess {
             MicroSecondDate firstP = new MicroSecondDate(origin.getOriginTime());
             firstP = firstP.add(new TimeInterval(pPhases.get(0).getTime(), UnitImpl.SECOND));
             TimeInterval shift = getShift();
+            List<Measurement> measurementList = new ArrayList<Measurement>();
             for (int i = 0; i < ans.length; i++) {
                 float[] predicted = ans[i].getPredicted();
                 // ITR for radial
@@ -123,7 +130,7 @@ public class IterDeconReceiverFunction implements WaveformVectorProcess {
                                                               event.getPreferred().getLocation())
                         : Rotate.getTransverseAzimuth(channelGroup.getStation().getLocation(), event.getPreferred()
                                 .getLocation());
-                saveTimeSeries(predicted,
+                LocalSeismogramImpl rfSeis = saveTimeSeries(predicted,
                                "receiver function " + singleSeismograms[0].channel_id.station_code,
                                chanCode,
                                firstP.subtract(shift),
@@ -135,20 +142,12 @@ public class IterDeconReceiverFunction implements WaveformVectorProcess {
                                original,
                                available,
                                cookieJar);
-                cookieJar.put("recFunc_percentMatch_" + chanCode, "" + ans[i].getPercentMatch());
+                String mName = (i == 0) ? "radial" : "transverse";
+                measurementList.add(new SeismogramMeasurement(mName, rfSeis));
+                measurementList.add(new ScalarMeasurement(mName+"_percentMatch", ans[i].getPercentMatch()));
             }
-            return new WaveformVectorResult(seismograms, new StringTreeLeaf(this, true));
-        } catch(IncompatibleSeismograms e) {
-            return new WaveformVectorResult(seismograms,
-                                            new StringTreeLeaf(this, false, "Seismograms not compatble", e));
-        } catch(FissuresException e) {
-            return new WaveformVectorResult(seismograms, new StringTreeLeaf(this, false, "Data problem", e));
-        } catch(ZeroPowerException e) {
-            return new WaveformVectorResult(seismograms, new StringTreeLeaf(this,
-                                                                            false,
-                                                                            "Zero power in numerator or demoninator",
-                                                                            e));
-        }
+            return new ListMeasurement(getName(), measurementList);
+        
     }
 
     public IterDeconResult[] process(EventAccessOperations event,
@@ -270,7 +269,7 @@ public class IterDeconReceiverFunction implements WaveformVectorProcess {
         return ans;
     }
 
-    public void saveTimeSeries(float[] data,
+    public LocalSeismogramImpl saveTimeSeries(float[] data,
                                String name,
                                String chanCode,
                                MicroSecondDate begin,
@@ -297,7 +296,10 @@ public class IterDeconReceiverFunction implements WaveformVectorProcess {
                                                                recFuncChanId,
                                                                data);
         predSeis.setName(name);
-        writer.accept(event, recFuncChan, original[0], available[0], new LocalSeismogramImpl[] {predSeis}, cookieJar);
+        if (writer != null) {
+            writer.accept(event, recFuncChan, original[0], available[0], new LocalSeismogramImpl[] {predSeis}, cookieJar);
+        }
+        return predSeis;
     }
 
     public float getGwidth() {
