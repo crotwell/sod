@@ -20,5 +20,9 @@ public class QuantityMeasurement extends Measurement {
         return quantity;
     }
     
+    public String toString() {
+        return getQuantity().toString();
+    }
+    
     QuantityImpl quantity;
 }
