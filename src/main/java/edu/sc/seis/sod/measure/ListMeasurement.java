@@ -29,7 +29,7 @@ public class ListMeasurement extends Measurement {
 
     @Override
     public String toXMLFragment() {
-        String out = "<list>\n";
+        String out = "<list name=\""+getName()+"\">\n";
         for (Measurement item : list) {
             out += item.toXMLFragment()+"\n";
         }

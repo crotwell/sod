@@ -13,7 +13,7 @@ public class QuantityMeasurement extends Measurement {
 
     @Override
     public String toXMLFragment() {
-        return "<scalar><name>" + getName() + "</name><value>" + getQuantity().getValue()+ "</value><unit>" + getQuantity().getUnit() + "</unit></scalar>";
+        return "<scalar name=\"" + getName() + "\"><value>" + getQuantity().getValue()+ "</value><unit>" + getQuantity().getUnit() + "</unit></scalar>";
     }
     
     public QuantityImpl getQuantity() {
