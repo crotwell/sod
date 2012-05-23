@@ -10,6 +10,7 @@ import com.oregondsp.signalProcessing.filter.iir.ChebyshevII;
 import com.oregondsp.signalProcessing.filter.iir.IIRFilter;
 import com.oregondsp.signalProcessing.filter.iir.PassbandType;
 
+import edu.iris.Fissures.FissuresException;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
@@ -25,6 +26,23 @@ import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
 public class OregonDSPFilter implements WaveformProcess {
+
+    public OregonDSPFilter(String filterName,
+                           PassbandType passband,
+                           double epsilon,
+                           QuantityImpl lowFreqCorner,
+                           QuantityImpl highFreqCorner,
+                           int numPoles,
+                           int filterType) {
+        super();
+        this.filterName = filterName;
+        this.passband = passband;
+        this.epsilon = epsilon;
+        this.lowFreqCorner = lowFreqCorner;
+        this.highFreqCorner = highFreqCorner;
+        this.numPoles = numPoles;
+        this.filterType = filterType;
+    }
 
     public OregonDSPFilter(Element config) throws ConfigurationException {
         this.config = config;
@@ -56,7 +74,7 @@ public class OregonDSPFilter implements WaveformProcess {
                 } else if (element.getTagName().equals("bandpass")) {
                     passband = PassbandType.BANDPASS;
                 } else if (element.getTagName().equals("lowpass")) {
-                    filterName = element.getTagName();
+                    passband = PassbandType.LOWPASS;
                 } else if (element.getTagName().equals("highpass")) {
                     passband = PassbandType.HIGHPASS;
                 }
@@ -69,6 +87,13 @@ public class OregonDSPFilter implements WaveformProcess {
             highFreqCorner = highFreqCorner.inverse();
         }
     }
+    
+    public OregonDSPFilter(Element config, PassbandType passband, QuantityImpl lowFreqCorner, QuantityImpl highFreqCorner) throws ConfigurationException {
+        this(config);
+        this.passband = passband;
+        this.lowFreqCorner = lowFreqCorner;
+        this.highFreqCorner = highFreqCorner;
+    }
 
     public boolean isThreadSafe() {
         return true;
@@ -80,6 +105,10 @@ public class OregonDSPFilter implements WaveformProcess {
                                  RequestFilter[] available,
                                  LocalSeismogramImpl[] seismograms,
                                  CookieJar cookieJar) throws Exception {
+        return apply(seismograms);
+    }
+
+    public WaveformResult apply(LocalSeismogramImpl[] seismograms) throws FissuresException {
         IIRFilter filter = null;
         LocalSeismogramImpl[] out = new LocalSeismogramImpl[seismograms.length];
         for (int i = 0; i < seismograms.length; i++) {
@@ -89,8 +118,9 @@ public class OregonDSPFilter implements WaveformProcess {
             float[] data = seismograms[i].get_as_floats();
             filter.filter(data);
             out[i] = new LocalSeismogramImpl(seismograms[i], data);
-            if (i < seismograms.length-1 && ! RangeTool.areContiguous(seismograms[i], seismograms[i+1])) {
-                filter = null; // filter preserves state for filtering contiguous waveforms, reset if a gap 
+            if (i < seismograms.length - 1 && !RangeTool.areContiguous(seismograms[i], seismograms[i + 1])) {
+                filter = null; // filter preserves state for filtering
+                               // contiguous waveforms, reset if a gap
             }
         }
         return new WaveformResult(out, new StringTreeLeaf(this, true));
@@ -101,10 +131,10 @@ public class OregonDSPFilter implements WaveformProcess {
         if (filterName.equals("chebyshevI")) {
             filter = new ChebyshevI(numPoles,
                                     epsilon,
-                                     passband,
-                                     lowFreqCorner.getValue(UnitImpl.HERTZ),
-                                     highFreqCorner.getValue(UnitImpl.HERTZ),
-                                     delta);
+                                    passband,
+                                    lowFreqCorner.getValue(UnitImpl.HERTZ),
+                                    highFreqCorner.getValue(UnitImpl.HERTZ),
+                                    delta);
         } else if (filterName.equals("chebyshevII")) {
             filter = new ChebyshevII(numPoles,
                                      epsilon,
@@ -123,12 +153,40 @@ public class OregonDSPFilter implements WaveformProcess {
         return filter;
     }
 
+    public String getFilterName() {
+        return filterName;
+    }
+
+    public PassbandType getPassband() {
+        return passband;
+    }
+
+    public double getEpsilon() {
+        return epsilon;
+    }
+
+    public QuantityImpl getLowFreqCorner() {
+        return lowFreqCorner;
+    }
+
+    public QuantityImpl getHighFreqCorner() {
+        return highFreqCorner;
+    }
+
+    public int getNumPoles() {
+        return numPoles;
+    }
+
+    public int getFilterType() {
+        return filterType;
+    }
+
     Element config;
 
     String filterName = "butterworth";
 
     PassbandType passband = PassbandType.BANDPASS;
-    
+
     double epsilon = 1;
 
     QuantityImpl lowFreqCorner;
@@ -139,5 +197,4 @@ public class OregonDSPFilter implements WaveformProcess {
 
     int filterType = ButterworthFilter.NONCAUSAL;
 
-    edu.sc.seis.fissuresUtil.bag.RMean rmean;
 }

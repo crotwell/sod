@@ -1163,10 +1163,70 @@ result = util.waveformResult(True, out)
         <element name="decimate">
             <xsd:annotation>
                 <summary>Decimates seismograms.</summary>
-                <description>This decimates seismograms by the given factor. Any needed low pass filtering should be
-                    done before applying this to avoid aliasing. </description>
+                <description>This decimates seismograms by the given factor or to the given sample rate. 
+                Any needed low pass filtering can be done before applying this or using the antiAliasFilter
+                element to avoid aliasing. The antiAliasFilter is the same as the <oregonDSPFilter> ingredient,
+                with the passband and highFreqCorner determined automatically.
+                If the seismogram sample rate is not an integer multiple of the desired max sample rate, then
+                the resulting sample rate will be less than or equal to the desired. For example if the
+                seismogram is 100 samples per second and the desired rate is 30 sps, then the decimation
+                factor will be 4 and the resulting rate will be 25 sps.
+                
+                Previous versions of SOD allow a naked integer factor in this, now you must use either
+                maxSamplesPerSec or byFactor subelements. </description>
+                <example>
+                    <decimate>
+                        <maxSamplesPerSec>10</maxSamplesPerSec>
+                    </decimate>
+                </example>
             </xsd:annotation>
-            <data type="integer"/>
+              <interleave>
+            <choice>
+                <element name="maxSamplesPerSec">
+                    <data type="float"/>
+                </element>
+                <element name="byFactor">
+                    <data type="int"/>
+                </element>
+            </choice>
+            <optional>
+                <element name="antiAliasFilter">
+                  <interleave>
+                    <optional>
+                        <choice>
+                            <element name="butterworth"><empty/></element>
+                            <element name="chebyshevI"><empty/></element>
+                            <element name="chebyshevII"><empty/></element>
+                        </choice>
+                    </optional>
+                    <optional>
+                        <element name="numPoles">
+                            <data type="integer">
+                                <xsd:annotation>
+                                    <example>2</example>
+                                </xsd:annotation>
+                            </data>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="filterType">
+                            <choice>
+                                <value>NONCAUSAL</value>
+                                <value>CAUSAL</value>
+                                <value>TWOPASS</value>
+                            </choice>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="epsilon">
+                            <data type="float"/>
+                        </element>
+                    </optional>
+                </interleave>
+              </element>
+            </optional>
+              </interleave>
+            
         </element>
     </define>
     <define name="div">
