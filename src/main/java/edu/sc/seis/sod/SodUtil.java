@@ -691,7 +691,7 @@ public class SodUtil {
     }
 
     /**
-     * returns the first element with the given name
+     * returns the first element with the given name, null if none exists.
      */
     public static Element getElement(Element config, String elementName) {
         NodeList children = config.getChildNodes();
