@@ -110,7 +110,7 @@ task tarDist(type: Tar, dependsOn: ['explodeDist']) {
     }
 }
 
-task explodeBin(type: Sync, dependsOn: ['makeScript', 'createBuildScript', 'buildSchema']) {
+task explodeBin(type: Sync, dependsOn: ['makeScript', 'buildSchema']) {
     group = 'dist'
     with binDistFiles
     into file("$buildDir/explode")
