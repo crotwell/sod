@@ -138,8 +138,8 @@ def getDExtras() {
 
 task makeScript(dependsOn: copyToLib) << { task ->
     group = 'build'
-    dExtras = getDExtras()
-    doBat = true
+    def dExtras = getDExtras()
+    def doBat = true
     ScriptBuilder.create('psod', 'edu.sc.seis.sod.Start', task.project, dExtras:dExtras, yourkit:true)
     ScriptBuilder.create('sod', 'edu.sc.seis.sod.Start', task.project, dExtras:dExtras, bat:true)
     ScriptBuilder.create('bgsod', 'edu.sc.seis.sod.Start', task.project, dExtras:dExtras, bat:doBat, background:true)
