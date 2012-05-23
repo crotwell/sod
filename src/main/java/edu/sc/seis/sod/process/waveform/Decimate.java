@@ -51,7 +51,7 @@ public class Decimate implements WaveformProcess, Threadable {
             if (d == null) {
                 d = new edu.sc.seis.fissuresUtil.bag.Decimate((int)Math.ceil(seismograms[0].getSampling()
                         .getFrequency()
-                        .getValue(UnitImpl.SECOND)
+                        .getValue(UnitImpl.HERTZ)
                         / toSampleRate));
             }
             if (antiAlias) {

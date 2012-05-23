@@ -38,8 +38,8 @@ public class OregonDSPFilter implements WaveformProcess {
         this.filterName = filterName;
         this.passband = passband;
         this.epsilon = epsilon;
-        this.lowFreqCorner = lowFreqCorner;
-        this.highFreqCorner = highFreqCorner;
+        setLowFreqCorner(lowFreqCorner);
+        setHighFreqCorner(highFreqCorner);
         this.numPoles = numPoles;
         this.filterType = filterType;
     }
@@ -52,9 +52,9 @@ public class OregonDSPFilter implements WaveformProcess {
             if (node instanceof Element) {
                 Element element = (Element)node;
                 if (element.getTagName().equals("lowFreqCorner")) {
-                    lowFreqCorner = SodUtil.loadQuantity(element);
+                    setLowFreqCorner(SodUtil.loadQuantity(element));
                 } else if (element.getTagName().equals("highFreqCorner")) {
-                    highFreqCorner = SodUtil.loadQuantity(element);
+                    setHighFreqCorner(SodUtil.loadQuantity(element));
                 } else if (element.getTagName().equals("numPoles")) {
                     numPoles = Integer.parseInt(XMLUtil.getText(element));
                 } else if (element.getTagName().equals("epsilon")) {
@@ -80,14 +80,16 @@ public class OregonDSPFilter implements WaveformProcess {
                 }
             }
         }
-        if (lowFreqCorner.get_unit().isConvertableTo(UnitImpl.SECOND)) {
-            lowFreqCorner = lowFreqCorner.inverse();
-        }
-        if (highFreqCorner.get_unit().isConvertableTo(UnitImpl.SECOND)) {
-            highFreqCorner = highFreqCorner.inverse();
-        }
     }
     
+    /** for use in Decimate where we know passband is lowpass and corner freq is new nyquist but want to configure other
+     * settings.
+     * @param config
+     * @param passband
+     * @param lowFreqCorner
+     * @param highFreqCorner
+     * @throws ConfigurationException
+     */
     public OregonDSPFilter(Element config, PassbandType passband, QuantityImpl lowFreqCorner, QuantityImpl highFreqCorner) throws ConfigurationException {
         this(config);
         this.passband = passband;
@@ -168,9 +170,23 @@ public class OregonDSPFilter implements WaveformProcess {
     public QuantityImpl getLowFreqCorner() {
         return lowFreqCorner;
     }
+    
+    protected void setLowFreqCorner(QuantityImpl lowFreqCorner) {
+        this.lowFreqCorner = lowFreqCorner;
+        if (lowFreqCorner != null && lowFreqCorner.get_unit().isConvertableTo(UnitImpl.SECOND)) {
+            lowFreqCorner = lowFreqCorner.inverse();
+        }
+    }
 
     public QuantityImpl getHighFreqCorner() {
         return highFreqCorner;
+    }
+    
+    protected void setHighFreqCorner(QuantityImpl highFreqCorner) {
+        this.highFreqCorner = highFreqCorner;
+        if (highFreqCorner != null && highFreqCorner.get_unit().isConvertableTo(UnitImpl.SECOND)) {
+            highFreqCorner = highFreqCorner.inverse();
+        }
     }
 
     public int getNumPoles() {
