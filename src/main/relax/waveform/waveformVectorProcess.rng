@@ -29,6 +29,7 @@
             <ref name="rotateGCP"/>
             <ref name="vectorTrim"/>
             <ref name="vectorScript"/>
+            <ref name="iterDeconReceiverFunction"/>
         </choice>
     </define>
     <define name="waveformVectorProcessPlus">
@@ -357,6 +358,48 @@
                     <text/>
             </attribute>
             <data type="string"/>
+        </element>
+    </define>
+    <define name="iterDeconReceiverFunction">
+        <element name="iterDeconReceiverFunction">
+            <xsd:annotation>
+                <summary>Calculates receiver functions.</summary>
+                <description>Uses the Iterative Deconvolution method of Ligorria and Ammon (1999) to calculate receiver functions.</description>
+            </xsd:annotation>
+            <interleave>
+                <optional>
+                    <choice>
+                        <ref name="asciiWriter"/>
+                        <ref name="mseedWriter"/>
+                        <ref name="sacWriter"/>
+                    </choice>
+                </optional>
+                <optional>
+                    <element name="phaseName">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="modelName">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="gaussianWidth">
+                        <data type="float"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="maxBumps">
+                        <data type="float"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="tolerance">
+                        <data type="float"/>
+                    </element>
+                </optional>
+            </interleave>
         </element>
     </define>
 </grammar>
