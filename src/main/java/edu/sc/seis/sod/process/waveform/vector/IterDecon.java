@@ -3,6 +3,7 @@ package edu.sc.seis.sod.process.waveform.vector;
 import com.oregondsp.signalProcessing.fft.RDFT;
 
 import edu.sc.seis.fissuresUtil.freq.Cmplx;
+import edu.sc.seis.sod.process.waveform.OregonDspFFT;
 
 
 /**

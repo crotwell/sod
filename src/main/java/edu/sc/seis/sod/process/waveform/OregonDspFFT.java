@@ -1,4 +1,4 @@
-package edu.sc.seis.sod.process.waveform.vector;
+package edu.sc.seis.sod.process.waveform;
 
 import com.oregondsp.signalProcessing.fft.RDFT;
 
