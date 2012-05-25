@@ -3,16 +3,6 @@ package edu.sc.seis.sod.process.waveform.vector;
 import com.oregondsp.signalProcessing.fft.RDFT;
 
 
-
-/**
- * NativeFFT.java
- *
- *
- * Created: Mon Apr 14 10:06:06 2003
- *
- * @author <a href="mailto:crotwell@owl.seis.sc.edu">Philip Crotwell</a>
- * @version 1.0
- */
 public class OregonDspFFT {
 
     public OregonDspFFT() {
