@@ -15,6 +15,7 @@ import edu.sc.seis.fissuresUtil.freq.Cmplx;
 import edu.sc.seis.fissuresUtil.mockFissures.IfSeismogramDC.MockSeismogram;
 import edu.sc.seis.fissuresUtil.sac.FissuresToSac;
 import edu.sc.seis.seisFile.sac.SacTimeSeries;
+import edu.sc.seis.sod.process.waveform.OregonDspFFT;
 
 // JUnitDoclet end import
 /**

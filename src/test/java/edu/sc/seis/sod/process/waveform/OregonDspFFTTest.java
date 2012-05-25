@@ -4,7 +4,7 @@
  * @author Created by Omnicore CodeGuide
  */
 
-package edu.sc.seis.sod.process.waveform.vector;
+package edu.sc.seis.sod.process.waveform;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -12,6 +12,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import edu.sc.seis.fissuresUtil.freq.Cmplx;
+import edu.sc.seis.sod.process.waveform.OregonDspFFT;
 
 public class OregonDspFFTTest  {
 
