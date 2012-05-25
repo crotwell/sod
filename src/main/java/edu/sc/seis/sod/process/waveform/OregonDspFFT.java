@@ -9,6 +9,7 @@ import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.measure.ArrayMeasurement;
 import edu.sc.seis.sod.measure.Measurement;
 
 
@@ -25,8 +26,10 @@ public class OregonDspFFT extends AbstractWaveformMeasure {
                           RequestFilter[] available,
                           LocalSeismogramImpl[] seismograms,
                           CookieJar cookieJar) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
+        if (seismograms.length != 1) {
+            throw new Exception("Require continuous data, but num seismograms="+seismograms.length);
+        }
+        return new ArrayMeasurement(getName(), forward(seismograms[0].get_as_floats()));
     }
 
     public static float[] forward(float[] realData) {

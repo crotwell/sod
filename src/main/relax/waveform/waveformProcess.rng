@@ -35,6 +35,7 @@
             <ref name="seismogramScript"/>
             <ref name="localSeismogramStatus"/>
             <ref name="filter"/>
+            <ref name="oregonDSPFFT"/>
             <ref name="oregonDSPFilter"/>
             <ref name="forkProcess"/>
             <ref name="seismogramAlwaysSuccess"/>
@@ -1302,6 +1303,26 @@ result = util.waveformResult(True, out)
                 <description>This calculates the unbiased mean of the samples in the seismograms and saves the results
                 as name in the cookieJar. This can be used by later processors or used within the printlineSeismogramProcess
                 as ${cookieJar.get('Mean')}. The default name is 'Mean'.</description>
+            </xsd:annotation>
+            <optional>
+                <element name="name">
+                    <data type="string"/>
+                </element>
+            </optional>
+        </element>
+    </define>
+    <define name="oregonDSPFFT">
+        <element name="rms">
+            <xsd:annotation>
+                <summary>Calculates the FFT of the seismogram's data using the OregonDSP package and stores it in the cookie jar.</summary>
+                <description>This calculates the FFT of the samples in the seismograms and saves the results
+                as name in the cookieJar. This can be used by later processors or used within the printlineSeismogramProcess
+                as ${cookieJar.get('OregonDSPFFT')}. The default name is 'OregonDSPFFT'.
+                OregonDSP uses the packed form used by Sorensen et al. (1987) for conjugate symmetric transforms. For an input
+                array of length n, this stores the n/2 real values of the fft in the first n/2 places in the output array. The
+                n/2-1 imaginary values are stored in reverse order starting from the end. So the ith real value is index i and
+                the ith imaginary value is at index n-i.
+                </description>
             </xsd:annotation>
             <optional>
                 <element name="name">
