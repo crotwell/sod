@@ -13,12 +13,12 @@ import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
 
 
-public abstract class AbstractWaveformVectorMeasurement implements WaveformVectorProcess {
+public abstract class AbstractWaveformVectorMeasure implements WaveformVectorProcess {
     
 
     protected String name;
 
-    public AbstractWaveformVectorMeasurement(Element config) {
+    public AbstractWaveformVectorMeasure(Element config) {
         name = SodUtil.loadText(config, "name", SodUtil.getSimpleName(getClass()));
     }
     

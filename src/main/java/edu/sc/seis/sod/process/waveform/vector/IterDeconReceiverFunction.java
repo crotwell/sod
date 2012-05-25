@@ -42,7 +42,7 @@ import edu.sc.seis.sod.process.waveform.MseedWriter;
 import edu.sc.seis.sod.process.waveform.SacWriter;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
-public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasurement {
+public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
 
     public IterDeconReceiverFunction(Element config) throws ConfigurationException, TauModelException {
         super(config);
