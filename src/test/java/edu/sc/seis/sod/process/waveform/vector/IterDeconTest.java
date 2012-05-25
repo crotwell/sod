@@ -57,6 +57,10 @@ public class IterDeconTest
         IterDecon.useOregonDSPFFT = true;
         float[] oregonFFT = IterDecon.forwardFFT(data);
         float[] oregonFFTDirect = OregonDspFFT.forward(data);
+        // oregonDSP uses opposite sign convention on imag part, so mul -1
+        for (int i = oregonFFTDirect.length/2+1; i < oregonFFTDirect.length; i++) {
+            oregonFFTDirect[i] *= -1;
+        }
         assertArrayEquals(oregonFFTDirect, oregonFFT, 0.0001f);
     }
     

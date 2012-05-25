@@ -306,6 +306,11 @@ public class IterDecon {
             throw new RuntimeException("NativeFFT not implemented");
         } else if (useOregonDSPFFT) {
             forward = OregonDspFFT.forward(x);
+            // OregonDSP uses opposite sign convention as Num. Rec. FFT, so
+            // values are complex congugate of what we want
+            for (int i = 1; i < forward.length/2; i++) {
+                forward[forward.length-i] *= -1;
+            }
         } else {
             // not on mac, so no altavec fft
             float[] javaFFT = new float[forward.length*2];
@@ -326,6 +331,11 @@ public class IterDecon {
             throw new RuntimeException("NativeFFT not implemented");
             //NativeFFT.inverse(inverse);
         } else if (useOregonDSPFFT) {
+            // OregonDSP uses opposite sign convention as Num. Rec. FFT, so
+            // values are complex congugate of what we want
+            for (int i = 1; i < x.length/2; i++) {
+                x[x.length-i] *= -1;
+            }
             inverse = OregonDspFFT.inverse(x);;
         } else {
             // not on mac, so no altavec fft

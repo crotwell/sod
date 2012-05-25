@@ -60,7 +60,8 @@ public class OregonDspFFTTest  {
         for (int i = 1; i < data.length/2; i++) {
             System.out.println(i+"  "+nativeData[i]+"  "+cData[i].real());
             assertEquals("real i="+i, (float)cData[i].real(), nativeData[i], 0.001f);
-            assertEquals("imag i="+i, (float)cData[i].imag(), nativeData[nativeData.length-i], 0.001f);
+            // oregonDSP uses opposite sign convention on imag part, so mul -1
+            assertEquals("imag i="+i, (float)cData[i].imag(), -1*nativeData[nativeData.length-i], 0.001f);
         }
     }
 
