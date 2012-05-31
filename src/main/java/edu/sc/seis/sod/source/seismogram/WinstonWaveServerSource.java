@@ -10,7 +10,7 @@ import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.iris.Fissures.seismogramDC.SeismogramAttrImpl;
-import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
+import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import gov.usgs.earthworm.Menu;
 import gov.usgs.earthworm.MenuItem;
 import gov.usgs.earthworm.TraceBuf;

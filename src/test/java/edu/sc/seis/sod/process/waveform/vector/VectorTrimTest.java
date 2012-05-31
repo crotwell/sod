@@ -14,10 +14,10 @@ import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.bag.Cut;
-import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannelId;
 import edu.sc.seis.fissuresUtil.mockFissures.IfSeismogramDC.MockSeismogram;
 import edu.sc.seis.fissuresUtil.sac.SacToFissures;
+import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 
 public class VectorTrimTest extends TestCase {
 

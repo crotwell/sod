@@ -29,7 +29,7 @@ import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.cache.ProxyEventDC;
 import edu.sc.seis.fissuresUtil.cache.RetryEventAccessOperations;
 import edu.sc.seis.fissuresUtil.cache.VestingEventDC;
-import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
+import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;

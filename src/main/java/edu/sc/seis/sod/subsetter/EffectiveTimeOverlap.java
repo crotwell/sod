@@ -6,7 +6,7 @@ import org.w3c.dom.Element;
 
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeUtils;
-import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
+import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.source.event.MicroSecondTimeRangeSupplier;

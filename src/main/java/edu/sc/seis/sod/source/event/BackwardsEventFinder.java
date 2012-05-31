@@ -4,7 +4,7 @@ import org.w3c.dom.Element;
 
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
+import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 
 
 public class BackwardsEventFinder extends EventFinder {

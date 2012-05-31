@@ -1,6 +1,6 @@
 package edu.sc.seis.sod.source.event;
 
-import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
+import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 
 public interface MicroSecondTimeRangeSupplier {
 
