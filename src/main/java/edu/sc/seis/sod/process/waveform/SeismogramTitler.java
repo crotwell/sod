@@ -10,10 +10,10 @@ import org.apache.velocity.VelocityContext;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.sc.seis.fissuresUtil.chooser.ThreadSafeSimpleDateFormat;
-import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.display.configuration.BorderConfiguration;
 import edu.sc.seis.fissuresUtil.display.configuration.BorderTitleConfiguration;
 import edu.sc.seis.fissuresUtil.display.configuration.SeismogramDisplayConfiguration;
+import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.sod.velocity.ContextWrangler;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 

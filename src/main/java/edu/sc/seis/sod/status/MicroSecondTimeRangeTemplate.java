@@ -1,6 +1,6 @@
 package edu.sc.seis.sod.status;
 
-import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
+import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 
 public interface MicroSecondTimeRangeTemplate {
 

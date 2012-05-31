@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 import org.w3c.dom.Element;
 
-import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
+import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.sod.ConfigurationException;
 
 public class MicroSecondTimeRangeFormatter extends Template implements

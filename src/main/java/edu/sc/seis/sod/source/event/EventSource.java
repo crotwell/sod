@@ -2,7 +2,7 @@ package edu.sc.seis.sod.source.event;
 
 import edu.iris.Fissures.model.TimeInterval;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
+import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.sod.SodElement;
 
 public interface EventSource extends SodElement {
