@@ -1165,7 +1165,7 @@ result = util.waveformResult(True, out)
                 <summary>Decimates seismograms.</summary>
                 <description>This decimates seismograms by the given factor or to the given sample rate. 
                 Any needed low pass filtering can be done before applying this or using the antiAliasFilter
-                element to avoid aliasing. The antiAliasFilter is the same as the <oregonDSPFilter> ingredient,
+                element to avoid aliasing. The antiAliasFilter is the same as the oregonDSPFilter ingredient,
                 with the passband and highFreqCorner determined automatically.
                 If the seismogram sample rate is not an integer multiple of the desired max sample rate, then
                 the resulting sample rate will be less than or equal to the desired. For example if the
