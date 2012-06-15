@@ -9,13 +9,11 @@ $additionalArms#end
 		</siteOR>
 #end
 #if($channels)
-        <embeddedChannel>
             <channelOR>
 #foreach($code in $channels)
                 <channelCode>$code</channelCode>
 #end
             </channelOR>
-        </embeddedChannel>
 #end
         <phaseRequest>
             <beginPhase>$begin.name</beginPhase>
@@ -34,8 +32,6 @@ $additionalArms#end
             <name>$server.name</name>
             <dns>$server.dns</dns>
         </fixedDataCenter>
-#else
-        <bestIRISDataCenter/>
 #end
         <someCoverage/>
         <responseGain/>
