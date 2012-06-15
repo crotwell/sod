@@ -1,7 +1,7 @@
 
 
 group = 'edu.sc.seis'
-version = '3.1.0'
+version = '3.1.1-SNAPSHOT'
 
 apply plugin:'application'
 mainClassName = "edu.sc.seis.sod.Start"
@@ -35,7 +35,6 @@ dependencies {
     compile "edu.sc.seis.mapData:dcwpo_browse:1.0"
     compile "net.sourceforge.javacsv:javacsv:2.0"
     compile "gov.usgs.winston:Winston:1.2svn"
-    compile "com.oregondsp.signalprocessing:oregondsp:2011"
 //    runtime "org.codehaus.groovy:groovy:1.8.6"
 //    runtime "org.jruby:jruby:1.5.1"
 }
