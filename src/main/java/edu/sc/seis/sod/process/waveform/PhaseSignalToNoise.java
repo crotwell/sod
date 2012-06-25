@@ -106,7 +106,7 @@ public class PhaseSignalToNoise  implements WaveformProcess, Threadable {
         } catch (PhaseNonExistent e) {
             // no phase at this distance, just fail
             return new WaveformResult(seismograms,
-                                      new StringTreeLeaf(this, false, "Phase does not exist", e));
+                                      new StringTreeLeaf(this, false, "Phase does not exist"));
         }
     }
 
