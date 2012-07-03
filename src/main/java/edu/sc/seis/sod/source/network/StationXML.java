@@ -230,8 +230,10 @@ public class StationXML implements NetworkSource {
             }
         }
     }
+    
     synchronized void checkChansLoaded(String netCode) {
         if (staChanMap.get(netCode) == null) {
+            checkNetsLoaded();
             try {
                 parse();
             } catch(Exception e) {
