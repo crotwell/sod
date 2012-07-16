@@ -70,7 +70,13 @@ public class DataSelectWebService implements SeismogramSourceLocator {
                                                               rf.channel_id.channel_code, 
                                                               start,
                                                               new MicroSecondDate(rf.end_time));
-                        out.addAll(FissuresConvert.toFissures(records));
+                        List<LocalSeismogramImpl> perRFList = FissuresConvert.toFissures(records);
+                        for (LocalSeismogramImpl seis : perRFList) {
+                            // the DataRecords know nothing about channel or network begin times, so use the request
+                            seis.channel_id.begin_time = rf.channel_id.begin_time;
+                            seis.channel_id.network_id.begin_time = rf.channel_id.network_id.begin_time;
+                        }
+                        out.addAll(perRFList);
                     }
                     return out;
                 } catch(IOException e) {
