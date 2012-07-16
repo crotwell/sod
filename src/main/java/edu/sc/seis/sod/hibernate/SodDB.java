@@ -135,13 +135,17 @@ public class SodDB extends AbstractHibernateDB {
 
     public void offerEventNetworkPairs(List<EventNetworkPair> staPairList) {
         for (EventNetworkPair pair : staPairList) {
-            enpToDo.offer(pair);
+            synchronized(enpToDo) {
+                enpToDo.offer(pair);
+            }
         }
     }
 
     public void offerEventStationPair(List<EventStationPair> staPairList) {
         for (EventStationPair eventStationPair : staPairList) {
-            espToDo.offer(eventStationPair);
+            synchronized(espToDo) {
+                espToDo.offer(eventStationPair);
+            }
         }
     }
     
