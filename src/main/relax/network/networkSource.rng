@@ -320,9 +320,11 @@ CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
                     <description>A network source that makes the metadata loaded from a StationXML file available to
                     SOD. While a local file could be used, the more useful way is to access the ws-station web service
                     at the IRIS DMC, http://www.iris.edu/ws/ws-station. SOD can download the stationXML automaticially
-                    and reconnect to periodically get updates. For a fill SOD run (that retrieves waveforms) 
-                    the level in the IRIS url should be either chan or resp
-                    as otherwise no channels will be found and so no data will be downloaded.</description>
+                    and reconnect to periodically get updates. For a full SOD run (that retrieves waveforms) 
+                    SOD will automatically set the level in the IRIS url as needed, but adding other qualifiers to
+                    limit the request size will help speed the queries. You may need to escape the ampersand with
+                    &amp;amp; due to the fact that a SOD recipe is XML and so the parser will signal an error for a
+                    unescaped ampersand.</description>
                     <velocity>#networkArmPage()</velocity>
                     <example>
                         <stationXML>
