@@ -383,9 +383,11 @@ public class NetworkArm implements Arm {
                             + StationIdUtil.toString(stationImpl));
                 }
                 for (StationImpl currStation : stations) {
+                    /*
+                     //disable for speed reasons
                     if (! NetworkConsistencyCheck.isConsistent(net, currStation)) {
                         failLogger.warn("Not consistent: "+StationIdUtil.toString(currStation.getId()));
-                    }
+                    }*/
                     // hibernate gets angry if the network isn't the same object
                     // as the one already in the thread's session
                     currStation.setNetworkAttr(netAttr);
