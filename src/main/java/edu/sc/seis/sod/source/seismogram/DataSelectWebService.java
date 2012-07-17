@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.Authenticator;
 import java.net.MalformedURLException;
 import java.net.PasswordAuthentication;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
@@ -14,21 +13,19 @@ import org.w3c.dom.Element;
 import edu.iris.Fissures.FissuresException;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.iris.Fissures.seismogramDC.RequestFilterUtil;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.chooser.ThreadSafeSimpleDateFormat;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.mseed.FissuresConvert;
-import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
-import edu.sc.seis.fissuresUtil.time.RangeTool;
 import edu.sc.seis.seisFile.MSeedQueryReader;
 import edu.sc.seis.seisFile.SeisFileException;
-import edu.sc.seis.seisFile.dataSelectWS.DataSelectException;
 import edu.sc.seis.seisFile.dataSelectWS.DataSelectReader;
 import edu.sc.seis.seisFile.mseed.DataRecord;
 import edu.sc.seis.seisFile.mseed.SeedFormatException;
+import edu.sc.seis.sod.BuildVersion;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 
@@ -45,6 +42,7 @@ public class DataSelectWebService implements SeismogramSourceLocator {
         if (user.length() != 0 && password.length() != 0) {
             Authenticator.setDefault(new MyAuthenticator(user, password));
         }
+        timeoutMillis = 1000*SodUtil.loadInt(config, "timeoutSecs", 30);
     }
 
     public SeismogramSource getSeismogramSource(CacheEvent event,
@@ -61,7 +59,8 @@ public class DataSelectWebService implements SeismogramSourceLocator {
             public List<LocalSeismogramImpl> retrieveData(List<RequestFilter> request) throws FissuresException {
                 try {
                     List<LocalSeismogramImpl> out = new ArrayList<LocalSeismogramImpl>();
-                    MSeedQueryReader dsReader = new DataSelectReader(baseUrl);
+                    DataSelectReader dsReader = new DataSelectReader(baseUrl, timeoutMillis);
+                    dsReader.setUserAgent("SOD/"+BuildVersion.getVersion());
                     for (RequestFilter rf : request) {
                         MicroSecondDate start = new MicroSecondDate(rf.start_time);
                         List<DataRecord> records =  dsReader.read(rf.channel_id.network_id.network_code,
@@ -70,6 +69,14 @@ public class DataSelectWebService implements SeismogramSourceLocator {
                                                               rf.channel_id.channel_code, 
                                                               start,
                                                               new MicroSecondDate(rf.end_time));
+                        for (DataRecord dr : records) {
+                            if ( ! (rf.channel_id.network_id.network_code.equals(dr.getHeader().getNetworkCode().trim()) &&
+                                    rf.channel_id.station_code.equals(dr.getHeader().getStationIdentifier().trim()) &&
+                                    rf.channel_id.site_code.equals(dr.getHeader().getLocationIdentifier().trim()) &&
+                                    rf.channel_id.channel_code.equals(dr.getHeader().getChannelIdentifier().trim()))) {
+                                throw new RuntimeException("Request: "+RequestFilterUtil.toString(rf)+" did not return matching data: "+dr.toString());
+                            }
+                        }
                         List<LocalSeismogramImpl> perRFList = FissuresConvert.toFissures(records);
                         for (LocalSeismogramImpl seis : perRFList) {
                             // the DataRecords know nothing about channel or network begin times, so use the request
@@ -92,6 +99,8 @@ public class DataSelectWebService implements SeismogramSourceLocator {
             }
         };
     }
+    
+    protected int timeoutMillis;
     
     protected String baseUrl;
 
