@@ -372,9 +372,12 @@ public class NetworkArm implements Arm {
             ArrayList<Station> arrayList = new ArrayList<Station>();
             try {
                 List<? extends StationImpl> stations = getInternalNetworkSource().getStations(netAttr.getId());
+                /*
+                 // network consistency for TA take a really long time due to pairwise comparison.
                 if( ! NetworkConsistencyCheck.isConsistent(stations)) {
                     failLogger.warn("Inconsistent stations for network: "+NetworkIdUtil.toString(net));
                 }
+                */
                 for (StationImpl stationImpl : stations) {
                     logger.debug("Station in NetworkArm: "
                             + StationIdUtil.toString(stationImpl));
@@ -483,9 +486,12 @@ public class NetworkArm implements Arm {
                 boolean needCommit = false;
                 StationImpl dbSta = NetworkDB.getSingleton().getStation(station.getDbid());
                 for (ChannelImpl chan : chansAtStation) {
+                    /*
+                     // consistency check takes time and only does a warning, skip
                     if (! NetworkConsistencyCheck.isConsistent(station, chan)) {
                         failLogger.warn("Not consistent: "+ChannelIdUtil.toString(chan.getId()));
                     }
+                    */
                     // make the assumption that the station in the channel is the same as the station retrieved earlier
                     chan.getSite().setStation(dbSta);
                     change(chan, inProg);
