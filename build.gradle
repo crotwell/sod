@@ -203,7 +203,7 @@ task buildSchema(dependsOn: ['transform', 'compileJava'])  {
     outputs.files outFile
     doLast{
     outFile.getParentFile().mkdirs()
-    relaxArgs = '-s '+inFile
+    def relaxArgs = '-s '+inFile
     ant.java(dir:outFile.getParentFile(), 
              classname:'com.thaiopensource.relaxng.util.Driver', 
              args:relaxArgs,
