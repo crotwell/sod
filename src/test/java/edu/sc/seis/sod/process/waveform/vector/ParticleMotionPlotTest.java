@@ -1,12 +1,8 @@
 package edu.sc.seis.sod.process.waveform.vector;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.TauP.Assert;

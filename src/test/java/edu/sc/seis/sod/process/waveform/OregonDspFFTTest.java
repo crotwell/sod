@@ -12,7 +12,6 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import edu.sc.seis.fissuresUtil.freq.Cmplx;
-import edu.sc.seis.sod.process.waveform.OregonDspFFT;
 
 public class OregonDspFFTTest  {
 

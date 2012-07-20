@@ -11,7 +11,6 @@ import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.VestingNetworkDC;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockNetworkAttr;
-import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockNetworkFinder;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockStation;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.NamedNetDC;
 import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;

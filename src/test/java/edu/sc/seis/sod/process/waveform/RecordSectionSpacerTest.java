@@ -3,24 +3,18 @@ package edu.sc.seis.sod.process.waveform;
 import java.util.ArrayList;
 import java.util.List;
 
+import junit.framework.TestCase;
+
 import org.apache.log4j.BasicConfigurator;
 
-import junit.framework.TestCase;
 import edu.iris.Fissures.AuditInfo;
 import edu.iris.Fissures.Location;
 import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.display.DisplayUtils;
 import edu.sc.seis.fissuresUtil.mockFissures.Defaults;
 import edu.sc.seis.fissuresUtil.mockFissures.MockLocation;
 import edu.sc.seis.fissuresUtil.mockFissures.IfEvent.MockEventAccessOperations;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannel;
-import edu.sc.seis.fissuresUtil.xml.DataSetSeismogram;
-import edu.sc.seis.fissuresUtil.xml.MemoryDataSet;
-import edu.sc.seis.fissuresUtil.xml.MemoryDataSetSeismogram;
-import edu.sc.seis.fissuresUtil.xml.StdDataSetParamNames;
 import edu.sc.seis.sod.hibernate.RecordSectionItem;
 
 /**
