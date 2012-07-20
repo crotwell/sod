@@ -2,8 +2,6 @@ package edu.sc.seis.sod.process.waveform;
 
 import java.io.File;
 
-import org.apache.velocity.VelocityContext;
-
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelIdUtil;
@@ -14,10 +12,7 @@ import edu.sc.seis.fissuresUtil.hibernate.SeismogramFileRefDB;
 import edu.sc.seis.fissuresUtil.xml.SeismogramFileTypes;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.status.StringTreeLeaf;
-import edu.sc.seis.sod.subsetter.VelocityFileElementParser;
-import edu.sc.seis.sod.velocity.ContextWrangler;
 import edu.sc.seis.sod.velocity.PrintlineVelocitizer;
 
 public abstract class AbstractSeismogramWriter extends 

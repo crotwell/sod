@@ -23,7 +23,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.PropertyConfigurator;
-import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -35,8 +34,6 @@ import org.xml.sax.SAXException;
 import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.sc.seis.fissuresUtil.Alohomora;
 import edu.sc.seis.fissuresUtil.Dissendium;
 import edu.sc.seis.fissuresUtil.cache.RetryStrategy;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;

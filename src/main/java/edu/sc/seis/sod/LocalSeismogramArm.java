@@ -3,7 +3,6 @@ package edu.sc.seis.sod;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import org.omg.CORBA.SystemException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
@@ -20,9 +19,7 @@ import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.iris.Fissures.seismogramDC.RequestFilterUtil;
 import edu.iris.dmc.seedcodec.CodecException;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.time.SortTool;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
