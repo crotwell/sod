@@ -34,7 +34,6 @@ dependencies {
 
     compile "edu.sc.seis.mapData:dcwpo_browse:1.0"
     compile "net.sourceforge.javacsv:javacsv:2.0"
-    compile "gov.usgs.winston:Winston:1.2svn"
 //    runtime "org.codehaus.groovy:groovy:1.8.6"
 //    runtime "org.jruby:jruby:1.5.1"
 }
