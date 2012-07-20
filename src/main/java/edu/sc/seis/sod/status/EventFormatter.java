@@ -1,7 +1,6 @@
 package edu.sc.seis.sod.status;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.TimeZone;
 

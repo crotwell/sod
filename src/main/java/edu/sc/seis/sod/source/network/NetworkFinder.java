@@ -1,7 +1,6 @@
 package edu.sc.seis.sod.source.network;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.omg.CORBA.BAD_PARAM;

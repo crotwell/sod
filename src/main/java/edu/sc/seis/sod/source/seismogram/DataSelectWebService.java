@@ -20,7 +20,6 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.chooser.ThreadSafeSimpleDateFormat;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.mseed.FissuresConvert;
-import edu.sc.seis.seisFile.MSeedQueryReader;
 import edu.sc.seis.seisFile.SeisFileException;
 import edu.sc.seis.seisFile.dataSelectWS.DataSelectReader;
 import edu.sc.seis.seisFile.mseed.DataRecord;
