@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 
-import org.apache.log4j.Level;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.exception.ParseErrorException;
@@ -19,9 +18,6 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.StationImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.hibernate.AbstractHibernateDB;
-import edu.sc.seis.fissuresUtil.mockFissures.IfEvent.MockEventAccess;
 import edu.sc.seis.fissuresUtil.mockFissures.IfEvent.MockEventAccessOperations;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannel;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockStation;

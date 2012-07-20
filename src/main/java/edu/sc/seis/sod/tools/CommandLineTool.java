@@ -10,7 +10,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.velocity.VelocityContext;
 import org.xml.sax.InputSource;
@@ -29,7 +28,6 @@ import edu.sc.seis.sod.Args;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.UserConfigurationException;
 import edu.sc.seis.sod.Version;
-import edu.sc.seis.sod.velocity.PrintlineVelocitizer;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
 public class CommandLineTool {

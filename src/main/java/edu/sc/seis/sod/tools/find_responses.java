@@ -1,8 +1,5 @@
 package edu.sc.seis.sod.tools;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
 import org.apache.velocity.VelocityContext;
 
 import com.martiansoftware.jsap.FlaggedOption;

@@ -3,7 +3,6 @@
  */
 package edu.sc.seis.sod.validator.tour;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -12,7 +11,6 @@ import java.util.List;
 import edu.sc.seis.sod.validator.model.Attribute;
 import edu.sc.seis.sod.validator.model.Choice;
 import edu.sc.seis.sod.validator.model.Data;
-import edu.sc.seis.sod.validator.model.Definition;
 import edu.sc.seis.sod.validator.model.Form;
 import edu.sc.seis.sod.validator.model.Group;
 import edu.sc.seis.sod.validator.model.Interleave;
