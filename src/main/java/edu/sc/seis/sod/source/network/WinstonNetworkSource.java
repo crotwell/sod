@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.source.network;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import edu.iris.Fissures.Time;
 import edu.iris.Fissures.TimeRange;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.SiteId;
+import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.SamplingImpl;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
@@ -17,10 +19,10 @@ import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.SiteImpl;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
+import edu.sc.seis.seisFile.waveserver.MenuItem;
+import edu.sc.seis.seisFile.waveserver.WaveServer;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.source.seismogram.WinstonWaveServerSource;
-import gov.usgs.winston.server.WWSClient;
 
 
 public class WinstonNetworkSource extends CSVNetworkSource {
@@ -33,17 +35,17 @@ public class WinstonNetworkSource extends CSVNetworkSource {
     protected void initChannels(Element config) throws ConfigurationException {
         host = SodUtil.loadText(config, "host", defaultHost);
         port = SodUtil.loadInt(config, "port", 16022);
-        List<gov.usgs.winston.Channel> winstonChannels = getWaveServer().getChannels();
+        try {
+        List<MenuItem> winstonMenu = getWaveServer().getMenu();
         channels = new ArrayList<ChannelImpl>();
-        for (gov.usgs.winston.Channel channel : winstonChannels) {
+        for (MenuItem menuItem : winstonMenu) {
             try {
-            String[] scnl = channel.getCode().split("\\$");
-            String netCode = scnl[2];
-            String staCode = scnl[0];
-            String chanCode = scnl[1];
-            String siteCode = scnl.length==3?"  ":scnl[3]; // if no 'l', just scn, then use space-space for site code
+            String netCode = menuItem.getNetwork();
+            String staCode = menuItem.getStation();
+            String chanCode = menuItem.getChannel();
+            String siteCode = menuItem.getLocation();
             try {
-            StationImpl curStation = getStationForChannel(netCode, staCode);
+                StationImpl curStation = getStationForChannel(netCode, staCode);
             if (curStation == null) {
                 logger.warn("Can't find station for "+netCode+"."+ staCode+", skipping");
                 continue;
@@ -53,10 +55,10 @@ public class WinstonNetworkSource extends CSVNetworkSource {
             
             SamplingImpl sampling = new SamplingImpl(1, new TimeInterval(1, UnitImpl.SECOND));
             Time chanStart = curStation.getBeginTime();
-            if (channel.getMinTime() < WinstonWaveServerSource.toY2KSeconds(ClockUtil.now())) {
+            if (menuItem.getStartDate().before(ClockUtil.now())) {
                 // sometime non-seismic channels are messed up in winston and have really bizarre times
                 // only use if start time is before now
-                chanStart = WinstonWaveServerSource.y2kSecondsToDate(channel.getMinTime()).getFissuresTime();
+                chanStart = new MicroSecondDate(Math.round(1000000 * menuItem.getStart())).getFissuresTime();
             }
             TimeRange chanTime = new TimeRange(chanStart,
                                                DEFAULT_END);
@@ -81,15 +83,14 @@ public class WinstonNetworkSource extends CSVNetworkSource {
                 logger.warn("problem with channel, skipping", t);
             }
         }
+        } catch(IOException e) {
+            throw new ConfigurationException("Unable to get menu from waveserver: ("+host+", "+port+")", e);
+        }
     }
     
-    public WWSClient getWaveServer() {
+    public WaveServer getWaveServer() {
         if (ws == null) {
-            ws = new WWSClient(host, port);
-            if (! ws.connect()) {
-                System.out.println("Not connected to WWS");
-            }
-            
+            ws = new WaveServer(host, port);
         }
         return ws;
     }
@@ -98,7 +99,7 @@ public class WinstonNetworkSource extends CSVNetworkSource {
     private String host;
     private int port;
 
-    private WWSClient ws;
+    private WaveServer ws;
 
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(WinstonNetworkSource.class);
 }
