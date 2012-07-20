@@ -8,7 +8,6 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.AbstractScriptSubsetter;
 import edu.sc.seis.sod.velocity.event.VelocityEvent;
-import edu.sc.seis.sod.velocity.network.VelocityChannel;
 import edu.sc.seis.sod.velocity.network.VelocityChannelGroup;
 
 

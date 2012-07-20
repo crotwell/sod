@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
 import org.apache.velocity.VelocityContext;

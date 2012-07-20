@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.StationImpl;

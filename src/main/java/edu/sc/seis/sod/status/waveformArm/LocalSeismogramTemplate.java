@@ -7,7 +7,6 @@
 package edu.sc.seis.sod.status.waveformArm;
 
 
-import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Collections;
 import java.util.HashMap;

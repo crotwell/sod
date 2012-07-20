@@ -8,7 +8,6 @@ import edu.sc.seis.sod.source.network.VelocityNetworkSource;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.AbstractScriptSubsetter;
 import edu.sc.seis.sod.velocity.network.VelocityChannel;
-import edu.sc.seis.sod.velocity.network.VelocityStation;
 
 
 public class ChannelScript extends AbstractScriptSubsetter implements ChannelSubsetter {

@@ -5,7 +5,6 @@ import org.w3c.dom.Element;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.source.network.VelocityNetworkSource;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.AbstractScriptSubsetter;
 import edu.sc.seis.sod.velocity.event.VelocityEvent;

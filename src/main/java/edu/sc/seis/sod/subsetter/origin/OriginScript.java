@@ -5,11 +5,9 @@ import org.w3c.dom.Element;
 import edu.iris.Fissures.event.EventAttrImpl;
 import edu.iris.Fissures.event.OriginImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.sod.source.network.VelocityNetworkSource;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.AbstractScriptSubsetter;
 import edu.sc.seis.sod.velocity.event.VelocityEvent;
-import edu.sc.seis.sod.velocity.network.VelocityChannel;
 
 
 public class OriginScript extends AbstractScriptSubsetter implements OriginSubsetter {
