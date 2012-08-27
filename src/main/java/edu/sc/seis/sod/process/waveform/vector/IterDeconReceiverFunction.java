@@ -20,14 +20,16 @@ import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.SamplingImpl;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
 import edu.sc.seis.fissuresUtil.bag.IncompatibleSeismograms;
+import edu.sc.seis.fissuresUtil.bag.IterDecon;
+import edu.sc.seis.fissuresUtil.bag.IterDeconResult;
 import edu.sc.seis.fissuresUtil.bag.Rotate;
 import edu.sc.seis.fissuresUtil.bag.TauPUtil;
+import edu.sc.seis.fissuresUtil.bag.opencl.ZeroPowerException;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
@@ -40,7 +42,6 @@ import edu.sc.seis.sod.measure.SeismogramMeasurement;
 import edu.sc.seis.sod.process.waveform.AbstractSeismogramWriter;
 import edu.sc.seis.sod.process.waveform.MseedWriter;
 import edu.sc.seis.sod.process.waveform.SacWriter;
-import edu.sc.seis.sod.status.StringTreeLeaf;
 
 public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
 
@@ -179,10 +180,12 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
         }
         Channel nChan = null, eChan = null, zChan = null;
         for (int i = 0; i < channel.length; i++) {
-            if (channel[i].get_id().channel_code.endsWith("N")) {
-                nChan = channel[i];
-            } else if (channel[i].get_id().channel_code.endsWith("E")) {
-                eChan = channel[i];
+            if (channel[i].getOrientation().dip == 0) {
+                if (Math.abs(channel[i].getOrientation().azimuth) < orientationTol || channel[i].get_id().channel_code.endsWith("N")) {
+                    nChan = channel[i];
+                } else if (Math.abs(channel[i].getOrientation().azimuth-90) < orientationTol || channel[i].get_id().channel_code.endsWith("E")) {
+                    eChan = channel[i];
+                }
             }
             if (channel[i].get_id().channel_code.endsWith("Z")) {
                 zChan = channel[i];
@@ -337,6 +340,8 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
 
     public static float DEFAULT_TOL = 0.001f;
 
+    protected float orientationTol = 5;
+    
     protected float gwidth = DEFAULT_GWIDTH;
 
     protected float tol = DEFAULT_TOL;
