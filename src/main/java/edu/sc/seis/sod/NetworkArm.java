@@ -322,6 +322,11 @@ public class NetworkArm implements Arm {
         for (ArmListener listener : armListeners) {
             listener.finished(this);
         }
+        if (Start.getEventArm() != null && Start.getEventArm().getWaveformArmSync() != null) {
+            synchronized(Start.getEventArm().getWaveformArmSync()) {
+                Start.getEventArm().getWaveformArmSync().notifyAll();
+            }
+        }
     }
 
     public void add(ArmListener listener) {
