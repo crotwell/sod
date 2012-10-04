@@ -103,7 +103,7 @@ public class WaveformArm extends Thread implements Arm {
         } finally {
             active = false;
             synchronized(OutputScheduler.getDefault()) {
-                OutputScheduler.getDefault().notify();
+                OutputScheduler.getDefault().notifyAll();
             }
         }
     }
