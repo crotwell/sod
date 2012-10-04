@@ -21,6 +21,7 @@ import edu.sc.seis.fissuresUtil.chooser.ThreadSafeSimpleDateFormat;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.mseed.FissuresConvert;
 import edu.sc.seis.seisFile.SeisFileException;
+import edu.sc.seis.seisFile.dataSelectWS.BulkDataSelectReader;
 import edu.sc.seis.seisFile.dataSelectWS.DataSelectReader;
 import edu.sc.seis.seisFile.mseed.DataRecord;
 import edu.sc.seis.seisFile.mseed.SeedFormatException;
@@ -58,31 +59,58 @@ public class DataSelectWebService implements SeismogramSourceLocator {
             public List<LocalSeismogramImpl> retrieveData(List<RequestFilter> request) throws FissuresException {
                 try {
                     List<LocalSeismogramImpl> out = new ArrayList<LocalSeismogramImpl>();
-                    DataSelectReader dsReader = new DataSelectReader(baseUrl, timeoutMillis);
-                    dsReader.setUserAgent("SOD/"+BuildVersion.getVersion());
-                    for (RequestFilter rf : request) {
-                        MicroSecondDate start = new MicroSecondDate(rf.start_time);
-                        List<DataRecord> records =  dsReader.read(rf.channel_id.network_id.network_code,
-                                                              rf.channel_id.station_code,
-                                                              rf.channel_id.site_code, 
-                                                              rf.channel_id.channel_code, 
-                                                              start,
-                                                              new MicroSecondDate(rf.end_time));
-                        for (DataRecord dr : records) {
-                            if ( ! (rf.channel_id.network_id.network_code.equals(dr.getHeader().getNetworkCode().trim()) &&
-                                    rf.channel_id.station_code.equals(dr.getHeader().getStationIdentifier().trim()) &&
-                                    rf.channel_id.site_code.equals(dr.getHeader().getLocationIdentifier().trim()) &&
-                                    rf.channel_id.channel_code.equals(dr.getHeader().getChannelIdentifier().trim()))) {
-                                throw new RuntimeException("Request: "+RequestFilterUtil.toString(rf)+" did not return matching data: "+dr.toString());
-                            }
+                    if (doBulk) {
+                    if (request.size() != 0) {
+                        BulkDataSelectReader dsReader = new BulkDataSelectReader(baseUrl, timeoutMillis);
+                        dsReader.setUserAgent("SOD/"+BuildVersion.getVersion());
+                        String query = "";
+                        for (RequestFilter rf : request) {
+                            MicroSecondDate start = new MicroSecondDate(rf.start_time);
+                            query += dsReader.createQuery(rf.channel_id.network_id.network_code,
+                                                          rf.channel_id.station_code,
+                                                          rf.channel_id.site_code, 
+                                                          rf.channel_id.channel_code, 
+                                                          start,
+                                                          new MicroSecondDate(rf.end_time));
                         }
+                        List<DataRecord> records =  dsReader.read(query);
                         List<LocalSeismogramImpl> perRFList = FissuresConvert.toFissures(records);
+                        RequestFilter rf = request.get(0);
                         for (LocalSeismogramImpl seis : perRFList) {
                             // the DataRecords know nothing about channel or network begin times, so use the request
                             seis.channel_id.begin_time = rf.channel_id.begin_time;
                             seis.channel_id.network_id.begin_time = rf.channel_id.network_id.begin_time;
                         }
                         out.addAll(perRFList);
+                    }
+                    } else {
+                        // nonbulk web service (uses more DMC resources, but easier as is GET instead of POST
+                        DataSelectReader dsReader = new DataSelectReader(baseUrl, timeoutMillis);
+                        dsReader.setUserAgent("SOD/"+BuildVersion.getVersion());
+                        for (RequestFilter rf : request) {
+                            MicroSecondDate start = new MicroSecondDate(rf.start_time);
+                            List<DataRecord> records =  dsReader.read(rf.channel_id.network_id.network_code,
+                                                                  rf.channel_id.station_code,
+                                                                  rf.channel_id.site_code, 
+                                                                  rf.channel_id.channel_code, 
+                                                                  start,
+                                                                  new MicroSecondDate(rf.end_time));
+                            for (DataRecord dr : records) {
+                                if ( ! (rf.channel_id.network_id.network_code.equals(dr.getHeader().getNetworkCode().trim()) &&
+                                        rf.channel_id.station_code.equals(dr.getHeader().getStationIdentifier().trim()) &&
+                                        rf.channel_id.site_code.equals(dr.getHeader().getLocationIdentifier()) &&
+                                        rf.channel_id.channel_code.equals(dr.getHeader().getChannelIdentifier().trim()))) {
+                                    throw new RuntimeException("Request: "+RequestFilterUtil.toString(rf)+" did not return matching data: "+dr.toString());
+                                }
+                            }
+                            List<LocalSeismogramImpl> perRFList = FissuresConvert.toFissures(records);
+                            for (LocalSeismogramImpl seis : perRFList) {
+                                // the DataRecords know nothing about channel or network begin times, so use the request
+                                seis.channel_id.begin_time = rf.channel_id.begin_time;
+                                seis.channel_id.network_id.begin_time = rf.channel_id.network_id.begin_time;
+                            }
+                            out.addAll(perRFList);
+                        }
                     }
                     return out;
                 } catch(IOException e) {
@@ -103,7 +131,9 @@ public class DataSelectWebService implements SeismogramSourceLocator {
     
     protected String baseUrl;
 
-    public static final String DEFAULT_WS_URL = "http://www.iris.edu/ws/dataselect/query";
+    protected boolean doBulk = true;
+    public static final String DEFAULT_WS_URL = BulkDataSelectReader.DEFAULT_WS_URL;
+  //  public static final String DEFAULT_WS_URL = DataSelectReader.DEFAULT_WS_URL;
     
     public static ThreadSafeSimpleDateFormat longFormat = new ThreadSafeSimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", TimeZone.getTimeZone("GMT"));
 
