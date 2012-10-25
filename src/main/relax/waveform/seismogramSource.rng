@@ -22,7 +22,9 @@
         <element name="fixedDataCenter">
             <xsd:annotation>
                 <summary>Pick a central data repository</summary>
-                <description>This specifies the data center to use.
+                <description>
+                <deprecated>DHI servers at the IRIS DMC will be turned off June 2013. The dataSelectWebService is the replacement.</deprecated>
+                    This specifies the data center to use.
                     See <a href="http://www.seis.sc.edu/wily/GetAllServers?corbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService&amp;description=IRIS nameserver">Wily</a>
                     for a complete list of SeismogramDCs and their current status.</description>
             </xsd:annotation>
