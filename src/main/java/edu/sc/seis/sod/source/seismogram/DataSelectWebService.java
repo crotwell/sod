@@ -31,6 +31,11 @@ import edu.sc.seis.sod.SodUtil;
 
 public class DataSelectWebService implements SeismogramSourceLocator {
 
+    public DataSelectWebService() throws MalformedURLException {
+        baseUrl = DEFAULT_WS_URL;
+        timeoutMillis = 30*1000;
+    }
+    
     public DataSelectWebService(Element config) throws MalformedURLException {
         this(config, DEFAULT_WS_URL);
     }
@@ -129,7 +134,7 @@ public class DataSelectWebService implements SeismogramSourceLocator {
     
     protected int timeoutMillis;
     
-    protected String baseUrl;
+    protected String baseUrl = DEFAULT_WS_URL;
 
     protected boolean doBulk = true;
     public static final String DEFAULT_WS_URL = BulkDataSelectReader.DEFAULT_WS_URL;
