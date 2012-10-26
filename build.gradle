@@ -129,7 +129,8 @@ def getDExtras() {
                 'org.omg.CORBA.ORBClass':'org.jacorb.orb.ORB', 
                 'swing.volatileImageBufferEnabled':'false', 
                 'java.endorsed.dirs':'${LIB}/endorsed', 
-                'jacorb.connection.client.pending_reply_timeout':'120000',
+                'jacorb.connection.client.pending_reply_timeout':'20000',
+                'jacorb.connection.client.idle_timeout':'90000',
                 'jacorb.home':'${SOD_HOME}' ,
                 'jacorb.log.default.verbosity':'2' ]
 }
