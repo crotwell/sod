@@ -1,5 +1,7 @@
 package edu.sc.seis.sod.velocity.network;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.apache.velocity.VelocityContext;
@@ -40,6 +42,9 @@ public class VelocityNetwork extends NetworkAttr {
     public VelocityNetwork(NetworkAttrImpl net, List<VelocityStation> stations) {
         this.net = net;
         this.stations = stations;
+        if (stations != null) {
+            Collections.sort(this.stations, byCodeSorter);
+        }
         this.setName(net.getName());
         this.setDescription(net.getDescription());
         this.setOwner(net.getOwner());
@@ -160,4 +165,11 @@ public class VelocityNetwork extends NetworkAttr {
         }
         return new VelocityNetwork((NetworkAttrImpl)net);
     }
+    
+    Comparator<VelocityStation> byCodeSorter = new Comparator<VelocityStation>() {
+        @Override
+        public int compare(VelocityStation sta0, VelocityStation sta1) {
+            return sta0.get_code().compareTo(sta1.get_code());
+        }
+    };
 }
