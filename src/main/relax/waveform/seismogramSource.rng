@@ -192,6 +192,12 @@
                 <description>This specifies a IRIS DMC dataselect web service.
                     </description>
             </xsd:annotation>
+            <interleave>
+            <optional>
+                <element name="dobulk">
+                    <data type="string"/>
+                </element>
+            </optional>
             <optional>
                 <element name="url">
                     <data type="string"/>
@@ -207,6 +213,7 @@
                     <data type="string"/>
                 </element>
             </optional>
+            </interleave>
         </element>
     </define>
 </grammar>
