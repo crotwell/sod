@@ -193,26 +193,26 @@
                     </description>
             </xsd:annotation>
             <interleave>
-            <optional>
-                <element name="dobulk">
-                    <data type="string"/>
-                </element>
-            </optional>
-            <optional>
-                <element name="url">
-                    <data type="string"/>
-                </element>
-            </optional>
-            <optional>
-                <element name="user">
-                    <data type="string"/>
-                </element>
-            </optional>
-            <optional>
-                <element name="password">
-                    <data type="string"/>
-                </element>
-            </optional>
+                <optional>
+                    <element name="dobulk">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="url">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="user">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="password">
+                        <data type="string"/>
+                    </element>
+                </optional>
             </interleave>
         </element>
     </define>
