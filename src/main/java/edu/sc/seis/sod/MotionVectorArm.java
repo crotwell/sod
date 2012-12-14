@@ -297,6 +297,9 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                         return;
                     }
                     Channel ecpChan = ecp.getChannelGroup().getChannels()[i];
+                    if (localSeismograms[i][j].channel_id.site_code.equals("")) {
+                        localSeismograms[i][j].channel_id.site_code = "  ";
+                    }
                     if (!ChannelIdUtil.areEqual(localSeismograms[i][j].channel_id, ecpChan.get_id())) {
                         // must be server error
                         logger.warn("Channel id in returned seismogram doesn not match channelid in request. req="
