@@ -34,6 +34,7 @@ import edu.sc.seis.sod.process.waveform.vector.WaveformVectorProcessWrapper;
 import edu.sc.seis.sod.process.waveform.vector.WaveformVectorResult;
 import edu.sc.seis.sod.source.seismogram.DataCenterSource;
 import edu.sc.seis.sod.source.seismogram.SeismogramSource;
+import edu.sc.seis.sod.source.seismogram.SeismogramSourceException;
 import edu.sc.seis.sod.source.seismogram.SeismogramSourceLocator;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.StringTree;
@@ -284,7 +285,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
             } catch(org.omg.CORBA.SystemException e) {
                 handle(ecp, Stage.DATA_RETRIEVAL, e, seismogramSource, requestToString(infilters, outfilters));
                 return;
-            } catch(FissuresException e) {
+            } catch(SeismogramSourceException e) {
                 handle(ecp, Stage.DATA_RETRIEVAL, e, seismogramSource, requestToString(infilters, outfilters));
                 return;
             }
@@ -406,7 +407,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
     }
 
     private LocalSeismogram[][] getData(EventVectorPair ecp, RequestFilter[][] rf, SeismogramSource seismogramSource)
-            throws FissuresException {
+            throws SeismogramSourceException {
         LocalSeismogram[][] localSeismograms = new LocalSeismogram[rf.length][];
         for (int i = 0; i < rf.length; i++) {
             if (rf[i].length != 0) {

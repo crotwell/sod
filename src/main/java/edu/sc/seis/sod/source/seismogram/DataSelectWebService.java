@@ -22,6 +22,7 @@ import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.mseed.FissuresConvert;
 import edu.sc.seis.seisFile.SeisFileException;
 import edu.sc.seis.seisFile.dataSelectWS.BulkDataSelectReader;
+import edu.sc.seis.seisFile.dataSelectWS.DataSelectException;
 import edu.sc.seis.seisFile.dataSelectWS.DataSelectReader;
 import edu.sc.seis.seisFile.mseed.DataRecord;
 import edu.sc.seis.seisFile.mseed.SeedFormatException;
@@ -31,7 +32,7 @@ import edu.sc.seis.sod.SodUtil;
 
 public class DataSelectWebService implements SeismogramSourceLocator {
 
-    public DataSelectWebService() throws MalformedURLException {
+    public DataSelectWebService() {
         baseUrl = DEFAULT_WS_URL;
         timeoutMillis = 30*1000;
     }
@@ -41,6 +42,7 @@ public class DataSelectWebService implements SeismogramSourceLocator {
     }
 
     public DataSelectWebService(Element config, String defaultURL) throws MalformedURLException {
+        doBulk = SodUtil.isTrue(config, "dobulk");
         baseUrl = SodUtil.loadText(config, "url", defaultURL);
         String user = SodUtil.loadText(config, "user", "");
         String password = SodUtil.loadText(config, "password", "");
@@ -61,7 +63,7 @@ public class DataSelectWebService implements SeismogramSourceLocator {
                 return request;
             }
 
-            public List<LocalSeismogramImpl> retrieveData(List<RequestFilter> request) throws FissuresException {
+            public List<LocalSeismogramImpl> retrieveData(List<RequestFilter> request) throws SeismogramSourceException {
                 try {
                     List<LocalSeismogramImpl> out = new ArrayList<LocalSeismogramImpl>();
                     if (doBulk) {
@@ -120,13 +122,18 @@ public class DataSelectWebService implements SeismogramSourceLocator {
                     return out;
                 } catch(IOException e) {
                     GlobalExceptionHandler.handle(e);
-                    throw new FissuresException(e.getMessage(), new edu.iris.Fissures.Error(1, "IOException"));
+                    throw new SeismogramSourceException(e);
                 } catch(SeedFormatException e) {
                     GlobalExceptionHandler.handle(e);
-                    throw new FissuresException(e.getMessage(), new edu.iris.Fissures.Error(1, "SeedFormatException")); 
+                    throw new SeismogramSourceException(e); 
+                } catch(DataSelectException e) {
+                    // treat DataSelectException like corba comm failure
+                    throw new SeismogramSourceException(e);
                 } catch(SeisFileException e) {
                     GlobalExceptionHandler.handle(e);
-                    throw new FissuresException(e.getMessage(), new edu.iris.Fissures.Error(1, "DataSelectException")); 
+                    throw new SeismogramSourceException(e); 
+                } catch(FissuresException e) {
+                    throw new SeismogramSourceException(e);
                 }
             }
         };
@@ -137,6 +144,7 @@ public class DataSelectWebService implements SeismogramSourceLocator {
     protected String baseUrl = DEFAULT_WS_URL;
 
     protected boolean doBulk = true;
+    
     public static final String DEFAULT_WS_URL = BulkDataSelectReader.DEFAULT_WS_URL;
   //  public static final String DEFAULT_WS_URL = DataSelectReader.DEFAULT_WS_URL;
     

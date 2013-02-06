@@ -88,7 +88,7 @@ class TryInOrderSource implements SeismogramSource {
     }
 
     @Override
-    public List<LocalSeismogramImpl> retrieveData(List<RequestFilter> request) throws FissuresException {
+    public List<LocalSeismogramImpl> retrieveData(List<RequestFilter> request) throws SeismogramSourceException {
         checkBestSet();
         return best.retrieveData(request);
     }

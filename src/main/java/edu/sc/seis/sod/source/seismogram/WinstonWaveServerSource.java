@@ -17,9 +17,9 @@ import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.iris.Fissures.seismogramDC.RequestFilterUtil;
 import edu.iris.Fissures.seismogramDC.SeismogramAttrImpl;
 import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
+import edu.sc.seis.seisFile.earthworm.TraceBuf2;
 import edu.sc.seis.seisFile.waveserver.MenuItem;
 import edu.sc.seis.seisFile.waveserver.WaveServer;
-import edu.sc.seis.seisFile.winston.TraceBuf2;
 
 public class WinstonWaveServerSource implements SeismogramSource {
      
@@ -77,7 +77,7 @@ public class WinstonWaveServerSource implements SeismogramSource {
     }
 
     @Override
-    public List<LocalSeismogramImpl> retrieveData(List<RequestFilter> request) throws FissuresException {
+    public List<LocalSeismogramImpl> retrieveData(List<RequestFilter> request) throws SeismogramSourceException {
         List<LocalSeismogramImpl> out = new ArrayList<LocalSeismogramImpl>();
         for (RequestFilter rf : request) {
             try {
@@ -94,7 +94,7 @@ public class WinstonWaveServerSource implements SeismogramSource {
                     out.add(toFissures(buf, rf.channel_id));
                 }
             } catch(IOException e) {
-                throw new RuntimeException("unable to get TraceBuf from WaveServer("+ws.getHost()+", "+ws.getPort()+") for "+RequestFilterUtil.toString(rf), e);
+                throw new SeismogramSourceException("unable to get TraceBuf from WaveServer("+ws.getHost()+", "+ws.getPort()+") for "+RequestFilterUtil.toString(rf), e);
             }
         }
         return out;

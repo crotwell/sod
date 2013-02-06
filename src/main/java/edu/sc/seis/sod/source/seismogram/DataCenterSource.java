@@ -23,8 +23,9 @@ public class DataCenterSource implements SeismogramSource {
     }
 
     @Override
-    public List<LocalSeismogramImpl> retrieveData(List<RequestFilter> request) throws FissuresException {
-        RequestFilter[] infilters = toArray(request);
+    public List<LocalSeismogramImpl> retrieveData(List<RequestFilter> request) throws SeismogramSourceException {
+        try {
+            RequestFilter[] infilters = toArray(request);
         LocalSeismogram[] localSeismograms = new LocalSeismogram[0];
         logger.debug("before retrieve_seismograms");
         NSSeismogramDC nsDC = (NSSeismogramDC)seisDC.getWrappedDC(NSSeismogramDC.class);
@@ -47,9 +48,8 @@ public class DataCenterSource implements SeismogramSource {
                 localSeismograms = seisDC.retrieve_queue(id);
             } else if (status.equals(RETRIEVING_DATA)) {
                 seisDC.cancel_request(id);
-                throw new FissuresException("Looks like the archive lost request ID " + id
-                                                    + ".  No data was returned after " + i + " minutes. ",
-                                            new edu.iris.Fissures.Error(1, "Timeout waiting on archive"));
+                throw new SeismogramSourceException("Looks like the archive lost request ID " + id
+                                                    + ".  No data was returned after " + i + " minutes. ");
             }
         } else {
             localSeismograms = seisDC.retrieve_seismograms(infilters);
@@ -68,6 +68,9 @@ public class DataCenterSource implements SeismogramSource {
             out.add((LocalSeismogramImpl)fromServer[i]);
         }
         return out;
+        } catch(FissuresException e) {
+            throw new SeismogramSourceException(e);
+        }
     }
 
     public ProxySeismogramDC getDataCenter() {

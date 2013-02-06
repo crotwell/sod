@@ -26,6 +26,7 @@ import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.process.waveform.WaveformResult;
 import edu.sc.seis.sod.source.seismogram.DataCenterSource;
 import edu.sc.seis.sod.source.seismogram.SeismogramSource;
+import edu.sc.seis.sod.source.seismogram.SeismogramSourceException;
 import edu.sc.seis.sod.source.seismogram.SeismogramSourceLocator;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
@@ -244,7 +245,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                 
                 try {
                     localSeismograms = DataCenterSource.toSeisArray(dataCenter.retrieveData(DataCenterSource.toList(infilters)));
-                } catch(FissuresException e) {
+                } catch(SeismogramSourceException e) {
                     MotionVectorArm.handle(ecp, Stage.DATA_RETRIEVAL, e, dataCenter, requestToString(infilters, outfilters));
                     return;
                 } catch(org.omg.CORBA.SystemException e) {
