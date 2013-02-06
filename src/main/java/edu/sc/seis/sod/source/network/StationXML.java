@@ -67,25 +67,33 @@ public class StationXML implements NetworkSource {
             try {
                 parsedURL = new URI(url);
                 List<String> split = new ArrayList<String>();
-                String[] splitArray = parsedURL.getQuery().split("&");
-                for (String s : splitArray) {
-                    String[] nvSplit = s.split("=");
-                    if ( ! nvSplit[0].equals("level")) {
-                        // zap level as we do that ourselves
-                        split.add(s);
+                if (parsedURL.getQuery() != null) {
+                    String[] splitArray = parsedURL.getQuery().split("&");
+                    for (String s : splitArray) {
+                        String[] nvSplit = s.split("=");
+                        if (!nvSplit[0].equals("level")) {
+                            // zap level as we do that ourselves
+                            split.add(s);
+                        }
                     }
-                }
-                String newQuery = "";
-                boolean first = true;
-                for (String s : split) {
-                    if (!first) {
-                        newQuery += "&";
+                    String newQuery = "";
+                    boolean first = true;
+                    for (String s : split) {
+                        if (!first) {
+                            newQuery += "&";
+                        }
+                        newQuery += s;
+                        first = false;
                     }
-                    newQuery += s;
-                    first = false;
+                    parsedURL = new URI(parsedURL.getScheme(),
+                                        parsedURL.getUserInfo(),
+                                        parsedURL.getHost(),
+                                        parsedURL.getPort(),
+                                        parsedURL.getPath(),
+                                        newQuery,
+                                        parsedURL.getFragment());
+                    url = parsedURL.toURL().toString();
                 }
-                parsedURL = new URI(parsedURL.getScheme(), parsedURL.getUserInfo(), parsedURL.getHost(), parsedURL.getPort(), parsedURL.getPath(), newQuery, parsedURL.getFragment());
-                url = parsedURL.toURL().toString();
             } catch(URISyntaxException e) {
                 throw new ConfigurationException("Invalid <url> element found.", e);
             } catch(MalformedURLException e) {
