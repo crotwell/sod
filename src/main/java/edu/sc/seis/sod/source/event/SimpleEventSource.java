@@ -11,7 +11,7 @@ public abstract class SimpleEventSource implements EventSource {
     public abstract CacheEvent[] getEvents();
 
     public boolean hasNext() {
-        return !hasNextBeenCalled;
+        return ! hasNextBeenCalled;
     }
 
     public CacheEvent[] next() {
@@ -22,6 +22,9 @@ public abstract class SimpleEventSource implements EventSource {
     }
 
     public TimeInterval getWaitBeforeNext() {
+        if (hasNextBeenCalled) {
+          throw new RuntimeException("SHouldn't happen");
+        }
         return new TimeInterval(0, UnitImpl.SECOND);
     }
 
