@@ -109,13 +109,17 @@ public class EventArm implements Arm {
     private void getEvents() throws Exception {
         waitForProcessing();
         for (EventSource source : sources) {
-            TimeInterval wait = source.getWaitBeforeNext();
+            TimeInterval wait = waitInterval.get(source);
+            if (wait == null) {wait = new TimeInterval(0, UnitImpl.SECOND);}
             if ((lastTime.get(source) == null || lastTime.get(source).add(wait).before(ClockUtil.now()))
                     && source.hasNext()) {
                 CacheEvent[] next = source.next();
                 logger.info("Handling " + next.length + " events from " + source.getDescription());
                 handle(next);
                 lastTime.put(source, ClockUtil.now());
+                if (source.hasNext()) {
+                    waitInterval.put(source, source.getWaitBeforeNext());
+                }
                 waitForProcessing();
                 if (waitForWaveformProcessing && Start.isArmFailure()) {
                     // we are supposed to wait for the waveform arm to process,
@@ -133,9 +137,12 @@ public class EventArm implements Arm {
         TimeInterval minWait = null;
         for (EventSource source : sources) {
             if (source.hasNext() && lastTime.get(source) != null) {
-                TimeInterval tmpWait = lastTime.get(source).add(source.getWaitBeforeNext()).subtract(ClockUtil.now());
-                if (minWait == null || tmpWait.lessThan(minWait)) {
-                    minWait = tmpWait;
+                TimeInterval wait = waitInterval.get(source);
+                if (wait != null) {
+                    TimeInterval tmpWait = lastTime.get(source).add(wait).subtract(ClockUtil.now());
+                    if (minWait == null || tmpWait.lessThan(minWait)) {
+                        minWait = tmpWait;
+                    }
                 }
             }
         }
@@ -316,6 +323,8 @@ public class EventArm implements Arm {
     private final Object waveformArmSync = new Object();
 
     private HashMap<EventSource, MicroSecondDate> lastTime = new HashMap<EventSource, MicroSecondDate>();
+    
+    private HashMap<EventSource, TimeInterval> waitInterval = new HashMap<EventSource, TimeInterval>();
 
     private List<EventSource> sources = new ArrayList<EventSource>();
 

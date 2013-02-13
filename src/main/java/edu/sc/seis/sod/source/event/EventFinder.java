@@ -44,14 +44,14 @@ public class EventFinder extends AbstractSource implements EventSource {
 	}
     
     public String getDescription() {
-        return "EventFinder Source: "+getDNS()+" "+getName();
+        return "EventFinder Source: "+getDNS()+" "+getUniqueName()+" "+eventTimeRange.getMSTR()+" "+querier.getMagRange().getMinValue();
     }
     
 	public boolean hasNext() {
 		MicroSecondDate queryEnd = getEventTimeRange().getEndTime();
 		MicroSecondDate quitDate = queryEnd.add(lag);
 		logger
-				.debug("Checking if more queries to the event server are in order.  The quit date is "
+				.debug(getUniqueName()+" Checking if more queries to the event server are in order.  The quit date is "
 						+ quitDate
 						+ " the last query was for "
 						+ getQueryStart()
@@ -63,9 +63,15 @@ public class EventFinder extends AbstractSource implements EventSource {
 	}
 
 	private CacheEvent[] internalNext() {
+	    MicroSecondDate now = ClockUtil.now();
         MicroSecondTimeRange queryTime = getQueryTime();
 	    CacheEvent[] results = querier.query(queryTime);
         logger.debug("Retrieved"+results.length+" events for time range "+queryTime);
+        if (caughtUpWithRealtime() && hasNext()) {
+            sleepUntilTime = now.add(refreshInterval);
+            logger.debug("set sleepUntilTime "+sleepUntilTime);
+            resetQueryTimeForLag();
+        }
         updateQueryEdge(queryTime);
         return results;
 	}
@@ -99,17 +105,16 @@ public class EventFinder extends AbstractSource implements EventSource {
 	}
 
 	public TimeInterval getWaitBeforeNext() {
-		if (caughtUpWithRealtime() && hasNext()) {
-			resetQueryTimeForLag();
-			return refreshInterval;
-		}
+	    if (sleepUntilTime != null) {
+            logger.debug(getUniqueName()+" "+"sleeping caught up, "+refreshInterval+" "+sleepUntilTime);
+	        return sleepUntilTime.subtract(ClockUtil.now());
+	    }
 		return new TimeInterval(0, UnitImpl.SECOND);
 	}
 
 	protected boolean caughtUpWithRealtime() {
-		return ClockUtil.now().subtract(getQueryStart()).lessThan(
-				refreshInterval)
-				|| getQueryStart().equals(getEventTimeRange().getEndTime());
+		return ClockUtil.now().subtract(refreshInterval).before(getQueryStart())
+				|| getQueryStart().add(new TimeInterval(10, UnitImpl.SECOND)).after(getEventTimeRange().getEndTime());
 	}
 
 	public MicroSecondTimeRange getEventTimeRange() {
@@ -196,10 +201,14 @@ public class EventFinder extends AbstractSource implements EventSource {
 	private EventDCQuerier querier;
 
 	private MicroSecondTimeRangeSupplier eventTimeRange;
+	
+	private MicroSecondDate sleepUntilTime = null;
 
 	private static Logger logger = LoggerFactory.getLogger(EventFinder.class);
 
-	protected TimeInterval increment, lag, refreshInterval;
-
+	protected TimeInterval increment, lag;
+	
+	protected TimeInterval refreshInterval = new TimeInterval(10, UnitImpl.MINUTE);
+	
 	private RetryStrategy retryStrat = Start.createRetryStrategy(getRetries());
 }// EventFinder
