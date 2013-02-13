@@ -189,6 +189,46 @@ public class EventDCQuerier {
 
     public int getRetries() {return numRetries;}
     
+    
+    public String[] getCatalogs() {
+        return catalogs;
+    }
+
+    
+    public String[] getContributors() {
+        return contributors;
+    }
+
+    
+    public Quantity getMinDepth() {
+        return minDepth;
+    }
+
+    
+    public Quantity getMaxDepth() {
+        return maxDepth;
+    }
+
+    
+    public String getServerName() {
+        return serverName;
+    }
+
+    
+    public String getServerDNS() {
+        return serverDNS;
+    }
+
+    
+    public MagnitudeRange getMagRange() {
+        return magRange;
+    }
+
+    
+    public edu.iris.Fissures.Area getArea() {
+        return area;
+    }
+
     private int sequenceMaximum = 100;
 
     private ProxyEventDC eventDC;
