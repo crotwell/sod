@@ -34,8 +34,8 @@ import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.source.event.EventSource;
 import edu.sc.seis.sod.source.network.InstrumentationFromDB;
 import edu.sc.seis.sod.source.network.LoadedNetworkSource;
-import edu.sc.seis.sod.source.network.NetworkFinder;
 import edu.sc.seis.sod.source.network.NetworkSource;
+import edu.sc.seis.sod.source.network.StationXML;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.networkArm.NetworkMonitor;
@@ -683,7 +683,7 @@ public class NetworkArm implements Arm {
         }
     }
 
-    private NetworkSource internalFinder = new NetworkFinder("edu/iris/dmc", "IRIS_NetworkDC", -1);
+    private NetworkSource internalFinder = new StationXML();
 
     private NetworkSource finder = new InstrumentationFromDB(internalFinder);
     

@@ -60,7 +60,10 @@ import edu.sc.seis.sod.SodUtil;
 
 
 public class StationXML implements NetworkSource {
-    
+
+    public StationXML() {
+        url = "http://www.iris.edu/ws/station/query?";
+    }
     public StationXML(Element config) throws ConfigurationException {
         if (DOMHelper.hasElement(config, URL_ELEMENT)) {
             url = SodUtil.getNestedText(SodUtil.getElement(config, URL_ELEMENT));
