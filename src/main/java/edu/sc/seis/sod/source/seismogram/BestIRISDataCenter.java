@@ -26,7 +26,6 @@ public class BestIRISDataCenter implements SeismogramSourceLocator {
             Magnitude usgsMw = null;
             Magnitude[] mags = event.getPreferred().getMagnitudes();
             for (int i = 0; i < mags.length; i++) {
-                System.out.println("BestIRISDataCenter "+i+" "+mags[i].value+" "+mags[i].type+" "+mags[i].contributor);
                 if (mags[i].contributor.equalsIgnoreCase("usgs") && mags[i].type.equalsIgnoreCase("mw")) {
                     usgsMw = mags[i];
                 }
