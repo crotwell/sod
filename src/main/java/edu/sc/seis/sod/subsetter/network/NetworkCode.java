@@ -29,7 +29,9 @@ public class NetworkCode implements NetworkSubsetter {
 
     public StringTree accept(NetworkAttrImpl attr) throws Exception {
         if(attr.get_code().equals(desiredCode)
-                && (year == null || year.equals(NetworkIdUtil.getTwoCharYear(attr.get_id())))) {
+                && (year == null ||
+                        (year.length() == 2 && year.equals(NetworkIdUtil.getTwoCharYear(attr.get_id()))) ||
+                        (year.length() == 4 && year.equals(NetworkIdUtil.getYear(attr.get_id()))))) {
             return new Pass(this);
         }
         return new Fail(this);
