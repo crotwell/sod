@@ -29,7 +29,7 @@ import edu.sc.seis.fissuresUtil.bag.IterDecon;
 import edu.sc.seis.fissuresUtil.bag.IterDeconResult;
 import edu.sc.seis.fissuresUtil.bag.Rotate;
 import edu.sc.seis.fissuresUtil.bag.TauPUtil;
-import edu.sc.seis.fissuresUtil.bag.opencl.ZeroPowerException;
+import edu.sc.seis.fissuresUtil.bag.ZeroPowerException;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
