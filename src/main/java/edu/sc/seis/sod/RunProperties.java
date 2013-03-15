@@ -68,16 +68,16 @@ public class RunProperties {
 			if (evChanPairProcChild != null) {
 				evChanPairProc = SodUtil.getText(evChanPairProcChild);
 			}
-			if (SodUtil.isTrue(el, "reopenEvents")) {
+			if (SodUtil.isTrue(el, "reopenEvents", false)) {
 				reopenEvents = true;
 			}
-			if (SodUtil.isTrue(el, "removeDatabase")) {
+			if (SodUtil.isTrue(el, "removeDatabase", false)) {
 				removeDatabase = true;
 			}
-            if ( ! SodUtil.isTrue(el, "warnIfDatabaseExists")) {
+            if ( ! SodUtil.isTrue(el, "warnIfDatabaseExists", true)) {
                 warnIfDatabaseExists = false;   // default is true
             }
-			if (SodUtil.isTrue(el, "statusPages")) {
+			if (SodUtil.isTrue(el, "statusPages", false)) {
 				statusPages = true;
 			}
 			if (DOMHelper.hasElement(el, "checkpointPeriodically")) {

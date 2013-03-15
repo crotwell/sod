@@ -42,7 +42,7 @@ public class DataSelectWebService implements SeismogramSourceLocator {
     }
 
     public DataSelectWebService(Element config, String defaultURL) throws MalformedURLException {
-        doBulk = SodUtil.isTrue(config, "dobulk");
+        doBulk = SodUtil.isTrue(config, "dobulk", true);
         if (doBulk) {
             baseUrl = SodUtil.loadText(config, "url", BulkDataSelectReader.DEFAULT_WS_URL);
         } else {
@@ -147,7 +147,7 @@ public class DataSelectWebService implements SeismogramSourceLocator {
     
     protected String baseUrl = DEFAULT_WS_URL;
 
-    protected boolean doBulk = true;
+    protected boolean doBulk;
     
     public static final String DEFAULT_WS_URL = BulkDataSelectReader.DEFAULT_WS_URL;
   //  public static final String DEFAULT_WS_URL = DataSelectReader.DEFAULT_WS_URL;
