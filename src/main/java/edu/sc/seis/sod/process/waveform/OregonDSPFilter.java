@@ -172,9 +172,12 @@ public class OregonDSPFilter implements WaveformProcess {
     }
     
     protected void setLowFreqCorner(QuantityImpl lowFreqCorner) {
-        this.lowFreqCorner = lowFreqCorner;
         if (lowFreqCorner != null && lowFreqCorner.get_unit().isConvertableTo(UnitImpl.SECOND)) {
-            lowFreqCorner = lowFreqCorner.inverse();
+            this.lowFreqCorner = lowFreqCorner.inverse();
+        } else if (lowFreqCorner != null && lowFreqCorner.get_unit().isConvertableTo(UnitImpl.HERTZ)) {
+            this.lowFreqCorner = lowFreqCorner;
+        } else {
+            throw new IllegalArgumentException("Corner freq must be convertible to SECONDS or HERTZ, but was: "+lowFreqCorner.get_unit());
         }
     }
 
@@ -183,9 +186,12 @@ public class OregonDSPFilter implements WaveformProcess {
     }
     
     protected void setHighFreqCorner(QuantityImpl highFreqCorner) {
-        this.highFreqCorner = highFreqCorner;
         if (highFreqCorner != null && highFreqCorner.get_unit().isConvertableTo(UnitImpl.SECOND)) {
-            highFreqCorner = highFreqCorner.inverse();
+            this.highFreqCorner = highFreqCorner.inverse();
+        } else if (highFreqCorner != null && highFreqCorner.get_unit().isConvertableTo(UnitImpl.HERTZ)) {
+            this.highFreqCorner = highFreqCorner;
+        } else {
+            throw new IllegalArgumentException("Corner freq must be convertible to SECONDS or HERTZ, but was: "+highFreqCorner.get_unit());
         }
     }
 
