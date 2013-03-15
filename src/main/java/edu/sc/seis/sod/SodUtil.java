@@ -74,9 +74,11 @@ import edu.sc.seis.sod.subsetter.station.StationSubsetter;
 
 public class SodUtil {
 
-    public static boolean isTrue(Element el, String tagName) {
+    public static boolean isTrue(Element el, String tagName, boolean defaultResult) {
         Element booleanElement = getElement(el, tagName);
-        if(booleanElement != null && isTrueText(getNestedText(booleanElement))) {
+        if(booleanElement == null) {
+            return defaultResult;
+        } else if (isTrueText(getNestedText(booleanElement))) {
             return true;
         }
         return false;
