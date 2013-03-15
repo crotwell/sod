@@ -15,6 +15,7 @@
             <ref name="periodicFakeEventSource"/>
             <ref name="nowFakeEventSource"/>
             <ref name="delayedEventSource"/>
+            <ref name="quakeML"/>
         </choice>
     </define>
     <define name="eventFinder">
@@ -79,6 +80,51 @@
                 </xsd:documentation>
             </xsd:annotation>
             <empty/>
+        </element>
+    </define>
+    <define name="quakeML">
+        <element name="quakeML">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Querys events from a QuakeML web service or file.</summary>
+                </xsd:documentation>
+            </xsd:annotation>
+            <interleave>
+                <optional>
+                    <element name="url">
+                        <xsd:annotation>
+                          <summary>A QuakeML URL</summary>
+                          <description>A url to a quakeml event source, either a web service or file.</description>
+                         </xsd:annotation>
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <choice>
+                       <ref name="globalArea"/>
+                       <ref name="boxArea"/>
+                       <ref name="pointDistance"/>
+                   </choice>
+               </optional>
+                <optional>
+                    <ref name="originDepthRange"/>
+                </optional>
+                <optional>
+               <choice>
+                   <ref name="originTimeRange"/>
+                   <ref name="networkTimeRange"/>
+               </choice>
+                </optional>
+                <optional>
+                    <ref name="magnitudeRange"/>
+                </optional>
+                <zeroOrMore>
+                    <ref name="catalog"/>
+                </zeroOrMore>
+                <zeroOrMore>
+                    <ref name="contributor"/>
+                </zeroOrMore>
+            </interleave>
         </element>
     </define>
     <define name="backwardsEventFinder">
