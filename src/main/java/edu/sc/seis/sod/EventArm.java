@@ -176,9 +176,10 @@ public class EventArm implements Arm {
     static int MIN_WAIT_EVENTS = 10;
 
     private void waitForProcessing() throws Exception {
+        if ( ! waitForWaveformProcessing) { return; }
         int numWaiting = eventStatus.getNumWaiting();
         logger.debug("Event wait: numWaiting = " + numWaiting + " should be < " + MIN_WAIT_EVENTS);
-        while (!Start.isArmFailure() && waitForWaveformProcessing && numWaiting > MIN_WAIT_EVENTS) {
+        while (!Start.isArmFailure() && numWaiting > MIN_WAIT_EVENTS) {
             synchronized(this) {
                 setStatus("eventArm waiting until there are less than " + MIN_WAIT_EVENTS
                         + " events waiting to be processed. " + numWaiting + " in queue now.");
@@ -193,7 +194,7 @@ public class EventArm implements Arm {
         }
         // less events, but maybe lots of event-network pairs
         int numENPWaiting = SodDB.getSingleton().getNumEventNetworkWorkUnits(Standing.INIT);
-        while (!Start.isArmFailure() && waitForWaveformProcessing && numWaiting + numENPWaiting > MIN_WAIT_EVENTS) {
+        while (!Start.isArmFailure() && numWaiting + numENPWaiting > MIN_WAIT_EVENTS) {
             synchronized(this) {
                 setStatus("eventArm waiting until there are less than " + MIN_WAIT_EVENTS
                         + " events and event-network pairs waiting to be processed, " + (numWaiting + numENPWaiting)
