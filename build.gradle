@@ -100,6 +100,14 @@ def distFiles = copySpec {
     }
 }
 
+task tarBin(type: Tar, dependsOn: ['explodeBin']) {
+    group = 'dist'
+    compression = Compression.GZIP
+    into(dirName) {
+        with binDistFiles
+    }
+}
+
 task tarDist(type: Tar, dependsOn: ['explodeDist']) {
     group = 'dist'
     compression = Compression.GZIP
