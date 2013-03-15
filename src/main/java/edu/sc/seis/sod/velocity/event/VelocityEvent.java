@@ -72,15 +72,27 @@ public class VelocityEvent extends ProxyEventAccessOperations {
     }
 
     public String getMagnitudeValue() {
+        if (origin.getMagnitudes().length != 0) {
         return "" + origin.getMagnitudes()[0].value;
+        } else {
+            return "";
+        }
     }
 
     public String getMagnitudeType() {
-        return origin.getMagnitudes()[0].type;
+        if (origin.getMagnitudes().length != 0) {
+            return origin.getMagnitudes()[0].type;
+        } else {
+            return "";
+        }
     }
 
     public String getMagnitudeContributor() {
-        return origin.getMagnitudes()[0].contributor;
+        if (origin.getMagnitudes().length != 0) {
+            return origin.getMagnitudes()[0].contributor;
+        } else {
+            return "";
+        }
     }
 
     public String getLatitude() {
