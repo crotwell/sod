@@ -22,6 +22,7 @@
             <ref name="sacWriter"/>
             <ref name="mseedWriter"/>
             <ref name="asciiWriter"/>
+            <ref name="wavWriter"/>
             <ref name="recordSectionDisplayGenerator"/>
             <ref name="responseGain"/>
             <ref name="phaseCut"/>
@@ -523,6 +524,36 @@
                 </example>
             </xsd:annotation>
             <ref name="seisWriterBase"/>
+        </element>
+    </define>
+    <define name="wavWriter">
+        <element name="wavWriter">
+            <xsd:annotation>
+                <summary>Writes wav sound files from seismograms</summary>
+                <description>The seismograms are the WAV sound format and written to files in the location indicated by 
+                    location. If multiple
+                    seismograms are found for a channel seismograms past the first will be written out with a number
+                    appended to their file name. ie the second seismogram will be filename.1 and the third will be
+                    filename.2. Set speedup to the appropriate speedup to allow seismic waves to be audible, 2000
+                    is a good first choice, allowing surface wave dispersion to be heard. Lower speedups may
+                    be needed for smaller events, but there appears to be a minimum resulting sample rate
+                    of 1000 samples per second for the wave format to be playable, so using upsample may be required..</description>
+                <example>
+                    <wavWriter>
+                        <workingDir>seismograms</workingDir>
+                        <location>${network.code}.${station.code}/${event.filizedTime}/${site.code}.${channel.code}.sac</location>
+                        <speedup>2000</speedup>
+                    </wavWriter>
+                </example>
+            </xsd:annotation>
+            <interleave>
+                <ref name="seisWriterBase"/>
+                <optional>
+                    <element name="speedup">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+            </interleave>
         </element>
     </define>
     <define name="seisWriterBase">
@@ -1232,6 +1263,73 @@ result = util.waveformResult(True, out)
             </optional>
               </interleave>
             
+        </element>
+    </define>
+    <define name="upsample">
+        <element name="upsample">
+            <xsd:annotation>
+                <summary>Upsamples seismograms.</summary>
+                <description>This upsamples seismograms by the given factor or to the given sample rate. 
+                Any needed low pass filtering can be done after applying this or using the antiAliasFilter
+                element to avoid aliasing. The antiAliasFilter is the same as the oregonDSPFilter ingredient,
+                with the passband and highFreqCorner determined automatically.
+                If the seismogram sample rate is not an integer multiple of the desired max sample rate, then
+                the resulting sample rate will be greater than or equal to the desired. For example if the
+                seismogram is 30 samples per second and the desired rate is 100 sps, then the decimation
+                factor will be 4 and the resulting rate will be 120 sps.
+                </description>
+                <example>
+                    <upsample>
+                        <minSamplesPerSec>10</minSamplesPerSec>
+                    </upsample>
+                </example>
+            </xsd:annotation>
+              <interleave>
+            <choice>
+                <element name="minSamplesPerSec">
+                    <data type="float"/>
+                </element>
+                <element name="byFactor">
+                    <data type="int"/>
+                </element>
+            </choice>
+            <optional>
+                <element name="antiAliasFilter">
+                  <interleave>
+                    <optional>
+                        <choice>
+                            <element name="butterworth"><empty/></element>
+                            <element name="chebyshevI"><empty/></element>
+                            <element name="chebyshevII"><empty/></element>
+                        </choice>
+                    </optional>
+                    <optional>
+                        <element name="numPoles">
+                            <data type="integer">
+                                <xsd:annotation>
+                                    <example>2</example>
+                                </xsd:annotation>
+                            </data>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="filterType">
+                            <choice>
+                                <value>NONCAUSAL</value>
+                                <value>CAUSAL</value>
+                                <value>TWOPASS</value>
+                            </choice>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="epsilon">
+                            <data type="float"/>
+                        </element>
+                    </optional>
+                </interleave>
+              </element>
+            </optional>
+          </interleave>  
         </element>
     </define>
     <define name="div">
