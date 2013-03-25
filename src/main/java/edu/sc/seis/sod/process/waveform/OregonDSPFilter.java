@@ -48,40 +48,40 @@ public class OregonDSPFilter implements WaveformProcess {
         this.config = config;
         if (config != null) {
             // otherwise just use defaults
-        NodeList childNodes = config.getChildNodes();
-        for (int counter = 0; counter < childNodes.getLength(); counter++) {
-            Node node = childNodes.item(counter);
-            if (node instanceof Element) {
-                Element element = (Element)node;
-                if (element.getTagName().equals("lowFreqCorner")) {
-                    setLowFreqCorner(SodUtil.loadQuantity(element));
-                } else if (element.getTagName().equals("highFreqCorner")) {
-                    setHighFreqCorner(SodUtil.loadQuantity(element));
-                } else if (element.getTagName().equals("numPoles")) {
-                    numPoles = Integer.parseInt(XMLUtil.getText(element));
-                } else if (element.getTagName().equals("epsilon")) {
-                    epsilon = Double.parseDouble(XMLUtil.getText(element));
-                } else if (element.getTagName().equals("filterType")) {
-                    if (XMLUtil.getText(element).equals("CAUSAL")) {
-                        filterType = ButterworthFilter.CAUSAL;
-                    } else {
-                        filterType = ButterworthFilter.NONCAUSAL;
+            NodeList childNodes = config.getChildNodes();
+            for (int counter = 0; counter < childNodes.getLength(); counter++) {
+                Node node = childNodes.item(counter);
+                if (node instanceof Element) {
+                    Element element = (Element)node;
+                    if (element.getTagName().equals("lowFreqCorner")) {
+                        setLowFreqCorner(SodUtil.loadQuantity(element));
+                    } else if (element.getTagName().equals("highFreqCorner")) {
+                        setHighFreqCorner(SodUtil.loadQuantity(element));
+                    } else if (element.getTagName().equals("numPoles")) {
+                        numPoles = Integer.parseInt(XMLUtil.getText(element));
+                    } else if (element.getTagName().equals("epsilon")) {
+                        epsilon = Double.parseDouble(XMLUtil.getText(element));
+                    } else if (element.getTagName().equals("filterType")) {
+                        if (XMLUtil.getText(element).equals("CAUSAL")) {
+                            filterType = ButterworthFilter.CAUSAL;
+                        } else {
+                            filterType = ButterworthFilter.NONCAUSAL;
+                        }
+                    } else if (element.getTagName().equals("butterworth")) {
+                        filterName = element.getTagName();
+                    } else if (element.getTagName().equals("chebyshevI")) {
+                        filterName = element.getTagName();
+                    } else if (element.getTagName().equals("chebyshevII")) {
+                        filterName = element.getTagName();
+                    } else if (element.getTagName().equals("bandpass")) {
+                        passband = PassbandType.BANDPASS;
+                    } else if (element.getTagName().equals("lowpass")) {
+                        passband = PassbandType.LOWPASS;
+                    } else if (element.getTagName().equals("highpass")) {
+                        passband = PassbandType.HIGHPASS;
                     }
-                } else if (element.getTagName().equals("butterworth")) {
-                    filterName = element.getTagName();
-                } else if (element.getTagName().equals("chebyshevI")) {
-                    filterName = element.getTagName();
-                } else if (element.getTagName().equals("chebyshevII")) {
-                    filterName = element.getTagName();
-                } else if (element.getTagName().equals("bandpass")) {
-                    passband = PassbandType.BANDPASS;
-                } else if (element.getTagName().equals("lowpass")) {
-                    passband = PassbandType.LOWPASS;
-                } else if (element.getTagName().equals("highpass")) {
-                    passband = PassbandType.HIGHPASS;
                 }
             }
-        }
         }
     }
     
