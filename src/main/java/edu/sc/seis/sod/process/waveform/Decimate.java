@@ -24,7 +24,7 @@ public class Decimate implements WaveformProcess, Threadable {
         }
         if (SodUtil.getElement(config, TOSPS_NAME) != null) {
             toSampleRate = Float.parseFloat(SodUtil.loadText(config, TOSPS_NAME, "not used"));
-        } else if (SodUtil.getElement(config, TOSPS_NAME) != null) {
+        } else if (SodUtil.getElement(config, FACTOR_NAME) != null) {
             decimate = new edu.sc.seis.fissuresUtil.bag.Decimate(Integer.parseInt(SodUtil.getNestedText(SodUtil.getElement(config,
                                                                                                                            FACTOR_NAME))));
         } else {
