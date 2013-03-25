@@ -46,6 +46,8 @@ public class OregonDSPFilter implements WaveformProcess {
 
     public OregonDSPFilter(Element config) throws ConfigurationException {
         this.config = config;
+        if (config != null) {
+            // otherwise just use defaults
         NodeList childNodes = config.getChildNodes();
         for (int counter = 0; counter < childNodes.getLength(); counter++) {
             Node node = childNodes.item(counter);
@@ -79,6 +81,7 @@ public class OregonDSPFilter implements WaveformProcess {
                     passband = PassbandType.HIGHPASS;
                 }
             }
+        }
         }
     }
     
