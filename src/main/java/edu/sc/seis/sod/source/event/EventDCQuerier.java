@@ -200,12 +200,12 @@ public class EventDCQuerier {
     }
 
     
-    public Quantity getMinDepth() {
+    public QuantityImpl getMinDepth() {
         return minDepth;
     }
 
     
-    public Quantity getMaxDepth() {
+    public QuantityImpl getMaxDepth() {
         return maxDepth;
     }
 
@@ -235,9 +235,9 @@ public class EventDCQuerier {
 
     private String[] catalogs, contributors;
 
-    private Quantity minDepth = new QuantityImpl(-90000.0, UnitImpl.KILOMETER);
+    private QuantityImpl minDepth = new QuantityImpl(-90000.0, UnitImpl.KILOMETER);
 
-    private Quantity maxDepth = new QuantityImpl(90000.0, UnitImpl.KILOMETER);
+    private QuantityImpl maxDepth = new QuantityImpl(90000.0, UnitImpl.KILOMETER);
 
     private String serverName, serverDNS;
 
