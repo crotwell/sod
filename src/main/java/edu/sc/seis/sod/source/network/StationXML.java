@@ -1,11 +1,16 @@
 package edu.sc.seis.sod.source.network;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -263,7 +268,38 @@ public class StationXML implements NetworkSource {
                               u.getFragment());
 
         logger.info("Retrieve from "+chanUri);
-        InputStream in  = new BufferedInputStream(chanUri.toURL().openStream());
+        
+        URLConnection urlConn = chanUri.toURL().openConnection();
+        if (urlConn instanceof HttpURLConnection) {
+            HttpURLConnection conn = (HttpURLConnection)urlConn;
+            if (conn.getResponseCode() == 204) {
+                // no data
+                return retrieveXML(new ByteArrayInputStream(EMPTY_STATIONXML));
+            } else if (conn.getResponseCode() != 200) {
+                String out = "";
+                BufferedReader errReader = null;
+                try {
+                    errReader = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+                    for (String line; (line = errReader.readLine()) != null;) {
+                        out += line + "\n";
+                    }
+                } finally {
+                    if (errReader != null) try { 
+                        errReader.close(); 
+                        conn.disconnect();
+                    } catch (IOException e) {
+                        throw e;
+                    }
+                }
+                throw new StationXMLException("Error in connection with url: "+chanUri+"  "+out);
+            }
+        }
+        
+        return retrieveXML(urlConn.getInputStream());
+    }
+    
+    static StaMessage retrieveXML(InputStream inStream) throws XMLStreamException, StationXMLException, IOException, URISyntaxException {
+        InputStream in  = new BufferedInputStream(inStream);
 
         XMLInputFactory factory = XMLInputFactory.newInstance();
         XMLEventReader r = factory.createXMLEventReader(in);
@@ -368,4 +404,6 @@ public class StationXML implements NetworkSource {
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(StationXML.class);
     
     public static final String URL_ELEMENT = "url";
+    
+    public static final byte[] EMPTY_STATIONXML = "<StaMessage xsi:schemaLocation=\"http://www.data.scec.org/xml/station/20120307/ http://www.data.scec.org/xml/station/20120307/station.xsd http://www.iris.edu/ws/schemas/station/2012/03/22/ http://www.iris.edu/ws/schemas/station/2012/03/22/station_comments.xsd\"/>".getBytes();
 }
