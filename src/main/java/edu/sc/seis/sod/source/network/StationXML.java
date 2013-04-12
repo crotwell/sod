@@ -51,13 +51,10 @@ import edu.sc.seis.fissuresUtil.stationxml.StationXMLToFissures;
 import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.time.RangeTool;
 import edu.sc.seis.seisFile.stationxml.Channel;
-import edu.sc.seis.seisFile.stationxml.Epoch;
+import edu.sc.seis.seisFile.stationxml.FDSNStationXML;
 import edu.sc.seis.seisFile.stationxml.Network;
 import edu.sc.seis.seisFile.stationxml.NetworkIterator;
-import edu.sc.seis.seisFile.stationxml.Response;
-import edu.sc.seis.seisFile.stationxml.StaMessage;
 import edu.sc.seis.seisFile.stationxml.Station;
-import edu.sc.seis.seisFile.stationxml.StationEpoch;
 import edu.sc.seis.seisFile.stationxml.StationIterator;
 import edu.sc.seis.seisFile.stationxml.StationXMLException;
 import edu.sc.seis.sod.ConfigurationException;
@@ -199,26 +196,23 @@ public class StationXML implements NetworkSource {
                                   parsedURL.getPath(),
                                   newQuery,
                                   parsedURL.getFragment());
-            StaMessage sm = retrieveXML(chanUri, "resp");
+            FDSNStationXML sm = retrieveXML(chanUri, "resp");
             NetworkIterator netIt = sm.getNetworks();
             while (netIt.hasNext()) {
                 Network n = netIt.next();
                 StationIterator staIt = n.getStations();
                 while (staIt.hasNext()) {
                     Station s = staIt.next();
-                    for (StationEpoch se : s.getStationEpochs()) {
-                        for (Channel c : se.getChannelList()) {
-                            for (Epoch e : c.getChanEpochList()) {
-                                List<Response> r = e.getResponseList();
-                                InstrumentationImpl inst = StationXMLToFissures.convertInstrumentation(e);
+                        for (Channel c : s.getChannelList()) {
+                                InstrumentationImpl inst = StationXMLToFissures.convertInstrumentation(c);
                                 if (RangeTool.areOverlapping(new MicroSecondTimeRange(inst.effective_time),
                                                              new MicroSecondTimeRange(chanBegin.add(ONE_SECOND), chanBegin.add(ONE_DAY)))) {
                                     return inst;
                                 }
                                 logger.debug("Skipping as wrong start time "+ChannelIdUtil.toString(chanId)+" "+inst.effective_time.start_time.date_time+" "+inst.effective_time.end_time.date_time);
-                            }
+                            
                         }
-                    }
+                    
                     
                 }
             }
@@ -258,7 +252,7 @@ public class StationXML implements NetworkSource {
         }
     }
     
-    static StaMessage retrieveXML(URI u, String level) throws XMLStreamException, StationXMLException, IOException, URISyntaxException  {
+    static FDSNStationXML retrieveXML(URI u, String level) throws XMLStreamException, StationXMLException, IOException, URISyntaxException  {
         URI chanUri = new URI(u.getScheme(),
                               u.getUserInfo(),
                               u.getHost(),
@@ -298,7 +292,7 @@ public class StationXML implements NetworkSource {
         return retrieveXML(urlConn.getInputStream());
     }
     
-    static StaMessage retrieveXML(InputStream inStream) throws XMLStreamException, StationXMLException, IOException, URISyntaxException {
+    static FDSNStationXML retrieveXML(InputStream inStream) throws XMLStreamException, StationXMLException, IOException, URISyntaxException {
         InputStream in  = new BufferedInputStream(inStream);
 
         XMLInputFactory factory = XMLInputFactory.newInstance();
@@ -308,15 +302,15 @@ public class StationXML implements NetworkSource {
             e = r.nextEvent(); // eat this one
             e = r.peek();  // peek at the next
         }
-        return new StaMessage(r);
+        return new FDSNStationXML(r);
     }
     
     synchronized void parseNets() throws XMLStreamException, StationXMLException, IOException, URISyntaxException {
         networks = new ArrayList<NetworkAttrImpl>();
         logger.info("Parsing networks from "+parsedURL);
-        StaMessage staMessage = retrieveXML(parsedURL, "net");
+        FDSNStationXML stationXML = retrieveXML(parsedURL, "net");
         
-        NetworkIterator netIt = staMessage.getNetworks();
+        NetworkIterator netIt = stationXML.getNetworks();
         while (netIt.hasNext()) {
             Network net = netIt.next();
             networks.add(StationXMLToFissures.convert(net));
@@ -325,7 +319,7 @@ public class StationXML implements NetworkSource {
                 Station s = it.next();
             }
         }
-        staMessage.closeReader();
+        stationXML.closeReader();
         logger.info("found "+networks.size()+" networks after parse");
     }
     
@@ -333,9 +327,9 @@ public class StationXML implements NetworkSource {
         staChanMap.clear();
         int numChannels = 0;
         logger.info("Parsing channels from "+parsedURL);
-        StaMessage staMessage = retrieveXML(parsedURL, "chan");
-        lastLoadDate = staMessage.getSentDate();
-        NetworkIterator netIt = staMessage.getNetworks();
+        FDSNStationXML stationXML = retrieveXML(parsedURL, "chan");
+        lastLoadDate = stationXML.getCreated();
+        NetworkIterator netIt = stationXML.getNetworks();
         while (netIt.hasNext()) {
             Network net = netIt.next();
             String key = NetworkIdUtil.toStringNoDates(StationXMLToFissures.convert(net).getId());
@@ -348,7 +342,7 @@ public class StationXML implements NetworkSource {
                 try {
                     numChannels += processStation(networks, s);
                 } catch (StationXMLException ee) {
-                    logger.error("Skipping "+s.getNetCode()+"."+s.getStaCode()+" "+ ee.getMessage());
+                    logger.error("Skipping "+s.getNetworkCode()+"."+s.getCode()+" "+ ee.getMessage());
                 }
             }
         }
@@ -358,7 +352,7 @@ public class StationXML implements NetworkSource {
     int processStation(List<NetworkAttrImpl> netList, Station s) throws StationXMLException {
         int numChannels = 0;
         for (String ignore : ignoreNets) {
-            if (s.getNetCode().equals(ignore)) {
+            if (s.getNetworkCode().equals(ignore)) {
             // not sure what AB network is, skip it for now
             return 0;
             }
