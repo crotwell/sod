@@ -37,6 +37,9 @@ public class NetworkFinder extends AbstractNetworkSource {
 
     public NetworkFinder(Element element) throws Exception {
         super(element);
+        if (getDNS().equals("edu/iris/dmc")) {
+            System.err.println("WARNING: DHI servers will be turned off June 2013, switch to <stationXML>");
+        }
     }
 
     public synchronized ProxyNetworkDC getNetworkDC() {

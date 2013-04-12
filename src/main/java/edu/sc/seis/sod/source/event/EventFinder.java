@@ -25,6 +25,9 @@ public class EventFinder extends AbstractSource implements EventSource {
 
 	public EventFinder(Element config) throws Exception {
 		super(config, "IRIS_EventDC");
+        if (getDNS().equals("edu/iris/dmc")) {
+            System.err.println("WARNING: DHI servers will be turned off June 2013, switch to <quakeML>");
+        }
 		eventFinderId = eventFinderCount++;
 		processConfig(config);
 		refreshInterval = Start.getRunProps().getEventRefreshInterval();
