@@ -43,7 +43,7 @@
         <element name="stationCode">
             <xsd:annotation>
                 <summary>Matches a station code</summary>
-                <description>Matches a station code. This is a simple string match or a regular expression.</description>
+                <description>Matches a station code. This is a simple string match. For regular expression see stationRegularExpression.</description>
             </xsd:annotation>
             <data type="string">
                 <xsd:annotation>
@@ -55,9 +55,10 @@
     <define name="regExp">
         <element name="stationRegularExpression">
             <xsd:annotation>
-                <summary>Matches a station if it's network code and station code match a regular
-                    expression</summary>
+                <summary>Matches a station if it's network code and station code separated by a period match a regular
+                    expression.</summary>
             </xsd:annotation>
+            <choice>
             <element name="url">
                 <data type="string">
                     <xsd:annotation>
@@ -65,6 +66,14 @@
                     </xsd:annotation>
                 </data>
             </element>
+            <element name="code">
+                <data type="string">
+                    <xsd:annotation>
+                        <example>TA\.[W-Z]58A</example>
+                    </xsd:annotation>
+                </data>
+            </element>
+            </choice>
         </element>
     </define>
     <define name="stationName">
