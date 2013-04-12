@@ -16,6 +16,7 @@ public class ChannelCode implements ChannelSubsetter {
     }
 
     public ChannelCode(String string) throws UserConfigurationException {
+        this.code = string;
         acceptedCode = string.toUpperCase();
         if(acceptedCode.length() == 0
                 || (acceptedCode.length() == 1 && acceptedCode.charAt(0) == '*')) {
@@ -51,6 +52,12 @@ public class ChannelCode implements ChannelSubsetter {
 
     String required;
 
-    private String acceptedCode;
+    private String code;
     
-}// GainCode
+    private String acceptedCode;
+
+    public String getCode() {
+        return code;
+    }
+    
+}
