@@ -20,17 +20,18 @@ public interface NetworkSource extends Source {
 
     public TimeInterval getRefreshInterval();
 
-    public abstract CacheNetworkAccess getNetwork(NetworkAttrImpl attr);
+    public CacheNetworkAccess getNetwork(NetworkAttrImpl attr);
 
-    public abstract List<? extends CacheNetworkAccess> getNetworkByName(String name) throws NetworkNotFound;
+    public List<? extends CacheNetworkAccess> getNetworkByName(String name) throws NetworkNotFound;
 
-    public abstract List<? extends NetworkAttrImpl> getNetworks();
+    public List<? extends NetworkAttrImpl> getNetworks();
 
-    public abstract List<? extends StationImpl> getStations(NetworkId net);
+    public List<? extends StationImpl> getStations(NetworkId net);
 
-    public abstract List<? extends ChannelImpl> getChannels(StationImpl station);
+    public List<? extends ChannelImpl> getChannels(StationImpl station);
 
-    public abstract QuantityImpl getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse;
+    public QuantityImpl getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse;
 
-    public abstract Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InvalidResponse;
+    public Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InvalidResponse;
+
 }
