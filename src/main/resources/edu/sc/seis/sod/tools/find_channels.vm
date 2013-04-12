@@ -1,10 +1,15 @@
 #if($additionalArms.length() > 0)
 $additionalArms#end
     <networkArm>
+        <stationXML>
+            <url>http://www.iris.edu/ws/station/query?</url>
+        </stationXML>
+#if($server)
         <networkFinder>
             <name>$server.name</name>
             <dns>$server.dns</dns>
         </networkFinder>
+#end
 #if($networks)
         <networkOR>
 #foreach($code in $networks)
