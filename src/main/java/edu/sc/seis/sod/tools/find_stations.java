@@ -9,6 +9,9 @@ import org.apache.velocity.VelocityContext;
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAPException;
 
+import edu.sc.seis.seisFile.client.BoxAreaParser;
+import edu.sc.seis.seisFile.client.DonutParser;
+
 public class find_stations extends CommandLineTool {
 
     public find_stations() throws JSAPException {

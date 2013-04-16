@@ -2,6 +2,8 @@ package edu.sc.seis.sod.tools;
 
 import com.martiansoftware.jsap.FlaggedOption;
 
+import edu.sc.seis.seisFile.client.PatternParser;
+
 public class ServerParser extends PatternParser {
 
     public ServerParser() {

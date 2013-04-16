@@ -2,6 +2,9 @@ package edu.sc.seis.sod.tools;
 
 import com.martiansoftware.jsap.FlaggedOption;
 
+import edu.sc.seis.seisFile.client.BoxAreaParser;
+import edu.sc.seis.seisFile.client.PatternParser;
+
 
 public class PhaseTimeParser extends PatternParser {
 
