@@ -5,114 +5,29 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Properties;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.velocity.VelocityContext;
 import org.xml.sax.InputSource;
 
-import com.martiansoftware.jsap.FlaggedOption;
-import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
-import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.Option;
-import com.martiansoftware.jsap.Parameter;
-import com.martiansoftware.jsap.StringParser;
 import com.martiansoftware.jsap.Switch;
 
 import edu.sc.seis.fissuresUtil.simple.Initializer;
+import edu.sc.seis.seisFile.client.AbstractClient;
 import edu.sc.seis.sod.Args;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.UserConfigurationException;
 import edu.sc.seis.sod.Version;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
-public class CommandLineTool {
+public class CommandLineTool extends AbstractClient {
 
     public CommandLineTool(String[] args) throws JSAPException {
-        this.args = args;
-        addParams();
-        String[] segs = getClass().getName().split("\\.");
-        commandName = segs[segs.length - 1];
-        result = jsap.parse(args);
-        if(requiresAtLeastOneArg() && args.length == 0) {
-            result.addException("Must use at least one option",
-                                new RuntimeException("Must use at least one option"));
-        }
-    }
-
-    protected boolean requiresAtLeastOneArg() {
-        return true;
-    }
-
-    protected FlaggedOption createListOption(String id,
-                                             char shortFlag,
-                                             String longFlag,
-                                             String help) {
-        return createListOption(id,
-                                shortFlag,
-                                longFlag,
-                                help,
-                                null,
-                                JSAP.STRING_PARSER);
-    }
-
-    protected FlaggedOption createListOption(String id,
-                                             char shortFlag,
-                                             String longFlag,
-                                             String help,
-                                             String defaultArg) {
-        return createListOption(id,
-                                shortFlag,
-                                longFlag,
-                                help,
-                                defaultArg,
-                                JSAP.STRING_PARSER);
-    }
-
-    protected FlaggedOption createListOption(String id,
-                                             char shortFlag,
-                                             String longFlag,
-                                             String help,
-                                             String defaultArg,
-                                             StringParser parser) {
-        FlaggedOption listOption = new FlaggedOption(id,
-                                                     parser,
-                                                     defaultArg,
-                                                     false,
-                                                     shortFlag,
-                                                     longFlag,
-                                                     help);
-        listOption.setList(true);
-        listOption.setListSeparator(',');
-        return listOption;
-    }
-
-    protected void addParams() throws JSAPException {
-        add(new Switch("version",
-                       'v',
-                       "version",
-                       "Print SOD's version and exit"));
-        add(new Switch("recipe",
-                       'r',
-                       "recipe",
-                       "Print the created recipe to stdout instead of running it"));
-        add(new Switch("help", 'h', "help", "Print this message."));
-        add(new FlaggedOption("props",
-                              JSAP.STRING_PARSER,
-                              null,
-                              false,
-                              'p',
-                              "props",
-                              "Use an additional props file"));
-    }
-
-    protected void add(Parameter param) throws JSAPException {
-        jsap.registerParameter(param);
-        params.add(param);
+        super(args);
     }
 
     public VelocityContext getContext() {
@@ -140,28 +55,8 @@ public class CommandLineTool {
         return vc;
     }
 
-    protected boolean isSpecified(Parameter p) {
-        return result.contains(p.getID());
-    }
-
-    public String[] getArgs() {
-        return args;
-    }
-
-    public boolean shouldPrintHelp() {
-        return result.getBoolean("help");
-    }
-
     public boolean shouldPrintRecipe() {
         return result.getBoolean("recipe");
-    }
-
-    public boolean shouldPrintVersion() {
-        return result.getBoolean("version");
-    }
-
-    public boolean isSuccess() {
-        return result.success();
     }
 
     public InputStream getTemplate() throws IOException {
@@ -170,16 +65,6 @@ public class CommandLineTool {
     }
 
     protected boolean requiresStdin = false;
-
-    private List params = new ArrayList();
-
-    protected JSAPResult result;
-
-    private JSAP jsap = new JSAP();
-
-    private String[] args;
-
-    private String commandName;
 
     public static void run(CommandLineTool ls) throws Exception {
         Start.checkGCJ();
