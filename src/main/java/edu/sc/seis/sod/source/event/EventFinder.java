@@ -25,6 +25,7 @@ public class EventFinder extends AbstractSource implements EventSource {
 
 	public EventFinder(Element config) throws Exception {
 		super(config, "IRIS_EventDC");
+		processConfig(config);
         if (getDNS().equals("edu/iris/dmc")) {
             System.err.println("WARNING: DHI servers will be turned off June 2013, switch to <quakeML>");
         }
@@ -36,6 +37,7 @@ public class EventFinder extends AbstractSource implements EventSource {
 	}
 
 	protected void processConfig(Element config) throws ConfigurationException {
+        dns = SodUtil.loadText(config, "dns", "edu/iris/dmc");
 		Element queryTimeEl = DOMHelper.extractElement(config,
 				"originTimeRange");
 		if (queryTimeEl == null) {
@@ -195,6 +197,17 @@ public class EventFinder extends AbstractSource implements EventSource {
 		return getName() + eventFinderId;
 	}
 
+    /**
+     * returns the DNSName of the server.
+     * The context under which the objectName is registered in the CORBA naming service.
+     * 
+     *
+     * @return a <code>String</code> value
+     */
+    public String getDNS() {
+        return dns;
+    }
+    
 	// Unique among eventFinders and constant for this eventFinder for repeated
 	// uses of the same recipe file
 	private int eventFinderId;
@@ -207,6 +220,8 @@ public class EventFinder extends AbstractSource implements EventSource {
 	
 	private MicroSecondDate sleepUntilTime = null;
 
+	private String dns;
+	
 	private static Logger logger = LoggerFactory.getLogger(EventFinder.class);
 
 	protected TimeInterval increment, lag;

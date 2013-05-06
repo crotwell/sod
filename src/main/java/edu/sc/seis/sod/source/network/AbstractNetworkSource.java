@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.source.network;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.w3c.dom.Element;
@@ -22,13 +23,13 @@ import edu.sc.seis.sod.source.AbstractSource;
 
 public abstract class AbstractNetworkSource extends AbstractSource implements NetworkSource {
 
-    public AbstractNetworkSource(String dns, String name, int retries) {
-        super(dns, name, retries);
+    public AbstractNetworkSource(String name, int retries) {
+        super(name, retries);
         refreshInterval = new TimeInterval(1, UnitImpl.FORTNIGHT);
     }
     
     public AbstractNetworkSource(AbstractNetworkSource wrapped) {
-        this(wrapped.getDNS(), wrapped.getName(), wrapped.getRetries());
+        this(wrapped.getName(), wrapped.getRetries());
     }
     
     public AbstractNetworkSource(Element config) throws Exception {
@@ -44,43 +45,14 @@ public abstract class AbstractNetworkSource extends AbstractSource implements Ne
     public TimeInterval getRefreshInterval() {
         return this.refreshInterval;
     }
-
-    protected TimeInterval refreshInterval;
-
-    /* (non-Javadoc)
-     * @see edu.sc.seis.sod.source.network.NetworkSource#getNetwork(edu.iris.Fissures.network.NetworkAttrImpl)
-     */
-    public abstract CacheNetworkAccess getNetwork(NetworkAttrImpl attr);
     
-    /* (non-Javadoc)
-     * @see edu.sc.seis.sod.source.network.NetworkSource#getNetworkByName(java.lang.String)
-     */
-    public abstract List<? extends CacheNetworkAccess> getNetworkByName(String name) throws NetworkNotFound;
+    public void setConstrains(NetworkQueryConstraints constraints) {
+        this.constraints = constraints;
+    }
     
-    /* (non-Javadoc)
-     * @see edu.sc.seis.sod.source.network.NetworkSource#getNetworks()
-     */
-    public abstract List<? extends NetworkAttrImpl> getNetworks();
+    protected NetworkQueryConstraints constraints;
     
-    /* (non-Javadoc)
-     * @see edu.sc.seis.sod.source.network.NetworkSource#getStations(edu.iris.Fissures.IfNetwork.NetworkId)
-     */
-    public abstract List<? extends StationImpl> getStations(NetworkId net);
-    
-    /* (non-Javadoc)
-     * @see edu.sc.seis.sod.source.network.NetworkSource#getChannels(edu.iris.Fissures.network.StationImpl)
-     */
-    public abstract List<? extends ChannelImpl> getChannels(StationImpl station);
-
-    /* (non-Javadoc)
-     * @see edu.sc.seis.sod.source.network.NetworkSource#getSensitivity(edu.iris.Fissures.IfNetwork.ChannelId)
-     */
-    public abstract QuantityImpl getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse;
-    
-    /* (non-Javadoc)
-     * @see edu.sc.seis.sod.source.network.NetworkSource#getInstrumentation(edu.iris.Fissures.IfNetwork.ChannelId)
-     */
-    public abstract Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InvalidResponse;
+    protected TimeInterval refreshInterval;    
     
     public static final String REFRESH_ELEMENT = "refreshInterval";
     

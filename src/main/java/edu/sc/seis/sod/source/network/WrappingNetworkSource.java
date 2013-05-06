@@ -66,14 +66,14 @@ public abstract class WrappingNetworkSource implements NetworkSource {
     public TimeInterval getRefreshInterval() {
         return getWrapped().getRefreshInterval();
     }
-    
-    @Override
-    public String getDNS() {
-        return getWrapped().getDNS();
-    }
 
     @Override
     public String getName() {
         return getWrapped().getName();
+    }
+
+    @Override
+    public void setConstrains(NetworkQueryConstraints constraints) {
+        getWrapped().setConstrains(constraints);
     }
 }

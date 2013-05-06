@@ -35,6 +35,11 @@ public class SiteCode implements ChannelSubsetter {
         }
     }
 
+    
+    public String getCode() {
+        return code;
+    }
+
     private String code;
     
     Pattern pattern;

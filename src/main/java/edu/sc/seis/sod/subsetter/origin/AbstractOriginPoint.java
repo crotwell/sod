@@ -30,6 +30,14 @@ public class AbstractOriginPoint extends DistanceRangeSubsetter {
         return out;
     }
 
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
     protected double latitude = 0.0;
 
     protected double longitude = 0.0;

@@ -34,4 +34,5 @@ public interface NetworkSource extends Source {
 
     public Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InvalidResponse;
 
+    public void setConstrains(NetworkQueryConstraints constraints);
 }

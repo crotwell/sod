@@ -233,6 +233,12 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
         return channels;
     }
 
+    @Override
+
+    public void setConstrains(NetworkQueryConstraints constraints) {
+        // no op
+    }
+
     public String toString() {
         return "CSVNetworkSource using " + csvFilename;
     }
@@ -360,15 +366,11 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
     }
 
     @Override
-    public String getDNS() {
+    public String getName() {
         if (csvFilename != null && csvFilename.length() != 0) {
             return csvFilename;
         }
         return "inline";
     }
 
-    @Override
-    public String getName() {
-        return getClass().getName();
-    }
 }

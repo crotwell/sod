@@ -7,6 +7,8 @@ import junit.framework.TestCase;
 import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.ParseException;
 
+import edu.sc.seis.seisFile.client.DonutParser;
+
 public class DonutParserTest extends TestCase {
 
     public void testSuccessfulParse() throws ParseException {

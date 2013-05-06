@@ -24,5 +24,10 @@ public abstract class LogicalLoaderSubsetter implements Subsetter {
 
     public abstract SubsetterLoader getLoader();
 
+    
+    public List<Subsetter> getSubsetters() {
+        return subsetters;
+    }
+
     protected List<Subsetter> subsetters = new ArrayList<Subsetter>();
 }

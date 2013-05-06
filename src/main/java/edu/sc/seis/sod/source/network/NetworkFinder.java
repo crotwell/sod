@@ -27,16 +27,19 @@ import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
 import edu.sc.seis.fissuresUtil.cache.VestingNetworkDC;
 import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
+import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 
 public class NetworkFinder extends AbstractNetworkSource {
 
     public NetworkFinder(String dns, String name, int retries) {
-        super(dns, name, retries);
+        super(name, retries);
+        this.dns = dns;
     }
 
-    public NetworkFinder(Element element) throws Exception {
-        super(element);
+    public NetworkFinder(Element config) throws Exception {
+        super(config);
+        dns = SodUtil.loadText(config, "dns", "edu/iris/dmc");
         if (getDNS().equals("edu/iris/dmc")) {
             System.err.println("WARNING: DHI servers will be turned off June 2013, switch to <stationXML>");
         }
@@ -99,27 +102,27 @@ public class NetworkFinder extends AbstractNetworkSource {
     }
 
     public synchronized List<CacheNetworkAccess> getNetworksInternal() {
-        String[] constrainingCodes = Start.getNetworkArm().getConstrainingNetworkCodes();
+        List<String> constrainingCodes = constraints.getConstrainingNetworkCodes();
         ProxyNetworkDC netDC = getNetworkDC();
         // purge cache before loading from server
         netDC.reset();
         ArrayList<CacheNetworkAccess> goodNets = new ArrayList<CacheNetworkAccess>();
-        if (constrainingCodes.length > 0) {
+        if (constrainingCodes.size() > 0) {
             edu.iris.Fissures.IfNetwork.NetworkFinder netFinder = netDC.a_finder();
-            for (int i = 0; i < constrainingCodes.length; i++) {
+            for (String conCode : constrainingCodes) {
                 CacheNetworkAccess[] found = null;
                 // this is a bit of a hack as names could be one or two
                 // characters, but works with _US-TA style
                 // virtual networks at the DMC
                 try {
-                    if (constrainingCodes[i].length() > 2) {
-                        found = (CacheNetworkAccess[])netFinder.retrieve_by_name(constrainingCodes[i]);
+                    if (conCode.length() > 2) {
+                        found = (CacheNetworkAccess[])netFinder.retrieve_by_name(conCode);
                     } else {
-                        found = (CacheNetworkAccess[])netFinder.retrieve_by_code(constrainingCodes[i]);
+                        found = (CacheNetworkAccess[])netFinder.retrieve_by_code(conCode);
                     }
                 } catch(NetworkNotFound e) {
                     // this probably indicates a bad conf file, warn and exit
-                    Start.informUserOfBadNetworkAndExit(constrainingCodes[i], e);
+                    Start.informUserOfBadNetworkAndExit(conCode, e);
                 }
                 for (int j = 0; j < found.length; j++) {
                     goodNets.add(found[j]);
@@ -173,6 +176,17 @@ public class NetworkFinder extends AbstractNetworkSource {
         Sensitivity s = cna.retrieve_sensitivity(chanId, chanId.begin_time);
         return new QuantityImpl(s.sensitivity_factor, cna.retrieve_initial_units(chanId, chanId.begin_time));
     }
+
+    /**
+     * returns the DNSName of the server.
+     * The context under which the objectName is registered in the CORBA naming service.
+     * 
+     *
+     * @return a <code>String</code> value
+     */
+    public String getDNS() {
+        return dns;
+    }
     
     protected List<ChannelImpl> checkStationTimeOverlap(StationImpl station, Channel[] inChannels) {
         MicroSecondDate stationBegin = new MicroSecondDate(station.getBeginTime());
@@ -219,6 +233,8 @@ public class NetworkFinder extends AbstractNetworkSource {
         recentNetworksCache = null;
         byNameCache.clear();
     }
+    
+    protected String dns;
     
     protected List<CacheNetworkAccess> recentNetworksCache = null;
     

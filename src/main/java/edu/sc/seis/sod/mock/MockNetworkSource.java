@@ -20,6 +20,7 @@ import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockNetworkAccess;
 import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
+import edu.sc.seis.sod.source.network.NetworkQueryConstraints;
 import edu.sc.seis.sod.source.network.NetworkSource;
 
 
@@ -33,11 +34,6 @@ public class MockNetworkSource implements NetworkSource {
     
     public MockNetworkSource() {
         this(new TimeInterval(3, UnitImpl.DAY));
-    }
-    
-    @Override
-    public String getDNS() {
-        return "Mock";
     }
 
     @Override
@@ -112,6 +108,11 @@ public class MockNetworkSource implements NetworkSource {
         return null;
     }
     
+    @Override
+    public void setConstrains(NetworkQueryConstraints constraints) {
+        //no op
+    }
+
     NetworkAccess[] nets = new NetworkAccess[] { MockNetworkAccess.createNetworkAccess(),
                                                  MockNetworkAccess.createOtherNetworkAccess(),
                                                  MockNetworkAccess.createManySplendoredNetworkAccess() };

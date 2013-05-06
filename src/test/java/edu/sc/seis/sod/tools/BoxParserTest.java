@@ -7,6 +7,8 @@ import junit.framework.TestCase;
 import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.ParseException;
 
+import edu.sc.seis.seisFile.client.BoxAreaParser;
+
 public class BoxParserTest extends TestCase {
 
     public void testSimpleBoxArea() throws JSAPException {

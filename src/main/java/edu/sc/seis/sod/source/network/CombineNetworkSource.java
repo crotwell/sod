@@ -39,15 +39,6 @@ public class CombineNetworkSource implements NetworkSource {
             } // end of if (node instanceof Element)
         } // end of for (int i=0; i<children.getSize(); i++)
     }
-    
-    @Override
-    public String getDNS() {
-        String out = getClass().getSimpleName()+"[";
-        for (NetworkSource source : wrapped) {
-            out+=source.getDNS()+", ";
-        }
-        return out.substring(0, out.length()-2)+"]";
-    }
 
     @Override
     public String getName() {
@@ -165,6 +156,11 @@ public class CombineNetworkSource implements NetworkSource {
         return null;
     }
     
+    public void setConstrains(NetworkQueryConstraints constraints) {
+        for (NetworkSource source : wrapped) {
+            source.setConstrains(constraints);
+        }
+    }
     List<NetworkSource> wrapped;
     
     HashMap<String, NetworkSource> codeToSource = new HashMap<String, NetworkSource>();

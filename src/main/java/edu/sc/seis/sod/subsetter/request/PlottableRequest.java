@@ -16,6 +16,7 @@ import edu.sc.seis.fissuresUtil.display.PlottableDisplay;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.source.AbstractSource;
 import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
@@ -24,6 +25,7 @@ public class PlottableRequest extends AbstractSource  implements RequestSubsette
 
     public PlottableRequest(Element config) throws Exception {
         super(config, "DelilahCache");
+        dns = SodUtil.loadText(config, "dns", "edu/iris/dmc");
         NodeList dims = config.getElementsByTagName("pixelsPerDay");
         pixelsPerDay = new int[dims.getLength()];
         for(int i=0;i<dims.getLength();i++) {
@@ -46,6 +48,12 @@ public class PlottableRequest extends AbstractSource  implements RequestSubsette
         return new Pass(this);
     }
 
+    public String getDNS() {
+        return dns;
+    }
+    
+    private String dns = "";
+    
     private ProxyPlottableDC plottableCache;
 
     private int[] pixelsPerDay;

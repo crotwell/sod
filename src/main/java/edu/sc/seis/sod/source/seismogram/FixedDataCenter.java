@@ -16,7 +16,8 @@ public class FixedDataCenter extends AbstractSource implements SodElement,
         SeismogramSourceLocator {
 
     public FixedDataCenter() {
-        super("edu/iris/dmc", DEFAULT_SERVER_NAME);
+        super(DEFAULT_SERVER_NAME);
+        this.dns = "edu/iris/dmc";
     }
     
     public FixedDataCenter(Element element) {
@@ -27,7 +28,8 @@ public class FixedDataCenter extends AbstractSource implements SodElement,
     }
 
     public FixedDataCenter(String dns, String name) {
-        super(dns, name);
+        super(name);
+        this.dns = dns;
     }
 
     public SeismogramSource getSeismogramSource(CacheEvent event,
@@ -51,6 +53,19 @@ public class FixedDataCenter extends AbstractSource implements SodElement,
         }
         return dataCenterSource;
     }
+
+    /**
+     * returns the DNSName of the server.
+     * The context under which the objectName is registered in the CORBA naming service.
+     * 
+     *
+     * @return a <code>String</code> value
+     */
+    public String getDNS() {
+        return dns;
+    }
+    
+    private String dns;
     
     private DataCenterSource dataCenterSource;
     

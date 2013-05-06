@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLConnection;
@@ -50,70 +49,72 @@ import edu.sc.seis.fissuresUtil.stationxml.StationChannelBundle;
 import edu.sc.seis.fissuresUtil.stationxml.StationXMLToFissures;
 import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.time.RangeTool;
-import edu.sc.seis.seisFile.stationxml.Channel;
-import edu.sc.seis.seisFile.stationxml.FDSNStationXML;
-import edu.sc.seis.seisFile.stationxml.Network;
-import edu.sc.seis.seisFile.stationxml.NetworkIterator;
-import edu.sc.seis.seisFile.stationxml.Station;
-import edu.sc.seis.seisFile.stationxml.StationIterator;
-import edu.sc.seis.seisFile.stationxml.StationXMLException;
+import edu.sc.seis.seisFile.fdsnws.FDSNStationQueryParams;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
+import edu.sc.seis.seisFile.fdsnws.stationxml.FDSNStationXML;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
+import edu.sc.seis.seisFile.fdsnws.stationxml.NetworkIterator;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
+import edu.sc.seis.seisFile.fdsnws.stationxml.StationIterator;
+import edu.sc.seis.seisFile.fdsnws.stationxml.StationXMLException;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 
 
 public class StationXML implements NetworkSource {
 
-    public StationXML() {
-        url = "http://www.iris.edu/ws/station/query?";
+    public StationXML() throws ConfigurationException {
+        url = FDSNStationQueryParams.IRIS_BASE_URL;
+        parseURL();
     }
+    
     public StationXML(Element config) throws ConfigurationException {
         if (DOMHelper.hasElement(config, URL_ELEMENT)) {
             url = SodUtil.getNestedText(SodUtil.getElement(config, URL_ELEMENT));
-            try {
-                parsedURL = new URI(url);
-                List<String> split = new ArrayList<String>();
-                if (parsedURL.getQuery() != null) {
-                    String[] splitArray = parsedURL.getQuery().split("&");
-                    for (String s : splitArray) {
-                        String[] nvSplit = s.split("=");
-                        if (!nvSplit[0].equals("level")) {
-                            // zap level as we do that ourselves
-                            split.add(s);
-                        }
-                    }
-                    String newQuery = "";
-                    boolean first = true;
-                    for (String s : split) {
-                        if (!first) {
-                            newQuery += "&";
-                        }
-                        newQuery += s;
-                        first = false;
-                    }
-                    parsedURL = new URI(parsedURL.getScheme(),
-                                        parsedURL.getUserInfo(),
-                                        parsedURL.getHost(),
-                                        parsedURL.getPort(),
-                                        parsedURL.getPath(),
-                                        newQuery,
-                                        parsedURL.getFragment());
-                    url = parsedURL.toURL().toString();
-                }
-            } catch(URISyntaxException e) {
-                throw new ConfigurationException("Invalid <url> element found.", e);
-            } catch(MalformedURLException e) {
-                throw new ConfigurationException("Bad URL", e);
-            }
-        } else {
-            throw new ConfigurationException("No <url> element found");
         }
         if(DOMHelper.hasElement(config, AbstractNetworkSource.REFRESH_ELEMENT)) {
             refreshInterval = SodUtil.loadTimeInterval(SodUtil.getElement(config, AbstractNetworkSource.REFRESH_ELEMENT));
         } else {
             refreshInterval = new TimeInterval(1, UnitImpl.FORTNIGHT);
         }
+        parseURL();
     }
 
+    void parseURL() throws ConfigurationException {
+        try {
+            parsedURL = new URI(url);
+            List<String> split = new ArrayList<String>();
+            if (parsedURL.getQuery() != null) {
+                String[] splitArray = parsedURL.getQuery().split("&");
+                for (String s : splitArray) {
+                    String[] nvSplit = s.split("=");
+                    if (!nvSplit[0].equals("level")) {
+                        // zap level as we do that ourselves
+                        split.add(s);
+                    }
+                }
+                String newQuery = "";
+                boolean first = true;
+                for (String s : split) {
+                    if (!first) {
+                        newQuery += "&";
+                    }
+                    newQuery += s;
+                    first = false;
+                }
+                parsedURL = new URI(parsedURL.getScheme(),
+                                    parsedURL.getUserInfo(),
+                                    parsedURL.getHost(),
+                                    parsedURL.getPort(),
+                                    parsedURL.getPath(),
+                                    newQuery,
+                                    parsedURL.getFragment());
+                System.out.println("parsedURL: "+parsedURL);
+            }
+        } catch(URISyntaxException e) {
+            throw new ConfigurationException("Invalid <url> element found.", e);
+        }
+    }
     
     public String getDNS() {
         return url;
@@ -182,12 +183,12 @@ public class StationXML implements NetworkSource {
 
     public Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
         MicroSecondDate chanBegin = new MicroSecondDate(chanId.begin_time);
-        String newQuery = "net="+chanId.network_id.network_code+
-                "&sta="+chanId.station_code+
-                "&loc="+chanId.site_code+
-                "&chan="+chanId.channel_code+
-                "&timewindow="+toDateString(chanBegin)+
-                ","+toDateString(chanBegin.add(ONE_DAY));
+        String newQuery = FDSNStationQueryParams.NETWORK+"="+chanId.network_id.network_code+
+                "&"+FDSNStationQueryParams.STATION+"="+chanId.station_code+
+                "&"+FDSNStationQueryParams.LOCATION+"="+chanId.site_code+
+                "&"+FDSNStationQueryParams.CHANNEL+"="+chanId.channel_code+
+                "&"+FDSNStationQueryParams.STARTTIME+"="+toDateString(chanBegin)+
+                "&"+FDSNStationQueryParams.ENDTIME+"="+toDateString(chanBegin.add(ONE_DAY));
         try {
             URI chanUri = new URI(parsedURL.getScheme(),
                                   parsedURL.getUserInfo(),
@@ -230,6 +231,9 @@ public class StationXML implements NetworkSource {
         throw new ChannelNotFound();
     }
     
+    public void setConstrains(NetworkQueryConstraints constraints) {
+        this.constraints = constraints;
+    }
 
     synchronized void checkNetsLoaded() {
         if (networks == null) {
@@ -308,7 +312,7 @@ public class StationXML implements NetworkSource {
     synchronized void parseNets() throws XMLStreamException, StationXMLException, IOException, URISyntaxException {
         networks = new ArrayList<NetworkAttrImpl>();
         logger.info("Parsing networks from "+parsedURL);
-        FDSNStationXML stationXML = retrieveXML(parsedURL, "net");
+        FDSNStationXML stationXML = retrieveXML(parsedURL, FDSNStationQueryParams.LEVEL_NETWORK);
         
         NetworkIterator netIt = stationXML.getNetworks();
         while (netIt.hasNext()) {
@@ -327,7 +331,7 @@ public class StationXML implements NetworkSource {
         staChanMap.clear();
         int numChannels = 0;
         logger.info("Parsing channels from "+parsedURL);
-        FDSNStationXML stationXML = retrieveXML(parsedURL, "chan");
+        FDSNStationXML stationXML = retrieveXML(parsedURL, FDSNStationQueryParams.LEVEL_CHANNEL);
         lastLoadDate = stationXML.getCreated();
         NetworkIterator netIt = stationXML.getNetworks();
         while (netIt.hasNext()) {
@@ -375,6 +379,8 @@ public class StationXML implements NetworkSource {
         return df.format(msd);
     }
     
+    NetworkQueryConstraints constraints;
+    
     static String[] ignoreNets = new String[] {"AB", "AI", "BN"};
     
     List<NetworkAttrImpl> knownNetworks = new ArrayList<NetworkAttrImpl>();;
@@ -383,7 +389,7 @@ public class StationXML implements NetworkSource {
     
     Map<String, List<StationChannelBundle>> staChanMap = new HashMap<String, List<StationChannelBundle>>();
     
-    String url;
+    String url = FDSNStationQueryParams.IRIS_BASE_URL;;
     
     URI parsedURL;
     

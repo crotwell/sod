@@ -34,21 +34,28 @@ import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.source.event.EventSource;
 import edu.sc.seis.sod.source.network.InstrumentationFromDB;
 import edu.sc.seis.sod.source.network.LoadedNetworkSource;
+import edu.sc.seis.sod.source.network.NetworkQueryConstraints;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.source.network.StationXML;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.networkArm.NetworkMonitor;
+import edu.sc.seis.sod.subsetter.Subsetter;
+import edu.sc.seis.sod.subsetter.channel.ChannelCode;
 import edu.sc.seis.sod.subsetter.channel.ChannelEffectiveTimeOverlap;
+import edu.sc.seis.sod.subsetter.channel.ChannelOR;
 import edu.sc.seis.sod.subsetter.channel.ChannelSubsetter;
 import edu.sc.seis.sod.subsetter.channel.PassChannel;
+import edu.sc.seis.sod.subsetter.channel.SiteCode;
 import edu.sc.seis.sod.subsetter.network.NetworkCode;
 import edu.sc.seis.sod.subsetter.network.NetworkEffectiveTimeOverlap;
 import edu.sc.seis.sod.subsetter.network.NetworkOR;
 import edu.sc.seis.sod.subsetter.network.NetworkSubsetter;
 import edu.sc.seis.sod.subsetter.network.PassNetwork;
 import edu.sc.seis.sod.subsetter.station.PassStation;
+import edu.sc.seis.sod.subsetter.station.StationCode;
 import edu.sc.seis.sod.subsetter.station.StationEffectiveTimeOverlap;
+import edu.sc.seis.sod.subsetter.station.StationOR;
 import edu.sc.seis.sod.subsetter.station.StationSubsetter;
 
 public class NetworkArm implements Arm {
@@ -62,7 +69,7 @@ public class NetworkArm implements Arm {
         try {
             SodDB sodDb = SodDB.getSingleton();
             // lastQueryTime should be null if first time
-            lastQueryTime = sodDb.getQueryTime(getInternalNetworkSource().getName(), getInternalNetworkSource().getDNS());
+            lastQueryTime = sodDb.getQueryTime(getInternalNetworkSource().getName(), "");
             
             // only do timer if positive interval and waveform arm exists, otherwise run in thread
             if (getRefreshInterval().value > 0 && Start.getWaveformRecipe() != null) {
@@ -119,6 +126,11 @@ public class NetworkArm implements Arm {
                 loadConfigElement(SodUtil.load((Element)node, PACKAGES));
             } // end of if (node instanceof Element)
         } // end of for (int i=0; i<children.getSize(); i++)
+        NetworkQueryConstraints constraints = new NetworkQueryConstraints(attrSubsetter,
+                                                                          stationSubsetter,
+                                                                          chanSubsetters);
+        
+        getNetworkSource().setConstrains(constraints);
         configureEffectiveTimeCheckers();
     }
 
@@ -287,35 +299,10 @@ public class NetworkArm implements Arm {
         }
     }
 
-    /**
-     * Given a network subsetter, return a string array consisting of all the
-     * network codes this subsetter accepts. If it doesn't constrain network
-     * codes, an empty array is returned.
-     */
-    public String[] getConstrainingNetworkCodes() {
-        if(attrSubsetter == null) {
-            return new String[0];
-        } else if(attrSubsetter instanceof NetworkOR) {
-            NetworkSubsetter[] kids = ((NetworkOR)attrSubsetter).getNetworkSubsetters();
-            String[] codes = new String[kids.length];
-            for(int i = 0; i < kids.length; i++) {
-                if(kids[i] instanceof NetworkCode) {
-                    codes[i] = ((NetworkCode)kids[i]).getCode();
-                } else {
-                    return new String[0];
-                }
-            }
-            return codes;
-        } else if(attrSubsetter instanceof NetworkCode) {
-            return new String[] {((NetworkCode)attrSubsetter).getCode()};
-        } else {
-            return new String[0];
-        }
-    }
 
     void finish() {
         armFinished = true;
-        lastQueryTime = new QueryTime(getInternalNetworkSource().getName(), getInternalNetworkSource().getDNS(), ClockUtil.now().getTimestamp());
+        lastQueryTime = new QueryTime(getInternalNetworkSource().getName(), "", ClockUtil.now().getTimestamp());
         SodDB.getSingleton().putQueryTime(lastQueryTime);
         SodDB.commit();
         logger.info("Network arm finished.");
