@@ -21,7 +21,7 @@ public class ServerParser extends PatternParser {
     }
 
     public String getErrorMessage(String arg) {
-        return "A server is specified as its dns followed by a / then its name like 'edu/iris/dmc/IRIS_NetworkDC' not '"
+        return "A DHI server is specified as its dns followed by a / then its name like 'edu/iris/dmc/IRIS_NetworkDC' not '"
                 + arg + "'";
     }
 }
