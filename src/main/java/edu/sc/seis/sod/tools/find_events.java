@@ -20,7 +20,7 @@ public class find_events extends CommandLineTool {
                        JSAP.NO_SHORTFLAG,
                        "allow-duplicates",
                        "Without this very similar events are rejected"));
-        add(ServerParser.createParam("edu/iris/dmc/IRIS_EventDC",
+        add(ServerParser.createParam(null,
                                      "The event server to use."));
         add(BoxAreaParser.createParam("Event constraining box as west/east/south/north"));
         add(DonutParser.createParam("Event constraining donut as lat/lon/minRadius/maxRadius"));
