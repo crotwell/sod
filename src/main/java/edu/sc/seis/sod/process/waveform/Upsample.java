@@ -17,6 +17,11 @@ import edu.sc.seis.sod.status.StringTreeBranch;
 
 public class Upsample implements WaveformProcess {
 
+    public Upsample(int factor) {
+        upsample = new edu.sc.seis.fissuresUtil.bag.Upsample(factor);
+
+    }
+    
     public Upsample(Element config) {
         this.config = config;
         if (SodUtil.getElement(config, ANTIALIAS_NAME) != null) {
