@@ -152,15 +152,15 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
     @Override
     public CacheEvent[] next() {
         try {
-        List<CacheEvent> out = new ArrayList<CacheEvent>();
-        EventIterator it = getIterator();
-        while (it.hasNext()) {
-            Event e = it.next();
-            out.add(toCacheEvent(e));
-        }
-        return out.toArray(new CacheEvent[0]);
+            List<CacheEvent> out = new ArrayList<CacheEvent>();
+            EventIterator it = getIterator();
+            while (it.hasNext()) {
+                Event e = it.next();
+                out.add(toCacheEvent(e));
+            }
+            return out.toArray(new CacheEvent[0]);
         } catch(Exception e) {
-            throw new RuntimeException(e); //ToDo: fix this
+            throw new RuntimeException(e); // ToDo: fix this
         }
     }
 
@@ -185,16 +185,13 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
     }
     
     EventIterator getIterator() throws SeisFileException {
-        if (it == null) {
             try {
-                it = getQuakeML().getEventParameters().getEvents();
+                return getQuakeML().getEventParameters().getEvents();
             } catch(SeisFileException e) {
                 throw e;
             } catch(Exception e) {
                 throw new SeisFileException(e);
             }
-        }
-        return it;
     }
     
     CacheEvent toCacheEvent(Event e) {
@@ -278,42 +275,32 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         return ce;
     }
     
-    Quakeml getQuakeML() throws MalformedURLException, IOException, URISyntaxException, XMLStreamException, SeisFileException {
-        if (quakeml == null) {
-            FDSNEventQueryParams timeWindowQueryParams = queryParams.clone();
-            
-
-            MicroSecondDate now = ClockUtil.now();
-            MicroSecondTimeRange queryTime = getQueryTime();
-
-            timeWindowQueryParams.setStartTime(queryTime.getBeginTime());
-            timeWindowQueryParams.setEndTime(queryTime.getEndTime());
-            if (caughtUpWithRealtime() && lastQueryEnd != null) {
-                timeWindowQueryParams.setUpdatedAfter(lastQueryEnd);
-            }
-            FDSNEventQuerier querier = new FDSNEventQuerier(timeWindowQueryParams);
-            querier.setUserAgent("SOD/"+BuildVersion.getVersion());
-            System.out.println("FDSNEventQuerier "+timeWindowQueryParams.formURI().toString());
-            if (caughtUpWithRealtime() && hasNext()) {
-                sleepUntilTime = now.add(refreshInterval);
-                logger.debug("set sleepUntilTime "+sleepUntilTime);
-                resetQueryTimeForLag();
-                lastQueryEnd = now;
-            }
-            updateQueryEdge(queryTime);
-            
-            quakeml = querier.getQuakeML();
+    Quakeml getQuakeML() throws MalformedURLException, IOException, URISyntaxException, XMLStreamException,
+            SeisFileException {
+        FDSNEventQueryParams timeWindowQueryParams = queryParams.clone();
+        MicroSecondDate now = ClockUtil.now();
+        MicroSecondTimeRange queryTime = getQueryTime();
+        timeWindowQueryParams.setStartTime(queryTime.getBeginTime());
+        timeWindowQueryParams.setEndTime(queryTime.getEndTime());
+        if (caughtUpWithRealtime() && lastQueryEnd != null) {
+            timeWindowQueryParams.setUpdatedAfter(lastQueryEnd);
         }
-        return quakeml;
+        FDSNEventQuerier querier = new FDSNEventQuerier(timeWindowQueryParams);
+        querier.setUserAgent("SOD/" + BuildVersion.getVersion());
+        System.out.println("FDSNEventQuerier " + timeWindowQueryParams.formURI().toString());
+        if (caughtUpWithRealtime() && hasNext()) {
+            sleepUntilTime = now.add(refreshInterval);
+            logger.debug("set sleepUntilTime " + sleepUntilTime);
+            resetQueryTimeForLag();
+            lastQueryEnd = now;
+        }
+        updateQueryEdge(queryTime);
+        return querier.getQuakeML();
     }
 
     FDSNEventQueryParams queryParams = new FDSNEventQueryParams();
 
     MicroSecondTimeRangeSupplier eventTimeRangeSupplier;
-    
-    Quakeml quakeml;
-    
-    EventIterator it;
     
     private MicroSecondDate lastQueryEnd;
 
