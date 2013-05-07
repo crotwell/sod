@@ -287,7 +287,6 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         }
         FDSNEventQuerier querier = new FDSNEventQuerier(timeWindowQueryParams);
         querier.setUserAgent("SOD/" + BuildVersion.getVersion());
-        System.out.println("FDSNEventQuerier " + timeWindowQueryParams.formURI().toString());
         if (caughtUpWithRealtime() && hasNext()) {
             sleepUntilTime = now.add(refreshInterval);
             logger.debug("set sleepUntilTime " + sleepUntilTime);

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.BasicConfigurator;
 import org.apache.velocity.VelocityContext;
 
 import com.martiansoftware.jsap.FlaggedOption;
@@ -30,6 +31,9 @@ public class find_stations extends CommandLineTool {
         }
         if (isSpecified(beginParam) || isSpecified(endParam)) {
             con.put("needsEffectiveTimeRange", Boolean.TRUE);
+            if (isSpecified(beginParam) && ! isSpecified(endParam)) {
+                con.put("end", "<now/>");
+            }
         } else {
             con.put("needsEffectiveTimeRange", Boolean.FALSE);
         }
@@ -61,7 +65,7 @@ public class find_stations extends CommandLineTool {
     protected void addDefaultParams() throws JSAPException {
         super.addParams();
         needsStationAndIfSpecified = new ArrayList();
-        add(ServerParser.createParam("edu/iris/dmc/IRIS_NetworkDC",
+        add(ServerParser.createParam(null,
                                      "The network server to use."));
         addStationParam(BoxAreaParser.createParam("A station constraining box as west/east/south/north"));
         addStationParam(DonutParser.createParam("A donut as lat/lon/minRadius/maxRadius"));
@@ -98,6 +102,7 @@ public class find_stations extends CommandLineTool {
     protected FlaggedOption outputFormatFlag;
 
     public static void main(String[] args) throws Exception {
+        BasicConfigurator.configure();
         CommandLineTool.run(new find_stations(args));
     }
 }

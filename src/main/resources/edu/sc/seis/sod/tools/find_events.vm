@@ -6,9 +6,10 @@
         <eventChannelPairProcessing>noCheck</eventChannelPairProcessing>
     </properties>
     <eventArm>
-        <eventFinder>
-            <name>$server.name</name>
-            <dns>$server.dns</dns>
+        <fdsnEvent>
+#if($baseurl)
+            <baseurl>$baseurl</baseurl>
+#end
 #if($box)
             <boxArea>
                 <latitudeRange>
@@ -63,7 +64,7 @@
             <contributor>$cat</contributor>
 #end
 #end
-        </eventFinder>
+        </fdsnEvent>
 #if(!$allowDupes)
         <removeEventDuplicate/>
 #end

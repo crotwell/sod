@@ -1,9 +1,38 @@
 #if($additionalArms.length() > 0)
 $additionalArms#end
     <networkArm>
-        <stationXML>
-            <url>http://www.iris.edu/ws/station/query?</url>
-        </stationXML>
+        <fdsnStation>
+#if($baseurl)
+            <baseurl>$baseurl</baseurl>
+#end
+#foreach($code in $networks)
+            <networkCode>$code</networkCode>
+#end
+#foreach($code in $stations)
+            <stationCode>$code</stationCode>
+#end
+#if($box)
+            <stationBoxArea>
+                <latitudeRange>
+                    <min>$box.south</min>
+                    <max>$box.north</max>
+                </latitudeRange>
+                <longitudeRange>
+                    <min>$box.west</min>
+                    <max>$box.east</max>
+                </longitudeRange>
+            </stationBoxArea>
+#end
+#if($donut)
+            <stationPointDistance>
+                <unit>DEGREE</unit>
+                <min>$donut.min</min>
+                <max>$donut.max</max>
+                <latitude>$donut.lat</latitude>
+                <longitude>$donut.lon</longitude>
+            </stationPointDistance>
+#end
+        </fdsnStation>
 #if($server)
         <networkFinder>
             <name>$server.name</name>
@@ -27,18 +56,16 @@ $additionalArms#end
             </stationOR>
 #end
 #if($box)
-            <stationArea>
-                <boxArea>
-                    <latitudeRange>
-                        <min>$box.south</min>
-                        <max>$box.north</max>
-                    </latitudeRange>
-                    <longitudeRange>
-                        <min>$box.west</min>
-                        <max>$box.east</max>
-                    </longitudeRange>
-                </boxArea>
-            </stationArea>
+            <stationBoxArea>
+                <latitudeRange>
+                    <min>$box.south</min>
+                    <max>$box.north</max>
+                </latitudeRange>
+                <longitudeRange>
+                    <min>$box.west</min>
+                    <max>$box.east</max>
+                </longitudeRange>
+            </stationBoxArea>
 #end
 #if($donut)
             <stationPointDistance>

@@ -1,8 +1,21 @@
     <networkArm>
-        <networkFinder>
-            <name>$server.name</name>
-            <dns>$server.dns</dns>
-        </networkFinder>
+        <fdsnStation>
+#if($baseurl)
+            <baseurl>$baseurl</baseurl>
+#end
+#foreach($code in $networks)
+            <networkCode>$code</networkCode>
+#end
+#foreach($code in $stations)
+            <stationCode>$code</stationCode>
+#end
+#foreach($code in $sites)
+            <locationCode>$code</siteLocation>
+#end
+#foreach($code in $channels)
+            <channelCode>$code</channelCode>
+#end
+        </fdsnStation>
 #if($networks)
         <networkOR>
 #foreach($code in $networks)
@@ -53,11 +66,11 @@
 #end
         </stationAND>
 #if($sites)
-        <siteOR>
+        <channelOR>
 #foreach($code in $sites)
             <siteCode>$code</siteCode>
 #end
-		</siteOR>
+		</channelOR>
 #end
 #if($needsEffectiveTimeRange)
         <channelEffectiveTimeOverlap>

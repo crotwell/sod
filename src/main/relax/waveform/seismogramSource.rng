@@ -15,7 +15,7 @@
             <ref name="choiceSource"/>
             <ref name="tryInOrder"/>
             <ref name="winstonWaveServer"/>
-            <ref name="dataSelectWebService"/>
+            <ref name="fdsnDataSelect"/>
         </choice>
     </define>
     <define name="fixedDataCenter">
@@ -23,7 +23,7 @@
             <xsd:annotation>
                 <summary>Pick a central data repository</summary>
                 <description>
-                <deprecated>DHI servers at the IRIS DMC will be turned off June 2013. The dataSelectWebService is the replacement.</deprecated>
+                <deprecated>DHI servers at the IRIS DMC will be turned off June 2013. The fdsnDataSelect web service is the replacement.</deprecated>
                     This specifies the data center to use.
                     See <a href="http://www.seis.sc.edu/wily/GetAllServers?corbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService&amp;description=IRIS nameserver">Wily</a>
                     for a complete list of SeismogramDCs and their current status.</description>
@@ -185,11 +185,11 @@
             </optional>
         </element>
     </define>
-    <define name="dataSelectWebService">
-        <element name="dataSelectWebService">
+    <define name="fdsnDataSelect">
+        <element name="fdsnDataSelect">
             <xsd:annotation>
-                <summary>Pick a IRIS DMC dataselect web service</summary>
-                <description>This specifies a IRIS DMC dataselect web service.
+                <summary>Pick a FDSN dataselect web service</summary>
+                <description>This specifies a FDSN dataselect web service. The default is the IRIS DMC.
                     </description>
             </xsd:annotation>
             <interleave>
@@ -199,7 +199,7 @@
                     </element>
                 </optional>
                 <optional>
-                    <element name="url">
+                    <element name="baseurl">
                         <data type="string"/>
                     </element>
                 </optional>

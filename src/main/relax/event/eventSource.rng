@@ -15,7 +15,7 @@
             <ref name="periodicFakeEventSource"/>
             <ref name="nowFakeEventSource"/>
             <ref name="delayedEventSource"/>
-            <ref name="quakeML"/>
+            <ref name="fdsnEvent"/>
         </choice>
     </define>
     <define name="eventFinder">
@@ -86,7 +86,7 @@
         <element name="quakeML">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary>Querys events from a QuakeML web service or file.</summary>
+                    <summary>Loads events from a QuakeML file or URL.</summary>
                 </xsd:documentation>
             </xsd:annotation>
             <interleave>
@@ -94,7 +94,29 @@
                     <element name="url">
                         <xsd:annotation>
                           <summary>A QuakeML URL</summary>
-                          <description>A url to a quakeml event source, either a web service or file.</description>
+                          <description>A url to a quakeml event source, either a remote web service or local file. Note this will
+                          only be queried once, and so is not usable for new events as in a "standing order".</description>
+                         </xsd:annotation>
+                        <data type="string"/>
+                    </element>
+                </optional>
+            </interleave>
+        </element>
+    </define>
+                
+    <define name="fdsnEvent">
+        <element name="fdsnEvent">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Querys events from a FDSN Event web service or file.</summary>
+                </xsd:documentation>
+            </xsd:annotation>
+            <interleave>
+                <optional>
+                    <element name="baseurl">
+                        <xsd:annotation>
+                          <summary>A FDSN Event web service URL</summary>
+                          <description>A url to a FDSN event web service.</description>
                          </xsd:annotation>
                         <data type="string"/>
                     </element>

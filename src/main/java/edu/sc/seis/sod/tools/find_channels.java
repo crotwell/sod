@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.tools;
 
+import org.apache.log4j.BasicConfigurator;
 import org.apache.velocity.VelocityContext;
 
 import com.martiansoftware.jsap.JSAPException;
@@ -53,6 +54,7 @@ public class find_channels extends find_stations {
     }
 
     public static void main(String[] args) throws Exception {
+        BasicConfigurator.configure();
         CommandLineTool.run(new find_channels(args));
     }
 }

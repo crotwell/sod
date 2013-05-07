@@ -12,12 +12,15 @@ import org.apache.log4j.PropertyConfigurator;
 import org.apache.velocity.VelocityContext;
 import org.xml.sax.InputSource;
 
+import com.martiansoftware.jsap.FlaggedOption;
+import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.Option;
 import com.martiansoftware.jsap.Switch;
 
 import edu.sc.seis.fissuresUtil.simple.Initializer;
 import edu.sc.seis.seisFile.client.AbstractClient;
+import edu.sc.seis.seisFile.fdsnws.AbstractFDSNClient;
 import edu.sc.seis.sod.Args;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.UserConfigurationException;
@@ -28,6 +31,21 @@ public class CommandLineTool extends AbstractClient {
 
     public CommandLineTool(String[] args) throws JSAPException {
         super(args);
+    }
+    
+    protected void addParams() throws JSAPException {
+        super.addParams();
+        add(new Switch("recipe",
+                       'r',
+                       "recipe",
+                       "Print the created recipe to stdout instead of running it"));
+        add(new FlaggedOption(AbstractFDSNClient.BASEURL,
+                              JSAP.STRING_PARSER,
+                              null,
+                              false,
+                              JSAP.NO_SHORTFLAG,
+                              AbstractFDSNClient.BASEURL,
+                              "Base URL for queries, ie everything before the '?'"));
     }
 
     public VelocityContext getContext() {

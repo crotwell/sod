@@ -32,6 +32,7 @@ import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
 import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.source.event.EventSource;
+import edu.sc.seis.sod.source.network.FdsnStation;
 import edu.sc.seis.sod.source.network.InstrumentationFromDB;
 import edu.sc.seis.sod.source.network.LoadedNetworkSource;
 import edu.sc.seis.sod.source.network.NetworkQueryConstraints;
@@ -670,7 +671,7 @@ public class NetworkArm implements Arm {
         }
     }
 
-    private NetworkSource internalFinder = new StationXML();
+    private NetworkSource internalFinder = new FdsnStation();
 
     private NetworkSource finder = new InstrumentationFromDB(internalFinder);
     
