@@ -23,7 +23,7 @@ public class FixedDataCenter extends AbstractSource implements SodElement,
     public FixedDataCenter(Element element) {
         super(element, DEFAULT_SERVER_NAME);
         if (getDNS().equals("edu/iris/dmc")) {
-            System.err.println("WARNING: DHI servers will be turned off June 2013, switch to <dataSelectWebService>");
+            System.err.println("WARNING: DHI servers will be turned off June 2013, switch to <fdsnDataSelect>");
         }
     }
 

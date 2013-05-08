@@ -41,7 +41,7 @@ public class NetworkFinder extends AbstractNetworkSource {
         super(config);
         dns = SodUtil.loadText(config, "dns", "edu/iris/dmc");
         if (getDNS().equals("edu/iris/dmc")) {
-            System.err.println("WARNING: DHI servers will be turned off June 2013, switch to <stationXML>");
+            System.err.println("WARNING: DHI servers will be turned off June 2013, switch to <fdsnStation>");
         }
     }
 

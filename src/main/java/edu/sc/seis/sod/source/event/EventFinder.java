@@ -27,7 +27,7 @@ public class EventFinder extends AbstractSource implements EventSource {
 		super(config, "IRIS_EventDC");
 		processConfig(config);
         if (getDNS().equals("edu/iris/dmc")) {
-            System.err.println("WARNING: DHI servers will be turned off June 2013, switch to <quakeML>");
+            System.err.println("WARNING: DHI servers will be turned off June 2013, switch to <fdsnEvent>");
         }
 		eventFinderId = eventFinderCount++;
 		processConfig(config);
