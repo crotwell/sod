@@ -71,6 +71,7 @@ public class StationXML implements NetworkSource {
     public StationXML(Element config) throws ConfigurationException {
         if (DOMHelper.hasElement(config, URL_ELEMENT)) {
             url = SodUtil.getNestedText(SodUtil.getElement(config, URL_ELEMENT));
+            checkForOldIrisWebService(url);
         }
         if(DOMHelper.hasElement(config, AbstractNetworkSource.REFRESH_ELEMENT)) {
             refreshInterval = SodUtil.loadTimeInterval(SodUtil.getElement(config, AbstractNetworkSource.REFRESH_ELEMENT));
@@ -78,6 +79,14 @@ public class StationXML implements NetworkSource {
             refreshInterval = new TimeInterval(1, UnitImpl.FORTNIGHT);
         }
         parseURL();
+    }
+
+    private void checkForOldIrisWebService(String url2) throws ConfigurationException {
+        if (url2.startsWith("http://www.iris.edu/ws")) {
+            throw new ConfigurationException("This URL appears to point to the deprecated IRIS DMC station web service. "
+                    +"This uses the older stationXML schema which is no longer supported by SOD. Please use the new FDSN Station "
+                    +"web service with the <fdsnStation> network source.");
+        }
     }
 
     void parseURL() throws ConfigurationException {
