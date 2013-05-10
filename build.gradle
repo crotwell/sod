@@ -30,6 +30,7 @@ dependencies {
         exclude group: 'org.apache.struts',  module: 'struts-taglib'
         exclude group: 'org.apache.struts',  module: 'struts-tiles'
         exclude group: 'org.apache.struts',  module: 'struts-core'
+        exclude group: 'javax.servlet',  module: 'servlet-api'
     }
 
     compile "edu.sc.seis.mapData:dcwpo_browse:1.0"
