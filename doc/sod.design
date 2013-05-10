@@ -1,0 +1,42 @@
+
+The Design of a Standing Order for Data Client
+
+Flexibility is the key to having a SOD client that is useful within many different types of research. One cannot come up with all types of event, station, channel and waveform filterers as what is acceptable to one study is closely linked to that particular study. Thus, it is paramount for users to be able to "plug in" filters tailored to their needs. We anticipate satisfying this need by having standard interfaces for each step in the process, and a mechanism to dynamically load new filters via a program configuration.
+
+An interesting system with some similarities is the Ant build system from the Apache group. Details can be found at http://jakarta.apache.org/ant. This is a system primarily aimed at managing the build process for Java projects. It is often compared to makefiles. The Ant system has the ability to load tasks based on a xml configuration file. For users created tasks, the task element within an Ant xml configuration file can specify a classname, and optionally paramters. The paramters have names. When Ant encounters such a task directive in the configuration file, it dynamically loads the class of the given name, instantates an object of that class, and the configures it with the given parameters. This gives Ant great fleibility in dealing with unanticipated needs of developers that may use Ant for things not even thought of my the original developers.
+
+SOD can make use of a similar system. Ant has a single interface for tasks, while SOD will need a separete interface for filters at each step defined in the white paper. For example, the event filtering step would have something like:
+
+interface EventFilter {
+
+	public boolean accept(EventAccessOperations event);
+
+}
+
+For each class that implements this interface, and is to be used in a particular SOD run, there will be a entry in the configuration file. For example,
+
+<eventfilter name="myeventfilter" class="edu.sc.seis.mysod.magnitudefilter">
+     <param name="min_mag" value="5.2">
+</eventfilter>
+
+SOD should provide many classes for most standard types of filters, and so individiual researchers should be able to do most common tasks without coding, but the option is there should it be needed.
+
+One common need is for the basic logic operations, and, not, or and xor. These
+will be provided for by the system. An example that takes all event of magnitude 5.5 and larger, as well as magnitude 5.0 and larger if they are deeper than 100 km.
+
+<or>
+   <eventfilter name="magfilter" class="edu.sc.seis.sod.magnitudefilter">
+      <param name="min_mag" value="5.5">
+   </eventfilter>
+   <and>
+      <eventfilter name="magfilter" 
+         class="edu.sc.seis.sod.magnitudefilter">
+         <param name="min_mag" value="5.0">
+      </eventfilter>
+      <eventfilter name="depthfilter" 
+         class="edu.sc.seis.mysod.depthfilter">
+         <param name="min_depth" value="100" unit="kilometer">
+      </eventfilter>
+   </and>
+</or>
+

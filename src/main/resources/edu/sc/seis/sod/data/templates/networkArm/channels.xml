@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<template xmlns:xlink="http://www.w3.org/1999/xlink/">
+<outputLocation><stationCode/>-<beginTime>yyyyMMdd</beginTime>-<endTime>yyyyMMdd</endTime></outputLocation>
+<filename>channels.html</filename>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+<title><runName/> - Channels</title>
+<style media="all">@import "../../../main.css";</style>
+<script type="text/javascript" src="../../../tableRuler.js"> </script>
+<script type="text/javascript" src="../../../sorttable.js"> </script>
+<script type="text/javascript" src="../../../footerPositioner.js"> </script>
+<script type="text/javascript">
+window.onload=function(){
+        positionFooter();
+        tableruler();
+        set_img_dir('../../../images/')
+}
+</script>
+</head>
+<body>
+<div id="Header">
+<station>
+<a href="../../../networks.html"> Networks</a>
+>
+<a href="../stations.html"> <networkCode/></a>
+>
+<stationCode/>
+</station>
+</div>
+<div id="Content">
+<h1>Channels in this station</h1>
+<h2>Station Information:</h2>
+<table>
+<station>
+<tr>
+<td><b>Name</b></td>
+<td><name/> (<networkCode/>.<stationCode/>)</td>
+</tr>
+<tr>
+<td><b>Latitude</b></td>
+<td><lat/></td>
+</tr>
+<tr>
+<td><b>Longitude</b></td>
+<td><lon/></td>
+</tr>
+<tr>
+<td><b>Begin Time</b></td>
+<td><beginTime/></td>
+</tr>
+<tr>
+<td><b>End Time</b></td>
+<td><endTime/></td>
+</tr>
+</station>
+</table>
+<h2>Channels:</h2>
+<table class="ruler sortable" id="channels">
+<tr class="title">
+<td>Id</td>
+<td>Begin Time (GMT)</td>
+<td>End Time (GMT)</td>
+<td>Status</td>
+</tr>
+<channels>
+<channel>
+<tr>
+<td><networkCode/>.<stationCode/>.<siteCode/>.<channelCode/></td>
+<td><beginTime/></td>
+<td><endTime/></td>
+<td><attribute name="id"><standing/></attribute><status/></td>
+</tr>
+</channel>
+<statusFilter><status>success</status></statusFilter>
+</channels>
+<channels>
+<channel>
+<tr>
+<td><networkCode/>.<stationCode/>.<siteCode/>.<channelCode/></td>
+<td><beginTime/></td>
+<td><endTime/></td>
+<td><attribute name="id"><standing/></attribute><status/></td>
+</tr>
+</channel>
+<statusFilter><notStatus>success</notStatus></statusFilter>
+</channels>
+</table>
+<h2>Sites:</h2>
+<table class="ruler sortable" id="sites">
+<tr class="title">
+<td>Id</td>
+<td>Begin Time (GMT)</td>
+<td>End Time (GMT)</td>
+<td>Latitude</td>
+<td>Longitude</td>
+<td>Depth</td>
+<td>Status</td>
+</tr>
+<sites>
+<site>
+<tr>
+<td><networkCode/>.<stationCode/>.<siteCode/></td>
+<td><beginTime/></td>
+<td><endTime/></td>
+<td><lat/></td>
+<td><lon/></td>
+<td><depth/></td>
+<td><attribute name="id"><standing/></attribute><status/></td>
+</tr>
+</site>
+</sites>
+</table>
+</div>
+<div id="LeftColumn">
+<menu><template>jar:edu/sc/seis/sod/data/templates/menu.xml</template></menu>
+</div>
+<div id="footer">
+<h2>Page last generated:</h2><now/>
+</div>
+</body>
+</html>
+</template>
+
+

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+    <start>
+        <element name="mustHaveThisElement">
+            <attribute name="blah">
+                <data type="int"/>
+            </attribute>
+            <attribute name="blah2">
+                <data type="int"/>
+            </attribute>
+            <ref name="internalEl"/>
+        </element>
+    </start>
+    <define name="internalEl">
+            <element name="withThisElementInsideOfIt"><empty/></element>
+    </define>
+</grammar>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+    <!-- test comment -->
+    <start>
+        <!-- test comment -->
+        <element name="mustHaveThisElement">
+        <!-- test comment -->
+            <ref name="internalEl"/>
+            <!-- test comment -->
+        </element>
+    </start>
+    <!-- test comment -->
+    <define name="internalEl">
+    <!-- test comment -->
+            <element name="withThisElementInsideOfIt">
+            <!-- test comment --><empty/>
+            <!-- test comment --></element>
+            <!-- test comment -->
+    </define>
+    <!-- test comment -->
+</grammar>

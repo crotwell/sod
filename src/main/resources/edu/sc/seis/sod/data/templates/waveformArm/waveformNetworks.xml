@@ -1,0 +1,45 @@
+<html>
+<header><title>$runName - Networks in the waveform arm</title>
+<style media="all">@import "../main.css";</style>
+<script type="text/javascript" src="../sorttable.js"> </script>
+<script type="text/javascript" src="../tableRuler.js"> </script>
+<script type="text/javascript" src="../footerPositioner.js"> </script>
+<script type="text/javascript">
+window.onload=function(){
+        positionFooter();
+        tableruler();
+        set_img_dir('../images/')
+}
+</script>
+</header>
+<body>
+
+<div id="Header">
+Networks
+</div>
+<div id="Content">
+<table class="sortable ruler" id="netTable">
+<tr  class="title">
+<th>Code</th>
+<th>Name</th>
+</tr>
+#foreach ( $net in $successful_networks )
+#set ($netAccess = $net.getNetworkAccess())
+#set ($netCode = $fissures.formatNetwork($netAccess.get_attributes().get_id()) )
+<tr>
+<td>$netCode</td>
+<td><a href="${netCode}.html">$fissures.networkName($netAccess)</a></td>
+</tr>
+#end
+</table>
+</div>
+<div id="footer">
+<h2>Page last generated:</h2>$fissures.formatDate($fissures.now())<br/>
+</div>
+<div id="LeftColumn">
+$menu
+</div>
+</body>
+</html>
+
+

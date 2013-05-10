@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    
+    <start>
+        <ref name="waveformVectorProcess"/>
+    </start>
+    <define name="waveformVectorProcess">
+        <choice>
+            <xsd:annotation>
+                <summary>Tactics for processing vectors of waveforms</summary>
+                <velocity>#waveformVectorArmPage()</velocity>
+            </xsd:annotation>
+            <ref name="threeComponentData"/>
+            <ref name="ANDWaveformProcessWrapper"/>
+            <ref name="ORWaveformProcessWrapper"/>
+            <ref name="legacyVectorExecute"/>
+            <ref name="waveformVectorFork"/>
+            <ref name="waveformVectorAND"/>
+            <ref name="waveformVectorOR"/>
+            <ref name="waveformVectorNOT"/>
+            <ref name="waveformVectorAlwaysSuccess"/>
+            <!-- local seismogramProcesses directly in the motion vector arm
+              are treaded as if they are in a ANDWaveformProcessWrapper -->
+            <ref name="seismogramProcess"/>
+            <ref name="externalVectorProcess"/>
+            <ref name="vectorImageProcess"/>
+            <ref name="particleMotionPlot"/>
+            <ref name="sampleSyncronize"/>
+            <ref name="rotateGCP"/>
+            <ref name="vectorTrim"/>
+            <ref name="vectorScript"/>
+            <ref name="iterDeconReceiverFunction"/>
+        </choice>
+    </define>
+    <define name="waveformVectorProcessPlus">
+        <choice>
+            <ref name="waveformVectorProcess"/>
+            <ref name="vectorAvailableDataPlus"/>
+        </choice>
+    </define>
+    <define name="threeComponentData">
+        <element name="threeComponentData">
+            <xsd:annotation>
+                <summary>Checks for data in all three components</summary>
+                <description>If there is some data in all three components, then this returns true, if any are empty,
+                    then false.</description>
+            </xsd:annotation>
+            <empty/>
+        </element>
+    </define>
+    <define name="ANDWaveformProcessWrapper">
+        <element name="ANDWaveformProcessWrapper">
+            <xsd:annotation>
+                <summary>Allows a waveform processor to be used in a waveformVector as an AND</summary>
+                <description>Each of the components of the waveformVector are processed independently by the
+                    seismogramProcess and the results are ANDed together. This operation short circuits, so no waveforms
+                    after the first failure are processed.</description>
+            </xsd:annotation>
+            <ref name="seismogramProcess"/>
+        </element>
+    </define>
+    <define name="ORWaveformProcessWrapper">
+        <element name="ORWaveformProcessWrapper">
+            <xsd:annotation>
+                <summary>Allows a waveform processor to be used in a waveformVector as an OR</summary>
+                <description>Each of the components of the waveformVector are processed independently by the
+                    seismogramProcess and the results are ORed together. This operation short circuits, so no waveforms
+                    after the first success are processed.</description>
+            </xsd:annotation>
+            <ref name="seismogramProcess"/>
+        </element>
+    </define>
+    <define name="legacyVectorExecute">
+        <element name="legacyVectorExecute">
+            <xsd:annotation>
+                <summary>Executes an external program</summary>
+                <description>The legacyVectorExecute processor is capable of running existing command line programs. It
+                    does this by passing the filenames of the seismograms saved by a earlier sacWriter or mseedWriter
+                    processor to a program started with Runtime.exec().</description>
+                <example>
+                    <legacyVectorExecute>
+                        <command>echo</command>
+                    </legacyVectorExecute>
+                </example>
+            </xsd:annotation>
+            <optional>
+                <element name="prefix">
+                    <data type="string"/>
+                </element>
+            </optional>
+            <element name="command">
+                <data type="string"/>
+            </element>
+            <optional>
+                <element name="workingDirectory">
+                    <data type="string"/>
+                </element>
+            </optional>
+        </element>
+    </define>
+    <define name="waveformVectorFork">
+        <element name="waveformVectorFork">
+            <xsd:annotation>
+                <summary>Forks the processing for vector waveform data</summary>
+                <description>The seismograms are copied and sent through the fork allowing independent processing of the
+                    same data. The return value is true if all of the sub processors complete successfully, false otherwise.</description>
+                <example>
+                    <waveformVectorFork>
+                        <rMean/>
+                        <sacWriter>
+                            <workingDir>rTrendData</workingDir>
+                            <location>${network.code}.${station.code}/${event.filizedTime}/${site.code}.${channel.code}.sac</location>
+                        </sacWriter>
+                    </waveformVectorFork>
+                </example>
+            </xsd:annotation>
+            <zeroOrMore>
+                <ref name="waveformVectorProcessPlus"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="waveformVectorAND">
+        <element name="waveformVectorAND">
+            <xsd:annotation>
+                <summary>Matches all included waveformVector processors</summary>
+                <description>The output is the logical AND of the outputs of all included waveformVector processors.
+                    This means that it will evaluate to true only if all of the included processors evaluate to true.
+                    The subsetters after the first false outputted are not evaluated. The seismic data passed down the
+                    chain is the data passed in. Seismogram results of the contained processors are ignored.</description>
+                <example>
+                    <waveformVectorAND>
+                        <waveformVectorNOT>
+                            <rMean/>
+                        </waveformVectorNOT>
+                        <sacWriter>
+                            <workingDir>rTrendData</workingDir>
+                            <location>${network.code}.${station.code}/${event.filizedTime}/${site.code}.${channel.code}.sac</location>
+                        </sacWriter>
+                    </waveformVectorAND>
+                </example>
+            </xsd:annotation>
+            <oneOrMore>
+                <ref name="waveformVectorProcessPlus"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="waveformVectorOR">
+        <element name="waveformVectorOR">
+            <xsd:annotation>
+                <summary>Matches at least one of the included waveformVector processors</summary>
+                <description>The output is the logical OR of the outputs of all included waveformVector processors. This
+                    means that it will evaluate to true as long as one of the included waveformVector processors
+                    evaluate to true. The processors after the first true outputted are not evaluated. The seismic data
+                    passed down the chain is the data passed in. Seismogram results of the contained processors are ignored.</description>
+                <example>
+                    <waveformVectorOR>
+                        <waveformVectorNOT>
+                            <rMean/>
+                        </waveformVectorNOT>
+                        <sacWriter>
+                            <workingDir>rTrendData</workingDir>
+                            <location>${network.code}.${station.code}/${event.filizedTime}/${site.code}.${channel.code}.sac</location>
+                        </sacWriter>
+                    </waveformVectorOR>
+                </example>
+            </xsd:annotation>
+            <oneOrMore>
+                <ref name="waveformVectorProcessPlus"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="waveformVectorNOT">
+        <element name="waveformVectorNOT">
+            <xsd:annotation>
+                <summary>Matches the negated output of the included waveformVector processor</summary>
+                <description>The output is the logical NOT of the output of the included waveformVector processors. This
+                    means that it will evaluate to true if the included processor evaluates to false, and vice versa.
+                    The seismic data passed down the chain is the data passed in. Seismogram results of the contained
+                    processors are ignored.</description>
+                <example>
+                    <waveformVectorNOT>
+                        <rMean/>
+                    </waveformVectorNOT>
+                </example>
+            </xsd:annotation>
+            <ref name="waveformVectorProcessPlus"/>
+        </element>
+    </define>
+    <define name="waveformVectorAlwaysSuccess">
+        <element name="waveformVectorAlwaysSuccess">
+            <xsd:annotation>
+                <summary>Executes a subprocessor, but always returns true.</summary>
+                <description>This executes the enclosed processor, but always returns a success regardless of whether
+                    the enclosed processor succeeded or failed. </description>
+                <example>
+                    <waveformVectorAlwaysSuccess>
+                        <waveformVectorFork>
+                            <rMean/>
+                            <sacWriter>
+                            <workingDir>rTrendData</workingDir>
+                            <location>${network.code}.${station.code}/${event.filizedTime}/${site.code}.${channel.code}.sac</location>
+                        </sacWriter>
+                        </waveformVectorFork>
+                    </waveformVectorAlwaysSuccess>
+                </example>
+            </xsd:annotation>
+            <ref name="waveformVectorProcessPlus"/>
+        </element>
+    </define>
+    <define name="externalVectorProcess">
+        <element name="externalWaveformVectorProcess">
+            <xsd:annotation>
+                <summary>Use a WaveformVectorProcess external to SOD</summary>
+                <description>$externalWaveformVectorProcessInfo.getRelaxHTML('../')</description>
+                <example>
+                    <externalWaveformVectorProcess>
+                        <classname>edu.somewhere.seis.sodExt.process.waveformVector.MyWaveformVectorProcess</classname>
+                    </externalWaveformVectorProcess>
+                </example>
+            </xsd:annotation>
+            <ref name="externalClass"/>
+        </element>
+    </define>
+    <define name="vectorImageProcess">
+        <element name="vectorImageProcess">
+            <optional>
+                <attribute name="id"/>
+            </optional>
+            <ref name="seismogramImageBase"/>
+            <optional>
+                <ref name="titleBorder"/>
+            </optional>
+            <optional>
+                <ref name="globalizedAmpConfig"/>
+            </optional>
+            <optional>
+                <element name="displayTemplate">
+                    <ref name="basicSeismogramDisplayContents"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="verticalDisplayConfig">
+                    <ref name="basicSeismogramDisplayContents"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="northDisplayConfig">
+                    <ref name="basicSeismogramDisplayContents"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="eastDisplayConfig">
+                    <ref name="basicSeismogramDisplayContents"/>
+                </element>
+            </optional>
+        </element>
+    </define>
+    <define name="particleMotionPlot">
+        <element name="particleMotionPlot">
+            <interleave>
+                <optional>
+                    <attribute name="id"/>
+                </optional>
+                <optional>
+                    <ref name="workingDir"/>
+                </optional>
+                <optional>
+                    <ref name="seisFileLocation"/>
+                </optional>
+                <optional>
+                    <ref name="titleBorder"/>
+                </optional>
+                <optional>
+                    <element name="phaseWindow">
+                        <ref name="phaseWindow"/>
+                    </element>
+                </optional>
+            </interleave>
+        </element>
+    </define>
+    <define name="rotateGCP">
+        <element name="rotateGCP">
+            <xsd:annotation>
+                <summary>Rotate the seismograms to Great Circle Path</summary>
+                <description>The horizontal seismograms are rotated to the great circle path. The channel codes are
+                    changed to end in R for radial or T for transverse, so BHN and BHE would become BHR and BHT. 
+                    Because the seismograms to be rotated must be aligned and corresponding in number, this 
+                    applies a <a href="collapseOverlaps.html">collapseOverlaps</a> to remove duplications,
+                    applies a <a href="merge.html">merge</a> to join adjacent segments and
+                    a <a href="vectorTrim.html">vectorTrim</a> to align
+                    all of the seismograms in the vector and remove time windows that does not exist for all three
+                    components.</description>
+            </xsd:annotation>
+            <empty/>
+        </element>
+    </define>
+    <define name="sampleSyncronize">
+        <element name="sampleSyncronize">
+            <xsd:annotation>
+                <summary>Shifts seismograms in the vector so samples are aligned.</summary>
+                <description>Time shifts the seismograms of the vector so that the samples
+                    align in time with integer multiples of the sample period, 
+                    based on the first seismogram in the first component. 
+                    This does not modify the data, only moves the begin times by up
+                    to one half a sample period to syncronize the components. This is useful for processors
+                    like vectorTrim and rotateGCP which expect seismograms to be of the same length and/or time.
+                    Note that this may not be exact for large time windows due to numerical rounding.</description>
+            </xsd:annotation>
+            <empty/>
+        </element>
+    </define>
+    <define name="vectorTrim">
+        <element name="vectorTrim">
+            <xsd:annotation>
+                <summary>Cuts all seismograms in the vector to their smallest overlapping pieces.</summary>
+                <description>Cuts the seismograms in the vector to their intersection. This is useful for processors
+                    like rotateGCP which expect seismograms to be of the same length and time.</description>
+            </xsd:annotation>
+            <empty/>
+        </element>
+    </define>
+    <define name="vectorScript">
+        <element name="vectorScript">
+            <xsd:annotation>
+                <summary>Runs a script waveform subsetter</summary>
+                <description>Runs a waveform subsetter script via JSR223. The event is put as "event" and the channel
+                as "channel". The channel and event objects are a
+                VelocityChannel and VelocityEvent, respectively, the same classes used in the <a href="templates.html">templates</a> for the printlineChannelProcess.
+                The original request is put as "request" and the returned available data, also as an array of RequestFilter objects,
+                is put as "available".  The seismograms are put as "seismograms" as a two dimensional array of LocalSeismogramImpl objects.
+                See the <a href="../scripting.html">scripting tutorial</a> for more information on inlining scripts
+                into a SOD recipe.</description>
+                <example>
+        <vectorScript type="jython" >
+        from jarray import array
+        from bag import rmean, taper, rtrend, stat
+        from edu.iris.Fissures.seismogramDC import LocalSeismogramImpl
+        
+        print "Hello Sod "
+        out = []
+        for perChanSeis in seismograms:
+            seisout = array([], LocalSeismogramImpl)
+            out.append(seisout)
+            for s in perChanSeis:
+                s = rmean(s)
+                s = taper(rtrend(s))
+                print s
+                print
+                print stat(s)
+                print
+                seisout.append(s)
+            print "\n"
+        result = util.waveformResult(True, out[0], out[1], out[2])
+       </vectorScript>
+                </example>
+            </xsd:annotation>
+            <attribute name="type">
+                    <text/>
+            </attribute>
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="iterDeconReceiverFunction">
+        <element name="iterDeconReceiverFunction">
+            <xsd:annotation>
+                <summary>Calculates receiver functions.</summary>
+                <description>Uses the Iterative Deconvolution method of Ligorria and Ammon (1999) to calculate receiver functions.</description>
+            </xsd:annotation>
+            <interleave>
+                <optional>
+                    <choice>
+                        <ref name="asciiWriter"/>
+                        <ref name="mseedWriter"/>
+                        <ref name="sacWriter"/>
+                    </choice>
+                </optional>
+                <optional>
+                    <element name="phaseName">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="modelName">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="gaussianWidth">
+                        <data type="float"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="maxBumps">
+                        <data type="float"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="tolerance">
+                        <data type="float"/>
+                    </element>
+                </optional>
+            </interleave>
+        </element>
+    </define>
+</grammar>

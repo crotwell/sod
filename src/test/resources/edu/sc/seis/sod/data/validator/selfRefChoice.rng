@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    <start>
+        <ref name="base"/>
+    </start>
+    <define name="base">
+        <element name="base">
+            <choice>
+                <ref name="base"/>
+                <element name="sub">
+                    <element name="gusgus">
+                        <empty/>
+                    </element>
+                </element>
+            </choice>
+        </element>
+    </define>
+</grammar>

@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <start>
+        <ref name="networkSource"/>
+    </start>
+    <define name="networkSource">
+        <choice>
+            <xsd:annotation>
+                <summary>Defines the source for network/station/channel information.</summary>
+                <description>This defines the source for all network information.</description>
+                <velocity>#networkArmPage()</velocity>
+            </xsd:annotation>
+            <ref name="finder"/>
+            <ref name="filterFinder"/>
+            <ref name="channelLimitedNetworkFinder"/>
+            <ref name="CSVNetworkSource"/>
+            <ref name="winstonNetworkSource"/>
+            <ref name="combineNetworkSource"/>
+            <ref name="stationXML"/>
+            <ref name="fdsnStation"/>
+        </choice>
+    </define>
+    <define name="finder">
+        <element name="networkFinder">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Finds networks</summary>
+                    <description> A Fissures/DHI NetworkDC service is located via the name and dns
+                        tags. The NetworkFinder is acquired from the NetworkDC, and a query is sent
+                        with the given arguments. The networks returned are then sent through the
+                        NetworkArm for processing. An optional refresh interval can be given if sod
+                        should periodically check for new channels.  
+                        See <a href="http://www.seis.sc.edu/wily/GetAllServers?corbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService&amp;description=IRIS nameserver">Wily</a>
+                        for a list of active NetworkDCs and their status. </description>
+                    <velocity>#networkArmPage()</velocity>
+                    <example>
+                        <networkFinder>
+                            <name>IRIS_NetworkDC</name>
+                            <dns>edu/iris/dmc</dns>
+                            <refreshInterval>
+                                <unit>MINUTE</unit>
+                                <value>3000</value>
+                            </refreshInterval>
+                        </networkFinder>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <optional>
+                <ref name="networkServerName"/>
+                <ref name="networkServerDns"/>
+            </optional>
+	    <optional>
+	      <element name="retries">
+		<xsd:annotation>
+		  <summary>Number of consecutive failures before quiting</summary>
+		  <description>In the event of server errors, SOD will retry 
+		  the query to the server for retries times before failing.
+		  The default is -1 which means to try forever.</description>
+            </xsd:annotation>
+		<data type="integer"/>
+	      </element>
+	    </optional>
+            <optional>
+                <ref name="refreshInterval"/>
+            </optional>
+        </element>
+    </define>
+    <define name="channelLimitedNetworkFinder">
+        <element name="channelLimitedNetworkFinder">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Finds networks</summary>
+                    <description> A Fissures/DHI NetworkDC service is located via the name and dns
+                        tags. The NetworkFinder is acquired from the NetworkDC, and a query is sent
+                        with the given arguments. The networks returned are then sent through the
+                        NetworkArm for processing. An optional refresh interval can be given if sod
+                        should periodically check for new channels.  
+                        See <a href="http://www.seis.sc.edu/wily/GetAllServers?corbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService&amp;description=IRIS nameserver">Wily</a>
+                        for a list of active NetworkDCs and their status. </description>
+                    <velocity>#networkArmPage()</velocity>
+                    <example>
+                        <channelLimitedNetworkFinder>
+                            <name>IRIS_NetworkDC</name>
+                            <dns>edu/iris/dmc</dns>
+                            <refreshInterval>
+                                <unit>MINUTE</unit>
+                                <value>3000</value>
+                            </refreshInterval>
+                        </channelLimitedNetworkFinder>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <optional>
+                <ref name="networkServerName"/>
+                <ref name="networkServerDns"/>
+            </optional>
+            <oneOrMore>
+                <element name="channelCode">
+                    <data type="string"/>
+                </element>
+            </oneOrMore>
+	    <optional>
+	      <element name="retries">
+		<xsd:annotation>
+		  <summary>Number of consecutive failures before quiting</summary>
+		  <description>In the event of server errors, SOD will retry 
+		  the query to the server for retries times before failing.
+		  The default is -1 which means to try forever.</description>
+            </xsd:annotation>
+		<data type="integer"/>
+	      </element>
+	    </optional>
+            <optional>
+                <ref name="refreshInterval"/>
+            </optional>
+        </element>
+    </define>
+    <define name="filterFinder">
+        <element name="filterNetworkFinder">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Finds networks and only allows in stations matching reg exps loaded
+                        from a url</summary>
+                    <example>
+                        <networkFinder>
+                            <name>IRIS_NetworkDC</name>
+                            <dns>edu/iris/dmc</dns>
+                            <refreshInterval>
+                                <unit>MINUTE</unit>
+                                <value>3000</value>
+                            </refreshInterval>
+                            <filterURL>http://seis.sc.edu/GEE/Dynamic/GEE_2.1/configs/filterStations.txt</filterURL>
+                        </networkFinder>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="networkServerName"/>
+            <ref name="networkServerDns"/>
+            <optional>
+                <ref name="refreshInterval"/>
+            </optional>
+            <element name="filterURL">
+                <data type="string"/>
+            </element>
+        </element>
+    </define>
+    <define name="combineNetworkSource">
+        <element name="combineNetworkSource">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>combines the networks from several sources, allowing for example the DMC and a local 
+                    winston wave server to both contribute to a SOD run.</summary>
+                    <description>The combination is on a per network basis, so the first network source that contains
+                    a given network is used.
+                    </description>
+                    <example>
+                      <combineNetworkSource>
+                        <winstonNetworkSource>
+                            <stationFile>winstonStations.csv</stationFile>
+                            <host>winston.seismo.univ.edu</host>
+                            <port>16022</port>
+                        </winstonNetworkSource>
+                        <networkFinder>
+                            <name>IRIS_NetworkDC</name>
+                            <dns>edu/iris/dmc</dns>
+                            <refreshInterval>
+                                <unit>MINUTE</unit>
+                                <value>3000</value>
+                            </refreshInterval>
+                            <filterURL>http://seis.sc.edu/GEE/Dynamic/GEE_2.1/configs/filterStations.txt</filterURL>
+                        </networkFinder>
+                      </combineNetworkSource>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <oneOrMore>
+                <ref name="networkSource"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="CSVNetworkSource">
+        <element name="CSVNetworkSource">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Retrieve channels from a Comma-Separated Values file</summary>
+                    <description>Channels are stored in a text file where the first line indicates which fields are going
+                        to be used in creating the channels for use in the SOD run. Each field, of course, is separated by
+                        a comma. From the second line on, each line represents an channel, and the values are filled in
+                        the same order as the fields in the first line. For more information on how to use this, <a
+                            href="csvEvents.html">look here</a>.</description>
+                </xsd:documentation>
+            </xsd:annotation>
+                    <choice>
+                        <element name="stationFile">
+                            <data type="string"/>
+                        </element>
+                        <element name="stations">
+                            <data type="string">
+                                <xsd:annotation>
+                                    <example>
+net.code, code, start, latitude, longitude, elevation, depth
+CO, JSC, 2009-04-13T00:00:00.000Z, 34.2816, -81.2597, 103, 1
+CO, CASEE, 2009-04-13T00:00:00.000Z, 34.993, -82.9317, 385, 2
+CO, RGR, 2009-04-13T00:00:00.000Z, 32.9074, -80.1939, 10, 51
+CO, CSB, 2009-04-13T00:00:00.000Z, 32.987, -80.0715, 6, 76.3
+CO, HODGE, 2009-04-13T00:00:00.000Z, 34.2314, -82.2585, 155, 1
+CO, BIRD, 2009-04-13T00:00:00.000Z, 34.6449, -80.4614, 132, 1
+CO, PAULI, 2009-04-13T00:00:00.000Z, 34.2816, -81.259752, 103, 1
+CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
+
+<network code="CO">
+    <station code="JSC" lat="34.2816" lon="-81.2597" elevation="103" depth="1">
+        <site code="00">
+            <channel code="BHZ" samplingPeriod="0.01"/>
+        </site>
+    </station> 
+</network>
+                                    </example>
+                                </xsd:annotation>
+                            </data>
+                        </element>
+                    </choice>
+                    <choice>
+                        <element name="channelFile">
+                            <data type="string"/>
+                        </element>
+                        <element name="channels">
+                            <data type="string">
+                                <xsd:annotation>
+                                    <example>
+net.code, station.code, site.code, code, sampling.frequency
+CO, JSC, 00, BHZ, 100
+CO, JSC, 00, BHN, 100
+CO, JSC, 00, BHE, 100
+CO, CASEE, 00, BHZ, 100
+CO, CASEE, 00, BHN, 100
+CO, CASEE, 00, BHE, 100
+CO, HODGE, 00, BHZ, 100
+CO, HODGE, 00, BHN, 100
+CO, HODGE, 00, BHE, 100
+CO, BIRD, 00, BHZ, 100
+CO, BIRD, 00, BHN, 100
+CO, BIRD, 00, BHE, 100
+CO, PAULI, 00, BHZ, 100
+CO, PAULI, 00, BHN, 100
+CO, PAULI, 00, BHE, 100
+CO, HAW, 00, BHZ, 100
+CO, HAW, 00, BHN, 100
+CO, HAW, 00, BHE, 100
+CO, RGR, 00, EHZ, 100
+CO, RGR, 00, EHN, 100
+CO, RGR, 00, EHE, 100
+CO, CSB, 00, EHZ, 100
+CO, CSB, 00, EHN, 100
+CO, CSB, 00, EHE, 100
+                                    </example>
+                                </xsd:annotation>
+                            </data>
+                        </element>
+                    </choice>
+        </element>
+    </define>
+    <define name="winstonNetworkSource">
+        <element name="winstonNetworkSource">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Retrieve channels from a Winston wave server, plus stations from Comma-Separated Values file</summary>
+                    <description>Channels are stored in a text file where the first line indicates which fields are going
+                        to be used in creating the channels for use in the SOD run. Each field, of course, is separated by
+                        a comma. From the second line on, each line represents an channel, and the values are filled in
+                        the same order as the fields in the first line. For more information on how to use this, <a
+                            href="csvEvents.html">look here</a>.</description>
+                </xsd:documentation>
+            </xsd:annotation>
+                    <choice>
+                        <element name="stationFile">
+                            <data type="string"/>
+                        </element>
+                        <element name="stations">
+                            <data type="string">
+                                <xsd:annotation>
+                                    <example>
+net.code, code, start, latitude, longitude, elevation, depth
+CO, JSC, 2009-04-13T00:00:00.000Z, 34.2816, -81.2597, 103, 1
+CO, CASEE, 2009-04-13T00:00:00.000Z, 34.993, -82.9317, 385, 2
+CO, RGR, 2009-04-13T00:00:00.000Z, 32.9074, -80.1939, 10, 51
+CO, CSB, 2009-04-13T00:00:00.000Z, 32.987, -80.0715, 6, 76.3
+CO, HODGE, 2009-04-13T00:00:00.000Z, 34.2314, -82.2585, 155, 1
+CO, BIRD, 2009-04-13T00:00:00.000Z, 34.6449, -80.4614, 132, 1
+CO, PAULI, 2009-04-13T00:00:00.000Z, 34.2816, -81.259752, 103, 1
+CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
+
+<network code="CO">
+    <station code="JSC" lat="34.2816" lon="-81.2597" elevation="103" depth="1">
+        <site code="00">
+            <channel code="BHZ" samplingPeriod="0.01"/>
+        </site>
+    </station> 
+</network>
+                                    </example>
+                                </xsd:annotation>
+                            </data>
+                        </element>
+                    </choice>
+            <element name="host">
+                <data type="string"/>
+            </element>
+            <optional>
+                <element name="port">
+                    <data type="integer"/>
+                </element>
+            </optional>
+        </element>
+    </define>
+    <define name="stationXML">
+        <element name="stationXML">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Loads network metadata from StationXML</summary>
+                    <description>A network source that makes the metadata loaded from a StationXML file available to
+                    SOD. While a local file could be used, the more useful way is to access the ws-station web service
+                    at the IRIS DMC, http://www.iris.edu/ws/ws-station. SOD can download the stationXML automaticially
+                    and reconnect to periodically get updates. For a full SOD run (that retrieves waveforms) 
+                    SOD will automatically set the level in the IRIS url as needed, but adding other qualifiers to
+                    limit the request size will help speed the queries. You may need to escape the ampersand with
+                    &amp;amp; due to the fact that a SOD recipe is XML and so the parser will signal an error for a
+                    unescaped ampersand.</description>
+                    <velocity>#networkArmPage()</velocity>
+                    <example>
+                        <stationXML>
+                            <url>http://www.iris.edu/ws/station/query?net=II&amp;sta=AAK&amp;chan=BHZ,BHN,BHE,BH1,BH2&amp;loc=00,--&amp;level=chan</url>
+                            <refreshInterval>
+                                <unit>DAY</unit>
+                                <value>10</value>
+                            </refreshInterval>
+                        </stationXML>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <element name="url">
+                <data type="string"/>
+            </element>
+            <optional>
+                <ref name="refreshInterval"/>
+            </optional>
+        </element>
+    </define>
+    <define name="fdsnStation">
+        <element name="fdsnStation">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Loads network metadata from a FDSN Station web service.</summary>
+                    <description>A network source that makes the metadata loaded from a FDNSStationXML file available to
+                    SOD. While a local file could be used, the more useful way is to access the fdsnStation web service
+                    at a data center like the IRIS DMC, http://service.iris.edu/fdsnws/station/1/. 
+                    SOD can download the stationXML automaticially
+                    and reconnect to periodically get updates. For a full SOD run (that retrieves waveforms) 
+                    SOD will automatically set the level in the IRIS url as needed, but adding other qualifiers to
+                    limit the request size will help speed the queries. You may need to escape the ampersand with
+                    &amp;amp; due to the fact that a SOD recipe is XML and so the parser will signal an error for a
+                    unescaped ampersand.</description>
+                    <velocity>#networkArmPage()</velocity>
+                    <example>
+                        <fdsnStation>
+                            <networkCode>II</networkCode>
+                            <stationCode>AAK</stationCode>
+                            <channelCode>BHZ</channelCode>
+                        </fdsnStation>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <interleave>
+            <optional>
+                <element name="baseurl">
+                    <data type="string"/>
+                </element>
+            </optional>
+            <zeroOrMore>
+                <choice>
+                    <element name="networkCode">
+                        <data type="string"/>
+                    </element>
+                    <element name="stationCode">
+                        <data type="string"/>
+                    </element>
+                    <element name="siteCode">
+                        <data type="string"/>
+                    </element>
+                    <element name="channelCode">
+                        <data type="string"/>
+                    </element>
+                </choice>
+            </zeroOrMore>
+            <optional>
+                <choice>
+                   <ref name="stationBoxArea"/>
+                   <ref name="stationPointDistance"/>
+               </choice>
+            </optional>
+            <optional>
+                <ref name="refreshInterval"/>
+            </optional>
+            </interleave>
+        </element>
+    </define>
+    <define name="networkServerName">
+        <element name="name">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Name of a network server</summary>
+                    <description>The server's name is used in combination with a dns value to find a
+                        network DC. The name "IRIS_NetworkDC" must be used in combination with the
+                        "edu/iris/dmc" dns value. The name "NCEDC_NetworkDC" must be used in
+                        conjunction with the "edu/berkley/geo/quake" dns value. The name
+                        "SCEPPNetworkDC" must be used in conjunction with a DNS value
+                    "edu/sc/seis".</description>
+                </xsd:documentation>
+            </xsd:annotation>
+            <choice>
+                <value>IRIS_NetworkDC</value>
+                <value>NCEDC_NetworkDC</value>
+                <value>SCEPPNetworkDC</value>
+                <data type="string"/>
+            </choice>
+        </element>
+    </define>
+    <define name="networkServerDns">
+        <element name="dns">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>DNS location of a network server</summary>
+                    <description>The server's dns is used in combination with a name value to find a
+                        server from an network DC. The name "IRIS_NetworkDC" must be used in
+                        combination with the "edu/iris/dmc" dns value. The name "NCEDC_NetworkDC"
+                        must be used in conjunction with the "edu/berkley/geo/quake" dns value. The
+                        name "SCEPPNetworkDC" must be used in conjunction with a DNS value
+                        "edu/sc/seis"</description>
+                </xsd:documentation>
+            </xsd:annotation>
+            <choice>
+                <value>edu/iris/dmc</value>
+                <value>edu/berkley/geo/quake</value>
+                <value>edu/sc/seis</value>
+                <data type="string"/>
+            </choice>
+        </element>
+    </define>
+    <define name="refreshInterval">
+        <element name="refreshInterval">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Constrains how often the networks are refreshed</summary>
+                    <description>The network arm will go out and check all of the information its
+                        gotten at the period defined here. This allows for new networks and stations
+                        to be found midrun and then be processed for the rest of the time SOD runs.
+                        So if you have a run on networks that have new stations being added, setting
+                        this value will allow for those new stations to be processed by your run.</description>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="timeInterval"/>
+        </element>
+    </define>
+</grammar>

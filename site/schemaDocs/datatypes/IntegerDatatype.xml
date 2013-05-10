@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Integer Datatype</title>
+    </properties>
+    <body>
+        <section name="Integer">
+            <p>All signed integers with no restriction on range.</p>
+        </section>
+        <section name="Valid Values">
+            <ul>
+                <li>-123423582</li>
+                <li>291218212</li>
+                <li>0</li>
+            </ul>
+        </section>
+        <section name="Invalid Values">
+            <ul>
+                <li>123.4E56 - No exponentials</li>
+                <li>123.6 - No decimals</li>
+            </ul>
+            </section>
+    </body>
+</document>

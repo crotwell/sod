@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    <start>
+        <element name="base">
+            <attribute name="firstAttr">
+                <text/>
+            </attribute>
+            <attribute name="secondAttr">
+                <empty/>
+            </attribute>
+            <choice>
+                <data type="float"/>
+                <data type="integer"/>
+            </choice>
+            <choice>
+                <data type="string"/>
+                <data type="nonNegativeInteger"/>
+            </choice>
+            <group>
+                <value type="double">2.1 </value>
+                <element name="groupEl">
+                    <empty/>
+                </element>
+            </group>
+            <group>
+                <value type="double">2.1 </value>
+                <element name="groupEl">
+                    <empty/>
+                </element>
+            </group>
+            <interleave>
+                <value type="string">Dog</value>
+                <value type="string">Cat</value>
+            </interleave>
+            <interleave>
+                <value type="string">Cat</value>
+                <value type="string">Dog</value>
+            </interleave>
+            <element name="firstEl">
+                <empty/>
+            </element>
+            <element name="secondEl">
+                <text/>
+            </element>
+        </element>
+    </start>
+</grammar>

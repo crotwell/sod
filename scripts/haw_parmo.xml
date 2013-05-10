@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sod>
+    <eventArm>
+
+<eventFinder>
+     <pointDistance>
+    <latitude>33</latitude>
+    <longitude>-81</longitude>
+    <unit>DEGREE</unit>
+    <min>0</min>
+    <max>3</max>
+</pointDistance>
+<originTimeRange>
+<!--
+  <startTime>20101101T17:00:00.001Z</startTime>
+-->
+  <startTime>20111011T17:00:00.001Z</startTime>
+  <endTime>20111116T21:00:00.001Z</endTime>
+</originTimeRange>
+<magnitudeRange>
+    <min>1.0</min>
+</magnitudeRange>
+
+</eventFinder>
+
+<eventFinder>
+     <pointDistance>
+    <latitude>33</latitude>
+    <longitude>-81</longitude>
+    <unit>DEGREE</unit>
+    <min>0</min>
+    <max>90</max>
+</pointDistance>
+<originTimeRange>
+<!--
+  <startTime>20101101T17:00:00.001Z</startTime>
+-->
+  <startTime>20111011T17:00:00.001Z</startTime>
+  <endTime>20111116T21:00:00.001Z</endTime>
+</originTimeRange>
+
+<magnitudeRange>
+    <magType>mb</magType>
+    <magType>M</magType>
+    <min>5.2</min>
+</magnitudeRange>
+</eventFinder>
+
+<originOR>
+    <originPointDistance>
+    <latitude>33</latitude>
+    <longitude>-81</longitude>
+    <unit>DEGREE</unit>
+    <min>0</min>
+    <max>20</max>
+    </originPointDistance>
+    <originDepthRange>
+      <unit>KILOMETER</unit>
+      <min>100</min>
+    </originDepthRange>
+</originOR>
+<removeEventDuplicate/>
+        <printlineEventProcess/>
+    </eventArm>
+    <networkArm>
+        <combineNetworkSource>
+
+            <CSVNetworkSource>
+                <stations>
+net.code, code, start, latitude, longitude, elevation, depth
+CO, JSC, 2009-04-13T00:00:00.000Z, 34.2816, -81.2597, 103, 1
+CO, CASEE, 2009-04-13T00:00:00.000Z, 34.993, -82.9317, 385, 2
+CO, RGR, 2009-04-13T00:00:00.000Z, 32.9074, -80.1939, 10, 51
+CO, CSB, 2009-04-13T00:00:00.000Z, 32.987, -80.0715, 6, 76.3
+CO, HODGE, 2009-04-13T00:00:00.000Z, 34.2314, -82.2585, 155, 1
+CO, BIRD, 2009-04-13T00:00:00.000Z, 34.6449, -80.4614, 132, 1
+CO, PAULI, 2009-04-13T00:00:00.000Z, 34.2816, -81.259752, 103, 1
+CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
+                </stations>
+                <channels>
+net.code, station.code, site.code, code, start, azimuth, dip, end
+CO, RGR, 00, EH1, 2011-05-17T00:00:00.000Z, 0, 0, 2500-01-01T00:00:00.000Z
+CO, RGR, 00, EH2, 2011-05-17T00:00:00.000Z, 90, 0, 2500-01-01T00:00:00.000Z
+CO, RGR, 00, EHZ, 2011-05-17T00:00:00.000Z, 0, -90, 2500-01-01T00:00:00.000Z
+CO, RGR, 00, EHN, 2009-04-13T00:00:00.000Z, 0, 0, 2011-05-17T00:00:00.000Z
+CO, RGR, 00, EHE, 2009-04-13T00:00:00.000Z, 90, 0, 2011-05-17T00:00:00.000Z
+CO, RGR, 00, EHZ, 2009-04-13T00:00:00.000Z, 0, -90, 2011-05-17T00:00:00.000Z
+CO, CSB, 00, EH1, 2011-05-17T00:00:00.000Z, 0, 0, 2500-01-01T00:00:00.000Z
+CO, CSB, 00, EH2, 2011-05-17T00:00:00.000Z, 90, 0, 2500-01-01T00:00:00.000Z
+CO, CSB, 00, EHZ, 2011-05-17T00:00:00.000Z, 0, -90, 2500-01-01T00:00:00.000Z
+CO, CSB, 00, EHN, 2009-04-13T00:00:00.000Z, 0, 0, 2011-05-17T00:00:00.000Z
+CO, CSB, 00, EHE, 2009-04-13T00:00:00.000Z, 90, 0, 2011-05-17T00:00:00.000Z
+CO, CSB, 00, EHZ, 2009-04-13T00:00:00.000Z, 0, -90, 2011-05-17T00:00:00.000Z
+CO, HAW, 00, HH1, 2011-04-13T00:00:00.000Z, 0, 0, 2500-01-01T00:00:00.000Z
+CO, HAW, 00, HH2, 2011-04-13T00:00:00.000Z, 90, 0, 2500-01-01T00:00:00.000Z
+CO, HAW, 00, HHZ, 2011-04-13T00:00:00.000Z, 0, -90, 2500-01-01T00:00:00.000Z
+CO, HAW, 00, BHN, 2010-11-03T00:00:00.000Z, 0, 0, 2011-04-13T00:00:00.000Z
+CO, HAW, 00, BHE, 2010-11-03T00:00:00.000Z, 90, 0, 2011-04-13T00:00:00.000Z
+CO, HAW, 00, BHZ, 2010-11-03T00:00:00.000Z, 0, -90, 2011-04-13T00:00:00.000Z
+                </channels>
+            </CSVNetworkSource>
+        </combineNetworkSource>
+        <networkOR>
+            <networkCode>CO</networkCode>
+            <networkCode>US</networkCode>
+            <networkCode>TA</networkCode>
+        </networkOR>
+<stationAND>
+        <stationBoxArea>
+            <latitudeRange>
+                <min>31</min>
+                <max>36</max>
+            </latitudeRange>
+            <longitudeRange>
+                <min>-85</min>
+                <max>-76</max>
+            </longitudeRange>
+        </stationBoxArea>
+<stationCode>HAW</stationCode>
+</stationAND>
+        <channelOR>
+            <bandCode>B</bandCode>
+            <bandCode>H</bandCode>
+            <bandCode>E</bandCode>
+        </channelOR>
+<channelScript type="jython">
+rot=45
+if channel.orientationCode == "1" or channel.orientationCode == "N":
+    channel.getWrapped().orientation.azimuth = rot
+    channel.getWrapped().orientation.dip = 0
+if channel.orientationCode == "2" or channel.orientationCode == "E":
+    channel.getWrapped().orientation.azimuth = 90+rot
+    channel.getWrapped().orientation.dip = 0
+</channelScript>
+        <printlineChannelProcess/>
+    </networkArm>
+    <waveformVectorArm>
+        <phaseRequest>
+            <model>prem</model>
+            <beginPhase>ttp</beginPhase>
+            <beginOffset>
+                <unit>SECOND</unit>
+                <value>-300</value>
+            </beginOffset>
+            <endPhase>ttp</endPhase>
+            <endOffset>
+                <unit>SECOND</unit>
+                <value>720</value>
+            </endOffset>
+        </phaseRequest>
+        <choiceSource>
+            <choice>
+                <networkCode>CO</networkCode>
+                <winstonWaveServer>
+                    <host>eeyore.seis.sc.edu</host>
+                    <port>16022</port>
+                </winstonWaveServer>
+            </choice>
+            <otherwise>
+                <fixedDataCenter>
+                    <name>IRIS_DataCenter</name>
+                    <dns>edu/iris/dmc</dns>
+                </fixedDataCenter>
+            </otherwise>
+        </choiceSource>
+        <someCoverage/>
+        <merge/>
+        <rMean/>
+        <rTrend/>
+        <filter>
+            <lowFreqCorner>
+                <value>2</value>
+                <unit>SECOND</unit>
+            </lowFreqCorner>
+            <highFreqCorner>
+                <value>5</value>
+                <unit>HERTZ</unit>
+            </highFreqCorner>
+            <filterType>NONCAUSAL</filterType>
+        </filter>
+        <requestCut/>
+        <sacWriter>
+            <phaseTimeHeader>
+                <model>prem</model>
+                <phaseName>ttp</phaseName>
+                <tHeader>a</tHeader>
+            </phaseTimeHeader>
+        </sacWriter>
+        <vectorImageProcess><fileType>pdf</fileType>
+            <phaseFlags>
+                <phase>P</phase>
+                <phase>S</phase>
+            </phaseFlags>
+        </vectorImageProcess>
+        <vectorImageProcess>
+            <phaseWindow>
+                <model>iasp91</model>
+                <beginPhase>ttp</beginPhase>
+                <beginOffset>
+                    <unit>SECOND</unit>
+                    <value>-5.0</value>
+                </beginOffset>
+                <endPhase>ttp</endPhase>
+                <endOffset>
+                    <unit>SECOND</unit>
+                    <value>15</value>
+                </endOffset>
+            </phaseWindow>
+            <fileType>pdf</fileType>
+            <prefix>cut</prefix>
+            <phaseFlags>
+                <phase>P</phase>
+                <phase>S</phase>
+            </phaseFlags>
+        </vectorImageProcess>
+        <phaseCut>
+            <model>iasp91</model>
+            <beginPhase>ttp</beginPhase>
+            <beginOffset>
+                <unit>SECOND</unit>
+                <value>-1.0</value>
+            </beginOffset>
+            <endPhase>ttp</endPhase>
+            <endOffset>
+                <unit>SECOND</unit>
+                <value>5</value>
+            </endOffset>
+        </phaseCut>
+        <sacWriter>
+            <workingDir>cutSeismograms</workingDir>
+            <phaseTimeHeader>
+                <model>iasp91</model>
+                <phaseName>ttp</phaseName>
+                <tHeader>a</tHeader>
+            </phaseTimeHeader>
+        </sacWriter>
+<!--
+        <vectorScript>
+        </vectorScript>
+-->
+        <particleMotionPlot>
+            <workingDir>parMoPlots_0.0_0.5</workingDir>
+            <titleBorder>
+                <type>title</type>
+                <position>bottom</position>
+                <title><text>P+.0 to P+0.5 sec $station.code $event.time</text></title>
+            </titleBorder>
+            <phaseWindow>
+                <model>iasp91</model>
+                <beginPhase>ttp</beginPhase>
+                <beginOffset>
+                    <unit>SECOND</unit>
+                    <value>0.0</value>
+                </beginOffset>
+                <endPhase>ttp</endPhase>
+                <endOffset>
+                    <unit>SECOND</unit>
+                    <value>0.5</value>
+                </endOffset>
+            </phaseWindow>
+        </particleMotionPlot>
+        <particleMotionPlot>
+            <workingDir>parMoPlots_.5_1.0</workingDir>
+            <titleBorder>
+                <type>title</type>
+                <position>bottom</position>
+                <title><text>P+.5 to P+1.0 sec $station.code $event.time</text></title>
+            </titleBorder>
+            <phaseWindow>
+                <model>iasp91</model>
+                <beginPhase>ttp</beginPhase>
+                <beginOffset>
+                    <unit>SECOND</unit>
+                    <value>.5</value>
+                </beginOffset>
+                <endPhase>ttp</endPhase>
+                <endOffset>
+                    <unit>SECOND</unit>
+                    <value>1.0</value>
+                </endOffset>
+            </phaseWindow>
+        </particleMotionPlot>
+        <particleMotionPlot>
+            <workingDir>parMoPlots_1.0_1.5</workingDir>
+            <titleBorder>
+                <type>title</type>
+                <position>bottom</position>
+                <title><text>P+1.0 to P+1.5 sec $station.code $event.time</text></title>
+            </titleBorder>
+            <phaseWindow>
+                <model>iasp91</model>
+                <beginPhase>ttp</beginPhase>
+                <beginOffset>
+                    <unit>SECOND</unit>
+                    <value>1.0</value>
+                </beginOffset>
+                <endPhase>ttp</endPhase>
+                <endOffset>
+                    <unit>SECOND</unit>
+                    <value>1.5</value>
+                </endOffset>
+            </phaseWindow>
+        </particleMotionPlot>
+        <particleMotionPlot>
+            <workingDir>parMoPlots_1.5_2.0</workingDir>
+            <titleBorder>
+                <type>title</type>
+                <position>bottom</position>
+                <title><text>P+1.5 to P+2.0 sec $station.code $event.time</text></title>
+            </titleBorder>
+            <phaseWindow>
+                <model>iasp91</model>
+                <beginPhase>ttp</beginPhase>
+                <beginOffset>
+                    <unit>SECOND</unit>
+                    <value>1.5</value>
+                </beginOffset>
+                <endPhase>ttp</endPhase>
+                <endOffset>
+                    <unit>SECOND</unit>
+                    <value>2.0</value>
+                </endOffset>
+            </phaseWindow>
+        </particleMotionPlot>
+        <particleMotionPlot>
+            <workingDir>parMoPlots_-0.5_0.0</workingDir>
+            <titleBorder>
+                <type>title</type>
+                <position>bottom</position>
+                <title><text>P-0.5 to P+0.0 sec $station.code $event.time</text></title>
+            </titleBorder>
+            <phaseWindow>
+                <model>iasp91</model>
+                <beginPhase>ttp</beginPhase>
+                <beginOffset>
+                    <unit>SECOND</unit>
+                    <value>-0.5</value>
+                </beginOffset>
+                <endPhase>ttp</endPhase>
+                <endOffset>
+                    <unit>SECOND</unit>
+                    <value>0.0</value>
+                </endOffset>
+            </phaseWindow>
+        </particleMotionPlot>
+
+        <printlineSeismogramProcess/>
+    </waveformVectorArm>
+</sod>

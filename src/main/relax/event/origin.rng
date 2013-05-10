@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <start>
+        <ref name="origin"/>
+    </start>
+    <define name="origin">
+        <choice>
+            <xsd:annotation>
+                <summary>Ingredients for selecting events</summary>
+                <description>This collects all of the subsetters that make decisions on the contents of an event.</description>
+                <velocity>#eventArmPage()</velocity>
+            </xsd:annotation>
+            <ref name="removeEventDuplicate"/>
+            <ref name="eventAttrName"/>
+            <ref name="geographicalRegion"/>
+            <ref name="seismicRegion"/>
+            <ref name="originTimeRange"/>
+            <ref name="magnitudeRange"/>
+            <ref name="originDepthRange"/>
+            <ref name="originPointDistance"/>
+            <ref name="originPointAzimuth"/>
+            <ref name="originPointBackAzimuth"/>
+            <ref name="pointLinearDistanceMagnitude"/>
+            <ref name="eventArea"/>
+            <ref name="eventBoxArea"/>
+            <ref name="eventPolygonFile"/>
+            <ref name="catalog"/>
+            <ref name="contributor"/>
+            <ref name="networkTimeRange"/>
+            <ref name="originArrayAND"/>
+            <ref name="originArrayOR"/>
+            <ref name="originAND"/>
+            <ref name="originOR"/>
+            <ref name="originNOT"/>
+            <ref name="externalOriginSubsetter"/>
+            <ref name="youngerThan"/>
+            <ref name="printline"/>
+            <ref name="CSVEventPrinter"/>
+            <ref name="similarEvent"/>
+            <ref name="originScript"/>
+        </choice>
+    </define>
+    <define name="eventAttrName">
+        <element name="eventAttrName">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Matches the event name</summary>
+                    <description> Evaluates to true if the name of the event matches the string. </description>
+                    <example>
+                        <eventAttrName>FIJI ISLANDS REGION</eventAttrName>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="geographicalRegion">
+        <element name="geographicalRegion">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Matches the geographic Flinn-Engdahl region number</summary>
+                    <description> Evaluates to true if the numerical value of the Flinn-Engdahl geographic region of the
+                        event matches the given value. </description>
+                    <example>
+                        <geographicalRegion>12</geographicalRegion>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <list>
+                <oneOrMore>
+                    <data type="nonNegativeInteger"/>
+                </oneOrMore>
+            </list>
+        </element>
+    </define>
+    <define name="seismicRegion">
+        <element name="seismicRegion">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Matches the seismic Flinn-Engdahl region number</summary>
+                    <description>Evaluates to true if the numerical value of the Flinn-Engdahl seismic region of the
+                        event matches the given value. </description>
+                    <example>
+                        <seismicRegion>12</seismicRegion>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <list>
+                <oneOrMore>
+                    <data type="nonNegativeInteger"/>
+                </oneOrMore>
+            </list>
+        </element>
+    </define>
+    <define name="eventArea">
+        <element name="eventArea">
+            <xsd:annotation>
+                <summary>Matches events that occur within a specified area</summary>
+                <deprecated>Just replace this with the area type inside of here. <a href="eventBoxArea.html">eventBoxArea</a>
+                 for boxArea or <a href="eventPolygonFile.html">eventPolygonFile</a> for polygonFile.</deprecated>
+            </xsd:annotation>
+            <ref name="area"/>
+        </element>
+    </define>
+    <define name="eventBoxArea">
+        <element name="eventBoxArea">
+            <xsd:annotation>
+                <summary>Accepts events that occur within a lat lon box </summary>
+                <description>Accepts events that occur within the latitude longitude box defined
+                    here</description>
+            </xsd:annotation>
+            <ref name="latitudeRange"/>
+            <ref name="longitudeRange"/>
+        </element>
+    </define>
+    <define name="eventPolygonFile">
+        <element name="eventPolygonFile">
+            <xsd:annotation>
+                <summary>Reads in a file with lat long points and accepts any event that falls inside
+                    the shape they create</summary>
+                <description>Reads the file at the location given and parses out a shape based on
+                    the points listed in the file. The points should be given as a longitude value, 
+                    a space then a latitude value as in <a href="pentagon.txt">this example</a>.
+                    Longitude values range from -180 to 180 and latitudes range from -90 to 90.
+                    The file can contain as many points as
+                    necessary to create the shape. Any point landing inside the shape is accepted.</description>
+            </xsd:annotation>
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="originArrayAND">
+        <element name="originArrayAND">
+            <xsd:annotation>
+                <summary>Enclosed subsetter matches all origins for an event</summary>
+                <description>Evalutes to true only if all origins (not just the preferred origin) evaluate to true for
+                    the enclosed subsetter.</description>
+            </xsd:annotation>
+            <ref name="origin"/>
+        </element>
+    </define>
+    <define name="originArrayOR">
+        <element name="originArrayOR">
+            <xsd:annotation>
+                <summary>Enclosed subsetter matches at least one origin for an event</summary>
+                <description>Evalutes to true if at least one origin (not necessarily the preferred origin) evaluates to
+                    true for the enclosed subsetter.</description>
+            </xsd:annotation>
+            <ref name="origin"/>
+        </element>
+    </define>
+    <define name="originAND">
+        <element name="originAND">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Matches all enclosed Origin subsetters</summary>
+                    <description>The output is the logical AND of the outputs of all included Origin subsetters. This
+                        means that it will evaluate to true only if all the enclosed Origin subsetters evaluate to true.
+                        The subsetters after the first false outputted are not evaluated.</description>
+                    <example>
+                        <originAND>
+                            <catalog>FINGER</catalog>
+                            <contributor>NEIC</contributor>
+                        </originAND>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <oneOrMore>
+                <ref name="origin"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="originOR">
+        <element name="originOR">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Matches at least one enclosed Origin subsetter</summary>
+                    <description>The output is the logical OR of the outputs of all included Origin subsetters. This
+                        means that it will evaluate to true if at least one of the enclosed Origin subsetters evaluate
+                        to true. The subsetters after the first true outputted are not evaluated.</description>
+                    <example>
+                        <originOR>
+                            <catalog>FINGER</catalog>
+                            <contributor>NEIC</contributor>
+                        </originOR>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <oneOrMore>
+                <ref name="origin"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="originNOT">
+        <element name="originNOT">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Matches the negated output of the enclosed Origin subsetter</summary>
+                    <description>The output is the logical NOT of the output of the enclosed Origin subsetter. This
+                        means that it will evaluate to false if the enclosed Origin subsetter evaluates to true, and
+                        vice versa.</description>
+                    <example>
+                        <originNOT>
+                            <catalog>FINGER</catalog>
+                        </originNOT>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="origin"/>
+        </element>
+    </define>
+    <define name="originPointDistance">
+        <element name="originPointDistance">
+            <xsd:annotation>
+                <summary>Distance range from a fixed point</summary>
+                <description>True if the origin is within the given distance range of the given lat and lon. This allows
+                    for the definition of donuts and circles of accepted events.</description>
+                <example>
+                    <originPointDistance>
+                        <latitude>35</latitude>
+                        <longitude>-85</longitude>
+                        <unit>DEGREE</unit>
+                        <min>30</min>
+                        <max>90</max>
+                    </originPointDistance>
+                </example>
+            </xsd:annotation>
+            <ref name="latLonUnitRange"/>
+        </element>
+    </define>
+    <define name="pointLinearDistanceMagnitude">
+        <element name="pointLinearDistanceMagnitude">
+            <xsd:annotation>
+                <summary>Accepts events above a linear threshold of magnitude with distance</summary>
+                <description> If the magnitude of the event is greater than or equal to the linear interpolation at the
+                    event point distance, then the event is accepted. To reverse and take events smaller than the linear
+                    interpolation, enclose this in an originNOT. </description>
+            </xsd:annotation>
+            <ref name="latLonUnitRange"/>
+            <ref name="magnitudeRange"/>
+        </element>
+    </define>
+    <define name="originPointAzimuth">
+        <element name="originPointAzimuth">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Azimuth range from a fixed point</summary>
+                    <description> True if the origin is within the given azimuth range of the given lat and lon. </description>
+                    <example>
+                        <originPointAzimuth>
+                            <latitude>35</latitude>
+                            <longitude>-85</longitude>
+                            <unit>DEGREE</unit>
+                            <min>30</min>
+                            <max>90</max>
+                        </originPointAzimuth>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="latLonUnitRange"/>
+        </element>
+    </define>
+    <define name="originPointBackAzimuth">
+        <element name="originPointBackAzimuth">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Back azimuth range from a fixed point</summary>
+                    <description> True if the origin is within the given back azimuth range of the given lat and lon. </description>
+                    <example>
+                        <originPointBackAzimuth>
+                            <latitude>35</latitude>
+                            <longitude>-85</longitude>
+                            <unit>DEGREE</unit>
+                            <min>30</min>
+                            <max>90</max>
+                        </originPointBackAzimuth>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="latLonUnitRange"/>
+        </element>
+    </define>
+    <define name="removeEventDuplicate">
+        <element name="removeEventDuplicate">
+            <xsd:annotation>
+                <description>This subsetter first gets all of the events SOD has accepted. Then it takes the current
+                    event, and if its time plus or minus the time variance, its depth plus or minus the depth variance,
+                    or its location plus or minus the distance variance falls within the values of one of the already
+                    accepted events, the event is rejected. This allows for the use of only one of several very similar events</description>
+                <summary>Accepts events that are dissimilar from already accepted events</summary>
+            </xsd:annotation>
+            <interleave>
+                <optional>
+                    <element name="timeVariance">
+                        <ref name="timeInterval"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="depthVariance">
+                        <ref name="length"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="distanceVariance">
+                        <ref name="length"/>
+                    </element>
+                </optional>
+            </interleave>
+        </element>
+    </define>
+    <define name="externalOriginSubsetter">
+        <element name="externalOriginSubsetter">
+            <xsd:annotation>
+                <summary>Use an Origin subsetter external to SOD</summary>
+                <description>$externalOriginSubsetterInfo.getRelaxHTML('../')</description>
+                <example>
+                    <externalOriginSubsetter>
+                        <classname>edu.somewhere.seis.sodExt.subsetter.origin.MyOriginSubsetter</classname>
+                    </externalOriginSubsetter>
+                </example>
+            </xsd:annotation>
+            <ref name="externalClass"/>
+        </element>
+    </define>
+    <define name="youngerThan">
+        <element name="youngerThan">
+            <xsd:annotation>
+                <summary>The event must have occured more recently than now minus the given time interval</summary>
+            </xsd:annotation>
+            <ref name="timeInterval"/>
+        </element>
+    </define>
+    <define name="printline">
+        <element name="printlineEventProcess">
+            <xsd:annotation>
+                <summary>Prints out each event on a new line</summary>
+                <description>Prints out each event on a new line. The template and filename elements are both <a
+                        href="templates.html">Velocity templates</a> containing <a
+                    href="templateTypes.html#event">event</a> as their only variable. If no template element is
+                    given, it defaults to "$event.region ($event.latitude, $event.longitude) $event.time
+                    $event.magnitude". If no filename is given, the output goes to standard out.</description>
+            </xsd:annotation>
+            <interleave>
+                <optional>
+                    <element name="template">
+                        <text/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
+            </interleave>
+        </element>
+    </define>
+    <define name="CSVEventPrinter">
+        <element name="CSVEventPrinter">
+            <xsd:annotation>
+                <summary>Prints out events into a comma-separated text file. If no filename is given, the csv is written
+                    to the console.</summary>
+            </xsd:annotation>
+            <optional>
+                <element name="filename">
+                    <text>
+                        <xsd:annotation>
+                            <example>events.csv</example>
+                        </xsd:annotation>
+                    </text>
+                </element>
+            </optional>
+        </element>
+    </define>
+    <define name="similarEvent">
+        <element name="similarEvent">
+            <xsd:annotation>
+                <summary>Accepts events that are similar to one in the included event source.</summary>
+            </xsd:annotation>
+            <ref name="eventSource"/>
+        </element>
+    </define>
+    <define name="originScript">
+        <element name="originScript">
+            <xsd:annotation>
+                <summary>Runs an script origin subsetter</summary>
+                <description>Runs a origin subsetter script via JSR223. The eventAccess is put as "eventAccess", 
+                the EventAttrImpl as "eventAttr" and the preferred origin
+                as "preferredOrigin". The eventAccess object is a
+                VelocityEvent, the same class used in the <a href="templates.html">templates</a> for the printlineEventProcess.
+                Note that most of the VelocityEvent methods return Strings, and so if you want to do calculations,
+                you probably want to deal with the eventAttr and preferredOrigin.
+                See the <a href="../scripting.html">scripting tutorial</a> for more information on inlining scripts
+                into a SOD recipe.</description>
+                <example>
+                    <originScript type="jython">
+result = preferredOrigin.magnitudeList.get(0).value > 5.5
+                    </originScript>
+                </example>
+            </xsd:annotation>
+            <attribute name="type">
+                    <text/>
+            </attribute>
+            <data type="string"/>
+        </element>
+    </define>  
+</grammar>

@@ -1,0 +1,9 @@
+log4j.rootCategory=warn, C
+log4j.appender.C=org.apache.log4j.ConsoleAppender
+log4j.appender.C.layout=org.apache.log4j.PatternLayout
+log4j.appender.C.layout.ConversionPattern=%d{ISO8601} - %m%n
+
+edu.sc.seis.fissuresUtil.nameServiceCorbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService
+
+# use totally in memory database for command line tools
+fissuresUtil.database.url=jdbc:hsqldb:mem:SodDB

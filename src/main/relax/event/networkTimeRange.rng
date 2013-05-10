@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <start>
+        <element name="networkTimeRange">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Allows events that occured during the time range covered by active channels retrieved by the network arm.</summary>
+                </xsd:documentation>
+            </xsd:annotation>
+            <empty/>
+        </element>
+    </start>
+</grammar>

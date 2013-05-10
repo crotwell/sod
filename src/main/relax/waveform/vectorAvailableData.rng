@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <start>
+        <ref name="vectorAvailableData"/>
+    </start>
+    <define name="vectorAvailableData">
+        <choice>
+            <xsd:annotation>
+                <summary>Tactics for handling available vector data</summary>
+                <velocity>#waveformVectorArmPage()</velocity>
+            </xsd:annotation>
+            <ref name="ANDAvailableDataWrapper"/>
+            <ref name="ORAvailableDataWrapper"/>
+            <ref name="vectorAvailableDataAND"/>
+            <ref name="vectorAvailableDataOR"/>
+            <ref name="vectorAvailableDataNOT"/>
+            <ref name="vectorAvailableDataScript"/>
+            <ref name="externalVectorAvailableData"/>
+            <ref name="availableData"/>
+        </choice>
+    </define>
+    <define name="vectorAvailableDataPlus">
+        <choice>
+            <ref name="vectorAvailableData"/>
+            <ref name="vectorRequestPlus"/>
+        </choice>
+    </define>
+    <define name="ANDAvailableDataWrapper">
+        <element name="ANDAvailableDataWrapper">
+            <xsd:annotation>
+                <summary>Allows an event channel available data subsetter to be embedded within an
+                    event vector available data subsetter.</summary>
+                <description>Allows an event channel available data subsetter to be embedded within
+                    an event channelgroup available data subsetter. The result is the AND of result
+                    of all the individual per channel available data subsetters. The is most often
+                    used within the motion vector arm.</description>
+                <example>
+                    <ANDAvailableDataWrapper>
+                        <noGaps/>
+                    </ANDAvailableDataWrapper>
+                </example>
+            </xsd:annotation>
+            <ref name="availableData"/>
+        </element>
+    </define>
+    <define name="ORAvailableDataWrapper">
+        <element name="ORAvailableDataWrapper">
+            <xsd:annotation>
+                <summary>Allows an event channel request subsetter to be embedded within an event
+                    vector available data subsetter.</summary>
+                <description>Allows an event channel request subsetter to be embedded within an
+                    event channelgroup available data subsetter. The result is the OR of the result
+                    of all the individual per channel available data subsetters. The is most often
+                    used within the motion vector arm.</description>
+                <example>
+                    <ORAvailableDataWrapper>
+                        <someCoverage/>
+                    </ORAvailableDataWrapper>
+                </example>
+            </xsd:annotation>
+            <ref name="availableData"/>
+        </element>
+    </define>
+    <define name="vectorAvailableDataAND">
+        <element name="vectorAvailableDataAND">
+            <xsd:annotation>
+                <summary>Matches all vectorAvailableData subsetters</summary>
+                <description>The output is the logical AND of the outputs of all included
+                    subsetters. This means that it will evaluate to true only if all the included
+                    subsetters evaluate to true. The subsetters after the first false outputted are
+                    not evaluated.</description>
+                <example>
+                    <vectorAvailableDataAND>
+                        <ANDAvailableDataWrapper>
+                            <noGaps/>
+                        </ANDAvailableDataWrapper>
+                        <ANDAvailableDataWrapper>
+                            <fullCoverage/>
+                        </ANDAvailableDataWrapper>
+                    </vectorAvailableDataAND>
+                </example>
+            </xsd:annotation>
+            <oneOrMore>
+                <ref name="vectorAvailableDataPlus"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="vectorAvailableDataOR">
+        <element name="vectorAvailableDataOR">
+            <xsd:annotation>
+                <summary>Match at least one vectorAvailableData subsetter</summary>
+                <description>The output is the logical OR of the outputs of all included subsetters.
+                    This means that it will evaluate to true as long as one of the included
+                    subsetters evaluates to true. The subsetters after the first true outputted are
+                    not evaluated.</description>
+                <example>
+                    <vectorAvailableDataOR>
+                        <ANDAvailableDataWrapper>
+                            <noGaps/>
+                        </ANDAvailableDataWrapper>
+                        <ANDAvailableDataWrapper>
+                            <fullCoverage/>
+                        </ANDAvailableDataWrapper>
+                    </vectorAvailableDataOR>
+                </example>
+            </xsd:annotation>
+            <oneOrMore>
+                <ref name="vectorAvailableDataPlus"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="vectorAvailableDataNOT">
+        <element name="vectorAvailableDataNOT">
+            <xsd:annotation>
+                <summary>Matches the negated output of included vectorAvailableData subsetter</summary>
+                <description>The output is the logical NOT of the output of the included subsetters.
+                    This means that it will only evaluate to true if the included subsetter
+                    evaluates to false, and vice versa.</description>
+                <example>
+                    <vectorAvailableDataNOT>
+                        <ANDAvailableDataWrapper>
+                            <noGaps/>
+                        </ANDAvailableDataWrapper>
+                    </vectorAvailableDataNOT>
+                </example>
+            </xsd:annotation>
+            <ref name="vectorAvailableDataPlus"/>
+        </element>
+    </define>
+    <define name="vectorAvailableDataScript">
+        <element name="vectorAvailableDataScript">
+            <xsd:annotation>
+                <summary>Runs a script vector available data subsetter</summary>
+                <description>Runs a vector available data subsetter script via JSR223. The event is put as "event" and the channelGroup
+                as "channelGroup". The channelGroup and event objects are a
+                VelocityChannelGroup and VelocityEvent, respectively, the same classes used in the <a href="templates.html">templates</a> for the printlineChannelProcess.
+                The original request is put as "request" and the returned available data, also as an array of RequestFilter objects,
+                is put as "available".
+                See the <a href="../scripting.html">scripting tutorial</a> for more information on inlining scripts
+                into a SOD recipe.</description>
+                <example>
+                    <availableDataScript type="jython">
+                        result = True
+                        for i in range(len(request)):
+                            if len(request[i]) != len(available[i]):
+                                result = False
+                                break
+                    
+                    </availableDataScript>
+                </example>
+            </xsd:annotation>
+            <attribute name="type">
+                    <text/>
+            </attribute>
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="externalVectorAvailableData">
+        <element name="externalVectorAvailableDataSubsetter">
+            <xsd:annotation>
+                <summary>Use a VectorAvailableData subsetter external to sod</summary>
+                <description>$externalVectorAvailableDataSubsetterInfo.getRelaxHTML('../')</description>
+                <example>
+                    <externalVectorAvailableData>
+                        <classname>edu.somewhere.seis.sodExt.subsetter.waveformVector.MyVectorAvailableData</classname>
+                    </externalVectorAvailableData>
+                </example>
+            </xsd:annotation>
+            <ref name="externalClass"/>
+        </element>
+    </define>
+</grammar>

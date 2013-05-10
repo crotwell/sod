@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <start>
+        <ref name="eventChannel"/>
+    </start>
+    <define name="eventChannel">
+        <choice>
+            <xsd:annotation>
+                <summary>Ingredients for selecting combinations of channels and events</summary>
+                <velocity>#waveformArmPage()</velocity>
+            </xsd:annotation>
+            <ref name="bestChannelAtStation"/>
+            <ref name="eventChannelAND"/>
+            <ref name="eventChannelOR"/>
+            <ref name="eventChannelNOT"/>
+            <ref name="eventChannelScript"/>
+            <ref name="externalEventChannelSubsetter"/>
+        </choice>
+    </define>
+    <define name="eventChannelPlus">
+        <choice>
+            <ref name="eventChannel"/>
+            <ref name="eventStation"/>
+            <ref name="channelPlus"/>
+            <ref name="origin"/>
+        </choice>
+    </define>
+    <define name="bestChannelAtStation">
+        <element name="bestChannelAtStation">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Picks the best channels for a station.</summary>
+                    <description>Picks the best channels at a station, avoiding processing 00.BHZ and 01.BHZ at the same station. 
+                    This can often happen when there are multiple sensors at a station, perhaps a surface seismometer and
+                    a borehole seismometer. The processor decides on best based on a simple hueristic based on site
+                    and channel codes. The defaults, each specified as a comma separated list, are:<br/>
+                    site Code Heuristic = 00,  ,01,02,03,04,05,06,07,08,09,10<br/>
+                    gain Code Heuristic = H,L <br/>
+                    band Code Heuristic = B,H,L,M,S,V,E,U <br/>
+                    orientation Code Heuristic = Z,N,E,1,2,3,U,V,W <br/>
+                    All three components are considered equally best,
+                    so in a typical broadband station
+                    the best channels might be 00.BHE, 00.BHN, 00.BHZ, and this subsetter will pass
+                    all three, while failing every other channel at this station. This means that any channel that is
+                    part of a three components of motion group will be considered "better" than any lone single component. 
+                    <br/>
+                    See edu.sc.seis.fissuresUtil.chooser.BestChannelUtil for the underlying code.
+                    The reason this is an event-channel subsetter is because the "best" channel
+                    at a station may change with time, for example a short period only station may
+                    be replaced by a broadband seismometer. Before the switch SHZ may be the best
+                    vertical, but afterwards it would be BHZ and SHZ would no longer exist.
+                    </description>
+                </xsd:documentation>
+            </xsd:annotation>
+            <interleave>
+                <optional>
+                    <element name="siteCodeHeuristic">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="gainCodeHeuristic">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="bandCodeHeuristic">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="orientationCodeHeuristic">
+                        <data type="string"/>
+                    </element>
+                </optional>
+            </interleave>
+        </element>
+    </define>
+    <define name="eventChannelAND">
+        <element name="eventChannelAND">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Matches all enclosed EventChannel subsetters</summary>
+                    <description>The output is the logical AND of the outputs of all included EventChannel subsetters. This
+                        means that it will evaluate to true only if all the enclosed EventChannel subsetters evaluate to
+                        true. The subsetters after the first false outputted are not evaluated.</description>
+                    <example>
+                        <eventChannelAND>
+                                <distanceRange>
+                                    <unit>DEGREE</unit>
+                                    <min>40</min>
+                                </distanceRange>
+                                <bandCode>B</bandCode>
+                        </eventChannelAND>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <oneOrMore>
+                <ref name="eventChannelPlus"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="eventChannelOR">
+        <element name="eventChannelOR">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Matches at least one enclosed EventChannel subsetter</summary>
+                    <description>The output is the logical OR of the outputs of all included EventChannel subsetters. This
+                        means that it will evaluate to true if at least one of the enclosed EventChannel subsetters evaluate
+                        to true. The subsetters after the first true outputted are not evaluated.</description>
+                    <example>
+                        <eventChannelOR>
+                                <distanceRange>
+                                    <unit>DEGREE</unit>
+                                    <min>40</min>
+                                </distanceRange>
+                                <bandCode>B</bandCode>
+                        </eventChannelOR>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <oneOrMore>
+                <ref name="eventChannelPlus"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="eventChannelNOT">
+        <element name="eventChannelNOT">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Matches the negated output of the enclosed EventChannel subsetter</summary>
+                    <description>The output is the logical NOT of the output of the enclosed EventChannel subsetter. This
+                        means that it will evaluate to false if the enclosed EventChannel subsetter evaluates to true, and
+                        vice versa.</description>
+                    <example>
+                        <eventChannelNOT>
+                                <distanceRange>
+                                    <unit>DEGREE</unit>
+                                    <min>40</min>
+                                </distanceRange>
+                        </eventChannelNOT>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="eventChannelPlus"/>
+        </element>
+    </define>
+    <define name="eventChannelScript">
+        <element name="eventChannelScript">
+            <xsd:annotation>
+                <summary>Runs a script eventChannel subsetter</summary>
+                <description>Runs a eventChannel subsetter script via JSR223. The event is put as "event" and the channel
+                as "channel". The channel and event objects are a
+                VelocityChannel and VelocityEvent, respectively, the same classes used in the <a href="templates.html">templates</a> for the printlineChannelProcess.
+                See the <a href="../scripting.html">scripting tutorial</a> for more information on inlining scripts
+                into a SOD recipe.</description>
+                <example>
+                    <eventChannelScript type="jython">
+           if channel.getOrientationCode() == 'N' and abs(channel.getAzimuth()) > 5:
+               # reject N channels that are more than 5 degrees from north
+               result = util.fail('channel not really North'+channel.getAzimuth())
+                    </eventChannelScript>
+                </example>
+            </xsd:annotation>
+            <attribute name="type">
+                    <text/>
+            </attribute>
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="externalEventChannelSubsetter">
+        <element name="externalEventChannelSubsetter">
+            <xsd:annotation>
+                <summary>Use an EventChannel subsetter external to SOD</summary>
+                <description>$externalEventChannelSubsetterInfo.getRelaxHTML('../')</description>
+                <example>
+                    <externalEventChannelSubsetter>
+                        <classname>edu.somewhere.seis.sodExt.subsetter.eventChannel.MyEventChannelSubsetter</classname>
+                    </externalEventChannelSubsetter>
+                </example>
+            </xsd:annotation>
+            <ref name="externalClass"/>
+        </element>
+    </define>
+</grammar>

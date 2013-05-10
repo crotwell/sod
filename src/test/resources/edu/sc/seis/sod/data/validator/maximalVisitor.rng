@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+    <start>
+        <element name="baseElement">
+            <optional>
+                <element name="optionalEl">
+                    <empty/>
+                </element>
+            </optional>
+            <oneOrMore>
+                <element name="oneOrMore">
+                    <empty/>
+                </element>
+            </oneOrMore>
+            <zeroOrMore>
+                <element name="zeroOrMore">
+                    <empty/>
+                </element>
+            </zeroOrMore>
+            <optional>
+                <oneOrMore>
+                    <element name="thisOne">
+                        <empty/>
+                    </element>
+                    <element name="thenThisOne">
+                        <empty/>
+                    </element>
+                </oneOrMore>
+                <zeroOrMore>
+                    <element name="thisOne">
+                        <empty/>
+                    </element>
+                    <element name="thenThisOne">
+                        <empty/>
+                    </element>
+                </zeroOrMore>
+            </optional>
+        </element>
+    </start>
+</grammar>

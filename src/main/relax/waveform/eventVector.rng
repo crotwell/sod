@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <start>
+        <ref name="eventVector"/>
+    </start>
+    <define name="eventVector">
+        <choice>
+            <xsd:annotation>
+                <summary>Ingredients for selecting channel groups for events</summary>
+                <velocity>#waveformVectorArmPage()</velocity>
+            </xsd:annotation>
+            <ref name="bestChannelGroupAtStation"/>
+            <ref name="ANDEventChannelWrapper"/>
+            <ref name="OREventChannelWrapper"/>
+            <ref name="eventVectorAND"/>
+            <ref name="eventVectorOR"/>
+            <ref name="eventVectorNOT"/>
+            <ref name="eventVectorScript"/>
+            <ref name="external"/>
+            <ref name="eventChannel"/>
+        </choice>
+    </define>
+    <define name="eventVectorPlus">
+        <choice>
+            <ref name="eventVector"/>
+            <ref name="eventStationPlus"/>
+        </choice>
+    </define>
+    <define name="bestChannelGroupAtStation">
+        <element name="bestChannelAtStation">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Picks the best channels for a station.</summary>
+                    <description>Picks the best channels at a station, avoiding processing 00.BHZ and 01.BHZ at the same station. 
+                    This can often happen when there are multiple sensors at a station, perhaps a surface seismometer and
+                    a borehole seismometer. The processor decides on best based on a simple hueristic based on site
+                    and channel codes. The default is:<br/>
+                    site Code Heuristic = "00", "  ", "01"<br/>
+                    gain Code Heuristic = "H", "L" <br/>
+                    band Code Heuristic = "B", "H", "L", "M", "S", "V", "E", "U" <br/>
+                    orientation Codes = "Z", "N", "E", "1", "2", "3", "U", "V", "W" <br/>
+                    All three components are considered equally best, so in a typical broadband station
+                    the best channels might be 00.BHE, 00.BHN, 00.BHZ, and this subsetter will pass
+                    all three, while failing every other channel at this station.
+                    <br/>
+                    See edu.sc.seis.fissuresUtil.chooser.BestChannelUtil for the underlying code.
+                    The reason this is an event-channel subsetter is because the "best" channel
+                    at a station may change with time, for example a short period only station may
+                    be replaced by a broadband seismometer. Before the switch SHZ may be the best
+                    vertical, but afterwards it would be BHZ and SHZ would no longer exist.
+                    </description>
+                </xsd:documentation>
+            </xsd:annotation>
+            <zeroOrMore>
+                <element name="siteCodeHeuristic">
+                    <data type="string"/>
+                </element>
+            </zeroOrMore>
+            <zeroOrMore>
+                <element name="gainCodeHeuristic">
+                    <data type="string"/>
+                </element>
+            </zeroOrMore>
+            <zeroOrMore>
+                <element name="bandCodeHeuristic">
+                    <data type="string"/>
+                </element>
+            </zeroOrMore>
+            <zeroOrMore>
+                <element name="orientationCodeHeuristic">
+                    <data type="string"/>
+                </element>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="ANDEventChannelWrapper">
+        <element name="ANDEventChannelWrapper">
+            <xsd:annotation>
+                <summary>Allows an event channel subsetter to be embedded within a event vector subsetter</summary>
+                <description>Allows an event channel subsetter to be embedded within a event channelgroup subsetter. The
+                    result is the AND of result of all the individual channels. The is most often used within the motion
+                    vector arm.</description>
+                <example>
+                    <ANDEventChannelWrapper>
+                            <bandCode>B</bandCode>
+                    </ANDEventChannelWrapper>
+                </example>
+            </xsd:annotation>
+            <ref name="eventChannelPlus"/>
+        </element>
+    </define>
+    <define name="OREventChannelWrapper">
+        <element name="OREventChannelWrapper">
+            <xsd:annotation>
+                <summary>Allows an event channel subsetter to be embedded within a event vector subsetter</summary>
+                <description>Allows an event channel subsetter to be embedded within a event channelgroup subsetter. The
+                    result is the OR of result of all the individual channels. The is most often used within the motion
+                    vector arm.</description>
+                <example>
+                    <OREventChannelWrapper>
+                            <bandCode>B</bandCode>
+                    </OREventChannelWrapper>
+                </example>
+            </xsd:annotation>
+            <ref name="eventChannelPlus"/>
+        </element>
+    </define>
+    <define name="eventVectorAND">
+        <element name="eventVectorAND">
+            <xsd:annotation>
+                <summary>Matches all included EventVector subsetters</summary>
+                <description>The output is the logical AND of the outputs of all included EventVector subsetters. This
+                    means that it will evaluate to true only if all the included subsetters evaluate to true. The
+                    subsetters after the first false outputted are not evaluated.</description>
+            </xsd:annotation>
+            <oneOrMore>
+                <ref name="eventVectorPlus"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="eventVectorOR">
+        <element name="eventVectorOR">
+            <xsd:annotation>
+                <summary>Matches at least one of included EventVector subsetters</summary>
+                <description>The output is the logical OR of the outputs of all included EventVector subsetters. This
+                    means that at least one included subsetter must evaluate to true for this subsetter to evaluate to
+                    true. The subsetters after the first true outputted are not evaluated.</description>
+            </xsd:annotation>
+            <oneOrMore>
+                <ref name="eventVectorPlus"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="eventVectorNOT">
+        <element name="eventVectorNOT">
+            <xsd:annotation>
+                <summary>Matches the negated output of the included EventVector subsetter</summary>
+                <description>The output is the logical NOT of the output of the included subsetter. This means that the
+                    included subsetter must evaluate to false for this subsetter to evaluate to true, and vice versa.</description>
+            </xsd:annotation>
+            <ref name="eventVectorPlus"/>
+        </element>
+    </define>
+    <define name="eventVectorScript">
+        <element name="eventVectorScript">
+            <xsd:annotation>
+                <summary>Runs a script eventVector subsetter</summary>
+                <description>Runs a eventVector subsetter script via JSR223. The event is put as "event" and the channelGroup
+                as "channelGroup". The channel and event objects are a
+                VelocityChannelGroup and VelocityEvent, respectively, the same classes used in the <a href="templates.html">templates</a> for the printlineChannelProcess.
+                See the <a href="../scripting.html">scripting tutorial</a> for more information on inlining scripts
+                into a SOD recipe.</description>
+                <example>
+                    <eventVectorScript type="jython">
+                        for channel in channelGroup.getChannels():
+                            if channel.getOrientationCode() == 'N' and abs(channel.getAzimuth()) > 5:
+                                # reject N channels that are more than 5 degrees from north
+                                result = util.fail('channel not really North'+channel.getAzimuth())
+                    </eventVectorScript>
+                </example>
+            </xsd:annotation>
+            <attribute name="type">
+                    <text/>
+            </attribute>
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="external">
+        <element name="externalEventVectorSubsetter">
+            <xsd:annotation>
+                <summary>Use an EventVector subsetter external to SOD</summary>
+                <description>$externalEventVectorSubsetterInfo.getRelaxHTML('../')</description>
+                <example>
+                    <externalEventVectorSubsetter>
+                        <classname>edu.somewhere.seis.sodExt.subsetter.waveformVector.MyEventVectorSubsetter</classname>
+                    </externalEventVectorSubsetter>
+                </example>
+            </xsd:annotation>
+            <ref name="externalClass"/>
+        </element>
+    </define>
+</grammar>

@@ -1,0 +1,71 @@
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <start combine="choice">
+        <notAllowed/>
+    </start>
+    <include href="units.rng"/>
+    <define name="range" combine="choice">
+        <group>
+            <xsd:annotation>
+                <summary>A range of lengths</summary>
+            </xsd:annotation>
+            <interleave>
+ 	           <ref name="lengthUnit"/>
+    	        <optional>
+        	        <element name="min">
+            	        <xsd:annotation>
+                	        <include/>
+                    	</xsd:annotation>
+	                    <data type="double">
+    	                    <xsd:annotation>
+        	                    <example>0</example>
+            	            </xsd:annotation>
+                	    </data>
+ 	               </element>
+    	        </optional>
+        	    <optional>
+            	    <element name="max">
+                	    <xsd:annotation>
+                    	    <include/>
+ 	                   </xsd:annotation>
+    	                <data type="double">
+        	                <xsd:annotation>
+            	                <example>36</example>
+                	        </xsd:annotation>
+ 	                   </data>
+    	            </element>
+        	    </optional>
+            </interleave>
+        </group>
+    </define>
+    <define name="degreeRange">
+        <group>
+            <xsd:annotation>
+                <summary>A range of distance in degrees</summary>
+            </xsd:annotation>
+            <optional>
+                <element name="min">
+                    <xsd:annotation>
+                        <include/>
+                    </xsd:annotation>
+                    <data type="double">
+                        <xsd:annotation>
+                            <example>18</example>
+                        </xsd:annotation>
+                    </data>
+                </element>
+            </optional>
+            <optional>
+                <element name="max">
+                    <xsd:annotation>
+                        <include/>
+                    </xsd:annotation>
+                    <data type="double">
+                        <xsd:annotation>
+                            <example>75</example>
+                        </xsd:annotation>
+                    </data>
+                </element>
+            </optional>
+        </group>
+    </define>
+</grammar>

@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<sod>
+    <eventArm>
+        <eventFinder>
+            <name>IRIS_EventDC</name>
+            <dns>edu/iris/dmc</dns>
+            <originTimeRange>
+                <startTime>
+                    <year>2003</year>
+                    <month>1</month>
+                    <day>1</day>
+                </startTime>
+                <endTime>
+                    <year>2003</year>
+                    <month>1</month>
+                    <day>10</day>
+                </endTime>
+            </originTimeRange>
+            <magnitudeRange>
+                <min>5</min>
+            </magnitudeRange>
+            <catalog>WHDF</catalog>
+        </eventFinder>
+        <printlineEventProcess><template>From server: $event</template></printlineEventProcess><originOR>
+            <originAND>
+                <magnitudeRange>
+                    <min>5</min>
+                </magnitudeRange>
+                <originDepthRange>
+                    <unit>KILOMETER</unit>
+                    <min>100</min>
+                    <max>200</max>
+                </originDepthRange>
+            </originAND>
+            <magnitudeRange>
+                <min>6</min>
+            </magnitudeRange>
+        </originOR>
+        <printlineEventProcess><template>Passed boolean subsetter: $event</template></printlineEventProcess>
+    </eventArm>
+</sod>

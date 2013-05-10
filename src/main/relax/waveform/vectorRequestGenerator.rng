@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <start combine="choice">
+        <ref name="vectorRequestGenerator"/>
+    </start>
+    <define name="vectorRequestGenerator">
+        <choice>
+            <xsd:annotation>
+                <summary>Ingredients that generating requests to the seismogram servers</summary>
+                <velocity>#waveformArmPage()</velocity>
+            </xsd:annotation>
+            <ref name="vectorRequestGeneratorScript"/>
+            <ref name="requestGenerator"/>
+        </choice>
+    </define>
+    <define name="vectorRequestGeneratorScript">
+        <element name="vectorRequestGeneratorScript">
+            <xsd:annotation>
+                <summary>Runs a script to generate the request</summary>
+                <description>Runs a request generater script via JSR223. The event is put as "event" and the channelGroup
+                as "channelGroup". The channelGroup and event objects are a
+                VelocityChannelGroup and VelocityEvent, respectively, the same classes used in the <a href="templates.html">templates</a> for the printlineChannelProcess.
+                The result is expected to be put as "request" by the script as a List of List or a 2D array of RequestFilter objects.
+                See the <a href="../scripting.html">scripting tutorial</a> for more information on inlining scripts
+                into a SOD recipe.</description>
+                <example>
+                    <vectorRequestGeneratorScript type="jython">
+
+                       from java.util import ArrayList
+                       from edu.iris.Fissures.IfSeismogramDC import RequestFilter
+                       from edu.iris.Fissures.model import TimeInterval, UnitImpl
+                       window = TimeInterval(5, UnitImpl.MINUTE)
+                       result = ArrayList()
+                       for c in channelGroup.channels:
+                           chanResult = ArrayList() 
+                           rf = RequestFilter(c.id,
+                                              event.preferred.fissuresTime,
+                                              event.preferred.time.add(window).getFissuresTime())
+                           chanResult.add(rf)
+                           result.add(chanResult)
+                    </vectorRequestGeneratorScript>
+                </example>
+            </xsd:annotation>
+            <attribute name="type">
+                    <text/>
+            </attribute>
+            <data type="string"/>
+        </element>
+    </define>
+</grammar>

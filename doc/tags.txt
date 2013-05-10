@@ -1,0 +1,102 @@
+EventArm
+--------
+EventFinder --> From IDL
+EventAttr 
+---------
+	FERegion
+		Seismic -->List
+		Geograhic -->List
+	Name -->ExactMatch
+	parameter -->(?)
+Origin
+------
+	catalog --> List
+	contributor --> List
+	magnitude 
+		  type -->List
+		  min --> if absent -Float.MAX_VALUE
+		  max --> if absent Float.MAX_VALUE
+	Location
+		Areas
+			BoxArea -->min,max,lat,lon
+			PointDistanceArea --> lat,lon, distanceRange
+			Global --> no arg
+			FlinnEngdahlArea --> (?)
+		DepthRange
+	timeRange --> start, end
+	parameter --> (?)
+	originArrayAND-->take single origin subsetter
+	originArrayOR --> take single origin subsetter
+EventProcess
+------------
+	printlineprocess
+
+********************************************************
+NetworkArm
+----------
+NetID:
+	CODE -->ExactMatch
+NetAtrr:
+	EffectiveTimeOverlapS
+StationId:
+	code->exactmatch
+Station:
+	location --> area
+	effectiveTimeOverlap
+SiteId:
+	code
+Site:
+	Location
+	effectiveTimeOverlap
+	distancefromStation
+ChannelId:
+	code --> ExactMatch
+	channel types --> look at the seed manual
+Channel:
+	EffectiveTimeOverlap
+	Sampling
+		min
+		max
+		interval	
+Orientation
+	exact
+	with max degree(spherical)
+	with strike
+	with dip
+	with strikeOffset
+	with dipOffset
+
+******************************************************************************
+
+WaveFormArm
+-----------
+
+EventStation:
+	effectiveTimeOverlap
+	embeddedOrigin
+	embeddedStation
+	distanceRange
+	azimuthRange
+	backazimuthRange
+	linearDistanceMag
+	linearDistanceRange
+	linearMagnitudeRange
+
+EventChannel:
+	effectiveTimeOverlap
+	embeddedOrigin
+	embeddedChannel
+	linearDistanceSampling
+	
+AvailableData:
+	nogaps
+	fullcoverage
+DataCenter:
+	fixed
+waveForm:
+	(?)
+Processor:
+	printlineProcessor
+
+	
+

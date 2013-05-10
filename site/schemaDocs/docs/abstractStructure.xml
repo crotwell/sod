@@ -1,0 +1,215 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>SOD - How to Interpret This Consists Of</title>
+    </properties>
+    <body>
+        <section name="The 'This Consists Of' Section of the Ingredient Reference">
+            <p>When SOD starts up, your recipe file is checked to make sure it will work. Only certain items are
+                allowed in certain places, so you have to be careful when creating or editing a recipe file.</p>
+            <p>The 'This Consists Of' section of the Ingredient Reference describes what should go where. We explain what
+                the pieces are in terms of XML. If you don't know anything about XML, we recommend that you read our <a
+                href="../xmlIntro.html">introduction</a> before reading this page any further.</p>
+        </section>
+        <section name="A Basic Example">
+            <p>This the 'This consists of' section of the <a href="event/origin/originPointDistance.html">origin point
+                distance</a> ingredient.</p>
+            <div id="contained">
+                <p> &lt;<a href="event/origin/originPointDistance.html"
+                    title="Distance range from a fixed point">originPointDistance</a>&gt; <div>
+                        <div id="group"> &lt;latitude&gt;<b>
+                                <a href="datatypes/DoubleDatatype.html">double</a>
+                            </b>&lt;/latitude&gt; <div/> &lt;longitude&gt;<b>
+                                <a href="datatypes/DoubleDatatype.html">double</a>
+                            </b>&lt;/longitude&gt; <div/>
+                            <a href="base/include/range/range.html" title="A range of lengths">range</a>
+                            <div/>
+                        </div>
+                    </div> &lt;/<a href="event/origin/originPointDistance.html" title="Distance range from a fixed point">originPointDistance</a>&gt;<div/>
+                </p>
+            </div>
+            <section name="The containing originPointDistance tag">
+                <p>The first line shows the start tag &lt;originPointDistance&gt; . This means that at this
+                    point in the recipe file (ie every place in the 'Places containing this' section) the element
+                    originPointDistance along with its contents are acceptable.</p>
+                <p>The next three lines along the black line must appear inside the originPointDistance element since
+                    they are directly below and indented from it. The black line indicates they are grouped together and
+                    must appear in the order they are given going down the page.</p>
+            </section>
+            <section name="The latitude and longitude elements">
+                <p>The latitude element must be the first thing inside of the originPointDistance element. A latitude
+                    only contains one thing: a 'double'. Text without brackets in bold indicates a single piece of data.
+                    Anything that matches a generic datatype is acceptable here, and clicking on its link will take you
+                    to a description of the datatype. Since this is a 'double', pretty much any numeric value can be given.</p>
+                <p>After the latitude element and its 'double' contents, the very similar longitude element must be
+                    added to originPointDistance. It is just another element with a 'double' value inside of it.</p>
+            </section>
+            <section name="Generic range definition">
+                <p> Finally, there is a link to 'range'. A simple link without any brackets should be replaced with the
+                    contents of its 'This consists of' section. To see what must go in the place of the range link,
+                    click on it to get to its page. It consists of a unit, min, and max element.</p>
+                <p>The unit element links to a deeper page that shows that it must be a complete unit element with the
+                    name of a unit of distance inside of it. As such, putting one of the values like KILOMETER or MILE
+                    satisfies this condition.</p>
+                <p>The min and max elements are very similar to the latitude and longitude elements defined earlier.
+                    They are just simple elements with doubles inside of them.</p>
+                <p>For this particular example, then, the range link in originPointDistance should be replaced with a
+                    unit element, a min element, and a max element.</p>
+            </section>
+            <section name="Putting it all together">
+                <p>Combining the results of the previous section, originPointDistance consists of an originPointDistance
+                    tag with latitude, longitude, unit, min and max tags inside of it:</p>
+                <pre>&lt;originPointDistance&gt; &lt;latitude&gt;35&lt;/latitude&gt;
+                    &lt;longitude&gt;-85&lt;/longitude&gt;
+                    &lt;unit&gt;DEGREE&lt;/unit&gt; &lt;min&gt;30&lt;/min&gt;
+                    &lt;max&gt;90&lt;/max&gt; &lt;/originPointDistance&gt;</pre>
+            </section>
+        </section>
+        <section name="A Slightly More Complicated Example">
+            <p>This is the 'This Consists Of' section of the <a href="event/source/eventFinder.html">Event Finder</a> ingredient.</p>
+            <div id="contained">
+                <p> &lt;<a href="eventFinder.html"
+                    title="Retrieve events from an EventFinder">eventFinder</a>&gt; <div>
+                        <div id="group"> &lt;<a href="event/source/name.html"
+                            title="Name of an event server">name</a>&gt; <div/> &lt;<a
+                                href="event/source/dns.html" title="DNS location of an event server">dns</a>&gt; <div/>
+                            <i>
+                                <a class="choice" href="abstractStructure.html#choice">choice</a>
+                            </i>
+                            <div id="choice"> &lt;<a href="base/include/area/globalArea.html"
+                                title="Accepts events that occur anywhere in the world ">globalArea</a>&gt; <div/>
+                                    &lt;<a href="base/include/area/boxArea.html"
+                                title="Accepts events that occur within a lat lon box ">boxArea</a>&gt; <div/>
+                            </div>end <i>
+                                <a class="choice" href="abstractStructure.html#choice">choice</a>
+                            </i>
+                            <div/> &lt;<a href="base/externalRef/originDepthRange/start.html"
+                            title="Matches events with depth within a defined range">originDepthRange</a>&gt; <i>
+                                <a href="abstractStructure.html#optional">optional</a>
+                            </i>
+                            <div/> &lt;<a href="base/externalRef/originTimeRange/start.html"
+                            title="Matches events whose time occurs within the given range">originTimeRange</a>&gt;
+                            <div/> &lt;<a href="base/externalRef/magnitudeRange/start.html"
+                            title=" Accepts a range of magnitudes">magnitudeRange</a>&gt; <i>
+                                <a href="abstractStructure.html#optional">optional</a>
+                            </i>
+                            <div/> &lt;<a href="event/catalog/start.html"
+                            title="Matches events with a given catalog">catalog</a>&gt; <i>
+                                <a href="abstractStructure.html#Any number of times">Any number of times</a>
+                            </i>
+                            <div/> &lt;<a href="event/contributor/start.html"
+                            title="Matches events with a given contributor">contributor</a>&gt; <i>
+                                <a href="abstractStructure.html#Any number of times">Any number of times</a>
+                            </i>
+                            <div/>
+                        </div>
+                    </div>&lt;/<a href="eventFinder.html"
+                    title="Retrieve events from an EventFinder">eventFinder</a>&gt; </p>
+            </div>
+            <section name="Labels">
+                <p>Compared to the last example, this one is a bit larger. It also has labels beside or surrounding
+                    certain tags to tell tell whats allowed and how many times. In particular, this example introduces
+                    the concepts of 'choice', 'optional', and 'Any number of times'. Both examples so far have used a 'group'.</p>
+            </section>
+            <section name="group">
+                <p>A group is denoted by a solid vertical line. The concept of a group is simple, and we already
+                    followed it without naming it in the previous example. Tags in a group must appear in the order they
+                    are specified in the 'This consists of' section. This means that inside the eventFinder the name
+                    always comes first, then dns and so on down the line of the group.</p>
+            </section>
+            <section name="choice">
+                <p>Choices are denoted by a dashed vertical line. Within a choice, you can use one of the items it
+                    contains. For this particular example, you have the choice between globalArea and boxArea. Also, if
+                    you follow the name and dns links, you will see that they also have choices for the values you may enter.</p>
+            </section>
+            <section name="optional">
+                <p>Any tag or choice that is labeled as 'optional' can be included either once or not at all. For this
+                    example, you don't have to have an originDepthRange or a magnitudeRange if you don't need to use
+                    one. Since they are both in the group we talked about earlier, they must be included in the right
+                    order if they are included. If they are left out, you just skip to the next item in the group.</p>
+            </section>
+            <section name="Any number of times">
+                <p>Anything labeled as 'Any number of times' is optional, but can be included more than once. In this
+                    example, you can have one catalog tag, 20 catalog tags, absolutely no catalog tags, or however many
+                    catalog tags you wish.</p>
+            </section>
+        </section>
+        <section name="A Couple Other Important Examples">
+            <p>This is the 'This consists of' section of the <a
+                href="properties/eventRefreshInterval.html">eventRefreshInterval</a> ingredient...</p>
+            <div id="contained">
+                <p> &lt;<a href="properties/eventRefreshInterval.html"
+                    title="Time between queries to the event server">eventRefreshInterval</a>&gt; <div>
+                        <a href="base/include/quantity/time.html" title="A length of time">time</a>
+                        <i>
+                            <a href="abstractStructure.html#interleave">interleave</a>
+                        </i>
+                        <div id="inter"> &lt;<a href="base/include/units/timeUnit.html"
+                            title="A unit of time">unit</a>&gt; <div/>&lt;value&gt;<b>
+                                <a href="datatypes/FloatDatatype.html">float</a>
+                            </b>&lt;/value&gt; <div/>
+                        </div>end <a href="base/include/quantity/time.html" title="A length of time">time</a>
+                        <i>
+                            <a href="abstractStructure.html#interleave">interleave</a>
+                        </i>
+                    </div> &lt;/<a href="properties/eventRefreshInterval.html" title="Time between queries to the event server">eventRefreshInterval</a>&gt;<div/>
+                </p>
+            </div>
+            <p>...and this is the 'This consists of' section of the <a
+                href="waveform/requestSubsetter/requestOR.html">requestOR</a> ingredient.</p>
+            <div id="contained">
+                <p> &lt;<a href="waveform/requestSubsetter/requestOR.html"
+                    title="Matches at least one enclosed request">requestOR</a>&gt; <div>
+                        <a href="waveform/requestSubsetter/request.html" title="Ingredients that work based on the generated request">request</a>
+                        <i>
+                            <a href="abstractStructure.html#At least once">At least once</a>
+                        </i>
+                        <i>
+                            <a class="choice" href="abstractStructure.html#choice">choice</a>
+                        </i>
+                        <div id="choice"> &lt;<a href="waveform/requestSubsetter/requestAND.html"
+                            title="Matches all enclosed requests">requestAND</a>&gt; <div/>&lt;<a
+                                href="waveform/requestSubsetter/requestOR.html"
+                            title="Matches at least one enclosed request">requestOR</a>&gt; <div/>&lt;<a
+                                href="waveform/requestSubsetter/requestNOT.html"
+                            title="Matches the negated output of the enclosed request">requestNOT</a>&gt;
+                                <div/>&lt;<a href="waveform/requestSubsetter/requestPrint.html"
+                            title="Prints the Request and returns true">requestPrint</a>/&gt; <div/>&lt;<a
+                                href="waveform/requestSubsetter/breqFastRequest.html"
+                            title="Creates a breqfast request and saves it to a file and returns true">breqFastRequest</a>&gt;
+                                <div/>&lt;<a href="waveform/requestSubsetter/PASS.html"
+                            title=" Always returns true. ">passRequest</a>&gt; <div/>&lt;<a
+                                href="waveform/requestSubsetter/external.html"
+                            title="Use a request subsetter external to SOD">externalRequest</a>&gt; <div/>
+                        </div>end <a href="waveform/requestSubsetter/request.html" title="Ingredients that work based on the generated request">request</a>
+                        <i>
+                            <a href="abstractStructure.html#At least once">At least once</a>
+                        </i>
+                        <i>
+                            <a class="choice" href="abstractStructure.html#choice">choice</a>
+                        </i>
+                        <div/>
+                    </div> &lt;/<a href="waveform/requestSubsetter/requestOR.html" title="Matches at least one enclosed request">requestOR</a>&gt;<div/>
+                </p>
+            </div>
+            <section name="Just a few more labels you need to know...">
+                <p>These last two examples illustrate a couple of other important concepts you need to know before you
+                    start looking up ingredients. These concepts are 'interleave' and 'At least once'.</p>
+            </section>
+            <section name="interleave">
+                <p>An interleave is denoted by a dotted vertical line. It is similar to a choice, but its contents can
+                    be in any order. This is to say that, for the eventRefreshInterval example above, it doesn't matter
+                    whether or not the unit tag comes first. Both of the following xml snippets are acceptable.</p>
+                <pre> &lt;eventRefreshInterval&gt; &lt;unit&gt;MINUTE&lt;/unit&gt;
+                    &lt;value&gt;30&lt;/value&gt; &lt;/eventRefreshInterval&gt;</pre>
+                <pre> &lt;eventRefreshInterval&gt; &lt;value&gt;30&lt;/value&gt;
+                    &lt;unit&gt;MINUTE&lt;/unit&gt; &lt;/eventRefreshInterval&gt; </pre>
+            </section>
+            <section name="At least once">
+                <p>Anything labeled 'At least once' is required, but can be included one or more times. In the requestOR
+                    example, requestOR must have at least one request. It cannot be empty, but it can have one, two,
+                    twenty, or an infinite amount of requests.</p>
+            </section>
+        </section>
+    </body>
+</document>

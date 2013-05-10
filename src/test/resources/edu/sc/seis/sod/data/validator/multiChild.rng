@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+    <start>
+        <element name="baseElement">
+            <ref name="twoChild"/>
+        </element>
+    </start>
+    <define name="twoChild">
+            <element name="internalEl1"><empty/></element>
+            <element name="internalEl2"><empty/></element>
+    </define>
+</grammar>

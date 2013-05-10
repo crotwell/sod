@@ -1,0 +1,59 @@
+#if($additionalArms.length() > 0)
+$additionalArms#end
+    <waveformArm>
+#if($sites)
+        <siteOR>
+#foreach($code in $sites)
+            <siteCode>$code</siteCode>
+#end
+		</siteOR>
+#end
+#if($channels)
+            <channelOR>
+#foreach($code in $channels)
+                <channelCode>$code</channelCode>
+#end
+            </channelOR>
+#end
+        <phaseRequest>
+            <beginPhase>$begin.name</beginPhase>
+            <beginOffset>
+                <unit>MINUTE</unit>
+                <value>$begin.offset</value>
+            </beginOffset>
+            <endPhase>$end.name</endPhase>
+            <endOffset>
+                <unit>MINUTE</unit>
+                <value>$end.offset</value>
+            </endOffset>
+        </phaseRequest>
+#if($baseurl)
+        <fdsnDataSelect>
+            <baseurl>$baseurl</baseurl>
+        </fdsnDataSelect>
+#end
+#if($server.name && $server.dns)
+        <fixedDataCenter>
+            <name>$server.name</name>
+            <dns>$server.dns</dns>
+        </fixedDataCenter>
+#end
+        <someCoverage/>
+        <responseGain/>
+        <sacWriter>
+            <workingDir></workingDir>
+            <location>$seismogramFilename</location>
+#foreach($header in $mark-phases)
+           <phaseTimeHeader>
+               <phaseName>$header.phase</phaseName>
+               <tHeader>$header.header</tHeader>
+           </phaseTimeHeader> 
+#end
+        </sacWriter>
+#if($output)
+        <printlineSeismogramProcess>
+            <template>$output</template>
+        </printlineSeismogramProcess>
+#end
+    </waveformArm>
+</sod>

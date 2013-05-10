@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <start>
+        <ref name="seismogramSource"/>
+    </start>
+    <define name="seismogramSource">
+        <choice>
+            <xsd:annotation>
+                <summary>Specifies the server to ask for seismograms.</summary>
+                <description> The default is the edu/iris/dmc IRIS_Datacenter</description>
+                <velocity>#waveformArmPage()</velocity>
+            </xsd:annotation>
+            <ref name="fixedDataCenter"/>
+            <ref name="choiceSource"/>
+            <ref name="tryInOrder"/>
+            <ref name="winstonWaveServer"/>
+            <ref name="fdsnDataSelect"/>
+        </choice>
+    </define>
+    <define name="fixedDataCenter">
+        <element name="fixedDataCenter">
+            <xsd:annotation>
+                <summary>Pick a central data repository</summary>
+                <description>
+                <deprecated>DHI servers at the IRIS DMC will be turned off June 2013. The fdsnDataSelect web service is the replacement.</deprecated>
+                    This specifies the data center to use.
+                    See <a href="http://www.seis.sc.edu/wily/GetAllServers?corbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService&amp;description=IRIS nameserver">Wily</a>
+                    for a complete list of SeismogramDCs and their current status.</description>
+            </xsd:annotation>
+            <ref name="seismogramServerName"/>
+            <ref name="seismogramServerDns"/>
+	    <optional>
+	      <element name="retries">
+		<xsd:annotation>
+		  <summary>Number of consecutive failures before quiting</summary>
+		  <description>In the event of server errors, SOD will retry 
+		  the query to the server for retries times before failing.
+		  The default is -1 which means to try forever.</description>
+            </xsd:annotation>
+		<data type="integer"/>
+	      </element>
+	    </optional>
+	</element>
+    </define>
+    <define name="seismogramServerName">
+        <element name="name">
+            <xsd:annotation>
+                <summary>Name of a data center</summary>
+                <description>The server's name is used in combination with a dns value to find a
+                    data center. The names "IRIS_BudDataCenter", "IRIS_PondDataCenter", and
+                    "IRIS_ArchiveDataCenter" must be used in combination with the "edu/iris/dmc" dns
+                    value. The name "NCEDC_DataCenter" must be used in conjunction with the
+                    "edu/berkley/geo/quake" dns value. The name "SCEPPSeismogramDC" must be used in
+                    conjunction with a DNS value "edu/sc/seis".</description>
+            </xsd:annotation>
+            <choice>
+                <value>IRIS_DataCenter</value>
+                <value>IRIS_BudDataCenter</value>
+                <value>IRIS_PondDataCenter</value>
+                <value>IRIS_ArchiveDataCenter</value>
+                <value>NCEDC_DataCenter</value>
+                <value>SCEDC_DataCenter</value>
+                <value>SCEPPSeismogramDC</value>
+                <data type="string"/>
+            </choice>
+        </element>
+    </define>
+    <define name="seismogramServerDns">
+        <element name="dns">
+            <xsd:annotation>
+                <summary>DNS location of a server</summary>
+                <description>The server's dns is used in combination with a 
+		name value to locate a server. Names are unique with a dns.</description>
+            </xsd:annotation>
+            <choice>
+                <value>edu/iris/dmc</value>
+                <value>edu/berkley/geo/quake</value>
+                <value>edu/caltech/scedc</value>
+                <value>edu/sc/seis</value>
+                <data type="string"/>
+            </choice>
+        </element>
+    </define>
+    <define name="choiceSource">
+        <element name="choiceSource">
+            <xsd:annotation>
+                <summary>Allows a choice between seismogram sources based on an eventChannelSubsetter</summary>
+                <description> This type of seismogram source allows for a choice to be made between several
+                    seismogram sources based on characteristics of an event and channel. It goes through
+                    each of the choices in order, and if the subsetter inside of a choice matches,
+                    it uses it. If no choice matches, the seismogram source in the otherwise is used. The
+                    example gets data from the POND from half a year ago up until 8 weeks ago. For
+                    anything more recent, it gets data from the BUD. Other uses for this are to
+                    switch seismogram sources based on the preferred seismogram sources for a station, or to use
+                    the POND  (IRIS_PondDataCenter) to retrieve data if an event meets the POND criteria but use the
+                    IRIS mass store (IRIS_DataCenter) otherwise.</description>
+                <example>
+                    <choiceSource>
+                        <choice>
+                            <originTimeRange>
+                                <startTime>
+                                    <earlier>
+                                        <timeInterval>
+                                          <value>26</value>
+                                          <unit>WEEK</unit>
+                                        </timeInterval>
+                                    </earlier>
+                                </startTime>
+                                <endTime>
+                                    <earlier>
+                                        <timeInterval>
+                                          <value>8</value>
+                                          <unit>WEEK</unit>
+                                        </timeInterval>
+                                    </earlier>
+                                </endTime>
+                            </originTimeRange>
+                            <fixedDataCenter>
+                                <name>IRIS_PondDataCenter</name>
+                                <dns>edu/iris/dmc</dns>
+                            </fixedDataCenter>
+                        </choice>
+                        <otherwise>
+                            <fixedDataCenter>
+                                <name>IRIS_BudDataCenter</name>
+                                <dns>edu/iris/dmc</dns>
+                            </fixedDataCenter>
+                        </otherwise>
+                    </choiceSource>
+                </example>
+            </xsd:annotation>
+            <oneOrMore>
+                <element name="choice">
+                    <ref name="eventChannelPlus"/>
+                    <ref name="seismogramSource"/>
+                </element>
+            </oneOrMore>
+            <element name="otherwise">
+                <ref name="seismogramSource"/>
+            </element>
+        </element>
+    </define>
+    <define name="tryInOrder">
+        <element name="tryInOrder">
+            <xsd:annotation>
+                <summary>Allows multiple seismogram sourcess with the first one with data being used</summary>
+                <description> This type of seismogram source allows several
+                    seismogram sources with the first one that has data for a given even-channel being used. It goes through
+                    each of the choices in the order given, and uses the first one that gives any available data.
+                    If no choice has data, then the result of the last datacenter is used (albeit the empty result). The
+                    example tries to get data from the BUD first and then POND if it isn't in the BUD.</description>
+                <example>
+                    <tryInOrder>
+                            <fixedDataCenter>
+                                <name>IRIS_BudDataCenter</name>
+                                <dns>edu/iris/dmc</dns>
+                            </fixedDataCenter>
+                            <fixedDataCenter>
+                                <name>IRIS_PondDataCenter</name>
+                                <dns>edu/iris/dmc</dns>
+                            </fixedDataCenter>
+                    </tryInOrder>
+                </example>
+            </xsd:annotation>
+            <oneOrMore>
+                <ref name="seismogramSource"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="winstonWaveServer">
+        <element name="winstonWaveServer">
+            <xsd:annotation>
+                <summary>Pick a Winston/Earthworm Wave Server</summary>
+                <description>This specifies a Winston or Earthworm Wave Server.
+                    </description>
+            </xsd:annotation>
+            <element name="host">
+                <data type="string"/>
+            </element>
+            <optional>
+                <element name="port">
+                    <data type="integer"/>
+                </element>
+            </optional>
+        </element>
+    </define>
+    <define name="fdsnDataSelect">
+        <element name="fdsnDataSelect">
+            <xsd:annotation>
+                <summary>Pick a FDSN dataselect web service</summary>
+                <description>This specifies a FDSN dataselect web service. The default is the IRIS DMC.
+                    </description>
+            </xsd:annotation>
+            <interleave>
+                <optional>
+                    <element name="dobulk">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="baseurl">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="user">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="password">
+                        <data type="string"/>
+                    </element>
+                </optional>
+            </interleave>
+        </element>
+    </define>
+</grammar>

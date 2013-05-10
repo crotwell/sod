@@ -1,0 +1,63 @@
+#
+# for Log4J
+#
+#log4j.rootCategory=debug, R, C, E
+log4j.logger.org.hibernate=ERROR
+log4j.logger.com.mchange=ERROR
+log4j.logger.net.sf.ehcache=ERROR
+log4j.logger.org.jacorb=ERROR
+log4j.logger.orb.giop=ERROR
+log4j.logger.orb.iiop=ERROR
+
+log4j.rootCategory=info, R, C, E
+log4j.appender.R=org.apache.log4j.RollingFileAppender
+log4j.appender.R.File=Sod.log
+log4j.appender.R.MaxFileSize=10000KB
+log4j.appender.R.MaxBackupIndex=100
+log4j.appender.R.layout=org.apache.log4j.PatternLayout
+log4j.appender.R.layout.ConversionPattern=%d{ISO8601} %p %t %c{2} - %m%n
+
+log4j.appender.E=org.apache.log4j.RollingFileAppender
+log4j.appender.E.File=Sod_Error.log
+log4j.appender.E.MaxFileSize=10000KB
+log4j.appender.E.MaxBackupIndex=3
+log4j.appender.E.layout=org.apache.log4j.PatternLayout
+log4j.appender.E.layout.ConversionPattern=%d{ISO8601} %p %t %c{2} - %m%n
+log4j.appender.E.Threshold=warn
+
+log4j.appender.C=org.apache.log4j.ConsoleAppender
+log4j.appender.C.layout=org.apache.log4j.PatternLayout
+log4j.appender.C.layout.ConversionPattern=%d{ISO8601} - %m%n
+log4j.appender.C.Threshold=warn
+
+log4j.logger.Fail=debug,FailFile
+log4j.appender.FailFile=org.apache.log4j.RollingFileAppender
+log4j.appender.FailFile.File=Fail.log
+log4j.appender.FailFile.MaxFileSize=100000KB
+log4j.appender.FailFile.MaxBackupIndex=9
+log4j.appender.FailFile.layout=org.apache.log4j.PatternLayout
+log4j.appender.FailFile.layout.ConversionPattern=%d{ISO8601} %p %t %c{2} - %m%n
+
+
+#
+# get the name serivce
+# The format for a corbaloc for a naming service is
+#    corbaloc:iiop:host.domain:port/NameService
+# You should put your own choices for host.domain and port
+#
+# for usc
+#edu.sc.seis.fissuresUtil.nameServiceCorbaLoc=corbaloc:iiop:nameservice.seis.sc.edu:6371/NameService
+# for iris
+edu.sc.seis.fissuresUtil.nameServiceCorbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService
+
+# default database url
+fissuresUtil.database.url=jdbc:hsqldb:file:SodDb/SodDb
+# hibernate create cached tables by default
+hibernate.connection.hsqldb.default_table_type=cached
+
+hibernate.cache.use_second_level_cache=true
+hibernate.cache.provider_class=org.hibernate.cache.EhCacheProvider
+ehcache.disk.store.dir=SodDb/ehcache
+
+# dark magic, but this is set up in Start by Alohomora.insertOrbProp()
+# org.omg.PortableInterceptor.ORBInitializerClass.edu.sc.seis.fissuresUtil.Alohomora=edu.sc.seis.fissuresUtil.Alohomora

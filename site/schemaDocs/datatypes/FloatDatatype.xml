@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Float Datatype</title>
+    </properties>
+    <body>
+        <section name="Float">
+            <p>A number that can have a decimal portion that is stored in 32 bits.  It also accepts exponential notation.</p>
+        </section>
+        <section name="Valid Values">
+            <ul>
+                <li>123.456</li>
+                <li>+1234.456</li>
+                <li>-1.2344e56</li>
+                <li>-.45E-6</li>
+            </ul>
+        </section>
+        <section name="Invalid Values">
+            <ul>
+                <li>123.4E 56 - No spaces in the value</li>
+                <li>123.6E+2.5 - Power of 10 must be an integer</li>
+            </ul>
+            </section>
+    </body>
+</document>

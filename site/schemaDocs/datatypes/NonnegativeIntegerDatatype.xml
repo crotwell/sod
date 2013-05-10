@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>NonnegativeInteger Datatype</title>
+    </properties>
+    <body>
+        <section name="Nonnegative Integer">
+            <p>Any positive integer or zero.</p>
+        </section>
+        <section name="Valid Values">
+            <ul>
+                <li>123</li>
+                <li>+1234</li>
+                <li>0</li>
+            </ul>
+        </section>
+        <section name="Invalid Values">
+            <ul>
+                <li>123.4E 56 - No spaces in the value</li>
+                <li>123.6E+2.5 - Power of 10 must be an integer</li>
+                 <li>-12 - Must be positive</li>
+            </ul>
+            </section>
+    </body>
+</document>

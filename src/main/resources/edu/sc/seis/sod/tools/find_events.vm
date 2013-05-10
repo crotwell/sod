@@ -1,0 +1,87 @@
+    <properties>
+        <eventLag>
+            <unit>HOUR</unit>
+            <value>0</value>
+        </eventLag>
+        <eventChannelPairProcessing>noCheck</eventChannelPairProcessing>
+    </properties>
+    <eventArm>
+        <fdsnEvent>
+#if($baseurl)
+            <baseurl>$baseurl</baseurl>
+#end
+#if($box)
+            <boxArea>
+                <latitudeRange>
+                    <min>$box.south</min>
+                    <max>$box.north</max>
+                </latitudeRange>
+                <longitudeRange>
+                    <min>$box.west</min>
+                    <max>$box.east</max>
+                </longitudeRange>
+            </boxArea>
+#elseif($donut)
+            <pointDistance>
+                <unit>DEGREE</unit>
+                <min>$donut.min</min>
+                <max>$donut.max</max>
+                <latitude>$donut.lat</latitude>
+                <longitude>$donut.lon</longitude>
+            </pointDistance>
+#end
+            <originDepthRange>
+                <unit>KILOMETER</unit>
+                <min>$depth.min</min>
+                <max>$depth.max</max>
+            </originDepthRange>
+            <originTimeRange>
+                <startTime>
+                    $begin
+                </startTime>
+                <endTime>
+                    $end
+                </endTime>
+            </originTimeRange>
+            <magnitudeRange>
+#if($types)
+#foreach($type in $types)
+                <magType>$type</magType>
+#end
+#end
+                <min>$magnitude.min</min>
+                <max>$magnitude.max</max>
+            </magnitudeRange>
+#if($catalogs)
+#foreach($cat in $catalogs)
+            <catalog>$cat</catalog>
+#end
+#end
+#if($contributors)
+#foreach($con in $contributors)
+            <contributor>$cat</contributor>
+#end
+#end
+        </fdsnEvent>
+#if(!$allowDupes)
+        <removeEventDuplicate/>
+#end
+#if($seismicRegions)
+#foreach($region in $seismicRegions)
+        <seismicRegion>$region</seismicRegion>
+#end
+#end
+#if($geographicRegions)
+#foreach($region in $geographicRegions)
+        <geographicalRegion>$region</geographicalRegion>
+#end
+#end
+#if($output)
+        <printlineEventProcess>
+            <template>$output</template>
+        </printlineEventProcess>
+#end
+    </eventArm>
+#if($additionalArms.length() > 0)
+$additionalArms#end
+</sod>

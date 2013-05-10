@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <start combine="choice">
+        <ref name="eventSource"/>
+    </start>
+    <define name="eventSource">
+        <choice>
+            <xsd:annotation>
+                <summary>Ingredient to acquire events</summary>
+                <velocity>#eventArmPage()</velocity>
+            </xsd:annotation>
+            <ref name="eventFinder"/>
+            <ref name="backwardsEventFinder"/>
+            <ref name="CSVEventSource"/>
+            <ref name="periodicFakeEventSource"/>
+            <ref name="nowFakeEventSource"/>
+            <ref name="delayedEventSource"/>
+            <ref name="fdsnEvent"/>
+        </choice>
+    </define>
+    <define name="eventFinder">
+        <element name="eventFinder">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Retrieve events from an EventFinder. </summary>
+                    <description> A Fissures/DHI EventDC service is located via the name and dns tags. The EventFinder
+                        is acquired from the EventDC, and a query is sent with the given arguments. The events returned
+                        are then sent through the EventArm for processing. See <a
+                        href="http://www.seis.sc.edu/wily/GetAllServers?corbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService&amp;description=IRIS nameserver">Wily</a>
+                        for a list of active EventDCs and their current status. A listing of known catalogs for the IRIS EventDC can be found
+                        <a href="http://www.seis.sc.edu/wily/EventCatalogs?corbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService&amp;dns=edu/iris/dmc&amp;serverObject=IRIS_EventDC">here</a>.
+                        The server defaults to the edu/iris/dmc IRIS_EventDC.</description>
+                </xsd:documentation>
+            </xsd:annotation>
+            <interleave>
+			    <optional><ref name="name"/></optional>
+			    <optional><ref name="dns"/></optional>
+	    		<optional>
+	    			<element name="retries">
+						<xsd:annotation>
+						  <summary>Number of consecutive failures before quiting</summary>
+						  <description>In the event of server errors, SOD will retry 
+						  the query to the server for retries times before failing.
+						  The default is -1 which means to try forever.</description>
+   				         </xsd:annotation>
+						<data type="integer"/>
+					</element>
+			    </optional>
+	            <optional>
+	                <choice>
+ 	                   <ref name="globalArea"/>
+ 	                   <ref name="boxArea"/>
+ 	                   <ref name="pointDistance"/>
+ 	               </choice>
+ 	           </optional>
+	            <optional>
+	                <ref name="originDepthRange"/>
+	            </optional>
+ 	           <choice>
+ 	               <ref name="originTimeRange"/>
+ 	               <ref name="networkTimeRange"/>
+ 	           </choice>
+	            <optional>
+	                <ref name="magnitudeRange"/>
+	            </optional>
+	            <zeroOrMore>
+	                <ref name="catalog"/>
+	            </zeroOrMore>
+	            <zeroOrMore>
+	                <ref name="contributor"/>
+	            </zeroOrMore>
+            </interleave>
+        </element>
+    </define>
+    <define name="networkTimeRange">
+        <element name="networkTimeRange">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Allows events that occured during the time range covered by active channels retrieved by the network arm.</summary>
+                </xsd:documentation>
+            </xsd:annotation>
+            <empty/>
+        </element>
+    </define>
+    <define name="quakeML">
+        <element name="quakeML">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Loads events from a QuakeML file or URL.</summary>
+                </xsd:documentation>
+            </xsd:annotation>
+            <interleave>
+                <optional>
+                    <element name="url">
+                        <xsd:annotation>
+                          <summary>A QuakeML URL</summary>
+                          <description>A url to a quakeml event source, either a remote web service or local file. Note this will
+                          only be queried once, and so is not usable for new events as in a "standing order".</description>
+                         </xsd:annotation>
+                        <data type="string"/>
+                    </element>
+                </optional>
+            </interleave>
+        </element>
+    </define>
+                
+    <define name="fdsnEvent">
+        <element name="fdsnEvent">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Querys events from a FDSN Event web service or file.</summary>
+                </xsd:documentation>
+            </xsd:annotation>
+            <interleave>
+                <optional>
+                    <element name="baseurl">
+                        <xsd:annotation>
+                          <summary>A FDSN Event web service URL</summary>
+                          <description>A url to a FDSN event web service.</description>
+                         </xsd:annotation>
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <choice>
+                       <ref name="globalArea"/>
+                       <ref name="boxArea"/>
+                       <ref name="pointDistance"/>
+                   </choice>
+               </optional>
+                <optional>
+                    <ref name="originDepthRange"/>
+                </optional>
+                <optional>
+               <choice>
+                   <ref name="originTimeRange"/>
+                   <ref name="networkTimeRange"/>
+               </choice>
+                </optional>
+                <optional>
+                    <ref name="magnitudeRange"/>
+                </optional>
+                <zeroOrMore>
+                    <ref name="catalog"/>
+                </zeroOrMore>
+                <zeroOrMore>
+                    <ref name="contributor"/>
+                </zeroOrMore>
+            </interleave>
+        </element>
+    </define>
+    <define name="backwardsEventFinder">
+        <element name="backwardsEventFinder">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Retrieve events from an EventFinder in reverse time order. </summary>
+                    <description> A Fissures/DHI EventDC service is located via the name and dns tags. The EventFinder
+                        is acquired from the EventDC, and a query is sent with the given arguments. The events returned
+                        are then sent through the EventArm for processing. See <a
+                            href="http://www.seis.sc.edu/wily/GetAllServers?corbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService&amp;description=IRIS nameserver">Wily</a>
+                        for a list of active EventDCs and their current status.</description>
+                </xsd:documentation>
+            </xsd:annotation>
+            <interleave>
+			    <optional><ref name="name"/></optional>
+			    <optional><ref name="dns"/></optional>
+	    		<optional>
+	    			<element name="retries">
+						<xsd:annotation>
+						  <summary>Number of consecutive failures before quiting</summary>
+						  <description>In the event of server errors, SOD will retry 
+						  the query to the server for retries times before failing.
+						  The default is -1 which means to try forever.</description>
+   				         </xsd:annotation>
+						<data type="integer"/>
+					</element>
+			    </optional>
+	            <optional>
+	                <choice>
+ 	                   <ref name="globalArea"/>
+ 	                   <ref name="boxArea"/>
+ 	                   <ref name="pointDistance"/>
+ 	               </choice>
+ 	           </optional>
+	            <optional>
+	                <ref name="originDepthRange"/>
+	            </optional>
+ 	           <choice>
+ 	               <ref name="originTimeRange"/>
+ 	               <ref name="networkTimeRange"/>
+ 	           </choice>
+	            <optional>
+	                <ref name="magnitudeRange"/>
+	            </optional>
+	            <zeroOrMore>
+	                <ref name="catalog"/>
+	            </zeroOrMore>
+	            <zeroOrMore>
+	                <ref name="contributor"/>
+	            </zeroOrMore>
+            </interleave>
+        </element>
+    </define>
+    <define name="name">
+        <element name="name">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Name of an event server</summary>
+                    <description>The server's name is used in combination with a dns value to find an event DC. The name
+                        "IRIS_EventDC" must be used in combination with the "edu/iris/dmc" dns value. The names
+                        "NCEDC_EventDC" and "NCSN_EventDC" must be used in conjunction with the "edu/berkley/geo/quake"
+                        dns value. The name "SCEPPEventDC" must be used in conjunction with a DNS value "edu/sc/seis".</description>
+                </xsd:documentation>
+            </xsd:annotation>
+            <choice>
+                <value>IRIS_EventDC</value>
+                <value>NCEDC_EventDC</value>
+                <value>NCSN_EventDC</value>
+                <value>SCEPPEventDC</value>
+                <data type="string"/>
+            </choice>
+        </element>
+    </define>
+    <define name="dns">
+        <element name="dns">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>DNS location of an event server</summary>
+                    <description>The server's dns is used in combination with a name value to find an event DC. The name
+                        "IRIS_EventDC" must be used in combination with the "edu/iris/dmc" dns value. The names
+                        "NCEDC_EventDC" and "NCSN_EventDC" must be used in conjunction with the "edu/berkley/geo/quake"
+                        dns value. The name "SCEPPEventDC" must be used in conjunction with a DNS value "edu/sc/seis"</description>
+                </xsd:documentation>
+            </xsd:annotation>
+            <choice>
+                <value>edu/iris/dmc</value>
+                <value>edu/berkley/geo/quake</value>
+                <value>edu/sc/seis</value>
+                <data type="string"/>
+            </choice>
+        </element>
+    </define>
+    <define name="CSVEventSource">
+        <element name="CSVEventSource">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Retrieve events from a Comma-Separated Values file</summary>
+                    <description>Events are stored in a text file where the first line indicates which fields are going
+                        to be used in creating the events for use in the SOD run. Each field, of course, is separated by
+                        a comma. From the second line on, each line represents an event, and the values are filled in
+                        the same order as the fields in the first line. For more information on how to use this, <a
+                            href="csvEvents.html">look here</a>.</description>
+                </xsd:documentation>
+            </xsd:annotation>
+            <choice>
+                <element name="filename">
+                    <data type="string">
+                        <xsd:annotation>
+                            <example>csvEvents.txt</example>
+                        </xsd:annotation>
+                    </data>
+                </element>
+                <element name="events">
+                    <data type="string">
+                        <xsd:annotation>
+                            <example>
+time, magnitude, latitude, longitude, depth
+2006-05-09T13:15:00.000Z, 7.0, -20.21, -173.90, 16
+2006-05-09T14:57:14.000Z, 5.5, -19.70, -172.53, 40
+2006-05-10T06:03:30.000Z, 5.2, -20.75, -173.10, 38
+                            </example>
+                        </xsd:annotation>
+                    </data>
+                </element>
+            </choice>
+        </element>
+    </define>
+    <define name="periodicFakeEventSource">
+        <element name="periodicFakeEventSource">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Fake events on a repeating schedule</summary>
+                    <description>Fake events are generated starting at the startTime and at the step interval thereafter until.
+                    If numEvents is not provided, then events continue to be generated forever, otherwise the number given will be generated.</description>
+                </xsd:documentation>
+            </xsd:annotation>
+            <element name="startTime">
+            	<ref name="time"/>
+            </element>
+            <element name="interval">
+                <ref name="timeInterval"/>
+            </element>
+            <optional>
+            	<element name="numEvents">
+                	<data type="int"/>
+            	</element>
+            </optional>
+        </element>
+    </define>
+    <define name="nowFakeEventSource">
+        <element name="nowFakeEventSource">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Fake events from on a repeating schedule</summary>
+                    <description>Fake events are generated starting at the startTime and at the step interval thereafter until.
+                    If numEvents is not provided, then events continue to be generated forever, otherwise the number given will be generated.
+                    This is similar to PeridicFakeEventSource except that the event time is always the now at request time. This means
+                    that the interval between events may be less than the interval under high load conditions. This is useful cases where
+                    it is more important to
+                    be current than to proceed in uniform time steps.</description>
+                </xsd:documentation>
+            </xsd:annotation>
+            <element name="interval">
+                <ref name="timeInterval"/>
+            </element>
+            <optional>
+                <element name="numEvents">
+                    <data type="int"/>
+                </element>
+            </optional>
+        </element>
+    </define>
+    <define name="delayedEventSource">
+        <element name="delayedEventSource">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Delays events from the enclosed source.</summary>
+                    <description>Events from the enclosed source are delayed if they are withing
+                    the given delay of now. This is useful for processing realtime events to allow for
+                    seismic wave propagation time and data latency.</description>
+                </xsd:documentation>
+            </xsd:annotation>
+            <element name="delay">
+                <ref name="timeInterval"/>
+            </element>
+        </element>
+    </define>
+</grammar>

@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<sod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:noNamespaceSchemaLocation='http://www.seis.sc.edu/xschema/sod/sod.xsd'>
+     <eventArm>
+	   <eventFinder>
+		<name>ANHINGAEVENTDC</name>
+		<dns>edu/sc/seis</dns>
+		<boxArea>
+			<latitudeRange>
+				<min>10</min>
+				<max>40</max>
+			</latitudeRange>
+			<longitudeRange>
+				<min>-100</min>
+				<max>100</max>
+			</longitudeRange>
+		</boxArea>
+		<originDepthRange>
+			<unitRange>
+				<unit>KILOMETER</unit>
+				<min>10</min>
+				<max>100</max>
+			</unitRange>
+		</originDepthRange>
+		<eventTimeRange>
+		<timeRange>
+			<startTime>1999-01-01T00:00:00Z</startTime>
+			<endTime>2002-01-01T00:00:00Z</endTime>
+		</timeRange>
+		</eventTimeRange>
+		<magnitudeRange>
+			<magType>mb</magType>
+                        <magType>mb</magType>
+                        <magType>mb</magType>
+			<min>5</min>
+			<max>10</max>
+		</magnitudeRange>
+		<catalog><value>BIGQUAKE</value></catalog>
+                <catalog><value>BIGQUAKE</value></catalog>
+                <catalog><value>BIGQUAKE</value></catalog>
+		<contributor><value>NEIC</value></contributor>
+	   </eventFinder>
+
+	   <eventAttrAND>
+		<seismicRegion><value>10 0 20 30 40 50</value></seismicRegion>
+		<eventAttrOR>
+			<eventAttrNOT>
+				<seismicRegion><value>70 80 100</value></seismicRegion>
+			</eventAttrNOT>
+		</eventAttrOR>
+	   </eventAttrAND>
+	   <originAND>
+		<originAND>
+                        <catalog><value>BIGQUAKE</value></catalog>
+                        <catalog><value>BIGQUAKE</value></catalog>
+                        <catalog><value>BIGQUAKE</value></catalog>
+		</originAND>
+                <originArrayAND>
+                 	<originNOT>
+				<magnitudeRange>
+					<magType>mb</magType>
+					<min>7</min>
+					<max>10</max>
+				</magnitudeRange>
+			</originNOT>
+                 </originArrayAND>
+
+	</originAND>
+    
+	<printLineEventProcess/>
+   
+   </eventArm>
+</sod>

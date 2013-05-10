@@ -1,0 +1,245 @@
+
+
+group = 'edu.sc.seis'
+version = '3.2.0beta2'
+
+apply plugin:'application'
+mainClassName = "edu.sc.seis.sod.Start"
+
+
+sourceSets {
+    relax {
+        resources {
+            srcDir new File(project.buildDir, 'generated-src/relax/resources')
+        }
+    }
+}
+
+dependencies {
+    compile project(':bag')
+//    compile project(':cormorant')
+    
+    compile "jline:jline:0.9.94"
+    compile "thaiopensource:jing:20091111"
+    compile "rngconvUSC:rngconv:20030225"
+    compile "de.erichseifert.gral:VectorGraphics2D:0.9-SNAPSHOT"
+    compile "de.erichseifert.gral:gral-core:0.9-SNAPSHOT"
+
+    compile ("org.apache.velocity:velocity-tools:2.0") {
+        exclude group: 'xml-apis',  module: 'xml-apis'
+        exclude group: 'org.apache.struts',  module: 'struts-taglib'
+        exclude group: 'org.apache.struts',  module: 'struts-tiles'
+        exclude group: 'org.apache.struts',  module: 'struts-core'
+        exclude group: 'javax.servlet',  module: 'servlet-api'
+    }
+
+    compile "edu.sc.seis.mapData:dcwpo_browse:1.0"
+    compile "net.sourceforge.javacsv:javacsv:2.0"
+    runtime "org.codehaus.groovy:groovy-all:2.1.3"
+//    runtime "org.jruby:jruby:1.7.3"
+}
+
+def dirName = project.name+'-'+version
+
+def binDistFiles = copySpec {
+
+    from('build/output') {
+        fileMode=0755
+        include('bin/**')
+    }
+    from('build/output') {
+        include('lib/**')
+    }
+    from('scripts') {
+        include('cwg.prop')
+    }
+    from('.') {
+        include('etc/**')
+    }
+}
+
+def distFiles = copySpec {
+    with(binDistFiles)
+    from('.') {
+        fileMode=0755
+        include('gradlew')
+        include('gradlew.bat')
+    }
+    from('.') {
+        include('gpl-3.0.txt')
+        include('defaultProps')
+        include('externalExample/**')
+        include('src/**')
+        include('lib/**')
+        include('gradle/**')
+        exclude('**/*.svn')
+    }
+    from('scripts') {
+        include('tutorial/**')
+        include('CMTReadySeismograms.xml')
+        include('ammonChannels.xml')
+        include('breqfast.xml')
+        include('dmcWebService.xml')
+        include('preferBroadband.xml')
+        include('realtime.xml')
+        include('sAndSKSInTanzania.xml')
+        include('southAmericanSacFiles.xml')
+        include('variableDataWindow.xml')
+        include('vector.xml')
+        include('weed.xml')
+        include('winston.xml')
+        into 'recipes'
+    }
+    from('build') {
+        include('doc/**')
+        include('build.gradle')
+        include('settings.gradle')
+    }
+    from('build/docs') {
+        include('javadoc/**')
+        into 'doc/documentation'
+    }
+}
+
+task tarBin(type: Tar, dependsOn: ['explodeBin']) {
+    group = 'dist'
+    compression = Compression.GZIP
+    into(dirName) {
+        with binDistFiles
+    }
+}
+
+task tarDist(type: Tar, dependsOn: ['explodeDist']) {
+    group = 'dist'
+    compression = Compression.GZIP
+    into(dirName) {
+        with distFiles
+    }
+}
+
+task explodeBin(type: Sync, dependsOn: ['makeScript', 'buildSchema']) {
+    group = 'dist'
+    with binDistFiles
+    into file("$buildDir/explode")
+}
+explodeBin.doLast { ant.chmod(dir: "$buildDir/explode/bin", perm: "755", includes: "*") }
+
+task explodeDist(type: Sync, dependsOn: ['explodeBin', 'wrapper', 'doc']) {
+    group = 'dist'
+    with distFiles
+    into file("$buildDir/explode")
+}
+
+def getDExtras() {
+    return [ 'seis.name':'sod'+getVersion(), 
+                'org.omg.CORBA.ORBSingletonClass':'org.jacorb.orb.ORBSingleton', 
+                'python.path':'${LIB}', 
+                'java.awt.headless':'true', 
+                'org.omg.CORBA.ORBClass':'org.jacorb.orb.ORB', 
+                'swing.volatileImageBufferEnabled':'false', 
+                'java.endorsed.dirs':'${LIB}/endorsed', 
+                'jacorb.connection.client.pending_reply_timeout':'20000',
+                'jacorb.connection.client.idle_timeout':'90000',
+                'jacorb.home':'${SOD_HOME}' ,
+                'jacorb.log.default.verbosity':'2' ]
+}
+
+task makeScript(dependsOn: copyToLib) << { task ->
+    group = 'build'
+    def dExtras = getDExtras()
+    def doBat = true
+    ScriptBuilder.create('psod', 'edu.sc.seis.sod.Start', task.project, dExtras:dExtras, yourkit:true)
+    ScriptBuilder.create('sod', 'edu.sc.seis.sod.Start', task.project, dExtras:dExtras, bat:true)
+    ScriptBuilder.create('bgsod', 'edu.sc.seis.sod.Start', task.project, dExtras:dExtras, bat:doBat, background:true)
+    ScriptBuilder.create('find_events', 'edu.sc.seis.sod.tools.find_events', task.project, dExtras:dExtras, bat:doBat)
+    ScriptBuilder.create('find_stations', 'edu.sc.seis.sod.tools.find_stations', task.project, dExtras:dExtras, bat:doBat)
+    ScriptBuilder.create('find_channels', 'edu.sc.seis.sod.tools.find_channels', task.project, dExtras:dExtras, bat:doBat)
+    ScriptBuilder.create('find_seismograms', 'edu.sc.seis.sod.tools.find_seismograms', task.project, dExtras:dExtras, bat:doBat)
+    ScriptBuilder.create('find_responses', 'edu.sc.seis.sod.tools.find_responses', task.project, dExtras:dExtras, bat:doBat)
+}
+
+task printRT << { task ->
+    configurations.default.each { File f -> println f.path }
+}
+       
+
+
+task copySodSite(dependsOn: [':seiswww:makeSodSite'], type: Sync) {
+    group = 'dist'
+    from project.file('../seiswww/build/sod/')
+    into project.file('build/doc/')
+}
+
+task staticSchemaDocs(type: Copy) {
+    group = 'dist'
+    def outDir = project.file('build/velocity/sod/ingredients/')
+    from project.file('site/schemaDocs/docs')
+    into outDir
+    doFirst {
+        outDir.mkdirs()
+    }
+}
+
+task buildSchemaDocs(type: JavaExec, dependsOn: ['staticSchemaDocs', 'buildSchema', 'compileJava'])  { 
+    def inRNGFile = new File(project.buildDir.path, 'generated-src/relaxInclude/sod.rng')
+//    inRNGFile = new File(project.buildDir, 'generated-src/relax/resources/edu/sc/seis/sod/data/sod.rng')
+//    jvmArgs = ['-agentlib:yjpagent', '-XX:+HeapDumpOnOutOfMemoryError', '-Xmx512m']
+    jvmArgs  ['-Xmx512m']
+    group = 'dist'
+//   inputs.files 'site/elementPage.vm', inRNGFile.getParentFile()
+    inputs.dir inRNGFile.getParentFile()
+//    outDir = project.file('build/velocity/sod/ingredients')
+    def outDir = new File(project.buildDir, 'generated-src/velocity/sod/ingredients')
+    outputs.dir outDir
+    workingDir = outDir
+    args  inRNGFile, project.projectDir.path, outDir
+    classpath configurations.runtime
+    classpath project.file("build/classes/main")
+    setMain "edu.sc.seis.sod.validator.documenter.SchemaDocumenter"
+    doFirst {
+        if (!outDir.exists() ) {
+            outDir.mkdirs()
+        }
+    }
+}
+
+task buildSchema(dependsOn: ['transform', 'compileJava'])  {
+    group = 'build'
+    def inFile = new File(project.buildDir.path, 'generated-src/relaxInclude/sod.rng')
+    inputs.dir inFile.getParentFile()
+    ext.resourcesDir = new File(project.buildDir, 'generated-src/relax/resources')
+    def outFile = new File(resourcesDir, 'edu/sc/seis/sod/data/sod.rng')
+    outputs.files outFile
+    doLast{
+    outFile.getParentFile().mkdirs()
+    def relaxArgs = '-s '+inFile
+    ant.java(dir:outFile.getParentFile(), 
+             classname:'com.thaiopensource.relaxng.util.Driver', 
+             args:relaxArgs,
+             maxmemory:'1512m',
+             fork:true,
+             classpath:configurations.runtime.asPath,
+             output:outFile) 
+    }
+}
+
+task transform(type: XSLT) { 
+    destDir=new File(project.buildDir, 'generated-src/relaxInclude')
+    stylesheetFile = new File(project.projectDir, 'src/main/xslt/simpleXInclude.xslt')
+    def rngFile = new File(project.projectDir, 'src/main/relax/sod.rng')
+    source rngFile
+    inputs.dir rngFile.getParentFile()
+    outputs.dir destDir
+}
+
+javadoc.options.links('http://wiki.fissuresidl.googlecode.com/hg/javadoc/')
+javadoc.options.links('http://wiki.fissuresimpl.googlecode.com/hg/javadoc/')
+javadoc.options.links('http://wiki.fissuresutil.googlecode.com/hg/javadoc/')
+javadoc.options.links('http://wiki.seedcodec.googlecode.com/hg/javadoc/')
+javadoc.options.links('http://wiki.seisfile.googlecode.com/hg/javadoc/')
+
+doc.dependsOn(copySodSite)
+assemble.dependsOn(tarDist)
+processResources.dependsOn(buildSchema)
+processResources{ from(project.sourceSets.main.resources)
+                  from(buildSchema.resourcesDir)}

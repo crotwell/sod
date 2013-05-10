@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<sod>
+    <!-- Event stuff -->
+    <eventArm>
+        <eventFinder>
+            <name>IRIS_EventDC</name>
+            <dns>edu/iris/dmc</dns>
+            <originTimeRange>
+                <startTime>
+                    <year>2000</year>
+                    <month>04</month>
+                    <day>09</day>
+                </startTime>
+                <endTime>
+                    <year>2000</year>
+                    <month>05</month>
+                    <day>09</day>
+                </endTime>
+            </originTimeRange>
+            <magnitudeRange>
+                <magType>MB</magType>
+                <min>6.0</min>
+            </magnitudeRange>
+            <catalog>MHDF</catalog>
+        </eventFinder>
+        <magnitudeRange>
+            <magType>MB</magType>
+            <min>6.0</min>
+        </magnitudeRange>
+        <printlineEventProcess>
+            <template>$event</template>
+        </printlineEventProcess>
+    </eventArm>
+</sod>

@@ -1,0 +1,113 @@
+ChannelFilter.java
+   Active channel at time
+   orientation
+   sampling rate
+   freq band of interest (may not be supported by DMC db)
+   instrument type (may not be supported by DMC db)
+   AND
+   OR
+   XOR
+   NOT
+
+ChannelIdFilter.java
+   Wildcard (*?) on codes, inclused =
+   begintime < a time
+   AND
+   OR
+   XOR
+   NOT
+
+EventChannelFilter.java
+   AND
+   OR
+   XOR
+   NOT
+   
+
+EventFilter.java
+   mag range (min, max, which mag types)
+   depth range
+   location areas
+   time range of interest
+   AND
+   OR
+   XOR
+   NOT
+
+EventStationFilter.java
+   distance > and <
+   azimuth > and <
+   backazimuth < and >
+   midpoint in area
+   phase hits depth within area
+   AND
+   OR
+   XOR
+   NOT
+
+LocalSeismogramFilter.java
+   sufficient data (continuous, no gaps)
+   begin and end time ok, abs time and relative to phases
+   signal to noise (how)
+   AND
+   OR
+   XOR
+   NOT
+   
+LocalSeismogramProcessor.java
+   write to sac files in directory
+   write to mseed files in directory
+   write to java serialization datasets
+   AND
+   OR
+   XOR
+   NOT
+
+MotionVectorFilter.java
+   sufficient data (continuous, no gaps)
+   begin and end time ok, abs time and relative to phases
+   signal to noise (how)
+   AND
+   OR
+   XOR
+   NOT
+
+
+NetworkFilter.java
+   active at time
+   owner/operator
+   AND
+   OR
+   XOR
+   NOT
+
+NetworkIdFilter.java
+   wildcard on code
+   active begintime < time of interest
+   AND
+   OR
+   XOR
+   NOT
+
+RequestGenerator.java
+   request relative to phases, with offsets
+   AND
+   OR
+   XOR
+   NOT
+
+StationFilter.java
+   location in area
+   AND
+   OR
+   XOR
+   NOT
+
+StationIdFilter.java
+   wildcards on code
+   active within time range of interest
+   AND
+   OR
+   XOR
+   NOT
+   

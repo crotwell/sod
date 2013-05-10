@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+
+    <start combine="choice">
+        <notAllowed/>
+    </start>
+    <define name="catalog">
+        <element name="catalog">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <description>Checks the catalog to which an event belongs against
+                        the string specified here. If they match, the event passes.
+                        The current list of known catalogs for the IRIS_EventDC can be
+                        found <a href="http://www.seis.sc.edu/wily/EventCatalogs?corbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService&amp;dns=edu/iris/dmc&amp;serverObject=IRIS_EventDC&amp;description=IRIS%20DMC">here</a>.</description>
+                    <summary>Matches events with a given catalog</summary>
+                    <example>
+                        <catalog>FINGER</catalog>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <data type="string"/>
+        </element>
+    </define>
+</grammar>

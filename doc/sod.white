@@ -1,0 +1,32 @@
+
+SOD: Standing Order for Data
+
+Large data volumes and long term seismic studies suggest that automated delivery of data to automated processes, or a local database, will become a standard way to receive data. In many cases a large fraction of the effort of seismic research is spent simply acquiring the needed data, weeding out the unwanted data and organizing the results. Most of this is not dependent on the type of seismic analysis being done and can benefit greatly from a framework to automate the tedious part with the ability to plug-in modules to do the actual science.
+
+The flow within such a system can be visualized by a series of steps. A description of each is below.
+
+1) In many cases notification of an event may be as simple as getting the next event in a sequence of historical events, but it may be on an "as they occur" basis. The historical request is likely the most typical, and an example is querying the event table within the database at the DMC. When operating in this mode, some of the functionality of 2 is combined with this step. Useful abilities include querying multiple sources of event information and being able to maintains the consistency of the connection with the sources over an extended run time. The "as they occur" mechanism requires receiving messages over an extended time, and from multiple sources. As they occur may mean as soon as the first estimate of location, such as BigQuakes, or may mean when a weekly QDE or CMT is generated.
+
+2) Filtering events determines if the next event is appropriate for use in the study. This may be done based on whether certain organizations or catalogs have generated a location or based on the parameters of the estimated origins. For example, located within a area, or a depth range, magnitude range or within a time interval.
+
+3) The pool of stations and channels is largely static over an individual study, although there is the possibility of new stations becoming available over the course of a long running project. USArray, with the possiblity of a new station nearly every day, makes this much more likely. In general, this information will be queried from a data source such as the DMC once at the beginning for a small study, or on a periodic basis for a longer running study. Another possible case is to allow a new station/channel query to be issued for each event that needs processing. As with events, elements of 4 and 5 may be present at this step.
+
+4) Filtering stations to determine if they are appropriate for inclusion in the study is largely expected to be based on location, although network affiliation and time of operation are also likely parameters.
+
+5) Channel filtering determines which, if any, channels from a station are useful. Criteria may include sampling rates, sensor types, frequency band of interest and channel name. Whether there are 3 components available is important.
+
+6) At this step, all possible combinations of events and station/channels from 5 are examined. It is expected that azimuth, back azimuth and distance will be the most common filter parameters, but more complicated selections such as relative time between predicted phase arrivals are also possible. Order of the loops is also important, events for each stations, or stations for each event.
+
+7) Each successful station/chanel/event tuple forms the basis for generating time window of interest, which will then be used to generate a data request. In general this can be done as offsets from particular predicted phase arrivals, or as offsets from origin time. These requests are sent to one or more waveform archives. How many requests are sent before one finishes, as well as the length of time to wait for "sticky" requests are important parameters. In addition, the notion of sticky requests blurs the distinction between near-real-time and historical requests, and hence a system that can seemlessly deal with both types is important.
+
+8) Once waveform data arrive, there is one last filtering process. This determines if sufficient data was collected, and if it is of high enough quality to use. Some of this may be automatic, such as the time range of recovered data or signal strength, but it may also require a person to acutally view and accept each waveform.
+
+9) Scientific study on the wave-forms may take place within the system, or all information may be saved, to disk or to a database, and the processing can occur external to the system. If the processing occurs internally, then the results need to be organized an saved to a database or disk. A combination of the two may also be needed.
+
+Much of the functionality from steps 1 to 7 is very similar to that needed by the new WEED tool. It is hoped that a significant amount of code reuse and sharing can be achieved between the two development projects.
+
+The design of the SOD tool should be done in a highly flexible manner. This will allow modules to be plugged-in for each of the steps outlined above. We envision a skeleton that forms the core of the system, which is then fleshed out by dynamically loaded modules. The configuration would be controlled by an XML file that specifies the class name of each module, and any parameters. There will be standard interfaces for each step that these modules must implement. A JavaBeans architecture will be used for the modules to allow for their configuration via the configuration file.
+
+This design allows for a standard set of modules to handle commonly needed functionality, while allowing any part to be augmented or replaced by custom modules built be individual researchers. 
+
+

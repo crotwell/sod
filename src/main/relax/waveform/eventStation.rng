@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <start>
+        <ref name="eventStation"/>
+    </start>
+    <define name="eventStation">
+        <choice>
+            <xsd:annotation>
+                <summary>Ingredients for selecting acceptable combinations of stations and events</summary>
+                <velocity>#waveformArmPage()</velocity>
+            </xsd:annotation>
+            <ref name="printlineEventStation"/>
+            <ref name="distanceRange"/>
+            <ref name="azimuthRange"/>
+            <ref name="backAzimuthRange"/>
+            <ref name="linearDistanceMagnitudeRange"/>
+            <ref name="eventStationAND"/>
+            <ref name="eventStationOR"/>
+            <ref name="eventStationNOT"/>
+            <ref name="midPoint"/>
+            <ref name="removeStationDuplicate"/>
+            <ref name="phaseExists"/>
+            <ref name="phaseWithoutInterference"/>
+            <ref name="eventStationScript"/>
+            <ref name="externalEventStation"/>
+        </choice>
+    </define>
+    <define name="eventStationPlus">
+        <choice>
+            <ref name="eventStation"/>
+            <ref name="station"/>
+            <ref name="origin"/>
+        </choice>
+    </define>
+    <define name="printlineEventStation">
+        <element name="printlineEventStation">
+            <xsd:annotation>
+                <summary>Prints a line to std out for each event-station pair processed</summary>
+                <description>This simply prints a line to standard out or a file for each event-station pair to be processed. It
+                    can be used as a simple status monitor. Both filename and template are 
+                    <a href="templates.html">Velocity templates</a>. They contain 
+                    <a href="templateTypes.html#site">site</a>, 
+                    <a href="templateTypes.html#station">station</a>, <a href="templateTypes.html#net">net</a>
+                    and <a href="templateTypes.html#event">event</a> variables. If no template element is given,
+                    it defaults to "Got $seismograms.size() seismograms for $channel.codes for eq on $event.time". If no
+                    filename is given, the output goes to standard out.</description>
+                <include/>
+            </xsd:annotation>
+            <interleave>
+                <optional>
+                    <element name="template">
+                        <text/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
+            </interleave>
+        </element>
+    </define>
+    <define name="distanceRange">
+        <element name="distanceRange">
+            <xsd:annotation>
+                <summary>Subsetter based on the distance from the event to station</summary>
+                <description>This accepts event station pairs where the distance between the
+                    preferred origin to the station is within the range given.</description>
+                <example>
+                    <distanceRange>
+                        <unit>DEGREE</unit>
+                        <min>30</min>
+                        <max>90</max>
+                    </distanceRange>
+                </example>
+            </xsd:annotation>
+            <ref name="range"/>
+        </element>
+    </define>
+    <define name="azimuthRange">
+        <element name="azimuthRange">
+            <xsd:annotation>
+                <summary>Subsetter based on the azimuth from the event to station</summary>
+                <description>This accepts event station pairs where the azimuth from the preferred
+                    origin to the station is within the range given in degrees.</description>
+                <example>
+                    <azimuthRange>
+                        <unit>DEGREE</unit>
+                        <min>30</min>
+                        <max>90</max>
+                    </azimuthRange>
+                </example>
+            </xsd:annotation>
+            <ref name="range"/>
+        </element>
+    </define>
+    <define name="backAzimuthRange">
+        <element name="backAzimuthRange">
+            <xsd:annotation>
+                <summary>Subsetter based on the back azimuth from the station to the event</summary>
+                <description>This accepts event station pairs where the azimuth from the station to
+                    the preferred origin is within the range given in degrees.</description>
+                <example>
+                    <backAzimuthRange>
+                        <unit>DEGREE</unit>
+                        <min>30</min>
+                        <max>90</max>
+                    </backAzimuthRange>
+                </example>
+            </xsd:annotation>
+            <ref name="range"/>
+        </element>
+    </define>
+    <define name="linearDistanceMagnitudeRange">
+        <element name="linearDistanceMagnitudeRange">
+            <xsd:annotation>
+                <summary>Accepts event stations pairs above a linear threshold of magnitude with distance</summary>
+                <description>If the magnitude of the event is greater than or equal to the linear
+                    interpolation at the event station distance, then the event station pair is
+                    accepted. To reverse and take events smaller than the linear interpolation,
+                    enclose this in an EventStationNOT.</description>
+                <example>
+                    <linearDistanceMagnitudeRange>
+                        <magnitudeRange>
+                            <magType>mb</magType>
+                            <magType>M</magType>
+                            <min>5.5</min>
+                        </magnitudeRange>
+                        <unit>DEGREE</unit>
+                        <min>30</min>
+                        <max>90</max>
+                    </linearDistanceMagnitudeRange>
+                </example>
+            </xsd:annotation>
+            <ref name="magnitudeRange"/>
+            <ref name="range"/>
+        </element>
+    </define>
+    <define name="eventStationAND">
+        <element name="eventStationAND">
+            <xsd:annotation>
+                <summary>Matches all enclosed EventStation subsetters</summary>
+                <description>The output is the logical AND of the outputs of all included
+                    EventStation subsetters. This means that it will evaluate to true only if all
+                    the enclosed EventStation subsetters evaluate to true. The subsetters after the
+                    first false outputted are not evaluated.</description>
+                <example>
+                    <eventStationAND>
+                        <distanceRange>
+                            <unit>DEGREE</unit>
+                            <min>40</min>
+                        </distanceRange>
+                        <backAzimuthRange>
+                            <unit>DEGREE</unit>
+                            <min>30</min>
+                            <max>45</max>
+                        </backAzimuthRange>
+                    </eventStationAND>
+                </example>
+            </xsd:annotation>
+            <oneOrMore>
+                <ref name="eventStationPlus"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="eventStationOR">
+        <element name="eventStationOR">
+            <xsd:annotation>
+                <summary>Matches at least one enclosed EventStation subsetter</summary>
+                <description>The output is the logical OR of the outputs of all included
+                    EventStation subsetters. This means that it will evaluate to true if at least
+                    one of the enclosed EventStation subsetters evaluate to true. The subsetters
+                    after the first true outputted are not evaluated.</description>
+                <example>
+                    <eventStationOR>
+                        <distanceRange>
+                            <unit>DEGREE</unit>
+                            <min>40</min>
+                        </distanceRange>
+                        <backAzimuthRange>
+                            <unit>DEGREE</unit>
+                            <min>30</min>
+                            <max>45</max>
+                        </backAzimuthRange>
+                    </eventStationOR>
+                </example>
+            </xsd:annotation>
+            <oneOrMore>
+                <ref name="eventStationPlus"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="eventStationNOT">
+        <element name="eventStationNOT">
+            <xsd:annotation>
+                <summary>Matches the negated output of the enclosed EventStation subsetter</summary>
+                <description>The output is the logical NOT of the output of the enclosed
+                    EventStation subsetter. This means that it will evaluate to false if the
+                    enclosed EventStation subsetter evaluates to true, and vice versa.</description>
+                <example>
+                    <eventStationNOT>
+                        <distanceRange>
+                            <unit>DEGREE</unit>
+                            <min>40</min>
+                        </distanceRange>
+                    </eventStationNOT>
+                </example>
+            </xsd:annotation>
+            <ref name="eventStationPlus"/>
+        </element>
+    </define>
+    <define name="phaseExists">
+        <element name="phaseExists">
+            <xsd:annotation>
+                <summary>Accepts an event-station pair if the given phase exists</summary>
+                <description>Accepts an event-station pair if the given phase exists at the station.</description>
+            </xsd:annotation>
+            <optional>
+                <element name="modelName">
+                    <ref name="model"/>
+                </element>
+            </optional>
+            <element name="phaseName">
+                <ref name="phaseName"/>
+            </element>
+        </element>
+    </define>
+    <define name="phaseWithoutInterference">
+        <element name="phaseWithoutInterference">
+            <xsd:annotation>
+                <summary>Accepts an event-station pair if the given phase is not interfered with by other phases.</summary>
+                <description>Accepts an event-station pair if the given phase exists at the station and the interferingPhases
+                either do not exist, or are outside the given time window.</description>
+            </xsd:annotation>
+            <optional>
+                <element name="model">
+                    <ref name="model"/>
+                </element>
+            </optional>
+            <element name="phaseName">
+                <ref name="phaseName"/>
+            </element>
+            <optional>
+                <element name="arrivalIndex">
+                    <data type="integer"/>
+                </element>
+            </optional>
+            <element name="beginOffset">
+                <xsd:annotation>
+                    <example>
+                        <beginOffset>
+                            <unit>SECOND</unit>
+                            <value>-60</value>
+                        </beginOffset>
+                    </example>
+                </xsd:annotation>
+                <choice>
+                    <ref name="timeInterval"/>
+                </choice>
+            </element>
+            <element name="endOffset">
+                <xsd:annotation>
+                    <example>
+                        <endOffset>
+                            <unit>SECOND</unit>
+                            <value>360</value>
+                        </endOffset>
+                    </example>
+                </xsd:annotation>
+                <choice>
+                    <ref name="timeInterval"/>
+                </choice>
+            </element>
+            <oneOrMore>
+                <element name="interferingPhase">
+                    <ref name="phaseName"/>
+                </element>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="midPoint">
+        <element name="midPoint">
+            <xsd:annotation>
+                <summary>Accepts an event-station pair if the midPoint is within the area</summary>
+                <description>Accepts an event-station pair if the midPoint between them is within
+                    the given area. Areas can be any valid area, including BoxArea, and GlobalArea.</description>
+            </xsd:annotation>
+            <ref name="area"/>
+        </element>
+    </define>
+    <define name="removeStationDuplicate">
+        <element name="removeStationDuplicate">
+            <xsd:annotation>
+                <description>This subsetter first gets all of the successful stations for this events. Then it takes the current
+                    station, and if location falls within the distance variance of one of the already
+                    accepted stations, the event-station pair is rejected. This allows for the use of only one of 
+                    several very similar stations for each event. Note that because this happens in the waveform arm,
+                    it is not guarantied that the same station will be used for each event. Also, if multiple waveformWorkerThreads
+                    are used, there is a small chance that more than one station for the same event will be processed.</description>
+                <summary>Accepts events that are dissimilar from already accepted events</summary>
+            </xsd:annotation>
+            <optional>
+                <element name="maxDistance">
+                    <ref name="length"/>
+                </element>
+            </optional>
+        </element>
+    </define>
+    <define name="externalEventStation">
+        <element name="externalEventStationSubsetter">
+            <xsd:annotation>
+                <summary>Use an EventStation subsetter external to SOD</summary>
+                <description>$externalEventStationSubsetterInfo.getRelaxHTML('../')</description>
+                <example>
+                    <externalEventStationSubsetter>
+                        <classname>edu.somewhere.seis.sodExt.subsetter.eventStation.MyEventStationSubsetter</classname>
+                    </externalEventStationSubsetter>
+                </example>
+            </xsd:annotation>
+            <ref name="externalClass"/>
+        </element>
+    </define>
+    <define name="eventStationScript">
+        <element name="eventStationScript">
+            <xsd:annotation>
+                <summary>Runs a script eventStation subsetter</summary>
+                <description>Runs a eventStation subsetter script via JSR223. The event is put as "event" and the station
+                as "station". The station and event objects are a
+                VelocityStation and VelocityEvent, respectively, the same classes used in the <a href="templates.html">templates</a> for the printlineChannelProcess.
+                See the <a href="../scripting.html">scripting tutorial</a> for more information on inlining scripts
+                into a SOD recipe.</description>
+                <example>
+                    <eventStationScript type="jython">
+        from edu.sc.seis.TauP import SphericalCoords, SeismicPhase
+        from edu.iris.Fissures import Location
+        from edu.iris.Fissures.model import BoxAreaImpl
+        from edu.sc.seis.fissuresUtil.bag import AreaUtil
+        minLatitude = 0;
+        maxLatitude = 40;
+        minLongitude = 100;
+        maxLongitude = 160;
+        result = False
+        box = BoxAreaImpl(minLatitude, maxLatitude, minLongitude, maxLongitude)
+        PP = SeismicPhase('PP','iasp91',event.getPreferred().getLocation().depth.value)
+        dist = SphericalCoords.distance(event.getPreferred().getLocation().latitude, event.getPreferred().getLocation().longitude, station.getFloatLatitude(), station.getFloatLongitude())
+        arrival = PP.getEarliestArrival(dist)
+        if arrival != None:
+           piercePoints = arrival.getPierce()
+           for timeDist in piercePoints:
+              if timeDist.getDistDeg() != 0 and timeDist.getDepth() == 0:
+                 azimuth = SphericalCoords.azimuth(event.getPreferred().getLocation().latitude, event.getPreferred().getLocation().longitude, station.getFloatLatitude(), station.getFloatLongitude())
+                 bounceLat = SphericalCoords.latFor(station.getFloatLatitude(), station.getFloatLongitude(), timeDist.getDistDeg(), azimuth)
+                 bounceLon = SphericalCoords.lonFor(station.getFloatLatitude(), station.getFloatLongitude(), timeDist.getDistDeg(), azimuth)
+                 result = AreaUtil.inArea(box, bounceLat, bounceLon)
+                 break
+                    </eventStationScript>
+                </example>
+            </xsd:annotation>
+            <attribute name="type">
+                    <text/>
+            </attribute>
+            <data type="string"/>
+        </element>
+    </define>  
+</grammar>

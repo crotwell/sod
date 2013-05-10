@@ -1,0 +1,27 @@
+build test script
+=================
+cvs update a clean copy (ie not the working copy)
+update project.xml
+update Version.java 
+cvs commit project.xml and Version.java
+tag cvs repositories for big releases 
+maven clean for fissuresImpl fissuresUtil and sod
+maven jar:install for fissuresImpl fissuresUtil and sod
+build tar and zip file
+put tar and zip on web server
+download tar and zip from web server
+run/compare tutorial using the fresh tar with bat
+run/compare weed using the fresh zip with bat
+
+hand release stuff
+==================
+start editor and look for badness in both display and xml output
+update news item on index in xdoc
+update download link on download in xdoc
+
+deploy script
+=================
+push generated web site to web server
+maven jar:deploy
+maven dist:deploy
+maven site:deploy

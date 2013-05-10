@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <start>
+        <ref name="request"/>
+    </start>
+    <define name="request">
+        <choice>
+            <xsd:annotation>
+                <summary>Ingredients that work based on the generated request</summary>
+                <velocity>#waveformArmPage()</velocity>
+            </xsd:annotation>
+            <ref name="requestAND"/>
+            <ref name="requestOR"/>
+            <ref name="requestNOT"/>
+            <ref name="requestPrint"/>
+            <ref name="breqFastRequest"/>
+            <ref name="netDCRequest"/>
+            <ref name="plottableRequest"/>
+            <ref name="requestScript"/>
+            <ref name="externalRequestSubsetter"/>
+        </choice>
+    </define>
+    <define name="requestPlus">
+        <choice>
+            <ref name="request"/>
+            <ref name="eventChannel"/>
+            <ref name="eventStation"/>
+            <ref name="channel"/>
+            <ref name="origin"/>
+        </choice>
+    </define>
+    <define name="requestAND">
+        <element name="requestAND">
+            <xsd:annotation>
+                <summary>Matches all enclosed requests</summary>
+                <description>The output is the logical AND of the outputs of all included requests. This means that it
+                    will evaluate to true only if all the enclosed requests evaluate to true. The requests after the
+                    first false outputted are not evaluated.</description>
+                <example>
+                    <requestAND>
+                        <requestPrint/>
+                        <externalRequest>
+                            <classname>edu.somewhere.seis.sodExt.subsetters.SampleExternalRequest</classname>
+                        </externalRequest>
+                    </requestAND>
+                </example>
+            </xsd:annotation>
+            <oneOrMore>
+                <ref name="requestPlus"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="requestOR">
+        <element name="requestOR">
+            <xsd:annotation>
+                <summary>Matches at least one enclosed request</summary>
+                <description>The output is the logical OR of the outputs of all included requests. This means that it
+                    will evaluate to true if at least one of the enclosed requests evaluates to true. The requests after
+                    the first true outputted are not evaluated.</description>
+                <example>
+                    <requestOR>
+                        <requestPrint/>
+                        <passRequest/>
+                    </requestOR>
+                </example>
+            </xsd:annotation>
+            <oneOrMore>
+                <ref name="requestPlus"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="requestNOT">
+        <element name="requestNOT">
+            <xsd:annotation>
+                <summary>Matches the negated output of the enclosed request</summary>
+                <description>The output is the logical NOT of the output of the included request. This mean that it will
+                    evaluate to false if the enclosed request evaluates to true, and vice versa.</description>
+            </xsd:annotation>
+            <ref name="requestPlus"/>
+        </element>
+    </define>
+    <define name="requestPrint">
+        <element name="requestPrint">
+            <xsd:annotation>
+                <summary>Prints the Request and returns true</summary>
+                <description>This prints out the request, and it always returns true. This is mainly useful for
+                    debugging purposes.</description>
+            </xsd:annotation>
+            <empty/>
+        </element>
+    </define>
+    <define name="breqFastRequest">
+        <element name="breqFastRequest">
+            <xsd:annotation>
+                <summary>Creates a breqfast request and saves it to a file and returns true</summary>
+                <description>Mainly useful for accessing data that is not available via Fissures/DHI, such as restricted
+                    PASSCAL datasets or data from datacenters that have a breqfast system but not DHI seismogram
+                    servers. Of course the network information must be available to SOD. As this subsetter always
+                    returns true, processing will continue past this point. In most cases, the whole reason to generate
+                    breqfast requests is that it is the only way to get the data, and so there is not much point in
+                    proceeding down the waveform arm. You will generally want to wrap the breqFastRequest in a
+                    requestNOT (or vectorRequestNOT for a waveformVectorArm) so that the return value is false. This will allow SOD to proceed to the next piece of
+                    work and avoid the wasted time in going to the server to get data.</description>
+            </xsd:annotation>
+            <optional>
+                <element name="workingDir">
+                    <xsd:annotation>
+                        <summary>Directory to place the breqfast files in. Defaults to breqfast</summary>
+                        <description>Specifies the base directory for generated BREQFAST files. This is combined with
+                            the value generated by location to make the full file name.</description>
+                    </xsd:annotation>
+                    <data type="string">
+                        <xsd:annotation>
+                            <example>RUSH_breqfast</example>
+                        </xsd:annotation>
+                    </data>
+                </element>
+            </optional>
+            <optional>
+                <element name="location">
+                    <xsd:annotation>
+                        <summary>Generates file locations for breqfast requests</summary>
+                        <description>It's specified as a <a href="templates.html">Velocity template</a> The
+                            template contains a list of <a href="templateTypes.html#request">request</a> named
+                            originalRequests that are the requests generated by your request generator, <a
+                            href="templateTypes.html#event">event</a>, <a
+                            href="templateTypes.html#channel">channel</a>, <a
+                            href="templateTypes.html#site">site</a>, <a
+                            href="templateTypes.html#station">station</a> and <a
+                            href="templateTypes.html#net">net</a> variables. This defaults to
+                            $event.getTime('yyyy.DDD.HH.mm.ss.SSSS').bfast The value generated here is combined with
+                            workingDir to make the full location.</description>
+                    </xsd:annotation>
+                    <data type="string">
+                        <xsd:annotation>
+                            <example>$event.getTime('yyyy.DDD.HH.mm.ss.SSSS').breq</example>
+                        </xsd:annotation>
+                    </data>
+                </element>
+            </optional>
+            <interleave>
+            <optional>
+                <element name="label">
+                    <xsd:annotation>
+                        <summary>Label inserted in breqfast file header.</summary>
+                        <description>Label inserted in breqfast file. Since it's in the header, there's oonly one per
+                            file. It should only contain information that is constant for this file. I e if your
+                            template makes a breqfast file per event, this shouldn't contain information specific to a
+                            station. It's specified as a <a href="templates.html">Velocity template</a> The
+                            template contains a list of <a href="templateTypes.html#request">request</a> named
+                            originalRequests that are the requests generated by your request generator, <a
+                            href="templateTypes.html#event">event</a>, <a
+                            href="templateTypes.html#channel">channel</a>, <a
+                            href="templateTypes.html#site">site</a>, <a
+                            href="templateTypes.html#station">station</a> and <a
+                            href="templateTypes.html#net">net</a> variables. If no label element is given, it
+                            defaults to the value in template.</description>
+                    </xsd:annotation>
+                    <data type="string"/>
+                </element>
+            </optional>
+            <element name="name">
+                <data type="string">
+                    <xsd:annotation>
+                        <example>Jenny Seismologist</example>
+                    </xsd:annotation>
+                </data>
+            </element>
+            <element name="inst">
+                <data type="string">
+                    <xsd:annotation>
+                        <example>Univ. of Example</example>
+                    </xsd:annotation>
+                </data>
+            </element>
+            <element name="mail">
+                <data type="string">
+                    <xsd:annotation>
+                        <example>Dept. of Seismology., Main St. MyTown AA, USA</example>
+                    </xsd:annotation>
+                </data>
+            </element>
+            <element name="email">
+                <data type="string">
+                    <xsd:annotation>
+                        <example>joe@seis.example.edu</example>
+                    </xsd:annotation>
+                </data>
+            </element>
+            <element name="phone">
+                <data type="string">
+                    <xsd:annotation>
+                        <example>555-867-5309</example>
+                    </xsd:annotation>
+                </data>
+            </element>
+            <element name="fax">
+                <data type="string">
+                    <xsd:annotation>
+                        <example>none</example>
+                    </xsd:annotation>
+                </data>
+            </element>
+            <element name="media">
+                <data type="string">
+                    <xsd:annotation>
+                        <example>Electronic</example>
+                    </xsd:annotation>
+                </data>
+            </element>
+            <element name="altmedia1">
+                <data type="string">
+                    <xsd:annotation>
+                        <example>Electronic</example>
+                    </xsd:annotation>
+                </data>
+            </element>
+            <element name="altmedia2">
+                <data type="string">
+                    <xsd:annotation>
+                        <example>Electronic</example>
+                    </xsd:annotation>
+                </data>
+            </element>
+            <element name="quality">
+                <data type="string">
+                    <xsd:annotation>
+                        <example>b</example>
+                    </xsd:annotation>
+                </data>
+            </element>
+            </interleave>
+        </element>
+    </define>
+    <define name="netDCRequest">
+        <element name="netDCRequest">
+            <xsd:annotation>
+                <summary>Creates a NetDC request and saves it to a file and returns true</summary>
+                <description>Mainly useful for accessing data that is not available via Fissures/DHI, such as restricted
+                    PASSCAL datasets or data from datacenters that have a netdc system but not DHI seismogram
+                    servers. Of course the network information must be available to SOD. As this subsetter always
+                    returns true, processing will continue past this point. In most cases, the whole reason to generate
+                    netdc requests is that it is the only way to get the data, and so there is not much point in
+                    proceeding down the waveform arm. You will generally want to wrap the netDCRequest in a
+                    requestNOT so that the return value is false. This will allow SOD to proceed to the next piece of
+                    work and avoid the wasted time in going to the server to get data.</description>
+            </xsd:annotation>
+            <optional>
+                <element name="workingDir">
+                    <xsd:annotation>
+                        <summary>Directory to place the netdc files in. Defaults to netdc</summary>
+                        <description>Specifies the base directory for generated NetDC files. This is combined with
+                            the value generated by location to make the full file name.</description>
+                    </xsd:annotation>
+                    <data type="string">
+                        <xsd:annotation>
+                            <example>RUSH_netdc</example>
+                        </xsd:annotation>
+                    </data>
+                </element>
+            </optional>
+            <optional>
+                <element name="location">
+                    <xsd:annotation>
+                        <summary>Generates file locations for netdc requests</summary>
+                        <description>It's specified as a <a href="templates.html">Velocity template</a> The
+                            template contains a list of <a href="templateTypes.html#request">request</a> named
+                            originalRequests that are the requests generated by your request generator, <a
+                            href="templateTypes.html#event">event</a>, <a
+                            href="templateTypes.html#channel">channel</a>, <a
+                            href="templateTypes.html#site">site</a>, <a
+                            href="templateTypes.html#station">station</a> and <a
+                            href="templateTypes.html#net">net</a> variables. This defaults to
+                            $event.getTime('yyyy.DDD.HH.mm.ss.SSSS').netdc The value generated here is combined with
+                            workingDir to make the full location.</description>
+                    </xsd:annotation>
+                    <data type="string">
+                        <xsd:annotation>
+                            <example>$event.getTime('yyyy.DDD.HH.mm.ss.SSSS').netdc</example>
+                        </xsd:annotation>
+                    </data>
+                </element>
+            </optional>
+            <interleave>
+            <optional>
+                <element name="label">
+                    <xsd:annotation>
+                        <summary>Label inserted in netdc file header.</summary>
+                        <description>Label inserted in netdc file. Since it's in the header, there's only one per file.
+                            It should only contain information that is constant for this file. I e if your template
+                            makes a netdc file per event, this shouldn't contain information specific to a station. It's
+                            specified as a <a href="templates.html">Velocity template</a> The template contains a
+                            list of <a href="templateTypes.html#request">request</a> named originalRequests that
+                            are the requests generated by your request generator, <a
+                            href="templateTypes.html#event">event</a>, <a
+                            href="templateTypes.html#channel">channel</a>, <a
+                            href="templateTypes.html#site">site</a>, <a
+                            href="templateTypes.html#station">station</a> and <a
+                            href="templateTypes.html#net">net</a> variables. If no label element is given, it
+                            defaults to the value in template.</description>
+                    </xsd:annotation>
+                    <data type="string"/>
+                </element>
+            </optional>
+            <element name="name">
+                <data type="string">
+                    <xsd:annotation>
+                        <example>Jenny Seismologist</example>
+                    </xsd:annotation>
+                </data>
+            </element>
+            <element name="inst">
+                <data type="string">
+                    <xsd:annotation>
+                        <example>Univ. of Example</example>
+                    </xsd:annotation>
+                </data>
+            </element>
+            <optional>
+                <element name="mail">
+                    <data type="string">
+                        <xsd:annotation>
+                            <example>Dept. of Seismology., Main St. MyTown AA, USA</example>
+                        </xsd:annotation>
+                    </data>
+                </element>
+            </optional>
+            <element name="email">
+                <data type="string">
+                    <xsd:annotation>
+                        <example>joe@seis.example.edu</example>
+                    </xsd:annotation>
+                </data>
+            </element>
+            <optional>
+                <element name="phone">
+                    <data type="string">
+                        <xsd:annotation>
+                            <example>555-867-5309</example>
+                        </xsd:annotation>
+                    </data>
+                </element>
+            </optional>
+            <optional>
+                <element name="fax">
+                    <data type="string">
+                        <xsd:annotation>
+                            <example>none</example>
+                        </xsd:annotation>
+                    </data>
+                </element>
+            </optional>
+            <optional>
+                <element name="media">
+                    <data type="string">
+                        <xsd:annotation>
+                            <example>FTP</example>
+                        </xsd:annotation>
+                    </data>
+                </element>
+                <optional>
+                    <element name="altmedia">
+                        <data type="string">
+                            <xsd:annotation>
+                                <example>EXABYTE TAPE</example>
+                            </xsd:annotation>
+                        </data>
+                    </element>
+                </optional>
+            </optional>
+            <optional>
+                <element name="format_waveform">
+                    <data type="string">
+                        <xsd:annotation>
+                            <example>SEED</example>
+                        </xsd:annotation>
+                    </data>
+                </element>
+            </optional>
+            <optional>
+                <element name="format_response">
+                    <data type="string">
+                        <xsd:annotation>
+                            <example>SEED_ASCII</example>
+                        </xsd:annotation>
+                    </data>
+                </element>
+            </optional>
+            <optional>
+                <element name="merge_data">
+                    <data type="string">
+                        <xsd:annotation>
+                            <example>YES 2</example>
+                        </xsd:annotation>
+                    </data>
+                </element>
+            </optional>
+            <optional>
+                <element name="disposition">
+                    <data type="string">
+                        <xsd:annotation>
+                            <example>PULL</example>
+                        </xsd:annotation>
+                    </data>
+                </element>
+            </optional>
+            </interleave>
+        </element>
+    </define>
+    <define name="plottableRequest">
+        <element name="plottableRequest">
+            <xsd:annotation>
+                <summary>Retrieves plottables for the given request.</summary>
+                <description>Retrieves plottables for the given request.</description>
+            </xsd:annotation>
+            <element name="name">
+            	<data type="string"/>
+            </element>
+            <element name="dns">
+            	<data type="string"/>
+            </element>
+            <oneOrMore>
+                <element name="pixelsPerDay">
+                    <data type="int"/>
+                </element>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="requestScript">
+        <element name="requestScript">
+            <xsd:annotation>
+                <summary>Runs a script request subsetter</summary>
+                <description>Runs a request subsetter script via JSR223. The event is put as "event" and the channel
+                as "channel". The channel and event objects are a
+                VelocityChannel and VelocityEvent, respectively, the same classes used in the <a href="templates.html">templates</a> for the printlineChannelProcess.
+                The request is put as "request" as an array of RequestFilter objects.
+                See the <a href="../scripting.html">scripting tutorial</a> for more information on inlining scripts
+                into a SOD recipe.</description>
+                <example>
+                    <requestScript type="jython">
+            from edu.iris.Fissures.model import MicroSecondDate, UnitImpl
+            for rf in request:
+                begin = MicroSecondDate(rf.start_time)
+                end = MicroSecondDate(rf.end_time)
+                width = end.subtract(begin)
+                if width.getValue(UnitImpl.SECOND) &lt; 500:
+                   result = util.fail("only "+width.getValue(UnitImpl.SECOND)+" seconds")
+                else:
+                   result = True
+                    </requestScript>
+                </example>
+            </xsd:annotation>
+            <attribute name="type">
+                    <text/>
+            </attribute>
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="externalRequestSubsetter">
+        <element name="externalRequestSubsetter">
+            <xsd:annotation>
+                <summary>Use a request subsetter external to SOD</summary>
+                <description>$externalRequestInfo.getRelaxHTML('../')</description>
+                <example>
+                    <externalRequest>
+                        <classname>edu.somewhere.seis.sodExt.subsetter.request.MyRequest</classname>
+                    </externalRequest>
+                </example>
+            </xsd:annotation>
+            <ref name="externalClass"/>
+        </element>
+    </define>
+</grammar>

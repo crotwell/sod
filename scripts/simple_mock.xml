@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sod>
+    <properties>
+        <runName>Retry Test</runName>
+        <statusPages>TRUE</statusPages>
+    </properties>
+    <eventArm>
+        <eventFinder>
+            <name>Mock</name>
+            <dns>edu/sc/seis/mock</dns>
+            <originTimeRange>
+                <startTime>
+                    <earlier>
+                        <timeInterval>
+                            <unit>WEEK</unit>
+                            <value>10</value></timeInterval>
+                    </earlier></startTime>
+                <endTime>
+                    <earlier>
+                        <timeInterval>
+                            <unit>WEEK</unit>
+                            <value>8</value></timeInterval>
+                    </earlier></endTime>
+            </originTimeRange>
+        </eventFinder>
+        <printlineEventProcess/>
+    </eventArm>
+    <networkArm>
+        <networkFinder>
+            <name>SingleChannel</name>
+            <dns>edu/sc/seis/mock</dns>
+        </networkFinder>
+        <printlineChannelProcess/>
+    </networkArm>
+    <waveformArm>
+        <phaseRequest>
+            <model>prem</model>
+            <beginPhase>ttp</beginPhase>
+            <beginOffset>
+                <unit>SECOND</unit>
+                <value>-60</value>
+            </beginOffset>
+            <endPhase>tts</endPhase>
+            <endOffset>
+                <unit>SECOND</unit>
+                <value>360</value>
+            </endOffset>
+        </phaseRequest>
+        <fixedDataCenter>
+            <name>Simple</name>
+            <dns>edu/sc/seis/mock</dns>
+        </fixedDataCenter>
+        <someCoverage/>
+        <printlineSeismogramProcess/>
+    </waveformArm>
+</sod>

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>SOD - Text Datatype</title>
+    </properties>
+    <body>
+        <section name="Any Text">
+            <p>Any amount of text can go here. The only restriction is that you must escape the
+                characters XML uses. So if you want to use &lt; you must write it like
+                &amp;lt; and if you want to use &amp; you need to use &amp;amp; so that
+                it SOD doesn't think you're adding more tags, but other than that, anything goes. </p>
+            <table>
+                <tr>
+                    <td><b>Desired Character</b></td>
+                    <td><b>Escape Sequence</b></td>
+                </tr>
+                <tr>
+                    <td>&lt;</td>
+                    <td>&amp;lt;</td>
+                </tr>
+                <tr>
+                    <td>&amp;</td>
+                    <td>&amp;amp;</td>
+                </tr>
+            </table>
+        </section>
+    </body>
+</document>

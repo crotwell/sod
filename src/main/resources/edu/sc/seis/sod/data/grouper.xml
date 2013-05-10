@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rules>
+        <rule>
+                <threeCharacterRule>ZNE</threeCharacterRule>
+                <threeCharacterRule>Z12</threeCharacterRule>
+                <threeCharacterRule>Z23</threeCharacterRule>
+                <threeCharacterRule>ABC</threeCharacterRule>
+                <threeCharacterRule>123</threeCharacterRule>
+                <threeCharacterRule>UVW</threeCharacterRule>
+        </rule>
+</rules>
