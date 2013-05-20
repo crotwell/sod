@@ -73,6 +73,13 @@ public abstract class AbstractEventSource extends AbstractSource implements Even
         }
         return new MicroSecondTimeRange(queryStart, queryEnd);
     }
+    
+    public void increaseQueryTimeWidth() {
+        increment = (TimeInterval)increment.multiplyBy(2);
+    }
+    public void decreaseQueryTimeWidth() {
+        increment = (TimeInterval)increment.multiplyBy(.75);
+    }
 
     /**
      * Scoots the query time back by the event lag amount from the run

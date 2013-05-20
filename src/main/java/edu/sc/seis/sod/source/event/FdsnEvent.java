@@ -161,6 +161,13 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                 Event e = it.next();
                 out.add(toCacheEvent(e));
             }
+
+            if ( out.size() < 10) {
+                increaseQueryTimeWidth();
+            }
+            if ( out.size() > 100) {
+                decreaseQueryTimeWidth();
+            }
             return out.toArray(new CacheEvent[0]);
         } catch(Exception e) {
             throw new RuntimeException(e); // ToDo: fix this
