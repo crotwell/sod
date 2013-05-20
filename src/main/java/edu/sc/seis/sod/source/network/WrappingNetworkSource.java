@@ -73,7 +73,7 @@ public abstract class WrappingNetworkSource implements NetworkSource {
     }
 
     @Override
-    public void setConstrains(NetworkQueryConstraints constraints) {
-        getWrapped().setConstrains(constraints);
+    public void setConstraints(NetworkQueryConstraints constraints) {
+        getWrapped().setConstraints(constraints);
     }
 }

@@ -131,7 +131,7 @@ public class NetworkArm implements Arm {
                                                                           stationSubsetter,
                                                                           chanSubsetters);
         
-        getNetworkSource().setConstrains(constraints);
+        getNetworkSource().setConstraints(constraints);
         configureEffectiveTimeCheckers();
     }
 

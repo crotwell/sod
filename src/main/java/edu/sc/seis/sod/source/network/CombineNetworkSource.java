@@ -156,9 +156,9 @@ public class CombineNetworkSource implements NetworkSource {
         return null;
     }
     
-    public void setConstrains(NetworkQueryConstraints constraints) {
+    public void setConstraints(NetworkQueryConstraints constraints) {
         for (NetworkSource source : wrapped) {
-            source.setConstrains(constraints);
+            source.setConstraints(constraints);
         }
     }
     List<NetworkSource> wrapped;

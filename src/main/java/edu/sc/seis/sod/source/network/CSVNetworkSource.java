@@ -235,7 +235,7 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
 
     @Override
 
-    public void setConstrains(NetworkQueryConstraints constraints) {
+    public void setConstraints(NetworkQueryConstraints constraints) {
         // no op
     }
 

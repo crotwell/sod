@@ -235,7 +235,7 @@ public class StationXML implements NetworkSource {
         throw new ChannelNotFound();
     }
     
-    public void setConstrains(NetworkQueryConstraints constraints) {
+    public void setConstraints(NetworkQueryConstraints constraints) {
         this.constraints = constraints;
     }
 
