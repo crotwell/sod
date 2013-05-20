@@ -240,10 +240,6 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                 fisMags.add(toFissuresMagnitude(m));
             }
             QuantityImpl depth = new QuantityImpl(o.getDepth().getValue(), UnitImpl.METER);
-            if (depth.get_value() > 0 && depth.get_value() < 1000) {
-                System.err.println("Warning: QuakeML event depth should be in METERS but looks like KILOMETERS: "+depth.get_value());
-                depth = new QuantityImpl(o.getDepth().getValue(), UnitImpl.KILOMETER);
-            }
             OriginImpl oImpl = new OriginImpl(o.getPublicId(),
                                               o.getIrisCatalog(),
                                               o.getIrisContributor(),
