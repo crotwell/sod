@@ -5,6 +5,10 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.model.TimeInterval;
+import edu.iris.Fissures.model.UnitImpl;
+import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.sod.subsetter.Subsetter;
 import edu.sc.seis.sod.subsetter.channel.ChannelCode;
 import edu.sc.seis.sod.subsetter.channel.ChannelOR;
@@ -40,6 +44,11 @@ public class NetworkQueryConstraints {
                                    StationSubsetter stationSubsetter,
                                    List<ChannelSubsetter> channelSubsetterList,
                                    edu.iris.Fissures.TimeRange timeRange) {
+        this.beginConstraint = new MicroSecondDate(timeRange.start_time);
+        this.endConstraint = new MicroSecondDate(timeRange.end_time);
+        if (endConstraint.subtract(ClockUtil.now()).lessThan(new TimeInterval(1, UnitImpl.HOUR))) {
+            endConstraint = null;
+        }
         constrainingNetworkCodes = new ArrayList<String>();
         if(attrSubsetter == null) {
             // nothing
@@ -185,15 +194,19 @@ public class NetworkQueryConstraints {
     public List<String> getConstrainingChannelCodes() {
         return constrainingChannelCodes;
     }
-    
-    public edu.iris.Fissures.TimeRange getConstrainingTimeRange() {
-        return timeRange;
+
+    public MicroSecondDate getConstrainingBeginTime() {
+        return beginConstraint;
+    }
+    public MicroSecondDate getConstrainingEndTime() {
+        return endConstraint;
     }
 
     List<String> constrainingNetworkCodes = new ArrayList<String>();
     List<String> constrainingStationCodes = new ArrayList<String>();
     List<String> constrainingLocationCodes = new ArrayList<String>();
     List<String> constrainingChannelCodes = new ArrayList<String>();
-    edu.iris.Fissures.TimeRange timeRange = null;
+    MicroSecondDate beginConstraint;
+    MicroSecondDate endConstraint;
 
 }

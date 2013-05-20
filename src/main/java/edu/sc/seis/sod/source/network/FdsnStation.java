@@ -257,6 +257,12 @@ public class FdsnStation extends AbstractNetworkSource {
             for (String chanCode : constraints.getConstrainingChannelCodes()) {
                 cloneQP.appendToChannel(chanCode);
             }
+            if (constraints.getConstrainingBeginTime() != null) {
+                cloneQP.setEndAfter(constraints.getConstrainingBeginTime());
+            }
+            if (constraints.getConstrainingEndTime() != null) {
+                cloneQP.setStartBefore(constraints.getConstrainingEndTime());
+            }
         }
         return cloneQP;
     }
