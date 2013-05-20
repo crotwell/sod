@@ -46,7 +46,7 @@ public class NetworkQueryConstraints {
                                    edu.iris.Fissures.TimeRange timeRange) {
         this.beginConstraint = new MicroSecondDate(timeRange.start_time);
         this.endConstraint = new MicroSecondDate(timeRange.end_time);
-        if (endConstraint.subtract(ClockUtil.now()).lessThan(new TimeInterval(1, UnitImpl.HOUR))) {
+        if (endConstraint.after(ClockUtil.now().subtract(new TimeInterval(1, UnitImpl.HOUR)))) {
             endConstraint = null;
         }
         constrainingNetworkCodes = new ArrayList<String>();
