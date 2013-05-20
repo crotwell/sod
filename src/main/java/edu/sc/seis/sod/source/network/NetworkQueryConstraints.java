@@ -38,7 +38,8 @@ public class NetworkQueryConstraints {
      */
     public NetworkQueryConstraints(NetworkSubsetter attrSubsetter,
                                    StationSubsetter stationSubsetter,
-                                   List<ChannelSubsetter> channelSubsetterList) {
+                                   List<ChannelSubsetter> channelSubsetterList,
+                                   edu.iris.Fissures.TimeRange timeRange) {
         constrainingNetworkCodes = new ArrayList<String>();
         if(attrSubsetter == null) {
             // nothing
@@ -184,10 +185,15 @@ public class NetworkQueryConstraints {
     public List<String> getConstrainingChannelCodes() {
         return constrainingChannelCodes;
     }
+    
+    public edu.iris.Fissures.TimeRange getConstrainingTimeRange() {
+        return timeRange;
+    }
 
     List<String> constrainingNetworkCodes = new ArrayList<String>();
     List<String> constrainingStationCodes = new ArrayList<String>();
     List<String> constrainingLocationCodes = new ArrayList<String>();
     List<String> constrainingChannelCodes = new ArrayList<String>();
+    edu.iris.Fissures.TimeRange timeRange = null;
 
 }
