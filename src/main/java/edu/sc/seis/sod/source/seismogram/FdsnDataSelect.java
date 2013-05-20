@@ -1,10 +1,7 @@
 package edu.sc.seis.sod.source.seismogram;
 
 import java.io.IOException;
-import java.net.Authenticator;
 import java.net.MalformedURLException;
-import java.net.PasswordAuthentication;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,30 +28,33 @@ import edu.sc.seis.sod.SodUtil;
 
 public class FdsnDataSelect implements SeismogramSourceLocator {
 
-    private URI baseURI = FDSNDataSelectQueryParams.IRIS_BASE_URI;
+    private String host = FDSNDataSelectQueryParams.IRIS_HOST;
 
     private int timeoutMillis = 30 * 1000;
 
     private boolean doBulk = false;
 
+    private String username;
+    
+    private String password;
+
     public FdsnDataSelect() {
-        baseURI = FDSNDataSelectQueryParams.IRIS_BASE_URI;
+        host = FDSNDataSelectQueryParams.IRIS_HOST;
         timeoutMillis = 30 * 1000;
         doBulk = false;
+        username = "";
+        password = "";
     }
 
     public FdsnDataSelect(Element config) throws MalformedURLException, URISyntaxException {
-        this(config, FDSNDataSelectQueryParams.IRIS_BASE_URL);
+        this(config, FDSNDataSelectQueryParams.IRIS_HOST);
     }
 
     public FdsnDataSelect(Element config, String defaultURL) throws MalformedURLException, URISyntaxException {
         doBulk = SodUtil.isTrue(config, "dobulk", true);
-        baseURI = new URI(SodUtil.loadText(config, "baseURI", defaultURL));
-        String user = SodUtil.loadText(config, "user", "");
-        String password = SodUtil.loadText(config, "password", "");
-        if (user.length() != 0 && password.length() != 0) {
-            Authenticator.setDefault(new MyAuthenticator(user, password));
-        }
+        host = SodUtil.loadText(config, "host", FDSNDataSelectQueryParams.IRIS_HOST);
+        username = SodUtil.loadText(config, "user", "");
+        password = SodUtil.loadText(config, "password", "");
         timeoutMillis = 1000 * SodUtil.loadInt(config, "timeoutSecs", 30);
     }
 
@@ -74,7 +74,7 @@ public class FdsnDataSelect implements SeismogramSourceLocator {
             public List<LocalSeismogramImpl> retrieveData(List<RequestFilter> request) throws SeismogramSourceException {
                 List<LocalSeismogramImpl> out = new ArrayList<LocalSeismogramImpl>();
                 if (request.size() != 0) {
-                    FDSNDataSelectQueryParams queryParams = new FDSNDataSelectQueryParams(baseURI);
+                    FDSNDataSelectQueryParams queryParams = new FDSNDataSelectQueryParams(host);
                     List<ChannelTimeWindow> queryRequest = new ArrayList<ChannelTimeWindow>();
                     for (RequestFilter rf : request) {
                         ChannelId c = rf.channel_id;
@@ -86,6 +86,9 @@ public class FdsnDataSelect implements SeismogramSourceLocator {
                                                                new MicroSecondDate(rf.end_time)));
                     }
                     FDSNDataSelectQuerier querier = new FDSNDataSelectQuerier(queryParams, queryRequest);
+                    if (username.length() != 0 && password.length() != 0) {
+                        querier.enableRestrictedData(username, password);
+                    }
                     List<DataRecord> drList = new ArrayList<DataRecord>();
                     try {
                     DataRecordIterator drIt = querier.getDataRecordIterator();
@@ -116,21 +119,5 @@ public class FdsnDataSelect implements SeismogramSourceLocator {
                 return out;
             }
         };
-    }
-}
-
-class MyAuthenticator extends Authenticator {
-
-    String user;
-
-    String password;
-
-    public MyAuthenticator(String user, String password) {
-        this.user = user;
-        this.password = password;
-    }
-
-    public PasswordAuthentication getPasswordAuthentication() {
-        return new PasswordAuthentication(user, password.toCharArray());
     }
 }
