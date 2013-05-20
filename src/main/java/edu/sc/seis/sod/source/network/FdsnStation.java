@@ -74,6 +74,8 @@ public class FdsnStation extends AbstractNetworkSource {
                         queryParams.appendToLocation(SodUtil.getNestedText(element));
                     } else if (element.getTagName().equals("channelCode")) {
                         queryParams.appendToChannel(SodUtil.getNestedText(element));
+                    } else if (element.getTagName().equals("host")) {
+                        queryParams.setHost(SodUtil.getNestedText(element));
                     }
                 }
             }
