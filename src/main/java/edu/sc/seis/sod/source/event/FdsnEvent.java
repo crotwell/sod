@@ -184,7 +184,6 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
     }
 
     @Override
-
     public MicroSecondTimeRange getEventTimeRange() {
         return eventTimeRangeSupplier.getMSTR();
     }
