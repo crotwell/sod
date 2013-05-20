@@ -1,6 +1,8 @@
 package edu.sc.seis.sod.source.network;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import edu.sc.seis.sod.subsetter.Subsetter;
@@ -79,41 +81,57 @@ public class NetworkQueryConstraints {
         constrainingLocationCodes = new ArrayList<String>();
         List<ChannelSubsetter> onlySiteList = new ArrayList<ChannelSubsetter>();
         List<ChannelSubsetter> onlyChanList = new ArrayList<ChannelSubsetter>();
-        for (ChannelSubsetter subsetter : channelSubsetterList) {
-            if ( subsetter instanceof SiteCode) {
-                onlySiteList.add(subsetter);
-            } else if ( subsetter instanceof ChannelCode) {
-                onlyChanList.add(subsetter);
-            } else if ( subsetter instanceof ChannelOR) {
-                List<Subsetter> chanOrList = ((ChannelOR)subsetter).getSubsetters();
-                if (chanOrList.size() == 0) {
-                    // weird, but no effect
-                } else {
+        Iterator<ChannelSubsetter> it = channelSubsetterList.iterator();
+        boolean secondMightBeChan = false;
+        if (it.hasNext()) {
+            ChannelSubsetter first = it.next();
+            if (first instanceof ChannelOR) {
+                boolean isAllChannelCode = true;
+                boolean isAllSiteCode = true;
+                List<Subsetter> chanOrList = ((ChannelOR)first).getSubsetters();
+                for (Subsetter subsetter2 : chanOrList) {
+                    if (subsetter2 instanceof ChannelCode) {
+                        isAllSiteCode = false;
+                    } else if (subsetter2 instanceof SiteCode) {
+                        isAllChannelCode = false;
+                    } else {
+                        isAllChannelCode = false;
+                        isAllSiteCode = false;
+                        break;
+                    }
+                }
+                if (isAllSiteCode) {
+                    onlySiteList.add(first);
+                    secondMightBeChan = true; // might be only chan subsetters in second
+                }
+                if (isAllChannelCode) {
+                    onlyChanList.add(first);
+                }
+            } else if ( first instanceof SiteCode) {
+                onlySiteList.add(first);
+                secondMightBeChan = true; // might be only chan subsetters in second
+            } else if ( first instanceof ChannelCode) {
+                onlyChanList.add(first);
+            }
+            if (it.hasNext() && secondMightBeChan) {
+                ChannelSubsetter second = it.next();
+                if (second instanceof ChannelOR) {
                     boolean isAllChannelCode = true;
-                    boolean isAllSiteCode = true;
+                    List<Subsetter> chanOrList = ((ChannelOR)second).getSubsetters();
                     for (Subsetter subsetter2 : chanOrList) {
                         if (subsetter2 instanceof ChannelCode) {
-                            isAllChannelCode = true;
-                            isAllSiteCode = false;
-                        } else if (subsetter2 instanceof SiteCode) {
-                            isAllChannelCode = false;
-                            isAllSiteCode = true;
+//                          so far ok
                         } else {
                             isAllChannelCode = false;
-                            isAllSiteCode = false;
                             break;
                         }
                     }
-                    if (isAllSiteCode) {
-                        onlySiteList.add(subsetter);
-                    }
                     if (isAllChannelCode) {
-                        onlyChanList.add(subsetter);
+                        onlyChanList.add(second);
                     }
+                } else if ( second instanceof ChannelCode) {
+                    onlyChanList.add(second);
                 }
-            } else {
-                onlySiteList.add(subsetter);
-                onlyChanList.add(subsetter);
             }
         }
         
@@ -132,8 +150,6 @@ public class NetworkQueryConstraints {
             }
         } else if(onlyChanList.size() == 1 && onlyChanList.get(0)  instanceof ChannelCode) {
             constrainingChannelCodes.add(((ChannelCode)onlyChanList.get(0)).getCode());
-        } else {
-            // nothing
         }
         
         if(onlySiteList.size() == 0 || onlySiteList.size() > 1) {
@@ -150,8 +166,6 @@ public class NetworkQueryConstraints {
             }
         } else if(onlySiteList.size() == 1 && onlySiteList.get(0)  instanceof SiteCode) {
             constrainingLocationCodes.add(((SiteCode)onlySiteList.get(0)).getCode());
-        } else {
-            // nothing
         }
     }
     
