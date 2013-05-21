@@ -2,18 +2,18 @@
 $additionalArms#end
     <waveformArm>
 #if($sites)
-        <siteOR>
+        <eventChannelOR>
 #foreach($code in $sites)
             <siteCode>$code</siteCode>
 #end
-		</siteOR>
+		</eventChannelOR>
 #end
 #if($channels)
-            <channelOR>
+            <eventChannelOR>
 #foreach($code in $channels)
                 <channelCode>$code</channelCode>
 #end
-            </channelOR>
+            </eventChannelOR>
 #end
         <phaseRequest>
             <beginPhase>$begin.name</beginPhase>
@@ -27,9 +27,9 @@ $additionalArms#end
                 <value>$end.offset</value>
             </endOffset>
         </phaseRequest>
-#if($baseurl)
+#if($host)
         <fdsnDataSelect>
-            <baseurl>$baseurl</baseurl>
+            <host>$host</host>
         </fdsnDataSelect>
 #end
 #if($server.name && $server.dns)

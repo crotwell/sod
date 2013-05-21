@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.source.network;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,6 +75,8 @@ public class FdsnStation extends AbstractNetworkSource {
                         queryParams.appendToLocation(SodUtil.getNestedText(element));
                     } else if (element.getTagName().equals("channelCode")) {
                         queryParams.appendToChannel(SodUtil.getNestedText(element));
+                    } else if (element.getTagName().equals("host")) {
+                        queryParams.setHost(SodUtil.getNestedText(element));
                     }
                 }
             }
@@ -93,7 +96,7 @@ public class FdsnStation extends AbstractNetworkSource {
     @Override
     public List<? extends NetworkAttrImpl> getNetworks() {
         try {
-            FDSNStationQueryParams staQP = queryParams.clone();
+            FDSNStationQueryParams staQP = setupQueryParams();
             staQP.setLevel(FDSNStationQueryParams.LEVEL_NETWORK);
             FDSNStationQuerier querier = new FDSNStationQuerier(staQP);
             querier.setUserAgent("SOD/"+BuildVersion.getVersion());
@@ -113,7 +116,7 @@ public class FdsnStation extends AbstractNetworkSource {
     @Override
     public List<? extends StationImpl> getStations(NetworkId net) {
         try {
-            FDSNStationQueryParams staQP = queryParams.clone();
+            FDSNStationQueryParams staQP = setupQueryParams();
             staQP.setLevel(FDSNStationQueryParams.LEVEL_STATION);
             staQP.clearNetwork();
             staQP.appendToNetwork(net.network_code);
@@ -144,7 +147,7 @@ public class FdsnStation extends AbstractNetworkSource {
 
     public List<? extends ChannelImpl> getChannels(StationId stationId) {
         try {
-            FDSNStationQueryParams staQP = queryParams.clone();
+            FDSNStationQueryParams staQP = setupQueryParams();
             staQP.setLevel(FDSNStationQueryParams.LEVEL_CHANNEL);
             staQP.clearNetwork()
                     .appendToNetwork(stationId.network_id.network_code)
@@ -191,7 +194,7 @@ public class FdsnStation extends AbstractNetworkSource {
     @Override
     public Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
         try {
-            FDSNStationQueryParams staQP = queryParams.clone();
+            FDSNStationQueryParams staQP = setupQueryParams();
             staQP.setLevel(FDSNStationQueryParams.LEVEL_RESPONSE);
             staQP.clearNetwork()
                     .appendToNetwork(chanId.network_id.network_code)
@@ -237,6 +240,31 @@ public class FdsnStation extends AbstractNetworkSource {
         } catch(XMLStreamException e) {
             throw new InvalidResponse(e);
         }
+    }
+    
+    FDSNStationQueryParams setupQueryParams() {
+        FDSNStationQueryParams cloneQP = queryParams.clone();
+        if (constraints != null) {
+            for (String netCode : constraints.getConstrainingNetworkCodes()) {
+                cloneQP.appendToNetwork(netCode);
+            }
+            for (String staCode : constraints.getConstrainingStationCodes()) {
+                cloneQP.appendToStation(staCode);
+            }
+            for (String siteCode : constraints.getConstrainingLocationCodes()) {
+                cloneQP.appendToLocation(siteCode);
+            }
+            for (String chanCode : constraints.getConstrainingChannelCodes()) {
+                cloneQP.appendToChannel(chanCode);
+            }
+            if (constraints.getConstrainingBeginTime() != null) {
+                cloneQP.setEndAfter(constraints.getConstrainingBeginTime());
+            }
+            if (constraints.getConstrainingEndTime() != null) {
+                cloneQP.setStartBefore(constraints.getConstrainingEndTime());
+            }
+        }
+        return cloneQP;
     }
     
     HashMap<String, QuantityImpl> chanSensitivityMap = new HashMap<String, QuantityImpl>();

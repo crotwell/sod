@@ -62,11 +62,6 @@ import edu.sc.seis.sod.SodUtil;
 
 
 public class StationXML implements NetworkSource {
-
-    public StationXML() throws ConfigurationException {
-        url = FDSNStationQueryParams.IRIS_BASE_URL;
-        parseURL();
-    }
     
     public StationXML(Element config) throws ConfigurationException {
         if (DOMHelper.hasElement(config, URL_ELEMENT)) {
@@ -240,7 +235,7 @@ public class StationXML implements NetworkSource {
         throw new ChannelNotFound();
     }
     
-    public void setConstrains(NetworkQueryConstraints constraints) {
+    public void setConstraints(NetworkQueryConstraints constraints) {
         this.constraints = constraints;
     }
 
@@ -398,7 +393,7 @@ public class StationXML implements NetworkSource {
     
     Map<String, List<StationChannelBundle>> staChanMap = new HashMap<String, List<StationChannelBundle>>();
     
-    String url = FDSNStationQueryParams.IRIS_BASE_URL;;
+    String url;
     
     URI parsedURL;
     

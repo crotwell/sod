@@ -23,7 +23,10 @@
                 <summary>Generates requests based on phases</summary>
                 <description>This generates requests based on the times relative to calculated phase arrivals.
                 See the documentation for the TauP Toolkit, http://www.seis.sc.edu/TauP for the phase naming
-                convention. SOD uses the TauP Toolkit internally.
+                convention. SOD uses the TauP Toolkit internally. The begin and end phase can be a comma
+                separated list. If there are multiple arrivals for the phases, then the time will be calculated
+                relative to the first arriving phase. If there are zero arrivals for the phases, then
+                no request will be generated and no data will be retrieved.
                 </description>
             </xsd:annotation>
             <ref name="phaseWindow"/>

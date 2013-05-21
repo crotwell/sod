@@ -127,15 +127,16 @@ public class NetworkArm implements Arm {
                 loadConfigElement(SodUtil.load((Element)node, PACKAGES));
             } // end of if (node instanceof Element)
         } // end of for (int i=0; i<children.getSize(); i++)
+        
+        edu.iris.Fissures.TimeRange timeRange = configureEffectiveTimeCheckers();
         NetworkQueryConstraints constraints = new NetworkQueryConstraints(attrSubsetter,
                                                                           stationSubsetter,
-                                                                          chanSubsetters);
-        
-        getNetworkSource().setConstrains(constraints);
-        configureEffectiveTimeCheckers();
+                                                                          chanSubsetters,
+                                                                          timeRange);
+        getNetworkSource().setConstraints(constraints);
     }
 
-    private void configureEffectiveTimeCheckers() {
+    private edu.iris.Fissures.TimeRange configureEffectiveTimeCheckers() {
         EventArm arm = Start.getEventArm();
         if(arm != null && !Start.getRunProps().allowDeadNets()) {
             EventSource[] sources = arm.getSources();
@@ -148,8 +149,10 @@ public class NetworkArm implements Arm {
             netEffectiveSubsetter = new NetworkEffectiveTimeOverlap(eventQueryTimes);
             staEffectiveSubsetter = new StationEffectiveTimeOverlap(eventQueryTimes);
             chanEffectiveSubsetter = new ChannelEffectiveTimeOverlap(eventQueryTimes);
+            return eventQueryTimes;
         } else {
             logger.debug("No implicit effective time constraint");
+            return null;
         }
     }
 

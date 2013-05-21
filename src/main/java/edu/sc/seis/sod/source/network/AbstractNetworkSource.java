@@ -46,7 +46,7 @@ public abstract class AbstractNetworkSource extends AbstractSource implements Ne
         return this.refreshInterval;
     }
     
-    public void setConstrains(NetworkQueryConstraints constraints) {
+    public void setConstraints(NetworkQueryConstraints constraints) {
         this.constraints = constraints;
     }
     

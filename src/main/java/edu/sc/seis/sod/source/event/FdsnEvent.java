@@ -6,6 +6,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
@@ -120,6 +121,8 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                         queryParams.setCatalog(((Catalog)object).getCatalog());
                     } else if(tagName.equals("contributor")) {
                         queryParams.setContributor(((Contributor)object).getContributor());
+                    } else if (tagName.equals("host")) {
+                        queryParams.setHost(SodUtil.getNestedText((Element)node));
                     }
                 }
             }
@@ -158,6 +161,13 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                 Event e = it.next();
                 out.add(toCacheEvent(e));
             }
+
+            if ( out.size() < 10) {
+                increaseQueryTimeWidth();
+            }
+            if ( out.size() > 100) {
+                decreaseQueryTimeWidth();
+            }
             return out.toArray(new CacheEvent[0]);
         } catch(Exception e) {
             throw new RuntimeException(e); // ToDo: fix this
@@ -174,14 +184,17 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
     }
 
     @Override
-
     public MicroSecondTimeRange getEventTimeRange() {
         return eventTimeRangeSupplier.getMSTR();
     }
     
     @Override
     public String getDescription() {
-        return queryParams.getBaseURI().toString();
+        try {
+            return queryParams.formURI().toString();
+        } catch(URISyntaxException e) {
+            throw new RuntimeException("Unable to for URL for description.", e);
+        }
     }
     
     EventIterator getIterator() throws SeisFileException {
@@ -218,7 +231,6 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                 magsByOriginId.put(m.getOriginId(), new ArrayList<Magnitude>());
             }
             magsByOriginId.get(m.getOriginId()).add(m);
-            logger.debug("Mag origin id "+m.getOriginId());
             if (m.getPublicId().equals(e.getPreferredMagnitudeID())) {
                 prefMag = m;
             }
@@ -231,15 +243,9 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
             }
             List<edu.iris.Fissures.IfEvent.Magnitude> fisMags = new ArrayList<edu.iris.Fissures.IfEvent.Magnitude>();
             for (Magnitude m : oMags) {
-                fisMags.add(new edu.iris.Fissures.IfEvent.Magnitude(m.getType(), 
-                                                                    m.getMag().getValue(), 
-                                                                    m.getCreationInfo().getAuthor()));
+                fisMags.add(toFissuresMagnitude(m));
             }
             QuantityImpl depth = new QuantityImpl(o.getDepth().getValue(), UnitImpl.METER);
-            if (depth.get_value() > 0 && depth.get_value() < 1000) {
-                System.err.println("Warning: QuakeML event depth should be in METERS but looks like KILOMETERS: "+depth.get_value());
-                depth = new QuantityImpl(o.getDepth().getValue(), UnitImpl.KILOMETER);
-            }
             OriginImpl oImpl = new OriginImpl(o.getPublicId(),
                                               o.getIrisCatalog(),
                                               o.getIrisContributor(),
@@ -258,9 +264,18 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         }
         // for convenience add the preferred magnitude as the first magnitude in the preferred origin
         if (prefMag != null && ! e.getPreferredMagnitudeID().equals(e.getPreferredOriginID())) {
+            edu.iris.Fissures.IfEvent.Magnitude pm = toFissuresMagnitude(prefMag);
             List<edu.iris.Fissures.IfEvent.Magnitude> newMags = new ArrayList<edu.iris.Fissures.IfEvent.Magnitude>();
-            newMags.add(new edu.iris.Fissures.IfEvent.Magnitude(prefMag.getType(), prefMag.getMag().getValue(), prefMag.getCreationInfo().getAuthor()));
+            newMags.add(pm);
             newMags.addAll(pref.getMagnitudeList());
+            Iterator<edu.iris.Fissures.IfEvent.Magnitude> it = newMags.iterator();
+            it.next(); // skip first as it is the preferred
+            while(it.hasNext()) {
+                edu.iris.Fissures.IfEvent.Magnitude fm = it.next();
+                if (fm.type.equals(pm.type) && fm.value == pm.value && fm.contributor.equals(pm.contributor)) {
+                    it.remove(); // duplicate of preferred
+                }
+            }
             pref = new OriginImpl(pref.get_id(),
                                   pref.getCatalog(),
                                   pref.getContributor(),
@@ -273,6 +288,20 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                                        out.toArray(new OriginImpl[0]),
                                        pref);
         return ce;
+    }
+    
+    edu.iris.Fissures.IfEvent.Magnitude toFissuresMagnitude(Magnitude m) {
+        String contributor = "";
+        if (m.getCreationInfo() != null && m.getCreationInfo().getAuthor() != null) {
+            contributor = m.getCreationInfo().getAuthor();
+        }
+        String type = "";
+        if (m.getType() != null) {
+            type = m.getType();
+        }
+        return new edu.iris.Fissures.IfEvent.Magnitude(type, 
+                                                       m.getMag().getValue(), 
+                                                       contributor);
     }
     
     Quakeml getQuakeML() throws MalformedURLException, IOException, URISyntaxException, XMLStreamException,
