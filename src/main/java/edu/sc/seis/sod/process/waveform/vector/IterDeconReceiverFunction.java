@@ -20,6 +20,7 @@ import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.SamplingImpl;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
+import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.TauP.Arrival;
@@ -155,61 +156,53 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
                                      ChannelGroup channelGroup,
                                      LocalSeismogramImpl[] localSeis) throws NoPreferredOrigin, FissuresException,
             IncompatibleSeismograms, TauModelException, ZeroPowerException {
-        return process(event, channelGroup.getChannels(), localSeis);
-    }
-
-    public IterDeconResult[] process(EventAccessOperations event, Channel[] channel, LocalSeismogramImpl[] localSeis)
-            throws NoPreferredOrigin, IncompatibleSeismograms, FissuresException, TauModelException, ZeroPowerException {
-        LocalSeismogramImpl n = null, e = null, z = null;
+        Channel[] xyChan = channelGroup.getHorizontalXY();
+        if (xyChan.length < 2) {
+            throw new IncompatibleSeismograms("Unable to find horizontal channels: "+channelGroup.getChannel1().get_code()
+                                              +" "+channelGroup.getChannel2().get_code()
+                                              +" "+channelGroup.getChannel3().get_code());
+        }
+        Channel xChan = xyChan[0];
+        Channel yChan = xyChan[1];
+        Channel zChan = channelGroup.getVertical();
+        
+        if (yChan == null || xChan == null || zChan == null) {
+            logger.error("problem one channel component is null ");
+            throw new NullPointerException("problem one channel component is null, " + " " + (yChan != null) + " "
+                    + (xChan != null) + " " + (zChan != null));
+        }
+        LocalSeismogramImpl ySeis = null, xSeis = null, zSeis = null;
         String foundChanCodes = "";
         for (int i = 0; i < localSeis.length; i++) {
-            if (localSeis[i].channel_id.channel_code.endsWith("N")) {
-                n = localSeis[i];
-            } else if (localSeis[i].channel_id.channel_code.endsWith("E")) {
-                e = localSeis[i];
-            }
-            if (localSeis[i].channel_id.channel_code.endsWith("Z")) {
-                z = localSeis[i];
+            if (ChannelIdUtil.areEqual(localSeis[i].channel_id, yChan.getId())) {
+                ySeis = localSeis[i];
+            } else if (ChannelIdUtil.areEqual(localSeis[i].channel_id, xChan.getId())) {
+                xSeis = localSeis[i];
+            } else if (ChannelIdUtil.areEqual(localSeis[i].channel_id, zChan.getId())) {
+                zSeis = localSeis[i];
             }
             foundChanCodes += localSeis[i].channel_id.channel_code + " ";
         }
-        if (n == null || e == null || z == null) {
+        if (ySeis == null || xSeis == null || zSeis == null) {
             logger.error("problem one seismogram component is null ");
             throw new NullPointerException("problem one seismogram component is null, " + foundChanCodes + " " + " "
-                    + (n != null) + " " + (e != null) + " " + (z != null));
+                    + (ySeis != null) + " " + (xSeis != null) + " " + (zSeis != null));
         }
-        Channel nChan = null, eChan = null, zChan = null;
-        for (int i = 0; i < channel.length; i++) {
-            if (channel[i].getOrientation().dip == 0) {
-                if (Math.abs(channel[i].getOrientation().azimuth) < orientationTol || channel[i].get_id().channel_code.endsWith("N")) {
-                    nChan = channel[i];
-                } else if (Math.abs(channel[i].getOrientation().azimuth-90) < orientationTol || channel[i].get_id().channel_code.endsWith("E")) {
-                    eChan = channel[i];
-                }
-            }
-            if (channel[i].get_id().channel_code.endsWith("Z")) {
-                zChan = channel[i];
-            }
-        }
-        if (nChan == null || eChan == null || zChan == null) {
-            logger.error("problem one channel component is null ");
-            throw new NullPointerException("problem one channel component is null, " + " " + (nChan != null) + " "
-                    + (eChan != null) + " " + (zChan != null));
-        }
+        
         Location staLoc = zChan.getSite().getStation().getLocation();
         Origin origin = event.get_preferred_origin();
         Location evtLoc = origin.getLocation();
-        LocalSeismogramImpl[] rotSeis = Rotate.rotateGCP(e,
-                                                         eChan.getOrientation(),
-                                                         n,
-                                                         nChan.getOrientation(),
+        LocalSeismogramImpl[] rotSeis = Rotate.rotateGCP(xSeis,
+                                                         xChan.getOrientation(),
+                                                         ySeis,
+                                                         yChan.getOrientation(),
                                                          staLoc,
                                                          evtLoc,
                                                          "T",
                                                          "R");
         float[][] rotated = {rotSeis[0].get_as_floats(), rotSeis[1].get_as_floats()};
         // check lengths, trim if needed???
-        float[] zdata = z.get_as_floats();
+        float[] zdata = zSeis.get_as_floats();
         if (rotated[0].length != zdata.length) {
             logger.error("data is not of same length " + rotated[0].length + " " + zdata.length);
             throw new IncompatibleSeismograms("data is not of same length " + rotated[0].length + " " + zdata.length);
@@ -217,7 +210,7 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
         if (zdata.length == 0) {
             throw new IncompatibleSeismograms("data is of zero length ");
         }
-        SamplingImpl samp = SamplingImpl.createSamplingImpl(z.sampling_info);
+        SamplingImpl samp = SamplingImpl.createSamplingImpl(zSeis.sampling_info);
         double period = samp.getPeriod().convertTo(UnitImpl.SECOND).getValue();
         zdata = IterDecon.makePowerTwo(zdata);
         rotated[0] = IterDecon.makePowerTwo(rotated[0]);
