@@ -30,6 +30,8 @@ public class FdsnDataSelect implements SeismogramSourceLocator {
 
     private String host = FDSNDataSelectQueryParams.IRIS_HOST;
 
+    private int port = -1;
+    
     private int timeoutMillis = 30 * 1000;
 
     private boolean doBulk = false;
@@ -53,6 +55,7 @@ public class FdsnDataSelect implements SeismogramSourceLocator {
     public FdsnDataSelect(Element config, String defaultURL) throws MalformedURLException, URISyntaxException {
         doBulk = SodUtil.isTrue(config, "dobulk", true);
         host = SodUtil.loadText(config, "host", FDSNDataSelectQueryParams.IRIS_HOST);
+        port = SodUtil.loadInt(config, "port", -1);
         username = SodUtil.loadText(config, "user", "");
         password = SodUtil.loadText(config, "password", "");
         timeoutMillis = 1000 * SodUtil.loadInt(config, "timeoutSecs", 30);
@@ -75,6 +78,9 @@ public class FdsnDataSelect implements SeismogramSourceLocator {
                 List<LocalSeismogramImpl> out = new ArrayList<LocalSeismogramImpl>();
                 if (request.size() != 0) {
                     FDSNDataSelectQueryParams queryParams = new FDSNDataSelectQueryParams(host);
+                    if (port > 0) {
+                        queryParams.setPort(port);
+                    }
                     List<ChannelTimeWindow> queryRequest = new ArrayList<ChannelTimeWindow>();
                     for (RequestFilter rf : request) {
                         ChannelId c = rf.channel_id;

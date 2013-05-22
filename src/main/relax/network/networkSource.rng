@@ -371,11 +371,25 @@ CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
                 </xsd:documentation>
             </xsd:annotation>
             <interleave>
-            <optional>
-                <element name="baseurl">
-                    <data type="string"/>
-                </element>
-            </optional>
+                <choice>
+                    <optional>
+                        <element name="baseurl">
+                            <data type="string"/>
+                        </element>
+                    </optional>
+                    <interleave>
+                        <optional>
+                            <element name="host">
+                                <data type="string"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="port">
+                                <data type="string"/>
+                            </element>
+                        </optional>
+                    </interleave>
+                </choice>
             <zeroOrMore>
                 <choice>
                     <element name="networkCode">

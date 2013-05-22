@@ -58,6 +58,10 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
     
     public FdsnEvent(Element config) throws ConfigurationException {
         super(config, "DefaultFDSNEvent");
+        int port = SodUtil.loadInt(config, "port", -1);
+        if (port > 0) {
+            queryParams.setPort(port);
+        }
         NodeList childNodes = config.getChildNodes();
         for(int counter = 0; counter < childNodes.getLength(); counter++) {
             Node node = childNodes.item(counter);
@@ -132,6 +136,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         } else {
             refreshInterval = new TimeInterval(1, UnitImpl.FORTNIGHT);
         }
+        int port = 
     }
 
     @Override
@@ -333,6 +338,8 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
     private MicroSecondDate lastQueryEnd;
 
     String url;
+    
+    int port = -1;
     
     URI parsedURL;
     

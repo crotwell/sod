@@ -112,15 +112,29 @@
                 </xsd:documentation>
             </xsd:annotation>
             <interleave>
-                <optional>
-                    <element name="baseurl">
-                        <xsd:annotation>
-                          <summary>A FDSN Event web service URL</summary>
-                          <description>A url to a FDSN event web service.</description>
-                         </xsd:annotation>
-                        <data type="string"/>
-                    </element>
-                </optional>
+                <choice>
+                    <optional>
+                        <element name="baseurl">
+                            <xsd:annotation>
+                              <summary>A FDSN Event web service URL</summary>
+                              <description>A url to a FDSN event web service.</description>
+                            </xsd:annotation>
+                            <data type="string"/>
+                        </element>
+                    </optional>
+                    <interleave>
+                        <optional>
+                            <element name="host">
+                                <data type="string"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="port">
+                                <data type="string"/>
+                            </element>
+                        </optional>
+                    </interleave>
+                </choice>
                 <optional>
                     <choice>
                        <ref name="globalArea"/>

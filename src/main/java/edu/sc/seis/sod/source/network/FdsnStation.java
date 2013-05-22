@@ -55,6 +55,10 @@ public class FdsnStation extends AbstractNetworkSource {
         super(config);
         if (config != null) {
             // otherwise just use defaults
+            int port = SodUtil.loadInt(config, "port", -1);
+            if (port > 0) {
+                queryParams.setPort(port);
+            }
             NodeList childNodes = config.getChildNodes();
             for (int counter = 0; counter < childNodes.getLength(); counter++) {
                 Node node = childNodes.item(counter);
@@ -76,7 +80,9 @@ public class FdsnStation extends AbstractNetworkSource {
                     } else if (element.getTagName().equals("channelCode")) {
                         queryParams.appendToChannel(SodUtil.getNestedText(element));
                     } else if (element.getTagName().equals("host")) {
-                        queryParams.setHost(SodUtil.getNestedText(element));
+                        String host = SodUtil.getNestedText(element);
+                        queryParams.setHost(host);
+                        this.name = host;
                     }
                 }
             }
@@ -98,8 +104,7 @@ public class FdsnStation extends AbstractNetworkSource {
         try {
             FDSNStationQueryParams staQP = setupQueryParams();
             staQP.setLevel(FDSNStationQueryParams.LEVEL_NETWORK);
-            FDSNStationQuerier querier = new FDSNStationQuerier(staQP);
-            querier.setUserAgent("SOD/"+BuildVersion.getVersion());
+            FDSNStationQuerier querier = setupQuerier(staQP);
             FDSNStationXML staxml = querier.getFDSNStationXML();
             List<NetworkAttrImpl> out = new ArrayList<NetworkAttrImpl>();
             NetworkIterator netIt = staxml.getNetworks();
@@ -120,8 +125,7 @@ public class FdsnStation extends AbstractNetworkSource {
             staQP.setLevel(FDSNStationQueryParams.LEVEL_STATION);
             staQP.clearNetwork();
             staQP.appendToNetwork(net.network_code);
-            FDSNStationQuerier querier = new FDSNStationQuerier(staQP);
-            querier.setUserAgent("SOD/"+BuildVersion.getVersion());
+            FDSNStationQuerier querier = setupQuerier(staQP);
             FDSNStationXML staxml = querier.getFDSNStationXML();
             List<StationImpl> out = new ArrayList<StationImpl>();
             NetworkIterator netIt = staxml.getNetworks();
@@ -153,8 +157,7 @@ public class FdsnStation extends AbstractNetworkSource {
                     .appendToNetwork(stationId.network_id.network_code)
                     .clearStation()
                     .appendToStation(stationId.station_code);
-            FDSNStationQuerier querier = new FDSNStationQuerier(staQP);
-            querier.setUserAgent("SOD/"+BuildVersion.getVersion());
+            FDSNStationQuerier querier = setupQuerier(staQP);
             FDSNStationXML staxml = querier.getFDSNStationXML();
             List<ChannelImpl> out = new ArrayList<ChannelImpl>();
             NetworkIterator netIt = staxml.getNetworks();
@@ -210,8 +213,7 @@ public class FdsnStation extends AbstractNetworkSource {
                                                                          // before
                                                                          // or
                                                                          // on
-            FDSNStationQuerier querier = new FDSNStationQuerier(staQP);
-            querier.setUserAgent("SOD/"+BuildVersion.getVersion());
+            FDSNStationQuerier querier = setupQuerier(staQP);
             FDSNStationXML staxml = querier.getFDSNStationXML();
             List<ChannelImpl> out = new ArrayList<ChannelImpl>();
             NetworkIterator netIt = staxml.getNetworks();
@@ -267,7 +269,15 @@ public class FdsnStation extends AbstractNetworkSource {
         return cloneQP;
     }
     
+    FDSNStationQuerier setupQuerier(FDSNStationQueryParams queryParams) {
+        FDSNStationQuerier querier = new FDSNStationQuerier(queryParams);
+        querier.setUserAgent("SOD/"+BuildVersion.getVersion());
+        return querier;
+    }
+    
     HashMap<String, QuantityImpl> chanSensitivityMap = new HashMap<String, QuantityImpl>();
 
     FDSNStationQueryParams queryParams = new FDSNStationQueryParams();
+    
+    int port = -1;
 }
