@@ -136,7 +136,6 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         } else {
             refreshInterval = new TimeInterval(1, UnitImpl.FORTNIGHT);
         }
-        int port = 
     }
 
     @Override
