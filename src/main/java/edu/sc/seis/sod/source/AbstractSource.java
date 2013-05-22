@@ -39,7 +39,7 @@ public abstract class AbstractSource implements Source{
         return CommonAccess.getNameService();
     }
     
-    private String name;
+    protected String name;
 
     private int retries = -1;
     
