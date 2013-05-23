@@ -199,11 +199,6 @@
                     </element>
                 </optional>
                 <optional>
-                    <element name="baseurl">
-                        <data type="string"/>
-                    </element>
-                </optional>
-                <optional>
                     <element name="user">
                         <data type="string"/>
                     </element>
