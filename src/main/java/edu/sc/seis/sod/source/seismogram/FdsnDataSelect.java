@@ -23,6 +23,7 @@ import edu.sc.seis.seisFile.fdsnws.FDSNDataSelectQuerier;
 import edu.sc.seis.seisFile.fdsnws.FDSNDataSelectQueryParams;
 import edu.sc.seis.seisFile.mseed.DataRecord;
 import edu.sc.seis.seisFile.mseed.DataRecordIterator;
+import edu.sc.seis.sod.BuildVersion;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 
@@ -95,6 +96,7 @@ public class FdsnDataSelect implements SeismogramSourceLocator {
                     if (username.length() != 0 && password.length() != 0) {
                         querier.enableRestrictedData(username, password);
                     }
+                    querier.setUserAgent("SOD/"+BuildVersion.getVersion());
                     List<DataRecord> drList = new ArrayList<DataRecord>();
                     try {
                     DataRecordIterator drIt = querier.getDataRecordIterator();
