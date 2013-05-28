@@ -42,9 +42,11 @@ public class RefreshNetworkArm extends TimerTask {
                 // maybe previous update has not yet finished, only reload nets
                 // not already in list???
                 for (NetworkAttrImpl net : nets) {
+                    System.out.println("Successful net: "+NetworkIdUtil.toString(net));
                     if (!isNetworkBeingReloaded(net.getDbid())) {
                         networksBeingReloaded.add(new Integer(net.getDbid()));
                         needReload.add(net);
+                        logger.debug("Will Reload "+NetworkIdUtil.toString(net));
                     } else {
                         logger.info("net already in processing list, skipping..."+NetworkIdUtil.toString(net));
                     }

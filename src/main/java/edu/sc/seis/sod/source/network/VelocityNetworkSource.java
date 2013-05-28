@@ -34,7 +34,7 @@ public class VelocityNetworkSource extends WrappingNetworkSource implements Netw
     }
 
     @Override
-    public List<? extends StationImpl> getStations(NetworkId net) {
+    public List<? extends StationImpl> getStations(NetworkAttrImpl net) {
         return VelocityStation.wrapList(getWrapped().getStations(net));
     }
 }

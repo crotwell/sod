@@ -97,7 +97,7 @@ public class CombineNetworkSource implements NetworkSource {
     }
 
     @Override
-    public List<? extends StationImpl> getStations(NetworkId net) {
+    public List<? extends StationImpl> getStations(NetworkAttrImpl net) {
         NetworkSource source = getSourceForCode(NetworkIdUtil.toStringNoDates(net));
         if (source != null) {
             return source.getStations(net);

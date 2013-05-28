@@ -48,7 +48,7 @@ public abstract class WrappingNetworkSource implements NetworkSource {
     }
 
     @Override
-    public List<? extends StationImpl> getStations(NetworkId net) {
+    public List<? extends StationImpl> getStations(NetworkAttrImpl net) {
         return getWrapped().getStations(net);
     }
 

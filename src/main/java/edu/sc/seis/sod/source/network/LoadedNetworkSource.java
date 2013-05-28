@@ -11,6 +11,7 @@ import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
+import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.iris.Fissures.network.StationImpl;
@@ -51,8 +52,8 @@ public class LoadedNetworkSource extends WrappingNetworkSource implements Networ
     }
 
     @Override
-    public List<? extends StationImpl> getStations(NetworkId net) {
-        if (NetworkIdUtil.areEqual(net, sta.getNetworkAttr().getId())) {
+    public List<? extends StationImpl> getStations(NetworkAttrImpl net) {
+        if (NetworkIdUtil.areEqual(net.getId(), sta.getNetworkAttr().getId())) {
             return allStations;
         }
         return getWrapped().getStations(net);

@@ -26,7 +26,7 @@ public interface NetworkSource extends Source {
 
     public List<? extends NetworkAttrImpl> getNetworks();
 
-    public List<? extends StationImpl> getStations(NetworkId net);
+    public List<? extends StationImpl> getStations(NetworkAttrImpl net);
 
     public List<? extends ChannelImpl> getChannels(StationImpl station);
 

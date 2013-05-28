@@ -26,6 +26,7 @@ import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
+import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
 import edu.sc.seis.fissuresUtil.stationxml.ChannelSensitivityBundle;
 import edu.sc.seis.fissuresUtil.stationxml.StationXMLToFissures;
@@ -104,6 +105,7 @@ public class FdsnStation extends AbstractNetworkSource {
         try {
             FDSNStationQueryParams staQP = setupQueryParams();
             staQP.setLevel(FDSNStationQueryParams.LEVEL_NETWORK);
+            staQP.clearChannel(); // channel constraints make getting networks very slow
             FDSNStationQuerier querier = setupQuerier(staQP);
             FDSNStationXML staxml = querier.getFDSNStationXML();
             List<NetworkAttrImpl> out = new ArrayList<NetworkAttrImpl>();
@@ -119,12 +121,17 @@ public class FdsnStation extends AbstractNetworkSource {
     }
 
     @Override
-    public List<? extends StationImpl> getStations(NetworkId net) {
+    public List<? extends StationImpl> getStations(NetworkAttrImpl net) {
         try {
             FDSNStationQueryParams staQP = setupQueryParams();
             staQP.setLevel(FDSNStationQueryParams.LEVEL_STATION);
             staQP.clearNetwork();
-            staQP.appendToNetwork(net.network_code);
+            staQP.appendToNetwork(net.getId().network_code);
+            staQP.setStartAfter(new MicroSecondDate(net.getBeginTime()));
+            MicroSecondDate end = new MicroSecondDate(net.getEndTime());
+            if (end.before(ClockUtil.now())) {
+                staQP.setEndBefore(end);
+            }
             FDSNStationQuerier querier = setupQuerier(staQP);
             FDSNStationXML staxml = querier.getFDSNStationXML();
             List<StationImpl> out = new ArrayList<StationImpl>();

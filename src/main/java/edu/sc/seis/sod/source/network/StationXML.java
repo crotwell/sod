@@ -145,7 +145,7 @@ public class StationXML implements NetworkSource {
         return Collections.unmodifiableList(networks);
     }
 
-    public List<? extends StationImpl> getStations(NetworkId net) {
+    public List<? extends StationImpl> getStations(NetworkAttrImpl net) {
         checkChansLoaded(NetworkIdUtil.toStringNoDates(net));
         List<StationChannelBundle> bundles = staChanMap.get(NetworkIdUtil.toStringNoDates(net));
         List<StationImpl> out = new ArrayList<StationImpl>();

@@ -366,7 +366,7 @@ public class NetworkArm implements Arm {
                     + net.getName());
             ArrayList<Station> arrayList = new ArrayList<Station>();
             try {
-                List<? extends StationImpl> stations = getInternalNetworkSource().getStations(netAttr.getId());
+                List<? extends StationImpl> stations = getInternalNetworkSource().getStations(netAttr);
                 /*
                  // network consistency for TA take a really long time due to pairwise comparison.
                 if( ! NetworkConsistencyCheck.isConsistent(stations)) {

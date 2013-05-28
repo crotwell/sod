@@ -77,9 +77,9 @@ public class MockNetworkSource implements NetworkSource {
     }
 
     @Override
-    public List<? extends StationImpl> getStations(NetworkId net) {
+    public List<? extends StationImpl> getStations(NetworkAttrImpl net) {
         for (int i = 0; i < nets.length; i++) {
-            if (NetworkIdUtil.areEqual(nets[i].get_attributes().getId(), net)) {
+            if (NetworkIdUtil.areEqual(nets[i].get_attributes().getId(), net.getId())) {
                 return Arrays.asList((StationImpl[])nets[i].retrieve_stations());
             }
         }

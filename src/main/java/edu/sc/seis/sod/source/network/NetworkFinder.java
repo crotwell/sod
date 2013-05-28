@@ -147,7 +147,7 @@ public class NetworkFinder extends AbstractNetworkSource {
     }
 
     @Override
-    public List<StationImpl> getStations(NetworkId netId) {
+    public List<StationImpl> getStations(NetworkAttrImpl netId) {
         CacheNetworkAccess net = getNetwork(netId);
         StationImpl[] stations = StationImpl.implize(net.retrieve_stations());
         List<StationImpl> out = new ArrayList<StationImpl>(stations.length);
