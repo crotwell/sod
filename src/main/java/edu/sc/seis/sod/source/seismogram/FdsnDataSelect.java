@@ -93,7 +93,7 @@ public class FdsnDataSelect implements SeismogramSourceLocator {
                                                                new MicroSecondDate(rf.end_time)));
                     }
                     FDSNDataSelectQuerier querier = new FDSNDataSelectQuerier(queryParams, queryRequest);
-                    if (username.length() != 0 && password.length() != 0) {
+                    if (username != null && username.length() != 0 && password != null && password.length() != 0) {
                         querier.enableRestrictedData(username, password);
                     }
                     querier.setUserAgent("SOD/"+BuildVersion.getVersion());
