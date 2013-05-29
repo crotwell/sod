@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
@@ -15,12 +16,14 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.StationImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.mockFissures.IfEvent.MockEventAccessOperations;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannel;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockStation;
+import edu.sc.seis.fissuresUtil.mockFissures.IfSeismogramDC.MockSeismogram;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.UserConfigurationException;
@@ -29,6 +32,7 @@ import edu.sc.seis.sod.velocity.event.VelocityEvent;
 import edu.sc.seis.sod.velocity.network.VelocityChannel;
 import edu.sc.seis.sod.velocity.network.VelocityNetwork;
 import edu.sc.seis.sod.velocity.network.VelocityStation;
+import edu.sc.seis.sod.velocity.seismogram.VelocitySeismogram;
 
 /**
  * Handles getting stuff in the context and directing output to System.out or a
@@ -46,10 +50,13 @@ public class PrintlineVelocitizer {
     public PrintlineVelocitizer(String[] strings) throws ConfigurationException {
         VelocityContext context = new VelocityContext();
         context.put("event", new VelocityEvent(MockEventAccessOperations.createEvent()));
-        context.put("channel", new VelocityChannel(MockChannel.createChannel()));
+        ChannelImpl chan = MockChannel.createChannel();
+        context.put("channel", new VelocityChannel(chan));
         context.put("station", new VelocityStation(MockStation.createStation()));
         context.put("net", new VelocityNetwork((NetworkAttrImpl)MockChannel.createChannel().getNetworkAttr()));
-        context.put("seismograms", new ArrayList<LocalSeismogramImpl>());
+        List<LocalSeismogramImpl> seisList = new ArrayList<LocalSeismogramImpl>();
+        seisList.add(new VelocitySeismogram(MockSeismogram.createSpike(chan.getId()), chan));
+        context.put("seismograms", seisList);
         context.put("index", new Integer(1));
         for(int i = 0; i < strings.length; i++) {
             try {
