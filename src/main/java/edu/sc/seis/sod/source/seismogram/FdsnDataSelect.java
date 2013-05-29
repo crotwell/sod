@@ -21,6 +21,7 @@ import edu.sc.seis.seisFile.ChannelTimeWindow;
 import edu.sc.seis.seisFile.SeisFileException;
 import edu.sc.seis.seisFile.fdsnws.FDSNDataSelectQuerier;
 import edu.sc.seis.seisFile.fdsnws.FDSNDataSelectQueryParams;
+import edu.sc.seis.seisFile.fdsnws.FDSNWSException;
 import edu.sc.seis.seisFile.mseed.DataRecord;
 import edu.sc.seis.seisFile.mseed.DataRecordIterator;
 import edu.sc.seis.sod.BuildVersion;
@@ -118,6 +119,12 @@ public class FdsnDataSelect implements SeismogramSourceLocator {
                     out.addAll(perRFList);
                     } catch(FissuresException e) {
                         throw new SeismogramSourceException(e);
+                    } catch(FDSNWSException e) {
+                        if (querier.getResponseCode() == 401 || querier.getResponseCode() == 403) {
+                            throw new SeismogramAuthorizationException("Authorization failure to "+e.getTargetURI());
+                        } else {
+                            throw new SeismogramSourceException(e);
+                        }
                     } catch(SeisFileException e) {
                         throw new SeismogramSourceException(e);
                     } catch(IOException e) {
