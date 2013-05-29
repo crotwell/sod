@@ -301,11 +301,8 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         FDSNEventQueryParams timeWindowQueryParams = queryParams.clone();
         MicroSecondDate now = ClockUtil.now();
         MicroSecondTimeRange queryTime = getQueryTime();
-        System.out.println("query time: "+queryTime);
         timeWindowQueryParams.setStartTime(queryTime.getBeginTime());
         timeWindowQueryParams.setEndTime(queryTime.getEndTime());
-        System.out.println("query params: "+timeWindowQueryParams.getParam(FDSNEventQueryParams.STARTTIME)
-                           +" "+timeWindowQueryParams.getParam(FDSNEventQueryParams.ENDTIME));
         if (caughtUpWithRealtime() && lastQueryEnd != null) {
             timeWindowQueryParams.setUpdatedAfter(lastQueryEnd);
         }
