@@ -121,7 +121,7 @@ public class FdsnDataSelect implements SeismogramSourceLocator {
                         throw new SeismogramSourceException(e);
                     } catch(FDSNWSException e) {
                         if (querier.getResponseCode() == 401 || querier.getResponseCode() == 403) {
-                            throw new SeismogramAuthorizationException("Authorization failure to "+e.getTargetURI());
+                            throw new SeismogramAuthorizationException("Authorization failure to "+e.getTargetURI(), e);
                         } else {
                             throw new SeismogramSourceException(e);
                         }
