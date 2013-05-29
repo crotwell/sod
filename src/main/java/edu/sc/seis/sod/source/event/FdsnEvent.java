@@ -131,11 +131,6 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                 }
             }
         }
-        if(DOMHelper.hasElement(config, AbstractNetworkSource.REFRESH_ELEMENT)) {
-            refreshInterval = SodUtil.loadTimeInterval(SodUtil.getElement(config, AbstractNetworkSource.REFRESH_ELEMENT));
-        } else {
-            refreshInterval = new TimeInterval(1, UnitImpl.FORTNIGHT);
-        }
     }
 
     @Override
@@ -166,24 +161,17 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                 out.add(toCacheEvent(e));
             }
 
-            if ( out.size() < 10) {
-                increaseQueryTimeWidth();
-            }
-            if ( out.size() > 100) {
-                decreaseQueryTimeWidth();
+            if (! caughtUpWithRealtime()) {
+                if ( out.size() < 10) {
+                    increaseQueryTimeWidth();
+                }
+                if ( out.size() > 100) {
+                    decreaseQueryTimeWidth();
+                }
             }
             return out.toArray(new CacheEvent[0]);
         } catch(Exception e) {
             throw new RuntimeException(e); // ToDo: fix this
-        }
-    }
-
-    @Override
-    public TimeInterval getWaitBeforeNext() {
-        if (queryTime == null) {
-            return new TimeInterval(0, UnitImpl.SECOND);
-        } else {
-            return queryTime.add(refreshInterval).subtract(ClockUtil.now());
         }
     }
 
@@ -313,8 +301,11 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         FDSNEventQueryParams timeWindowQueryParams = queryParams.clone();
         MicroSecondDate now = ClockUtil.now();
         MicroSecondTimeRange queryTime = getQueryTime();
+        System.out.println("query time: "+queryTime);
         timeWindowQueryParams.setStartTime(queryTime.getBeginTime());
         timeWindowQueryParams.setEndTime(queryTime.getEndTime());
+        System.out.println("query params: "+timeWindowQueryParams.getParam(FDSNEventQueryParams.STARTTIME)
+                           +" "+timeWindowQueryParams.getParam(FDSNEventQueryParams.ENDTIME));
         if (caughtUpWithRealtime() && lastQueryEnd != null) {
             timeWindowQueryParams.setUpdatedAfter(lastQueryEnd);
         }
@@ -322,7 +313,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         querier.setUserAgent("SOD/" + BuildVersion.getVersion());
         if (caughtUpWithRealtime() && hasNext()) {
             sleepUntilTime = now.add(refreshInterval);
-            logger.debug("set sleepUntilTime " + sleepUntilTime);
+            logger.debug("set sleepUntilTime " + sleepUntilTime+"  refresh="+refreshInterval);
             resetQueryTimeForLag();
             lastQueryEnd = now;
         }
@@ -341,8 +332,6 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
     int port = -1;
     
     URI parsedURL;
-    
-    MicroSecondDate queryTime;
     
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(FdsnEvent.class);
     
