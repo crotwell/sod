@@ -43,7 +43,6 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
             return new WaveformVectorResult(false, mergeResult.getSeismograms(), new StringTreeBranch(this, false, mergeResult.getReason()));
         }
         seismograms = mergeResult.getSeismograms();
-        System.out.println("merge   "+seismograms[0][0].getChannelID().channel_code+seismograms[0][0].getNumPoints()+" "+seismograms[1][0].getNumPoints()+" "+seismograms[2][0].getNumPoints()+" ");
         
         if (seismograms[0].length != seismograms[1].length || seismograms[0].length != seismograms[2].length) {
             return new WaveformVectorResult(seismograms,
@@ -76,9 +75,7 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
     public LocalSeismogramImpl[][] trim(LocalSeismogramImpl[][] vector)
             throws FissuresException {
         if(normalizeSampling(vector)) {
-            System.out.println("norm   "+vector[0][0].getChannelID().channel_code+vector[0][0].getNumPoints()+" "+vector[1][0].getNumPoints()+" "+vector[2][0].getNumPoints()+" ");
             LocalSeismogramImpl[][] cutSeis = cutVector(vector, findSmallestCoveringCuts(vector));
-            System.out.println("cut   "+cutSeis[0][0].getChannelID().channel_code+cutSeis[0][0].getNumPoints()+" "+cutSeis[1][0].getNumPoints()+" "+cutSeis[2][0].getNumPoints()+" ");
             // check time alignment
             LocalSeismogramImpl[][] out = new LocalSeismogramImpl[3][cutSeis[0].length];
             for (int i = 0; i < cutSeis[0].length; i++) {
@@ -86,7 +83,6 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
                 out[1][i] = alignTimes(cutSeis[0][i], cutSeis[1][i]);
                 out[2][i] = alignTimes(cutSeis[0][i], cutSeis[2][i]);
             }
-            System.out.println("alignTimes   "+out[0][0].getChannelID().channel_code+out[0][0].getNumPoints()+" "+out[1][0].getNumPoints()+" "+out[2][0].getNumPoints()+" ");
             return out;
         } else {
             throw new IllegalArgumentException("Unable to normalize samplings on seismograms in vector.  These can not be trimmed to the same length");
@@ -95,8 +91,6 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
     
     public static LocalSeismogramImpl alignTimes(LocalSeismogramImpl main, LocalSeismogramImpl shifty) throws FissuresException {
         shifty = SampleSyncronize.alignTimes(main, shifty);
-        System.out.println("main   "+main.getChannelID().channel_code+main.getNumPoints()+" "+main.getBeginTime()+" "+main.getBeginTime().getMicroSecondTime()+" "+main.getSampling());
-        System.out.println("shifty "+shifty.getChannelID().channel_code+shifty.getNumPoints()+" "+shifty.getBeginTime()+" "+shifty.getBeginTime().getMicroSecondTime()+" "+shifty.getSampling());
         if (shifty.getNumPoints() == main.getNumPoints() +1) {
             // looks like we are long by one
             if (shifty.getBeginTime().difference(main.getBeginTime()).lessThan(shifty.getBeginTime().add(shifty.getSampling().getPeriod()).difference(main.getBeginTime()))) {
@@ -107,8 +101,6 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
                 shifty = Cut.cut(shifty, 1, shifty.getNumPoints()-1); //cut by index inclusive, so -1 to not trim end
             }
         }
-        System.out.println("cut main   "+main.getNumPoints()+" "+main.getBeginTime());
-        System.out.println("cut shifty "+shifty.getNumPoints()+" "+shifty.getBeginTime());
         if (shifty.getNumPoints() == main.getNumPoints()) {
             shifty.begin_time = main.begin_time; // just make sure we are lined up
             return shifty;
@@ -128,7 +120,6 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
             for(int j = 0; j < vector[i].length; j++) {
                 for(int k = 0; k < c.length; k++) {
                     LocalSeismogramImpl cutSeis = c[k].apply(vector[i][j]);
-                    System.out.println("incut "+k+"  "+cutSeis.getChannelID().channel_code+" "+vector[i][j].getBeginTime().getMicroSecondTime() +" "+vector[i][j].getNumPoints()+" "+cutSeis.getNumPoints()+" "+c[k].getBegin()+" "+c[k].getEnd());
                     if(cutSeis != null) {
                         iResults.add(cutSeis);
                     }
