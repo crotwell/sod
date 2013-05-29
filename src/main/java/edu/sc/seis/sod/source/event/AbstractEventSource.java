@@ -58,9 +58,6 @@ public abstract class AbstractEventSource extends AbstractSource implements Even
 
 
     protected boolean caughtUpWithRealtime() {
-        System.out.println("caughtUpWithRealtime "+ ClockUtil.now().subtract(refreshInterval).before(getQueryStart())
-                + getQueryStart().add(new TimeInterval(10, UnitImpl.SECOND)).after(getEventTimeRange().getEndTime()));
-
         return ClockUtil.now().subtract(refreshInterval).before(getQueryStart())
                 || getQueryStart().add(new TimeInterval(10, UnitImpl.SECOND)).after(getEventTimeRange().getEndTime());
     }
