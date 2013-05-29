@@ -160,6 +160,15 @@
                 <zeroOrMore>
                     <ref name="contributor"/>
                 </zeroOrMore>
+                <optional>
+                    <ref name="eventQueryIncrement"/>
+                </optional>
+                <optional>
+                    <ref name="eventRefreshInterval"/>
+                </optional>
+                <optional>
+                    <ref name="eventLag"/>
+                </optional>
             </interleave>
         </element>
     </define>
