@@ -42,7 +42,7 @@ public abstract class AbstractEventSource extends AbstractSource implements Even
         if(DOMHelper.hasElement(config, AbstractEventSource.EVENT_LAG)) {
             lag = SodUtil.loadTimeInterval(SodUtil.getElement(config, AbstractEventSource.EVENT_LAG));
         } else {
-            lag = Start.getRunProps().getEventQueryIncrement();
+            lag = Start.getRunProps().getEventLag();
         }
     }
 
@@ -140,6 +140,21 @@ public abstract class AbstractEventSource extends AbstractSource implements Even
         setQueryEdge(queryTime.getEndTime());
     }
     
+    
+    public MicroSecondDate getSleepUntilTime() {
+        return sleepUntilTime;
+    }
+
+    
+    public TimeInterval getLag() {
+        return lag;
+    }
+
+    
+    public TimeInterval getRefreshInterval() {
+        return refreshInterval;
+    }
+
     public static final String NO_DNS = "NO_DNS";
 
     protected MicroSecondDate sleepUntilTime = null;
