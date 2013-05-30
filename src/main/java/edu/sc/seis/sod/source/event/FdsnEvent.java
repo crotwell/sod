@@ -58,6 +58,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
     
     public FdsnEvent(Element config) throws ConfigurationException {
         super(config, "DefaultFDSNEvent");
+        queryParams.setOrderBy(FDSNEventQueryParams.ORDER_TIME_ASC); // fdsnEvent default is reverse time
         int port = SodUtil.loadInt(config, "port", -1);
         if (port > 0) {
             queryParams.setPort(port);
