@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sod>
     <eventArm>
-        <eventFinder>
-            <name>IRIS_EventDC</name>
-            <dns>edu/iris/dmc</dns>
+        <fdsnEvent>
             <originTimeRange>
                 <startTime>
                     <year>2011</year>
@@ -19,8 +17,8 @@
             <magnitudeRange>
                 <min>5</min>
             </magnitudeRange>
-            <catalog>WHDF</catalog>
-        </eventFinder>
+            <catalog>NEIC PDE</catalog>
+        </fdsnEvent>
         <originOR>
             <originAND>
                 <magnitudeRange>
@@ -39,8 +37,9 @@
         <printlineEventProcess/>
     </eventArm>
     <networkArm>
-<stationXML><url>http://www.iris.edu/ws/station/query?net=CO&amp;chan=HH*</url></stationXML>
+        <fdsnStation></fdsnStation>
         <networkCode>CO</networkCode>
+        <channelCode>HH?</channelCode>
         <sacPoleZeroWriter/>
         <responseWriter/>
         <printlineChannelProcess/>
@@ -59,7 +58,7 @@
                 <value>360</value>
             </endOffset>
         </phaseRequest>
-        <dataSelectWebService/>
+        <fdsnDataSelect/>
         <someCoverage/>
         <merge/>
         <printlineSeismogramProcess/>

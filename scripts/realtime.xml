@@ -7,9 +7,7 @@
         </seismogramLatency>
     </properties>
     <eventArm>
-        <eventFinder>
-            <name>IRIS_EventDC</name>
-            <dns>edu/iris/dmc</dns>
+        <fdsnEvent>
             <originTimeRange>
                 <startTime>
                     <earlier>
@@ -27,15 +25,13 @@
             <magnitudeRange>
                 <min>3</min>
             </magnitudeRange>
-            <catalog>PREF</catalog>
-        </eventFinder>
+            <catalog>NEIC PDE</catalog>
+        </fdsnEvent>
         <printlineEventProcess/>
     </eventArm>
     <networkArm>
-        <networkFinder>
-            <name>IRIS_NetworkDC</name>
-            <dns>edu/iris/dmc</dns>
-        </networkFinder>
+        <fdsnStation>
+        </fdsnStation>
         <networkCode>II</networkCode>
         <bandCode>B</bandCode>
         <printlineChannelProcess/>
@@ -59,10 +55,7 @@
                 <value>360</value>
             </endOffset>
         </phaseRequest>
-        <fixedDataCenter>
-            <name>IRIS_BudDataCenter</name>
-            <dns>edu/iris/dmc</dns>
-        </fixedDataCenter>
+        <fdsnDataSelect/>
         <availableDataAND>
             <availableDataOR>
                 <fullCoverage/>

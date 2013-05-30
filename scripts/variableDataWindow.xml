@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sod>
     <eventArm>
-        <eventFinder>
-            <name>IRIS_EventDC</name>
-            <dns>edu/iris/dmc</dns>
+        <fdsnEvent>
             <boxArea>
                 <latitudeRange>
                     <min>46</min>
@@ -31,15 +29,12 @@
             <magnitudeRange>
                 <min>3</min>
             </magnitudeRange>
-            <catalog>PREF</catalog>
-        </eventFinder>
+            <catalog>NEIC PDE</catalog>
+        </fdsnEvent>
         <printlineEventProcess/>
     </eventArm>
     <networkArm>
-        <networkFinder>
-            <name>IRIS_NetworkDC</name>
-            <dns>edu/iris/dmc</dns>
-        </networkFinder>
+        <fdsnStation/>
         <stationOR>
             <stationPointDistance>
                 <!-- Minnesota -->
@@ -138,10 +133,7 @@
                 </phaseRequest>
             </otherwise>
         </choiceRequest>
-        <fixedDataCenter>
-            <name>IRIS_BUDDataCenter</name>
-            <dns>edu/iris/dmc</dns>
-        </fixedDataCenter>
+        <fdsnDataSelect/>
         <someCoverage/>
         <printlineSeismogramProcess/>
         <mseedWriter/>

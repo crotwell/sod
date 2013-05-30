@@ -4,9 +4,7 @@
         <runName>BREQFast Test Run</runName>
     </properties>
     <eventArm>
-        <eventFinder>
-            <name>IRIS_EventDC</name>
-            <dns>edu/iris/dmc</dns>
+        <fdsnEvent>
             <boxArea>
                 <latitudeRange>
                     <min>-90</min>
@@ -30,20 +28,18 @@
                 <min>6.0</min>
                 <max>10.0</max>
             </magnitudeRange>
-            <catalog>PREF</catalog>
-        </eventFinder>
+            <catalog>NEIC PDE</catalog>
+        </fdsnEvent>
         <removeEventDuplicate/>
         <printlineEventProcess/>
     </eventArm>
     <networkArm>
-        <networkFinder>
-            <name>IRIS_NetworkDC</name>
-            <dns>edu/iris/dmc</dns>
+        <fdsnStation>
             <refreshInterval>
                 <unit>DAY</unit>
                 <value>2</value>
             </refreshInterval>
-        </networkFinder>
+        </fdsnStation>
         <networkCode>II</networkCode>
         <channelAND>
             <channelOR>
