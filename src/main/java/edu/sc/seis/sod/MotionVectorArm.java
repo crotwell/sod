@@ -1,5 +1,6 @@
 package edu.sc.seis.sod;
 
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -477,6 +478,10 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                t.printStackTrace(System.err);
                logger.error("", t);
            } else if (t instanceof org.omg.CORBA.SystemException) {
+               // don't log exception here, let RetryStragtegy do it
+               ecp.update(Status.get(stage, Standing.CORBA_FAILURE));
+           } else if (t instanceof SeismogramSourceException && t.getCause() != null && t.getCause() instanceof SocketTimeoutException) {
+               // treat just like CORBA SystemException so it is retried later
                // don't log exception here, let RetryStragtegy do it
                ecp.update(Status.get(stage, Standing.CORBA_FAILURE));
            } else if (t instanceof SeismogramAuthorizationException) {

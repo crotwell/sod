@@ -2,6 +2,7 @@ package edu.sc.seis.sod.source.seismogram;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,14 +34,16 @@ public class FdsnDataSelect implements SeismogramSourceLocator {
     private String host = FDSNDataSelectQueryParams.IRIS_HOST;
 
     private int port = -1;
-    
+
     private int timeoutMillis = 30 * 1000;
 
     private boolean doBulk = false;
 
     private String username;
-    
+
     private String password;
+
+    int maxRetries = 3;
 
     public FdsnDataSelect() {
         host = FDSNDataSelectQueryParams.IRIS_HOST;
@@ -93,17 +96,8 @@ public class FdsnDataSelect implements SeismogramSourceLocator {
                                                                new MicroSecondDate(rf.start_time),
                                                                new MicroSecondDate(rf.end_time)));
                     }
-                    FDSNDataSelectQuerier querier = new FDSNDataSelectQuerier(queryParams, queryRequest);
-                    if (username != null && username.length() != 0 && password != null && password.length() != 0) {
-                        querier.enableRestrictedData(username, password);
-                    }
-                    querier.setUserAgent("SOD/"+BuildVersion.getVersion());
-                    List<DataRecord> drList = new ArrayList<DataRecord>();
+                    List<DataRecord> drList = retrieveData(queryParams, queryRequest, maxRetries);
                     try {
-                    DataRecordIterator drIt = querier.getDataRecordIterator();
-                    while (drIt.hasNext()) {
-                        drList.add(drIt.next());
-                    }
                     List<LocalSeismogramImpl> perRFList = FissuresConvert.toFissures(drList);
                     for (LocalSeismogramImpl seis : perRFList) {
                         // the DataRecords know nothing about channel or network
@@ -117,21 +111,50 @@ public class FdsnDataSelect implements SeismogramSourceLocator {
                         }
                     }
                     out.addAll(perRFList);
-                    } catch(FissuresException e) {
-                        throw new SeismogramSourceException(e);
-                    } catch(FDSNWSException e) {
-                        if (querier.getResponseCode() == 401 || querier.getResponseCode() == 403) {
-                            throw new SeismogramAuthorizationException("Authorization failure to "+e.getTargetURI(), e);
-                        } else {
-                            throw new SeismogramSourceException(e);
-                        }
                     } catch(SeisFileException e) {
                         throw new SeismogramSourceException(e);
-                    } catch(IOException e) {
+                    } catch (FissuresException e) {
                         throw new SeismogramSourceException(e);
                     }
                 }
                 return out;
+            }
+
+            public List<DataRecord> retrieveData(FDSNDataSelectQueryParams queryParams,
+                                                 List<ChannelTimeWindow> queryRequest,
+                                                 int tryCount) throws SeismogramSourceException {
+                List<DataRecord> drList = new ArrayList<DataRecord>();
+                FDSNDataSelectQuerier querier = new FDSNDataSelectQuerier(queryParams, queryRequest);
+                if (username != null && username.length() != 0 && password != null && password.length() != 0) {
+                    querier.enableRestrictedData(username, password);
+                }
+                querier.setUserAgent("SOD/" + BuildVersion.getVersion());
+                try {
+                    DataRecordIterator drIt = querier.getDataRecordIterator();
+                    while (drIt.hasNext()) {
+                        drList.add(drIt.next());
+                    }
+                } catch(FDSNWSException e) {
+                    if (querier.getResponseCode() == 401 || querier.getResponseCode() == 403) {
+                        throw new SeismogramAuthorizationException("Authorization failure to " + e.getTargetURI(), e);
+                    } else {
+                        throw new SeismogramSourceException(e);
+                    }
+                } catch(SeisFileException e) {
+                    throw new SeismogramSourceException(e);
+                } catch(SocketTimeoutException e) {
+                    tryCount--;
+                    System.out.println("*** TIMEOUT RETRY: "+tryCount+" left");
+                    if (tryCount > 0) {
+                        return retrieveData(queryParams, queryRequest, tryCount);
+                    } else {
+                        // not sure I like this...
+                        throw new SeismogramSourceException("Retries exceeded", e);
+                    }
+                } catch(IOException e) {
+                    throw new SeismogramSourceException(e);
+                }
+                return drList;
             }
         };
     }
