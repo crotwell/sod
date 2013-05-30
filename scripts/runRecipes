@@ -1,0 +1,13 @@
+rm logs/*  ; bin/sod  -p cwg.prop -q -f recipes/CMTReadySeismograms.xml ; echo CMTReadySeismograms.xml
+rm logs/*  ; bin/sod  -p cwg.prop -q -f recipes/ammonChannels.xml ; echo ammonChannels.xml
+rm logs/*  ; bin/sod  -p cwg.prop -q -f recipes/breqfast.xml ; echo breqfast.xml
+rm logs/*  ; bin/sod  -p cwg.prop -q -f recipes/dmcWebService.xml ; echo dmcWebService.xml
+rm logs/*  ; bin/sod  -p cwg.prop -q -f recipes/preferBroadband.xml ; echo preferBroadband.xml
+rm logs/*  ; bin/sod  -p cwg.prop -q -f recipes/realtime.xml ; echo realtime.xml
+rm logs/*  ; bin/sod  -p cwg.prop -q -f recipes/sAndSKSInTanzania.xml ; echo sAndSKSInTanzania.xml
+rm logs/*  ; bin/sod  -p cwg.prop -q -f recipes/southAmericanSacFiles.xml ; echo southAmericanSacFiles.xml
+rm logs/*  ; bin/sod  -p cwg.prop -q -f recipes/tutorial/waveform.xml ; echo tutorial/waveform.xml
+rm logs/*  ; bin/sod  -p cwg.prop -q -f recipes/variableDataWindow.xml ; echo variableDataWindow.xml
+rm logs/*  ; bin/sod  -p cwg.prop -q -f recipes/vector.xml ; echo vector.xml
+rm logs/*  ; bin/sod  -p cwg.prop -q -f recipes/weed.xml ; echo weed.xml
+rm logs/*  ; bin/sod  -p cwg.prop -q -f recipes/winston.xml ; echo winston.xml
