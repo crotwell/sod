@@ -19,7 +19,8 @@
             <magnitudeRange>
                 <min>5</min>
             </magnitudeRange>
-            <catalog>WHDF</catalog>
+            <catalog>NEIC PDE</catalog>
+            <contributor>NEIC PDE-M</contributor>
         </fdsnEvent>
         <originOR>
             <originAND>
