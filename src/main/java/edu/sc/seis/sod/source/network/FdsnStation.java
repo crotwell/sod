@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.source.network;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
+import edu.iris.Fissures.network.InstrumentationImpl;
 import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
@@ -39,6 +41,8 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.NetworkIterator;
 import edu.sc.seis.seisFile.fdsnws.stationxml.StationIterator;
 import edu.sc.seis.sod.BuildVersion;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.source.SodSourceException;
+import edu.sc.seis.sod.source.event.FdsnEvent;
 import edu.sc.seis.sod.subsetter.station.StationPointDistance;
 
 public class FdsnStation extends AbstractNetworkSource {
@@ -54,6 +58,7 @@ public class FdsnStation extends AbstractNetworkSource {
 
     public FdsnStation(Element config) throws Exception {
         super(config);
+        queryParams.setIncludeRestricted(false);
         if (config != null) {
             // otherwise just use defaults
             int port = SodUtil.loadInt(config, "port", -1);
@@ -80,6 +85,8 @@ public class FdsnStation extends AbstractNetworkSource {
                         queryParams.appendToLocation(SodUtil.getNestedText(element));
                     } else if (element.getTagName().equals("channelCode")) {
                         queryParams.appendToChannel(SodUtil.getNestedText(element));
+                    } else if (element.getTagName().equals("includeRestricted")) {
+                        queryParams.setIncludeRestricted(true);
                     } else if (element.getTagName().equals("host")) {
                         String host = SodUtil.getNestedText(element);
                         queryParams.setHost(host);
@@ -222,7 +229,6 @@ public class FdsnStation extends AbstractNetworkSource {
                                                                          // on
             FDSNStationQuerier querier = setupQuerier(staQP);
             FDSNStationXML staxml = querier.getFDSNStationXML();
-            List<ChannelImpl> out = new ArrayList<ChannelImpl>();
             NetworkIterator netIt = staxml.getNetworks();
             while (netIt.hasNext()) {
                 edu.sc.seis.seisFile.fdsnws.stationxml.Network n = netIt.next();
@@ -233,13 +239,19 @@ public class FdsnStation extends AbstractNetworkSource {
                     StationImpl sImpl = StationXMLToFissures.convert(s, netAttr);
                     for (Channel c : s.getChannelList()) {
                         ChannelSensitivityBundle csb = StationXMLToFissures.convert(c, sImpl);
-                        out.add(csb.getChan());
                         chanSensitivityMap.put(ChannelIdUtil.toString(csb.getChan().get_id()), csb.getSensitivity());
-                        return StationXMLToFissures.convertInstrumentation(c); // first
+                        InstrumentationImpl out = StationXMLToFissures.convertInstrumentation(c); // first
                                                                                // one
                                                                                // should
                                                                                // be
                                                                                // right
+                        staxml.closeReader();
+                        try {
+                            querier.getInputStream().close();
+                        } catch(IOException e) {
+                            // oh well
+                        }
+                        return out;
                     }
                 }
             }

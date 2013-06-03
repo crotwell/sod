@@ -32,6 +32,9 @@ $additionalArms#end
                 <longitude>$donut.lon</longitude>
             </stationPointDistance>
 #end
+#if($includeRestricted)
+            <includeRestricted/>
+#end
         </fdsnStation>
 #if($server)
         <networkFinder>
@@ -45,6 +48,11 @@ $additionalArms#end
             <networkCode>$code</networkCode>
 #end
         </networkOR>
+#else
+        <networkNOT>
+            <!-- exclude PI network as it is passcal test data -->
+            <networkCode>PI</networkCode>
+        </networkNOT>
 #end
 #if($needsStationAND)
         <stationAND>

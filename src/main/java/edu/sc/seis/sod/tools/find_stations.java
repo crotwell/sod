@@ -8,7 +8,9 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.velocity.VelocityContext;
 
 import com.martiansoftware.jsap.FlaggedOption;
+import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
+import com.martiansoftware.jsap.Switch;
 
 import edu.sc.seis.seisFile.client.BoxAreaParser;
 import edu.sc.seis.seisFile.client.DonutParser;
@@ -87,6 +89,10 @@ public class find_stations extends CommandLineTool {
                                                "The latest time to overlap an accepted station",
                                                true);
         addStationParam(endParam);
+        add(new Switch("includeRestricted",
+                       JSAP.NO_SHORTFLAG,
+                       "includeRestricted",
+                       "Without this restricted stations and channels are rejected"));
     }
 
     private void addStationParam(FlaggedOption option) throws JSAPException {
