@@ -149,7 +149,7 @@ logger.debug("refresh "+NetworkIdUtil.toString(net));
     
     void checkSensitivityLoaded(ChannelImpl chan, LoadedNetworkSource loadSource) {
         try {
-            QuantityImpl sens = loadSource.getSensitivity(chan.getId());
+            QuantityImpl sens = loadSource.getSensitivity(chan);
         } catch(ChannelNotFound e) {
             logger.warn("No Instrumentation for "+ChannelIdUtil.toStringFormatDates(chan.getId()));
             NetworkDB.getSingleton().putSensitivity( ChannelSensitivity.createNonChannelSensitivity(chan));

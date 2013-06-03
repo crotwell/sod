@@ -33,9 +33,8 @@ public class ResponseWriter implements ChannelSubsetter {
     public StringTree accept(ChannelImpl chan, NetworkSource network)
             throws Exception {
         try {
-            ChannelId channel_id = chan.get_id();
-            Instrumentation inst = network.getInstrumentation(channel_id);
-            String response = ResponsePrint.printResponse(channel_id, inst);
+            Instrumentation inst = network.getInstrumentation(chan);
+            String response = ResponsePrint.printResponse(chan.getId(), inst);
             velocitizer.evaluate(template, response, chan);
         } catch(ChannelNotFound e) {
             return new Fail(this, "No instrumentation");

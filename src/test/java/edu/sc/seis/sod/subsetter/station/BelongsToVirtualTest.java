@@ -7,6 +7,7 @@ import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
+import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.VestingNetworkDC;
@@ -41,7 +42,8 @@ public class BelongsToVirtualTest extends TestCase {
 
         public int callCount;
         
-        public  List<? extends StationImpl> getStations(NetworkId net) {
+        @Override
+        public  List<? extends StationImpl> getStations(NetworkAttrImpl net) {
             callCount++;
             return super.getStations(net);
         }
@@ -77,7 +79,7 @@ public class BelongsToVirtualTest extends TestCase {
     public void testAcceptsAllStationsInAssignedNetwork() throws ConfigurationException {
         CountRetrieveStations na = new CountRetrieveStations();
         BelongsToVirtual btv = new BelongsToVirtual(mockNetName, FORTNIGHT);
-        List<? extends StationImpl> stations = na.getStations(MockNetworkAttr.createMultiSplendoredAttr().getId());
+        List<? extends StationImpl> stations = na.getStations(MockNetworkAttr.createMultiSplendoredAttr());
         for (StationImpl sta : stations) {
             assertTrue(btv.accept(sta, na).isSuccess());
         }

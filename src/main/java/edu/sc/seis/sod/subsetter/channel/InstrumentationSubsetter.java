@@ -1,10 +1,9 @@
 package edu.sc.seis.sod.subsetter.channel;
 
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.SeismicHardware;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
 import edu.sc.seis.sod.source.network.NetworkSource;
 
@@ -15,16 +14,15 @@ import edu.sc.seis.sod.source.network.NetworkSource;
  */
 public abstract class InstrumentationSubsetter implements ChannelSubsetter {
 
-    protected SeismicHardware getSeismicHardware(Channel channel,
+    protected SeismicHardware getSeismicHardware(ChannelImpl channel,
                                                  NetworkSource network)
             throws ChannelNotFound, InvalidResponse {
-        ChannelId chanId = channel.get_id();
-        return getSeismicHardware(network.getInstrumentation(chanId));
+        return getSeismicHardware(network.getInstrumentation(channel));
     }
 
     protected abstract SeismicHardware getSeismicHardware(Instrumentation inst);
 
-    protected boolean acceptId(Channel channel,
+    protected boolean acceptId(ChannelImpl channel,
                                NetworkSource network,
                                int id) {
         try {
@@ -38,7 +36,7 @@ public abstract class InstrumentationSubsetter implements ChannelSubsetter {
         }
     }
 
-    protected boolean acceptManufacturer(Channel channel,
+    protected boolean acceptManufacturer(ChannelImpl channel,
                                          NetworkSource network,
                                          String manufacturer) {
         try {
@@ -52,7 +50,7 @@ public abstract class InstrumentationSubsetter implements ChannelSubsetter {
         }
     }
 
-    protected boolean acceptModel(Channel channel,
+    protected boolean acceptModel(ChannelImpl channel,
                                   NetworkSource network,
                                   String model) {
         try {
@@ -66,7 +64,7 @@ public abstract class InstrumentationSubsetter implements ChannelSubsetter {
         }
     }
 
-    protected boolean acceptSerialNumber(Channel channel,
+    protected boolean acceptSerialNumber(ChannelImpl channel,
                                          NetworkSource network,
                                          String serialNum) {
         try {

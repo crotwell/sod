@@ -15,7 +15,7 @@ public class HasResponse implements ChannelSubsetter {
 
     public StringTree accept(ChannelImpl channel, NetworkSource network) {
         try {
-            network.getInstrumentation(channel.get_id());
+            network.getInstrumentation(channel);
             return new Pass(this);
         } catch(ChannelNotFound e) {
             return new Fail(this, "No instrumentation");

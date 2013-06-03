@@ -1,7 +1,6 @@
 package edu.sc.seis.sod.source.network;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,10 +12,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import edu.iris.Fissures.BoxArea;
-import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
-import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.iris.Fissures.IfNetwork.StationId;
 import edu.iris.Fissures.model.MicroSecondDate;
@@ -35,6 +32,7 @@ import edu.sc.seis.fissuresUtil.stationxml.StationXMLToFissures;
 import edu.sc.seis.seisFile.SeisFileException;
 import edu.sc.seis.seisFile.fdsnws.FDSNStationQuerier;
 import edu.sc.seis.seisFile.fdsnws.FDSNStationQueryParams;
+import edu.sc.seis.seisFile.fdsnws.FDSNWSException;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.FDSNStationXML;
 import edu.sc.seis.seisFile.fdsnws.stationxml.NetworkIterator;
@@ -42,7 +40,6 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.StationIterator;
 import edu.sc.seis.sod.BuildVersion;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.source.SodSourceException;
-import edu.sc.seis.sod.source.event.FdsnEvent;
 import edu.sc.seis.sod.subsetter.station.StationPointDistance;
 
 public class FdsnStation extends AbstractNetworkSource {
@@ -106,9 +103,17 @@ public class FdsnStation extends AbstractNetworkSource {
     public List<? extends CacheNetworkAccess> getNetworkByName(String name) throws NetworkNotFound {
         throw new NetworkNotFound();
     }
-
+    
     @Override
     public List<? extends NetworkAttrImpl> getNetworks() {
+        try {
+            return getNetworks(defaultRetries);
+        } catch(SodSourceException e) {
+            throw new RuntimeException("Timeout getting networks", e);
+        }
+    }
+
+    public List<? extends NetworkAttrImpl> getNetworks(int retryCount) throws SodSourceException  {
         try {
             FDSNStationQueryParams staQP = setupQueryParams();
             staQP.setLevel(FDSNStationQueryParams.LEVEL_NETWORK);
@@ -122,13 +127,44 @@ public class FdsnStation extends AbstractNetworkSource {
                 out.add(StationXMLToFissures.convert(n));
             }
             return out;
+        } catch(SeisFileException e) {
+            if (e.getCause() instanceof IOException) {
+                retryCount--;
+                logger.info("Station TIMEOUT retry: "+retryCount+" left");
+                if (retryCount > 0) {
+                    int sleepy = 2*1000;
+                    if (retryCount< defaultRetries) {
+                        sleepy = (defaultRetries-retryCount)*10*1000;
+                    }
+                    try {
+                        Thread.sleep(sleepy);
+                    } catch(InterruptedException e1) {}
+                    return getNetworks(retryCount);
+                } else {
+                    // not sure I like this...
+                    // return empty list, so outside will wait and then try again
+                    throw new SodSourceException(e);
+                }
+            } else {
+                throw new RuntimeException(e);
+            }
         } catch(Exception e) {
             throw new RuntimeException(e);
         }
     }
 
+    int defaultRetries = 3;
+
     @Override
     public List<? extends StationImpl> getStations(NetworkAttrImpl net) {
+        try {
+            return getStations(net, defaultRetries);
+        } catch(SodSourceException e) {
+            throw new RuntimeException("Timeout getting networks", e);
+        }
+    }
+
+    public List<? extends StationImpl> getStations(NetworkAttrImpl net, int retryCount) throws SodSourceException  {
         try {
             FDSNStationQueryParams staQP = setupQueryParams();
             staQP.setLevel(FDSNStationQueryParams.LEVEL_STATION);
@@ -153,6 +189,25 @@ public class FdsnStation extends AbstractNetworkSource {
                 }
             }
             return out;
+        } catch(SeisFileException e) {
+            if (e.getCause() instanceof IOException) {
+                retryCount--;
+                logger.info("Station TIMEOUT retry: "+retryCount+" left");
+                if (retryCount > 0) {
+                    int sleepy = 2*1000;
+                    if (retryCount< defaultRetries) {
+                        sleepy = (defaultRetries-retryCount)*10*1000;
+                    }
+                    try {
+                        Thread.sleep(sleepy);
+                    } catch(InterruptedException e1) {}
+                    return getStations(net, retryCount);
+                } else {
+                    throw new SodSourceException("Retries exceeded", e);
+                }
+            } else {
+                throw new RuntimeException(e);
+            }
         } catch(Exception e) {
             throw new RuntimeException(e);
         }
@@ -160,17 +215,21 @@ public class FdsnStation extends AbstractNetworkSource {
 
     @Override
     public List<? extends ChannelImpl> getChannels(StationImpl station) {
-        return getChannels(station.get_id());
+        try {
+            return getChannels(station, defaultRetries);
+        } catch(SodSourceException e) {
+            throw new RuntimeException("Timeout getting channels", e);
+        }
     }
 
-    public List<? extends ChannelImpl> getChannels(StationId stationId) {
+    public List<? extends ChannelImpl> getChannels(StationImpl station, int retryCount) throws SodSourceException  {
         try {
             FDSNStationQueryParams staQP = setupQueryParams();
             staQP.setLevel(FDSNStationQueryParams.LEVEL_CHANNEL);
             staQP.clearNetwork()
-                    .appendToNetwork(stationId.network_id.network_code)
+                    .appendToNetwork(station.getId().network_id.network_code)
                     .clearStation()
-                    .appendToStation(stationId.station_code);
+                    .appendToStation(station.getId().station_code);
             FDSNStationQuerier querier = setupQuerier(staQP);
             FDSNStationXML staxml = querier.getFDSNStationXML();
             List<ChannelImpl> out = new ArrayList<ChannelImpl>();
@@ -190,40 +249,66 @@ public class FdsnStation extends AbstractNetworkSource {
                 }
             }
             return out;
+        } catch(SeisFileException e) {
+            if (e.getCause() instanceof IOException) {
+                retryCount--;
+                logger.info("Station TIMEOUT retry: "+retryCount+" left");
+                if (retryCount > 0) {
+                    int sleepy = 2*1000;
+                    if (retryCount< defaultRetries) {
+                        sleepy = (defaultRetries-retryCount)*10*1000;
+                    }
+                    try {
+                        Thread.sleep(sleepy);
+                    } catch(InterruptedException e1) {}
+                    return getChannels(station, retryCount);
+                } else {
+                    throw new SodSourceException("Retries exceeded", e);
+                }
+            } else {
+                throw new RuntimeException(e);
+            }
         } catch(Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public QuantityImpl getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
-        String key = ChannelIdUtil.toString(chanId);
+    public QuantityImpl getSensitivity(ChannelImpl chan) throws ChannelNotFound, InvalidResponse {
+        String key = ChannelIdUtil.toString(chan.getId());
         if (!chanSensitivityMap.containsKey(key)) {
-            StationId sId = new StationId(chanId.network_id, chanId.station_code, chanId.begin_time);
-            getChannels(sId);
+            getChannels(chan.getStationImpl());
         }
         if (!chanSensitivityMap.containsKey(key)) {
-            throw new ChannelNotFound(chanId);
+            throw new ChannelNotFound(chan.getId());
         }
         return chanSensitivityMap.get(key);
     }
 
     @Override
-    public Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
+    public Instrumentation getInstrumentation(ChannelImpl chan) throws ChannelNotFound, InvalidResponse {
+        try {
+            return getInstrumentation(chan, defaultRetries);
+        } catch(SodSourceException e) {
+            throw new RuntimeException("Timeout getting channels", e);
+        }
+    }
+
+    public Instrumentation getInstrumentation(ChannelImpl chan, int retryCount) throws SodSourceException, ChannelNotFound, InvalidResponse  {
         try {
             FDSNStationQueryParams staQP = setupQueryParams();
             staQP.setLevel(FDSNStationQueryParams.LEVEL_RESPONSE);
             staQP.clearNetwork()
-                    .appendToNetwork(chanId.network_id.network_code)
+                    .appendToNetwork(chan.getId().network_id.network_code)
                     .clearStation()
-                    .appendToStation(chanId.station_code)
+                    .appendToStation(chan.getId().station_code)
                     .clearLocation()
-                    .appendToLocation(chanId.site_code)
+                    .appendToLocation(chan.getId().site_code)
                     .clearChannel()
-                    .appendToChannel(chanId.channel_code)
-                    .setEndAfter(new MicroSecondDate(chanId.begin_time))
+                    .appendToChannel(chan.getId().channel_code)
+                    .setEndAfter(new MicroSecondDate(chan.getId().begin_time))
                     // ends after
-                    .setEndTime(new MicroSecondDate(chanId.begin_time)); // starts
+                    .setEndTime(new MicroSecondDate(chan.getId().begin_time)); // starts
                                                                          // before
                                                                          // or
                                                                          // on
@@ -257,7 +342,24 @@ public class FdsnStation extends AbstractNetworkSource {
             }
             throw new ChannelNotFound();
         } catch(SeisFileException e) {
-            throw new InvalidResponse(e);
+            if (e.getCause() instanceof IOException) {
+                retryCount--;
+                logger.info("Station TIMEOUT retry: "+retryCount+" left");
+                if (retryCount > 0) {
+                    int sleepy = 2*1000;
+                    if (retryCount< defaultRetries) {
+                        sleepy = (defaultRetries-retryCount)*10*1000;
+                    }
+                    try {
+                        Thread.sleep(sleepy);
+                    } catch(InterruptedException e1) {}
+                    return getInstrumentation(chan, retryCount);
+                } else {
+                    throw new SodSourceException("Retries exceeded", e);
+                }
+            } else {
+                throw new RuntimeException(e);
+            }
         } catch(XMLStreamException e) {
             throw new InvalidResponse(e);
         }
@@ -299,4 +401,6 @@ public class FdsnStation extends AbstractNetworkSource {
     FDSNStationQueryParams queryParams = new FDSNStationQueryParams();
     
     int port = -1;
+    
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(FdsnStation.class);
 }

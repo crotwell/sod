@@ -40,15 +40,15 @@ public class LoadedNetworkSource extends WrappingNetworkSource implements Networ
     }
 
     @Override
-    public Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
-        instrumentationLoaded.add(ChannelIdUtil.toString(chanId));
-        return getWrapped().getInstrumentation(chanId);
+    public Instrumentation getInstrumentation(ChannelImpl chan) throws ChannelNotFound, InvalidResponse {
+        instrumentationLoaded.add(ChannelIdUtil.toString(chan.getId()));
+        return getWrapped().getInstrumentation(chan);
     }
 
     @Override
-    public QuantityImpl getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
-        instrumentationLoaded.add(ChannelIdUtil.toString(chanId));
-        return getWrapped().getSensitivity(chanId);
+    public QuantityImpl getSensitivity(ChannelImpl chan) throws ChannelNotFound, InvalidResponse {
+        instrumentationLoaded.add(ChannelIdUtil.toString(chan.getId()));
+        return getWrapped().getSensitivity(chan);
     }
 
     @Override

@@ -7,7 +7,6 @@ import org.omg.CORBA.BAD_PARAM;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
@@ -166,15 +165,15 @@ public class NetworkFinder extends AbstractNetworkSource {
     }
     
     @Override
-    public Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
-        return getNetwork(chanId.network_id).retrieve_instrumentation(chanId, chanId.begin_time);
+    public Instrumentation getInstrumentation(ChannelImpl chan) throws ChannelNotFound, InvalidResponse {
+        return getNetwork(chan.getId().network_id).retrieve_instrumentation(chan.getId(), chan.getId().begin_time);
     }
 
     @Override
-    public QuantityImpl getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
-        CacheNetworkAccess cna = getNetwork(chanId.network_id);
-        Sensitivity s = cna.retrieve_sensitivity(chanId, chanId.begin_time);
-        return new QuantityImpl(s.sensitivity_factor, cna.retrieve_initial_units(chanId, chanId.begin_time));
+    public QuantityImpl getSensitivity(ChannelImpl chan) throws ChannelNotFound, InvalidResponse {
+        CacheNetworkAccess cna = getNetwork(chan.getId().network_id);
+        Sensitivity s = cna.retrieve_sensitivity(chan.getId(), chan.getId().begin_time);
+        return new QuantityImpl(s.sensitivity_factor, cna.retrieve_initial_units(chan.getId(), chan.getId().begin_time));
     }
 
     /**

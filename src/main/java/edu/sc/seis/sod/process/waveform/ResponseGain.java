@@ -39,8 +39,7 @@ public class ResponseGain implements WaveformProcess, Threadable {
         if(seismograms.length > 0) {
             NetworkSource na = Start.getNetworkArm().getNetworkSource();
             try {
-                ChannelId chanId = channel.get_id();
-                QuantityImpl sensitivity = na.getSensitivity(chanId);
+                QuantityImpl sensitivity = na.getSensitivity(channel);
                 if (sensitivity == null) {
                     throw new ChannelNotFound();
                 }

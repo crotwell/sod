@@ -294,7 +294,7 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
     }
 
     @Override
-    public Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
+    public Instrumentation getInstrumentation(ChannelImpl chanId) throws ChannelNotFound, InvalidResponse {
         throw new ChannelNotFound();
     }
 
@@ -314,7 +314,7 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
     }
 
     @Override
-    public QuantityImpl getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
+    public QuantityImpl getSensitivity(ChannelImpl chanId) throws ChannelNotFound, InvalidResponse {
         throw new ChannelNotFound();
     }
 
