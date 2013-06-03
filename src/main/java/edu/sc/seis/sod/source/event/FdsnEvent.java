@@ -2,6 +2,7 @@ package edu.sc.seis.sod.source.event;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ import edu.sc.seis.sod.BuildVersion;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.source.network.AbstractNetworkSource;
+import edu.sc.seis.sod.source.seismogram.SeismogramSourceException;
 import edu.sc.seis.sod.subsetter.DepthRange;
 import edu.sc.seis.sod.subsetter.origin.Catalog;
 import edu.sc.seis.sod.subsetter.origin.Contributor;
@@ -154,8 +156,12 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
 
     @Override
     public CacheEvent[] next() {
+        return nextWithRetry(defaultRetry).toArray(new CacheEvent[0]);
+    }
+
+    public List<CacheEvent> nextWithRetry(int tryCount) {
+        List<CacheEvent> out = new ArrayList<CacheEvent>();
         try {
-            List<CacheEvent> out = new ArrayList<CacheEvent>();
             EventIterator it = getIterator();
             while (it.hasNext()) {
                 Event e = it.next();
@@ -170,7 +176,28 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                     decreaseQueryTimeWidth();
                 }
             }
-            return out.toArray(new CacheEvent[0]);
+            return out;
+        } catch(SeisFileException e) {
+            if (e.getCause() instanceof IOException) {
+                tryCount--;
+                logger.info("Event TIMEOUT retry: "+tryCount+" left");
+                if (tryCount > 0) {
+                    int sleepy = 2*1000;
+                    if (tryCount< defaultRetry) {
+                        sleepy = (defaultRetry-tryCount)*10*1000;
+                    }
+                    try {
+                        Thread.sleep(sleepy);
+                    } catch(InterruptedException e1) {}
+                    return nextWithRetry(tryCount);
+                } else {
+                    // not sure I like this...
+                    // return empty list, so outside will wait and then try again
+                    return out;
+                }
+            } else {
+                throw new RuntimeException(e);
+            }
         } catch(Exception e) {
             throw new RuntimeException(e); // ToDo: fix this
         }
@@ -330,6 +357,8 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
     int port = -1;
     
     URI parsedURL;
+    
+    int defaultRetry = 3;
     
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(FdsnEvent.class);
     
