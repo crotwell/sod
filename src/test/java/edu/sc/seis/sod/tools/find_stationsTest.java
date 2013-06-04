@@ -8,12 +8,6 @@ import com.martiansoftware.jsap.JSAPException;
 
 public class find_stationsTest extends TestCase {
 
-    public void testDefaultServerArg() throws JSAPException {
-        find_stations ls = new find_stations();
-        VelocityContext vc = ls.getContext();
-        assertTrue(vc.containsKey("server"));
-    }
-
     public void testDefaultStationArg() throws JSAPException {
         find_stations ls = new find_stations();
         VelocityContext vc = ls.getContext();
