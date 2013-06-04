@@ -47,6 +47,7 @@ import edu.sc.seis.seisFile.fdsnws.quakeml.Quakeml;
 import edu.sc.seis.sod.BuildVersion;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.source.AbstractSource;
 import edu.sc.seis.sod.source.network.AbstractNetworkSource;
 import edu.sc.seis.sod.source.seismogram.SeismogramSourceException;
 import edu.sc.seis.sod.subsetter.DepthRange;
@@ -70,7 +71,11 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
             Node node = childNodes.item(counter);
             if(node instanceof Element) {
                 String tagName = ((Element)node).getTagName();
-                if(!tagName.equals("retries")) {
+                if(!tagName.equals(AbstractSource.RETRIES_ELEMENT) 
+                        && ! tagName.equals(AbstractNetworkSource.REFRESH_ELEMENT)
+                        && ! tagName.equals(AbstractEventSource.EVENT_QUERY_INCREMENT)
+                        && ! tagName.equals(AbstractEventSource.EVENT_LAG)
+                        && ! tagName.equals(AbstractSource.NAME_ELEMENT)) {
                     Object object = SodUtil.load((Element)node,
                                                  new String[] {"eventArm",
                                                                "origin"});

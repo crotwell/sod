@@ -28,8 +28,9 @@ import edu.sc.seis.seisFile.mseed.DataRecordIterator;
 import edu.sc.seis.sod.BuildVersion;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.source.AbstractSource;
 
-public class FdsnDataSelect implements SeismogramSourceLocator {
+public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLocator {
 
     private String host = FDSNDataSelectQueryParams.IRIS_HOST;
 
@@ -46,6 +47,7 @@ public class FdsnDataSelect implements SeismogramSourceLocator {
     int maxRetries = 3;
 
     public FdsnDataSelect() {
+        super("DefaultFDSNDataSelect");
         host = FDSNDataSelectQueryParams.IRIS_HOST;
         timeoutMillis = 30 * 1000;
         doBulk = false;
@@ -57,9 +59,10 @@ public class FdsnDataSelect implements SeismogramSourceLocator {
         this(config, FDSNDataSelectQueryParams.IRIS_HOST);
     }
 
-    public FdsnDataSelect(Element config, String defaultURL) throws MalformedURLException, URISyntaxException {
+    public FdsnDataSelect(Element config, String defaultHost) throws MalformedURLException, URISyntaxException {
+        super(config, "DefaultFDSNDataSelect");
         doBulk = SodUtil.isTrue(config, "dobulk", true);
-        host = SodUtil.loadText(config, "host", FDSNDataSelectQueryParams.IRIS_HOST);
+        host = SodUtil.loadText(config, "host", defaultHost);
         port = SodUtil.loadInt(config, "port", -1);
         username = SodUtil.loadText(config, "user", "");
         password = SodUtil.loadText(config, "password", "");

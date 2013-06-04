@@ -19,8 +19,8 @@ public abstract class AbstractSource implements Source{
     }
     
     public AbstractSource (Element config, String defaultName){
-        name = SodUtil.loadText(config, "name", defaultName);
-        retries = SodUtil.loadInt(config, "retries", -1);
+        name = SodUtil.loadText(config, NAME_ELEMENT, defaultName);
+        retries = SodUtil.loadInt(config, RETRIES_ELEMENT, -1);
     }
     
     /* (non-Javadoc)
@@ -42,6 +42,10 @@ public abstract class AbstractSource implements Source{
     protected String name;
 
     private int retries = -1;
+
+    public static final String NAME_ELEMENT = "name";
+    
+    public static final String RETRIES_ELEMENT = "retries";
     
     private static Logger logger = LoggerFactory.getLogger(AbstractSource.class);
 }// AbstractSource
