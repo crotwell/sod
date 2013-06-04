@@ -132,7 +132,7 @@ public class Start {
             }
 
             public Throwable getSubThrowable(Throwable throwable) {
-                return throwable.getCause();
+                return null;
             }
         });
         GlobalExceptionHandler.registerWithAWTThread();
