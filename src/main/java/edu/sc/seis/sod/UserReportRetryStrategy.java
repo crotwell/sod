@@ -10,6 +10,8 @@ import org.omg.CosNaming.NamingContextPackage.NotFound;
 import edu.sc.seis.fissuresUtil.cache.BulletproofVestFactory;
 import edu.sc.seis.fissuresUtil.cache.ClassicRetryStrategy;
 import edu.sc.seis.fissuresUtil.cache.CorbaServerWrapper;
+import edu.sc.seis.fissuresUtil.cache.ServerWrapper;
+import edu.sc.seis.sod.source.AbstractSource;
 
 public class UserReportRetryStrategy extends ClassicRetryStrategy {
 
@@ -26,8 +28,8 @@ public class UserReportRetryStrategy extends ClassicRetryStrategy {
         this(BulletproofVestFactory.getDefaultNumRetry());
     }
 
-    public synchronized boolean shouldRetry(SystemException exc,
-                                            CorbaServerWrapper server,
+    public synchronized boolean shouldRetry(Throwable exc,
+                                            Object server,
                                             int tryCount) {
         String serverId = makeServerId(server);
         if(!bustedServers.contains(serverId)) {
@@ -61,7 +63,7 @@ public class UserReportRetryStrategy extends ClassicRetryStrategy {
         return super.shouldRetry(exc, server, tryCount);
     }
 
-    public synchronized void serverRecovered(CorbaServerWrapper server) {
+    public synchronized void serverRecovered(Object server) {
         String serverId = makeServerId(server);
         if(bustedServers.contains(serverId)) {
             bustedServers.remove(serverId);
@@ -74,8 +76,14 @@ public class UserReportRetryStrategy extends ClassicRetryStrategy {
         logger.warn(msg);
     }
 
-    private String makeServerId(CorbaServerWrapper server) {
-        return server.getFullName() + " " + server.getServerType();
+    private String makeServerId(Object server) {
+        if (server instanceof CorbaServerWrapper) {
+        return ((CorbaServerWrapper)server).getFullName() + " " + ((CorbaServerWrapper)server).getServerType();
+        } else if (server instanceof AbstractSource) {
+            return ((AbstractSource)server).getName();
+        } else {
+            return server.toString();
+        }
     }
 
     public static String getWilyURL() {
