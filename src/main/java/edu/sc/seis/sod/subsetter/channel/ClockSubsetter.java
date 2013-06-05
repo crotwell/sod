@@ -1,10 +1,10 @@
 package edu.sc.seis.sod.subsetter.channel;
 
-import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Clock;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.SeismicHardware;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
 import edu.sc.seis.sod.source.network.NetworkSource;
 
@@ -20,7 +20,7 @@ public abstract class ClockSubsetter extends InstrumentationSubsetter {
         return inst.the_clock;
     }
     
-    protected boolean acceptType(Channel channel,
+    protected boolean acceptType(ChannelImpl channel,
                                  NetworkSource network,
                                  String type) {
         try {

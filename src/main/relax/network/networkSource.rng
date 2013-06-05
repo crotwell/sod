@@ -353,13 +353,13 @@ CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
                     <summary>Loads network metadata from a FDSN Station web service.</summary>
                     <description>A network source that makes the metadata loaded from a FDNSStationXML file available to
                     SOD. While a local file could be used, the more useful way is to access the fdsnStation web service
-                    at a data center like the IRIS DMC, http://service.iris.edu/fdsnws/station/1/. 
+                    at a data center like the default IRIS DMC, http://service.iris.edu/fdsnws/station/1/. 
                     SOD can download the stationXML automaticially
                     and reconnect to periodically get updates. For a full SOD run (that retrieves waveforms) 
                     SOD will automatically set the level in the IRIS url as needed, but adding other qualifiers to
                     limit the request size will help speed the queries. You may need to escape the ampersand with
                     &amp;amp; due to the fact that a SOD recipe is XML and so the parser will signal an error for a
-                    unescaped ampersand.</description>
+                    unescaped ampersand. By default this does not get restricted channels.</description>
                     <velocity>#networkArmPage()</velocity>
                     <example>
                         <fdsnStation>
@@ -406,6 +406,12 @@ CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
                     </element>
                 </choice>
             </zeroOrMore>
+            
+            <optional>
+                    <element name="includeRestricted">
+                        <data type="boolean"/>
+                    </element>
+            </optional>
             <optional>
                 <choice>
                    <ref name="stationBoxArea"/>

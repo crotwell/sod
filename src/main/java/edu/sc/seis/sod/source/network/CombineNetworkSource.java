@@ -8,7 +8,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.NetworkId;
@@ -97,7 +96,7 @@ public class CombineNetworkSource implements NetworkSource {
     }
 
     @Override
-    public List<? extends StationImpl> getStations(NetworkId net) {
+    public List<? extends StationImpl> getStations(NetworkAttrImpl net) {
         NetworkSource source = getSourceForCode(NetworkIdUtil.toStringNoDates(net));
         if (source != null) {
             return source.getStations(net);
@@ -115,10 +114,10 @@ public class CombineNetworkSource implements NetworkSource {
     }
 
     @Override
-    public QuantityImpl getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
-        NetworkSource source = getSourceForCode(NetworkIdUtil.toStringNoDates(chanId.network_id));
+    public QuantityImpl getSensitivity(ChannelImpl chan) throws ChannelNotFound, InvalidResponse {
+        NetworkSource source = getSourceForCode(NetworkIdUtil.toStringNoDates(chan.getId().network_id));
         if (source != null) {
-            QuantityImpl out = source.getSensitivity(chanId);
+            QuantityImpl out = source.getSensitivity(chan);
             if (out != null) {
                 return out;
             }
@@ -127,10 +126,10 @@ public class CombineNetworkSource implements NetworkSource {
     }
 
     @Override
-    public Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
-        NetworkSource source = getSourceForCode(NetworkIdUtil.toStringNoDates(chanId.network_id));
+    public Instrumentation getInstrumentation(ChannelImpl chan) throws ChannelNotFound, InvalidResponse {
+        NetworkSource source = getSourceForCode(NetworkIdUtil.toStringNoDates(chan.getId().network_id));
         if (source != null) {
-            Instrumentation out = source.getInstrumentation(chanId);
+            Instrumentation out = source.getInstrumentation(chan);
             if (out != null) {
                 return out;
             }

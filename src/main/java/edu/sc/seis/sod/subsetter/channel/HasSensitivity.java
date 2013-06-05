@@ -17,7 +17,7 @@ public class HasSensitivity implements ChannelSubsetter {
 
     public StringTree accept(ChannelImpl channel, NetworkSource network) {
         try {
-            QuantityImpl sens = network.getSensitivity(channel.get_id());
+            QuantityImpl sens = network.getSensitivity(channel);
             return new StringTreeLeaf(this, InstrumentationLoader.isValidSensitivity(sens));
         } catch(ChannelNotFound e) {
             return new Fail(this, "No instrumentation");

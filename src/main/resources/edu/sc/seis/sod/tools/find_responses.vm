@@ -15,6 +15,30 @@
 #foreach($code in $channels)
             <channelCode>$code</channelCode>
 #end
+#if($box)
+            <stationBoxArea>
+                <latitudeRange>
+                    <min>$box.south</min>
+                    <max>$box.north</max>
+                </latitudeRange>
+                <longitudeRange>
+                    <min>$box.west</min>
+                    <max>$box.east</max>
+                </longitudeRange>
+            </stationBoxArea>
+#end
+#if($donut)
+            <stationPointDistance>
+                <unit>DEGREE</unit>
+                <min>$donut.min</min>
+                <max>$donut.max</max>
+                <latitude>$donut.lat</latitude>
+                <longitude>$donut.lon</longitude>
+            </stationPointDistance>
+#end
+#if($includeRestricted)
+            <includeRestricted/>
+#end
         </fdsnStation>
 #if($networks)
         <networkOR>
@@ -22,6 +46,11 @@
             <networkCode>$code</networkCode>
 #end
         </networkOR>
+#else
+        <networkNOT>
+            <!-- exclude PI network as it is passcal test data -->
+            <networkCode>PI</networkCode>
+        </networkNOT>
 #end
         <stationAND>
 #if($stations)

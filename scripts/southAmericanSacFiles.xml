@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sod>
     <eventArm>
-        <eventFinder>
-            <name>IRIS_EventDC</name>
-            <dns>edu/iris/dmc</dns>
+        <fdsnEvent>
             <boxArea>
                 <latitudeRange>
                     <min>-30</min>
@@ -32,15 +30,12 @@
             <magnitudeRange>
                 <min>5.0</min>
             </magnitudeRange>
-            <catalog>WHDF</catalog>
-        </eventFinder>
+            <catalog>NEIC PDE</catalog>
+        </fdsnEvent>
         <printlineEventProcess/>
     </eventArm>
     <networkArm>
-        <networkFinder>
-            <name>IRIS_NetworkDC</name>
-            <dns>edu/iris/dmc</dns>
-        </networkFinder>
+        <fdsnStation/>
         <bandCode>B</bandCode>
         <gainCode>H</gainCode>
         <printlineChannelProcess/>
@@ -66,10 +61,7 @@
                 <value>180</value>
             </endOffset>
         </phaseRequest>
-        <fixedDataCenter>
-            <name>IRIS_PondDataCenter</name>
-            <dns>edu/iris/dmc</dns>
-        </fixedDataCenter>
+        <fdsnDataSelect/>
         <someCoverage/>
         <printlineSeismogramProcess/>
         <rMean/>

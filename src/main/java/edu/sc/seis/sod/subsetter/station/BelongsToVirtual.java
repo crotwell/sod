@@ -8,6 +8,7 @@ import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
+import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
@@ -62,7 +63,7 @@ public class BelongsToVirtual implements StationSubsetter {
         if(ClockUtil.now().subtract(getRefreshInterval()).after(lastQuery)) {
             lastQuery = ClockUtil.now();
             NetworkAccess virtual = getVirtual(network, name);
-            stations = network.getStations(virtual.get_attributes().getId());
+            stations = network.getStations((NetworkAttrImpl)virtual.get_attributes());
         }
     }
     

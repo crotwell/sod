@@ -2,6 +2,7 @@ package edu.sc.seis.sod.source.event;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ import edu.sc.seis.sod.BuildVersion;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.source.network.AbstractNetworkSource;
+import edu.sc.seis.sod.source.seismogram.SeismogramSourceException;
 import edu.sc.seis.sod.subsetter.DepthRange;
 import edu.sc.seis.sod.subsetter.origin.Catalog;
 import edu.sc.seis.sod.subsetter.origin.Contributor;
@@ -58,6 +60,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
     
     public FdsnEvent(Element config) throws ConfigurationException {
         super(config, "DefaultFDSNEvent");
+        queryParams.setOrderBy(FDSNEventQueryParams.ORDER_TIME_ASC); // fdsnEvent default is reverse time
         int port = SodUtil.loadInt(config, "port", -1);
         if (port > 0) {
             queryParams.setPort(port);
@@ -131,11 +134,6 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                 }
             }
         }
-        if(DOMHelper.hasElement(config, AbstractNetworkSource.REFRESH_ELEMENT)) {
-            refreshInterval = SodUtil.loadTimeInterval(SodUtil.getElement(config, AbstractNetworkSource.REFRESH_ELEMENT));
-        } else {
-            refreshInterval = new TimeInterval(1, UnitImpl.FORTNIGHT);
-        }
     }
 
     @Override
@@ -158,32 +156,50 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
 
     @Override
     public CacheEvent[] next() {
+        return nextWithRetry(defaultRetry).toArray(new CacheEvent[0]);
+    }
+
+    public List<CacheEvent> nextWithRetry(int tryCount) {
+        List<CacheEvent> out = new ArrayList<CacheEvent>();
         try {
-            List<CacheEvent> out = new ArrayList<CacheEvent>();
             EventIterator it = getIterator();
             while (it.hasNext()) {
                 Event e = it.next();
                 out.add(toCacheEvent(e));
             }
 
-            if ( out.size() < 10) {
-                increaseQueryTimeWidth();
+            if (! caughtUpWithRealtime()) {
+                if ( out.size() < 10) {
+                    increaseQueryTimeWidth();
+                }
+                if ( out.size() > 100) {
+                    decreaseQueryTimeWidth();
+                }
             }
-            if ( out.size() > 100) {
-                decreaseQueryTimeWidth();
+            return out;
+        } catch(SeisFileException e) {
+            if (e.getCause() instanceof IOException) {
+                tryCount--;
+                logger.info("Event TIMEOUT retry: "+tryCount+" left");
+                if (tryCount > 0) {
+                    int sleepy = 2*1000;
+                    if (tryCount< defaultRetry) {
+                        sleepy = (defaultRetry-tryCount)*10*1000;
+                    }
+                    try {
+                        Thread.sleep(sleepy);
+                    } catch(InterruptedException e1) {}
+                    return nextWithRetry(tryCount);
+                } else {
+                    // not sure I like this...
+                    // return empty list, so outside will wait and then try again
+                    return out;
+                }
+            } else {
+                throw new RuntimeException(e);
             }
-            return out.toArray(new CacheEvent[0]);
         } catch(Exception e) {
             throw new RuntimeException(e); // ToDo: fix this
-        }
-    }
-
-    @Override
-    public TimeInterval getWaitBeforeNext() {
-        if (queryTime == null) {
-            return new TimeInterval(0, UnitImpl.SECOND);
-        } else {
-            return queryTime.add(refreshInterval).subtract(ClockUtil.now());
         }
     }
 
@@ -322,7 +338,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         querier.setUserAgent("SOD/" + BuildVersion.getVersion());
         if (caughtUpWithRealtime() && hasNext()) {
             sleepUntilTime = now.add(refreshInterval);
-            logger.debug("set sleepUntilTime " + sleepUntilTime);
+            logger.debug("set sleepUntilTime " + sleepUntilTime+"  refresh="+refreshInterval);
             resetQueryTimeForLag();
             lastQueryEnd = now;
         }
@@ -342,7 +358,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
     
     URI parsedURL;
     
-    MicroSecondDate queryTime;
+    int defaultRetry = 3;
     
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(FdsnEvent.class);
     

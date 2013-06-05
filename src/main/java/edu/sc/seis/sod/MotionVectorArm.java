@@ -1,5 +1,6 @@
 package edu.sc.seis.sod;
 
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -33,6 +34,7 @@ import edu.sc.seis.sod.process.waveform.vector.WaveformVectorProcess;
 import edu.sc.seis.sod.process.waveform.vector.WaveformVectorProcessWrapper;
 import edu.sc.seis.sod.process.waveform.vector.WaveformVectorResult;
 import edu.sc.seis.sod.source.seismogram.DataCenterSource;
+import edu.sc.seis.sod.source.seismogram.SeismogramAuthorizationException;
 import edu.sc.seis.sod.source.seismogram.SeismogramSource;
 import edu.sc.seis.sod.source.seismogram.SeismogramSourceException;
 import edu.sc.seis.sod.source.seismogram.SeismogramSourceLocator;
@@ -478,6 +480,13 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
            } else if (t instanceof org.omg.CORBA.SystemException) {
                // don't log exception here, let RetryStragtegy do it
                ecp.update(Status.get(stage, Standing.CORBA_FAILURE));
+           } else if (t instanceof SeismogramSourceException && t.getCause() != null && t.getCause() instanceof SocketTimeoutException) {
+               // treat just like CORBA SystemException so it is retried later
+               // don't log exception here, let RetryStragtegy do it
+               ecp.update(Status.get(stage, Standing.CORBA_FAILURE));
+           } else if (t instanceof SeismogramAuthorizationException) {
+               ecp.update(Status.get(stage, Standing.SYSTEM_FAILURE));
+               failLogger.info("Authorization failure, will not retry. "+ ecp +" "+t.getMessage());
            } else {
                ecp.update(t, Status.get(stage, Standing.SYSTEM_FAILURE));
                String message = "";
@@ -489,7 +498,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                            + t.getClass().getName() + ") " + message;
                }
                try {
-                   message += " " + ecp;
+                   message += " " + ecp+"\n";
                } catch (LazyInitializationException lazy) {
                    message += "LazyInitializationException after exception, so I can't print the evp\n";
                }

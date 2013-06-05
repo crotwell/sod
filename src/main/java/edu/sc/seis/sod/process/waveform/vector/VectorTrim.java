@@ -43,7 +43,7 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
             return new WaveformVectorResult(false, mergeResult.getSeismograms(), new StringTreeBranch(this, false, mergeResult.getReason()));
         }
         seismograms = mergeResult.getSeismograms();
-
+        
         if (seismograms[0].length != seismograms[1].length || seismograms[0].length != seismograms[2].length) {
             return new WaveformVectorResult(seismograms,
                                             new StringTreeLeaf(this,
@@ -95,10 +95,10 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
             // looks like we are long by one
             if (shifty.getBeginTime().difference(main.getBeginTime()).lessThan(shifty.getBeginTime().add(shifty.getSampling().getPeriod()).difference(main.getBeginTime()))) {
                 // first data point closer than second, so chop end 
-                shifty = Cut.cut(shifty, 0, shifty.getNumPoints()-1);
+                shifty = Cut.cut(shifty, 0, shifty.getNumPoints()-2); //cut by index inclusive, so -2 to trim 1 from end
             } else {
                 // second is close, so chop begin
-                shifty = Cut.cut(shifty, 1, shifty.getNumPoints());
+                shifty = Cut.cut(shifty, 1, shifty.getNumPoints()-1); //cut by index inclusive, so -1 to not trim end
             }
         }
         if (shifty.getNumPoints() == main.getNumPoints()) {

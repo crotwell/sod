@@ -45,6 +45,7 @@ public class RefreshNetworkArm extends TimerTask {
                     if (!isNetworkBeingReloaded(net.getDbid())) {
                         networksBeingReloaded.add(new Integer(net.getDbid()));
                         needReload.add(net);
+                        logger.debug("Will Reload "+NetworkIdUtil.toString(net));
                     } else {
                         logger.info("net already in processing list, skipping..."+NetworkIdUtil.toString(net));
                     }
@@ -148,7 +149,7 @@ logger.debug("refresh "+NetworkIdUtil.toString(net));
     
     void checkSensitivityLoaded(ChannelImpl chan, LoadedNetworkSource loadSource) {
         try {
-            QuantityImpl sens = loadSource.getSensitivity(chan.getId());
+            QuantityImpl sens = loadSource.getSensitivity(chan);
         } catch(ChannelNotFound e) {
             logger.warn("No Instrumentation for "+ChannelIdUtil.toStringFormatDates(chan.getId()));
             NetworkDB.getSingleton().putSensitivity( ChannelSensitivity.createNonChannelSensitivity(chan));

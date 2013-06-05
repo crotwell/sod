@@ -13,6 +13,7 @@ import org.w3c.dom.Element;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
+import edu.sc.seis.sod.source.event.AbstractEventSource;
 
 public class RunProperties {
 
@@ -30,16 +31,16 @@ public class RunProperties {
 				statusDir = SodUtil.getText(statusBaseChild);
 			}
 			Element eventQueryChild = SodUtil.getElement(el,
-					"eventQueryIncrement");
+					AbstractEventSource.EVENT_QUERY_INCREMENT);
 			if (eventQueryChild != null) {
 				eventQueryIncrement = SodUtil.loadTimeInterval(eventQueryChild);
 			}
-			Element eventLagChild = SodUtil.getElement(el, "eventLag");
+			Element eventLagChild = SodUtil.getElement(el, AbstractEventSource.EVENT_LAG);
 			if (eventLagChild != null) {
 				eventLag = SodUtil.loadTimeInterval(eventLagChild);
 			}
 			Element eventRefreshChild = SodUtil.getElement(el,
-					"eventRefreshInterval");
+			                                               AbstractEventSource.EVENT_REFRESH_INTERVAL);
 			if (eventRefreshChild != null) {
 				eventRefresh = SodUtil.loadTimeInterval(eventRefreshChild);
 			}

@@ -11,6 +11,7 @@ import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
+import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.iris.Fissures.network.StationImpl;
@@ -39,20 +40,20 @@ public class LoadedNetworkSource extends WrappingNetworkSource implements Networ
     }
 
     @Override
-    public Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
-        instrumentationLoaded.add(ChannelIdUtil.toString(chanId));
-        return getWrapped().getInstrumentation(chanId);
+    public Instrumentation getInstrumentation(ChannelImpl chan) throws ChannelNotFound, InvalidResponse {
+        instrumentationLoaded.add(ChannelIdUtil.toString(chan.getId()));
+        return getWrapped().getInstrumentation(chan);
     }
 
     @Override
-    public QuantityImpl getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
-        instrumentationLoaded.add(ChannelIdUtil.toString(chanId));
-        return getWrapped().getSensitivity(chanId);
+    public QuantityImpl getSensitivity(ChannelImpl chan) throws ChannelNotFound, InvalidResponse {
+        instrumentationLoaded.add(ChannelIdUtil.toString(chan.getId()));
+        return getWrapped().getSensitivity(chan);
     }
 
     @Override
-    public List<? extends StationImpl> getStations(NetworkId net) {
-        if (NetworkIdUtil.areEqual(net, sta.getNetworkAttr().getId())) {
+    public List<? extends StationImpl> getStations(NetworkAttrImpl net) {
+        if (NetworkIdUtil.areEqual(net.getId(), sta.getNetworkAttr().getId())) {
             return allStations;
         }
         return getWrapped().getStations(net);
