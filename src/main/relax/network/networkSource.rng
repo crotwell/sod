@@ -174,6 +174,15 @@
                     </example>
                 </xsd:documentation>
             </xsd:annotation>
+            <optional>
+                <element name="name">
+                    <data type="string">
+                        <xsd:annotation>
+                            <summary>A unique name for this source.</summary>
+                        </xsd:annotation>
+                    </data>
+                </element>
+            </optional>
             <oneOrMore>
                 <ref name="networkSource"/>
             </oneOrMore>
@@ -273,6 +282,15 @@ CO, CSB, 00, EHE, 100
                             href="csvEvents.html">look here</a>.</description>
                 </xsd:documentation>
             </xsd:annotation>
+            <optional>
+                <element name="name">
+                    <data type="string">
+                        <xsd:annotation>
+                            <summary>A unique name for this source.</summary>
+                        </xsd:annotation>
+                    </data>
+                </element>
+            </optional>
                     <choice>
                         <element name="stationFile">
                             <data type="string"/>
@@ -325,7 +343,8 @@ CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
                     SOD will automatically set the level in the IRIS url as needed, but adding other qualifiers to
                     limit the request size will help speed the queries. You may need to escape the ampersand with
                     &amp;amp; due to the fact that a SOD recipe is XML and so the parser will signal an error for a
-                    unescaped ampersand.</description>
+                    unescaped ampersand.</description> 
+                    <deprecated>This is deprecated in favor of the new fdsnStation source.</deprecated>
                     <velocity>#networkArmPage()</velocity>
                     <example>
                         <stationXML>
@@ -371,6 +390,15 @@ CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
                 </xsd:documentation>
             </xsd:annotation>
             <interleave>
+                <optional>
+                    <element name="name">
+                        <data type="string">
+                            <xsd:annotation>
+                                <summary>A unique name for this source.</summary>
+                            </xsd:annotation>
+                        </data>
+                    </element>
+                </optional>
                 <choice>
                     <optional>
                         <element name="baseurl">

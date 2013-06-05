@@ -96,6 +96,7 @@
                           <summary>A QuakeML URL</summary>
                           <description>A url to a quakeml event source, either a remote web service or local file. Note this will
                           only be queried once, and so is not usable for new events as in a "standing order".</description>
+                          <deprecated>This is deprecated in favor of the new fdsnEvent source.</deprecated>
                          </xsd:annotation>
                         <data type="string"/>
                     </element>
@@ -112,6 +113,15 @@
                 </xsd:documentation>
             </xsd:annotation>
             <interleave>
+            <optional>
+                <element name="name">
+                    <data type="string">
+                        <xsd:annotation>
+                            <summary>A unique name for this source.</summary>
+                        </xsd:annotation>
+                    </data>
+                </element>
+            </optional>
                 <choice>
                     <optional>
                         <element name="baseurl">
@@ -307,6 +317,15 @@ time, magnitude, latitude, longitude, depth
                     If numEvents is not provided, then events continue to be generated forever, otherwise the number given will be generated.</description>
                 </xsd:documentation>
             </xsd:annotation>
+            <optional>
+                <element name="name">
+                    <data type="string">
+                        <xsd:annotation>
+                            <summary>A unique name for this source.</summary>
+                        </xsd:annotation>
+                    </data>
+                </element>
+            </optional>
             <element name="startTime">
             	<ref name="time"/>
             </element>
@@ -333,6 +352,15 @@ time, magnitude, latitude, longitude, depth
                     be current than to proceed in uniform time steps.</description>
                 </xsd:documentation>
             </xsd:annotation>
+            <optional>
+                <element name="name">
+                    <data type="string">
+                        <xsd:annotation>
+                            <summary>A unique name for this source.</summary>
+                        </xsd:annotation>
+                    </data>
+                </element>
+            </optional>
             <element name="interval">
                 <ref name="timeInterval"/>
             </element>
@@ -353,6 +381,15 @@ time, magnitude, latitude, longitude, depth
                     seismic wave propagation time and data latency.</description>
                 </xsd:documentation>
             </xsd:annotation>
+            <optional>
+                <element name="name">
+                    <data type="string">
+                        <xsd:annotation>
+                            <summary>A unique name for this source.</summary>
+                        </xsd:annotation>
+                    </data>
+                </element>
+            </optional>
             <element name="delay">
                 <ref name="timeInterval"/>
             </element>
