@@ -141,9 +141,12 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
                         // begin times, so use the request
                         for (RequestFilter rf : request) {
                             // find matching chan id
+                            if (rf.channel_id.network_id.network_code.equals(seis.channel_id.network_id.network_code)) {
+                                seis.channel_id.network_id.begin_time = rf.channel_id.network_id.begin_time;
+                            }
                             if (ChannelIdUtil.areEqualExceptForBeginTime(rf.channel_id, seis.channel_id)) {
                                 seis.channel_id.begin_time = rf.channel_id.begin_time;
-                                seis.channel_id.network_id.begin_time = rf.channel_id.network_id.begin_time;
+                                break;
                             }
                         }
                     }
