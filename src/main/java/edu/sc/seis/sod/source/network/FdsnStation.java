@@ -15,7 +15,6 @@ import edu.iris.Fissures.BoxArea;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.NetworkNotFound;
-import edu.iris.Fissures.IfNetwork.StationId;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
@@ -32,7 +31,6 @@ import edu.sc.seis.fissuresUtil.stationxml.StationXMLToFissures;
 import edu.sc.seis.seisFile.SeisFileException;
 import edu.sc.seis.seisFile.fdsnws.FDSNStationQuerier;
 import edu.sc.seis.seisFile.fdsnws.FDSNStationQueryParams;
-import edu.sc.seis.seisFile.fdsnws.FDSNWSException;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.FDSNStationXML;
 import edu.sc.seis.seisFile.fdsnws.stationxml.NetworkIterator;
@@ -107,7 +105,7 @@ public class FdsnStation extends AbstractNetworkSource {
     @Override
     public List<? extends NetworkAttrImpl> getNetworks() {
         try {
-            return getNetworks(defaultRetries);
+            return getNetworks(getRetries());
         } catch(SodSourceException e) {
             throw new RuntimeException("Timeout getting networks", e);
         }
@@ -128,43 +126,14 @@ public class FdsnStation extends AbstractNetworkSource {
             }
             return out;
         } catch(SeisFileException e) {
-            if (e.getCause() instanceof IOException) {
-                retryCount--;
-                logger.info("Station TIMEOUT retry: "+retryCount+" left");
-                if (retryCount > 0) {
-                    int sleepy = 2*1000;
-                    if (retryCount< defaultRetries) {
-                        sleepy = (defaultRetries-retryCount)*10*1000;
-                    }
-                    try {
-                        Thread.sleep(sleepy);
-                    } catch(InterruptedException e1) {}
-                    return getNetworks(retryCount);
-                } else {
-                    // not sure I like this...
-                    // return empty list, so outside will wait and then try again
-                    throw new SodSourceException(e);
-                }
-            } else {
-                throw new RuntimeException(e);
-            }
-        } catch(Exception e) {
-            throw new RuntimeException(e);
+            throw new SodSourceException(e);
+        } catch(XMLStreamException e) {
+            throw new SodSourceException(e);
         }
     }
-
-    int defaultRetries = 3;
 
     @Override
-    public List<? extends StationImpl> getStations(NetworkAttrImpl net) {
-        try {
-            return getStations(net, defaultRetries);
-        } catch(SodSourceException e) {
-            throw new RuntimeException("Timeout getting networks", e);
-        }
-    }
-
-    public List<? extends StationImpl> getStations(NetworkAttrImpl net, int retryCount) throws SodSourceException  {
+    public List<? extends StationImpl> getStations(NetworkAttrImpl net) throws SodSourceException {
         try {
             FDSNStationQueryParams staQP = setupQueryParams();
             staQP.setLevel(FDSNStationQueryParams.LEVEL_STATION);
@@ -190,39 +159,14 @@ public class FdsnStation extends AbstractNetworkSource {
             }
             return out;
         } catch(SeisFileException e) {
-            if (e.getCause() instanceof IOException) {
-                retryCount--;
-                logger.info("Station TIMEOUT retry: "+retryCount+" left");
-                if (retryCount > 0) {
-                    int sleepy = 2*1000;
-                    if (retryCount< defaultRetries) {
-                        sleepy = (defaultRetries-retryCount)*10*1000;
-                    }
-                    try {
-                        Thread.sleep(sleepy);
-                    } catch(InterruptedException e1) {}
-                    return getStations(net, retryCount);
-                } else {
-                    throw new SodSourceException("Retries exceeded", e);
-                }
-            } else {
-                throw new RuntimeException(e);
-            }
-        } catch(Exception e) {
-            throw new RuntimeException(e);
+            throw new SodSourceException(e);
+        } catch(XMLStreamException e) {
+            throw new SodSourceException(e);
         }
     }
 
     @Override
-    public List<? extends ChannelImpl> getChannels(StationImpl station) {
-        try {
-            return getChannels(station, defaultRetries);
-        } catch(SodSourceException e) {
-            throw new RuntimeException("Timeout getting channels", e);
-        }
-    }
-
-    public List<? extends ChannelImpl> getChannels(StationImpl station, int retryCount) throws SodSourceException  {
+    public List<? extends ChannelImpl> getChannels(StationImpl station) throws SodSourceException  {
         try {
             FDSNStationQueryParams staQP = setupQueryParams();
             staQP.setLevel(FDSNStationQueryParams.LEVEL_CHANNEL);
@@ -250,31 +194,14 @@ public class FdsnStation extends AbstractNetworkSource {
             }
             return out;
         } catch(SeisFileException e) {
-            if (e.getCause() instanceof IOException) {
-                retryCount--;
-                logger.info("Station TIMEOUT retry: "+retryCount+" left");
-                if (retryCount > 0) {
-                    int sleepy = 2*1000;
-                    if (retryCount< defaultRetries) {
-                        sleepy = (defaultRetries-retryCount)*10*1000;
-                    }
-                    try {
-                        Thread.sleep(sleepy);
-                    } catch(InterruptedException e1) {}
-                    return getChannels(station, retryCount);
-                } else {
-                    throw new SodSourceException("Retries exceeded", e);
-                }
-            } else {
-                throw new RuntimeException(e);
-            }
-        } catch(Exception e) {
-            throw new RuntimeException(e);
+            throw new SodSourceException(e);
+        } catch(XMLStreamException e) {
+            throw new SodSourceException(e);
         }
     }
 
     @Override
-    public QuantityImpl getSensitivity(ChannelImpl chan) throws ChannelNotFound, InvalidResponse {
+    public QuantityImpl getSensitivity(ChannelImpl chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
         String key = ChannelIdUtil.toString(chan.getId());
         if (!chanSensitivityMap.containsKey(key)) {
             getChannels(chan.getStationImpl());
@@ -286,15 +213,7 @@ public class FdsnStation extends AbstractNetworkSource {
     }
 
     @Override
-    public Instrumentation getInstrumentation(ChannelImpl chan) throws ChannelNotFound, InvalidResponse {
-        try {
-            return getInstrumentation(chan, defaultRetries);
-        } catch(SodSourceException e) {
-            throw new RuntimeException("Timeout getting channels", e);
-        }
-    }
-
-    public Instrumentation getInstrumentation(ChannelImpl chan, int retryCount) throws SodSourceException, ChannelNotFound, InvalidResponse  {
+    public Instrumentation getInstrumentation(ChannelImpl chan) throws SodSourceException, ChannelNotFound, InvalidResponse  {
         try {
             FDSNStationQueryParams staQP = setupQueryParams();
             staQP.setLevel(FDSNStationQueryParams.LEVEL_RESPONSE);
@@ -342,26 +261,9 @@ public class FdsnStation extends AbstractNetworkSource {
             }
             throw new ChannelNotFound();
         } catch(SeisFileException e) {
-            if (e.getCause() instanceof IOException) {
-                retryCount--;
-                logger.info("Station TIMEOUT retry: "+retryCount+" left");
-                if (retryCount > 0) {
-                    int sleepy = 2*1000;
-                    if (retryCount< defaultRetries) {
-                        sleepy = (defaultRetries-retryCount)*10*1000;
-                    }
-                    try {
-                        Thread.sleep(sleepy);
-                    } catch(InterruptedException e1) {}
-                    return getInstrumentation(chan, retryCount);
-                } else {
-                    throw new SodSourceException("Retries exceeded", e);
-                }
-            } else {
-                throw new RuntimeException(e);
-            }
+            throw new SodSourceException(e);
         } catch(XMLStreamException e) {
-            throw new InvalidResponse(e);
+            throw new SodSourceException(e);
         }
     }
     

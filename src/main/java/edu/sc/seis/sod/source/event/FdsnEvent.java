@@ -2,7 +2,6 @@ package edu.sc.seis.sod.source.event;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -12,6 +11,7 @@ import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
 
+import org.omg.CORBA.SystemException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -23,17 +23,16 @@ import edu.iris.Fissures.GlobalArea;
 import edu.iris.Fissures.Location;
 import edu.iris.Fissures.LocationType;
 import edu.iris.Fissures.PointDistanceArea;
+import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.IfParameterMgr.ParameterRef;
 import edu.iris.Fissures.event.EventAttrImpl;
 import edu.iris.Fissures.event.OriginImpl;
 import edu.iris.Fissures.model.FlinnEngdahlRegionImpl;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
-import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.seisFile.SeisFileException;
 import edu.sc.seis.seisFile.fdsnws.FDSNEventQuerier;
@@ -49,7 +48,6 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.source.AbstractSource;
 import edu.sc.seis.sod.source.network.AbstractNetworkSource;
-import edu.sc.seis.sod.source.seismogram.SeismogramSourceException;
 import edu.sc.seis.sod.subsetter.DepthRange;
 import edu.sc.seis.sod.subsetter.origin.Catalog;
 import edu.sc.seis.sod.subsetter.origin.Contributor;
@@ -161,51 +159,58 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
 
     @Override
     public CacheEvent[] next() {
-        return nextWithRetry(defaultRetry).toArray(new CacheEvent[0]);
-    }
-
-    public List<CacheEvent> nextWithRetry(int tryCount) {
-        List<CacheEvent> out = new ArrayList<CacheEvent>();
+        int count = 0;
+        SeisFileException latest;
         try {
-            EventIterator it = getIterator();
-            while (it.hasNext()) {
-                Event e = it.next();
-                out.add(toCacheEvent(e));
-            }
-
-            if (! caughtUpWithRealtime()) {
-                if ( out.size() < 10) {
-                    increaseQueryTimeWidth();
-                }
-                if ( out.size() > 100) {
-                    decreaseQueryTimeWidth();
-                }
-            }
-            return out;
-        } catch(SeisFileException e) {
-            if (e.getCause() instanceof IOException) {
-                tryCount--;
-                logger.info("Event TIMEOUT retry: "+tryCount+" left");
-                if (tryCount > 0) {
-                    int sleepy = 2*1000;
-                    if (tryCount< defaultRetry) {
-                        sleepy = (defaultRetry-tryCount)*10*1000;
-                    }
-                    try {
-                        Thread.sleep(sleepy);
-                    } catch(InterruptedException e1) {}
-                    return nextWithRetry(tryCount);
-                } else {
-                    // not sure I like this...
-                    // return empty list, so outside will wait and then try again
-                    return out;
-                }
+            return internalNext().toArray(new CacheEvent[0]);
+        } catch(OutOfMemoryError e) {
+            throw new RuntimeException("Out of memory", e);
+        } catch(SeisFileException t) {
+            if (t.getCause() instanceof IOException) {
+                latest = t;
             } else {
-                throw new RuntimeException(e);
+                throw new RuntimeException(t);
             }
-        } catch(Exception e) {
-            throw new RuntimeException(e); // ToDo: fix this
+        } catch(XMLStreamException e) {
+            throw new RuntimeException(e);
         }
+        while(getRetryStrategy().shouldRetry(latest, this, count++)) {
+            try {
+                List<CacheEvent> result = internalNext();
+                getRetryStrategy().serverRecovered(this);
+                return result.toArray(new CacheEvent[0]);
+            } catch(SeisFileException t) {
+                if (t.getCause() instanceof IOException) {
+                    latest = t;
+                } else {
+                    throw new RuntimeException(t);
+                }
+            } catch(XMLStreamException e) {
+                throw new RuntimeException(e);
+            } catch(OutOfMemoryError e) {
+                throw new RuntimeException("Out of memory", e);
+            }
+        }
+        throw new RuntimeException(latest);
+    }
+    
+    public List<CacheEvent> internalNext() throws SeisFileException, XMLStreamException {
+        List<CacheEvent> out = new ArrayList<CacheEvent>();
+        EventIterator it = getIterator();
+        while (it.hasNext()) {
+            Event e = it.next();
+            out.add(toCacheEvent(e));
+        }
+
+        if (! caughtUpWithRealtime()) {
+            if ( out.size() < 10) {
+                increaseQueryTimeWidth();
+            }
+            if ( out.size() > 100) {
+                decreaseQueryTimeWidth();
+            }
+        }
+        return out;
     }
 
     @Override
@@ -362,8 +367,6 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
     int port = -1;
     
     URI parsedURL;
-    
-    int defaultRetry = 3;
     
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(FdsnEvent.class);
     

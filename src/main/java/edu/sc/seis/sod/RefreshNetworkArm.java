@@ -19,6 +19,7 @@ import edu.sc.seis.fissuresUtil.hibernate.ChannelSensitivity;
 import edu.sc.seis.fissuresUtil.hibernate.InstrumentationBlob;
 import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
 import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
+import edu.sc.seis.sod.source.SodSourceException;
 import edu.sc.seis.sod.source.network.LoadedNetworkSource;
 import edu.sc.seis.sod.source.network.NetworkFinder;
 
@@ -150,6 +151,9 @@ logger.debug("refresh "+NetworkIdUtil.toString(net));
     void checkSensitivityLoaded(ChannelImpl chan, LoadedNetworkSource loadSource) {
         try {
             QuantityImpl sens = loadSource.getSensitivity(chan);
+        } catch(SodSourceException e) {
+            logger.warn("Error getting Instrumentation for "+ChannelIdUtil.toStringFormatDates(chan.getId()));
+            NetworkDB.getSingleton().putSensitivity( ChannelSensitivity.createNonChannelSensitivity(chan));
         } catch(ChannelNotFound e) {
             logger.warn("No Instrumentation for "+ChannelIdUtil.toStringFormatDates(chan.getId()));
             NetworkDB.getSingleton().putSensitivity( ChannelSensitivity.createNonChannelSensitivity(chan));

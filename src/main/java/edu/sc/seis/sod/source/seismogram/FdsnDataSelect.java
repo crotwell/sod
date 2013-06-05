@@ -7,6 +7,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.FissuresException;
@@ -36,7 +38,7 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
 
     private int port = -1;
 
-    private int timeoutMillis = 30 * 1000;
+    private int timeoutMillis = 10 * 1000;
 
     private boolean doBulk = false;
 
@@ -44,12 +46,10 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
 
     private String password;
 
-    int maxRetries = 3;
-
     public FdsnDataSelect() {
         super("DefaultFDSNDataSelect");
         host = FDSNDataSelectQueryParams.IRIS_HOST;
-        timeoutMillis = 30 * 1000;
+        timeoutMillis = 10 * 1000;
         doBulk = false;
         username = "";
         password = "";
@@ -60,13 +60,13 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
     }
 
     public FdsnDataSelect(Element config, String defaultHost) throws MalformedURLException, URISyntaxException {
-        super(config, "DefaultFDSNDataSelect");
+        super(config, "DefaultFDSNDataSelect", 2);
         doBulk = SodUtil.isTrue(config, "dobulk", true);
         host = SodUtil.loadText(config, "host", defaultHost);
         port = SodUtil.loadInt(config, "port", -1);
         username = SodUtil.loadText(config, "user", "");
         password = SodUtil.loadText(config, "password", "");
-        timeoutMillis = 1000 * SodUtil.loadInt(config, "timeoutSecs", 30);
+        timeoutMillis = 1000 * SodUtil.loadInt(config, "timeoutSecs", 10);
     }
 
     @Override
@@ -83,6 +83,40 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
 
             @Override
             public List<LocalSeismogramImpl> retrieveData(List<RequestFilter> request) throws SeismogramSourceException {
+                int count = 0;
+                SeismogramSourceException latest;
+                try {
+                    return internalRetrieveData(request);
+                } catch(OutOfMemoryError e) {
+                    throw new RuntimeException("Out of memory", e);
+                } catch(SeismogramSourceException t) {
+                    if (t.getCause() instanceof IOException 
+                            || (t.getCause() != null && t.getCause().getCause() instanceof IOException)) {
+                        latest = t;
+                    } else {
+                        throw new RuntimeException(t);
+                    }
+                }
+                while(getRetryStrategy().shouldRetry(latest, this, count++)) {
+                    try {
+                        List<LocalSeismogramImpl> result = internalRetrieveData(request);
+                        getRetryStrategy().serverRecovered(this);
+                        return result;
+                    } catch(SeismogramSourceException t) {
+                        if (t.getCause() instanceof IOException 
+                                || (t.getCause() != null && t.getCause().getCause() instanceof IOException)) {
+                            latest = t;
+                        } else {
+                            throw new RuntimeException(t);
+                        }
+                    } catch(OutOfMemoryError e) {
+                        throw new RuntimeException("Out of memory", e);
+                    }
+                }
+                throw new RuntimeException(latest);
+            }
+            
+            public List<LocalSeismogramImpl> internalRetrieveData(List<RequestFilter> request) throws SeismogramSourceException {
                 List<LocalSeismogramImpl> out = new ArrayList<LocalSeismogramImpl>();
                 if (request.size() != 0) {
                     FDSNDataSelectQueryParams queryParams = new FDSNDataSelectQueryParams(host);
@@ -99,7 +133,7 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
                                                                new MicroSecondDate(rf.start_time),
                                                                new MicroSecondDate(rf.end_time)));
                     }
-                    List<DataRecord> drList = retrieveData(queryParams, queryRequest, maxRetries);
+                    List<DataRecord> drList = retrieveData(queryParams, queryRequest, getRetries());
                     try {
                     List<LocalSeismogramImpl> perRFList = FissuresConvert.toFissures(drList);
                     for (LocalSeismogramImpl seis : perRFList) {
@@ -128,6 +162,8 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
                                                  int tryCount) throws SeismogramSourceException {
                 List<DataRecord> drList = new ArrayList<DataRecord>();
                 FDSNDataSelectQuerier querier = new FDSNDataSelectQuerier(queryParams, queryRequest);
+                querier.setConnectTimeout(timeoutMillis);
+                querier.setReadTimeout(timeoutMillis);
                 if (username != null && username.length() != 0 && password != null && password.length() != 0) {
                     querier.enableRestrictedData(username, password);
                 }

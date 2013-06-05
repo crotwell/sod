@@ -31,12 +31,15 @@ import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
 import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.sod.hibernate.SodDB;
+import edu.sc.seis.sod.source.SodSourceException;
 import edu.sc.seis.sod.source.event.EventSource;
+import edu.sc.seis.sod.source.network.AbstractNetworkSource;
 import edu.sc.seis.sod.source.network.FdsnStation;
 import edu.sc.seis.sod.source.network.InstrumentationFromDB;
 import edu.sc.seis.sod.source.network.LoadedNetworkSource;
 import edu.sc.seis.sod.source.network.NetworkQueryConstraints;
 import edu.sc.seis.sod.source.network.NetworkSource;
+import edu.sc.seis.sod.source.network.RetryNetworkSource;
 import edu.sc.seis.sod.source.network.StationXML;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.StringTree;
@@ -165,7 +168,11 @@ public class NetworkArm implements Arm {
     private void loadConfigElement(Object sodElement)
             throws ConfigurationException {
         if(sodElement instanceof NetworkSource) {
-            internalFinder = (NetworkSource)sodElement;
+            if (sodElement instanceof AbstractNetworkSource) {
+                internalFinder = new RetryNetworkSource((AbstractNetworkSource)sodElement);
+            } else {
+                internalFinder = (NetworkSource)sodElement;
+            }
             finder = new InstrumentationFromDB(internalFinder);
         } else if(sodElement instanceof NetworkSubsetter) {
             attrSubsetter = (NetworkSubsetter)sodElement;
@@ -235,7 +242,7 @@ public class NetworkArm implements Arm {
         }
     }
 
-    List<NetworkAttrImpl> getSuccessfulNetworksFromServer() {
+    List<NetworkAttrImpl> getSuccessfulNetworksFromServer() throws SodSourceException {
         synchronized(netGetSync) {
             statusChanged("Getting networks");
             logger.info("Getting networks from server");
@@ -674,7 +681,7 @@ public class NetworkArm implements Arm {
         }
     }
 
-    private NetworkSource internalFinder = new FdsnStation();
+    private NetworkSource internalFinder = new RetryNetworkSource(new FdsnStation());
 
     private NetworkSource finder = new InstrumentationFromDB(internalFinder);
     

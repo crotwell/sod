@@ -28,7 +28,7 @@ public abstract class AbstractEventSource extends AbstractSource implements Even
     }
 
     public AbstractEventSource(Element config, String defaultName) throws ConfigurationException {
-        super(config, defaultName);
+        super(config, defaultName, -1);
         if(DOMHelper.hasElement(config, AbstractNetworkSource.REFRESH_ELEMENT)) {
             refreshInterval = SodUtil.loadTimeInterval(SodUtil.getElement(config, AbstractNetworkSource.REFRESH_ELEMENT));
         } else {

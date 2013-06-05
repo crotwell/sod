@@ -33,7 +33,7 @@ public abstract class AbstractNetworkSource extends AbstractSource implements Ne
     }
     
     public AbstractNetworkSource(Element config) throws Exception {
-        super(config, "default");
+        super(config, "default", -1);
         Element subElement = SodUtil.getElement(config, REFRESH_ELEMENT);
         if(subElement != null) {
             refreshInterval = SodUtil.loadTimeInterval(subElement);

@@ -7,6 +7,7 @@ import edu.iris.Fissures.IfNetwork.SeismicHardware;
 import edu.iris.Fissures.IfNetwork.Sensor;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
+import edu.sc.seis.sod.source.SodSourceException;
 import edu.sc.seis.sod.source.network.NetworkSource;
 
 /**
@@ -31,6 +32,9 @@ public abstract class SensorSubsetter extends InstrumentationSubsetter {
         } catch(InvalidResponse ex) {
             handle(ex);
             return false;
+        } catch(SodSourceException ex) {
+            handle(ex);
+            return false;
         }
     }
 
@@ -43,6 +47,9 @@ public abstract class SensorSubsetter extends InstrumentationSubsetter {
             handleChannelNotFound(ex);
             return false;
         } catch(InvalidResponse ex) {
+            handle(ex);
+            return false;
+        } catch(SodSourceException ex) {
             handle(ex);
             return false;
         }

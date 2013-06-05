@@ -5,6 +5,7 @@ import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.SeismicHardware;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
+import edu.sc.seis.sod.source.SodSourceException;
 import edu.sc.seis.sod.source.network.NetworkSource;
 
 /**
@@ -16,7 +17,7 @@ public abstract class InstrumentationSubsetter implements ChannelSubsetter {
 
     protected SeismicHardware getSeismicHardware(ChannelImpl channel,
                                                  NetworkSource network)
-            throws ChannelNotFound, InvalidResponse {
+            throws ChannelNotFound, InvalidResponse, SodSourceException {
         return getSeismicHardware(network.getInstrumentation(channel));
     }
 
@@ -33,6 +34,9 @@ public abstract class InstrumentationSubsetter implements ChannelSubsetter {
         } catch(InvalidResponse ex) {
             handle(ex);
             return false;
+        } catch(SodSourceException ex) {
+            handle(ex);
+            return false;
         }
     }
 
@@ -45,6 +49,9 @@ public abstract class InstrumentationSubsetter implements ChannelSubsetter {
             handleChannelNotFound(ex);
             return false;
         } catch(InvalidResponse ex) {
+            handle(ex);
+            return false;
+        } catch(SodSourceException ex) {
             handle(ex);
             return false;
         }
@@ -61,6 +68,9 @@ public abstract class InstrumentationSubsetter implements ChannelSubsetter {
         } catch(InvalidResponse ex) {
             handle(ex);
             return false;
+        } catch(SodSourceException ex) {
+            handle(ex);
+            return false;
         }
     }
 
@@ -73,6 +83,9 @@ public abstract class InstrumentationSubsetter implements ChannelSubsetter {
             handleChannelNotFound(ex);
             return false;
         } catch(InvalidResponse ex) {
+            handle(ex);
+            return false;
+        } catch(SodSourceException ex) {
             handle(ex);
             return false;
         }
@@ -92,6 +105,9 @@ public abstract class InstrumentationSubsetter implements ChannelSubsetter {
     }
     public static void handle(InvalidResponse e) {
         logger.info(getInstrumentationInvalidMsg(), e);
+    }
+    public static void handle(SodSourceException e) {
+        logger.info("Problem loading Instrumentation", e);
     }
     
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(InstrumentationSubsetter.class);

@@ -13,6 +13,7 @@ import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
+import edu.sc.seis.sod.source.SodSourceException;
 import edu.sc.seis.sod.source.Source;
 
 public interface NetworkSource extends Source {
@@ -23,15 +24,15 @@ public interface NetworkSource extends Source {
 
     public List<? extends CacheNetworkAccess> getNetworkByName(String name) throws NetworkNotFound;
 
-    public List<? extends NetworkAttrImpl> getNetworks();
+    public List<? extends NetworkAttrImpl> getNetworks() throws SodSourceException;
 
-    public List<? extends StationImpl> getStations(NetworkAttrImpl net);
+    public List<? extends StationImpl> getStations(NetworkAttrImpl net) throws SodSourceException;
 
-    public List<? extends ChannelImpl> getChannels(StationImpl station);
+    public List<? extends ChannelImpl> getChannels(StationImpl station) throws SodSourceException;
 
-    public QuantityImpl getSensitivity(ChannelImpl chanId) throws ChannelNotFound, InvalidResponse;
+    public QuantityImpl getSensitivity(ChannelImpl chanId) throws ChannelNotFound, InvalidResponse, SodSourceException;
 
-    public Instrumentation getInstrumentation(ChannelImpl chanId) throws ChannelNotFound, InvalidResponse;
+    public Instrumentation getInstrumentation(ChannelImpl chanId) throws ChannelNotFound, InvalidResponse, SodSourceException;
 
     public void setConstraints(NetworkQueryConstraints constraints);
 }

@@ -7,6 +7,7 @@ import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
+import edu.sc.seis.sod.source.SodSourceException;
 import edu.sc.seis.sod.velocity.network.VelocityChannel;
 import edu.sc.seis.sod.velocity.network.VelocityStation;
 
@@ -18,7 +19,7 @@ public class VelocityNetworkSource extends WrappingNetworkSource implements Netw
     }
 
     @Override
-    public List<? extends ChannelImpl> getChannels(StationImpl station) {
+    public List<? extends ChannelImpl> getChannels(StationImpl station) throws SodSourceException {
         return VelocityChannel.wrap(getWrapped().getChannels(station));
     }
 
@@ -28,13 +29,13 @@ public class VelocityNetworkSource extends WrappingNetworkSource implements Netw
     }
 
     @Override
-    public List<? extends NetworkAttrImpl> getNetworks() {
+    public List<? extends NetworkAttrImpl> getNetworks() throws SodSourceException {
         // TODO: this is not really what we want as it is not a Velocity
         return getWrapped().getNetworks();
     }
 
     @Override
-    public List<? extends StationImpl> getStations(NetworkAttrImpl net) {
+    public List<? extends StationImpl> getStations(NetworkAttrImpl net) throws SodSourceException {
         return VelocityStation.wrapList(getWrapped().getStations(net));
     }
 }

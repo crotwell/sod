@@ -17,6 +17,7 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.UserConfigurationException;
+import edu.sc.seis.sod.source.SodSourceException;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
@@ -49,7 +50,7 @@ public class BelongsToVirtual implements StationSubsetter {
         this.refreshInterval = refreshInterval;
     }
 
-    public StringTree accept(StationImpl station, NetworkSource network) throws ConfigurationException {
+    public StringTree accept(StationImpl station, NetworkSource network) throws ConfigurationException, SodSourceException {
         refreshStations(network);
         for (StationImpl sta : stations) {
             if(StationIdUtil.areEqual(station, sta)) {
@@ -59,7 +60,7 @@ public class BelongsToVirtual implements StationSubsetter {
         return new Fail(this);
     }
 
-    private void refreshStations(NetworkSource network) throws ConfigurationException {
+    private void refreshStations(NetworkSource network) throws ConfigurationException, SodSourceException {
         if(ClockUtil.now().subtract(getRefreshInterval()).after(lastQuery)) {
             lastQuery = ClockUtil.now();
             NetworkAccess virtual = getVirtual(network, name);

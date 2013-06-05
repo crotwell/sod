@@ -3,7 +3,6 @@ package edu.sc.seis.sod.subsetter.station;
 import java.util.List;
 
 import junit.framework.TestCase;
-import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
@@ -15,7 +14,6 @@ import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockNetworkAttr;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockStation;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.NamedNetDC;
 import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
-import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.UserConfigurationException;
 import edu.sc.seis.sod.mock.MockNetworkSource;
 import edu.sc.seis.sod.source.network.NetworkFinder;
@@ -55,7 +53,7 @@ public class BelongsToVirtualTest extends TestCase {
     
     private static String mockNetName = MockNetworkAttr.createMultiSplendoredAttr().getName();
 
-    public void testRefresh() throws ConfigurationException {
+    public void testRefresh() throws Exception {
         CountRetrieveStations na = new CountRetrieveStations();
         BelongsToVirtual btv = new BelongsToVirtual(mockNetName, FORTNIGHT);
         btv.accept(MockStation.createStation(), na);
@@ -64,7 +62,7 @@ public class BelongsToVirtualTest extends TestCase {
         assertEquals(1, na.callCount);
     }
 
-    public void testZeroRefreshTime() throws InterruptedException, ConfigurationException {
+    public void testZeroRefreshTime() throws InterruptedException, Exception {
         CountRetrieveStations na = new CountRetrieveStations();
         BelongsToVirtual btv = new BelongsToVirtual(mockNetName,
                                                     new TimeInterval(0,
@@ -76,7 +74,7 @@ public class BelongsToVirtualTest extends TestCase {
         assertEquals(2, na.callCount);
     }
 
-    public void testAcceptsAllStationsInAssignedNetwork() throws ConfigurationException {
+    public void testAcceptsAllStationsInAssignedNetwork() throws Exception {
         CountRetrieveStations na = new CountRetrieveStations();
         BelongsToVirtual btv = new BelongsToVirtual(mockNetName, FORTNIGHT);
         List<? extends StationImpl> stations = na.getStations(MockNetworkAttr.createMultiSplendoredAttr());
@@ -85,14 +83,14 @@ public class BelongsToVirtualTest extends TestCase {
         }
     }
 
-    public void testStationsNotInNetwork() throws ConfigurationException {
+    public void testStationsNotInNetwork() throws Exception {
         CountRetrieveStations na = new CountRetrieveStations();
         BelongsToVirtual btv = new BelongsToVirtual(mockNetName, FORTNIGHT);
         assertFalse(btv.accept(MockStation.createStation(), na).isSuccess());
         assertFalse(btv.accept(MockStation.createOtherStation(), na).isSuccess());
     }
 
-    public void testBadVirtualName() throws ConfigurationException {
+    public void testBadVirtualName() throws Exception {
         try {
             ExplodesOnRetByName na = new ExplodesOnRetByName();
             BelongsToVirtual btv = new BelongsToVirtual(mockNetName, FORTNIGHT);

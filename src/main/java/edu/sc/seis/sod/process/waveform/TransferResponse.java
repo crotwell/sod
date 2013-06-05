@@ -2,7 +2,6 @@ package edu.sc.seis.sod.process.waveform;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Filter;
 import edu.iris.Fissures.IfNetwork.FilterType;
@@ -21,6 +20,7 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Threadable;
+import edu.sc.seis.sod.source.SodSourceException;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.StringTreeLeaf;
@@ -63,7 +63,7 @@ public class TransferResponse implements WaveformProcess, Threadable {
         }
     }
     
-    public static SacPoleZero checkResponse(ChannelImpl chan, NetworkSource na) throws InvalidResponse {
+    public static SacPoleZero checkResponse(ChannelImpl chan, NetworkSource na) throws InvalidResponse, SodSourceException {
         try {
             Instrumentation inst = na.getInstrumentation(chan);
             InstrumentationLoader.checkResponse(inst.the_response);

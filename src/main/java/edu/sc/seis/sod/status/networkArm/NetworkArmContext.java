@@ -13,6 +13,7 @@ import org.apache.velocity.context.Context;
 import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
 import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.source.SodSourceException;
 
 public class NetworkArmContext extends AbstractContext {
 
@@ -28,7 +29,11 @@ public class NetworkArmContext extends AbstractContext {
 
     public Object internalGet(String key) {
         if(key.equals(ALL_NETS_KEY)) {
-            return Start.getNetworkArm().getNetworkSource().getNetworks();
+            try {
+                return Start.getNetworkArm().getNetworkSource().getNetworks();
+            } catch(SodSourceException e) {
+                throw new RuntimeException("can't get for key=" + key, e);
+            }
         } else if(key.equals(SUCCESSFUL_NETS_KEY)) {
             try {
                 return Start.getNetworkArm()
