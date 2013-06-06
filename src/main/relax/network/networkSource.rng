@@ -33,6 +33,7 @@
                         should periodically check for new channels.  
                         See <a href="http://www.seis.sc.edu/wily/GetAllServers?corbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService&amp;description=IRIS nameserver">Wily</a>
                         for a list of active NetworkDCs and their status. </description>
+                    <deprecated>This is deprecated in favor of the new fdsnStation source.</deprecated>
                     <velocity>#networkArmPage()</velocity>
                     <example>
                         <networkFinder>

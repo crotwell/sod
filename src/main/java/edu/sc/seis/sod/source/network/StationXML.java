@@ -59,7 +59,7 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.StationXMLException;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 
-
+@Deprecated
 public class StationXML implements NetworkSource {
     
     public StationXML(Element config) throws ConfigurationException {

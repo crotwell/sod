@@ -13,6 +13,7 @@ import edu.sc.seis.sod.CookieJar;
 /**
  * @author groves Created on Apr 12, 2005
  */
+@Deprecated
 public class BestIRISDataCenter implements SeismogramSourceLocator {
 
     public SeismogramSource getSeismogramSource(CacheEvent event,
