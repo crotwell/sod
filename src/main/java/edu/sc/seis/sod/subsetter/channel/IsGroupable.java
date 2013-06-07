@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.subsetter.channel;
 
+import org.w3c.dom.Element;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import edu.iris.Fissures.network.SiteIdUtil;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.ChannelGrouper;
+import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
@@ -15,18 +17,19 @@ import edu.sc.seis.sod.status.StringTree;
 
 public class IsGroupable implements ChannelSubsetter {
 
+    public IsGroupable(Element config) {
+    }
+    
 	public StringTree accept(ChannelImpl channel, NetworkSource network)
 			throws Exception {
 	    List<? extends ChannelImpl> allChans = network.getChannels((StationImpl)channel.getStation());
         ArrayList<ChannelImpl> siteChans = new ArrayList<ChannelImpl>();
         for (ChannelImpl channelImpl : allChans) {
-			if (SiteIdUtil.areSameSite(channelImpl.get_id(), channel.get_id())) {
-				siteChans.add(channelImpl);
-			}
+            siteChans.add(channelImpl);
 		}
 
         List<ChannelImpl> failures = new ArrayList<ChannelImpl>();
-        List<ChannelGroup> chanGroups = channelGrouper.group(siteChans, failures);
+        List<ChannelGroup> chanGroups = getChannelGrouper().group(siteChans, failures);
         for(ChannelGroup cg : chanGroups) {
         	if (cg.contains(channel)) {
         		return new Pass(this);
@@ -36,5 +39,15 @@ public class IsGroupable implements ChannelSubsetter {
 	}
 
 
-    private ChannelGrouper channelGrouper = new ChannelGrouper();
+    
+    public ChannelGrouper getChannelGrouper() {
+        // lazy load
+        if(channelGrouper == null) {
+            channelGrouper = Start.getNetworkArm().getChannelGrouper();
+        }
+        return channelGrouper;
+    }
+
+
+    private ChannelGrouper channelGrouper;
 }

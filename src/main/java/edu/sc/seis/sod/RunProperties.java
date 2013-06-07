@@ -69,6 +69,11 @@ public class RunProperties {
 			if (evChanPairProcChild != null) {
 				evChanPairProc = SodUtil.getText(evChanPairProcChild);
 			}
+            Element chanGroupRuleChild = SodUtil.getElement(el,
+                    "channelGroupingRules");
+            if (chanGroupRuleChild != null) {
+                channelGroupingRules = SodUtil.getText(chanGroupRuleChild);
+            }
 			if (SodUtil.isTrue(el, "reopenEvents", false)) {
 				reopenEvents = true;
 			}
@@ -189,8 +194,12 @@ public class RunProperties {
     public List getHibernateConfig() {
 	    return hibernateConfig;
 	}
+	
+    public String getChannelGroupingRules() {
+        return channelGroupingRules;
+    }
 
-	public static final TimeInterval NO_TIME = new TimeInterval(0,
+    public static final TimeInterval NO_TIME = new TimeInterval(0,
 			UnitImpl.SECOND);
 
 	public static final TimeInterval ONE_WEEK = new TimeInterval(7,
@@ -242,6 +251,8 @@ public class RunProperties {
 	private boolean loserEventCleaner = false;
 
 	private boolean allowDeadNets;
+	
+	private String channelGroupingRules = null;
 	
 	private boolean skipAvailableData = false;
 	

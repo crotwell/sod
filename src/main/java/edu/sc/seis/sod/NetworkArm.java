@@ -65,6 +65,7 @@ import edu.sc.seis.sod.subsetter.station.StationSubsetter;
 public class NetworkArm implements Arm {
 
     public NetworkArm(Element config) throws ConfigurationException {
+        channelGrouper = new ChannelGrouper(Start.getRunProps().getChannelGroupingRules());
         processConfig(config);
         refresh = new RefreshNetworkArm(this);
     }
@@ -697,7 +698,7 @@ public class NetworkArm implements Arm {
 
     private ChannelSubsetter chanEffectiveSubsetter = new PassChannel();
 
-    private ChannelGrouper channelGrouper = new ChannelGrouper();
+    private ChannelGrouper channelGrouper;
 
 
     public NetworkSource getNetworkSource() {
@@ -756,4 +757,9 @@ public class NetworkArm implements Arm {
     final Object staGetSync = new Object();
 
     final Object chanGetSync = new Object();
+
+    public ChannelGrouper getChannelGrouper() {
+        return channelGrouper;
+    }
+    
 }// NetworkArm

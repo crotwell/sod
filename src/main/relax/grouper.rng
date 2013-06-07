@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+    xmlns:xsd="http://http://www.w3.org/2001/XMLSchema"
+    xmlns:xi="http://www.w3.org/2001/XInclude" >
+  	<start>
+  		 <ref name="rules"/>
+  	</start>
+  	<define name="rules">
+	  	<element name="rules">
+  			<zeroOrMore>
+	  			<ref name="rule"/>
+  			</zeroOrMore>
+  		</element>
+  	</define>
+    <define name="siteMatchRule">
+     <element name="siteMatchRule">
+         <attribute name="orientations">
+            <data type="string">
+                <param name="length">3</param>
+            </data>
+        </attribute>
+        </element>
+    </define>
+    <define name="orient">
+         <element name="orient">
+             <attribute name="site">
+                <data type="string">
+                   <param name="length">2</param>
+                </data>
+             </attribute>
+             <attribute name="orientation">
+                <data type="string">
+                    <param name="length">1</param>
+                </data>
+            </attribute>
+        </element>
+    </define>
+    <define name="orientedSiteRule">
+        <element name="orientedSiteRule">
+            <ref name="orient"/>
+            <ref name="orient"/>
+            <ref name="orient"/>
+        </element>
+    </define>
+            	
+   <define name="rule">
+   	<element name ="rule">
+  		<optional>
+          	    <ref name="network"/>
+       		</optional>
+       		<optional>
+	            <ref name="station"/>
+       		</optional>
+       		<optional>
+	            <ref name="channel"/>
+       		</optional>
+        	<zeroOrMore>
+        	    <choice>
+                    <ref name="siteMatchRule"/>
+                    <ref name="orientedSiteRule"/>
+                </choice>
+   		</zeroOrMore>
+  	 </element>
+  </define>
+  
+  
+<!-- Common includes -->
+    <xi:include href="properties.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/area.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/anyXML.rng" />
+    <xi:include href="base/include/catalog.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/contributor.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/eventLabel.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/externalClass.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/latLon.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/magnitudeRange.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/originDepthRange.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/originTimeRange.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/phaseWindow.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/quantity.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/range.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/samplingRange.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/seismogramDisplay.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/seismogramImage.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/source.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/taup.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/time.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/timeRange.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="base/include/units.rng" parse="xml" xpointer="xpointer(//define)"/>
+  
+  
+  
+    <xi:include href="network/network.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="network/station.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="network/channel.rng" parse="xml" xpointer="xpointer(//define)"/>
+    
+    <xi:include href="event/eventSource.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="event/origin.rng" parse="xml" xpointer="xpointer(//define)"/>
+    
+    <xi:include href="waveform/eventStation.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="waveform/eventChannel.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="waveform/requestGenerator.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="waveform/requestSubsetter.rng" parse="xml" xpointer="xpointer(//define)"/>
+    <xi:include href="waveform/seismogramSource.rng" parse="xml" xpointer="xpointer(//define)"/>
+</grammar>
+
