@@ -48,6 +48,9 @@
                     <ref name="eventChannelPairProcessing"/>
                 </optional>
                 <optional>
+                    <ref name="channelGroupingRules"/>
+                </optional>
+                <optional>
                     <ref name="statusPages"/>
                 </optional>
                 <optional>
@@ -233,7 +236,17 @@
                 <value>noCheck</value>
             </choice>
         </element>
+    </define><define name="channelGroupingRules">
+        <element name="channelGroupingRules">
+            <xsd:annotation>
+                <summary>Adds rules for grouping channels.</summary>
+                <description>This allows a file with additional rules to be specified. The rules should follow
+                the grouper.rng schema.</description>
+            </xsd:annotation>
+            <text/>
+        </element>
     </define>
+    
     <define name="statusPages">
         <element name="statusPages">
             <xsd:annotation>
