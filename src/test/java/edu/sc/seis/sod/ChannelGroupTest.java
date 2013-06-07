@@ -40,7 +40,7 @@ public class ChannelGroupTest {
         
         List<ChannelGroup> cgList = cger.group(chanList, failures);
         assertEquals("failures", 0, failures.size());
-        assertEquals("grouped", 1, cgList.size());
+        assertEquals("grouped", 2, cgList.size());
     }
     
     @Test
@@ -48,7 +48,7 @@ public class ChannelGroupTest {
         List<ChannelImpl> chanList = new ArrayList<ChannelImpl>();
         List<ChannelImpl> failures = new ArrayList<ChannelImpl>();
         StationImpl mockStation = MockStation.createStation();
-        chanList.add(MockChannel.createChannel(mockStation, "30", "BHZ"));
+        chanList.add(MockChannel.createChannel(mockStation, "00", "BHZ"));
         SiteMatchRule threeC = new SiteMatchRule("ZNE");
 
         assertEquals("initial", 1, chanList.size());
