@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
@@ -20,6 +21,7 @@ import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.mseed.FissuresConvert;
+import edu.sc.seis.fissuresUtil.time.ReduceTool;
 import edu.sc.seis.seisFile.ChannelTimeWindow;
 import edu.sc.seis.seisFile.SeisFileException;
 import edu.sc.seis.seisFile.fdsnws.FDSNDataSelectQuerier;
@@ -136,6 +138,7 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
                     List<DataRecord> drList = retrieveData(queryParams, queryRequest, getRetries());
                     try {
                     List<LocalSeismogramImpl> perRFList = FissuresConvert.toFissures(drList);
+                    perRFList = Arrays.asList(ReduceTool.merge(perRFList.toArray(new LocalSeismogramImpl[0])));
                     for (LocalSeismogramImpl seis : perRFList) {
                         // the DataRecords know nothing about channel or network
                         // begin times, so use the request
