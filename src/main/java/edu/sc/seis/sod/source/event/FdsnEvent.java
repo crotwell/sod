@@ -11,7 +11,6 @@ import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
 
-import org.omg.CORBA.SystemException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -23,7 +22,6 @@ import edu.iris.Fissures.GlobalArea;
 import edu.iris.Fissures.Location;
 import edu.iris.Fissures.LocationType;
 import edu.iris.Fissures.PointDistanceArea;
-import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.IfParameterMgr.ParameterRef;
 import edu.iris.Fissures.event.EventAttrImpl;
 import edu.iris.Fissures.event.OriginImpl;
