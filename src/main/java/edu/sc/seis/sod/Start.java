@@ -218,7 +218,9 @@ public class Start {
                 allHopeAbandon(validator.getErrorMessage());
             } else {
                 logger.info("Congratulations, valid recipe.");
-                System.out.println("Congratulations, valid recipe.");
+                if (! args.isPrintRecipe()) {
+                    System.out.println("Congratulations, valid recipe.");
+                }
             }
             if(args.onlyValidate()) {
                 System.exit(0);
