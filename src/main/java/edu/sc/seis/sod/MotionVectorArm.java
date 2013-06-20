@@ -26,6 +26,7 @@ import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
+import edu.sc.seis.fissuresUtil.time.ReduceTool;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.process.waveform.vector.ANDWaveformProcessWrapper;
@@ -47,6 +48,7 @@ import edu.sc.seis.sod.subsetter.availableData.AvailableDataSubsetter;
 import edu.sc.seis.sod.subsetter.availableData.vector.ANDAvailableDataWrapper;
 import edu.sc.seis.sod.subsetter.availableData.vector.ORAvailableDataWrapper;
 import edu.sc.seis.sod.subsetter.availableData.vector.VectorAvailableDataSubsetter;
+import edu.sc.seis.sod.subsetter.channel.ChannelEffectiveTimeOverlap;
 import edu.sc.seis.sod.subsetter.eventChannel.PassEventChannel;
 import edu.sc.seis.sod.subsetter.eventChannel.vector.EventVectorSubsetter;
 import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
@@ -182,6 +184,18 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
 
     public void processRequestSubsetter(EventVectorPair ecp, RequestFilter[][] infilters) {
         StringTree passed;
+        for (int i = 0; i < infilters.length; i++) {
+            // check channel overlaps request
+            RequestFilter coveringRequest = ReduceTool.cover(infilters[i]);
+            ChannelEffectiveTimeOverlap chanOverlap = new ChannelEffectiveTimeOverlap(new MicroSecondDate(coveringRequest.start_time),
+                                                                                      new MicroSecondDate(coveringRequest.end_time));
+            passed = chanOverlap.accept(ecp.getChannelGroup().getChannels()[i], null); // net source not needed by chanOverlap
+            if ( ! passed.isSuccess()) {
+                ecp.update(Status.get(Stage.REQUEST_SUBSETTER, Standing.REJECT));
+                failLogger.info(ecp.toString()+" channel doesn't overlap request.");
+                return;
+            }
+        }
         synchronized(request) {
             try {
                 passed = request.accept(ecp.getEvent(), ecp.getChannelGroup(), infilters, ecp.getCookieJar());

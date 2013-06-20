@@ -20,6 +20,7 @@ import edu.iris.Fissures.seismogramDC.RequestFilterUtil;
 import edu.iris.dmc.seedcodec.CodecException;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
+import edu.sc.seis.fissuresUtil.time.ReduceTool;
 import edu.sc.seis.fissuresUtil.time.SortTool;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
@@ -34,6 +35,7 @@ import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
 import edu.sc.seis.sod.subsetter.Subsetter;
 import edu.sc.seis.sod.subsetter.availableData.AvailableDataSubsetter;
+import edu.sc.seis.sod.subsetter.channel.ChannelEffectiveTimeOverlap;
 import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
 import edu.sc.seis.sod.subsetter.eventChannel.PassEventChannel;
 import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
@@ -158,6 +160,16 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
 
     public void processRequestSubsetter(EventChannelPair ecp, RequestFilter[] infilters) {
         StringTree passed;
+        // check channel overlaps request
+        RequestFilter coveringRequest = ReduceTool.cover(infilters);
+        ChannelEffectiveTimeOverlap chanOverlap = new ChannelEffectiveTimeOverlap(new MicroSecondDate(coveringRequest.start_time),
+                                                                                  new MicroSecondDate(coveringRequest.end_time));
+        passed = chanOverlap.accept(ecp.getChannel(), null); // net source not needed by chanOverlap
+        if ( ! passed.isSuccess()) {
+            ecp.update(Status.get(Stage.REQUEST_SUBSETTER, Standing.REJECT));
+            failLogger.info(ecp.toString()+" channel doesn't overlap request.");
+            return;
+        }
         synchronized(request) {
             try {
                 passed = request.accept(ecp.getEvent(), ecp.getChannel(), infilters, ecp.getCookieJar());
