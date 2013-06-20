@@ -8,7 +8,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.NetworkId;
@@ -24,6 +23,7 @@ import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.source.SodSourceException;
 
 
 public class CombineNetworkSource implements NetworkSource {
@@ -63,7 +63,12 @@ public class CombineNetworkSource implements NetworkSource {
     @Override
     public CacheNetworkAccess getNetwork(NetworkAttrImpl attr) {
         String code = NetworkIdUtil.toStringNoDates(attr);
-        NetworkSource source = getSourceForCode(code);
+        NetworkSource source;
+        try {
+            source = getSourceForCode(code);
+        } catch(SodSourceException e) {
+            throw new RuntimeException("Network not found: "+NetworkIdUtil.toString(attr));
+        }
         return source.getNetwork(attr);
     }
 
@@ -79,7 +84,7 @@ public class CombineNetworkSource implements NetworkSource {
     }
 
     @Override
-    public synchronized List<? extends NetworkAttrImpl> getNetworks() {
+    public synchronized List<? extends NetworkAttrImpl> getNetworks() throws SodSourceException {
         List<NetworkAttrImpl> out = new ArrayList<NetworkAttrImpl>();
         for (NetworkSource source : wrapped) {
             List<? extends NetworkAttrImpl> subOut = source.getNetworks();
@@ -97,7 +102,7 @@ public class CombineNetworkSource implements NetworkSource {
     }
 
     @Override
-    public List<? extends StationImpl> getStations(NetworkId net) {
+    public List<? extends StationImpl> getStations(NetworkAttrImpl net) throws SodSourceException {
         NetworkSource source = getSourceForCode(NetworkIdUtil.toStringNoDates(net));
         if (source != null) {
             return source.getStations(net);
@@ -106,7 +111,7 @@ public class CombineNetworkSource implements NetworkSource {
     }
 
     @Override
-    public List<? extends ChannelImpl> getChannels(StationImpl station) {
+    public List<? extends ChannelImpl> getChannels(StationImpl station) throws SodSourceException {
         NetworkSource source = getSourceForCode(NetworkIdUtil.toStringNoDates(station.getId().network_id));
         if (source != null) {
             return source.getChannels(station);
@@ -115,10 +120,10 @@ public class CombineNetworkSource implements NetworkSource {
     }
 
     @Override
-    public QuantityImpl getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
-        NetworkSource source = getSourceForCode(NetworkIdUtil.toStringNoDates(chanId.network_id));
+    public QuantityImpl getSensitivity(ChannelImpl chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
+        NetworkSource source = getSourceForCode(NetworkIdUtil.toStringNoDates(chan.getId().network_id));
         if (source != null) {
-            QuantityImpl out = source.getSensitivity(chanId);
+            QuantityImpl out = source.getSensitivity(chan);
             if (out != null) {
                 return out;
             }
@@ -127,10 +132,10 @@ public class CombineNetworkSource implements NetworkSource {
     }
 
     @Override
-    public Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
-        NetworkSource source = getSourceForCode(NetworkIdUtil.toStringNoDates(chanId.network_id));
+    public Instrumentation getInstrumentation(ChannelImpl chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
+        NetworkSource source = getSourceForCode(NetworkIdUtil.toStringNoDates(chan.getId().network_id));
         if (source != null) {
-            Instrumentation out = source.getInstrumentation(chanId);
+            Instrumentation out = source.getInstrumentation(chan);
             if (out != null) {
                 return out;
             }
@@ -138,7 +143,7 @@ public class CombineNetworkSource implements NetworkSource {
         throw new ChannelNotFound();
     }
 
-    synchronized NetworkSource getSourceForCode(String code) {
+    synchronized NetworkSource getSourceForCode(String code) throws SodSourceException {
         if (codeToSource.containsKey(code)) {
             return codeToSource.get(code);
         } else {

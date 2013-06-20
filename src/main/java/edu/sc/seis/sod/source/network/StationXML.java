@@ -25,7 +25,6 @@ import javax.xml.stream.events.XMLEvent;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.NetworkId;
@@ -60,7 +59,7 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.StationXMLException;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 
-
+@Deprecated
 public class StationXML implements NetworkSource {
     
     public StationXML(Element config) throws ConfigurationException {
@@ -145,7 +144,7 @@ public class StationXML implements NetworkSource {
         return Collections.unmodifiableList(networks);
     }
 
-    public List<? extends StationImpl> getStations(NetworkId net) {
+    public List<? extends StationImpl> getStations(NetworkAttrImpl net) {
         checkChansLoaded(NetworkIdUtil.toStringNoDates(net));
         List<StationChannelBundle> bundles = staChanMap.get(NetworkIdUtil.toStringNoDates(net));
         List<StationImpl> out = new ArrayList<StationImpl>();
@@ -170,13 +169,13 @@ public class StationXML implements NetworkSource {
         return new ArrayList<ChannelImpl>();
     }
 
-    public QuantityImpl getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
-        checkChansLoaded(NetworkIdUtil.toStringNoDates(chanId.network_id));
-        List<StationChannelBundle> bundles = staChanMap.get(NetworkIdUtil.toStringNoDates(chanId.network_id));
+    public QuantityImpl getSensitivity(ChannelImpl chan) throws ChannelNotFound, InvalidResponse {
+        checkChansLoaded(NetworkIdUtil.toStringNoDates(chan.getId().network_id));
+        List<StationChannelBundle> bundles = staChanMap.get(NetworkIdUtil.toStringNoDates(chan.getId().network_id));
         for (StationChannelBundle b : bundles) {
-            if (chanId.station_code.equals( b.getStation().get_code())) {
+            if (chan.getId().station_code.equals( b.getStation().get_code())) {
                 for (ChannelSensitivityBundle chanSens : b.getChanList()) {
-                    if (ChannelIdUtil.areEqual(chanId, chanSens.getChan().get_id()) && chanSens.getSensitivity() != null) {
+                    if (ChannelIdUtil.areEqual(chan.getId(), chanSens.getChan().get_id()) && chanSens.getSensitivity() != null) {
                         return chanSens.getSensitivity();
                     }
                 }
@@ -185,12 +184,12 @@ public class StationXML implements NetworkSource {
         throw new ChannelNotFound();
     }
 
-    public Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
-        MicroSecondDate chanBegin = new MicroSecondDate(chanId.begin_time);
-        String newQuery = FDSNStationQueryParams.NETWORK+"="+chanId.network_id.network_code+
-                "&"+FDSNStationQueryParams.STATION+"="+chanId.station_code+
-                "&"+FDSNStationQueryParams.LOCATION+"="+chanId.site_code+
-                "&"+FDSNStationQueryParams.CHANNEL+"="+chanId.channel_code+
+    public Instrumentation getInstrumentation(ChannelImpl chan) throws ChannelNotFound, InvalidResponse {
+        MicroSecondDate chanBegin = new MicroSecondDate(chan.getId().begin_time);
+        String newQuery = FDSNStationQueryParams.NETWORK+"="+chan.getId().network_id.network_code+
+                "&"+FDSNStationQueryParams.STATION+"="+chan.getId().station_code+
+                "&"+FDSNStationQueryParams.LOCATION+"="+chan.getId().site_code+
+                "&"+FDSNStationQueryParams.CHANNEL+"="+chan.getId().channel_code+
                 "&"+FDSNStationQueryParams.STARTTIME+"="+toDateString(chanBegin)+
                 "&"+FDSNStationQueryParams.ENDTIME+"="+toDateString(chanBegin.add(ONE_DAY));
         try {
@@ -214,7 +213,7 @@ public class StationXML implements NetworkSource {
                                                              new MicroSecondTimeRange(chanBegin.add(ONE_SECOND), chanBegin.add(ONE_DAY)))) {
                                     return inst;
                                 }
-                                logger.debug("Skipping as wrong start time "+ChannelIdUtil.toString(chanId)+" "+inst.effective_time.start_time.date_time+" "+inst.effective_time.end_time.date_time);
+                                logger.debug("Skipping as wrong start time "+ChannelIdUtil.toString(chan.getId())+" "+inst.effective_time.start_time.date_time+" "+inst.effective_time.end_time.date_time);
                             
                         }
                     

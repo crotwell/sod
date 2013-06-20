@@ -16,7 +16,7 @@ public abstract class AbstractResponseSubsetter implements ChannelSubsetter {
 			throws Exception {
 		Instrumentation instrumentation;
 		try {
-			instrumentation = network.getInstrumentation(channel.get_id());
+			instrumentation = network.getInstrumentation(channel);
 			InstrumentationLoader.checkResponse(instrumentation.the_response);
 		} catch (ChannelNotFound e) {
 			return new Fail(this, "No instrumentation");

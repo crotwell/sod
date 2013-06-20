@@ -27,6 +27,10 @@ AbstractFileWriter implements WaveformProcess {
         new PrintlineVelocitizer(new String[] {fileTemplate});
     }
 
+    protected AbstractSeismogramWriter() throws ConfigurationException {
+        this("seismograms", DEFAULT_FILE_TEMPLATE_WO_EXT+".unknown", "", false);
+    }
+
     public WaveformResult accept(CacheEvent event,
                                   ChannelImpl channel,
                                   RequestFilter[] original,

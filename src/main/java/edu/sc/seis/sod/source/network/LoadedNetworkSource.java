@@ -7,14 +7,15 @@ import java.util.List;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
-import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
+import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
+import edu.sc.seis.sod.source.SodSourceException;
 
 
 public class LoadedNetworkSource extends WrappingNetworkSource implements NetworkSource {
@@ -26,7 +27,7 @@ public class LoadedNetworkSource extends WrappingNetworkSource implements Networ
     }
 
     @Override
-    public List<? extends ChannelImpl> getChannels(StationImpl station) {
+    public List<? extends ChannelImpl> getChannels(StationImpl station) throws SodSourceException {
         if (StationIdUtil.areEqual(station, sta)) {
             if (chans == null) {
                 this.chans = getWrapped().getChannels(sta);
@@ -39,20 +40,20 @@ public class LoadedNetworkSource extends WrappingNetworkSource implements Networ
     }
 
     @Override
-    public Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
-        instrumentationLoaded.add(ChannelIdUtil.toString(chanId));
-        return getWrapped().getInstrumentation(chanId);
+    public Instrumentation getInstrumentation(ChannelImpl chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
+        instrumentationLoaded.add(ChannelIdUtil.toString(chan.getId()));
+        return getWrapped().getInstrumentation(chan);
     }
 
     @Override
-    public QuantityImpl getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
-        instrumentationLoaded.add(ChannelIdUtil.toString(chanId));
-        return getWrapped().getSensitivity(chanId);
+    public QuantityImpl getSensitivity(ChannelImpl chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
+        instrumentationLoaded.add(ChannelIdUtil.toString(chan.getId()));
+        return getWrapped().getSensitivity(chan);
     }
 
     @Override
-    public List<? extends StationImpl> getStations(NetworkId net) {
-        if (NetworkIdUtil.areEqual(net, sta.getNetworkAttr().getId())) {
+    public List<? extends StationImpl> getStations(NetworkAttrImpl net) throws SodSourceException {
+        if (NetworkIdUtil.areEqual(net.getId(), sta.getNetworkAttr().getId())) {
             return allStations;
         }
         return getWrapped().getStations(net);

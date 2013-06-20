@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rules>
         <rule>
-                <threeCharacterRule>ZNE</threeCharacterRule>
-                <threeCharacterRule>Z12</threeCharacterRule>
-                <threeCharacterRule>Z23</threeCharacterRule>
-                <threeCharacterRule>ABC</threeCharacterRule>
-                <threeCharacterRule>123</threeCharacterRule>
-                <threeCharacterRule>UVW</threeCharacterRule>
+                <siteMatchRule orientations="ZNE" />
+                <siteMatchRule orientations="Z12" />
+                <siteMatchRule orientations="Z23" />
+                <siteMatchRule orientations="ABC" />
+                <siteMatchRule orientations="123" />
+                <siteMatchRule orientations="UVW" />
+        </rule>
+        <rule>
+            <networkCode>XK04</networkCode>
+            <channelAND>
+                <bandCode>B</bandCode>
+                <gainCode>H</gainCode>
+            </channelAND>
+            <orientedSiteRule>
+                <orient site="30" orientation="Z" />
+                <orient site="31" orientation="N" />
+                <orient site="32" orientation="E" />
+            </orientedSiteRule>
+        </rule>
+        <rule>
+            <networkCode>XK04</networkCode>
+            <channelAND>
+                <bandCode>L</bandCode>
+                <gainCode>H</gainCode>
+            </channelAND>
+            <orientedSiteRule>
+                <orient site="00" orientation="Z" />
+                <orient site="01" orientation="N" />
+                <orient site="02" orientation="E" />
+            </orientedSiteRule>
         </rule>
 </rules>

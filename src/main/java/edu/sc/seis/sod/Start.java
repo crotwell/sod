@@ -48,6 +48,7 @@ import edu.sc.seis.fissuresUtil.exceptionHandler.WindowConnectionInterceptor;
 import edu.sc.seis.fissuresUtil.hibernate.AbstractHibernateDB;
 import edu.sc.seis.fissuresUtil.hibernate.HibernateUtil;
 import edu.sc.seis.fissuresUtil.simple.Initializer;
+import edu.sc.seis.seisFile.fdsnws.FDSNWSException;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.StatefulEvent;
 import edu.sc.seis.sod.hibernate.StatefulEventDB;
@@ -111,6 +112,26 @@ public class Start {
                         return sub;
                     }
                 }
+                return null;
+            }
+        });
+        GlobalExceptionHandler.add(new Extractor() {
+
+            public boolean canExtract(Throwable throwable) {
+                return (throwable instanceof FDSNWSException);
+            }
+
+            public String extract(Throwable throwable) {
+                String out = "";
+                if(throwable instanceof FDSNWSException) {
+                    FDSNWSException mie = (FDSNWSException)throwable;
+                    out += mie.getMessage();
+                    out += "\nURI: "+mie.getTargetURI();
+                }
+                return out;
+            }
+
+            public Throwable getSubThrowable(Throwable throwable) {
                 return null;
             }
         });
@@ -197,7 +218,9 @@ public class Start {
                 allHopeAbandon(validator.getErrorMessage());
             } else {
                 logger.info("Congratulations, valid recipe.");
-                System.out.println("Congratulations, valid recipe.");
+                if (! args.isPrintRecipe()) {
+                    System.out.println("Congratulations, valid recipe.");
+                }
             }
             if(args.onlyValidate()) {
                 System.exit(0);

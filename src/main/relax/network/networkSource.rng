@@ -33,6 +33,7 @@
                         should periodically check for new channels.  
                         See <a href="http://www.seis.sc.edu/wily/GetAllServers?corbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService&amp;description=IRIS nameserver">Wily</a>
                         for a list of active NetworkDCs and their status. </description>
+                    <deprecated>This is deprecated in favor of the new fdsnStation source.</deprecated>
                     <velocity>#networkArmPage()</velocity>
                     <example>
                         <networkFinder>
@@ -174,6 +175,15 @@
                     </example>
                 </xsd:documentation>
             </xsd:annotation>
+            <optional>
+                <element name="name">
+                    <data type="string">
+                        <xsd:annotation>
+                            <summary>A unique name for this source.</summary>
+                        </xsd:annotation>
+                    </data>
+                </element>
+            </optional>
             <oneOrMore>
                 <ref name="networkSource"/>
             </oneOrMore>
@@ -273,6 +283,15 @@ CO, CSB, 00, EHE, 100
                             href="csvEvents.html">look here</a>.</description>
                 </xsd:documentation>
             </xsd:annotation>
+            <optional>
+                <element name="name">
+                    <data type="string">
+                        <xsd:annotation>
+                            <summary>A unique name for this source.</summary>
+                        </xsd:annotation>
+                    </data>
+                </element>
+            </optional>
                     <choice>
                         <element name="stationFile">
                             <data type="string"/>
@@ -325,7 +344,8 @@ CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
                     SOD will automatically set the level in the IRIS url as needed, but adding other qualifiers to
                     limit the request size will help speed the queries. You may need to escape the ampersand with
                     &amp;amp; due to the fact that a SOD recipe is XML and so the parser will signal an error for a
-                    unescaped ampersand.</description>
+                    unescaped ampersand.</description> 
+                    <deprecated>This is deprecated in favor of the new fdsnStation source.</deprecated>
                     <velocity>#networkArmPage()</velocity>
                     <example>
                         <stationXML>
@@ -353,13 +373,13 @@ CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
                     <summary>Loads network metadata from a FDSN Station web service.</summary>
                     <description>A network source that makes the metadata loaded from a FDNSStationXML file available to
                     SOD. While a local file could be used, the more useful way is to access the fdsnStation web service
-                    at a data center like the IRIS DMC, http://service.iris.edu/fdsnws/station/1/. 
+                    at a data center like the default IRIS DMC, http://service.iris.edu/fdsnws/station/1/. 
                     SOD can download the stationXML automaticially
                     and reconnect to periodically get updates. For a full SOD run (that retrieves waveforms) 
                     SOD will automatically set the level in the IRIS url as needed, but adding other qualifiers to
                     limit the request size will help speed the queries. You may need to escape the ampersand with
                     &amp;amp; due to the fact that a SOD recipe is XML and so the parser will signal an error for a
-                    unescaped ampersand.</description>
+                    unescaped ampersand. By default this does not get restricted channels.</description>
                     <velocity>#networkArmPage()</velocity>
                     <example>
                         <fdsnStation>
@@ -371,11 +391,34 @@ CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
                 </xsd:documentation>
             </xsd:annotation>
             <interleave>
-            <optional>
-                <element name="baseurl">
-                    <data type="string"/>
-                </element>
-            </optional>
+                <optional>
+                    <element name="name">
+                        <data type="string">
+                            <xsd:annotation>
+                                <summary>A unique name for this source.</summary>
+                            </xsd:annotation>
+                        </data>
+                    </element>
+                </optional>
+                <choice>
+                    <optional>
+                        <element name="baseurl">
+                            <data type="string"/>
+                        </element>
+                    </optional>
+                    <interleave>
+                        <optional>
+                            <element name="host">
+                                <data type="string"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="port">
+                                <data type="string"/>
+                            </element>
+                        </optional>
+                    </interleave>
+                </choice>
             <zeroOrMore>
                 <choice>
                     <element name="networkCode">
@@ -392,6 +435,12 @@ CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
                     </element>
                 </choice>
             </zeroOrMore>
+            
+            <optional>
+                    <element name="includeRestricted">
+                        <data type="boolean"/>
+                    </element>
+            </optional>
             <optional>
                 <choice>
                    <ref name="stationBoxArea"/>

@@ -37,6 +37,10 @@
         <printlineEventProcess/>
     </eventArm>
     <networkArm>
+        <fdsnStation>
+            <siteCode>00</siteCode>
+            <channelCode>BH?</channelCode>
+        </fdsnStation>
         <networkCode>II</networkCode>
         <siteCode>00</siteCode>
         <bandCode>B</bandCode>

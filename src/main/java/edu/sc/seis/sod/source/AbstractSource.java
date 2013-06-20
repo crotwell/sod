@@ -1,36 +1,68 @@
 package edu.sc.seis.sod.source;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
+import edu.sc.seis.fissuresUtil.cache.RetryStrategy;
 import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.UserReportRetryStrategy;
 
-public abstract class AbstractSource implements Source{
+public abstract class AbstractSource implements Source {
 
-    public AbstractSource (String name) {
+    public AbstractSource(String name) {
         this(name, -1);
     }
 
-    public AbstractSource (String name, int retries) {
+    public AbstractSource(String name, int retries) {
         this.name = name;
         retries = -1;
     }
-    
-    public AbstractSource (Element config, String defaultName){
-        name = SodUtil.loadText(config, "name", defaultName);
-        retries = SodUtil.loadInt(config, "retries", -1);
+
+    public AbstractSource(Element config, String defaultName) {
+        this(config, defaultName, -1);
     }
-    
-    /* (non-Javadoc)
+
+    public AbstractSource(Element config, String defaultName, int defaultRetries) {
+        name = SodUtil.loadText(config, NAME_ELEMENT, defaultName);
+        retries = SodUtil.loadInt(config, RETRIES_ELEMENT, defaultRetries);
+        retryStrategy = new UserReportRetryStrategy(getRetries());
+    }
+
+    protected boolean shouldRetryWithSleep(Throwable t, int tryCount) {
+        if (retryStrategy.shouldRetry(t, this, tryCount)) {
+            int sleepy = 2 * 1000;
+            if (tryCount < getRetries()) {
+                sleepy = (getRetries() - tryCount) * 10 * 1000;
+            } else {
+                if (tryCount < 10) {
+                    // exponential backoff
+                    sleepy = (int)Math.round(Math.pow(2, tryCount) * 1000);
+                } else {
+                    sleepy = 1024 * 1000; // max backoff
+                }
+            }
+            try {
+                Thread.sleep(sleepy);
+            } catch(InterruptedException e1) {}
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see edu.sc.seis.sod.source.Source#getName()
      */
     @Override
     public String getName() {
         return name;
     }
-    
+
     public int getRetries() {
         return retries;
     }
@@ -38,10 +70,24 @@ public abstract class AbstractSource implements Source{
     public FissuresNamingService getFissuresNamingService() {
         return CommonAccess.getNameService();
     }
-    
-    private String name;
+
+    public RetryStrategy getRetryStrategy() {
+        return retryStrategy;
+    }
+
+    public void setRetryStrategy(RetryStrategy retryStrategy) {
+        this.retryStrategy = retryStrategy;
+    }
+
+    protected String name;
 
     private int retries = -1;
-    
+
+    private RetryStrategy retryStrategy;
+
+    public static final String NAME_ELEMENT = "name";
+
+    public static final String RETRIES_ELEMENT = "retries";
+
     private static Logger logger = LoggerFactory.getLogger(AbstractSource.class);
 }// AbstractSource

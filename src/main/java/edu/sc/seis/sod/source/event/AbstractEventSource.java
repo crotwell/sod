@@ -7,11 +7,15 @@ import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.database.NotFound;
+import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.QueryTime;
+import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.source.AbstractSource;
+import edu.sc.seis.sod.source.network.AbstractNetworkSource;
 
 
 public abstract class AbstractEventSource extends AbstractSource implements EventSource {
@@ -23,11 +27,23 @@ public abstract class AbstractEventSource extends AbstractSource implements Even
         increment = Start.getRunProps().getEventQueryIncrement();
     }
 
-    public AbstractEventSource(Element config, String defaultName) {
-        super(config, defaultName);
-        refreshInterval = Start.getRunProps().getEventRefreshInterval();
-        lag = Start.getRunProps().getEventLag();
-        increment = Start.getRunProps().getEventQueryIncrement();
+    public AbstractEventSource(Element config, String defaultName) throws ConfigurationException {
+        super(config, defaultName, -1);
+        if(DOMHelper.hasElement(config, AbstractNetworkSource.REFRESH_ELEMENT)) {
+            refreshInterval = SodUtil.loadTimeInterval(SodUtil.getElement(config, AbstractNetworkSource.REFRESH_ELEMENT));
+        } else {
+            refreshInterval = Start.getRunProps().getEventRefreshInterval();
+        }
+        if(DOMHelper.hasElement(config, AbstractEventSource.EVENT_QUERY_INCREMENT)) {
+            increment = SodUtil.loadTimeInterval(SodUtil.getElement(config, AbstractEventSource.EVENT_QUERY_INCREMENT));
+        } else {
+            increment = Start.getRunProps().getEventQueryIncrement();
+        }
+        if(DOMHelper.hasElement(config, AbstractEventSource.EVENT_LAG)) {
+            lag = SodUtil.loadTimeInterval(SodUtil.getElement(config, AbstractEventSource.EVENT_LAG));
+        } else {
+            lag = Start.getRunProps().getEventLag();
+        }
     }
 
     @Override
@@ -124,6 +140,21 @@ public abstract class AbstractEventSource extends AbstractSource implements Even
         setQueryEdge(queryTime.getEndTime());
     }
     
+    
+    public MicroSecondDate getSleepUntilTime() {
+        return sleepUntilTime;
+    }
+
+    
+    public TimeInterval getLag() {
+        return lag;
+    }
+
+    
+    public TimeInterval getRefreshInterval() {
+        return refreshInterval;
+    }
+
     public static final String NO_DNS = "NO_DNS";
 
     protected MicroSecondDate sleepUntilTime = null;
@@ -133,4 +164,10 @@ public abstract class AbstractEventSource extends AbstractSource implements Even
     protected TimeInterval refreshInterval = new TimeInterval(10, UnitImpl.MINUTE);
     
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(AbstractEventSource.class);
+
+    public static final String EVENT_QUERY_INCREMENT = "eventQueryIncrement";
+    
+    public static final String EVENT_REFRESH_INTERVAL = "eventRefreshInterval";
+    
+    public static final String EVENT_LAG = "eventLag";
 }

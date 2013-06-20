@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
@@ -77,9 +76,9 @@ public class MockNetworkSource implements NetworkSource {
     }
 
     @Override
-    public List<? extends StationImpl> getStations(NetworkId net) {
+    public List<? extends StationImpl> getStations(NetworkAttrImpl net) {
         for (int i = 0; i < nets.length; i++) {
-            if (NetworkIdUtil.areEqual(nets[i].get_attributes().getId(), net)) {
+            if (NetworkIdUtil.areEqual(nets[i].get_attributes().getId(), net.getId())) {
                 return Arrays.asList((StationImpl[])nets[i].retrieve_stations());
             }
         }
@@ -97,13 +96,13 @@ public class MockNetworkSource implements NetworkSource {
     }
 
     @Override
-    public QuantityImpl getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
+    public QuantityImpl getSensitivity(ChannelImpl chanId) throws ChannelNotFound, InvalidResponse {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
+    public Instrumentation getInstrumentation(ChannelImpl chanId) throws ChannelNotFound, InvalidResponse {
         // TODO Auto-generated method stub
         return null;
     }

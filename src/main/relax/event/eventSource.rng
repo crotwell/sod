@@ -30,6 +30,7 @@
                         for a list of active EventDCs and their current status. A listing of known catalogs for the IRIS EventDC can be found
                         <a href="http://www.seis.sc.edu/wily/EventCatalogs?corbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService&amp;dns=edu/iris/dmc&amp;serverObject=IRIS_EventDC">here</a>.
                         The server defaults to the edu/iris/dmc IRIS_EventDC.</description>
+                    <deprecated>This is deprecated in favor of the new fdsnEvent source.</deprecated>
                 </xsd:documentation>
             </xsd:annotation>
             <interleave>
@@ -96,6 +97,7 @@
                           <summary>A QuakeML URL</summary>
                           <description>A url to a quakeml event source, either a remote web service or local file. Note this will
                           only be queried once, and so is not usable for new events as in a "standing order".</description>
+                          <deprecated>This is deprecated in favor of the new fdsnEvent source.</deprecated>
                          </xsd:annotation>
                         <data type="string"/>
                     </element>
@@ -112,15 +114,38 @@
                 </xsd:documentation>
             </xsd:annotation>
             <interleave>
-                <optional>
-                    <element name="baseurl">
+            <optional>
+                <element name="name">
+                    <data type="string">
                         <xsd:annotation>
-                          <summary>A FDSN Event web service URL</summary>
-                          <description>A url to a FDSN event web service.</description>
-                         </xsd:annotation>
-                        <data type="string"/>
-                    </element>
-                </optional>
+                            <summary>A unique name for this source.</summary>
+                        </xsd:annotation>
+                    </data>
+                </element>
+            </optional>
+                <choice>
+                    <optional>
+                        <element name="baseurl">
+                            <xsd:annotation>
+                              <summary>A FDSN Event web service URL</summary>
+                              <description>A url to a FDSN event web service.</description>
+                            </xsd:annotation>
+                            <data type="string"/>
+                        </element>
+                    </optional>
+                    <interleave>
+                        <optional>
+                            <element name="host">
+                                <data type="string"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="port">
+                                <data type="string"/>
+                            </element>
+                        </optional>
+                    </interleave>
+                </choice>
                 <optional>
                     <choice>
                        <ref name="globalArea"/>
@@ -146,6 +171,15 @@
                 <zeroOrMore>
                     <ref name="contributor"/>
                 </zeroOrMore>
+                <optional>
+                    <ref name="eventQueryIncrement"/>
+                </optional>
+                <optional>
+                    <ref name="eventRefreshInterval"/>
+                </optional>
+                <optional>
+                    <ref name="eventLag"/>
+                </optional>
             </interleave>
         </element>
     </define>
@@ -159,6 +193,7 @@
                         are then sent through the EventArm for processing. See <a
                             href="http://www.seis.sc.edu/wily/GetAllServers?corbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService&amp;description=IRIS nameserver">Wily</a>
                         for a list of active EventDCs and their current status.</description>
+                    <deprecated>This is deprecated in favor of the new fdsnStation source.</deprecated>
                 </xsd:documentation>
             </xsd:annotation>
             <interleave>
@@ -284,6 +319,15 @@ time, magnitude, latitude, longitude, depth
                     If numEvents is not provided, then events continue to be generated forever, otherwise the number given will be generated.</description>
                 </xsd:documentation>
             </xsd:annotation>
+            <optional>
+                <element name="name">
+                    <data type="string">
+                        <xsd:annotation>
+                            <summary>A unique name for this source.</summary>
+                        </xsd:annotation>
+                    </data>
+                </element>
+            </optional>
             <element name="startTime">
             	<ref name="time"/>
             </element>
@@ -310,6 +354,15 @@ time, magnitude, latitude, longitude, depth
                     be current than to proceed in uniform time steps.</description>
                 </xsd:documentation>
             </xsd:annotation>
+            <optional>
+                <element name="name">
+                    <data type="string">
+                        <xsd:annotation>
+                            <summary>A unique name for this source.</summary>
+                        </xsd:annotation>
+                    </data>
+                </element>
+            </optional>
             <element name="interval">
                 <ref name="timeInterval"/>
             </element>
@@ -330,9 +383,19 @@ time, magnitude, latitude, longitude, depth
                     seismic wave propagation time and data latency.</description>
                 </xsd:documentation>
             </xsd:annotation>
+            <optional>
+                <element name="name">
+                    <data type="string">
+                        <xsd:annotation>
+                            <summary>A unique name for this source.</summary>
+                        </xsd:annotation>
+                    </data>
+                </element>
+            </optional>
             <element name="delay">
                 <ref name="timeInterval"/>
             </element>
+            <ref name="eventSource"/>
         </element>
     </define>
 </grammar>

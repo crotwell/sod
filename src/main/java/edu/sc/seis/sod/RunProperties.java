@@ -13,6 +13,7 @@ import org.w3c.dom.Element;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
+import edu.sc.seis.sod.source.event.AbstractEventSource;
 
 public class RunProperties {
 
@@ -30,16 +31,16 @@ public class RunProperties {
 				statusDir = SodUtil.getText(statusBaseChild);
 			}
 			Element eventQueryChild = SodUtil.getElement(el,
-					"eventQueryIncrement");
+					AbstractEventSource.EVENT_QUERY_INCREMENT);
 			if (eventQueryChild != null) {
 				eventQueryIncrement = SodUtil.loadTimeInterval(eventQueryChild);
 			}
-			Element eventLagChild = SodUtil.getElement(el, "eventLag");
+			Element eventLagChild = SodUtil.getElement(el, AbstractEventSource.EVENT_LAG);
 			if (eventLagChild != null) {
 				eventLag = SodUtil.loadTimeInterval(eventLagChild);
 			}
 			Element eventRefreshChild = SodUtil.getElement(el,
-					"eventRefreshInterval");
+			                                               AbstractEventSource.EVENT_REFRESH_INTERVAL);
 			if (eventRefreshChild != null) {
 				eventRefresh = SodUtil.loadTimeInterval(eventRefreshChild);
 			}
@@ -68,6 +69,11 @@ public class RunProperties {
 			if (evChanPairProcChild != null) {
 				evChanPairProc = SodUtil.getText(evChanPairProcChild);
 			}
+            Element chanGroupRuleChild = SodUtil.getElement(el,
+                    "channelGroupingRules");
+            if (chanGroupRuleChild != null) {
+                channelGroupingRules = SodUtil.getText(chanGroupRuleChild);
+            }
 			if (SodUtil.isTrue(el, "reopenEvents", false)) {
 				reopenEvents = true;
 			}
@@ -188,8 +194,12 @@ public class RunProperties {
     public List getHibernateConfig() {
 	    return hibernateConfig;
 	}
+	
+    public String getChannelGroupingRules() {
+        return channelGroupingRules;
+    }
 
-	public static final TimeInterval NO_TIME = new TimeInterval(0,
+    public static final TimeInterval NO_TIME = new TimeInterval(0,
 			UnitImpl.SECOND);
 
 	public static final TimeInterval ONE_WEEK = new TimeInterval(7,
@@ -241,6 +251,8 @@ public class RunProperties {
 	private boolean loserEventCleaner = false;
 
 	private boolean allowDeadNets;
+	
+	private String channelGroupingRules = null;
 	
 	private boolean skipAvailableData = false;
 	

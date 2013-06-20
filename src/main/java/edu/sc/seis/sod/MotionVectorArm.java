@@ -1,5 +1,6 @@
 package edu.sc.seis.sod;
 
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -25,6 +26,7 @@ import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
+import edu.sc.seis.fissuresUtil.time.ReduceTool;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.process.waveform.vector.ANDWaveformProcessWrapper;
@@ -33,6 +35,7 @@ import edu.sc.seis.sod.process.waveform.vector.WaveformVectorProcess;
 import edu.sc.seis.sod.process.waveform.vector.WaveformVectorProcessWrapper;
 import edu.sc.seis.sod.process.waveform.vector.WaveformVectorResult;
 import edu.sc.seis.sod.source.seismogram.DataCenterSource;
+import edu.sc.seis.sod.source.seismogram.SeismogramAuthorizationException;
 import edu.sc.seis.sod.source.seismogram.SeismogramSource;
 import edu.sc.seis.sod.source.seismogram.SeismogramSourceException;
 import edu.sc.seis.sod.source.seismogram.SeismogramSourceLocator;
@@ -45,6 +48,7 @@ import edu.sc.seis.sod.subsetter.availableData.AvailableDataSubsetter;
 import edu.sc.seis.sod.subsetter.availableData.vector.ANDAvailableDataWrapper;
 import edu.sc.seis.sod.subsetter.availableData.vector.ORAvailableDataWrapper;
 import edu.sc.seis.sod.subsetter.availableData.vector.VectorAvailableDataSubsetter;
+import edu.sc.seis.sod.subsetter.channel.ChannelEffectiveTimeOverlap;
 import edu.sc.seis.sod.subsetter.eventChannel.PassEventChannel;
 import edu.sc.seis.sod.subsetter.eventChannel.vector.EventVectorSubsetter;
 import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
@@ -180,6 +184,18 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
 
     public void processRequestSubsetter(EventVectorPair ecp, RequestFilter[][] infilters) {
         StringTree passed;
+        for (int i = 0; i < infilters.length; i++) {
+            // check channel overlaps request
+            RequestFilter coveringRequest = ReduceTool.cover(infilters[i]);
+            ChannelEffectiveTimeOverlap chanOverlap = new ChannelEffectiveTimeOverlap(new MicroSecondDate(coveringRequest.start_time),
+                                                                                      new MicroSecondDate(coveringRequest.end_time));
+            passed = chanOverlap.accept(ecp.getChannelGroup().getChannels()[i], null); // net source not needed by chanOverlap
+            if ( ! passed.isSuccess()) {
+                ecp.update(Status.get(Stage.REQUEST_SUBSETTER, Standing.REJECT));
+                failLogger.info(ecp.toString()+" channel doesn't overlap request.");
+                return;
+            }
+        }
         synchronized(request) {
             try {
                 passed = request.accept(ecp.getEvent(), ecp.getChannelGroup(), infilters, ecp.getCookieJar());
@@ -478,6 +494,13 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
            } else if (t instanceof org.omg.CORBA.SystemException) {
                // don't log exception here, let RetryStragtegy do it
                ecp.update(Status.get(stage, Standing.CORBA_FAILURE));
+           } else if (t instanceof SeismogramSourceException && t.getCause() != null && t.getCause() instanceof SocketTimeoutException) {
+               // treat just like CORBA SystemException so it is retried later
+               // don't log exception here, let RetryStragtegy do it
+               ecp.update(Status.get(stage, Standing.CORBA_FAILURE));
+           } else if (t instanceof SeismogramAuthorizationException) {
+               ecp.update(Status.get(stage, Standing.SYSTEM_FAILURE));
+               failLogger.info("Authorization failure, will not retry. "+ ecp +" "+t.getMessage());
            } else {
                ecp.update(t, Status.get(stage, Standing.SYSTEM_FAILURE));
                String message = "";
@@ -489,7 +512,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                            + t.getClass().getName() + ") " + message;
                }
                try {
-                   message += " " + ecp;
+                   message += " " + ecp+"\n";
                } catch (LazyInitializationException lazy) {
                    message += "LazyInitializationException after exception, so I can't print the evp\n";
                }

@@ -41,7 +41,7 @@ CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
                 <host>eeyore.seis.sc.edu</host>
                 <port>16022</port>
             </winstonNetworkSource>
-            <networkFinder/>  <!-- dmc is default network finder-->
+            <fdsnStation/>  <!-- dmc is default -->
         </combineNetworkSource>
         <networkOR>
             <networkCode>CO</networkCode>
@@ -91,10 +91,7 @@ CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
                 </winstonWaveServer>
             </choice>
             <otherwise>
-                <fixedDataCenter>
-                    <name>IRIS_DataCenter</name>
-                    <dns>edu/iris/dmc</dns>
-                </fixedDataCenter>
+                <fdsnDataSelect/>
             </otherwise>
         </choiceSource>
         <someCoverage/>

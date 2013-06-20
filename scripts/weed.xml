@@ -6,9 +6,7 @@
         <removeDatabase>TRUE</removeDatabase>
     </properties>
     <eventArm>
-        <eventFinder>
-            <name>IRIS_EventDC</name>
-            <dns>edu/iris/dmc</dns>
+        <fdsnEvent>
             <boxArea>
                 <latitudeRange>
                     <min>-90</min>
@@ -32,9 +30,9 @@
                 <min>6.0</min>
                 <max>10.0</max>
             </magnitudeRange>
-            <catalog>WHDF</catalog>
+            <catalog>NEIC PDE</catalog>
             <contributor>NEIC</contributor>
-        </eventFinder>
+        </fdsnEvent>
         <originAND>
             <originPointDistance>
                 <latitude>0</latitude>
@@ -62,10 +60,7 @@
         <printlineEventProcess/>
     </eventArm>
     <networkArm>
-        <networkFinder>
-            <name>IRIS_NetworkDC</name>
-            <dns>edu/iris/dmc</dns>
-        </networkFinder>
+        <fdsnStation/>
         <networkCode>II</networkCode>
         <channelOR>
             <siteCode/>
@@ -125,10 +120,7 @@
                 <value>360</value>
             </endOffset>
         </phaseRequest>
-        <fixedDataCenter>
-            <name>IRIS_PondDataCenter</name>
-            <dns>edu/iris/dmc</dns>
-        </fixedDataCenter>
+        <fdsnDataSelect/>
         <someCoverage/>
         <printlineSeismogramProcess/>
         <sacWriter/>

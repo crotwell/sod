@@ -22,11 +22,9 @@ public class ChannelAND extends ChannelLogicalSubsetter implements
     public boolean isSuccess(StringTree[] reasons) {
         for(int i = 0; i < reasons.length; i++) {
             if(!reasons[i].isSuccess()){
-                NetworkDB.flush();
                 return false;
             }
         }
-        NetworkDB.flush();
         return true;
     }
 }// ChannelAND

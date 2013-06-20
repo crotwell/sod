@@ -120,10 +120,10 @@ public class CommandLineTool extends AbstractClient {
         }
         VelocityContext ctx = ls.getContext();
         SimpleVelocitizer sv = new SimpleVelocitizer();
-        // Wait three seconds before checking for input on system in to allow
+        // Wait two seconds before checking for input on system in to allow
         // sluggardly pipers to do their work
         try {
-            Thread.sleep(3000);
+            Thread.sleep(2000);
         } catch(InterruptedException ie) {
             // What do you want me to do?
         }

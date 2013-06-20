@@ -199,11 +199,6 @@
                     </element>
                 </optional>
                 <optional>
-                    <element name="baseurl">
-                        <data type="string"/>
-                    </element>
-                </optional>
-                <optional>
                     <element name="user">
                         <data type="string"/>
                     </element>
@@ -213,6 +208,29 @@
                         <data type="string"/>
                     </element>
                 </optional>
+                <choice>
+                    <optional>
+                        <element name="baseurl">
+                            <xsd:annotation>
+                              <summary>A FDSN DataSelect web service URL</summary>
+                              <description>A url to a FDSN DataSelect web service.</description>
+                            </xsd:annotation>
+                            <data type="string"/>
+                        </element>
+                    </optional>
+                    <interleave>
+                        <optional>
+                            <element name="host">
+                                <data type="string"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="port">
+                                <data type="string"/>
+                            </element>
+                        </optional>
+                    </interleave>
+                </choice>
             </interleave>
         </element>
     </define>

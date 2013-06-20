@@ -359,7 +359,7 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
 
     boolean overwrite = false;
 
-    TauPUtil taup;
+    protected TauPUtil taup;
 
     IterDecon decon;
 

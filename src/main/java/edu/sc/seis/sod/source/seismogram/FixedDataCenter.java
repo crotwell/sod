@@ -12,6 +12,7 @@ import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.source.AbstractSource;
 
+@Deprecated
 public class FixedDataCenter extends AbstractSource implements SodElement,
         SeismogramSourceLocator {
 

@@ -1,9 +1,7 @@
 <sod>
     <networkArm>
-        <networkFinder>
-            <name>IRIS_NetworkDC</name>
-            <dns>edu/iris/dmc</dns>
-        </networkFinder>
+        <fdsnStation>
+        </fdsnStation>
         <networkEffectiveTimeOverlap>
             <startTime>20041226T00:45:00.001Z</startTime>
             <endTime>20041226T01:45:00.001Z</endTime>

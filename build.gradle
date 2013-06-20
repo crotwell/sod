@@ -1,7 +1,7 @@
 
 
 group = 'edu.sc.seis'
-version = '3.2.0beta2'
+version = '3.2.0beta4'
 
 apply plugin:'application'
 mainClassName = "edu.sc.seis.sod.Start"
@@ -84,6 +84,7 @@ def distFiles = copySpec {
         include('realtime.xml')
         include('sAndSKSInTanzania.xml')
         include('southAmericanSacFiles.xml')
+        include('recfunc_ears.xml')
         include('variableDataWindow.xml')
         include('vector.xml')
         include('weed.xml')
@@ -117,7 +118,7 @@ task tarDist(type: Tar, dependsOn: ['explodeDist']) {
     }
 }
 
-task explodeBin(type: Sync, dependsOn: ['makeScript', 'buildSchema']) {
+task explodeBin(type: Sync, dependsOn: ['makeScript', 'buildSchema', 'buildGrouperSchema']) {
     group = 'dist'
     with binDistFiles
     into file("$buildDir/explode")
@@ -223,6 +224,26 @@ task buildSchema(dependsOn: ['transform', 'compileJava'])  {
     }
 }
 
+task buildGrouperSchema(dependsOn: ['transformGrouper', 'compileJava'])  {
+    group = 'build'
+    def inFile = new File(project.buildDir.path, 'generated-src/relaxInclude/grouper.rng')
+    inputs.dir inFile.getParentFile()
+    ext.resourcesDir = new File(project.buildDir, 'generated-src/relax/resources')
+    def outFile = new File(resourcesDir, 'edu/sc/seis/sod/data/grouper.rng')
+    outputs.files outFile
+    doLast{
+    outFile.getParentFile().mkdirs()
+    def relaxArgs = '-s '+inFile
+    ant.java(dir:outFile.getParentFile(),
+             classname:'com.thaiopensource.relaxng.util.Driver',
+             args:relaxArgs,
+             maxmemory:'1512m',
+             fork:true,
+             classpath:configurations.runtime.asPath,
+             output:outFile)
+    }
+}
+
 task transform(type: XSLT) { 
     destDir=new File(project.buildDir, 'generated-src/relaxInclude')
     stylesheetFile = new File(project.projectDir, 'src/main/xslt/simpleXInclude.xslt')
@@ -231,6 +252,16 @@ task transform(type: XSLT) {
     inputs.dir rngFile.getParentFile()
     outputs.dir destDir
 }
+
+task transformGrouper(type: XSLT) { 
+    destDir=new File(project.buildDir, 'generated-src/relaxInclude')
+    stylesheetFile = new File(project.projectDir, 'src/main/xslt/simpleXInclude.xslt')
+    def rngFile = new File(project.projectDir, 'src/main/relax/grouper.rng')
+    source rngFile
+    inputs.dir rngFile.getParentFile()
+    outputs.dir destDir
+}
+
 
 javadoc.options.links('http://wiki.fissuresidl.googlecode.com/hg/javadoc/')
 javadoc.options.links('http://wiki.fissuresimpl.googlecode.com/hg/javadoc/')
@@ -241,5 +272,6 @@ javadoc.options.links('http://wiki.seisfile.googlecode.com/hg/javadoc/')
 doc.dependsOn(copySodSite)
 assemble.dependsOn(tarDist)
 processResources.dependsOn(buildSchema)
+processResources.dependsOn(buildGrouperSchema)
 processResources{ from(project.sourceSets.main.resources)
                   from(buildSchema.resourcesDir)}

@@ -294,7 +294,7 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
     }
 
     @Override
-    public Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
+    public Instrumentation getInstrumentation(ChannelImpl chanId) throws ChannelNotFound, InvalidResponse {
         throw new ChannelNotFound();
     }
 
@@ -314,15 +314,15 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
     }
 
     @Override
-    public QuantityImpl getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
+    public QuantityImpl getSensitivity(ChannelImpl chanId) throws ChannelNotFound, InvalidResponse {
         throw new ChannelNotFound();
     }
 
     @Override
-    public List<? extends StationImpl> getStations(NetworkId net) {
+    public List<? extends StationImpl> getStations(NetworkAttrImpl net) {
         List<StationImpl> staList = new ArrayList<StationImpl>();
         for (StationImpl sta : stations) {
-            if (NetworkIdUtil.areEqual(net, sta.getId().network_id)) {
+            if (NetworkIdUtil.areEqual(net.getId(), sta.getId().network_id)) {
                 staList.add(sta);
             }
         }

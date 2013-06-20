@@ -36,10 +36,9 @@ public class SacPoleZeroWriter implements ChannelSubsetter {
 
     public StringTree accept(ChannelImpl chan, NetworkSource network)
             throws Exception {
-        ChannelId channel_id = chan.get_id();
         Instrumentation inst;
         try {
-            inst = network.getInstrumentation(channel_id);
+            inst = network.getInstrumentation(chan);
         } catch(ChannelNotFound e) {
             return new Fail(this, "No instrumentation");
         } catch(InvalidResponse e) {

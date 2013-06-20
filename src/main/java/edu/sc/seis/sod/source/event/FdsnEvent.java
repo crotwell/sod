@@ -28,11 +28,9 @@ import edu.iris.Fissures.event.OriginImpl;
 import edu.iris.Fissures.model.FlinnEngdahlRegionImpl;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
-import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.seisFile.SeisFileException;
 import edu.sc.seis.seisFile.fdsnws.FDSNEventQuerier;
@@ -46,6 +44,7 @@ import edu.sc.seis.seisFile.fdsnws.quakeml.Quakeml;
 import edu.sc.seis.sod.BuildVersion;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.source.AbstractSource;
 import edu.sc.seis.sod.source.network.AbstractNetworkSource;
 import edu.sc.seis.sod.subsetter.DepthRange;
 import edu.sc.seis.sod.subsetter.origin.Catalog;
@@ -58,12 +57,21 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
     
     public FdsnEvent(Element config) throws ConfigurationException {
         super(config, "DefaultFDSNEvent");
+        queryParams.setOrderBy(FDSNEventQueryParams.ORDER_TIME_ASC); // fdsnEvent default is reverse time
+        int port = SodUtil.loadInt(config, "port", -1);
+        if (port > 0) {
+            queryParams.setPort(port);
+        }
         NodeList childNodes = config.getChildNodes();
         for(int counter = 0; counter < childNodes.getLength(); counter++) {
             Node node = childNodes.item(counter);
             if(node instanceof Element) {
                 String tagName = ((Element)node).getTagName();
-                if(!tagName.equals("retries")) {
+                if(!tagName.equals(AbstractSource.RETRIES_ELEMENT) 
+                        && ! tagName.equals(AbstractNetworkSource.REFRESH_ELEMENT)
+                        && ! tagName.equals(AbstractEventSource.EVENT_QUERY_INCREMENT)
+                        && ! tagName.equals(AbstractEventSource.EVENT_LAG)
+                        && ! tagName.equals(AbstractSource.NAME_ELEMENT)) {
                     Object object = SodUtil.load((Element)node,
                                                  new String[] {"eventArm",
                                                                "origin"});
@@ -127,11 +135,6 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                 }
             }
         }
-        if(DOMHelper.hasElement(config, AbstractNetworkSource.REFRESH_ELEMENT)) {
-            refreshInterval = SodUtil.loadTimeInterval(SodUtil.getElement(config, AbstractNetworkSource.REFRESH_ELEMENT));
-        } else {
-            refreshInterval = new TimeInterval(1, UnitImpl.FORTNIGHT);
-        }
     }
 
     @Override
@@ -154,33 +157,58 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
 
     @Override
     public CacheEvent[] next() {
+        int count = 0;
+        SeisFileException latest;
         try {
-            List<CacheEvent> out = new ArrayList<CacheEvent>();
-            EventIterator it = getIterator();
-            while (it.hasNext()) {
-                Event e = it.next();
-                out.add(toCacheEvent(e));
+            return internalNext().toArray(new CacheEvent[0]);
+        } catch(OutOfMemoryError e) {
+            throw new RuntimeException("Out of memory", e);
+        } catch(SeisFileException t) {
+            if (t.getCause() instanceof IOException) {
+                latest = t;
+            } else {
+                throw new RuntimeException(t);
             }
+        } catch(XMLStreamException e) {
+            throw new RuntimeException(e);
+        }
+        while(getRetryStrategy().shouldRetry(latest, this, count++)) {
+            try {
+                List<CacheEvent> result = internalNext();
+                getRetryStrategy().serverRecovered(this);
+                return result.toArray(new CacheEvent[0]);
+            } catch(SeisFileException t) {
+                if (t.getCause() instanceof IOException) {
+                    latest = t;
+                } else {
+                    throw new RuntimeException(t);
+                }
+            } catch(XMLStreamException e) {
+                throw new RuntimeException(e);
+            } catch(OutOfMemoryError e) {
+                throw new RuntimeException("Out of memory", e);
+            }
+        }
+        throw new RuntimeException(latest);
+    }
+    
+    public List<CacheEvent> internalNext() throws SeisFileException, XMLStreamException {
+        List<CacheEvent> out = new ArrayList<CacheEvent>();
+        EventIterator it = getIterator();
+        while (it.hasNext()) {
+            Event e = it.next();
+            out.add(toCacheEvent(e));
+        }
 
+        if (! caughtUpWithRealtime()) {
             if ( out.size() < 10) {
                 increaseQueryTimeWidth();
             }
             if ( out.size() > 100) {
                 decreaseQueryTimeWidth();
             }
-            return out.toArray(new CacheEvent[0]);
-        } catch(Exception e) {
-            throw new RuntimeException(e); // ToDo: fix this
         }
-    }
-
-    @Override
-    public TimeInterval getWaitBeforeNext() {
-        if (queryTime == null) {
-            return new TimeInterval(0, UnitImpl.SECOND);
-        } else {
-            return queryTime.add(refreshInterval).subtract(ClockUtil.now());
-        }
+        return out;
     }
 
     @Override
@@ -318,7 +346,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         querier.setUserAgent("SOD/" + BuildVersion.getVersion());
         if (caughtUpWithRealtime() && hasNext()) {
             sleepUntilTime = now.add(refreshInterval);
-            logger.debug("set sleepUntilTime " + sleepUntilTime);
+            logger.debug("set sleepUntilTime " + sleepUntilTime+"  refresh="+refreshInterval);
             resetQueryTimeForLag();
             lastQueryEnd = now;
         }
@@ -334,9 +362,9 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
 
     String url;
     
-    URI parsedURL;
+    int port = -1;
     
-    MicroSecondDate queryTime;
+    URI parsedURL;
     
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(FdsnEvent.class);
     

@@ -44,10 +44,12 @@ public class NetworkQueryConstraints {
                                    StationSubsetter stationSubsetter,
                                    List<ChannelSubsetter> channelSubsetterList,
                                    edu.iris.Fissures.TimeRange timeRange) {
-        this.beginConstraint = new MicroSecondDate(timeRange.start_time);
-        this.endConstraint = new MicroSecondDate(timeRange.end_time);
-        if (endConstraint.after(ClockUtil.now().subtract(new TimeInterval(1, UnitImpl.HOUR)))) {
-            endConstraint = null;
+        if (timeRange != null) {
+            this.beginConstraint = new MicroSecondDate(timeRange.start_time);
+            this.endConstraint = new MicroSecondDate(timeRange.end_time);
+            if (endConstraint.after(ClockUtil.now().subtract(new TimeInterval(1, UnitImpl.HOUR)))) {
+                endConstraint = null;
+            }
         }
         constrainingNetworkCodes = new ArrayList<String>();
         if(attrSubsetter == null) {

@@ -8,6 +8,7 @@ import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.cache.InstrumentationLoader;
 import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
+import edu.sc.seis.sod.source.SodSourceException;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.StringTree;
@@ -17,12 +18,14 @@ public class HasSensitivity implements ChannelSubsetter {
 
     public StringTree accept(ChannelImpl channel, NetworkSource network) {
         try {
-            QuantityImpl sens = network.getSensitivity(channel.get_id());
+            QuantityImpl sens = network.getSensitivity(channel);
             return new StringTreeLeaf(this, InstrumentationLoader.isValidSensitivity(sens));
         } catch(ChannelNotFound e) {
             return new Fail(this, "No instrumentation");
         } catch (InvalidResponse e) {
             return new Fail(this, "Invalid instrumentation: "+e.getMessage());
+        } catch(SodSourceException e) {
+            return new Fail(this, "Error getting instrumentation: "+e.getMessage());
         }
     }
 

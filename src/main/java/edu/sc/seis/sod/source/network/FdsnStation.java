@@ -1,6 +1,6 @@
 package edu.sc.seis.sod.source.network;
 
-import java.net.URISyntaxException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,20 +12,19 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import edu.iris.Fissures.BoxArea;
-import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
-import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.IfNetwork.NetworkNotFound;
-import edu.iris.Fissures.IfNetwork.StationId;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
+import edu.iris.Fissures.network.InstrumentationImpl;
 import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
+import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
 import edu.sc.seis.fissuresUtil.stationxml.ChannelSensitivityBundle;
 import edu.sc.seis.fissuresUtil.stationxml.StationXMLToFissures;
@@ -38,6 +37,7 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.NetworkIterator;
 import edu.sc.seis.seisFile.fdsnws.stationxml.StationIterator;
 import edu.sc.seis.sod.BuildVersion;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.source.SodSourceException;
 import edu.sc.seis.sod.subsetter.station.StationPointDistance;
 
 public class FdsnStation extends AbstractNetworkSource {
@@ -53,8 +53,13 @@ public class FdsnStation extends AbstractNetworkSource {
 
     public FdsnStation(Element config) throws Exception {
         super(config);
+        queryParams.setIncludeRestricted(false);
         if (config != null) {
             // otherwise just use defaults
+            int port = SodUtil.loadInt(config, "port", -1);
+            if (port > 0) {
+                queryParams.setPort(port);
+            }
             NodeList childNodes = config.getChildNodes();
             for (int counter = 0; counter < childNodes.getLength(); counter++) {
                 Node node = childNodes.item(counter);
@@ -75,8 +80,12 @@ public class FdsnStation extends AbstractNetworkSource {
                         queryParams.appendToLocation(SodUtil.getNestedText(element));
                     } else if (element.getTagName().equals("channelCode")) {
                         queryParams.appendToChannel(SodUtil.getNestedText(element));
+                    } else if (element.getTagName().equals("includeRestricted")) {
+                        queryParams.setIncludeRestricted(true);
                     } else if (element.getTagName().equals("host")) {
-                        queryParams.setHost(SodUtil.getNestedText(element));
+                        String host = SodUtil.getNestedText(element);
+                        queryParams.setHost(host);
+                        this.name = host;
                     }
                 }
             }
@@ -92,14 +101,22 @@ public class FdsnStation extends AbstractNetworkSource {
     public List<? extends CacheNetworkAccess> getNetworkByName(String name) throws NetworkNotFound {
         throw new NetworkNotFound();
     }
-
+    
     @Override
     public List<? extends NetworkAttrImpl> getNetworks() {
         try {
+            return getNetworks(getRetries());
+        } catch(SodSourceException e) {
+            throw new RuntimeException("Timeout getting networks", e);
+        }
+    }
+
+    public List<? extends NetworkAttrImpl> getNetworks(int retryCount) throws SodSourceException  {
+        try {
             FDSNStationQueryParams staQP = setupQueryParams();
             staQP.setLevel(FDSNStationQueryParams.LEVEL_NETWORK);
-            FDSNStationQuerier querier = new FDSNStationQuerier(staQP);
-            querier.setUserAgent("SOD/"+BuildVersion.getVersion());
+            staQP.clearChannel(); // channel constraints make getting networks very slow
+            FDSNStationQuerier querier = setupQuerier(staQP);
             FDSNStationXML staxml = querier.getFDSNStationXML();
             List<NetworkAttrImpl> out = new ArrayList<NetworkAttrImpl>();
             NetworkIterator netIt = staxml.getNetworks();
@@ -108,20 +125,26 @@ public class FdsnStation extends AbstractNetworkSource {
                 out.add(StationXMLToFissures.convert(n));
             }
             return out;
-        } catch(Exception e) {
-            throw new RuntimeException(e);
+        } catch(SeisFileException e) {
+            throw new SodSourceException(e);
+        } catch(XMLStreamException e) {
+            throw new SodSourceException(e);
         }
     }
 
     @Override
-    public List<? extends StationImpl> getStations(NetworkId net) {
+    public List<? extends StationImpl> getStations(NetworkAttrImpl net) throws SodSourceException {
         try {
             FDSNStationQueryParams staQP = setupQueryParams();
             staQP.setLevel(FDSNStationQueryParams.LEVEL_STATION);
             staQP.clearNetwork();
-            staQP.appendToNetwork(net.network_code);
-            FDSNStationQuerier querier = new FDSNStationQuerier(staQP);
-            querier.setUserAgent("SOD/"+BuildVersion.getVersion());
+            staQP.appendToNetwork(net.getId().network_code);
+            staQP.setStartAfter(new MicroSecondDate(net.getBeginTime()));
+            MicroSecondDate end = new MicroSecondDate(net.getEndTime());
+            if (end.before(ClockUtil.now())) {
+                staQP.setEndBefore(end);
+            }
+            FDSNStationQuerier querier = setupQuerier(staQP);
             FDSNStationXML staxml = querier.getFDSNStationXML();
             List<StationImpl> out = new ArrayList<StationImpl>();
             NetworkIterator netIt = staxml.getNetworks();
@@ -135,26 +158,23 @@ public class FdsnStation extends AbstractNetworkSource {
                 }
             }
             return out;
-        } catch(Exception e) {
-            throw new RuntimeException(e);
+        } catch(SeisFileException e) {
+            throw new SodSourceException(e);
+        } catch(XMLStreamException e) {
+            throw new SodSourceException(e);
         }
     }
 
     @Override
-    public List<? extends ChannelImpl> getChannels(StationImpl station) {
-        return getChannels(station.get_id());
-    }
-
-    public List<? extends ChannelImpl> getChannels(StationId stationId) {
+    public List<? extends ChannelImpl> getChannels(StationImpl station) throws SodSourceException  {
         try {
             FDSNStationQueryParams staQP = setupQueryParams();
             staQP.setLevel(FDSNStationQueryParams.LEVEL_CHANNEL);
             staQP.clearNetwork()
-                    .appendToNetwork(stationId.network_id.network_code)
+                    .appendToNetwork(station.getId().network_id.network_code)
                     .clearStation()
-                    .appendToStation(stationId.station_code);
-            FDSNStationQuerier querier = new FDSNStationQuerier(staQP);
-            querier.setUserAgent("SOD/"+BuildVersion.getVersion());
+                    .appendToStation(station.getId().station_code);
+            FDSNStationQuerier querier = setupQuerier(staQP);
             FDSNStationXML staxml = querier.getFDSNStationXML();
             List<ChannelImpl> out = new ArrayList<ChannelImpl>();
             NetworkIterator netIt = staxml.getNetworks();
@@ -173,47 +193,46 @@ public class FdsnStation extends AbstractNetworkSource {
                 }
             }
             return out;
-        } catch(Exception e) {
-            throw new RuntimeException(e);
+        } catch(SeisFileException e) {
+            throw new SodSourceException(e);
+        } catch(XMLStreamException e) {
+            throw new SodSourceException(e);
         }
     }
 
     @Override
-    public QuantityImpl getSensitivity(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
-        String key = ChannelIdUtil.toString(chanId);
+    public QuantityImpl getSensitivity(ChannelImpl chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
+        String key = ChannelIdUtil.toString(chan.getId());
         if (!chanSensitivityMap.containsKey(key)) {
-            StationId sId = new StationId(chanId.network_id, chanId.station_code, chanId.begin_time);
-            getChannels(sId);
+            getChannels(chan.getStationImpl());
         }
         if (!chanSensitivityMap.containsKey(key)) {
-            throw new ChannelNotFound(chanId);
+            throw new ChannelNotFound(chan.getId());
         }
         return chanSensitivityMap.get(key);
     }
 
     @Override
-    public Instrumentation getInstrumentation(ChannelId chanId) throws ChannelNotFound, InvalidResponse {
+    public Instrumentation getInstrumentation(ChannelImpl chan) throws SodSourceException, ChannelNotFound, InvalidResponse  {
         try {
             FDSNStationQueryParams staQP = setupQueryParams();
             staQP.setLevel(FDSNStationQueryParams.LEVEL_RESPONSE);
             staQP.clearNetwork()
-                    .appendToNetwork(chanId.network_id.network_code)
+                    .appendToNetwork(chan.getId().network_id.network_code)
                     .clearStation()
-                    .appendToStation(chanId.station_code)
+                    .appendToStation(chan.getId().station_code)
                     .clearLocation()
-                    .appendToLocation(chanId.site_code)
+                    .appendToLocation(chan.getId().site_code)
                     .clearChannel()
-                    .appendToChannel(chanId.channel_code)
-                    .setEndAfter(new MicroSecondDate(chanId.begin_time))
+                    .appendToChannel(chan.getId().channel_code)
+                    .setEndAfter(new MicroSecondDate(chan.getId().begin_time))
                     // ends after
-                    .setEndTime(new MicroSecondDate(chanId.begin_time)); // starts
+                    .setEndTime(new MicroSecondDate(chan.getId().begin_time)); // starts
                                                                          // before
                                                                          // or
                                                                          // on
-            FDSNStationQuerier querier = new FDSNStationQuerier(staQP);
-            querier.setUserAgent("SOD/"+BuildVersion.getVersion());
+            FDSNStationQuerier querier = setupQuerier(staQP);
             FDSNStationXML staxml = querier.getFDSNStationXML();
-            List<ChannelImpl> out = new ArrayList<ChannelImpl>();
             NetworkIterator netIt = staxml.getNetworks();
             while (netIt.hasNext()) {
                 edu.sc.seis.seisFile.fdsnws.stationxml.Network n = netIt.next();
@@ -224,21 +243,27 @@ public class FdsnStation extends AbstractNetworkSource {
                     StationImpl sImpl = StationXMLToFissures.convert(s, netAttr);
                     for (Channel c : s.getChannelList()) {
                         ChannelSensitivityBundle csb = StationXMLToFissures.convert(c, sImpl);
-                        out.add(csb.getChan());
                         chanSensitivityMap.put(ChannelIdUtil.toString(csb.getChan().get_id()), csb.getSensitivity());
-                        return StationXMLToFissures.convertInstrumentation(c); // first
+                        InstrumentationImpl out = StationXMLToFissures.convertInstrumentation(c); // first
                                                                                // one
                                                                                // should
                                                                                // be
                                                                                // right
+                        staxml.closeReader();
+                        try {
+                            querier.getInputStream().close();
+                        } catch(IOException e) {
+                            // oh well
+                        }
+                        return out;
                     }
                 }
             }
             throw new ChannelNotFound();
         } catch(SeisFileException e) {
-            throw new InvalidResponse(e);
+            throw new SodSourceException(e);
         } catch(XMLStreamException e) {
-            throw new InvalidResponse(e);
+            throw new SodSourceException(e);
         }
     }
     
@@ -267,7 +292,17 @@ public class FdsnStation extends AbstractNetworkSource {
         return cloneQP;
     }
     
+    FDSNStationQuerier setupQuerier(FDSNStationQueryParams queryParams) {
+        FDSNStationQuerier querier = new FDSNStationQuerier(queryParams);
+        querier.setUserAgent("SOD/"+BuildVersion.getVersion());
+        return querier;
+    }
+    
     HashMap<String, QuantityImpl> chanSensitivityMap = new HashMap<String, QuantityImpl>();
 
     FDSNStationQueryParams queryParams = new FDSNStationQueryParams();
+    
+    int port = -1;
+    
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(FdsnStation.class);
 }

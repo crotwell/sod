@@ -1,11 +1,11 @@
 package edu.sc.seis.sod.subsetter.channel;
 
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.SeismicHardware;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
+import edu.sc.seis.sod.source.SodSourceException;
 import edu.sc.seis.sod.source.network.NetworkSource;
 
 /**
@@ -15,16 +15,15 @@ import edu.sc.seis.sod.source.network.NetworkSource;
  */
 public abstract class InstrumentationSubsetter implements ChannelSubsetter {
 
-    protected SeismicHardware getSeismicHardware(Channel channel,
+    protected SeismicHardware getSeismicHardware(ChannelImpl channel,
                                                  NetworkSource network)
-            throws ChannelNotFound, InvalidResponse {
-        ChannelId chanId = channel.get_id();
-        return getSeismicHardware(network.getInstrumentation(chanId));
+            throws ChannelNotFound, InvalidResponse, SodSourceException {
+        return getSeismicHardware(network.getInstrumentation(channel));
     }
 
     protected abstract SeismicHardware getSeismicHardware(Instrumentation inst);
 
-    protected boolean acceptId(Channel channel,
+    protected boolean acceptId(ChannelImpl channel,
                                NetworkSource network,
                                int id) {
         try {
@@ -35,10 +34,13 @@ public abstract class InstrumentationSubsetter implements ChannelSubsetter {
         } catch(InvalidResponse ex) {
             handle(ex);
             return false;
+        } catch(SodSourceException ex) {
+            handle(ex);
+            return false;
         }
     }
 
-    protected boolean acceptManufacturer(Channel channel,
+    protected boolean acceptManufacturer(ChannelImpl channel,
                                          NetworkSource network,
                                          String manufacturer) {
         try {
@@ -49,10 +51,13 @@ public abstract class InstrumentationSubsetter implements ChannelSubsetter {
         } catch(InvalidResponse ex) {
             handle(ex);
             return false;
+        } catch(SodSourceException ex) {
+            handle(ex);
+            return false;
         }
     }
 
-    protected boolean acceptModel(Channel channel,
+    protected boolean acceptModel(ChannelImpl channel,
                                   NetworkSource network,
                                   String model) {
         try {
@@ -63,10 +68,13 @@ public abstract class InstrumentationSubsetter implements ChannelSubsetter {
         } catch(InvalidResponse ex) {
             handle(ex);
             return false;
+        } catch(SodSourceException ex) {
+            handle(ex);
+            return false;
         }
     }
 
-    protected boolean acceptSerialNumber(Channel channel,
+    protected boolean acceptSerialNumber(ChannelImpl channel,
                                          NetworkSource network,
                                          String serialNum) {
         try {
@@ -75,6 +83,9 @@ public abstract class InstrumentationSubsetter implements ChannelSubsetter {
             handleChannelNotFound(ex);
             return false;
         } catch(InvalidResponse ex) {
+            handle(ex);
+            return false;
+        } catch(SodSourceException ex) {
             handle(ex);
             return false;
         }
@@ -94,6 +105,9 @@ public abstract class InstrumentationSubsetter implements ChannelSubsetter {
     }
     public static void handle(InvalidResponse e) {
         logger.info(getInstrumentationInvalidMsg(), e);
+    }
+    public static void handle(SodSourceException e) {
+        logger.info("Problem loading Instrumentation", e);
     }
     
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(InstrumentationSubsetter.class);
