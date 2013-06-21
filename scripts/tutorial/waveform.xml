@@ -63,6 +63,7 @@
         </phaseRequest>
         <fdsnDataSelect/>
         <someCoverage/>
+        <someDataCoverage/>
         <printlineSeismogramProcess/>
         <sacWriter/>
         <responseGain/>
