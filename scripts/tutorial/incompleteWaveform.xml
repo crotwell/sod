@@ -16,10 +16,7 @@
                 <value>360</value>
             </endOffset>
         </phaseRequest>
-        <fixedDataCenter>
-            <name>IRIS_PondDataCenter</name>
-            <dns>edu/iris/dmc</dns>
-        </fixedDataCenter>
+        <fdsnDataSelect/>
         <printlineSeismogramProcess/>
         <sacWriter/>
     </waveformArm>
