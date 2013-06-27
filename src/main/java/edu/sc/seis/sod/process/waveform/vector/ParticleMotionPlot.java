@@ -341,7 +341,7 @@ class SeisPlotDataSource extends AbstractDataSource {
 
     MicroSecondTimeRange timeWindow;
     
-    public Number get(int col, int row) {
+    public Comparable<?> get(int col, int row) {
         try {
             double rot = Math.toRadians(90-xAz);
             if (col == 0) {
