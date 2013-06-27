@@ -103,19 +103,13 @@ public class FdsnStation extends AbstractNetworkSource {
     }
     
     @Override
-    public List<? extends NetworkAttrImpl> getNetworks() {
-        try {
-            return getNetworks(getRetries());
-        } catch(SodSourceException e) {
-            throw new RuntimeException("Timeout getting networks", e);
-        }
-    }
-
-    public List<? extends NetworkAttrImpl> getNetworks(int retryCount) throws SodSourceException  {
+    public List<? extends NetworkAttrImpl> getNetworks() throws SodSourceException {
         try {
             FDSNStationQueryParams staQP = setupQueryParams();
             staQP.setLevel(FDSNStationQueryParams.LEVEL_NETWORK);
             staQP.clearChannel(); // channel constraints make getting networks very slow
+            staQP.clearStartAfter().clearStartBefore().clearStartTime(); // start and end times also slow as 
+            staQP.clearEndAfter().clearEndBefore().clearEndTime();       // applied to channel not network
             FDSNStationQuerier querier = setupQuerier(staQP);
             FDSNStationXML staxml = querier.getFDSNStationXML();
             List<NetworkAttrImpl> out = new ArrayList<NetworkAttrImpl>();
