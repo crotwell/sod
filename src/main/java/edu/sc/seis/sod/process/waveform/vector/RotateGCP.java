@@ -57,6 +57,15 @@ public class RotateGCP implements WaveformVectorProcess, Threadable {
                                                                false,
                                                                "Channels not rotatable, unable to find horizontals with 90 deg separation: "+o1.azimuth+"/"+o1.dip+" "+o2.azimuth+"/"+o2.dip+" "+o3.azimuth+"/"+o3.dip+" "));
         }
+        if (! Rotate.areRotatable(horizontal[0].getOrientation(), horizontal[1].getOrientation())) {
+            return new WaveformVectorResult(seismograms,
+                                            new StringTreeLeaf(this,
+                                                               false,
+                                                               "horizontal channels not orthogonal: xAzimuth="
+                                                                       + horizontal[0].getOrientation().azimuth
+                                                                       + " yAzimuth="
+                                                                       + horizontal[1].getOrientation().azimuth));
+        }
         int xIndex = -1, yIndex = -1;
         for(int i = 0; i < seismograms.length; i++) {
             if(seismograms[i].length != 0) {
