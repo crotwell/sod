@@ -31,28 +31,6 @@ public abstract class AbstractSource implements Source {
         retryStrategy = new UserReportRetryStrategy(getRetries());
     }
 
-    protected boolean shouldRetryWithSleep(Throwable t, int tryCount) {
-        if (retryStrategy.shouldRetry(t, this, tryCount)) {
-            int sleepy = 2 * 1000;
-            if (tryCount < getRetries()) {
-                sleepy = (getRetries() - tryCount) * 10 * 1000;
-            } else {
-                if (tryCount < 10) {
-                    // exponential backoff
-                    sleepy = (int)Math.round(Math.pow(2, tryCount) * 1000);
-                } else {
-                    sleepy = 1024 * 1000; // max backoff
-                }
-            }
-            try {
-                Thread.sleep(sleepy);
-            } catch(InterruptedException e1) {}
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     /*
      * (non-Javadoc)
      * 
