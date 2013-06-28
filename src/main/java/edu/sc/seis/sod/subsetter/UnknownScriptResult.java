@@ -1,7 +1,7 @@
 package edu.sc.seis.sod.subsetter;
 
 
-public class UnknownScriptResult extends Exception {
+public class UnknownScriptResult extends SubsetterException {
 
     public UnknownScriptResult() {
     }

@@ -21,6 +21,7 @@ import edu.sc.seis.sod.process.waveform.CollapseOverlaps;
 import edu.sc.seis.sod.process.waveform.Merge;
 import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.status.StringTreeLeaf;
+import edu.sc.seis.sod.subsetter.SubsetterException;
 
 public class VectorTrim implements WaveformVectorProcess, Threadable {
 
@@ -64,7 +65,7 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
                                             new StringTreeLeaf(this,
                                                                true,
                                                                "Each vector of equal size"));
-        } catch(IllegalArgumentException e) {
+        } catch(SubsetterException e) {
             return new WaveformVectorResult(seismograms,
                                             new StringTreeLeaf(this,
                                                                false,
@@ -73,7 +74,7 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
     }
 
     public LocalSeismogramImpl[][] trim(LocalSeismogramImpl[][] vector)
-            throws FissuresException {
+            throws FissuresException, SubsetterException {
         if(normalizeSampling(vector)) {
             LocalSeismogramImpl[][] cutSeis = cutVector(vector, findSmallestCoveringCuts(vector));
             // check time alignment
@@ -85,11 +86,11 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
             }
             return out;
         } else {
-            throw new IllegalArgumentException("Unable to normalize samplings on seismograms in vector.  These can not be trimmed to the same length");
+            throw new SubsetterException("Unable to normalize samplings on seismograms in vector.  These can not be trimmed to the same length");
         }
     }
     
-    public static LocalSeismogramImpl alignTimes(LocalSeismogramImpl main, LocalSeismogramImpl shifty) throws FissuresException {
+    public static LocalSeismogramImpl alignTimes(LocalSeismogramImpl main, LocalSeismogramImpl shifty) throws SubsetterException, FissuresException {
         shifty = SampleSyncronize.alignTimes(main, shifty);
         if (shifty.getNumPoints() == main.getNumPoints() +1) {
             // looks like we are long by one
@@ -107,9 +108,9 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
         } 
         if (shifty.getNumPoints() == main.getNumPoints()-1) {
             // Oops!
-            throw new RuntimeException("Oops, cut ends up with too few points");
+            throw new SubsetterException("Oops, cut ends up with too few points");
         }
-        throw new RuntimeException("Oops, can't handle different num points: main="+main.getNumPoints()+" shifty="+shifty.getNumPoints());
+        throw new SubsetterException("Oops, can't handle different num points: main="+main.getNumPoints()+" shifty="+shifty.getNumPoints());
     }
 
     public LocalSeismogramImpl[][] cutVector(LocalSeismogramImpl[][] vector,
