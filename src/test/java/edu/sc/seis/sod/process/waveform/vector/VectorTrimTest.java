@@ -18,6 +18,7 @@ import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannelId;
 import edu.sc.seis.fissuresUtil.mockFissures.IfSeismogramDC.MockSeismogram;
 import edu.sc.seis.fissuresUtil.sac.SacToFissures;
 import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
+import edu.sc.seis.sod.subsetter.SubsetterException;
 
 public class VectorTrimTest extends TestCase {
 
@@ -28,7 +29,7 @@ public class VectorTrimTest extends TestCase {
         baseSeis = createSpike();
     }
 
-    public void testOnThreeEqualSeismograms() throws FissuresException {
+    public void testOnThreeEqualSeismograms() throws FissuresException, SubsetterException {
         LocalSeismogramImpl[][] vector = new LocalSeismogramImpl[][] { {baseSeis},
                                                                       {baseSeis},
                                                                       {baseSeis}};
@@ -50,7 +51,7 @@ public class VectorTrimTest extends TestCase {
     }
 
     public void testOnThreeSeismogramsWithIncreasingLength()
-            throws FissuresException {
+            throws FissuresException, SubsetterException {
         LocalSeismogramImpl[][] vector = new LocalSeismogramImpl[][] { {baseSeis},
                                                                       {createSpike(2)},
                                                                       {createSpike(3)}};
@@ -75,7 +76,7 @@ public class VectorTrimTest extends TestCase {
     }
 
     public void testOnThreeSeismogramsWithEqualLengthAndIncreasingStartTimes()
-            throws FissuresException {
+            throws FissuresException, SubsetterException {
         LocalSeismogramImpl[][] vector = new LocalSeismogramImpl[][] { {baseSeis},
                                                                       {createSpike(1,
                                                                                    1)},
@@ -85,7 +86,7 @@ public class VectorTrimTest extends TestCase {
     }
 
     private void checkEmptyTrim(LocalSeismogramImpl[][] vector)
-            throws FissuresException {
+            throws FissuresException, SubsetterException {
         LocalSeismogramImpl[][] result = trimmer.trim(vector);
         for(int i = 0; i < result.length; i++) {
             assertEquals(0, result[i].length);
@@ -93,7 +94,7 @@ public class VectorTrimTest extends TestCase {
     }
 
     public void testOnThreeSeismogramsWithIncreasingStartTimesAndDecreasingLength()
-            throws FissuresException {
+            throws FissuresException, SubsetterException {
         LocalSeismogramImpl[][] vector = new LocalSeismogramImpl[][] { {createSpike(3,
                                                                                     0)},
                                                                       {createSpike(2,
@@ -105,14 +106,14 @@ public class VectorTrimTest extends TestCase {
     }
 
     public void testOnTwoEqualSeismogramsAndOneMissingSeismogram()
-            throws FissuresException {
+            throws FissuresException, SubsetterException {
         LocalSeismogramImpl[][] vector = new LocalSeismogramImpl[][] { {baseSeis},
                                                                       {},
                                                                       {baseSeis}};
         checkEmptyTrim(trimmer.trim(vector));
     }
 
-    public void testOnSegmentedVectorPieces() throws FissuresException {
+    public void testOnSegmentedVectorPieces() throws FissuresException, SubsetterException {
         LocalSeismogramImpl[] segmented = new LocalSeismogramImpl[] {createSpike(),
                                                                      createSpike(1,
                                                                                  2)};
@@ -132,7 +133,7 @@ public class VectorTrimTest extends TestCase {
     }
 
     public void testOnSegmentedUnequalButOverlappingVectorPieces()
-            throws FissuresException {
+            throws FissuresException, SubsetterException {
         LocalSeismogramImpl commonSeis = createSpike(2, 2);
         LocalSeismogramImpl[][] vector = new LocalSeismogramImpl[][] { {createSpike(),
                                                                         commonSeis},
@@ -153,7 +154,7 @@ public class VectorTrimTest extends TestCase {
     }
 
     public void testOnSegmentedUnoverlappingVectorPieces()
-            throws FissuresException {
+            throws FissuresException, SubsetterException {
         LocalSeismogramImpl[][] vector = new LocalSeismogramImpl[][] { {createSpike(),
                                                                         createSpike(2,
                                                                                     2)},
@@ -188,7 +189,7 @@ public class VectorTrimTest extends TestCase {
     }
 
     public void testOnSeismogramsWithVaryingSamplingALaPond()
-            throws FissuresException, ParseException {
+            throws FissuresException, ParseException, SubsetterException {
         String[][] seisTimes = new String[][] { {"2003.01.06 23:50:07.483",
                                                  "2003.01.07 00:08:08.334"},
                                                {"2003.01.06 23:51:59.483",
@@ -217,7 +218,7 @@ public class VectorTrimTest extends TestCase {
     }
 
     public void testOnSeismogramsWithSlightlyVaryingStart()
-            throws FissuresException, ParseException {
+            throws FissuresException, ParseException, SubsetterException {
         String[] seisTimes = new String[] { "2003.01.06 23:50:07.481",
                                             "2003.01.06 23:50:07.482",
                                             "2003.01.06 23:50:07.483"};
