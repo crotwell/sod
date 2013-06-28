@@ -576,6 +576,15 @@ public class SodUtil {
         }
     }
 
+    public static float loadFloat(Element config, String elementName, float defaultValue) {
+        Element child = XMLUtil.getElement(config, elementName);
+        if(child != null) {
+            return Float.parseFloat(XMLUtil.getText(child));
+        } else {
+            return defaultValue;
+        }
+    }
+
     public static String loadText(Element config, String elementName, String defaultValue) {
         Element child = getElement(config, elementName);
         if(child != null) {
