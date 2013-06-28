@@ -291,7 +291,37 @@
                     all of the seismograms in the vector and remove time windows that does not exist for all three
                     components.</description>
             </xsd:annotation>
-            <empty/>
+            <interleave>
+                <optional>
+                  <element name="radialOrientationCode">
+                      <data type="string">
+                          <param name="length">1</param>
+                          <xsd:annotation>
+                              <example>R</example>
+                          </xsd:annotation>
+                      </data>
+                  </element>
+                </optional>
+                <optional>
+                  <element name="transverseOrientationCode">
+                      <data type="string">
+                          <param name="length">1</param>
+                          <xsd:annotation>
+                              <example>T</example>
+                          </xsd:annotation>
+                      </data>
+                  </element>
+                </optional>
+                <optional>
+                    <element name="ninetyDegreeTol">
+                        <data type="float">
+                          <param name="minExclusive">0</param>
+                          <param name="maxInclusive">90</param>
+                      </data>
+                    </element>
+                </optional>
+            </interleave>
+            
         </element>
     </define>
     <define name="sampleSyncronize">

@@ -14,6 +14,7 @@ import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Threadable;
 import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.status.StringTreeLeaf;
@@ -30,6 +31,7 @@ public class RotateGCP implements WaveformVectorProcess, Threadable {
         transverseOrientationCode = DOMHelper.extractText(el,
                                                           "transverseOrientationCode",
                                                           "T");
+        ninetyDegreeTol = SodUtil.loadFloat(el, "ninetyDegreeTol", ninetyDegreeTol);
     }
 
     /**
@@ -47,7 +49,7 @@ public class RotateGCP implements WaveformVectorProcess, Threadable {
         }
         seismograms = trimResult.getSeismograms();
         // find x & y channel, y should be x+90 degrees and horizontal
-        Channel[] horizontal = channelGroup.getHorizontalXY();
+        Channel[] horizontal = channelGroup.getHorizontalXY(ninetyDegreeTol);
         if(horizontal.length == 0) {
             Orientation o1 = channelGroup.getChannel1().getOrientation();
             Orientation o2 = channelGroup.getChannel2().getOrientation();
@@ -55,13 +57,14 @@ public class RotateGCP implements WaveformVectorProcess, Threadable {
             return new WaveformVectorResult(seismograms,
                                             new StringTreeLeaf(this,
                                                                false,
-                                                               "Channels not rotatable, unable to find horizontals with 90 deg separation: "+o1.azimuth+"/"+o1.dip+" "+o2.azimuth+"/"+o2.dip+" "+o3.azimuth+"/"+o3.dip+" "));
+                                                               "Channels not rotatable, unable to find horizontals with 90 deg separation: "+o1.azimuth+"/"+o1.dip+" "+o2.azimuth+"/"+o2.dip+" "+o3.azimuth+"/"+o3.dip+" tol="+ninetyDegreeTol));
         }
-        if (! Rotate.areRotatable(horizontal[0].getOrientation(), horizontal[1].getOrientation())) {
+        if (! Rotate.areRotatable(horizontal[0].getOrientation(), horizontal[1].getOrientation(), ninetyDegreeTol)) {
             return new WaveformVectorResult(seismograms,
                                             new StringTreeLeaf(this,
                                                                false,
-                                                               "horizontal channels not orthogonal: xAzimuth="
+                                                               "horizontal channels not orthogonal with tol="+ninetyDegreeTol
+                                                               +": xAzimuth="
                                                                        + horizontal[0].getOrientation().azimuth
                                                                        + " yAzimuth="
                                                                        + horizontal[1].getOrientation().azimuth));
@@ -123,7 +126,8 @@ public class RotateGCP implements WaveformVectorProcess, Threadable {
                                                          staLoc,
                                                          eventLoc,
                                                          transverseOrientationCode,
-                                                         radialOrientationCode);
+                                                         radialOrientationCode,
+                                                         ninetyDegreeTol);
             out[xIndex][i] = rot[0];
             out[yIndex][i] = rot[1];
         }
@@ -136,6 +140,8 @@ public class RotateGCP implements WaveformVectorProcess, Threadable {
     }
     
     private String radialOrientationCode, transverseOrientationCode;
+    
+    private float ninetyDegreeTol = Rotate.NINTY_DEGREE_TOLERANCE;
     
     private VectorTrim trimmer = new VectorTrim();
 }
