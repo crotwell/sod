@@ -42,12 +42,12 @@ public class SacWriterTest extends TestCase {
                                                        {"${channel.name}", chan.getName()}};
         for(int i = 0; i < templateAndResult.length; i++) {
             assertEquals(FissuresFormatter.filize(templateAndResult[i][1]),
-                         new SacWriter("", templateAndResult[i][0]).generate(ev, chan, seis, 0, templateAndResult.length));
+                         new SacWriter("", templateAndResult[i][0]).generate(ev, chan, seis, 0, 1));
         }
         assertEquals(FissuresFormatter.filize("test/" + seis.getName()),
-                     new SacWriter("test/", seis.getName()).generate(ev, chan, seis, 0, templateAndResult.length));
+                     new SacWriter("test/", seis.getName()).generate(ev, chan, seis, 0, 1));
         assertEquals(FissuresFormatter.filize("test/" + seis.getName()),
-                     new SacWriter("test", seis.getName()).generate(ev, chan, seis, 0, templateAndResult.length));
+                     new SacWriter("test", seis.getName()).generate(ev, chan, seis, 0, 1));
     }
 
     public void testApplyProcessorsWithNoProcessors() throws Exception {
@@ -96,8 +96,8 @@ public class SacWriterTest extends TestCase {
 
     public void testGenerateLocations() throws ConfigurationException {
         SacWriter sw = new SacWriter("${seismogram.name}.sac");
-        assertTrue(sw.generate(ev, chan, seis, 0, 2).endsWith("1.sac"));
-        assertTrue(sw.generate(ev, chan, seis, 1, 2).endsWith("2.sac"));
+        assertTrue(sw.generate(ev, chan, seis, 0, 2)+" endsWith 1.sac", sw.generate(ev, chan, seis, 0, 2).endsWith("1.sac"));
+        assertTrue(sw.generate(ev, chan, seis, 1, 2)+" ends with 2.sac", sw.generate(ev, chan, seis, 1, 2).endsWith("2.sac"));
     }
 
     public void testRemoveExisting() throws FileNotFoundException, IOException,
