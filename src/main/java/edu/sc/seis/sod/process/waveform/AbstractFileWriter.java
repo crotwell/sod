@@ -40,7 +40,7 @@ public abstract class AbstractFileWriter {
                            int numSeismograms) {
         VelocityContext ctx = ContextWrangler.createContext(event);
         if(numSeismograms > 1) {
-            ctx.put("index", "." + index+1);
+            ctx.put("index", "." + (index+1)); // names index base 1, array is base 0
         } else {
             ctx.put("index", "");
         }
