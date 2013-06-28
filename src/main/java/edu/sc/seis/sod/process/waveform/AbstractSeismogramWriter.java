@@ -40,9 +40,9 @@ AbstractFileWriter implements WaveformProcess {
         if (cookieJar == null) {throw new NullPointerException("CookieJar cannot be null");}
         if (channel == null) {throw new NullPointerException("Channel cannot be null");}
         if(seismograms.length > 0) {
-            removeExisting(event, channel, seismograms[0]);
+            removeExisting(event, channel, seismograms[0], seismograms.length);
             for(int i = 0; i < seismograms.length; i++) {
-                String loc = generate(event, channel, seismograms[i], i);
+                String loc = generate(event, channel, seismograms[i], i, seismograms.length);
                 File parent = new File(loc).getParentFile();
                 if(!parent.exists() && !parent.mkdirs()) {
                     StringTreeLeaf reason = new StringTreeLeaf(this,

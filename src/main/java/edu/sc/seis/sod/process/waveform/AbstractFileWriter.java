@@ -36,10 +36,11 @@ public abstract class AbstractFileWriter {
     public String generate(CacheEvent event,
                            ChannelImpl channel,
                            LocalSeismogramImpl representativeSeismogram,
-                           int index) {
+                           int index,
+                           int numSeismograms) {
         VelocityContext ctx = ContextWrangler.createContext(event);
-        if(index > 0) {
-            ctx.put("index", "." + index);
+        if(numSeismograms > 1) {
+            ctx.put("index", "." + index+1);
         } else {
             ctx.put("index", "");
         }
@@ -88,9 +89,9 @@ public abstract class AbstractFileWriter {
 
     public void removeExisting(CacheEvent event,
                                ChannelImpl channel,
-                               LocalSeismogramImpl representativeSeismogram) {
+                               LocalSeismogramImpl representativeSeismogram, int numSeismograms) {
         for(int i = 0; true; i++) {
-            File cur = new File(generate(event, channel, representativeSeismogram, i));
+            File cur = new File(generate(event, channel, representativeSeismogram, i, numSeismograms));
             if(!cur.exists()) {
                 break;
             }
