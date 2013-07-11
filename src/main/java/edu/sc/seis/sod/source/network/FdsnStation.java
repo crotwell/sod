@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.source.network;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,7 @@ import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
+import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
@@ -111,6 +113,7 @@ public class FdsnStation extends AbstractNetworkSource {
             staQP.clearStartAfter().clearStartBefore().clearStartTime(); // start and end times also slow as 
             staQP.clearEndAfter().clearEndBefore().clearEndTime();       // applied to channel not network
             FDSNStationQuerier querier = setupQuerier(staQP);
+            logger.debug("getNetworks"+staQP.formURI());
             FDSNStationXML staxml = querier.getFDSNStationXML();
             List<NetworkAttrImpl> out = new ArrayList<NetworkAttrImpl>();
             NetworkIterator netIt = staxml.getNetworks();
@@ -119,6 +122,9 @@ public class FdsnStation extends AbstractNetworkSource {
                 out.add(StationXMLToFissures.convert(n));
             }
             return out;
+        } catch(URISyntaxException e) {
+            // should not happen
+            throw new SodSourceException("Problem forming URI", e);
         } catch(SeisFileException e) {
             throw new SodSourceException(e);
         } catch(XMLStreamException e) {
@@ -133,11 +139,12 @@ public class FdsnStation extends AbstractNetworkSource {
             staQP.setLevel(FDSNStationQueryParams.LEVEL_STATION);
             staQP.clearNetwork();
             staQP.appendToNetwork(net.getId().network_code);
-            staQP.setStartAfter(new MicroSecondDate(net.getBeginTime()));
+            staQP.setStartTime(new MicroSecondDate(net.getBeginTime()));
             MicroSecondDate end = new MicroSecondDate(net.getEndTime());
             if (end.before(ClockUtil.now())) {
-                staQP.setEndBefore(end);
+                staQP.setEndTime(end);
             }
+            logger.debug("getStations "+staQP.formURI());
             FDSNStationQuerier querier = setupQuerier(staQP);
             FDSNStationXML staxml = querier.getFDSNStationXML();
             List<StationImpl> out = new ArrayList<StationImpl>();
@@ -152,6 +159,9 @@ public class FdsnStation extends AbstractNetworkSource {
                 }
             }
             return out;
+        } catch(URISyntaxException e) {
+            // should not happen
+            throw new SodSourceException("Problem forming URI", e);
         } catch(SeisFileException e) {
             throw new SodSourceException(e);
         } catch(XMLStreamException e) {
@@ -168,6 +178,12 @@ public class FdsnStation extends AbstractNetworkSource {
                     .appendToNetwork(station.getId().network_id.network_code)
                     .clearStation()
                     .appendToStation(station.getId().station_code);
+            staQP.setStartTime(new MicroSecondDate(station.getBeginTime()));
+            MicroSecondDate end = new MicroSecondDate(station.getEndTime());
+            if (end.before(ClockUtil.now())) {
+                staQP.setEndTime(end);
+            }
+            logger.debug("getChannels "+staQP.formURI());
             FDSNStationQuerier querier = setupQuerier(staQP);
             FDSNStationXML staxml = querier.getFDSNStationXML();
             List<ChannelImpl> out = new ArrayList<ChannelImpl>();
@@ -187,6 +203,9 @@ public class FdsnStation extends AbstractNetworkSource {
                 }
             }
             return out;
+        } catch(URISyntaxException e) {
+            // should not happen
+            throw new SodSourceException("Problem forming URI", e);
         } catch(SeisFileException e) {
             throw new SodSourceException(e);
         } catch(XMLStreamException e) {
@@ -225,6 +244,7 @@ public class FdsnStation extends AbstractNetworkSource {
                                                                          // before
                                                                          // or
                                                                          // on
+            logger.debug("getInstrumentation "+staQP.formURI());
             FDSNStationQuerier querier = setupQuerier(staQP);
             FDSNStationXML staxml = querier.getFDSNStationXML();
             NetworkIterator netIt = staxml.getNetworks();
@@ -254,6 +274,9 @@ public class FdsnStation extends AbstractNetworkSource {
                 }
             }
             throw new ChannelNotFound();
+        } catch(URISyntaxException e) {
+            // should not happen
+            throw new SodSourceException("Problem forming URI", e);
         } catch(SeisFileException e) {
             throw new SodSourceException(e);
         } catch(XMLStreamException e) {
