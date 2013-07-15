@@ -54,7 +54,11 @@ public abstract class AbstractSource implements Source {
     }
 
     public void setRetryStrategy(RetryStrategy retryStrategy) {
-        this.retryStrategy = retryStrategy;
+        if (retryStrategy != null) {
+            this.retryStrategy = retryStrategy;
+        } else {
+            throw new IllegalArgumentException("RetryStrategy cannot be null");
+        }
     }
 
     protected String name;
