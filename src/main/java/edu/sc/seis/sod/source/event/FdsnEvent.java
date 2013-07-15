@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -33,6 +35,7 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.seisFile.SeisFileException;
+import edu.sc.seis.seisFile.fdsnws.AbstractQueryParams;
 import edu.sc.seis.seisFile.fdsnws.FDSNEventQuerier;
 import edu.sc.seis.seisFile.fdsnws.FDSNEventQueryParams;
 import edu.sc.seis.seisFile.fdsnws.quakeml.Event;
@@ -54,6 +57,24 @@ import edu.sc.seis.sod.subsetter.origin.OriginDepthRange;
 
 
 public class FdsnEvent extends AbstractEventSource implements EventSource {
+
+    public FdsnEvent(final FDSNEventQueryParams queryParams)  {
+        super("DefaultFDSNEvent", 2);
+        eventTimeRangeSupplier = new MicroSecondTimeRangeSupplier() {
+            
+            @Override
+            public MicroSecondTimeRange getMSTR() {
+                SimpleDateFormat sdf = AbstractQueryParams.createDateFormat();
+                try {
+                    return new MicroSecondTimeRange(new MicroSecondDate(sdf.parse(queryParams.getParam(FDSNEventQueryParams.STARTTIME))),
+                                                    new MicroSecondDate(sdf.parse(queryParams.getParam(FDSNEventQueryParams.ENDTIME))));
+                } catch(ParseException e) {
+                    throw new RuntimeException("Should not happen", e);
+                }
+            }
+        };
+        this.queryParams = queryParams;
+    }
     
     public FdsnEvent(Element config) throws ConfigurationException {
         super(config, "DefaultFDSNEvent");
