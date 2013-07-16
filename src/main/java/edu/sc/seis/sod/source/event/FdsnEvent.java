@@ -55,13 +55,12 @@ import edu.sc.seis.sod.subsetter.origin.Contributor;
 import edu.sc.seis.sod.subsetter.origin.MagnitudeRange;
 import edu.sc.seis.sod.subsetter.origin.OriginDepthRange;
 
-
 public class FdsnEvent extends AbstractEventSource implements EventSource {
 
-    public FdsnEvent(final FDSNEventQueryParams queryParams)  {
+    public FdsnEvent(final FDSNEventQueryParams queryParams) {
         super("DefaultFDSNEvent", 2);
         eventTimeRangeSupplier = new MicroSecondTimeRangeSupplier() {
-            
+
             @Override
             public MicroSecondTimeRange getMSTR() {
                 SimpleDateFormat sdf = AbstractQueryParams.createDateFormat();
@@ -75,33 +74,34 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         };
         this.queryParams = queryParams;
     }
-    
+
     public FdsnEvent(Element config) throws ConfigurationException {
         super(config, "DefaultFDSNEvent");
-        queryParams.setOrderBy(FDSNEventQueryParams.ORDER_TIME_ASC); // fdsnEvent default is reverse time
+        queryParams.setOrderBy(FDSNEventQueryParams.ORDER_TIME_ASC); // fdsnEvent
+                                                                     // default
+                                                                     // is
+                                                                     // reverse
+                                                                     // time
         int port = SodUtil.loadInt(config, "port", -1);
         if (port > 0) {
             queryParams.setPort(port);
         }
         NodeList childNodes = config.getChildNodes();
-        for(int counter = 0; counter < childNodes.getLength(); counter++) {
+        for (int counter = 0; counter < childNodes.getLength(); counter++) {
             Node node = childNodes.item(counter);
-            if(node instanceof Element) {
+            if (node instanceof Element) {
                 String tagName = ((Element)node).getTagName();
-                if(!tagName.equals(AbstractSource.RETRIES_ELEMENT) 
-                        && ! tagName.equals(AbstractNetworkSource.REFRESH_ELEMENT)
-                        && ! tagName.equals(AbstractEventSource.EVENT_QUERY_INCREMENT)
-                        && ! tagName.equals(AbstractEventSource.EVENT_LAG)
-                        && ! tagName.equals(AbstractSource.NAME_ELEMENT)) {
-                    Object object = SodUtil.load((Element)node,
-                                                 new String[] {"eventArm",
-                                                               "origin"});
-
-                    if(tagName.equals("originTimeRange")) {
-                        eventTimeRangeSupplier = ((MicroSecondTimeRangeSupplier) SodUtil.load((Element)node, new String[] {
-                            "eventArm", "origin" }));
-                        
-                    } else if(tagName.equals("originDepthRange")) {
+                if (!tagName.equals(AbstractSource.RETRIES_ELEMENT)
+                        && !tagName.equals(AbstractNetworkSource.REFRESH_ELEMENT)
+                        && !tagName.equals(AbstractEventSource.EVENT_QUERY_INCREMENT)
+                        && !tagName.equals(AbstractEventSource.EVENT_LAG)
+                        && !tagName.equals(AbstractSource.NAME_ELEMENT)) {
+                    Object object = SodUtil.load((Element)node, new String[] {"eventArm", "origin"});
+                    if (tagName.equals("originTimeRange")) {
+                        eventTimeRangeSupplier = ((MicroSecondTimeRangeSupplier)SodUtil.load((Element)node,
+                                                                                             new String[] {"eventArm",
+                                                                                                           "origin"}));
+                    } else if (tagName.equals("originDepthRange")) {
                         DepthRange dr = ((OriginDepthRange)object);
                         if (dr.getMinDepth().getValue(UnitImpl.KILOMETER) > -99999) {
                             queryParams.setMinDepth((float)dr.getMinDepth().getValue(UnitImpl.KILOMETER));
@@ -109,15 +109,17 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                         if (dr.getMaxDepth().getValue(UnitImpl.KILOMETER) < 99999) {
                             queryParams.setMaxDepth((float)dr.getMaxDepth().getValue(UnitImpl.KILOMETER));
                         }
-                    } else if(tagName.equals("magnitudeRange")) {
+                    } else if (tagName.equals("magnitudeRange")) {
                         MagnitudeRange magRange = (MagnitudeRange)object;
                         String[] magTypes = magRange.getSearchTypes();
-                        // fdsn web services don't support multiple mag types, but we append them comma 
-                        // separated just in case they do one day. Sod will likely get an error back
+                        // fdsn web services don't support multiple mag types,
+                        // but we append them comma
+                        // separated just in case they do one day. Sod will
+                        // likely get an error back
                         String magStr = "";
                         for (int i = 0; i < magTypes.length; i++) {
                             magStr += magTypes[i];
-                            if (i < magTypes.length-1) {
+                            if (i < magTypes.length - 1) {
                                 magStr += ",";
                             }
                         }
@@ -130,7 +132,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                         if (magRange.getMaxValue() < 99) {
                             queryParams.setMaxMagnitude((float)magRange.getMaxValue());
                         }
-                    } else if(object instanceof edu.iris.Fissures.Area) {
+                    } else if (object instanceof edu.iris.Fissures.Area) {
                         edu.iris.Fissures.Area area = (edu.iris.Fissures.Area)object;
                         if (area instanceof GlobalArea) {
                             // nothing needed
@@ -144,11 +146,12 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                                               (float)((QuantityImpl)donut.min_distance).getValue(UnitImpl.DEGREE),
                                               (float)((QuantityImpl)donut.max_distance).getValue(UnitImpl.DEGREE));
                         } else {
-                            throw new ConfigurationException("Area of class "+area.getClass().getName()+" not understood");
+                            throw new ConfigurationException("Area of class " + area.getClass().getName()
+                                    + " not understood");
                         }
-                    } else if(tagName.equals("catalog")) {
+                    } else if (tagName.equals("catalog")) {
                         queryParams.setCatalog(((Catalog)object).getCatalog());
-                    } else if(tagName.equals("contributor")) {
+                    } else if (tagName.equals("contributor")) {
                         queryParams.setContributor(((Contributor)object).getContributor());
                     } else if (tagName.equals("host")) {
                         queryParams.setHost(SodUtil.getNestedText((Element)node));
@@ -162,19 +165,10 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
     public boolean hasNext() {
         MicroSecondDate queryEnd = getEventTimeRange().getEndTime();
         MicroSecondDate quitDate = queryEnd.add(lag);
-        logger
-                .debug(getName()+" Checking if more queries to the event server are in order.  The quit date is "
-                        + quitDate
-                        + " the last query was for "
-                        + getQueryStart()
-                        + " and we're querying to "
-                        + queryEnd);
-        return  quitDate.equals(ClockUtil.now())
-            || quitDate.after(ClockUtil.now())
-            || !getQueryStart().equals(queryEnd);
+        logger.debug(getName() + " Checking if more queries to the event server are in order.  The quit date is "
+                + quitDate + " the last query was for " + getQueryStart() + " and we're querying to " + queryEnd);
+        return quitDate.equals(ClockUtil.now()) || quitDate.after(ClockUtil.now()) || !getQueryStart().equals(queryEnd);
     }
-
-
 
     @Override
     public CacheEvent[] next() {
@@ -193,7 +187,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         } catch(XMLStreamException e) {
             throw new RuntimeException(e);
         }
-        while(getRetryStrategy().shouldRetry(latest, this, count++)) {
+        while (getRetryStrategy().shouldRetry(latest, this, count++)) {
             try {
                 List<CacheEvent> result = internalNext();
                 getRetryStrategy().serverRecovered(this);
@@ -212,7 +206,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         }
         throw new RuntimeException(latest);
     }
-    
+
     public List<CacheEvent> internalNext() throws SeisFileException, XMLStreamException {
         List<CacheEvent> out = new ArrayList<CacheEvent>();
         EventIterator it = getIterator();
@@ -220,12 +214,11 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
             Event e = it.next();
             out.add(toCacheEvent(e));
         }
-
-        if (! caughtUpWithRealtime()) {
-            if ( out.size() < 10) {
+        if (!caughtUpWithRealtime()) {
+            if (out.size() < 10) {
                 increaseQueryTimeWidth();
             }
-            if ( out.size() > 100) {
+            if (out.size() > 100) {
                 decreaseQueryTimeWidth();
             }
         }
@@ -236,7 +229,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
     public MicroSecondTimeRange getEventTimeRange() {
         return eventTimeRangeSupplier.getMSTR();
     }
-    
+
     @Override
     public String getDescription() {
         try {
@@ -245,38 +238,34 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
             throw new RuntimeException("Unable to for URL for description.", e);
         }
     }
-    
+
     EventIterator getIterator() throws SeisFileException {
-            try {
-                return getQuakeML().getEventParameters().getEvents();
-            } catch(SeisFileException e) {
-                throw e;
-            } catch(Exception e) {
-                throw new SeisFileException(e);
-            }
+        try {
+            return getQuakeML().getEventParameters().getEvents();
+        } catch(SeisFileException e) {
+            throw e;
+        } catch(Exception e) {
+            throw new SeisFileException(e);
+        }
     }
-    
+
     CacheEvent toCacheEvent(Event e) {
         String desc = "";
         if (e.getDescriptionList().size() > 0) {
             desc = e.getDescriptionList().get(0).getText();
         }
-        FlinnEngdahlRegion fe = new FlinnEngdahlRegionImpl(FlinnEngdahlType.GEOGRAPHIC_REGION,
-                                                           -1);
+        FlinnEngdahlRegion fe = new FlinnEngdahlRegionImpl(FlinnEngdahlType.GEOGRAPHIC_REGION, -1);
         for (EventDescription eDescription : e.getDescriptionList()) {
             if (eDescription.getIrisFECode() != -1) {
-                fe = new FlinnEngdahlRegionImpl(FlinnEngdahlType.GEOGRAPHIC_REGION,
-                                                eDescription.getIrisFECode());
+                fe = new FlinnEngdahlRegionImpl(FlinnEngdahlType.GEOGRAPHIC_REGION, eDescription.getIrisFECode());
             }
         }
-        
-        
         List<OriginImpl> out = new ArrayList<OriginImpl>();
         HashMap<String, List<Magnitude>> magsByOriginId = new HashMap<String, List<Magnitude>>();
         List<Magnitude> mList = e.getMagnitudeList();
         Magnitude prefMag = null; // event should always have a prefMag
         for (Magnitude m : mList) {
-            if ( ! magsByOriginId.containsKey(m.getOriginId())) {
+            if (!magsByOriginId.containsKey(m.getOriginId())) {
                 magsByOriginId.put(m.getOriginId(), new ArrayList<Magnitude>());
             }
             magsByOriginId.get(m.getOriginId()).add(m);
@@ -287,7 +276,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         OriginImpl pref = null;
         for (Origin o : e.getOriginList()) {
             List<Magnitude> oMags = magsByOriginId.get(o.getPublicId());
-            if (oMags == null) { 
+            if (oMags == null) {
                 oMags = new ArrayList<Magnitude>();
             }
             List<edu.iris.Fissures.IfEvent.Magnitude> fisMags = new ArrayList<edu.iris.Fissures.IfEvent.Magnitude>();
@@ -311,15 +300,16 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                 pref = oImpl;
             }
         }
-        // for convenience add the preferred magnitude as the first magnitude in the preferred origin
-        if (prefMag != null && ! e.getPreferredMagnitudeID().equals(e.getPreferredOriginID())) {
+        // for convenience add the preferred magnitude as the first magnitude in
+        // the preferred origin
+        if (prefMag != null && !e.getPreferredMagnitudeID().equals(e.getPreferredOriginID())) {
             edu.iris.Fissures.IfEvent.Magnitude pm = toFissuresMagnitude(prefMag);
             List<edu.iris.Fissures.IfEvent.Magnitude> newMags = new ArrayList<edu.iris.Fissures.IfEvent.Magnitude>();
             newMags.add(pm);
             newMags.addAll(pref.getMagnitudeList());
             Iterator<edu.iris.Fissures.IfEvent.Magnitude> it = newMags.iterator();
             it.next(); // skip first as it is the preferred
-            while(it.hasNext()) {
+            while (it.hasNext()) {
                 edu.iris.Fissures.IfEvent.Magnitude fm = it.next();
                 if (fm.type.equals(pm.type) && fm.value == pm.value && fm.contributor.equals(pm.contributor)) {
                     it.remove(); // duplicate of preferred
@@ -333,12 +323,10 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                                   newMags.toArray(new edu.iris.Fissures.IfEvent.Magnitude[0]),
                                   pref.getParmIds());
         }
-        CacheEvent ce = new CacheEvent(new EventAttrImpl(desc, fe),
-                                       out.toArray(new OriginImpl[0]),
-                                       pref);
+        CacheEvent ce = new CacheEvent(new EventAttrImpl(desc, fe), out.toArray(new OriginImpl[0]), pref);
         return ce;
     }
-    
+
     edu.iris.Fissures.IfEvent.Magnitude toFissuresMagnitude(Magnitude m) {
         String contributor = "";
         if (m.getCreationInfo() != null && m.getCreationInfo().getAuthor() != null) {
@@ -348,11 +336,9 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         if (m.getType() != null) {
             type = m.getType();
         }
-        return new edu.iris.Fissures.IfEvent.Magnitude(type, 
-                                                       m.getMag().getValue(), 
-                                                       contributor);
+        return new edu.iris.Fissures.IfEvent.Magnitude(type, m.getMag().getValue(), contributor);
     }
-    
+
     Quakeml getQuakeML() throws MalformedURLException, IOException, URISyntaxException, XMLStreamException,
             SeisFileException {
         FDSNEventQueryParams timeWindowQueryParams = queryParams.clone();
@@ -364,10 +350,10 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
             timeWindowQueryParams.setUpdatedAfter(lastQueryEnd);
         }
         FDSNEventQuerier querier = new FDSNEventQuerier(timeWindowQueryParams);
-        querier.setUserAgent("SOD/" + BuildVersion.getVersion());
+        querier.setUserAgent(getUserAgent());
         if (caughtUpWithRealtime() && hasNext()) {
             sleepUntilTime = now.add(refreshInterval);
-            logger.debug("set sleepUntilTime " + sleepUntilTime+"  refresh="+refreshInterval);
+            logger.debug("set sleepUntilTime " + sleepUntilTime + "  refresh=" + refreshInterval);
             resetQueryTimeForLag();
             lastQueryEnd = now;
         }
@@ -378,16 +364,26 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
     FDSNEventQueryParams queryParams = new FDSNEventQueryParams();
 
     MicroSecondTimeRangeSupplier eventTimeRangeSupplier;
-    
+
     private MicroSecondDate lastQueryEnd;
 
     String url;
-    
+
     int port = -1;
-    
+
     URI parsedURL;
-    
+
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(FdsnEvent.class);
-    
+
     public static final String URL_ELEMENT = "url";
+
+    String userAgent = "SOD/" + BuildVersion.getVersion();
+
+    public String getUserAgent() {
+        return userAgent;
+    }
+
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
+    }
 }
