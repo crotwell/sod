@@ -189,7 +189,6 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
                     throw new SeismogramSourceException(e);
                 } catch(SocketTimeoutException e) {
                     tryCount--;
-                    System.out.println("*** TIMEOUT RETRY: "+tryCount+" left");
                     if (tryCount > 0) {
                         return retrieveData(queryParams, queryRequest, tryCount);
                     } else {

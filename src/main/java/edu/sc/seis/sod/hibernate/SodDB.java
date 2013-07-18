@@ -702,7 +702,6 @@ public class SodDB extends AbstractHibernateDB {
         q.setString("recsecid", recordSectionId);
         q.setString("orientationId", orientationId);
         q.setBoolean("best", best);
-        System.out.println("getStationsForRecordSection: "+q+"  event:"+event.getDbid()+" rsid:"+recordSectionId+" orient:"+orientationId+" "+best);
         return q.list();
     }
 

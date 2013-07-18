@@ -112,7 +112,6 @@ public class StationXML implements NetworkSource {
                                     parsedURL.getPath(),
                                     newQuery,
                                     parsedURL.getFragment());
-                System.out.println("StationXML parsedURL: "+parsedURL);
             }
         } catch(URISyntaxException e) {
             throw new ConfigurationException("Invalid <url> element found.", e);

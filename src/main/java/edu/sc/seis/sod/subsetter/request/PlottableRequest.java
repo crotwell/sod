@@ -32,7 +32,6 @@ public class PlottableRequest extends AbstractSource  implements RequestSubsette
             pixelsPerDay[i] = Integer.parseInt(XMLUtil.getText((Element)dims.item(i)));
         }
         plottableCache = new RetryPlottableDC(new NSPlottableDC(getDNS(), getName(), CommonAccess.getNameService()), 2);
-        System.out.println("PlottableRequest: "+getName()+" "+getDNS()+"  "+pixelsPerDay[0]);
     }
     
     public StringTree accept(CacheEvent event, ChannelImpl channel, RequestFilter[] request, CookieJar cookieJar)
