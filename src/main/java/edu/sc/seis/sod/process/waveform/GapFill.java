@@ -68,8 +68,7 @@ public class GapFill extends Merge {
     }
         
     public List<LocalSeismogramImpl> reduce(List<LocalSeismogramImpl> inList, MicroSecondTimeRange mstr) throws FissuresException {
-        System.out.println("reduce size=:"+inList.size());
-        if (inList.size() == 1) {
+        if (inList.size() == 0 || inList.size() == 1) {
             return inList;
         }
         LocalSeismogramImpl first = inList.remove(0);
@@ -80,18 +79,15 @@ public class GapFill extends Merge {
         if (mstr.contains(first.getEndTime()) && mstr.contains(second.getBeginTime())) {
             // have overlap in a request window, so fill the gap
             LocalSeismogramImpl[] merged = gapFill(first, second);
-            System.out.println("gap in window, merge.size="+merged.length);
             for (int i = 0; i < merged.length; i++) {
                 outList.add(merged[i]);
             }
         } else {
             // gap not in window, do not fill
-            System.out.println("gap not in window");
             outList.add(first);
             outList.add(second);
         }
         outList.addAll(remaining);
-        System.out.println("reduce finish: size="+outList.size());
         return outList;
     }
     
@@ -107,11 +103,6 @@ public class GapFill extends Merge {
                                                                first.time_corrections, 
                                                                first.sample_rate_history, 
                                                                fillData);
-        System.out.println("Before ReduceTool.merge");
-        System.out.println("First end: "+first.getEndTime());
-        System.out.println("middle begin: "+fillSeis.getBeginTime());
-        System.out.println("middle end: "+fillSeis.getEndTime());
-        System.out.println("last begin: "+second.getBeginTime());
         LocalSeismogramImpl[] merged = ReduceTool.merge(new LocalSeismogramImpl[] {first, fillSeis, second});
         return merged;
     }
