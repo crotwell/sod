@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.FissuresException;
@@ -80,7 +81,7 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
 
             @Override
             public List<RequestFilter> available_data(List<RequestFilter> request) {
-                return request; // no-op,
+                throw new NotImplementedException(this.getClass());
             }
 
             @Override

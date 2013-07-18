@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.hibernate.LazyInitializationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,7 @@ import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.process.waveform.vector.ANDWaveformProcessWrapper;
 import edu.sc.seis.sod.process.waveform.vector.WaveformProcessWrapper;
+import edu.sc.seis.sod.process.waveform.vector.WaveformVectorAsAvailableData;
 import edu.sc.seis.sod.process.waveform.vector.WaveformVectorProcess;
 import edu.sc.seis.sod.process.waveform.vector.WaveformVectorProcessWrapper;
 import edu.sc.seis.sod.process.waveform.vector.WaveformVectorResult;
@@ -40,6 +42,7 @@ import edu.sc.seis.sod.source.seismogram.SeismogramSource;
 import edu.sc.seis.sod.source.seismogram.SeismogramSourceException;
 import edu.sc.seis.sod.source.seismogram.SeismogramSourceLocator;
 import edu.sc.seis.sod.status.Fail;
+import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
@@ -228,33 +231,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                     return;
                 }
             }
-            RequestFilter[][] outfilters = null;
-
-            if (Start.getRunProps().isSkipAvailableData()) {
-                outfilters = infilters;
-            } else {
-                outfilters = new RequestFilter[ecp.getChannelGroup().getChannels().length][];
-                for (int i = 0; i < outfilters.length; i++) {
-                    logger.debug("Trying available_data for " + ChannelIdUtil.toString(infilters[0][0].channel_id)
-                                 + " from " + infilters[0][0].start_time.date_time + " to " + infilters[0][0].end_time.date_time);
-                    logger.debug("before available_data call");
-                    try {
-                        outfilters[i] = DataCenterSource.toArray(dataCenter.available_data(DataCenterSource.toList(infilters[i])));
-                        logger.debug("after successful available_data call");
-                    } catch(org.omg.CORBA.SystemException e) {
-                        handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e, dataCenter, requestToString(infilters, null));
-                        return;
-                    }
-                    if (outfilters[i].length != 0) {
-                        logger.debug("Got available_data for " + ChannelIdUtil.toString(outfilters[i][0].channel_id)
-                                     + " from " + outfilters[i][0].start_time.date_time + " to "
-                                     + outfilters[i][0].end_time.date_time);
-                    } else {
-                        logger.debug("No available_data for " + ChannelIdUtil.toString(infilters[i][0].channel_id));
-                    }
-                }
-            }
-            processAvailableDataSubsetter(ecp, dataCenter, infilters, outfilters);
+            processAvailableDataSubsetter(ecp, dataCenter, infilters);
         } else {
             ecp.update(Status.get(Stage.REQUEST_SUBSETTER, Standing.REJECT));
             failLogger.info(ecp.toString());
@@ -263,9 +240,47 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
 
     public void processAvailableDataSubsetter(EventVectorPair ecp,
                                               SeismogramSource seismogramSource,
-                                              RequestFilter[][] infilters,
-                                              RequestFilter[][] outfilters) {
-        StringTree result;
+                                              RequestFilter[][] infilters) {
+        LinkedList<WaveformVectorProcess> processList = new LinkedList<WaveformVectorProcess>();
+        processList.addAll(processes);
+        RequestFilter[][] outfilters = null;
+
+        boolean noImplAvailableData = false;
+        if (Start.getRunProps().isSkipAvailableData()) {
+            outfilters = infilters;
+            processList.addFirst(new WaveformVectorAsAvailableData(availData));
+        } else {
+            try {
+            outfilters = new RequestFilter[ecp.getChannelGroup().getChannels().length][];
+            for (int i = 0; i < outfilters.length; i++) {
+                logger.debug("Trying available_data for " + ChannelIdUtil.toString(infilters[0][0].channel_id)
+                             + " from " + infilters[0][0].start_time.date_time + " to " + infilters[0][0].end_time.date_time);
+                logger.debug("before available_data call");
+                try {
+                    outfilters[i] = DataCenterSource.toArray(seismogramSource.available_data(DataCenterSource.toList(infilters[i])));
+                    logger.debug("after successful available_data call");
+                } catch(org.omg.CORBA.SystemException e) {
+                    handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e, seismogramSource, requestToString(infilters, null));
+                    return;
+                }
+                if (outfilters[i].length != 0) {
+                    logger.debug("Got available_data for " + ChannelIdUtil.toString(outfilters[i][0].channel_id)
+                                 + " from " + outfilters[i][0].start_time.date_time + " to "
+                                 + outfilters[i][0].end_time.date_time);
+                } else {
+                    logger.debug("No available_data for " + ChannelIdUtil.toString(infilters[i][0].channel_id));
+                }
+            }
+            } catch (NotImplementedException e) {
+                logger.info("After NoImpl available_data call, calc available from actual data");
+                noImplAvailableData = true;
+                outfilters = infilters;
+                processList.addFirst(new WaveformVectorAsAvailableData(availData));
+            }
+        }
+
+        StringTree result = new Pass(availData); // init just for noImplAvailableData case
+        if (!noImplAvailableData) {
         synchronized(availData) {
             try {
                 result = availData.accept(ecp.getEvent(),
@@ -277,6 +292,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                 handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e);
                 return;
             }
+        }
         }
         if (result.isSuccess()) {
             for (int i = 0; i < infilters.length; i++) {
@@ -329,7 +345,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                 } // end of for (int i=0; i<localSeismograms.length; i++)
                 tempLocalSeismograms[i] = (LocalSeismogramImpl[])tempForCast.toArray(new LocalSeismogramImpl[0]);
             }
-            processSeismograms(ecp, seismogramSource, infilters, outfilters, tempLocalSeismograms);
+            processSeismograms(ecp, seismogramSource, infilters, outfilters, tempLocalSeismograms, processList);
         } else {
             if(ClockUtil.now().subtract(Start.getRunProps().getSeismogramLatency()).after(ecp.getEvent()
                                                                                           .getOrigin()
@@ -351,10 +367,11 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                                    SeismogramSource seismogramSource,
                                    RequestFilter[][] infilters,
                                    RequestFilter[][] outfilters,
-                                   LocalSeismogramImpl[][] localSeismograms) {
+                                   LocalSeismogramImpl[][] localSeismograms,
+                                   LinkedList<WaveformVectorProcess> processList) {
         WaveformVectorProcess processor = null;
         WaveformVectorResult result = new WaveformVectorResult(localSeismograms, new StringTreeLeaf(this, true));
-        Iterator<WaveformVectorProcess> it = processes.iterator();
+        Iterator<WaveformVectorProcess> it = processList.iterator();
         try {
             while (it.hasNext() && result.isSuccess()) {
                 processor = it.next();
