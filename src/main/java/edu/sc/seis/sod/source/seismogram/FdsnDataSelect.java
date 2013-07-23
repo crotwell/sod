@@ -10,11 +10,11 @@ import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.FissuresException;
 import edu.iris.Fissures.IfNetwork.ChannelId;
+import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.network.ChannelIdUtil;
@@ -27,7 +27,15 @@ import edu.sc.seis.seisFile.ChannelTimeWindow;
 import edu.sc.seis.seisFile.SeisFileException;
 import edu.sc.seis.seisFile.fdsnws.FDSNDataSelectQuerier;
 import edu.sc.seis.seisFile.fdsnws.FDSNDataSelectQueryParams;
+import edu.sc.seis.seisFile.fdsnws.FDSNStationQuerier;
+import edu.sc.seis.seisFile.fdsnws.FDSNStationQueryParams;
 import edu.sc.seis.seisFile.fdsnws.FDSNWSException;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
+import edu.sc.seis.seisFile.fdsnws.stationxml.DataAvailability;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
+import edu.sc.seis.seisFile.fdsnws.stationxml.NetworkIterator;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
+import edu.sc.seis.seisFile.fdsnws.stationxml.StationIterator;
 import edu.sc.seis.seisFile.mseed.DataRecord;
 import edu.sc.seis.seisFile.mseed.DataRecordIterator;
 import edu.sc.seis.sod.BuildVersion;
@@ -44,6 +52,8 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
     private int timeoutMillis = 10 * 1000;
 
     private boolean doBulk = false;
+    
+    boolean fdsnStationAvailability = false;
 
     private String username;
 
@@ -70,6 +80,14 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
         username = SodUtil.loadText(config, "user", "");
         password = SodUtil.loadText(config, "password", "");
         timeoutMillis = 1000 * SodUtil.loadInt(config, "timeoutSecs", 10);
+        fdsnStationAvailability = SodUtil.isTrue(config, "fdsnStationAvailability", false);
+    }
+    
+    public FdsnDataSelect(String host,int port, boolean fdsnStationAvailability) {
+        super(host, 2);
+        this.host = host;
+        this.port = port;
+        this.fdsnStationAvailability = fdsnStationAvailability;
     }
 
     @Override
@@ -81,32 +99,27 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
 
             @Override
             public List<RequestFilter> available_data(List<RequestFilter> request) {
-                throw new NotImplementedException(this.getClass());
-            }
-
-            @Override
-            public List<LocalSeismogramImpl> retrieveData(List<RequestFilter> request) throws SeismogramSourceException {
                 int count = 0;
                 SeismogramSourceException latest;
                 try {
-                    return internalRetrieveData(request);
+                    return internalAvailableData(request);
                 } catch(OutOfMemoryError e) {
                     throw new RuntimeException("Out of memory", e);
                 } catch(SeismogramSourceException t) {
-                    if (t.getCause() instanceof IOException 
+                    if (t.getCause() instanceof IOException
                             || (t.getCause() != null && t.getCause().getCause() instanceof IOException)) {
                         latest = t;
                     } else {
                         throw new RuntimeException(t);
                     }
                 }
-                while(getRetryStrategy().shouldRetry(latest, this, count++)) {
+                while (getRetryStrategy().shouldRetry(latest, this, count++)) {
                     try {
-                        List<LocalSeismogramImpl> result = internalRetrieveData(request);
+                        List<RequestFilter> result = internalAvailableData(request);
                         getRetryStrategy().serverRecovered(this);
                         return result;
                     } catch(SeismogramSourceException t) {
-                        if (t.getCause() instanceof IOException 
+                        if (t.getCause() instanceof IOException
                                 || (t.getCause() != null && t.getCause().getCause() instanceof IOException)) {
                             latest = t;
                         } else {
@@ -118,8 +131,108 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
                 }
                 throw new RuntimeException(latest);
             }
-            
-            public List<LocalSeismogramImpl> internalRetrieveData(List<RequestFilter> request) throws SeismogramSourceException {
+
+            @Override
+            public List<LocalSeismogramImpl> retrieveData(List<RequestFilter> request) throws SeismogramSourceException {
+                int count = 0;
+                SeismogramSourceException latest;
+                try {
+                    return internalRetrieveData(request);
+                } catch(OutOfMemoryError e) {
+                    throw new RuntimeException("Out of memory", e);
+                } catch(SeismogramSourceException t) {
+                    if (t.getCause() instanceof IOException
+                            || (t.getCause() != null && t.getCause().getCause() instanceof IOException)) {
+                        latest = t;
+                    } else {
+                        throw new RuntimeException(t);
+                    }
+                }
+                while (getRetryStrategy().shouldRetry(latest, this, count++)) {
+                    try {
+                        List<LocalSeismogramImpl> result = internalRetrieveData(request);
+                        getRetryStrategy().serverRecovered(this);
+                        return result;
+                    } catch(SeismogramSourceException t) {
+                        if (t.getCause() instanceof IOException
+                                || (t.getCause() != null && t.getCause().getCause() instanceof IOException)) {
+                            latest = t;
+                        } else {
+                            throw new RuntimeException(t);
+                        }
+                    } catch(OutOfMemoryError e) {
+                        throw new RuntimeException("Out of memory", e);
+                    }
+                }
+                throw new RuntimeException(latest);
+            }
+
+            public List<RequestFilter> internalAvailableData(List<RequestFilter> request)
+                    throws SeismogramSourceException {
+                try {
+                    List<RequestFilter> out = new ArrayList<RequestFilter>();
+                    if (request.size() != 0) {
+                        FDSNStationQueryParams queryParams = new FDSNStationQueryParams(host);
+                        if (port > 0) {
+                            queryParams.setPort(port);
+                        }
+                        queryParams.setIncludeAvailability(true);
+                        queryParams.setLevel("channel");
+                        for (RequestFilter rf : request) {
+                            ChannelId c = rf.channel_id;
+                            queryParams.appendToNetwork(c.network_id.network_code);
+                            queryParams.appendToStation(c.station_code);
+                            queryParams.appendToLocation(c.site_code);
+                            queryParams.appendToChannel(c.channel_code);
+                        }
+                        try {
+                            logger.info("availavle data query: "+queryParams.formURI());
+                        } catch(URISyntaxException e) {
+                            throw new RuntimeException(e);
+                        }
+                        FDSNStationQuerier querier = new FDSNStationQuerier(queryParams);
+                        NetworkIterator nIt = querier.getFDSNStationXML().getNetworks();
+                        while (nIt.hasNext()) {
+                            Network n = nIt.next();
+                            StationIterator sIt = n.getStations();
+                            while (sIt.hasNext()) {
+                                Station s = sIt.next();
+                                List<Channel> chanList = s.getChannelList();
+                                for (Channel channel : chanList) {
+                                    DataAvailability da = channel.getDataAvailability();
+                                    if (da != null && da.getExtent() != null) {
+                                        out.add(new RequestFilter(new ChannelId(new NetworkId(n.getCode(),
+                                                                                              new MicroSecondDate(n.getStartDate()).getFissuresTime()),
+                                                                                s.getCode(),
+                                                                                channel.getLocCode(),
+                                                                                channel.getCode(),
+                                                                                new MicroSecondDate(channel.getStartDate()).getFissuresTime()),
+                                                                  new MicroSecondDate(da.getExtent().getStart()).getFissuresTime(),
+                                                                  new MicroSecondDate(da.getExtent().getEnd()).getFissuresTime()));
+                                    if (s.getCode().equals("BBSR")) {
+                                        logger.info("BBSR DA "+new MicroSecondDate(da.getExtent().getStart())+" "+new MicroSecondDate(da.getExtent().getEnd()));
+                                    }
+                                    } else {
+                                        logger.info("No DataAvailability for "+n.getCode()+"."+s.getCode()+"."+
+                                                                                channel.getLocCode()+"."+
+                                                                                channel.getCode());
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    return ReduceTool.trimTo(out, request);
+                } catch(FDSNWSException e) {
+                    throw new SeismogramSourceException(e);
+                } catch(SeisFileException e) {
+                    throw new SeismogramSourceException(e);
+                } catch(XMLStreamException e) {
+                    throw new SeismogramSourceException(e);
+                }
+            }
+
+            public List<LocalSeismogramImpl> internalRetrieveData(List<RequestFilter> request)
+                    throws SeismogramSourceException {
                 List<LocalSeismogramImpl> out = new ArrayList<LocalSeismogramImpl>();
                 if (request.size() != 0) {
                     FDSNDataSelectQueryParams queryParams = new FDSNDataSelectQueryParams(host);
@@ -138,26 +251,27 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
                     }
                     List<DataRecord> drList = retrieveData(queryParams, queryRequest, getRetries());
                     try {
-                    List<LocalSeismogramImpl> perRFList = FissuresConvert.toFissures(drList);
-                    perRFList = Arrays.asList(ReduceTool.merge(perRFList.toArray(new LocalSeismogramImpl[0])));
-                    for (LocalSeismogramImpl seis : perRFList) {
-                        // the DataRecords know nothing about channel or network
-                        // begin times, so use the request
-                        for (RequestFilter rf : request) {
-                            // find matching chan id
-                            if (rf.channel_id.network_id.network_code.equals(seis.channel_id.network_id.network_code)) {
-                                seis.channel_id.network_id.begin_time = rf.channel_id.network_id.begin_time;
-                            }
-                            if (ChannelIdUtil.areEqualExceptForBeginTime(rf.channel_id, seis.channel_id)) {
-                                seis.channel_id.begin_time = rf.channel_id.begin_time;
-                                break;
+                        List<LocalSeismogramImpl> perRFList = FissuresConvert.toFissures(drList);
+                        perRFList = Arrays.asList(ReduceTool.merge(perRFList.toArray(new LocalSeismogramImpl[0])));
+                        for (LocalSeismogramImpl seis : perRFList) {
+                            // the DataRecords know nothing about channel or
+                            // network
+                            // begin times, so use the request
+                            for (RequestFilter rf : request) {
+                                // find matching chan id
+                                if (rf.channel_id.network_id.network_code.equals(seis.channel_id.network_id.network_code)) {
+                                    seis.channel_id.network_id.begin_time = rf.channel_id.network_id.begin_time;
+                                }
+                                if (ChannelIdUtil.areEqualExceptForBeginTime(rf.channel_id, seis.channel_id)) {
+                                    seis.channel_id.begin_time = rf.channel_id.begin_time;
+                                    break;
+                                }
                             }
                         }
-                    }
-                    out.addAll(perRFList);
+                        out.addAll(perRFList);
                     } catch(SeisFileException e) {
                         throw new SeismogramSourceException(e);
-                    } catch (FissuresException e) {
+                    } catch(FissuresException e) {
                         throw new SeismogramSourceException(e);
                     }
                 }
@@ -203,4 +317,6 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
             }
         };
     }
+    
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(FdsnDataSelect.class);
 }

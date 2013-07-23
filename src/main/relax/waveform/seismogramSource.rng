@@ -189,13 +189,20 @@
         <element name="fdsnDataSelect">
             <xsd:annotation>
                 <summary>Pick a FDSN dataselect web service</summary>
-                <description>This specifies a FDSN dataselect web service. The default is the IRIS DMC.
+                <description>This specifies a FDSN dataselect web service. The default is the IRIS DMC. This can
+                do a data availability, but because of the coarseness of the result, it is not as useful as
+                was in the older DHI servers, so the default is off.
                     </description>
             </xsd:annotation>
             <interleave>
                 <optional>
+                    <element name="fdsnStationAvailability">
+                        <data type="boolean"/>
+                    </element>
+                </optional>
+                <optional>
                     <element name="dobulk">
-                        <data type="string"/>
+                        <data type="boolean"/>
                     </element>
                 </optional>
                 <optional>
