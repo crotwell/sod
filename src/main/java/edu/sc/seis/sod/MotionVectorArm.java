@@ -28,6 +28,7 @@ import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.fissuresUtil.time.ReduceTool;
+import edu.sc.seis.seisFile.mseed.MissingBlockette1000;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.process.waveform.vector.ANDWaveformProcessWrapper;
@@ -257,8 +258,11 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                              + " from " + infilters[0][0].start_time.date_time + " to " + infilters[0][0].end_time.date_time);
                 logger.debug("before available_data call");
                 try {
-                    outfilters[i] = DataCenterSource.toArray(seismogramSource.available_data(DataCenterSource.toList(infilters[i])));
+                    outfilters[i] = DataCenterSource.toArray(seismogramSource.availableData(DataCenterSource.toList(infilters[i])));
                     logger.debug("after successful available_data call");
+                } catch(SeismogramSourceException e) {
+                    handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e, seismogramSource, requestToString(infilters, null));
+                    return;
                 } catch(org.omg.CORBA.SystemException e) {
                     handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e, seismogramSource, requestToString(infilters, null));
                     return;
@@ -511,13 +515,17 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
            } else if (t instanceof org.omg.CORBA.SystemException) {
                // don't log exception here, let RetryStragtegy do it
                ecp.update(Status.get(stage, Standing.CORBA_FAILURE));
-           } else if (t instanceof SeismogramSourceException && t.getCause() != null && t.getCause() instanceof SocketTimeoutException) {
-               // treat just like CORBA SystemException so it is retried later
-               // don't log exception here, let RetryStragtegy do it
-               ecp.update(Status.get(stage, Standing.CORBA_FAILURE));
+           } else if (t instanceof SeismogramSourceException) {
+               if (t.getCause() != null && t.getCause() instanceof MissingBlockette1000) {
+                   
+               } else if (t.getCause() != null && t.getCause() instanceof SocketTimeoutException) {
+                   // treat just like CORBA SystemException so it is retried later
+                   // don't log exception here, let RetryStragtegy do it
+                   ecp.update(Status.get(stage, Standing.CORBA_FAILURE));
+               }
            } else if (t instanceof SeismogramAuthorizationException) {
-               ecp.update(Status.get(stage, Standing.SYSTEM_FAILURE));
-               failLogger.info("Authorization failure, will not retry. "+ ecp +" "+t.getMessage());
+               ecp.update(Status.get(stage, Standing.REJECT));
+               failLogger.info("Data decompression failure, miniseed without B1000 is not miniseed. "+ ecp +" "+t.getMessage());
            } else {
                ecp.update(t, Status.get(stage, Standing.SYSTEM_FAILURE));
                String message = "";

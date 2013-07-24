@@ -211,7 +211,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
     }
 
     public void processAvailableDataSubsetter(EventChannelPair ecp,
-                                              SeismogramSource dataCenter,
+                                              SeismogramSource seismogramSource,
                                               RequestFilter[] infilters) {
         LinkedList<WaveformProcess> processList = new LinkedList<WaveformProcess>();
         processList.addAll(processes);
@@ -231,7 +231,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
             try {
             logger.debug("before available_data call retries=");
             MicroSecondDate before = new MicroSecondDate();
-            outfilters = DataCenterSource.toArray(dataCenter.available_data(DataCenterSource.toList(infilters)));
+            outfilters = DataCenterSource.toArray(seismogramSource.availableData(DataCenterSource.toList(infilters)));
             MicroSecondDate after = new MicroSecondDate();
             logger.info("After successful available_data call, time taken=" + after.subtract(before).getValue(UnitImpl.SECOND)+" sec");
             if(outfilters.length != 0) {
@@ -240,6 +240,9 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
             } else {
                 logger.debug("No available_data for " + ChannelIdUtil.toString(ecp.getChannel().get_id()));
             }
+            } catch(SeismogramSourceException e) {
+                MotionVectorArm.handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e, seismogramSource, requestToString(infilters, null));
+                return;
             } catch(NotImplementedException e) {
                 logger.info("After NoImpl available_data call, calc available from actual data");
                 noImplAvailableData = true;
@@ -255,7 +258,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
             try {
                 passed = availData.accept(ecp.getEvent(), ecp.getChannel(), infilters, outfilters, ecp.getCookieJar());
             } catch(Throwable e) {
-                MotionVectorArm.handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e, dataCenter, requestToString(infilters, outfilters));
+                MotionVectorArm.handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e, seismogramSource, requestToString(infilters, outfilters));
                 return;
             }
         }
@@ -274,12 +277,12 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                 
                 
                 try {
-                    localSeismograms = DataCenterSource.toSeisArray(dataCenter.retrieveData(DataCenterSource.toList(infilters)));
+                    localSeismograms = DataCenterSource.toSeisArray(seismogramSource.retrieveData(DataCenterSource.toList(infilters)));
                 } catch(SeismogramSourceException e) {
-                    MotionVectorArm.handle(ecp, Stage.DATA_RETRIEVAL, e, dataCenter, requestToString(infilters, outfilters));
+                    MotionVectorArm.handle(ecp, Stage.DATA_RETRIEVAL, e, seismogramSource, requestToString(infilters, outfilters));
                     return;
                 } catch(org.omg.CORBA.SystemException e) {
-                    MotionVectorArm.handle(ecp, Stage.DATA_RETRIEVAL, e, dataCenter, requestToString(infilters, outfilters));
+                    MotionVectorArm.handle(ecp, Stage.DATA_RETRIEVAL, e, seismogramSource, requestToString(infilters, outfilters));
                     return;
                 }
                 logger.debug("after successful retrieve_seismograms");
@@ -316,7 +319,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                 tempForCast.add(localSeismograms[i]);
             } // end of for (int i=0; i<localSeismograms.length; i++)
             LocalSeismogramImpl[] tempLocalSeismograms = (LocalSeismogramImpl[])tempForCast.toArray(new LocalSeismogramImpl[0]);
-            processSeismograms(ecp, dataCenter, infilters, outfilters, 
+            processSeismograms(ecp, seismogramSource, infilters, outfilters, 
                                SortTool.byBeginTimeAscending(tempLocalSeismograms),
                                processList);
         } else {

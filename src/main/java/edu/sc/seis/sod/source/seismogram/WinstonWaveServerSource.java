@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.iris.Fissures.FissuresException;
 import edu.iris.Fissures.Time;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
@@ -48,7 +47,7 @@ public class WinstonWaveServerSource implements SeismogramSource {
     }
     
     @Override
-    public List<RequestFilter> available_data(List<RequestFilter> request) {
+    public List<RequestFilter> availableData(List<RequestFilter> request) throws SeismogramSourceException {
         List<RequestFilter> out = new ArrayList<RequestFilter>();
         List<MenuItem> menu;
         try {

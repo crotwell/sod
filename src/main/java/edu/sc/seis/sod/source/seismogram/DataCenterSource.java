@@ -18,7 +18,7 @@ public class DataCenterSource implements SeismogramSource {
     }
 
     @Override
-    public List<RequestFilter> available_data(List<RequestFilter> request) {
+    public List<RequestFilter> availableData(List<RequestFilter> request) {
         return toList(seisDC.available_data(toArray(request)));
     }
 

@@ -98,7 +98,7 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
         return new SeismogramSource() {
 
             @Override
-            public List<RequestFilter> available_data(List<RequestFilter> request) {
+            public List<RequestFilter> availableData(List<RequestFilter> request) throws SeismogramSourceException {
                 int count = 0;
                 SeismogramSourceException latest;
                 try {
@@ -110,7 +110,7 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
                             || (t.getCause() != null && t.getCause().getCause() instanceof IOException)) {
                         latest = t;
                     } else {
-                        throw new RuntimeException(t);
+                        throw t;
                     }
                 }
                 while (getRetryStrategy().shouldRetry(latest, this, count++)) {
@@ -123,13 +123,13 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
                                 || (t.getCause() != null && t.getCause().getCause() instanceof IOException)) {
                             latest = t;
                         } else {
-                            throw new RuntimeException(t);
+                            throw t;
                         }
                     } catch(OutOfMemoryError e) {
-                        throw new RuntimeException("Out of memory", e);
+                        throw e;
                     }
                 }
-                throw new RuntimeException(latest);
+                throw latest;
             }
 
             @Override
@@ -145,7 +145,7 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
                             || (t.getCause() != null && t.getCause().getCause() instanceof IOException)) {
                         latest = t;
                     } else {
-                        throw new RuntimeException(t);
+                        throw t;
                     }
                 }
                 while (getRetryStrategy().shouldRetry(latest, this, count++)) {
@@ -158,13 +158,13 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
                                 || (t.getCause() != null && t.getCause().getCause() instanceof IOException)) {
                             latest = t;
                         } else {
-                            throw new RuntimeException(t);
+                            throw t;
                         }
                     } catch(OutOfMemoryError e) {
                         throw new RuntimeException("Out of memory", e);
                     }
                 }
-                throw new RuntimeException(latest);
+                throw latest;
             }
 
             public List<RequestFilter> internalAvailableData(List<RequestFilter> request)
@@ -209,13 +209,10 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
                                                                                 new MicroSecondDate(channel.getStartDate()).getFissuresTime()),
                                                                   new MicroSecondDate(da.getExtent().getStart()).getFissuresTime(),
                                                                   new MicroSecondDate(da.getExtent().getEnd()).getFissuresTime()));
-                                    if (s.getCode().equals("BBSR")) {
-                                        logger.info("BBSR DA "+new MicroSecondDate(da.getExtent().getStart())+" "+new MicroSecondDate(da.getExtent().getEnd()));
-                                    }
                                     } else {
-                                        logger.info("No DataAvailability for "+n.getCode()+"."+s.getCode()+"."+
-                                                                                channel.getLocCode()+"."+
-                                                                                channel.getCode());
+//                                        logger.info("No DataAvailability for "+n.getCode()+"."+s.getCode()+"."+
+//                                                                                channel.getLocCode()+"."+
+//                                                                                channel.getCode());
                                     }
                                 }
                             }

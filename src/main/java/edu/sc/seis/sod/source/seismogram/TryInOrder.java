@@ -69,12 +69,12 @@ class TryInOrderSource implements SeismogramSource {
     }
 
     @Override
-    public List<RequestFilter> available_data(List<RequestFilter> request) {
+    public List<RequestFilter> availableData(List<RequestFilter> request) throws SeismogramSourceException  {
         Iterator<SeismogramSource> it = sources.iterator();
         while (it.hasNext()) {
             try {
                 SeismogramSource seismogramSource = (SeismogramSource)it.next();
-                List<RequestFilter> out = seismogramSource.available_data(request);
+                List<RequestFilter> out = seismogramSource.availableData(request);
                 if(out.size() > 0) {
                     best = seismogramSource;
                     return out;
