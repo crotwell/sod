@@ -228,6 +228,9 @@ public class FdsnStation extends AbstractNetworkSource {
     @Override
     public Instrumentation getInstrumentation(ChannelImpl chan) throws SodSourceException, ChannelNotFound, InvalidResponse  {
         try {
+            if (chan == null) { throw new IllegalArgumentException("Channel is null");}
+            if (chan.getId() == null) { throw new IllegalArgumentException("Channel id is null");}
+            if (chan.getId().begin_time == null) { throw new IllegalArgumentException("Channel begin time is null");}
             FDSNStationQueryParams staQP = setupQueryParams();
             staQP.setLevel(FDSNStationQueryParams.LEVEL_RESPONSE);
             staQP.clearNetwork()
