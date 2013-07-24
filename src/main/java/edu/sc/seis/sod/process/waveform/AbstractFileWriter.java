@@ -13,6 +13,9 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.status.FissuresFormatter;
+import edu.sc.seis.sod.status.Pass;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.VelocityFileElementParser;
 import edu.sc.seis.sod.velocity.ContextWrangler;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
@@ -86,6 +89,25 @@ public abstract class AbstractFileWriter {
         }
         return FissuresFormatter.filize(velocitizer.evaluate(template, ctx));
     }
+    
+    public StringTree checkParentDirs(String filename) {
+        File out = new File(filename);
+        File parent = out.getParentFile();
+        if(!parent.exists() && !parent.mkdirs()) {
+            String msg = "Unable to create directory " + parent;
+            StringTreeLeaf reason = new StringTreeLeaf(this,
+                                                       false,
+                                                       msg);
+            if (firstDirectoryCreationError) {
+                // this is probably something the user wants to see, at least once
+                firstDirectoryCreationError = false;
+                System.err.println("WARNING: "+reason.toString());
+            }
+            return reason;
+        }
+        return new Pass(this);
+        
+    }
 
     public void removeExisting(CacheEvent event,
                                ChannelImpl channel,
@@ -155,4 +177,6 @@ public abstract class AbstractFileWriter {
     public AbstractFileWriter() {
         super();
     }
+
+    boolean firstDirectoryCreationError = true;
 }
