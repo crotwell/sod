@@ -98,7 +98,7 @@ public class RunProperties {
 			}
             if (DOMHelper
                     .hasElement(el, "skipAvailableData")) {
-                skipAvailableData = true;
+                skipAvailableData = DOMHelper.extractBoolean(el, "skipAvailableData");
             }
 			Element hibernateExtraConfig = SodUtil.getElement(el, "hibernateConfig");
 			if (hibernateExtraConfig != null) {
