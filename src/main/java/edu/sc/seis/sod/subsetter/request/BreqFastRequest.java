@@ -66,7 +66,7 @@ public class BreqFastRequest implements RequestSubsetter {
     }
 
     protected synchronized boolean writeToBFEmail(EventAccessOperations event,
-                                                  Channel channel,
+                                                  ChannelImpl channel,
                                                   RequestFilter[] request) {
         VelocityContext ctx = new WaveformProcessContext(event,
                                                          channel,
