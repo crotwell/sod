@@ -112,7 +112,7 @@ public class PrintlineVelocitizer {
     public String evaluate(String filename,
                            String template,
                            EventAccessOperations event,
-                           Channel channel,
+                           ChannelImpl channel,
                            RequestFilter[] request,
                            CookieJar cookieJar) throws IOException {
         return evaluate(filename,
@@ -127,7 +127,7 @@ public class PrintlineVelocitizer {
     public String evaluate(String filename,
                            String template,
                            EventAccessOperations event,
-                           Channel channel,
+                           ChannelImpl channel,
                            RequestFilter[] original,
                            RequestFilter[] available,
                            CookieJar cookieJar) throws IOException {
@@ -144,7 +144,7 @@ public class PrintlineVelocitizer {
     public String evaluate(String fileTemplate,
                            String template,
                            EventAccessOperations event,
-                           Channel channel,
+                           ChannelImpl channel,
                            RequestFilter[] original,
                            RequestFilter[] available,
                            LocalSeismogramImpl[] seismograms,
