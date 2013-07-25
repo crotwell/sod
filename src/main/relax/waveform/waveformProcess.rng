@@ -1389,7 +1389,7 @@ result = util.waveformResult(True, out)
                 <summary>Calculates the minimum and maximum of the seismogram's data and stores it in the cookie jar.</summary>
                 <description>This calculates the minimum and maximum of the samples in the seismograms and saves the results
                 as 'MinMax.min' and 'MinMax.max' in the cookieJar. This can be used by later processors or used within the printlineSeismogramProcess
-                as ${cookieJar.get('MinMax.min')}. The default name is 'MinMax'.</description>
+                as ${cookieJar.get('MinMax').getItem('max')}. The default name is 'MinMax'.</description>
             </xsd:annotation>
             <optional>
                 <element name="name">
