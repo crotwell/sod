@@ -16,6 +16,10 @@ public class VelocityInstrumentation {
         this.chan = chan;
     }
     
+    public String toString() {
+        return getSensitivity()+" "+getSensorModel();
+    }
+    
     void checkLoadInstrumentation() {
         if ( ! didTryLoad) {
             didTryLoad = true;
