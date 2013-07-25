@@ -110,6 +110,13 @@ task tarBin(type: Tar, dependsOn: ['explodeBin']) {
     }
 }
 
+
+task zipDist(type: Zip, dependsOn: ['explodeDist']) {
+    group = 'dist'
+    into(dirName) {
+        with distFiles
+    }
+}
 task tarDist(type: Tar, dependsOn: ['explodeDist']) {
     group = 'dist'
     compression = Compression.GZIP
@@ -271,6 +278,7 @@ javadoc.options.links('http://wiki.seisfile.googlecode.com/hg/javadoc/')
 
 doc.dependsOn(copySodSite)
 assemble.dependsOn(tarDist)
+assemble.dependsOn(zipDist)
 processResources.dependsOn(buildSchema)
 processResources.dependsOn(buildGrouperSchema)
 processResources{ from(project.sourceSets.main.resources)
