@@ -19,6 +19,7 @@ import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.bag.DistAz;
+import edu.sc.seis.fissuresUtil.chooser.ThreadSafeDecimalFormat;
 import edu.sc.seis.fissuresUtil.xml.XMLStation;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.status.FissuresFormatter;
@@ -283,7 +284,7 @@ public class VelocityStation extends StationImpl {
         return position;
     }
 
-    static final DecimalFormat df = new DecimalFormat("0.00");
+    static final ThreadSafeDecimalFormat df = new ThreadSafeDecimalFormat("0.00");
 
     public void insertIntoContext(VelocityContext ctx) {
         ctx.put("station", this);

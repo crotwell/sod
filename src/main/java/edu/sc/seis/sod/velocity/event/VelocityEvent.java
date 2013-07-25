@@ -20,6 +20,7 @@ import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.ProxyEventAccessOperations;
+import edu.sc.seis.fissuresUtil.chooser.ThreadSafeDecimalFormat;
 import edu.sc.seis.fissuresUtil.chooser.ThreadSafeSimpleDateFormat;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.fissuresUtil.xml.XMLEvent;
@@ -213,6 +214,10 @@ public class VelocityEvent extends ProxyEventAccessOperations {
         return null;
     }
 
+    public String getDistanceDeg(VelocityStation sta) {
+        return sta.getDistanceDeg(this);
+    }
+
     public String getDistance(VelocityStation sta) {
         return sta.getDistance(this);
     }
@@ -272,7 +277,7 @@ public class VelocityEvent extends ProxyEventAccessOperations {
 
     private static ParseRegions pr = ParseRegions.getInstance();
 
-    private DecimalFormat df = new DecimalFormat("0.0");
+    private ThreadSafeDecimalFormat df = new ThreadSafeDecimalFormat("0.0");
 
     public static VelocityEvent[] wrap(List evs) {
         VelocityEvent[] velEvs = new VelocityEvent[evs.size()];

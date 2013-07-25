@@ -14,6 +14,7 @@ import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.bag.DistAz;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
+import edu.sc.seis.fissuresUtil.chooser.ThreadSafeDecimalFormat;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.status.StationFormatter;
@@ -41,7 +42,7 @@ public class EventStationFormatter extends StationFormatter{
             return df.format(dAz.getDelta());
         }
 
-        private DecimalFormat df = new DecimalFormat("0.00");
+        private ThreadSafeDecimalFormat df = new ThreadSafeDecimalFormat("0.00");
     }
 
     private class BackAz implements StationTemplate{
@@ -50,7 +51,7 @@ public class EventStationFormatter extends StationFormatter{
             return df.format(dAz.getBaz());
         }
 
-        private DecimalFormat df = new DecimalFormat("0.00");
+        private ThreadSafeDecimalFormat df = new ThreadSafeDecimalFormat("0.00");
     }
 
     private class SuccessfulQuery implements StationTemplate{

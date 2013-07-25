@@ -6,12 +6,12 @@
 package edu.sc.seis.sod.status.waveformArm;
 
 import java.sql.SQLException;
-import java.text.DecimalFormat;
 
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
+import edu.sc.seis.fissuresUtil.chooser.ThreadSafeDecimalFormat;
 import edu.sc.seis.sod.Stage;
 import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Start;
@@ -38,7 +38,7 @@ public class WPHTemplate extends AllTypeTemplate {
         return elapsedTime.convertTo(UnitImpl.HOUR).getValue();
     }
 
-    private DecimalFormat df = new DecimalFormat("0.00");
+    private ThreadSafeDecimalFormat df = new ThreadSafeDecimalFormat("0.00");
 
     private SodDB ecs;
 
