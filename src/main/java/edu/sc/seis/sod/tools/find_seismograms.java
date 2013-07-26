@@ -24,8 +24,6 @@ public class find_seismograms extends CommandLineTool {
 
     protected void addParams() throws JSAPException {
         super.addParams();
-        add(ServerParser.createParam(null,
-                                     "Set the seismogram server to use for this search"));
         add(PhaseTimeParser.createParam("begin",
                                         "-2ttp",
                                         "Phase name and offset for the seismogram's begin"));
