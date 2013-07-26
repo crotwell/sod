@@ -5,10 +5,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import edu.iris.Fissures.model.TimeInterval;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
+import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
@@ -23,12 +26,29 @@ public class DelayedEventSource implements EventSource {
 
     public DelayedEventSource(Element config) throws ConfigurationException {
         delay = SodUtil.loadTimeInterval(SodUtil.getElement(config, "delay"));
-        Object o = SodUtil.load(config, "event"); // loads something from source.event package
-        if (o instanceof EventSource) {
-            wrappedSource = (EventSource)o;
+        NodeList children = config.getChildNodes();
+        for (int i = 0; i < children.getLength(); i++) {
+            Node node = children.item(i);
+            if(node instanceof Element) {
+                Element el = (Element)node;
+                if (el.getLocalName().equals("name")) {
+                    description = SodUtil.getNestedText(el);
+                } else if (el.getLocalName().equals("delay")) {
+                    // handled above
+                } else {
+                    Object o = SodUtil.load(el, "event"); // loads something from source.event package
+                    if (o instanceof EventSource) {
+                        wrappedSource = (EventSource)o;
+                        break;
+                    }
+                }
+            }
         }
     }
     public String getDescription() {
+        if (description != null) {
+            return description;
+        }
         return "Delayed ("+wrappedSource.getDescription()+") delayed "+delay;
     }
 
@@ -70,6 +90,8 @@ public class DelayedEventSource implements EventSource {
     public boolean checkEvent(CacheEvent e) {
         return ClockUtil.now().subtract(delay).after(e.getOrigin().getTime());
     }
+    
+    String description = null;
     
     EventSource wrappedSource;
     
