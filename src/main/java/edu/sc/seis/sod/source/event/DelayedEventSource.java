@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.source.event;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -66,9 +67,12 @@ public class DelayedEventSource implements EventSource {
 
     public CacheEvent[] next() {
         List<CacheEvent> out = new ArrayList<CacheEvent>();
-        for (CacheEvent cacheEvent : delayedEvents) {
+        Iterator<CacheEvent> it = delayedEvents.iterator();
+        while(it.hasNext()) {
+            CacheEvent cacheEvent  = it.next();
             if (checkEvent(cacheEvent)) {
                 out.add(cacheEvent);
+                it.remove();
             }
         }
         if (out.size() != 0) {
