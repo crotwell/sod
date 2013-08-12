@@ -98,7 +98,14 @@ public class EventArm implements Arm {
                 Element el = (Element)node;
                 Object sodElement = SodUtil.load(el, new String[] {"eventArm", "origin", "event"});
                 if (sodElement instanceof EventSource) {
-                    sources.add((EventSource)sodElement);
+                    EventSource es = (EventSource)sodElement;
+                    for (EventSource existingES : sources) {
+                        if (es.getName().equals(existingES.getName())) {
+                            logger.warn("Source name already used, appending "+sources.size());
+                            es.appendToName(""+sources.size());
+                        }
+                    }
+                    sources.add(es);
                 } else if (sodElement instanceof OriginSubsetter) {
                     subsetters.add((OriginSubsetter)sodElement);
                 }

@@ -61,6 +61,10 @@ public abstract class AbstractSource implements Source {
         }
     }
 
+    public void appendToName(String suffix) {
+        name += suffix;
+    }
+    
     protected String name;
 
     private int retries = -1;

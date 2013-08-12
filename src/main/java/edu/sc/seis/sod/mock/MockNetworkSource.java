@@ -19,15 +19,17 @@ import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockNetworkAccess;
 import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
+import edu.sc.seis.sod.source.network.AbstractNetworkSource;
 import edu.sc.seis.sod.source.network.NetworkQueryConstraints;
 import edu.sc.seis.sod.source.network.NetworkSource;
 
 
-public class MockNetworkSource implements NetworkSource {
+public class MockNetworkSource extends AbstractNetworkSource implements NetworkSource {
 
     TimeInterval refresh;
     
     public MockNetworkSource(TimeInterval refresh) {
+        super("MockNetworkSource", 0);
         this.refresh = refresh;
     }
     

@@ -14,9 +14,10 @@ import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
 import edu.sc.seis.sod.source.SodSourceException;
 
-public abstract class WrappingNetworkSource implements NetworkSource {
+public abstract class WrappingNetworkSource extends AbstractNetworkSource implements NetworkSource {
 
-    public WrappingNetworkSource(NetworkSource wrapped) {
+    public WrappingNetworkSource(AbstractNetworkSource wrapped) {
+        super(wrapped);
         this.wrapped = wrapped;
     }
 

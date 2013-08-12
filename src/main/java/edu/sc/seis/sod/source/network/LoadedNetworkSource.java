@@ -20,7 +20,7 @@ import edu.sc.seis.sod.source.SodSourceException;
 
 public class LoadedNetworkSource extends WrappingNetworkSource implements NetworkSource {
 
-    public LoadedNetworkSource(NetworkSource wrapped, List<? extends StationImpl> allStations, StationImpl sta) {
+    public LoadedNetworkSource(AbstractNetworkSource wrapped, List<? extends StationImpl> allStations, StationImpl sta) {
         super(wrapped);
         this.sta = sta;
         this.allStations = allStations;

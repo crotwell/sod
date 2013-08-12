@@ -16,16 +16,19 @@ import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.source.AbstractSource;
 
 
-public class DelayedEventSource implements EventSource {
+public class DelayedEventSource extends AbstractSource implements EventSource {
 
     protected DelayedEventSource(TimeInterval delay, EventSource source) {
+        super("delayed "+source.getName());
         this.delay = delay;
         this.wrappedSource = source;
     }
 
     public DelayedEventSource(Element config) throws ConfigurationException {
+        super(config, "delayedEventSouce");
         delay = SodUtil.loadTimeInterval(SodUtil.getElement(config, "delay"));
         NodeList children = config.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {

@@ -26,9 +26,10 @@ import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.source.SodSourceException;
 
 
-public class CombineNetworkSource implements NetworkSource {
+public class CombineNetworkSource extends AbstractNetworkSource implements NetworkSource {
 
     public CombineNetworkSource(Element config) throws ConfigurationException {
+        super(config);
         wrapped = new ArrayList<NetworkSource>();
         NodeList children = config.getChildNodes();
         for(int i = 0; i < children.getLength(); i++) {

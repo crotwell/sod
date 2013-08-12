@@ -41,6 +41,7 @@ import edu.sc.seis.sod.subsetter.AreaSubsetter;
 public class CSVEventSource extends SimpleEventSource {
 
     public CSVEventSource(Element config) throws ConfigurationException {
+        super(config, "CSVEventSource");
         if (DOMHelper.hasElement(config, "filename")) {
             initFromFile(DOMHelper.extractText(config, "filename"));
         } else if (DOMHelper.hasElement(config, "events")) {
@@ -55,6 +56,7 @@ public class CSVEventSource extends SimpleEventSource {
     }
     
     public CSVEventSource(String filename) throws ConfigurationException {
+        super(filename);
         initFromFile(filename);
     }
     

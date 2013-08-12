@@ -1,12 +1,31 @@
 package edu.sc.seis.sod.source.event;
 
+import org.w3c.dom.Element;
+
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
+import edu.sc.seis.sod.source.AbstractSource;
 
-public abstract class SimpleEventSource implements EventSource {
+public abstract class SimpleEventSource extends AbstractSource implements EventSource {
+
+    public SimpleEventSource(Element config, String defaultName, int defaultRetries) {
+        super(config, defaultName, defaultRetries);
+    }
+
+    public SimpleEventSource(Element config, String defaultName) {
+        super(config, defaultName);
+    }
+
+    public SimpleEventSource(String name, int retries) {
+        super(name, retries);
+    }
+
+    public SimpleEventSource(String name) {
+        super(name);
+    }
 
     public abstract CacheEvent[] getEvents();
 

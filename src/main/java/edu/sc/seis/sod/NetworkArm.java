@@ -171,10 +171,11 @@ public class NetworkArm implements Arm {
         if(sodElement instanceof NetworkSource) {
             if (sodElement instanceof AbstractNetworkSource) {
                 internalFinder = new RetryNetworkSource((AbstractNetworkSource)sodElement);
+                finder = new InstrumentationFromDB(internalFinder);
             } else {
-                internalFinder = (NetworkSource)sodElement;
+               // internalFinder = (NetworkSource)sodElement;
+                throw new ConfigurationException("This should extend AbstractNetworkSource: "+internalFinder.getClass());
             }
-            finder = new InstrumentationFromDB(internalFinder);
         } else if(sodElement instanceof NetworkSubsetter) {
             attrSubsetter = (NetworkSubsetter)sodElement;
         } else if(sodElement instanceof StationSubsetter) {
@@ -682,7 +683,7 @@ public class NetworkArm implements Arm {
         }
     }
 
-    private NetworkSource internalFinder = new RetryNetworkSource(new FdsnStation());
+    private AbstractNetworkSource internalFinder = new RetryNetworkSource(new FdsnStation());
 
     private NetworkSource finder = new InstrumentationFromDB(internalFinder);
     
@@ -705,7 +706,7 @@ public class NetworkArm implements Arm {
         return finder;
     }
 
-     protected NetworkSource getInternalNetworkSource() {
+     protected AbstractNetworkSource getInternalNetworkSource() {
         return internalFinder;
     }
     

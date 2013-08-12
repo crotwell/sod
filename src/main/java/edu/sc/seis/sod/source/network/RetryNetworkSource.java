@@ -16,9 +16,10 @@ import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
 import edu.sc.seis.sod.source.SodSourceException;
 
 
-public class RetryNetworkSource implements NetworkSource {
+public class RetryNetworkSource extends AbstractNetworkSource implements NetworkSource {
 
     public RetryNetworkSource(AbstractNetworkSource wrapped) {
+        super(wrapped);
         this.wrapped = wrapped;
     }
 

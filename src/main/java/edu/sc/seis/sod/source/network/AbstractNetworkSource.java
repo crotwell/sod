@@ -18,6 +18,7 @@ import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.source.AbstractSource;
 
@@ -32,7 +33,7 @@ public abstract class AbstractNetworkSource extends AbstractSource implements Ne
         this(wrapped.getName(), wrapped.getRetries());
     }
     
-    public AbstractNetworkSource(Element config) throws Exception {
+    public AbstractNetworkSource(Element config) throws ConfigurationException  {
         super(config, "default", -1);
         Element subElement = SodUtil.getElement(config, REFRESH_ELEMENT);
         if(subElement != null) {
