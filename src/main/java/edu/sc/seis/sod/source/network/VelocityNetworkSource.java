@@ -14,8 +14,8 @@ import edu.sc.seis.sod.velocity.network.VelocityStation;
 
 public class VelocityNetworkSource extends WrappingNetworkSource implements NetworkSource {
 
-    public VelocityNetworkSource(AbstractNetworkSource wrapped) {
-        super(wrapped);
+    public VelocityNetworkSource(NetworkSource network) {
+        super(network);
     }
 
     @Override

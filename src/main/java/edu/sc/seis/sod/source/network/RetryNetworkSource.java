@@ -18,9 +18,8 @@ import edu.sc.seis.sod.source.SodSourceException;
 
 public class RetryNetworkSource extends AbstractNetworkSource implements NetworkSource {
 
-    public RetryNetworkSource(AbstractNetworkSource wrapped) {
-        super(wrapped);
-        this.wrapped = wrapped;
+    public RetryNetworkSource(NetworkSource sodElement) {
+        super(sodElement);
     }
 
     @Override

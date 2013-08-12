@@ -12,6 +12,7 @@ import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
+import edu.sc.seis.fissuresUtil.cache.RetryStrategy;
 import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
 import edu.sc.seis.sod.source.SodSourceException;
 import edu.sc.seis.sod.source.Source;
@@ -35,4 +36,8 @@ public interface NetworkSource extends Source {
     public Instrumentation getInstrumentation(ChannelImpl chanId) throws ChannelNotFound, InvalidResponse, SodSourceException;
 
     public void setConstraints(NetworkQueryConstraints constraints);
+    
+    public int getRetries();
+
+    public RetryStrategy getRetryStrategy();
 }

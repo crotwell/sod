@@ -33,33 +33,23 @@ import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.source.SodSourceException;
 import edu.sc.seis.sod.source.event.EventSource;
-import edu.sc.seis.sod.source.network.AbstractNetworkSource;
 import edu.sc.seis.sod.source.network.FdsnStation;
 import edu.sc.seis.sod.source.network.InstrumentationFromDB;
 import edu.sc.seis.sod.source.network.LoadedNetworkSource;
 import edu.sc.seis.sod.source.network.NetworkQueryConstraints;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.source.network.RetryNetworkSource;
-import edu.sc.seis.sod.source.network.StationXML;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.networkArm.NetworkMonitor;
-import edu.sc.seis.sod.subsetter.Subsetter;
-import edu.sc.seis.sod.subsetter.channel.ChannelCode;
 import edu.sc.seis.sod.subsetter.channel.ChannelEffectiveTimeOverlap;
-import edu.sc.seis.sod.subsetter.channel.ChannelOR;
 import edu.sc.seis.sod.subsetter.channel.ChannelSubsetter;
 import edu.sc.seis.sod.subsetter.channel.PassChannel;
-import edu.sc.seis.sod.subsetter.channel.SiteCode;
-import edu.sc.seis.sod.subsetter.network.NetworkCode;
 import edu.sc.seis.sod.subsetter.network.NetworkEffectiveTimeOverlap;
-import edu.sc.seis.sod.subsetter.network.NetworkOR;
 import edu.sc.seis.sod.subsetter.network.NetworkSubsetter;
 import edu.sc.seis.sod.subsetter.network.PassNetwork;
 import edu.sc.seis.sod.subsetter.station.PassStation;
-import edu.sc.seis.sod.subsetter.station.StationCode;
 import edu.sc.seis.sod.subsetter.station.StationEffectiveTimeOverlap;
-import edu.sc.seis.sod.subsetter.station.StationOR;
 import edu.sc.seis.sod.subsetter.station.StationSubsetter;
 
 public class NetworkArm implements Arm {
@@ -169,13 +159,8 @@ public class NetworkArm implements Arm {
     private void loadConfigElement(Object sodElement)
             throws ConfigurationException {
         if(sodElement instanceof NetworkSource) {
-            if (sodElement instanceof AbstractNetworkSource) {
-                internalFinder = new RetryNetworkSource((AbstractNetworkSource)sodElement);
-                finder = new InstrumentationFromDB(internalFinder);
-            } else {
-               // internalFinder = (NetworkSource)sodElement;
-                throw new ConfigurationException("This should extend AbstractNetworkSource: "+internalFinder.getClass());
-            }
+            internalFinder = new RetryNetworkSource((NetworkSource)sodElement);
+            finder = new InstrumentationFromDB(internalFinder);
         } else if(sodElement instanceof NetworkSubsetter) {
             attrSubsetter = (NetworkSubsetter)sodElement;
         } else if(sodElement instanceof StationSubsetter) {
@@ -683,7 +668,7 @@ public class NetworkArm implements Arm {
         }
     }
 
-    private AbstractNetworkSource internalFinder = new RetryNetworkSource(new FdsnStation());
+    private NetworkSource internalFinder = new RetryNetworkSource(new FdsnStation());
 
     private NetworkSource finder = new InstrumentationFromDB(internalFinder);
     
@@ -706,7 +691,7 @@ public class NetworkArm implements Arm {
         return finder;
     }
 
-     protected AbstractNetworkSource getInternalNetworkSource() {
+     protected NetworkSource getInternalNetworkSource() {
         return internalFinder;
     }
     

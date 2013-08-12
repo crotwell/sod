@@ -14,7 +14,7 @@ import edu.sc.seis.sod.source.SodSourceException;
 
 public class InstrumentationFromDB extends WrappingNetworkSource implements NetworkSource {
 
-    public InstrumentationFromDB(AbstractNetworkSource wrapped) {
+    public InstrumentationFromDB(NetworkSource wrapped) {
         super(wrapped);
     }
 

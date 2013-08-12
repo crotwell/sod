@@ -16,7 +16,7 @@ import edu.sc.seis.sod.source.SodSourceException;
 
 public abstract class WrappingNetworkSource extends AbstractNetworkSource implements NetworkSource {
 
-    public WrappingNetworkSource(AbstractNetworkSource wrapped) {
+    public WrappingNetworkSource(NetworkSource wrapped) {
         super(wrapped);
         this.wrapped = wrapped;
     }

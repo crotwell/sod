@@ -29,7 +29,7 @@ public abstract class AbstractNetworkSource extends AbstractSource implements Ne
         refreshInterval = new TimeInterval(1, UnitImpl.FORTNIGHT);
     }
     
-    public AbstractNetworkSource(AbstractNetworkSource wrapped) {
+    public AbstractNetworkSource(NetworkSource wrapped) {
         this(wrapped.getName(), wrapped.getRetries());
     }
     
