@@ -222,5 +222,5 @@ public class RetryNetworkSource extends AbstractNetworkSource implements Network
         wrapped.setConstraints(constraints);
     }
     
-    AbstractNetworkSource wrapped;
+    NetworkSource wrapped;
 }
