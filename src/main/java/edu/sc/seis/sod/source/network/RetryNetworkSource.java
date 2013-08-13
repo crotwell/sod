@@ -20,6 +20,7 @@ public class RetryNetworkSource extends AbstractNetworkSource implements Network
 
     public RetryNetworkSource(NetworkSource sodElement) {
         super(sodElement);
+        this.wrapped = sodElement;
     }
 
     @Override
