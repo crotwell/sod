@@ -130,12 +130,12 @@ public class ChannelGrouper {
         return true;
     }
 
-    private HashMap<String, List<ChannelImpl>> groupByNetStaBandGain(List<ChannelImpl> channels) {
+     HashMap<String, List<ChannelImpl>> groupByNetStaBandGain(List<ChannelImpl> channels) {
         HashMap<String, List<ChannelImpl>> bandGain = new HashMap<String, List<ChannelImpl>>();
         for(ChannelImpl c : channels) {
             MicroSecondDate msd = new MicroSecondDate(c.get_id().begin_time);
             ChannelId cId = c.getId();
-            String key = cId.network_id.network_code+"."+cId.station_code;
+            String key = cId.network_id.network_code+"."+cId.station_code+"."+cId.channel_code;
             key = key.substring(0, key.length() - 1);
             key = msd + key;
             List<ChannelImpl> chans = bandGain.get(key);
