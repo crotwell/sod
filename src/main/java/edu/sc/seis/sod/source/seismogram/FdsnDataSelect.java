@@ -169,6 +169,9 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
 
             public List<RequestFilter> internalAvailableData(List<RequestFilter> request)
                     throws SeismogramSourceException {
+                if ( ! fdsnStationAvailability) {
+                    return request;
+                }
                 try {
                     List<RequestFilter> out = new ArrayList<RequestFilter>();
                     if (request.size() != 0) {
@@ -284,6 +287,7 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
                 querier.setReadTimeout(timeoutMillis);
                 if (username != null && username.length() != 0 && password != null && password.length() != 0) {
                     querier.enableRestrictedData(username, password);
+                    logger.info("enable restricted");
                 }
                 querier.setUserAgent("SOD/" + BuildVersion.getVersion());
                 try {
