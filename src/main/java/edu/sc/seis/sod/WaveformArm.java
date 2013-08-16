@@ -69,10 +69,12 @@ public class WaveformArm extends Thread implements Arm {
                     } catch(InterruptedException e) {}
                     //logger.debug("done waiting on event arm");
                     next = getNext();
-                }
-                if (next == null && SodDB.getSingleton().getNumWorkUnits(Standing.INIT) > 0) {
-                    logger.debug("next null, so try get from DB");
-                    next = SodDB.getSingleton().getNextECP();
+                    if (next == null && SodDB.getSingleton().getNumWorkUnits(Standing.INIT) > 0) {
+                        logger.debug("next null, so try get from DB");
+                        next = SodDB.getSingleton().getNextECP();
+                    } else {
+                        logger.debug("next null, not try get from DB "+(next == null) +" && "+ SodDB.getSingleton().getNumWorkUnits(Standing.INIT)+" > 0");
+                    }
                 }
                 if(next == null) {
                     // lets sleep for a couple of seconds just to make sure
