@@ -300,14 +300,20 @@ public class SodDB extends AbstractHibernateDB {
                 + " left join fetch e.event ";
         if (getEcpClass().equals(EventChannelPair.class)) {
         q +=  " left join fetch e.channel "
-                + " left join fetch e.channel.site.station "
+                + " left join fetch e.channel.site "
                 + " left join fetch e.channel.site.station "
                 + " left join fetch e.channel.site.station.networkAttr ";
         } else {
             q +=  " left join fetch e.channelGroup "
-                    + " left join fetch e.channelGroup.channel.station "
-                    + " left join fetch e.channelGroup.channel.station "
-                    + " left join fetch e.channelGroup.channel.station.networkAttr ";
+                    + " left join fetch e.channelGroup.channel1.site "
+                    + " left join fetch e.channelGroup.channel1.site.station "
+                    + " left join fetch e.channelGroup.channel1.site.station.networkAttr "
+                    + " left join fetch e.channelGroup.channel2.site "
+                    + " left join fetch e.channelGroup.channel2.site.station "
+                    + " left join fetch e.channelGroup.channel2.site.station.networkAttr "
+                    + " left join fetch e.channelGroup.channel3.site "
+                    + " left join fetch e.channelGroup.channel3.site.station "
+                    + " left join fetch e.channelGroup.channel3.site.station.networkAttr ";
         }
         q+=  " where e.status.stageInt = "+Stage.EVENT_CHANNEL_POPULATION.getVal()
                 + " and e.status.standingInt = :standing ";
