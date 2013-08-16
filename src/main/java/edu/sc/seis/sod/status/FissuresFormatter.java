@@ -306,7 +306,7 @@ public class FissuresFormatter {
 
     public static String formatDepth(QuantityImpl impl) {
         synchronized(depthFormat) {
-            return UnitDisplayUtil.formatQuantityImpl(impl, depthFormat);
+            return UnitDisplayUtil.formatQuantityImpl(impl, depthFormat, UnitImpl.KILOMETER);
         }
     }
 
