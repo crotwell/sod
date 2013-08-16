@@ -202,7 +202,9 @@
             <xsd:annotation>
                 <summary>Apply a Butterworth filter</summary>
                 <description>Applies a Butterworth filter to the seismograms. The filterType can be CAUSAL or NONCAUSAL
-                    or TWOPASS, with the last two being equivalent and NONCAUSAL being the default. The default number of poles is 2.</description>
+                    or TWOPASS, with the last two being equivalent and NONCAUSAL being the default. The default number of poles is 2.
+                    This is a relatively simple implementation and so is a memory and cpu hog. You are highly encouraged
+                    to use the much nicer oregonDSPFilter instead.</description>
             </xsd:annotation>
             <element name="lowFreqCorner">
                 <xsd:annotation>
