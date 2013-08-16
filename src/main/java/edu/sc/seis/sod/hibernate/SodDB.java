@@ -294,6 +294,7 @@ public class SodDB extends AbstractHibernateDB {
 
     
     public synchronized void populateECPToDo() {
+        logger.debug("populateECPToDo");
         String q = "from "
                 + getEcpClass().getName()
                 + " e "
@@ -327,6 +328,7 @@ public class SodDB extends AbstractHibernateDB {
                 ecpToDo.offer(ecp);
             }
         }
+        logger.debug("Done populateECPToDo "+result.size());
     }
 
 
