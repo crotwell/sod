@@ -105,7 +105,7 @@ public class SodDB extends AbstractHibernateDB {
         String query;
         String setStmt;
         if(processingRule.equals(RunProperties.AT_LEAST_ONCE)) {
-            setStmt = " stageInt = "+Stage.EVENT_CHANNEL_SUBSETTER.getVal()+", standingInt = "+Standing.INIT.getVal();
+            setStmt = " stageInt = "+Stage.EVENT_CHANNEL_POPULATION.getVal()+", standingInt = "+Standing.INIT.getVal();
         } else {
             setStmt = " standingInt = "+Standing.SYSTEM_FAILURE.getVal();
         }
