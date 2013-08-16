@@ -40,6 +40,10 @@ public class WaveformArm extends Thread implements Arm {
             try { Thread.sleep(10);  } catch(InterruptedException e) { }
         }
         try {
+            // on startup pull any old existing ecp, esp or enp to work on first
+            SodDB.getSingleton().populateECPToDo();
+            SodDB.getSingleton().populateESPToDo();
+            SodDB.getSingleton().populateENPToDo();
             while(true) {
                 AbstractEventPair next = getNext();
                 while(next == null
@@ -65,6 +69,9 @@ public class WaveformArm extends Thread implements Arm {
                     } catch(InterruptedException e) {}
                     //logger.debug("done waiting on event arm");
                     next = getNext();
+                }
+                if (next == null && SodDB.getSingleton().getNumWorkUnits(Standing.INIT) > 0) {
+                    next = SodDB.getSingleton().getNextECP();
                 }
                 if(next == null) {
                     // lets sleep for a couple of seconds just to make sure
@@ -127,6 +134,16 @@ public class WaveformArm extends Thread implements Arm {
         }
         if (retryRandom > ecpPercentage) {
             // random not in small, so try memory esp or enp first
+
+            if (SodDB.getSingleton().isECPTodo()) {
+                ecp = SodDB.getSingleton().getNextECPFromCache();
+                if(ecp != null) {
+                    ecp.update(Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.IN_PROG));
+                    SodDB.commit();
+                    ecp  = (AbstractEventChannelPair)SodDB.getSession().merge(ecp);
+                    return ecp;
+                }
+            }
             if (SodDB.getSingleton().isESPTodo()) {
                 EventStationPair esp = SodDB.getSingleton().getNextESPFromCache();
                 if(esp != null) {
@@ -154,14 +171,18 @@ public class WaveformArm extends Thread implements Arm {
         // we do this  by trying if the random is less than the ecpPercentage or if we have
         // have found an ecp in the db within the last ECP_WINDOW
         // this cuts down on useless db acccesses
-        if((retryRandom < ecpPercentage || (ClockUtil.now().subtract(lastECP).lessThan(ECP_WINDOW))) ) {
-            ecp = SodDB.getSingleton().getNextECP();
-            if(ecp != null) {
-                ecp.update(Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.IN_PROG));
-                SodDB.commit();
-                ecp = (AbstractEventChannelPair)SodDB.getSession().merge(ecp);
-                lastECP = ClockUtil.now();
-                return ecp;
+        if(retryRandom < ecpPercentage ) {
+            if ( ! SodDB.getSingleton().isECPTodo()) {
+                SodDB.getSingleton().populateECPToDo();
+            }
+            if (SodDB.getSingleton().isECPTodo()) {
+                ecp = SodDB.getSingleton().getNextECPFromCache();
+                if(ecp != null) {
+                    ecp.update(Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.IN_PROG));
+                    SodDB.commit();
+                    ecp  = (AbstractEventChannelPair)SodDB.getSession().merge(ecp);
+                    return ecp;
+                }
             }
         }
         // no ecp/evp try e-station
@@ -307,7 +328,7 @@ public class WaveformArm extends Thread implements Arm {
     /** percent of the pool that will be retries */
     private static double retryPercentage = .01; 
     
-    private static double ecpPercentage = .00001; // most processing uses esp from db, only use ecp if crash
+    private static double ecpPercentage = .001; // most processing uses esp from db, only use ecp if crash
 
     private static TimeInterval ECP_WINDOW = new TimeInterval(5, UnitImpl.MINUTE);
     

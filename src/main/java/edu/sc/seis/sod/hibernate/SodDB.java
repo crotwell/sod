@@ -80,7 +80,8 @@ public class SodDB extends AbstractHibernateDB {
     }
 
     public void reopenSuspendedEventChannelPairs(String processingRule, boolean vector) {
-        Stage[] stages = {Stage.EVENT_STATION_SUBSETTER,
+        Stage[] stages = {Stage.EVENT_CHANNEL_POPULATION,
+                          Stage.EVENT_STATION_SUBSETTER,
                           Stage.EVENT_CHANNEL_SUBSETTER,
                           Stage.REQUEST_SUBSETTER,
                           Stage.AVAILABLE_DATA_SUBSETTER,
@@ -147,6 +148,14 @@ public class SodDB extends AbstractHibernateDB {
             }
         }
     }
+
+    public void offerEventChannelPair(List<AbstractEventChannelPair> chanPairList) {
+        for (AbstractEventChannelPair ecp : chanPairList) {
+            synchronized(ecpToDo) {
+                ecpToDo.offer(ecp);
+            }
+        }
+    }
     
     public EventStationPair createEventStationPair(StatefulEvent event, StationImpl station) {
         logger.debug("Put esp ("+event.getDbid()+",s "+station.getDbid()+") ");
@@ -170,6 +179,12 @@ public class SodDB extends AbstractHibernateDB {
         logger.debug("Put "+eventChannelPair);
         session.save(eventChannelPair);
         return eventChannelPair;
+    }
+    
+    public boolean isECPTodo() {
+        synchronized(ecpToDo) {
+            return ! ecpToDo.isEmpty();
+        }
     }
     
     public boolean isESPTodo() {
@@ -277,20 +292,60 @@ public class SodDB extends AbstractHibernateDB {
         }
     }
 
-    /** next successful event-channel to process. Returns null if no more events. */
-    public AbstractEventChannelPair getNextECP() {
+    
+    public synchronized void populateECPToDo() {
         String q = "from "
                 + getEcpClass().getName()
                 + " e "
-                + " where e.status.stageInt = "+Stage.EVENT_CHANNEL_POPULATION.getVal()
-                + " and e.status.standingInt = "+Standing.INIT.getVal();
+                + " left join fetch e.event ";
+        if (getEcpClass().equals(EventChannelPair.class)) {
+        q +=  " left join fetch e.channel "
+                + " left join fetch e.channel.site.station "
+                + " left join fetch e.channel.site.station "
+                + " left join fetch e.channel.site.station.networkAttr ";
+        } else {
+            q +=  " left join fetch e.channelGroup "
+                    + " left join fetch e.channelGroup.channel.station "
+                    + " left join fetch e.channelGroup.channel.station "
+                    + " left join fetch e.channelGroup.channel.station.networkAttr ";
+        }
+        q+=  " where e.status.stageInt = "+Stage.EVENT_CHANNEL_POPULATION.getVal()
+                + " and e.status.standingInt = :standing ";
         Query query = getSession().createQuery(q);
-        query.setMaxResults(1);
-        List<EventChannelPair> result = query.list();
-        if(result.size() > 0) {
-            return result.get(0);
+        query.setInteger("standing", Standing.INIT.getVal());
+        query.setMaxResults(1000);
+        List<AbstractEventChannelPair> result = query.list();
+        logger.info("populate ECP/EVP ToDo: "+result.size());
+        for (AbstractEventChannelPair ecp : result) {
+            synchronized(ecpToDo) {
+                ecpToDo.offer(ecp);
+            }
+        }
+    }
+
+
+    /** next successful event-station to process from memory cache. 
+     * Returns null if no more esp in memory. */
+    public synchronized AbstractEventChannelPair getNextECPFromCache() {
+        AbstractEventChannelPair ecp;
+        synchronized(ecpToDo) {
+            ecp = ecpToDo.poll();
+        }
+        if (ecp != null) {
+            // might be new thread
+            // ok to use even though might not be committed as hibernate flushes
+            // due to native generator for id
+            return (AbstractEventChannelPair)getSession().merge(ecp);
         }
         return null;
+    }
+    
+    /** next successful event-channel to process. Returns null if no more events. */
+    public AbstractEventChannelPair getNextECP() {
+        if ( ! isECPTodo()) {
+            populateECPToDo();
+        }
+        return getNextECPFromCache();
     }
 
     public AbstractEventChannelPair getNextRetryECPFromCache() {
@@ -933,8 +988,10 @@ public class SodDB extends AbstractHibernateDB {
     private Queue<AbstractEventChannelPair> retryToDo = new LinkedList<AbstractEventChannelPair>();
 
     private Queue<EventNetworkPair> enpToDo = new LinkedList<EventNetworkPair>();
-    
+
     private Queue<EventStationPair> espToDo = new LinkedList<EventStationPair>();
+    
+    private Queue<AbstractEventChannelPair> ecpToDo = new LinkedList<AbstractEventChannelPair>();
 
     
     private String retry, failed, success, successPerEvent,
