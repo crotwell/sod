@@ -157,6 +157,13 @@ public class SodDB extends AbstractHibernateDB {
         }
     }
     
+    public List<EventStationPair> loadESPForNetwork(StatefulEvent event, NetworkAttrImpl net) {
+        Query query = getSession().createQuery(espFromNet);
+        query.setEntity("event", event);
+        query.setEntity("net", net);
+        return query.list();
+    }
+    
     public EventStationPair createEventStationPair(StatefulEvent event, StationImpl station) {
         logger.debug("Put esp ("+event.getDbid()+",s "+station.getDbid()+") ");
         Session session = getSession();
@@ -1030,7 +1037,11 @@ public class SodDB extends AbstractHibernateDB {
         failedPerEventStation = staEventBase + failReq;
         retryPerEventStation = staEventBase + retryReq;
         totalSuccess = baseStatement + " "+PROCESS_SUCCESS;
+        espFromNet = "FROM "+EventStationPair.class.getName()+" esp WHERE "
+            +" esp.event = :event and esp.station.network = :net";
     }
+    
+    private String espFromNet;
     
     public static Class<? extends AbstractEventChannelPair> discoverDbEcpClass() {
         Class<? extends AbstractEventChannelPair> out;
