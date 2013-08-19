@@ -55,6 +55,7 @@ public class EventNetworkPair extends AbstractEventPair {
                     try {
                         p = new EventStationPair(getEvent(), 
                                                  NetworkDB.getSingleton().getStation(stations[i].getDbid()));
+                        logger.debug("Created ESP "+p);
                     } catch(NotFound e) {
                         throw new RuntimeException("Should never happen but I guess it did!", e);
                     }
