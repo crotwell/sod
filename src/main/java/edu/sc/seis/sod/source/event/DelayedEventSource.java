@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -19,10 +21,10 @@ import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.source.AbstractSource;
 
 
-public class DelayedEventSource extends AbstractSource implements EventSource {
+public class DelayedEventSource extends AbstractEventSource implements EventSource {
 
     protected DelayedEventSource(TimeInterval delay, EventSource source) {
-        super("delayed "+source.getName());
+        super("delayed "+source.getName(), source.getRetries());
         this.delay = delay;
         this.wrappedSource = source;
     }
@@ -76,6 +78,7 @@ public class DelayedEventSource extends AbstractSource implements EventSource {
     }
 
     public CacheEvent[] next() {
+        logger.debug("next: "+delayedEvents.size()+" delayed.");
         List<CacheEvent> out = new ArrayList<CacheEvent>();
         Iterator<CacheEvent> it = delayedEvents.iterator();
         while(it.hasNext()) {
@@ -112,4 +115,6 @@ public class DelayedEventSource extends AbstractSource implements EventSource {
     TimeInterval delay;
     
     LinkedList<CacheEvent> delayedEvents = new LinkedList<CacheEvent>();
+    
+    private static Logger logger = LoggerFactory.getLogger(DelayedEventSource.class);
 }

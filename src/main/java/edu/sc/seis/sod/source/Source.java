@@ -15,4 +15,6 @@ public interface Source {
     
     /** Allows name to be appended to in case of conflicts with other sources. */
     public void appendToName(String suffix);
+    
+    public int getRetries();
 }

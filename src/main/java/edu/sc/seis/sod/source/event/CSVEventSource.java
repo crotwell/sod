@@ -40,10 +40,15 @@ import edu.sc.seis.sod.subsetter.AreaSubsetter;
  */
 public class CSVEventSource extends SimpleEventSource {
 
+    private static final String DEFAULT_CSV_SOURCE_NAME = "CSVEventSource";
+
     public CSVEventSource(Element config) throws ConfigurationException {
-        super(config, "CSVEventSource");
+        super(config, DEFAULT_CSV_SOURCE_NAME);
         if (DOMHelper.hasElement(config, "filename")) {
             initFromFile(DOMHelper.extractText(config, "filename"));
+            if (getName().equals(DEFAULT_CSV_SOURCE_NAME)) {
+                name += " "+csvFilename;
+            }
         } else if (DOMHelper.hasElement(config, "events")) {
             try {
                 events = getEventsFromReader(new StringReader(DOMHelper.extractText(config, "events").trim()));

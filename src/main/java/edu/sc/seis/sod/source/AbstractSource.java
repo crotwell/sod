@@ -26,7 +26,11 @@ public abstract class AbstractSource implements Source {
     }
 
     public AbstractSource(Element config, String defaultName, int defaultRetries) {
-        name = SodUtil.loadText(config, NAME_ELEMENT, defaultName);
+        if (config.hasAttribute("name")) {
+            name = config.getAttribute("name");
+        } else {
+            name = SodUtil.loadText(config, NAME_ELEMENT, defaultName);
+        }
         retries = SodUtil.loadInt(config, RETRIES_ELEMENT, defaultRetries);
         retryStrategy = new UserReportRetryStrategy(getRetries());
     }
