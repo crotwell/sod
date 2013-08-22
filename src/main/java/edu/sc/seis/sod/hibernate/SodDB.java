@@ -158,6 +158,7 @@ public class SodDB extends AbstractHibernateDB {
     }
     
     public List<EventStationPair> loadESPForNetwork(StatefulEvent event, NetworkAttrImpl net) {
+        if (espFromNet == null) { initHQLStmts(); }
         Query query = getSession().createQuery(espFromNet);
         query.setEntity("event", event);
         query.setEntity("net", net);
@@ -1038,7 +1039,7 @@ public class SodDB extends AbstractHibernateDB {
         retryPerEventStation = staEventBase + retryReq;
         totalSuccess = baseStatement + " "+PROCESS_SUCCESS;
         espFromNet = "FROM "+EventStationPair.class.getName()+" esp WHERE "
-            +" esp.event = :event and esp.station.network = :net";
+            +" esp.event = :event and esp.station.networkAttr = :net";
     }
     
     private String espFromNet;
