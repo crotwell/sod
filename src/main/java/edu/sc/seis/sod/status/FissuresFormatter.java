@@ -310,6 +310,12 @@ public class FissuresFormatter {
         }
     }
 
+    public static String formatElevation(QuantityImpl impl) {
+        synchronized(depthFormat) {
+            return UnitDisplayUtil.formatQuantityImpl(impl, depthFormat, UnitImpl.METER);
+        }
+    }
+
     public static NumberFormat getDepthFormat() {
         return depthFormat;
     }
