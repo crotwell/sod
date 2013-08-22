@@ -180,17 +180,18 @@ public class VelocityStation extends StationImpl {
     }
     
     public String getDepth() {
-        return FissuresFormatter.formatDepth(QuantityImpl.createQuantityImpl(sta.getLocation().depth));
+        // format as elevation as formatDepth uses KM and stations usually want depth in Meter
+        return FissuresFormatter.formatElevation(QuantityImpl.createQuantityImpl(sta.getLocation().depth));
     }
 
     public String getDepth(String format) {
         double depthInKM = QuantityImpl.createQuantityImpl(sta.getLocation().depth)
-                .convertTo(UnitImpl.KILOMETER).value;
+                .convertTo(UnitImpl.METER).value;
         return new DecimalFormat(format).format(depthInKM);
     }
 
     public String getElevation() {
-        return FissuresFormatter.formatDepth(QuantityImpl.createQuantityImpl(sta.getLocation().elevation));
+        return FissuresFormatter.formatElevation(QuantityImpl.createQuantityImpl(sta.getLocation().elevation));
     }
 
     public String getElevation(String format) {
