@@ -3,7 +3,11 @@ package edu.sc.seis.sod.process.waveform.vector;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import edu.iris.Fissures.FissuresException;
+import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
@@ -177,6 +181,7 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
      */
     public boolean normalizeSampling(LocalSeismogramImpl[][] impls) {
         QuantityImpl lastPeriod = null;
+        ChannelId lastChan = null;
         for(int i = 0; i < impls.length; i++) {
             for(int j = 0; j < impls[i].length; j++) {
                 TimeInterval curPeriod = (TimeInterval)impls[i][j].getSampling()
@@ -184,9 +189,13 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
                         .convertTo(UnitImpl.SECOND);
                 if(lastPeriod != null) {
                     if(Math.abs(1 - lastPeriod.divideBy(curPeriod).getValue()) > .01) {
+                        logger.info("sampling not equal: "+i+","+j+" "
+                    +ChannelIdUtil.toStringNoDates(lastChan)+" "+lastPeriod+"  "
+                    +ChannelIdUtil.toStringNoDates(impls[i][j].channel_id)+" "+curPeriod);
                         return false;
                     }
                 }
+                lastChan = impls[i][j].channel_id;
                 lastPeriod = curPeriod;
             }
         }
@@ -204,4 +213,6 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
     
     private ANDWaveformProcessWrapper merger = new ANDWaveformProcessWrapper(new Merge());
     private ANDWaveformProcessWrapper collapser = new ANDWaveformProcessWrapper(new CollapseOverlaps());
+    
+    private static final Logger logger = LoggerFactory.getLogger(VectorTrim.class);
 }
