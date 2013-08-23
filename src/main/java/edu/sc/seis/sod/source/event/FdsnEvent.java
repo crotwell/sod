@@ -77,7 +77,8 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
 
     public FdsnEvent(Element config) throws ConfigurationException {
         super(config, "DefaultFDSNEvent");
-        queryParams.setOrderBy(FDSNEventQueryParams.ORDER_TIME_ASC); // fdsnEvent
+        queryParams.setIncludeAllMagnitudes(true)
+                   .setOrderBy(FDSNEventQueryParams.ORDER_TIME_ASC); // fdsnEvent
                                                                      // default
                                                                      // is
                                                                      // reverse
@@ -349,6 +350,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         if (caughtUpWithRealtime() && lastQueryEnd != null) {
             timeWindowQueryParams.setUpdatedAfter(lastQueryEnd);
         }
+        logger.debug("Query: "+timeWindowQueryParams.formURI());
         FDSNEventQuerier querier = new FDSNEventQuerier(timeWindowQueryParams);
         querier.setUserAgent(getUserAgent());
         if (caughtUpWithRealtime() && hasNext()) {
@@ -356,6 +358,8 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
             logger.debug("set sleepUntilTime " + sleepUntilTime + "  refresh=" + refreshInterval);
             resetQueryTimeForLag();
             lastQueryEnd = now;
+        } else {
+            logger.debug("not caught up with real time or hasNext: "+caughtUpWithRealtime() +" && "+ hasNext());
         }
         updateQueryEdge(queryTime);
         return querier.getQuakeML();
