@@ -79,13 +79,17 @@ public abstract class AbstractEventSource extends AbstractSource implements Even
      * @return - the next time range to be queried for events
      */
     protected MicroSecondTimeRange getQueryTime() {
+        MicroSecondDate now = ClockUtil.now();
         MicroSecondDate queryStart = getQueryStart();
         MicroSecondDate queryEnd = queryStart.add(increment);
         if (getEventTimeRange().getEndTime().before(queryEnd)) {
             queryEnd = getEventTimeRange().getEndTime();
         }
-        if (ClockUtil.now().before(queryEnd)) {
+        if (now.before(queryEnd)) {
             queryEnd = ClockUtil.now();
+        }
+        if (now.subtract(getLag()).before(queryStart)) {
+            queryStart = now.subtract(getLag());
         }
         return new MicroSecondTimeRange(queryStart, queryEnd);
     }
