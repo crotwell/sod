@@ -285,9 +285,15 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
                 FDSNDataSelectQuerier querier = new FDSNDataSelectQuerier(queryParams, queryRequest);
                 querier.setConnectTimeout(timeoutMillis);
                 querier.setReadTimeout(timeoutMillis);
+                String restrictedStr = "query: ";
                 if (username != null && username.length() != 0 && password != null && password.length() != 0) {
                     querier.enableRestrictedData(username, password);
-                    logger.info("enable restricted");
+                    restrictedStr = "restricted "+restrictedStr;
+                }
+                try {
+                    logger.info(restrictedStr+queryParams.formURI());
+                } catch(URISyntaxException e) {
+                    throw new SeismogramSourceException("Error with URL syntax", e);
                 }
                 querier.setUserAgent("SOD/" + BuildVersion.getVersion());
                 try {
