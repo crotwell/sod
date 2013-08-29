@@ -99,4 +99,10 @@ class TestSimpleEventSource implements EventSource {
     public String getDescription() {
         return "fake es";
     }
+
+    @Override
+    public int getRetries() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 };
