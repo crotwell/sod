@@ -30,6 +30,7 @@ import edu.iris.Fissures.event.OriginImpl;
 import edu.iris.Fissures.model.FlinnEngdahlRegionImpl;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
+import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
@@ -166,13 +167,15 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
     public boolean hasNext() {
         MicroSecondDate queryEnd = getEventTimeRange().getEndTime();
         MicroSecondDate quitDate = queryEnd.add(lag);
+        boolean out =  quitDate.equals(ClockUtil.now()) || quitDate.after(ClockUtil.now()) || !getQueryStart().equals(queryEnd);
         logger.debug(getName() + " Checking if more queries to the event server are in order.  The quit date is "
-                + quitDate + " the last query was for " + getQueryStart() + " and we're querying to " + queryEnd);
-        return quitDate.equals(ClockUtil.now()) || quitDate.after(ClockUtil.now()) || !getQueryStart().equals(queryEnd);
+                + quitDate + " the last query was for " + getQueryStart() + " and we're querying to " + queryEnd+" result="+out);
+        return out;
     }
 
     @Override
     public CacheEvent[] next() {
+        logger.debug(getName()+".next() called");
         int count = 0;
         SeisFileException latest;
         try {
@@ -348,7 +351,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         timeWindowQueryParams.setStartTime(queryTime.getBeginTime());
         timeWindowQueryParams.setEndTime(queryTime.getEndTime());
         if (caughtUpWithRealtime() && lastQueryEnd != null) {
-            timeWindowQueryParams.setUpdatedAfter(lastQueryEnd);
+            timeWindowQueryParams.setUpdatedAfter(lastQueryEnd.subtract(new TimeInterval(10, UnitImpl.HOUR)));
         }
         logger.debug("Query: "+timeWindowQueryParams.formURI());
         FDSNEventQuerier querier = new FDSNEventQuerier(timeWindowQueryParams);
