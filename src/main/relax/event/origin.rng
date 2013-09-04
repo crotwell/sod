@@ -158,8 +158,8 @@
                         The subsetters after the first false outputted are not evaluated.</description>
                     <example>
                         <originAND>
-                            <catalog>FINGER</catalog>
-                            <contributor>NEIC</contributor>
+                            <catalog>NEIC PDE</catalog>
+                            <contributor>NEIC ALERT</contributor>
                         </originAND>
                     </example>
                 </xsd:documentation>
@@ -179,8 +179,8 @@
                         to true. The subsetters after the first true outputted are not evaluated.</description>
                     <example>
                         <originOR>
-                            <catalog>FINGER</catalog>
-                            <contributor>NEIC</contributor>
+                            <catalog>NEIC PDE</catalog>
+                            <contributor>NEIC ALERT</contributor>
                         </originOR>
                     </example>
                 </xsd:documentation>
@@ -200,7 +200,7 @@
                         vice versa.</description>
                     <example>
                         <originNOT>
-                            <catalog>FINGER</catalog>
+                            <catalog>NEIC PDE</catalog>
                         </originNOT>
                     </example>
                 </xsd:documentation>

@@ -25,10 +25,9 @@
                     <summary> Retrieve events from an EventFinder. </summary>
                     <description> A Fissures/DHI EventDC service is located via the name and dns tags. The EventFinder
                         is acquired from the EventDC, and a query is sent with the given arguments. The events returned
-                        are then sent through the EventArm for processing. See <a
-                        href="http://www.seis.sc.edu/wily/GetAllServers?corbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService&amp;description=IRIS nameserver">Wily</a>
-                        for a list of active EventDCs and their current status. A listing of known catalogs for the IRIS EventDC can be found
-                        <a href="http://www.seis.sc.edu/wily/EventCatalogs?corbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService&amp;dns=edu/iris/dmc&amp;serverObject=IRIS_EventDC">here</a>.
+                        are then sent through the EventArm for processing.
+ A listing of known catalogs for the IRIS FDSN Event web service can be found
+                        <a href="http://service.iris.edu/fdsnws/event/1/catalogs">here</a>.
                         The server defaults to the edu/iris/dmc IRIS_EventDC.</description>
                     <deprecated>This is deprecated in favor of the new fdsnEvent source.</deprecated>
                 </xsd:documentation>
@@ -190,9 +189,8 @@
                     <summary> Retrieve events from an EventFinder in reverse time order. </summary>
                     <description> A Fissures/DHI EventDC service is located via the name and dns tags. The EventFinder
                         is acquired from the EventDC, and a query is sent with the given arguments. The events returned
-                        are then sent through the EventArm for processing. See <a
-                            href="http://www.seis.sc.edu/wily/GetAllServers?corbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService&amp;description=IRIS nameserver">Wily</a>
-                        for a list of active EventDCs and their current status.</description>
+                        are then sent through the EventArm for processing.
+</description>
                     <deprecated>This is deprecated in favor of the new fdsnStation source.</deprecated>
                 </xsd:documentation>
             </xsd:annotation>

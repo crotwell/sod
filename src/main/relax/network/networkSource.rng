@@ -31,8 +31,7 @@
                         with the given arguments. The networks returned are then sent through the
                         NetworkArm for processing. An optional refresh interval can be given if sod
                         should periodically check for new channels.  
-                        See <a href="http://www.seis.sc.edu/wily/GetAllServers?corbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService&amp;description=IRIS nameserver">Wily</a>
-                        for a list of active NetworkDCs and their status. </description>
+                    </description>
                     <deprecated>This is deprecated in favor of the new fdsnStation source.</deprecated>
                     <velocity>#networkArmPage()</velocity>
                     <example>
@@ -77,8 +76,7 @@
                         with the given arguments. The networks returned are then sent through the
                         NetworkArm for processing. An optional refresh interval can be given if sod
                         should periodically check for new channels.  
-                        See <a href="http://www.seis.sc.edu/wily/GetAllServers?corbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService&amp;description=IRIS nameserver">Wily</a>
-                        for a list of active NetworkDCs and their status. </description>
+                    </description>
                     <velocity>#networkArmPage()</velocity>
                     <example>
                         <channelLimitedNetworkFinder>
