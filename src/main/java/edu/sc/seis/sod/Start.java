@@ -282,7 +282,11 @@ public class Start {
                 HibernateUtil.getConfiguration().addResource(res);
             }
         }
-        AbstractHibernateDB.deploySchema();
+        try {
+            AbstractHibernateDB.deploySchema();
+        } catch (Exception e) {
+            throw new ConfigurationException("Unable to set up database", e);
+        }
         // check that hibernate is ok
         SodDB sodDb = SodDB.getSingleton();
         sodDb.commit();
