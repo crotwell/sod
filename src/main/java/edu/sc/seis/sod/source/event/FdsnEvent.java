@@ -39,6 +39,7 @@ import edu.sc.seis.seisFile.SeisFileException;
 import edu.sc.seis.seisFile.fdsnws.AbstractQueryParams;
 import edu.sc.seis.seisFile.fdsnws.FDSNEventQuerier;
 import edu.sc.seis.seisFile.fdsnws.FDSNEventQueryParams;
+import edu.sc.seis.seisFile.fdsnws.FDSNWSException;
 import edu.sc.seis.seisFile.fdsnws.quakeml.Event;
 import edu.sc.seis.seisFile.fdsnws.quakeml.EventDescription;
 import edu.sc.seis.seisFile.fdsnws.quakeml.EventIterator;
@@ -196,6 +197,8 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                 List<CacheEvent> result = internalNext();
                 getRetryStrategy().serverRecovered(this);
                 return result.toArray(new CacheEvent[0]);
+            } catch(FDSNWSException t) {
+                latest = t;
             } catch(SeisFileException t) {
                 if (t.getCause() instanceof IOException) {
                     latest = t;
