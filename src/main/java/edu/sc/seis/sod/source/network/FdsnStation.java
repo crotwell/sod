@@ -136,8 +136,19 @@ public class FdsnStation extends AbstractNetworkSource {
     public List<? extends StationImpl> getStations(NetworkAttrImpl net) throws SodSourceException {
         try {
             FDSNStationQueryParams staQP = setupQueryParams();
-            staQP.setLevel(FDSNStationQueryParams.LEVEL_STATION);
+            // add any "virtual" network codes back to the query as they limit stations
+            // in real networks.
+            String netString = staQP.getParam(FDSNStationQueryParams.NETWORK);
+            String[] paramNets = netString.split(",");
             staQP.clearNetwork();
+            for (int i = 0; i < paramNets.length; i++) {
+                if (paramNets[i].length() > 2) {
+                    // assume virtual, so add to query
+                    staQP.appendToNetwork(paramNets[i]);
+                }
+            }
+            staQP.setLevel(FDSNStationQueryParams.LEVEL_STATION);
+            // now append the real network code
             staQP.appendToNetwork(net.getId().network_code);
             staQP.setStartTime(new MicroSecondDate(net.getBeginTime()));
             MicroSecondDate end = new MicroSecondDate(net.getEndTime());
