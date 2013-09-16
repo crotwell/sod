@@ -139,12 +139,14 @@ public class FdsnStation extends AbstractNetworkSource {
             // add any "virtual" network codes back to the query as they limit stations
             // in real networks.
             String netString = staQP.getParam(FDSNStationQueryParams.NETWORK);
-            String[] paramNets = netString.split(",");
-            staQP.clearNetwork();
-            for (int i = 0; i < paramNets.length; i++) {
-                if (paramNets[i].length() > 2) {
-                    // assume virtual, so add to query
-                    staQP.appendToNetwork(paramNets[i]);
+            if (netString != null) {
+                String[] paramNets = netString.split(",");
+                staQP.clearNetwork();
+                for (int i = 0; i < paramNets.length; i++) {
+                    if (paramNets[i].length() > 2) {
+                        // assume virtual, so add to query
+                        staQP.appendToNetwork(paramNets[i]);
+                    }
                 }
             }
             staQP.setLevel(FDSNStationQueryParams.LEVEL_STATION);
