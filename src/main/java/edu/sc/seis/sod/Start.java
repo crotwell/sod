@@ -63,6 +63,25 @@ public class Start {
         GlobalExceptionHandler.add(new Extractor() {
 
             public boolean canExtract(Throwable throwable) {
+                return (throwable instanceof FDSNWSException);
+            }
+
+            public String extract(Throwable throwable) {
+                String out = "";
+                if(throwable instanceof FDSNWSException) {
+                    FDSNWSException mie = (FDSNWSException)throwable;
+                    out += "URI: " + mie.getTargetURI() + "\n";
+                }
+                return out;
+            }
+
+            public Throwable getSubThrowable(Throwable throwable) {
+                return null;
+            }
+        });
+        GlobalExceptionHandler.add(new Extractor() {
+
+            public boolean canExtract(Throwable throwable) {
                 return (throwable instanceof org.apache.velocity.exception.MethodInvocationException);
             }
 
