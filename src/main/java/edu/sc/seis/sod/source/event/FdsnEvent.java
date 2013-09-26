@@ -48,7 +48,9 @@ import edu.sc.seis.seisFile.fdsnws.quakeml.Origin;
 import edu.sc.seis.seisFile.fdsnws.quakeml.Quakeml;
 import edu.sc.seis.sod.BuildVersion;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.EventArm;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.source.AbstractSource;
 import edu.sc.seis.sod.source.network.AbstractNetworkSource;
 import edu.sc.seis.sod.subsetter.DepthRange;
@@ -127,7 +129,15 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                             }
                         }
                         if (magStr.length() != 0) {
-                            queryParams.setMagnitudeType(magStr);
+                            //queryParams.setMagnitudeType(magStr);
+                            // we don't set magType as this limits the effects of includeallmagnitudes
+                            // instead, we prepend the magnitudeRange to the origin subsetters and
+                            // do the subsetting locally
+                            logger.info("MagType subsetting being done locally due to server implementation issues with includeallmagnitudes");
+                            EventArm eArm = Start.getEventArm();
+                            if (eArm != null) {
+                                eArm.getSubsetters().add(0, magRange);
+                            }
                         }
                         if (magRange.getMinValue() > -99) {
                             queryParams.setMinMagnitude((float)magRange.getMinValue());
@@ -156,12 +166,37 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                         queryParams.setCatalog(((Catalog)object).getCatalog());
                     } else if (tagName.equals("contributor")) {
                         queryParams.setContributor(((Contributor)object).getContributor());
+                        boolean foundCatalog = false;
+                        for (int c = 0; c < childNodes.getLength(); c++) {
+                            Node cnode = childNodes.item(counter);
+                            if (cnode instanceof Element && ((Element)cnode).getTagName().equals("catalog")) {
+                                foundCatalog = true;
+                            }
+                        }
+                        if ( ! foundCatalog) {
+                            fixCatalogForContributor(((Contributor)object).getContributor());
+                        }
                     } else if (tagName.equals("host")) {
                         queryParams.setHost(SodUtil.getNestedText((Element)node));
                     }
                 }
             }
         }
+    }
+
+    private void fixCatalogForContributor(String contributor) {
+        if (contributor.contains("NEIC")) {
+            queryParams.setCatalog("NEIC PDE");
+        } else if (contributor.contains("GCMT")) {
+            queryParams.setCatalog("GCMT");
+        } else if (contributor.contains("ISC")) {
+            queryParams.setCatalog("ISC");
+        } else if (contributor.contains("ANF")) {
+            queryParams.setCatalog("ANF");
+        } else if (contributor.equals("University of Washington")) {
+            queryParams.setCatalog("UofW");
+        }
+        
     }
 
     @Override

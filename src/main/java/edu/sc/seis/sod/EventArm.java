@@ -320,6 +320,11 @@ public class EventArm implements Arm {
         return (EventSource[])sources.toArray(new EventSource[0]);
     }
 
+    
+    public List<OriginSubsetter> getSubsetters() {
+        return subsetters;
+    }
+
     public Object getWaveformArmSync() {
         return waveformArmSync;
     }
