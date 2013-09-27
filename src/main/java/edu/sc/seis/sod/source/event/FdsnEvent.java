@@ -91,6 +91,11 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         if (port > 0) {
             queryParams.setPort(port);
         }
+        String host = SodUtil.loadText(config, "host", null);
+        if (host!= null && host.length() != 0) {
+            queryParams.setHost(host);
+        }
+
         NodeList childNodes = config.getChildNodes();
         for (int counter = 0; counter < childNodes.getLength(); counter++) {
             Node node = childNodes.item(counter);
@@ -100,6 +105,8 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                         && !tagName.equals(AbstractNetworkSource.REFRESH_ELEMENT)
                         && !tagName.equals(AbstractEventSource.EVENT_QUERY_INCREMENT)
                         && !tagName.equals(AbstractEventSource.EVENT_LAG)
+                        && !tagName.equals(HOST_ELEMENT)
+                        && !tagName.equals(PORT_ELEMENT)
                         && !tagName.equals(AbstractSource.NAME_ELEMENT)) {
                     Object object = SodUtil.load((Element)node, new String[] {"eventArm", "origin"});
                     if (tagName.equals("originTimeRange")) {
@@ -176,8 +183,6 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                         if ( ! foundCatalog) {
                             fixCatalogForContributor(((Contributor)object).getContributor());
                         }
-                    } else if (tagName.equals("host")) {
-                        queryParams.setHost(SodUtil.getNestedText((Element)node));
                     }
                 }
             }
@@ -325,21 +330,26 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
             for (Magnitude m : oMags) {
                 fisMags.add(toFissuresMagnitude(m));
             }
-            QuantityImpl depth = new QuantityImpl(o.getDepth().getValue(), UnitImpl.METER);
-            OriginImpl oImpl = new OriginImpl(o.getPublicId(),
-                                              o.getIrisCatalog(),
-                                              o.getIrisContributor(),
-                                              new MicroSecondDate(o.getTime().getValue()).getFissuresTime(),
-                                              new Location(o.getLatitude().getValue(),
-                                                           o.getLongitude().getValue(),
-                                                           new QuantityImpl(0, UnitImpl.METER),
-                                                           depth,
-                                                           LocationType.GEOGRAPHIC),
-                                              fisMags.toArray(new edu.iris.Fissures.IfEvent.Magnitude[0]),
-                                              new ParameterRef[0]);
-            out.add(oImpl);
-            if (o.getPublicId().equals(e.getPreferredOriginID())) {
-                pref = oImpl;
+            if (o.getLatitude() != null && o.getLongitude() != null && o.getTime() != null ) {
+                //usgs web service has some origins with only a depth, skip these
+                QuantityImpl depth = new QuantityImpl(o.getDepth().getValue(), UnitImpl.METER);
+                OriginImpl oImpl = new OriginImpl(o.getPublicId(),
+                                                  o.getIrisCatalog(),
+                                                  o.getIrisContributor(),
+                                                  new MicroSecondDate(o.getTime().getValue()).getFissuresTime(),
+                                                  new Location(o.getLatitude().getValue(),
+                                                               o.getLongitude().getValue(),
+                                                               new QuantityImpl(0, UnitImpl.METER),
+                                                               depth,
+                                                               LocationType.GEOGRAPHIC),
+                                                  fisMags.toArray(new edu.iris.Fissures.IfEvent.Magnitude[0]),
+                                                  new ParameterRef[0]);
+                out.add(oImpl);
+                if (o.getPublicId().equals(e.getPreferredOriginID())) {
+                    pref = oImpl;
+                }
+            } else {
+                logger.info("Can't create origin due to NULL: id:"+o.getPublicId()+" lat:"+o.getLatitude() +" long:"+ o.getLongitude() +" time:"+ o.getTime()+", skipping.");
             }
         }
         // for convenience add the preferred magnitude as the first magnitude in
@@ -421,6 +431,8 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(FdsnEvent.class);
 
     public static final String URL_ELEMENT = "url";
+    public static final String HOST_ELEMENT = "host";
+    public static final String PORT_ELEMENT = "port";
 
     String userAgent = "SOD/" + BuildVersion.getVersion();
 
