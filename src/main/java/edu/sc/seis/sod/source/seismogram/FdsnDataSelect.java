@@ -41,7 +41,12 @@ import edu.sc.seis.seisFile.mseed.DataRecordIterator;
 import edu.sc.seis.sod.BuildVersion;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.source.AbstractSource;
+import edu.sc.seis.sod.source.network.FdsnStation;
+import edu.sc.seis.sod.source.network.InstrumentationFromDB;
+import edu.sc.seis.sod.source.network.NetworkSource;
+import edu.sc.seis.sod.source.network.WrappingNetworkSource;
 
 public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLocator {
 
@@ -81,6 +86,17 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
         password = SodUtil.loadText(config, "password", "");
         timeoutMillis = 1000 * SodUtil.loadInt(config, "timeoutSecs", 10);
         fdsnStationAvailability = SodUtil.isTrue(config, "fdsnStationAvailability", false);
+        // check if username and password, and if so enable restricted on the network source
+        if ( ! username.equals("") && ! password.equals("") && Start.getNetworkArm() != null) {
+            NetworkSource wrappedNetSource = ((WrappingNetworkSource)Start.getNetworkArm().getNetworkSource());
+            while (wrappedNetSource instanceof WrappingNetworkSource) {
+                wrappedNetSource = ((WrappingNetworkSource)wrappedNetSource).getWrapped();
+            }
+            if (wrappedNetSource instanceof FdsnStation) {
+                logger.info("User and password set, so including restricted in FdsnStation network source");
+                ((FdsnStation)wrappedNetSource).includeRestricted(true);
+            }
+        }
     }
     
     public FdsnDataSelect(String host,int port, boolean fdsnStationAvailability) {

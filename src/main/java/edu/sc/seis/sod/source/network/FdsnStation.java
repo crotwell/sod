@@ -93,6 +93,10 @@ public class FdsnStation extends AbstractNetworkSource {
             }
         }
     }
+    
+    public void includeRestricted(boolean val) {
+        queryParams.setIncludeRestricted(val);
+    }
 
     @Override
     public CacheNetworkAccess getNetwork(NetworkAttrImpl attr) {
