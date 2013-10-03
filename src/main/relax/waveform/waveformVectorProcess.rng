@@ -296,9 +296,6 @@
                   <element name="radialOrientationCode">
                       <data type="string">
                           <param name="length">1</param>
-                          <xsd:annotation>
-                              <example>R</example>
-                          </xsd:annotation>
                       </data>
                   </element>
                 </optional>
@@ -306,9 +303,6 @@
                   <element name="transverseOrientationCode">
                       <data type="string">
                           <param name="length">1</param>
-                          <xsd:annotation>
-                              <example>T</example>
-                          </xsd:annotation>
                       </data>
                   </element>
                 </optional>
