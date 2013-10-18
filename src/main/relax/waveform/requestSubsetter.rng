@@ -18,6 +18,7 @@
             <ref name="plottableRequest"/>
             <ref name="requestScript"/>
             <ref name="externalRequestSubsetter"/>
+            <ref name="atLeastOneRequest"/>
         </choice>
     </define>
     <define name="requestPlus">
@@ -468,6 +469,17 @@
                 </example>
             </xsd:annotation>
             <ref name="externalClass"/>
+        </element>
+    </define>
+    <define name="atLeastOneRequest">
+        <element name="atLeastOneRequest">
+            <xsd:annotation>
+                <summary>Only pass if there is at least one request.</summary>
+                <description>Fails if the request generator did not generate any requests, this can be the case
+                when using a phase offset at a distance for which the phase does not exist. This is the default
+                request subsetter.</description>
+            </xsd:annotation>
+            <empty/>
         </element>
     </define>
 </grammar>

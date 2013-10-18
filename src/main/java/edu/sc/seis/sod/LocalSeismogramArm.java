@@ -42,7 +42,7 @@ import edu.sc.seis.sod.subsetter.channel.ChannelEffectiveTimeOverlap;
 import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
 import edu.sc.seis.sod.subsetter.eventChannel.PassEventChannel;
 import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
-import edu.sc.seis.sod.subsetter.request.PassRequest;
+import edu.sc.seis.sod.subsetter.request.AtLeastOneRequest;
 import edu.sc.seis.sod.subsetter.request.RequestSubsetter;
 import edu.sc.seis.sod.subsetter.requestGenerator.RequestGenerator;
 
@@ -432,7 +432,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
 
     private RequestGenerator requestGenerator;
 
-    private RequestSubsetter request = new PassRequest();
+    private RequestSubsetter request = new AtLeastOneRequest();
     
     private AvailableDataSubsetter availData = defaultAvailableDataSubsetter;
 

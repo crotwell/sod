@@ -56,7 +56,7 @@ import edu.sc.seis.sod.subsetter.channel.ChannelEffectiveTimeOverlap;
 import edu.sc.seis.sod.subsetter.eventChannel.PassEventChannel;
 import edu.sc.seis.sod.subsetter.eventChannel.vector.EventVectorSubsetter;
 import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
-import edu.sc.seis.sod.subsetter.request.PassRequest;
+import edu.sc.seis.sod.subsetter.request.AtLeastOneRequest;
 import edu.sc.seis.sod.subsetter.request.RequestSubsetter;
 import edu.sc.seis.sod.subsetter.request.vector.ANDRequestWrapper;
 import edu.sc.seis.sod.subsetter.request.vector.VectorRequestSubsetter;
@@ -558,7 +558,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
 
     private VectorRequestGenerator requestGenerator;
 
-    private VectorRequestSubsetter request = new PassRequest();
+    private VectorRequestSubsetter request = new AtLeastOneRequest();
     
     private static final VectorAvailableDataSubsetter defaultVectorAvailableData = new ORAvailableDataWrapper(defaultAvailableDataSubsetter);
     
