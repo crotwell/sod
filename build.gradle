@@ -1,7 +1,7 @@
 
 
 group = 'edu.sc.seis'
-version = '3.2.3'
+version = '3.2.4-SNAPSHOT'
 
 apply plugin:'application'
 mainClassName = "edu.sc.seis.sod.Start"
@@ -172,7 +172,7 @@ task printRT << { task ->
        
 
 
-task copySodSite(dependsOn: [':seiswww:makeSodSite'], type: Sync) {
+task copySodSite(dependsOn: ['buildSchemaDocs', ':seiswww:makeSodSite'], type: Sync) {
     group = 'dist'
     from project.file('../seiswww/build/sod/')
     into project.file('build/doc/')
