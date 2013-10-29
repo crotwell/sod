@@ -133,7 +133,7 @@ public class PhaseInteraction implements EventStationSubsetter {
         for(int counter = 0; counter < requiredArrivals.size(); counter++) {
             TimeDist[] timeDistArray = requiredArrivals.get(counter).getPierce();
             TimeDist timeDist = getRequiredTimeDist(timeDistArray);
-            QuantityImpl timeDistDepth = new QuantityImpl(timeDist.depth,
+            QuantityImpl timeDistDepth = new QuantityImpl(timeDist.getDepth(),
                                                           UnitImpl.KILOMETER);
             ;
             QuantityImpl minDepth;
@@ -202,7 +202,7 @@ public class PhaseInteraction implements EventStationSubsetter {
         QuantityImpl maxDistance = null;
         QuantityImpl timeDistDistance = new QuantityImpl(timeDist.getDistDeg(), UnitImpl.DEGREE);
         while(counter < totalDistance) {
-            QuantityImpl timeDistDepth = new QuantityImpl(timeDist.depth,
+            QuantityImpl timeDistDepth = new QuantityImpl(timeDist.getDepth(),
                                                           UnitImpl.KILOMETER);
             QuantityImpl minDepth;
             QuantityImpl maxDepth;
@@ -274,7 +274,7 @@ public class PhaseInteraction implements EventStationSubsetter {
             }
             azimuth = checkForLongway(requiredArrivals.get(i).getDistDeg(), azimuth);
             for(int counter = 0; counter < timeDist.length; counter++) {
-                QuantityImpl timeDistDepth = new QuantityImpl(timeDist[0].depth,
+                QuantityImpl timeDistDepth = new QuantityImpl(timeDist[0].getDepth(),
                                                               UnitImpl.KILOMETER);
                 ;
                 QuantityImpl minDepth;
@@ -293,11 +293,11 @@ public class PhaseInteraction implements EventStationSubsetter {
                     if(area == null || area instanceof GlobalArea) return true;
                     double tLat = SphericalCoords.latFor(origin.getLocation().latitude,
                                                          origin.getLocation().longitude,
-                                                         timeDist[counter].depth,
+                                                         timeDist[counter].getDepth(),
                                                          azimuth);
                     double tLon = SphericalCoords.lonFor(origin.getLocation().latitude,
                                                          origin.getLocation().longitude,
-                                                         timeDist[counter].depth,
+                                                         timeDist[counter].getDepth(),
                                                          azimuth);
                     if(area instanceof BoxArea) {
                         BoxArea boxArea = (BoxArea)area;
@@ -314,12 +314,12 @@ public class PhaseInteraction implements EventStationSubsetter {
 
     public TimeDist getRequiredTimeDist(TimeDist[] timeDist) {
         if(timeDist.length == 0) return null;
-        double past = timeDist[0].depth;
+        double past = timeDist[0].getDepth();
         double current;
         double next;
         for(int counter = 1; counter < timeDist.length - 1; counter++) {
-            current = timeDist[counter].depth;
-            next = timeDist[counter + 1].depth;
+            current = timeDist[counter].getDepth();
+            next = timeDist[counter + 1].getDepth();
             if(interactionStyle.equals("TOPSIDE REFLECTION")) {
                 //("dist = "+distance+" depth = "+depth+" past = "+past+"
                 // current = "+current+" next = "+next);
