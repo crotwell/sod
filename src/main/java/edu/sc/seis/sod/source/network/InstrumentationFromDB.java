@@ -32,6 +32,9 @@ public class InstrumentationFromDB extends WrappingNetworkSource implements Netw
         }
         // go to server?
         QuantityImpl sense = getWrapped().getSensitivity(chan);
+        if (sense == null) {
+            throw new ChannelNotFound(chan.getId());
+        }
         dbSensitivity = new ChannelSensitivity(chan, (float)sense.getValue(), 0, sense.getUnit());
         NetworkDB.getSingleton().putSensitivity(dbSensitivity);
         return sense;
