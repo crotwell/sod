@@ -192,8 +192,7 @@ public class StAXModelBuilder implements XMLStreamConstants {
             } else if(isData(tag)) {
                 kids.add(handleData());
             } else {
-                System.out.println("Unknown tag! " + tag + " " + definedGrammar);
-                System.exit(0);
+                throw new RuntimeException("Unknown tag! " + tag + " " + definedGrammar);
             }
         }
         if(kids.size() == 0) {
@@ -358,7 +357,11 @@ public class StAXModelBuilder implements XMLStreamConstants {
         }
         result.setNamespace(ns);
         result.setAnnotation(handleAnn());
+        try {
         result.setChild(handleAll());
+        } catch (RuntimeException e) {
+            throw new RuntimeException("in "+name, e);
+        }
         nextTag();
         return result;
     }
