@@ -81,33 +81,34 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
 
     public FdsnEvent(Element config) throws ConfigurationException {
         super(config, "DefaultFDSNEvent");
-        queryParams.setIncludeAllMagnitudes(true)
-                   .setOrderBy(FDSNEventQueryParams.ORDER_TIME_ASC); // fdsnEvent
-                                                                     // default
-                                                                     // is
-                                                                     // reverse
-                                                                     // time
+        queryParams.setIncludeAllMagnitudes(true).setOrderBy(FDSNEventQueryParams.ORDER_TIME_ASC); // fdsnEvent
+                                                                                                   // default
+                                                                                                   // is
+                                                                                                   // reverse
+                                                                                                   // time
         int port = SodUtil.loadInt(config, "port", -1);
         if (port > 0) {
             queryParams.setPort(port);
         }
         String host = SodUtil.loadText(config, "host", null);
-        if (host!= null && host.length() != 0) {
+        if (host != null && host.length() != 0) {
             queryParams.setHost(host);
         }
-
+        // mainly for beta testing
+        String fdsnwsPath = SodUtil.loadText(config, "fdsnwsPath", null);
+        if (fdsnwsPath != null && fdsnwsPath.length() != 0) {
+            queryParams.setFdsnwsPath(fdsnwsPath);
+        }
         NodeList childNodes = config.getChildNodes();
         for (int counter = 0; counter < childNodes.getLength(); counter++) {
             Node node = childNodes.item(counter);
             if (node instanceof Element) {
                 String tagName = ((Element)node).getTagName();
-                if (!tagName.equals(AbstractSource.RETRIES_ELEMENT)
+                if (!tagName.equals(AbstractSource.RETRIES_ELEMENT) && !tagName.equals("fdsnPath")
                         && !tagName.equals(AbstractNetworkSource.REFRESH_ELEMENT)
                         && !tagName.equals(AbstractEventSource.EVENT_QUERY_INCREMENT)
-                        && !tagName.equals(AbstractEventSource.EVENT_LAG)
-                        && !tagName.equals(HOST_ELEMENT)
-                        && !tagName.equals(PORT_ELEMENT)
-                        && !tagName.equals(AbstractSource.NAME_ELEMENT)) {
+                        && !tagName.equals(AbstractEventSource.EVENT_LAG) && !tagName.equals(HOST_ELEMENT)
+                        && !tagName.equals(PORT_ELEMENT) && !tagName.equals(AbstractSource.NAME_ELEMENT)) {
                     Object object = SodUtil.load((Element)node, new String[] {"eventArm", "origin"});
                     if (tagName.equals("originTimeRange")) {
                         eventTimeRangeSupplier = ((MicroSecondTimeRangeSupplier)SodUtil.load((Element)node,
@@ -136,15 +137,16 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                             }
                         }
                         if (magStr.length() != 0) {
-                            //queryParams.setMagnitudeType(magStr);
-                            // we don't set magType as this limits the effects of includeallmagnitudes
-                            // instead, we prepend the magnitudeRange to the origin subsetters and
+                            queryParams.setMagnitudeType(magStr);
+                            // also prepend the magnitudeRange to the
+                            // origin subsetters and
                             // do the subsetting locally
-                            logger.info("MagType subsetting being done locally due to server implementation issues with includeallmagnitudes");
                             EventArm eArm = Start.getEventArm();
                             if (eArm != null) {
                                 eArm.getSubsetters().add(0, magRange);
                             }
+                        } else {
+                            queryParams.setMagnitudeType("preferred");
                         }
                         if (magRange.getMinValue() > -99) {
                             queryParams.setMinMagnitude((float)magRange.getMinValue());
@@ -180,7 +182,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                                 foundCatalog = true;
                             }
                         }
-                        if ( ! foundCatalog) {
+                        if (!foundCatalog) {
                             fixCatalogForContributor(((Contributor)object).getContributor());
                         }
                     }
@@ -201,31 +203,41 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         } else if (contributor.equals("University of Washington")) {
             queryParams.setCatalog("UofW");
         }
-        
     }
 
     @Override
     public boolean hasNext() {
         MicroSecondDate queryEnd = getEventTimeRange().getEndTime();
         MicroSecondDate quitDate = queryEnd.add(lag);
-        boolean out =  quitDate.equals(ClockUtil.now()) || quitDate.after(ClockUtil.now()) || !getQueryStart().equals(queryEnd);
+        boolean out = quitDate.equals(ClockUtil.now()) || quitDate.after(ClockUtil.now())
+                || !getQueryStart().equals(queryEnd);
         logger.debug(getName() + " Checking if more queries to the event server are in order.  The quit date is "
-                + quitDate + " the last query was for " + getQueryStart() + " and we're querying to " + queryEnd+" result="+out);
+                + quitDate + " the last query was for " + getQueryStart() + " and we're querying to " + queryEnd
+                + " result=" + out);
         return out;
     }
 
     @Override
     public CacheEvent[] next() {
-        logger.debug(getName()+".next() called");
+        MicroSecondTimeRange queryTime = getQueryTime();
+        logger.debug(getName() + ".next() called for " + queryTime);
         int count = 0;
         SeisFileException latest;
         try {
-            return internalNext().toArray(new CacheEvent[0]);
+            return internalNext(queryTime).toArray(new CacheEvent[0]);
         } catch(OutOfMemoryError e) {
             throw new RuntimeException("Out of memory", e);
         } catch(SeisFileException t) {
             if (t.getCause() instanceof IOException) {
                 latest = t;
+                if (t.getCause() instanceof java.net.SocketTimeoutException) {
+                    // timed out, so decrease increment and retry with smaller time window
+                    // also make the increaseThreashold smaller so we are not so aggressive
+                    // about expanding the time window
+                    decreaseQueryTimeWidth();
+                    increaseThreashold /= 2;
+                    return new CacheEvent[0];
+                }
             } else {
                 throw new RuntimeException(t);
             }
@@ -234,7 +246,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         }
         while (getRetryStrategy().shouldRetry(latest, this, count++)) {
             try {
-                List<CacheEvent> result = internalNext();
+                List<CacheEvent> result = internalNext(queryTime);
                 getRetryStrategy().serverRecovered(this);
                 return result.toArray(new CacheEvent[0]);
             } catch(FDSNWSException t) {
@@ -254,22 +266,41 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         throw new RuntimeException(latest);
     }
 
-    public List<CacheEvent> internalNext() throws SeisFileException, XMLStreamException {
-        List<CacheEvent> out = new ArrayList<CacheEvent>();
-        EventIterator it = getIterator();
-        while (it.hasNext()) {
-            Event e = it.next();
-            out.add(toCacheEvent(e));
-        }
-        if (!caughtUpWithRealtime()) {
-            if (out.size() < 10) {
-                increaseQueryTimeWidth();
+    public List<CacheEvent> internalNext(MicroSecondTimeRange queryTime) throws SeisFileException, XMLStreamException {
+        try {
+            MicroSecondDate now = ClockUtil.now();
+            List<CacheEvent> out = new ArrayList<CacheEvent>();
+            EventIterator it = getQuakeML(setUpQuery(queryTime)).getEventParameters().getEvents();
+            if (!it.hasNext()) {
+                logger.debug("No events returned from query.");
             }
-            if (out.size() > 100) {
-                decreaseQueryTimeWidth();
+            while (it.hasNext()) {
+                Event e = it.next();
+                out.add(toCacheEvent(e));
             }
+            if (!caughtUpWithRealtime()) {
+                if (out.size() < increaseThreashold) {
+                    increaseQueryTimeWidth();
+                }
+                if (out.size() > decreaseThreashold) {
+                    decreaseQueryTimeWidth();
+                }
+            }
+            updateQueryEdge(queryTime);
+            if (caughtUpWithRealtime() && hasNext()) {
+                sleepUntilTime = now.add(refreshInterval);
+                logger.debug("set sleepUntilTime " + sleepUntilTime + "  refresh=" + refreshInterval);
+                resetQueryTimeForLag();
+                lastQueryEnd = now;
+            } else {
+                logger.debug("not caught up with real time or hasNext: " + caughtUpWithRealtime() + " && " + hasNext());
+            }
+            return out;
+        } catch(SeisFileException e) {
+            throw e;
+        } catch(Exception e) {
+            throw new SeisFileException(e);
         }
-        return out;
     }
 
     @Override
@@ -283,16 +314,6 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
             return queryParams.formURI().toString();
         } catch(URISyntaxException e) {
             throw new RuntimeException("Unable to for URL for description.", e);
-        }
-    }
-
-    EventIterator getIterator() throws SeisFileException {
-        try {
-            return getQuakeML().getEventParameters().getEvents();
-        } catch(SeisFileException e) {
-            throw e;
-        } catch(Exception e) {
-            throw new SeisFileException(e);
         }
     }
 
@@ -330,7 +351,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
             for (Magnitude m : oMags) {
                 fisMags.add(toFissuresMagnitude(m));
             }
-            if (o.getLatitude() != null && o.getLongitude() != null && o.getTime() != null ) {
+            if (o.getLatitude() != null && o.getLongitude() != null && o.getTime() != null) {
                 //usgs web service has some origins with only a depth, skip these
                 QuantityImpl depth = new QuantityImpl(o.getDepth().getValue(), UnitImpl.METER);
                 OriginImpl oImpl = new OriginImpl(o.getPublicId(),
@@ -349,7 +370,8 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                     pref = oImpl;
                 }
             } else {
-                logger.info("Can't create origin due to NULL: id:"+o.getPublicId()+" lat:"+o.getLatitude() +" long:"+ o.getLongitude() +" time:"+ o.getTime()+", skipping.");
+                logger.info("Can't create origin due to NULL: id:" + o.getPublicId() + " lat:" + o.getLatitude()
+                        + " long:" + o.getLongitude() + " time:" + o.getTime() + ", skipping.");
             }
         }
         // for convenience add the preferred magnitude as the first magnitude in
@@ -391,29 +413,22 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         return new edu.iris.Fissures.IfEvent.Magnitude(type, m.getMag().getValue(), contributor);
     }
 
-    Quakeml getQuakeML() throws MalformedURLException, IOException, URISyntaxException, XMLStreamException,
-            SeisFileException {
+    Quakeml getQuakeML(FDSNEventQueryParams timeWindowQueryParams) throws MalformedURLException, IOException,
+            URISyntaxException, XMLStreamException, SeisFileException {
+        FDSNEventQuerier querier = new FDSNEventQuerier(timeWindowQueryParams);
+        querier.setUserAgent(getUserAgent());
+        return querier.getQuakeML();
+    }
+
+    FDSNEventQueryParams setUpQuery(MicroSecondTimeRange queryTime) throws URISyntaxException {
         FDSNEventQueryParams timeWindowQueryParams = queryParams.clone();
-        MicroSecondDate now = ClockUtil.now();
-        MicroSecondTimeRange queryTime = getQueryTime();
         timeWindowQueryParams.setStartTime(queryTime.getBeginTime());
         timeWindowQueryParams.setEndTime(queryTime.getEndTime());
         if (caughtUpWithRealtime() && lastQueryEnd != null) {
             timeWindowQueryParams.setUpdatedAfter(lastQueryEnd.subtract(new TimeInterval(10, UnitImpl.HOUR)));
         }
-        logger.debug("Query: "+timeWindowQueryParams.formURI());
-        FDSNEventQuerier querier = new FDSNEventQuerier(timeWindowQueryParams);
-        querier.setUserAgent(getUserAgent());
-        if (caughtUpWithRealtime() && hasNext()) {
-            sleepUntilTime = now.add(refreshInterval);
-            logger.debug("set sleepUntilTime " + sleepUntilTime + "  refresh=" + refreshInterval);
-            resetQueryTimeForLag();
-            lastQueryEnd = now;
-        } else {
-            logger.debug("not caught up with real time or hasNext: "+caughtUpWithRealtime() +" && "+ hasNext());
-        }
-        updateQueryEdge(queryTime);
-        return querier.getQuakeML();
+        logger.debug("Query: " + timeWindowQueryParams.formURI());
+        return timeWindowQueryParams;
     }
 
     FDSNEventQueryParams queryParams = new FDSNEventQueryParams();
@@ -427,11 +442,17 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
     int port = -1;
 
     URI parsedURL;
+    
+    int increaseThreashold = 10;
+    
+    int decreaseThreashold = 100;
 
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(FdsnEvent.class);
 
     public static final String URL_ELEMENT = "url";
+
     public static final String HOST_ELEMENT = "host";
+
     public static final String PORT_ELEMENT = "port";
 
     String userAgent = "SOD/" + BuildVersion.getVersion();

@@ -143,6 +143,11 @@
                                 <data type="string"/>
                             </element>
                         </optional>
+                        <optional>
+                            <element name="fdsnPath">
+                                <data type="string"/>
+                            </element>
+                        </optional>
                     </interleave>
                 </choice>
                 <optional>
