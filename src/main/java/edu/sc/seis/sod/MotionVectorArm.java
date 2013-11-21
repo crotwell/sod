@@ -172,8 +172,8 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                     }
                 }
                 if (!found) {
-                    logger.info("FAIL no request generated");
                     ecp.update(Status.get(Stage.REQUEST_SUBSETTER, Standing.REJECT));
+                    failLogger.info("No request generated: "+ecp.toString());
                     return;
                 }
             } catch(Throwable e) {

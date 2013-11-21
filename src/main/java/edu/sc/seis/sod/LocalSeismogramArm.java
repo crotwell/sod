@@ -156,7 +156,12 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                 return;
             }
         }
-        processRequestSubsetter(ecp, SortTool.byBeginTimeAscending(infilters));
+        if (infilters.length == 0) {
+            ecp.update(Status.get(Stage.REQUEST_SUBSETTER, Standing.REJECT));
+            failLogger.info("No request generated: "+ecp.toString());
+        } else {
+            processRequestSubsetter(ecp, SortTool.byBeginTimeAscending(infilters));
+        }
     }
 
     private boolean firstRequest;
