@@ -93,8 +93,11 @@ public abstract class AbstractFileWriter {
     public StringTree checkParentDirs(String filename) {
         File out = new File(filename);
         File parent = out.getParentFile();
-        if(!parent.exists() && !parent.mkdirs()) {
+        if(parent == null || (!parent.exists() && !parent.mkdirs())) {
             String msg = "Unable to create directory " + parent;
+            if (parent == null) {
+                msg = "Unable to create directory, File.getParentFile() returns null: " + out.getPath();
+            }
             StringTreeLeaf reason = new StringTreeLeaf(this,
                                                        false,
                                                        msg);
