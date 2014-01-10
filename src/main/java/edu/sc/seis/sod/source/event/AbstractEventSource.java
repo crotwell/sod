@@ -155,6 +155,21 @@ public abstract class AbstractEventSource extends AbstractSource implements Even
     }
 
     
+    
+    public TimeInterval getIncrement() {
+        return increment;
+    }
+
+    
+    public void setIncrement(TimeInterval increment) {
+        this.increment = increment;
+    }
+
+    
+    public void setLag(TimeInterval lag) {
+        this.lag = lag;
+    }
+
     public TimeInterval getRefreshInterval() {
         return refreshInterval;
     }
