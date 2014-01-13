@@ -238,6 +238,8 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                     increaseThreashold /= 2;
                     return new CacheEvent[0];
                 }
+            } else if (t instanceof FDSNWSException && ((FDSNWSException)t).getHttpResponseCode() != 200) {
+                latest = t;
             } else {
                 throw new RuntimeException(t);
             }
@@ -249,10 +251,19 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                 List<CacheEvent> result = internalNext(queryTime);
                 getRetryStrategy().serverRecovered(this);
                 return result.toArray(new CacheEvent[0]);
-            } catch(FDSNWSException t) {
-                latest = t;
             } catch(SeisFileException t) {
+                latest = t;
                 if (t.getCause() instanceof IOException) {
+                    latest = t;
+                    if (t.getCause() instanceof java.net.SocketTimeoutException) {
+                        // timed out, so decrease increment and retry with smaller time window
+                        // also make the increaseThreashold smaller so we are not so aggressive
+                        // about expanding the time window
+                        decreaseQueryTimeWidth();
+                        increaseThreashold /= 2;
+                        return new CacheEvent[0];
+                    }
+                } else if (t instanceof FDSNWSException && ((FDSNWSException)t).getHttpResponseCode() != 200) {
                     latest = t;
                 } else {
                     throw new RuntimeException(t);

@@ -125,6 +125,8 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
                     if (t.getCause() instanceof IOException
                             || (t.getCause() != null && t.getCause().getCause() instanceof IOException)) {
                         latest = t;
+                    } else if (t.getCause() instanceof FDSNWSException && ((FDSNWSException)t.getCause()).getHttpResponseCode() != 200) {
+                        latest = t;
                     } else {
                         throw t;
                     }
@@ -137,6 +139,8 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
                     } catch(SeismogramSourceException t) {
                         if (t.getCause() instanceof IOException
                                 || (t.getCause() != null && t.getCause().getCause() instanceof IOException)) {
+                            latest = t;
+                        } else if (t.getCause() instanceof FDSNWSException && ((FDSNWSException)t.getCause()).getHttpResponseCode() != 200) {
                             latest = t;
                         } else {
                             throw t;
@@ -160,6 +164,8 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
                     if (t.getCause() instanceof IOException
                             || (t.getCause() != null && t.getCause().getCause() instanceof IOException)) {
                         latest = t;
+                    } else if (t.getCause() instanceof FDSNWSException && ((FDSNWSException)t.getCause()).getHttpResponseCode() != 200) {
+                        latest = t;
                     } else {
                         throw t;
                     }
@@ -172,6 +178,8 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
                     } catch(SeismogramSourceException t) {
                         if (t.getCause() instanceof IOException
                                 || (t.getCause() != null && t.getCause().getCause() instanceof IOException)) {
+                            latest = t;
+                        } else if (t.getCause() instanceof FDSNWSException && ((FDSNWSException)t.getCause()).getHttpResponseCode() != 200) {
                             latest = t;
                         } else {
                             throw t;

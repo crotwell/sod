@@ -25,6 +25,7 @@ import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.InstrumentationImpl;
 import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.StationImpl;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
@@ -33,6 +34,7 @@ import edu.sc.seis.fissuresUtil.stationxml.StationXMLToFissures;
 import edu.sc.seis.seisFile.SeisFileException;
 import edu.sc.seis.seisFile.fdsnws.FDSNStationQuerier;
 import edu.sc.seis.seisFile.fdsnws.FDSNStationQueryParams;
+import edu.sc.seis.seisFile.fdsnws.FDSNWSException;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.FDSNStationXML;
 import edu.sc.seis.seisFile.fdsnws.stationxml.NetworkIterator;
@@ -116,9 +118,8 @@ public class FdsnStation extends AbstractNetworkSource {
             staQP.clearChannel(); // channel constraints make getting networks very slow
             staQP.clearStartAfter().clearStartBefore().clearStartTime(); // start and end times also slow as 
             staQP.clearEndAfter().clearEndBefore().clearEndTime();       // applied to channel not network
-            FDSNStationQuerier querier = setupQuerier(staQP);
             logger.debug("getNetworks"+staQP.formURI());
-            FDSNStationXML staxml = querier.getFDSNStationXML();
+            FDSNStationXML staxml = internalGetStationXML(staQP);
             List<NetworkAttrImpl> out = new ArrayList<NetworkAttrImpl>();
             NetworkIterator netIt = staxml.getNetworks();
             while (netIt.hasNext()) {
@@ -162,8 +163,7 @@ public class FdsnStation extends AbstractNetworkSource {
                 staQP.setEndTime(end);
             }
             logger.debug("getStations "+staQP.formURI());
-            FDSNStationQuerier querier = setupQuerier(staQP);
-            FDSNStationXML staxml = querier.getFDSNStationXML();
+            FDSNStationXML staxml = internalGetStationXML(staQP);
             List<StationImpl> out = new ArrayList<StationImpl>();
             NetworkIterator netIt = staxml.getNetworks();
             while (netIt.hasNext()) {
@@ -201,8 +201,7 @@ public class FdsnStation extends AbstractNetworkSource {
                 staQP.setEndTime(end);
             }
             logger.debug("getChannels "+staQP.formURI());
-            FDSNStationQuerier querier = setupQuerier(staQP);
-            FDSNStationXML staxml = querier.getFDSNStationXML();
+            FDSNStationXML staxml = internalGetStationXML(staQP);
             List<ChannelImpl> out = new ArrayList<ChannelImpl>();
             NetworkIterator netIt = staxml.getNetworks();
             while (netIt.hasNext()) {
@@ -265,8 +264,7 @@ public class FdsnStation extends AbstractNetworkSource {
                                                                          // or
                                                                          // on
             logger.debug("getInstrumentation "+staQP.formURI());
-            FDSNStationQuerier querier = setupQuerier(staQP);
-            FDSNStationXML staxml = querier.getFDSNStationXML();
+            FDSNStationXML staxml = internalGetStationXML(staQP);
             NetworkIterator netIt = staxml.getNetworks();
             while (netIt.hasNext()) {
                 edu.sc.seis.seisFile.fdsnws.stationxml.Network n = netIt.next();
@@ -284,11 +282,6 @@ public class FdsnStation extends AbstractNetworkSource {
                                                                                // be
                                                                                // right
                         staxml.closeReader();
-                        try {
-                            querier.getInputStream().close();
-                        } catch(IOException e) {
-                            // oh well
-                        }
                         return out;
                     }
                 }
@@ -333,6 +326,43 @@ public class FdsnStation extends AbstractNetworkSource {
         FDSNStationQuerier querier = new FDSNStationQuerier(queryParams);
         querier.setUserAgent("SOD/"+BuildVersion.getVersion());
         return querier;
+    }
+    
+    FDSNStationXML internalGetStationXML(FDSNStationQueryParams staQP) {
+        int count = 0;
+        SeisFileException latest;
+        try {
+            return  setupQuerier(staQP).getFDSNStationXML();
+        } catch(OutOfMemoryError e) {
+            throw new RuntimeException("Out of memory", e);
+        } catch(SeisFileException t) {
+            if (t.getCause() instanceof IOException) {
+                latest = t;
+            } else if (t instanceof FDSNWSException && ((FDSNWSException)t).getHttpResponseCode() != 200) {
+                latest = t;
+            } else {
+                throw new RuntimeException(t);
+            }
+        }
+        while (getRetryStrategy().shouldRetry(latest, this, count++)) {
+            try {
+                FDSNStationXML out = setupQuerier(staQP).getFDSNStationXML();
+                getRetryStrategy().serverRecovered(this);
+                return out;
+            } catch(SeisFileException t) {
+                latest = t;
+                if (t.getCause() instanceof IOException) {
+                    latest = t;
+                } else if (t instanceof FDSNWSException && ((FDSNWSException)t).getHttpResponseCode() != 200) {
+                    latest = t;
+                } else {
+                    throw new RuntimeException(t);
+                }
+            } catch(OutOfMemoryError e) {
+                throw new RuntimeException("Out of memory", e);
+            }
+        }
+        throw new RuntimeException(latest);
     }
     
     HashMap<String, QuantityImpl> chanSensitivityMap = new HashMap<String, QuantityImpl>();
