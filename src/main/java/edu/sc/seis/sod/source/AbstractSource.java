@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
+import edu.sc.seis.fissuresUtil.cache.ClassicRetryStrategy;
 import edu.sc.seis.fissuresUtil.cache.RetryStrategy;
 import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
 import edu.sc.seis.sod.CommonAccess;
@@ -19,6 +20,7 @@ public abstract class AbstractSource implements Source {
     public AbstractSource(String name, int retries) {
         this.name = name;
         retries = -1;
+        retryStrategy = new ClassicRetryStrategy(retries);
     }
 
     public AbstractSource(Element config, String defaultName) {
