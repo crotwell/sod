@@ -185,9 +185,9 @@ public class VelocityStation extends StationImpl {
     }
 
     public String getDepth(String format) {
-        double depthInKM = QuantityImpl.createQuantityImpl(sta.getLocation().depth)
+        double depthInM = QuantityImpl.createQuantityImpl(sta.getLocation().depth)
                 .convertTo(UnitImpl.METER).value;
-        return new DecimalFormat(format).format(depthInKM);
+        return new DecimalFormat(format).format(depthInM);
     }
 
     public String getElevation() {
