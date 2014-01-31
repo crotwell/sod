@@ -13,6 +13,7 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.IfTimeSeries.TimeSeriesDataSel;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
+import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
@@ -110,7 +111,8 @@ public class GapFill extends Merge {
     public static int calcNumGapPoints(LocalSeismogramImpl first, LocalSeismogramImpl second) {
         MicroSecondDate firstEnd = first.getEndTime();
         MicroSecondDate secondBegin = second.getBeginTime();
-        QuantityImpl numSamplePeriods = secondBegin.subtract(firstEnd).divideBy(first.getSampling().getPeriod());
+        
+        QuantityImpl numSamplePeriods = secondBegin.subtract((TimeInterval)first.getSampling().getPeriod().multiplyBy(0.5)).subtract(firstEnd).divideBy(first.getSampling().getPeriod());
         return (int)Math.ceil(numSamplePeriods.getValue(UnitImpl.DIMENSIONLESS)) -1; // one less than ceiling
     }
     
