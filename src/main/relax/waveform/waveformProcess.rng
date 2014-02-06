@@ -1130,9 +1130,12 @@ result = util.waveformResult(True, out)
                     </p>
                     <p>The defaults are as in the example below.
                     See the sac <a
-                    href="http://www.llnl.gov/sac/SAC_Commands/transfer">manual</a> for more in depth discussion of transfer.
+                    href="http://www.iris.edu/files/sac-manual/commands/transfer.html">manual</a> for more in depth discussion of transfer.
                     SOD does not use SAC directly, but the implementation is modeled on SAC and should have identical results.
-                    </p></description>
+                    Meaning that the results, assuming the response is set up correctly, should be displacement, ie it is 
+                    meant to be the same as running in sac the command:</p>
+                    <b>transfer from polezero subtype xyz to none</b><br/>
+                    </description>
                 <example>
                     <transferResponse>
                         <lowCut>0.005</lowCut>
