@@ -71,7 +71,7 @@ public class WinstonWaveServerSource implements SeismogramSource {
             }
             return out;
         } catch(IOException e) {
-            throw new RuntimeException("unable to get menu from WaveServer("+ws.getHost()+", "+ws.getPort()+")", e);
+            throw new SeismogramSourceException("unable to get menu from WaveServer("+ws.getHost()+", "+ws.getPort()+")", e);
         }
     }
 
