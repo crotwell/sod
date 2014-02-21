@@ -122,7 +122,9 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
                 } catch(OutOfMemoryError e) {
                     throw new RuntimeException("Out of memory", e);
                 } catch(SeismogramSourceException t) {
-                    if (t.getCause() instanceof IOException
+                    if (t.getCause() == null) {
+                        throw t;
+                    } else if (t.getCause() instanceof IOException
                             || (t.getCause() != null && t.getCause().getCause() instanceof IOException)) {
                         latest = t;
                     } else if (t.getCause() instanceof FDSNWSException && ((FDSNWSException)t.getCause()).getHttpResponseCode() != 200) {
@@ -137,7 +139,9 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
                         getRetryStrategy().serverRecovered(this);
                         return result;
                     } catch(SeismogramSourceException t) {
-                        if (t.getCause() instanceof IOException
+                        if (t.getCause() == null) {
+                            throw t;
+                        } else if (t.getCause() instanceof IOException
                                 || (t.getCause() != null && t.getCause().getCause() instanceof IOException)) {
                             latest = t;
                         } else if (t.getCause() instanceof FDSNWSException && ((FDSNWSException)t.getCause()).getHttpResponseCode() != 200) {
@@ -161,7 +165,9 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
                 } catch(OutOfMemoryError e) {
                     throw new RuntimeException("Out of memory", e);
                 } catch(SeismogramSourceException t) {
-                    if (t.getCause() instanceof IOException
+                    if (t.getCause() == null) {
+                        throw t;
+                    } else if (t.getCause() instanceof IOException
                             || (t.getCause() != null && t.getCause().getCause() instanceof IOException)) {
                         latest = t;
                     } else if (t.getCause() instanceof FDSNWSException && ((FDSNWSException)t.getCause()).getHttpResponseCode() != 200) {
@@ -176,7 +182,9 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
                         getRetryStrategy().serverRecovered(this);
                         return result;
                     } catch(SeismogramSourceException t) {
-                        if (t.getCause() instanceof IOException
+                        if (t.getCause() == null) {
+                            throw t;
+                        } else if (t.getCause() instanceof IOException
                                 || (t.getCause() != null && t.getCause().getCause() instanceof IOException)) {
                             latest = t;
                         } else if (t.getCause() instanceof FDSNWSException && ((FDSNWSException)t.getCause()).getHttpResponseCode() != 200) {
