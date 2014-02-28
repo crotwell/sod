@@ -116,24 +116,8 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
             @Override
             public List<RequestFilter> availableData(List<RequestFilter> request) throws SeismogramSourceException {
                 int count = 0;
-                SeismogramSourceException latest;
-                try {
-                    return internalAvailableData(request);
-                } catch(OutOfMemoryError e) {
-                    throw new RuntimeException("Out of memory", e);
-                } catch(SeismogramSourceException t) {
-                    if (t.getCause() == null) {
-                        throw t;
-                    } else if (t.getCause() instanceof IOException
-                            || (t.getCause() != null && t.getCause().getCause() instanceof IOException)) {
-                        latest = t;
-                    } else if (t.getCause() instanceof FDSNWSException && ((FDSNWSException)t.getCause()).getHttpResponseCode() != 200) {
-                        latest = t;
-                    } else {
-                        throw t;
-                    }
-                }
-                while (getRetryStrategy().shouldRetry(latest, this, count++)) {
+                SeismogramSourceException latest = null;
+                while (count == 0 || getRetryStrategy().shouldRetry(latest, this, count++)) {
                     try {
                         List<RequestFilter> result = internalAvailableData(request);
                         getRetryStrategy().serverRecovered(this);
@@ -159,24 +143,9 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
             @Override
             public List<LocalSeismogramImpl> retrieveData(List<RequestFilter> request) throws SeismogramSourceException {
                 int count = 0;
-                SeismogramSourceException latest;
-                try {
-                    return internalRetrieveData(request);
-                } catch(OutOfMemoryError e) {
-                    throw new RuntimeException("Out of memory", e);
-                } catch(SeismogramSourceException t) {
-                    if (t.getCause() == null) {
-                        throw t;
-                    } else if (t.getCause() instanceof IOException
-                            || (t.getCause() != null && t.getCause().getCause() instanceof IOException)) {
-                        latest = t;
-                    } else if (t.getCause() instanceof FDSNWSException && ((FDSNWSException)t.getCause()).getHttpResponseCode() != 200) {
-                        latest = t;
-                    } else {
-                        throw t;
-                    }
-                }
-                while (getRetryStrategy().shouldRetry(latest, this, count++)) {
+                SeismogramSourceException latest = null;
+                
+                while (count == 0 || getRetryStrategy().shouldRetry(latest, this, count++)) {
                     try {
                         List<LocalSeismogramImpl> result = internalRetrieveData(request);
                         getRetryStrategy().serverRecovered(this);
