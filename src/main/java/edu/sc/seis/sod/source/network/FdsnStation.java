@@ -18,30 +18,31 @@ import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.InstrumentationImpl;
 import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.StationImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
 import edu.sc.seis.fissuresUtil.stationxml.ChannelSensitivityBundle;
 import edu.sc.seis.fissuresUtil.stationxml.StationXMLToFissures;
+import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.seisFile.SeisFileException;
 import edu.sc.seis.seisFile.fdsnws.FDSNStationQuerier;
 import edu.sc.seis.seisFile.fdsnws.FDSNStationQueryParams;
 import edu.sc.seis.seisFile.fdsnws.FDSNWSException;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
+import edu.sc.seis.seisFile.fdsnws.stationxml.DataAvailability;
 import edu.sc.seis.seisFile.fdsnws.stationxml.FDSNStationXML;
 import edu.sc.seis.seisFile.fdsnws.stationxml.NetworkIterator;
 import edu.sc.seis.seisFile.fdsnws.stationxml.StationIterator;
 import edu.sc.seis.sod.BuildVersion;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.source.SodSourceException;
+import edu.sc.seis.sod.source.seismogram.CoarseFdsnAvailableData;
 import edu.sc.seis.sod.subsetter.station.StationPointDistance;
 
 public class FdsnStation extends AbstractNetworkSource {
@@ -58,6 +59,7 @@ public class FdsnStation extends AbstractNetworkSource {
     public FdsnStation(Element config) throws Exception {
         super(config);
         queryParams.setIncludeRestricted(false);
+        queryParams.setIncludeAvailability(true);
         if (config != null) {
             // otherwise just use defaults
             int port = SodUtil.loadInt(config, "port", -1);
@@ -200,7 +202,7 @@ public class FdsnStation extends AbstractNetworkSource {
             if (end.before(ClockUtil.now())) {
                 staQP.setEndTime(end);
             }
-            logger.debug("getChannels "+staQP.formURI());
+            logger.info("getChannels "+staQP.formURI());
             FDSNStationXML staxml = internalGetStationXML(staQP);
             List<ChannelImpl> out = new ArrayList<ChannelImpl>();
             NetworkIterator netIt = staxml.getNetworks();
@@ -215,6 +217,14 @@ public class FdsnStation extends AbstractNetworkSource {
                         ChannelSensitivityBundle csb = StationXMLToFissures.convert(c, sImpl);
                         out.add(csb.getChan());
                         chanSensitivityMap.put(ChannelIdUtil.toString(csb.getChan().get_id()), csb.getSensitivity());
+                        DataAvailability da = c.getDataAvailability();
+                        if (da != null && da.getExtent() != null) {
+                            MicroSecondTimeRange range = new MicroSecondTimeRange(new MicroSecondDate(da.getExtent().getStart()),
+                                                                                  new MicroSecondDate(da.getExtent().getEnd()));
+                            List<MicroSecondTimeRange> mstrList = new ArrayList<MicroSecondTimeRange>();
+                            mstrList.add(range);
+                            availableData.update(staQP.getHost(), csb.getChan().get_id(), mstrList);
+                        }
                     }
                 }
             }
@@ -297,6 +307,10 @@ public class FdsnStation extends AbstractNetworkSource {
         }
     }
     
+    public CoarseFdsnAvailableData getAvailableData() {
+        return availableData;
+    }
+
     FDSNStationQueryParams setupQueryParams() {
         FDSNStationQueryParams cloneQP = queryParams.clone();
         if (constraints != null) {
@@ -330,21 +344,8 @@ public class FdsnStation extends AbstractNetworkSource {
     
     FDSNStationXML internalGetStationXML(FDSNStationQueryParams staQP) {
         int count = 0;
-        SeisFileException latest;
-        try {
-            return  setupQuerier(staQP).getFDSNStationXML();
-        } catch(OutOfMemoryError e) {
-            throw new RuntimeException("Out of memory", e);
-        } catch(SeisFileException t) {
-            if (t.getCause() instanceof IOException) {
-                latest = t;
-            } else if (t instanceof FDSNWSException && ((FDSNWSException)t).getHttpResponseCode() != 200) {
-                latest = t;
-            } else {
-                throw new RuntimeException(t);
-            }
-        }
-        while (getRetryStrategy().shouldRetry(latest, this, count++)) {
+        SeisFileException latest = null;
+        while (count == 0 || getRetryStrategy().shouldRetry(latest, this, count++)) {
             try {
                 FDSNStationXML out = setupQuerier(staQP).getFDSNStationXML();
                 getRetryStrategy().serverRecovered(this);
@@ -365,11 +366,15 @@ public class FdsnStation extends AbstractNetworkSource {
         throw new RuntimeException(latest);
     }
     
+    public FDSNStationQueryParams getDefaultQueryParams() {
+        return queryParams;
+    }
+    
+    CoarseFdsnAvailableData availableData = new CoarseFdsnAvailableData();
+    
     HashMap<String, QuantityImpl> chanSensitivityMap = new HashMap<String, QuantityImpl>();
 
     FDSNStationQueryParams queryParams = new FDSNStationQueryParams();
-    
-    int port = -1;
     
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(FdsnStation.class);
 }

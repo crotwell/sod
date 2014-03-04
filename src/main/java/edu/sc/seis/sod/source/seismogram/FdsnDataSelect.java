@@ -7,6 +7,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -20,8 +21,10 @@ import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.iris.Fissures.seismogramDC.RequestFilterUtil;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.mseed.FissuresConvert;
+import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.time.ReduceTool;
 import edu.sc.seis.seisFile.ChannelTimeWindow;
 import edu.sc.seis.seisFile.SeisFileException;
@@ -56,9 +59,7 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
 
     private int timeoutMillis = 10 * 1000;
 
-    private boolean doBulk = false;
-    
-    boolean fdsnStationAvailability = false;
+    CoarseFdsnAvailableData availableData;
 
     private String username;
 
@@ -68,7 +69,6 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
         super("DefaultFDSNDataSelect");
         host = FDSNDataSelectQueryParams.IRIS_HOST;
         timeoutMillis = 10 * 1000;
-        doBulk = false;
         username = "";
         password = "";
     }
@@ -79,31 +79,36 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
 
     public FdsnDataSelect(Element config, String defaultHost) throws MalformedURLException, URISyntaxException {
         super(config, "DefaultFDSNDataSelect", 2);
-        doBulk = SodUtil.isTrue(config, "dobulk", true);
         host = SodUtil.loadText(config, "host", defaultHost);
         port = SodUtil.loadInt(config, "port", -1);
         username = SodUtil.loadText(config, "user", "");
         password = SodUtil.loadText(config, "password", "");
         timeoutMillis = 1000 * SodUtil.loadInt(config, "timeoutSecs", 10);
-        fdsnStationAvailability = SodUtil.isTrue(config, "fdsnStationAvailability", false);
+        boolean fdsnStationAvailability = SodUtil.isTrue(config, "fdsnStationAvailability", false);
+        FdsnStation fdsnStation = null;
+        NetworkSource wrappedNetSource = ((WrappingNetworkSource)Start.getNetworkArm().getNetworkSource());
+        while (wrappedNetSource instanceof WrappingNetworkSource) {
+            wrappedNetSource = ((WrappingNetworkSource)wrappedNetSource).getWrapped();
+        }
+        if (wrappedNetSource instanceof FdsnStation) {
+            fdsnStation = (FdsnStation)wrappedNetSource;
+        }
+
         // check if username and password, and if so enable restricted on the network source
         if ( ! username.equals("") && ! password.equals("") && Start.getNetworkArm() != null) {
-            NetworkSource wrappedNetSource = ((WrappingNetworkSource)Start.getNetworkArm().getNetworkSource());
-            while (wrappedNetSource instanceof WrappingNetworkSource) {
-                wrappedNetSource = ((WrappingNetworkSource)wrappedNetSource).getWrapped();
-            }
-            if (wrappedNetSource instanceof FdsnStation) {
-                logger.info("User and password set, so including restricted in FdsnStation network source");
-                ((FdsnStation)wrappedNetSource).includeRestricted(true);
-            }
+            logger.info("User and password set, so including restricted in FdsnStation network source");
+            fdsnStation.includeRestricted(true);
+        }
+        if (fdsnStationAvailability && fdsnStation != null) {
+            availableData = fdsnStation.getAvailableData();
         }
     }
     
-    public FdsnDataSelect(String host,int port, boolean fdsnStationAvailability) {
+    public FdsnDataSelect(String host,int port, CoarseFdsnAvailableData fdsnStationAvailability) {
         super(host, 2);
         this.host = host;
         this.port = port;
-        this.fdsnStationAvailability = fdsnStationAvailability;
+        this.availableData = fdsnStationAvailability;
     }
 
     @Override
@@ -115,29 +120,21 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
 
             @Override
             public List<RequestFilter> availableData(List<RequestFilter> request) throws SeismogramSourceException {
-                int count = 0;
-                SeismogramSourceException latest = null;
-                while (count == 0 || getRetryStrategy().shouldRetry(latest, this, count++)) {
-                    try {
-                        List<RequestFilter> result = internalAvailableData(request);
-                        getRetryStrategy().serverRecovered(this);
-                        return result;
-                    } catch(SeismogramSourceException t) {
-                        if (t.getCause() == null) {
-                            throw t;
-                        } else if (t.getCause() instanceof IOException
-                                || (t.getCause() != null && t.getCause().getCause() instanceof IOException)) {
-                            latest = t;
-                        } else if (t.getCause() instanceof FDSNWSException && ((FDSNWSException)t.getCause()).getHttpResponseCode() != 200) {
-                            latest = t;
-                        } else {
-                            throw t;
+                if ( availableData == null) {
+                    return request;
+                }
+                List<RequestFilter> out = new ArrayList<RequestFilter>();
+                for (RequestFilter rf : request) {
+                    List<MicroSecondTimeRange> avail = availableData.get(host, rf.channel_id);
+                    MicroSecondTimeRange reqRange = new MicroSecondTimeRange(rf);
+                    for (MicroSecondTimeRange range : avail) {
+                        MicroSecondTimeRange intersect = reqRange.intersection(range);
+                        if (intersect != null) {
+                            out.add(new RequestFilter(rf.channel_id, intersect.getBeginTime().getFissuresTime(), intersect.getEndTime().getFissuresTime()));
                         }
-                    } catch(OutOfMemoryError e) {
-                        throw e;
                     }
                 }
-                throw latest;
+                return out;
             }
 
             @Override
@@ -170,9 +167,10 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
 
             public List<RequestFilter> internalAvailableData(List<RequestFilter> request)
                     throws SeismogramSourceException {
-                if ( ! fdsnStationAvailability) {
+                if ( availableData == null) {
                     return request;
                 }
+                
                 try {
                     List<RequestFilter> out = new ArrayList<RequestFilter>();
                     if (request.size() != 0) {
