@@ -428,18 +428,22 @@
         <element name="sacWriter">
             <xsd:annotation>
                 <summary>Writes sac files from seismograms</summary>
-                <description>The seismograms are written to sac files in the location indicated by location. If multiple
+                <description><p>The seismograms are written to sac files in the location indicated by location. If multiple
                     seismograms are found for a channel seismograms past the first will be written out with a number
                     appended to their file name. ie the second seismogram will be filename.1 and the third will be
-                    filename.2. The phaseTimeHeader element will cause the travel time of the given phase to be placed
+                    filename.2. </p>
+                    <p>The phaseTimeHeader element will cause the travel time of the given phase to be placed
                     in the sac header corresponding to the tHeader element. tHeader can be 0-9 as well as a. In the case
                     of 0-9, the ray parameter is inserted into the corresponding userX header as rad/sec. In the case of
                     triplicated phases, the arrivalIndex can be used to pick an arrival different from the first.
                     The default is 1, yeilding the first arrival. If this is set to 2, the second arrival is used
                     and if it is set to -1 then the last arrival is used.
-                    See the TauP user manual, http://www.seis.sc.edu/TauP, for the phase naming convention.  
-                    If the littleEndian element is added to the sacWriter, it will write out sac files in Intel processor style 
-                    little endian byte order.  It defaults to writing in big endian order.</description>
+                    See the TauP user manual, http://www.seis.sc.edu/TauP, for the phase naming convention.  </p>
+                    <p>If the littleEndian element is added to the sacWriter, it will write out sac files in Intel processor style 
+                    little endian byte order.  It defaults to writing in big endian order.</p>
+                    <p>The sacHeaderScript allows manipulation of the sac file before it is written. This is a
+                    type of script similar to seismogramScript. 
+                    The event is put as "event", the channel as "channel" and the sac file as "sac". </p></description>
                 <example>
                     <sacWriter>
                         <workingDir>seismograms</workingDir>
@@ -455,6 +459,14 @@
                             <tHeader>1</tHeader>
                             <arrivalIndex>2</arrivalIndex>
                         </phaseTimeHeader>
+                        <sacHeaderScript type="jython" >
+                            from edu.sc.seis.seisFile.sac import SacConstants
+                            h = sac.getHeader()
+                            h.idep=SacConstants.IDISP
+                            h.ievtyp=SacConstants.IEQ
+                            h.iqual=SacConstants.IGOOD
+                            h.evdp = h.evdp/1000 # to make depth in km instead of meters
+                        </sacHeaderScript>
                     </sacWriter>
                 </example>
             </xsd:annotation>
@@ -473,9 +485,11 @@
                         <summary>Runs a script to set arbitrary SAC headers, or do other customization of the SAC file.</summary>
                 <example>
                     <sacHeaderScript type="jython" >
-                        sac.idep=sac.IDISP
-                        sac.ivtyp=sac.IEQ
-                        sac.iqual=sac.IGOOD
+                        import edu.sc.seis.seisFile.sac.SacConstants
+                        h = sac.getHeader()
+                        h.idep=SacConstants.IDISP
+                        h.ivtyp=SacConstants.IEQ
+                        h.iqual=SacConstants.IGOOD
                      </sacHeaderScript>
                 </example>
             </xsd:annotation>
