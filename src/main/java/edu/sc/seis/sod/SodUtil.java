@@ -85,7 +85,7 @@ public class SodUtil {
     }
 
     public static boolean isTrueText(String nestedText) {
-        if(nestedText.equals("TRUE")) {
+        if(nestedText.toUpperCase().equals("TRUE")) {
             return true;
         }
         return false;
