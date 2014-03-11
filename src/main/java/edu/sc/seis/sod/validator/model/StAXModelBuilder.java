@@ -25,6 +25,7 @@ import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.validator.ModelWalker;
 import edu.sc.seis.sod.validator.model.datatype.AnyText;
+import edu.sc.seis.sod.validator.model.datatype.BooleanDatatype;
 import edu.sc.seis.sod.validator.model.datatype.DoubleDatatype;
 import edu.sc.seis.sod.validator.model.datatype.FloatDatatype;
 import edu.sc.seis.sod.validator.model.datatype.IntegerDatatype;
@@ -508,6 +509,8 @@ public class StAXModelBuilder implements XMLStreamConstants {
                 return new IntegerDatatype();
             } else if(type.equals("nonNegativeInteger")) {
                 return new NonnegativeIntegerDatatype();
+            } else if(type.equals("boolean")) {
+                return new BooleanDatatype();
             }
             return new Token();
         }
