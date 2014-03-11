@@ -36,7 +36,8 @@
                 <summary>Matches all enclosed requests</summary>
                 <description>The output is the logical AND of the outputs of all included requests. This means that it
                     will evaluate to true only if all the enclosed requests evaluate to true. The requests after the
-                    first false outputted are not evaluated.</description>
+                    first false outputted are not evaluated.
+                    In addition, any eventStation, eventChannel, event, channel, station or network subsetter may be used here directly.</description>
                 <example>
                     <requestAND>
                         <requestPrint/>
@@ -57,7 +58,8 @@
                 <summary>Matches at least one enclosed request</summary>
                 <description>The output is the logical OR of the outputs of all included requests. This means that it
                     will evaluate to true if at least one of the enclosed requests evaluates to true. The requests after
-                    the first true outputted are not evaluated.</description>
+                    the first true outputted are not evaluated.
+                    In addition, any eventStation, eventChannel, event, channel, station or network subsetter may be used here directly.</description>
                 <example>
                     <requestOR>
                         <requestPrint/>
@@ -75,7 +77,8 @@
             <xsd:annotation>
                 <summary>Matches the negated output of the enclosed request</summary>
                 <description>The output is the logical NOT of the output of the included request. This mean that it will
-                    evaluate to false if the enclosed request evaluates to true, and vice versa.</description>
+                    evaluate to false if the enclosed request evaluates to true, and vice versa.
+                    In addition, any eventStation, eventChannel, event, channel, station or network subsetter may be used here directly.</description>
             </xsd:annotation>
             <ref name="requestPlus"/>
         </element>

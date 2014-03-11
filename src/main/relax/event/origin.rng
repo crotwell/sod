@@ -34,7 +34,7 @@
             <ref name="originNOT"/>
             <ref name="externalOriginSubsetter"/>
             <ref name="youngerThan"/>
-            <ref name="printline"/>
+            <ref name="printlineEventProcess"/>
             <ref name="CSVEventPrinter"/>
             <ref name="similarEvent"/>
             <ref name="originScript"/>
@@ -329,7 +329,7 @@
             <ref name="timeInterval"/>
         </element>
     </define>
-    <define name="printline">
+    <define name="printlineEventProcess">
         <element name="printlineEventProcess">
             <xsd:annotation>
                 <summary>Prints out each event on a new line</summary>

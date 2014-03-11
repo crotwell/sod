@@ -8,14 +8,14 @@
         <choice>
             <xsd:annotation>
                 <summary>Specifies the server to ask for seismograms.</summary>
-                <description> The default is the edu/iris/dmc IRIS_Datacenter</description>
+                <description> The default is the IRIS FDSN DataSelect web service.</description>
                 <velocity>#waveformArmPage()</velocity>
             </xsd:annotation>
-            <ref name="fixedDataCenter"/>
+            <ref name="fdsnDataSelect"/>
             <ref name="choiceSource"/>
             <ref name="tryInOrder"/>
             <ref name="winstonWaveServer"/>
-            <ref name="fdsnDataSelect"/>
+            <ref name="fixedDataCenter"/>
         </choice>
     </define>
     <define name="fixedDataCenter">
@@ -115,16 +115,15 @@
                                     </earlier>
                                 </endTime>
                             </originTimeRange>
-                            <fixedDataCenter>
-                                <name>IRIS_PondDataCenter</name>
-                                <dns>edu/iris/dmc</dns>
-                            </fixedDataCenter>
+                            <fdsnDataSelect>
+                                <name>Local Caching server</name>
+                                <host>myserver.myuniversity.edu</host>
+                            </fdsnDataSelect>
                         </choice>
                         <otherwise>
-                            <fixedDataCenter>
-                                <name>IRIS_BudDataCenter</name>
-                                <dns>edu/iris/dmc</dns>
-                            </fixedDataCenter>
+                            <fdsnDataSelect>
+                                <name>IRIS Server</name>
+                            </fdsnDataSelect>
                         </otherwise>
                     </choiceSource>
                 </example>
@@ -151,14 +150,13 @@
                     example tries to get data from the BUD first and then POND if it isn't in the BUD.</description>
                 <example>
                     <tryInOrder>
-                            <fixedDataCenter>
-                                <name>IRIS_BudDataCenter</name>
-                                <dns>edu/iris/dmc</dns>
-                            </fixedDataCenter>
-                            <fixedDataCenter>
-                                <name>IRIS_PondDataCenter</name>
-                                <dns>edu/iris/dmc</dns>
-                            </fixedDataCenter>
+                            <fdsnDataSelect>
+                                <name>Local Caching server</name>
+                                <host>myserver.myuniversity.edu</host>
+                            </fdsnDataSelect>
+                            <fdsnDataSelect>
+                                <name>IRIS server</name>
+                            </fdsnDataSelect>
                     </tryInOrder>
                 </example>
             </xsd:annotation>
@@ -189,8 +187,13 @@
             <xsd:annotation>
                 <summary>Pick a FDSN dataselect web service</summary>
                 <description>This specifies a FDSN dataselect web service. The default is the IRIS DMC. This can
-                do a data availability, but because of the coarseness of the result, it is not as useful as
-                was in the older DHI servers, so the default is off.
+                do a data availability via a corresponding FDSN Station web service, 
+                but because of the coarseness of the result, it is not as useful as
+                was in the older DHI servers, so the default is off, meaning SOD pretends 
+                the available data is always the same as the requested data.
+                The host parameter should be used to connect to another service. The baseurl and
+                port parameters should only be used to connect to a service that does not follow the
+                FDSN specification on how the URL should be formed.
                     </description>
             </xsd:annotation>
             <interleave>

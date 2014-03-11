@@ -9,13 +9,13 @@
                 <summary>Ingredient to acquire events</summary>
                 <velocity>#eventArmPage()</velocity>
             </xsd:annotation>
+            <ref name="fdsnEvent"/>
             <ref name="eventFinder"/>
             <ref name="backwardsEventFinder"/>
             <ref name="CSVEventSource"/>
             <ref name="periodicFakeEventSource"/>
             <ref name="nowFakeEventSource"/>
             <ref name="delayedEventSource"/>
-            <ref name="fdsnEvent"/>
         </choice>
     </define>
     <define name="eventFinder">
@@ -110,6 +110,16 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Querys events from a FDSN Event web service or file.</summary>
+                    <description>The default is to query the IRIS DMC FDSN Event web service, the host
+                     parameter should only be needed to query a different server. The baseURL, fdsnPath and port
+                     parameters should only be used in the case of a server that does not follow the FDSN
+                     specification as to how the service URL should be formed. Most of the other parameters
+                     map directly to the same parameter in the old eventFinder source. The main exception, at
+                     least for queries to the IRIS DMC, is that the catalog and contributor names are not
+                     the same, and so you should refer to the web service documentation, available at
+                     <a href="http://service.iris.edu/fdsnws/event/1">http://service.iris.edu/fdsnws/event/1</a>
+                     for details.
+                    </description>
                 </xsd:documentation>
             </xsd:annotation>
             <interleave>
@@ -117,7 +127,7 @@
                 <element name="name">
                     <data type="string">
                         <xsd:annotation>
-                            <summary>A unique name for this source.</summary>
+                            <summary>A unique name for this source, mainly used for logging purposes.</summary>
                         </xsd:annotation>
                     </data>
                 </element>
@@ -127,7 +137,8 @@
                         <element name="baseurl">
                             <xsd:annotation>
                               <summary>A FDSN Event web service URL</summary>
-                              <description>A url to a FDSN event web service.</description>
+                              <description>A url to a FDSN event web service. Should only be used in
+                              the case of a service that doe not follow the FDSN specification.</description>
                             </xsd:annotation>
                             <data type="string"/>
                         </element>

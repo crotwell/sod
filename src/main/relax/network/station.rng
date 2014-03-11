@@ -9,7 +9,7 @@
             <xsd:annotation>
                 <summary>Ingredients for selecting stations</summary>
                 <description>This collects all of the subsetters that make decisions on the contents
-                    of a station.</description>
+                    of a station. In addition, any network subsetter may be used here within a logical subsetter.</description>
                 <velocity>#networkArmPage()</velocity>
             </xsd:annotation>
             <ref name="stationCode"/>
@@ -209,7 +209,8 @@
                 <description>The output is the logical AND of the outputs of all included Station
                     subsetters. This means that it will evaluate to true only if all the enclosed
                     Station subsetters evaluate to true. The subsetters after the first false
-                    outputted are not evaluated.</description>
+                    outputted are not evaluated. 
+                    In addition, any network subsetter may be used here directly.</description>
                 <example>
                     <stationAND>
                         <stationEffectiveTimeOverlap>
@@ -243,7 +244,8 @@
                 <description>The output is the logical OR of the outputs of all included Station
                     subsetters. This means that it will evaluate to true if at least one of the
                     enclosed Station subsetters evaluate to true. The subsetters after the first
-                    true outputted are not evaluated.</description>
+                    true outputted are not evaluated.
+                    In addition, any network subsetter may be used here directly.</description>
                 <example>
                     <stationOR>
                         <stationEffectiveTimeOverlap>
@@ -274,9 +276,10 @@
         <element name="stationNOT">
             <xsd:annotation>
                 <summary>Matches the negated output of the enclosed Station subsetter</summary>
-                <description>CHANGE The output is the logical NOT of the output of the enclosed
+                <description>The output is the logical NOT of the output of the enclosed
                     Station subsetter. This means that it will evaluate to false if the enclosed
-                    Station subsetter evaluates to true, and vice versa.</description>
+                    Station subsetter evaluates to true, and vice versa.
+                    In addition, any network subsetter may be used here directly.</description>
             </xsd:annotation>
             <ref name="stationPlus"/>
         </element>

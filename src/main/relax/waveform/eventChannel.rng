@@ -8,6 +8,29 @@
         <choice>
             <xsd:annotation>
                 <summary>Ingredients for selecting combinations of channels and events</summary>
+                <description>Subsetters that depend on both event and channel go here.
+                In addition to the ones directly listed here, any eventStation, origin, network, station or channel
+                subsetter may also be used here within a logical subsetter. 
+                </description>
+                <example>
+                    <eventChannelOR>
+                        <originDepthRange>
+                            <min>100</min>
+                            <unit>KILOMETER</unit>
+                        </originDepthRange>
+                        <eventChannelOR>
+                            <bandCode>B</bandCode>
+                            <eventChannelAND>
+                                <bandCode>S</bandCode>
+                                <distanceRange>
+                                    <unit>DEGREE</unit>
+                                    <min>0</min>
+                                    <max>20</max>
+                                </distanceRange>
+                            </eventChannelAND>
+                        </eventChannelOR>
+                    </eventChannelOR>
+                </example>
                 <velocity>#waveformArmPage()</velocity>
             </xsd:annotation>
             <ref name="bestChannelAtStation"/>
@@ -84,7 +107,8 @@
                     <summary>Matches all enclosed EventChannel subsetters</summary>
                     <description>The output is the logical AND of the outputs of all included EventChannel subsetters. This
                         means that it will evaluate to true only if all the enclosed EventChannel subsetters evaluate to
-                        true. The subsetters after the first false outputted are not evaluated.</description>
+                        true. The subsetters after the first false outputted are not evaluated.
+                    In addition, any event, channel, station or network subsetter may be used here directly.</description>
                     <example>
                         <eventChannelAND>
                                 <distanceRange>
@@ -108,7 +132,8 @@
                     <summary>Matches at least one enclosed EventChannel subsetter</summary>
                     <description>The output is the logical OR of the outputs of all included EventChannel subsetters. This
                         means that it will evaluate to true if at least one of the enclosed EventChannel subsetters evaluate
-                        to true. The subsetters after the first true outputted are not evaluated.</description>
+                        to true. The subsetters after the first true outputted are not evaluated.
+                    In addition, any event, channel, station or network subsetter may be used here directly.</description>
                     <example>
                         <eventChannelOR>
                                 <distanceRange>
@@ -132,7 +157,8 @@
                     <summary>Matches the negated output of the enclosed EventChannel subsetter</summary>
                     <description>The output is the logical NOT of the output of the enclosed EventChannel subsetter. This
                         means that it will evaluate to false if the enclosed EventChannel subsetter evaluates to true, and
-                        vice versa.</description>
+                        vice versa.
+                    In addition, any event, channel, station or network subsetter may be used here directly.</description>
                     <example>
                         <eventChannelNOT>
                                 <distanceRange>
