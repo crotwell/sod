@@ -3,6 +3,7 @@ package edu.sc.seis.sod.subsetter.availableData;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
@@ -25,7 +26,7 @@ public class PrintlineAvailableDataProcess implements AvailableDataSubsetter {
 
     private String template, filename;
 
-    public static final String DEFAULT_TEMPLATE = "Got $availableRequests.size()";
+    public static final String DEFAULT_TEMPLATE = "Got $availableRequests.size() for $channel";
 
     public StringTree accept(CacheEvent event,
                              ChannelImpl channel,
