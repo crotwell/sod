@@ -71,6 +71,7 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
         timeoutMillis = 10 * 1000;
         username = "";
         password = "";
+        checkFdsnStationLinkage();
     }
 
     public FdsnDataSelect(Element config) throws MalformedURLException, URISyntaxException {
@@ -84,7 +85,10 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
         username = SodUtil.loadText(config, "user", "");
         password = SodUtil.loadText(config, "password", "");
         timeoutMillis = 1000 * SodUtil.loadInt(config, "timeoutSecs", 10);
-        boolean fdsnStationAvailability = SodUtil.isTrue(config, "fdsnStationAvailability", false);
+        checkFdsnStationLinkage();
+    }
+    
+    private void checkFdsnStationLinkage() {
         FdsnStation fdsnStation = null;
         NetworkSource wrappedNetSource = ((WrappingNetworkSource)Start.getNetworkArm().getNetworkSource());
         while (wrappedNetSource instanceof WrappingNetworkSource) {
@@ -92,6 +96,8 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
         }
         if (wrappedNetSource instanceof FdsnStation) {
             fdsnStation = (FdsnStation)wrappedNetSource;
+        } else {
+            logger.warn("Can't do FdsnStation Linkage, net source no FdsnStation: "+wrappedNetSource.getClass().getCanonicalName());
         }
 
         // check if username and password, and if so enable restricted on the network source
@@ -99,8 +105,11 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
             logger.info("User and password set, so including restricted in FdsnStation network source");
             fdsnStation.includeRestricted(true);
         }
-        if (fdsnStationAvailability && fdsnStation != null) {
+        if ( fdsnStation != null) {
             availableData = fdsnStation.getAvailableData();
+        }
+        if (availableData == null) {
+            logger.warn("CoarseAvailableData is null, cannot do available data check.");
         }
     }
     
@@ -125,12 +134,14 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
                 }
                 List<RequestFilter> out = new ArrayList<RequestFilter>();
                 for (RequestFilter rf : request) {
-                    List<MicroSecondTimeRange> avail = availableData.get(host, rf.channel_id);
-                    MicroSecondTimeRange reqRange = new MicroSecondTimeRange(rf);
-                    for (MicroSecondTimeRange range : avail) {
-                        MicroSecondTimeRange intersect = reqRange.intersection(range);
-                        if (intersect != null) {
-                            out.add(new RequestFilter(rf.channel_id, intersect.getBeginTime().getFissuresTime(), intersect.getEndTime().getFissuresTime()));
+                    if (availableData.isCached(host, rf.channel_id)) {
+                        List<MicroSecondTimeRange> avail = availableData.get(host, rf.channel_id);
+                        MicroSecondTimeRange reqRange = new MicroSecondTimeRange(rf);
+                        for (MicroSecondTimeRange range : avail) {
+                            MicroSecondTimeRange intersect = reqRange.intersection(range);
+                            if (intersect != null) {
+                                out.add(new RequestFilter(rf.channel_id, intersect.getBeginTime().getFissuresTime(), intersect.getEndTime().getFissuresTime()));
+                            }
                         }
                     }
                 }
