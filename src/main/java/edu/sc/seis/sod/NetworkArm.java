@@ -668,9 +668,9 @@ public class NetworkArm implements Arm {
         }
     }
 
-    private NetworkSource internalFinder = new RetryNetworkSource(new FdsnStation());
+    private NetworkSource internalFinder;
 
-    private NetworkSource finder = new InstrumentationFromDB(internalFinder);
+    private NetworkSource finder;
     
     private NetworkSubsetter attrSubsetter = new PassNetwork();
 
@@ -688,10 +688,16 @@ public class NetworkArm implements Arm {
 
 
     public NetworkSource getNetworkSource() {
+        if (finder == null) {
+            finder = new InstrumentationFromDB(getInternalNetworkSource());
+        }
         return finder;
     }
 
      protected NetworkSource getInternalNetworkSource() {
+         if (internalFinder == null) {
+             internalFinder = new RetryNetworkSource(new FdsnStation()); 
+         }
         return internalFinder;
     }
     
