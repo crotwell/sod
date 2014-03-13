@@ -1,5 +1,7 @@
 package edu.sc.seis.sod.source.seismogram;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,11 +21,24 @@ public class CoarseFdsnAvailableData {
     public void update(String host, ChannelId chan, List<MicroSecondTimeRange> rangeList) {
         Map<String, List<MicroSecondTimeRange>> hostCache = getHostCache(host);
         hostCache.put(ChannelIdUtil.toString(chan), rangeList);
-        System.out.println("Update Avail: "+rangeList.size()+"  "+(rangeList.size()>0?rangeList.get(0):""));
+        logger.info("Update Avail: "+host+" "+rangeList.size()+"  "+(rangeList.size()>0?rangeList.get(0):"")+" for "+ChannelIdUtil.toString(chan));
     }
     
+    /** returns null if no availability is cached for this host/chan
+     * 
+     * @param host
+     * @param chan
+     * @return
+     */
     public List<MicroSecondTimeRange> get(String host, ChannelId chan) {
-        return getList(host, chan);
+        if (isCached(host, chan)) {
+            return getList(host, chan);
+        }
+        return null;
+    }
+    
+    public boolean isCached(String host, ChannelId chan) {
+        return cache.containsKey(host) && cache.get(host).containsKey(ChannelIdUtil.toString(chan));
     }
     
     public boolean overlaps(String host, ChannelId chan, MicroSecondTimeRange range) {
@@ -58,4 +73,7 @@ public class CoarseFdsnAvailableData {
     }
     
     Map<String, Map<String, List<MicroSecondTimeRange>>> cache = new HashMap<String, Map<String, List<MicroSecondTimeRange>>>();
+
+
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(CoarseFdsnAvailableData.class);
 }
