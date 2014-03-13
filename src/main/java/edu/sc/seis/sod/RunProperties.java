@@ -49,7 +49,7 @@ public class RunProperties {
 				maxRetry = SodUtil.loadTimeInterval(maxRetryChild);
 			}
 			Element seismogramLatencyEl = SodUtil.getElement(el,
-					"seismogramLag");
+					"seismogramLatency");
 			if (seismogramLatencyEl != null) {
 				seismogramLatency = SodUtil
 						.loadTimeInterval(seismogramLatencyEl);
