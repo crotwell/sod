@@ -241,7 +241,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
             logger.info("After successful available_data call, time taken=" + after.subtract(before).getValue(UnitImpl.SECOND)+" sec");
             if(outfilters.length != 0) {
                 logger.debug("Got available_data for " + ChannelIdUtil.toString(outfilters[0].channel_id) + " from "
-                             + outfilters[0].start_time.date_time + " to " + outfilters[0].end_time.date_time);
+                             + outfilters[0].start_time.date_time + " to " + outfilters[0].end_time.date_time+" "+outfilters.length);
             } else {
                 logger.debug("No available_data for " + ChannelIdUtil.toString(ecp.getChannel().get_id()));
             }
