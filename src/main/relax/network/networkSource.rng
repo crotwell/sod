@@ -418,6 +418,11 @@ CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
                                 <data type="string"/>
                             </element>
                         </optional>
+                        <optional>
+                            <element name="fdsnwsPath">
+                                <data type="string"/>
+                            </element>
+                        </optional>
                     </interleave>
                 </choice>
             <zeroOrMore>
