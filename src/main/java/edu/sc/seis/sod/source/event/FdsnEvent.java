@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.source.event;
 
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -36,6 +37,7 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.seisFile.SeisFileException;
+import edu.sc.seis.seisFile.fdsnws.AbstractFDSNQuerier;
 import edu.sc.seis.seisFile.fdsnws.AbstractQueryParams;
 import edu.sc.seis.seisFile.fdsnws.FDSNEventQuerier;
 import edu.sc.seis.seisFile.fdsnws.FDSNEventQueryParams;
@@ -222,40 +224,19 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         MicroSecondTimeRange queryTime = getQueryTime();
         logger.debug(getName() + ".next() called for " + queryTime);
         int count = 0;
-        SeisFileException latest;
-        try {
-            return internalNext(queryTime).toArray(new CacheEvent[0]);
-        } catch(OutOfMemoryError e) {
-            throw new RuntimeException("Out of memory", e);
-        } catch(SeisFileException t) {
-            if (t.getCause() instanceof IOException) {
-                latest = t;
-                if (t.getCause() instanceof java.net.SocketTimeoutException) {
-                    // timed out, so decrease increment and retry with smaller time window
-                    // also make the increaseThreashold smaller so we are not so aggressive
-                    // about expanding the time window
-                    decreaseQueryTimeWidth();
-                    increaseThreashold /= 2;
-                    return new CacheEvent[0];
-                }
-            } else if (t instanceof FDSNWSException && ((FDSNWSException)t).getHttpResponseCode() != 200) {
-                latest = t;
-            } else {
-                throw new RuntimeException(t);
-            }
-        } catch(XMLStreamException e) {
-            throw new RuntimeException(e);
-        }
-        while (getRetryStrategy().shouldRetry(latest, this, count++)) {
+        Exception latest = null;
+        
+        while (count == 0 || getRetryStrategy().shouldRetry(latest, this, count++)) {
             try {
                 List<CacheEvent> result = internalNext(queryTime);
-                getRetryStrategy().serverRecovered(this);
+                if (count > 0) { getRetryStrategy().serverRecovered(this); }
                 return result.toArray(new CacheEvent[0]);
-            } catch(SeisFileException t) {
-                latest = t;
-                if (t.getCause() instanceof IOException) {
-                    latest = t;
-                    if (t.getCause() instanceof java.net.SocketTimeoutException) {
+            } catch(SeisFileException e) {
+                latest = e;
+                Throwable rootCause = AbstractFDSNQuerier.extractRootCause(e);
+                if (rootCause instanceof IOException) {
+                    // try again on IOException
+                    if (rootCause instanceof java.net.SocketTimeoutException || rootCause instanceof InterruptedIOException) {
                         // timed out, so decrease increment and retry with smaller time window
                         // also make the increaseThreashold smaller so we are not so aggressive
                         // about expanding the time window
@@ -263,13 +244,26 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                         increaseThreashold /= 2;
                         return new CacheEvent[0];
                     }
-                } else if (t instanceof FDSNWSException && ((FDSNWSException)t).getHttpResponseCode() != 200) {
-                    latest = t;
+                } else if (e instanceof FDSNWSException && ((FDSNWSException)e).getHttpResponseCode() != 200) {
+                    latest = e;
                 } else {
-                    throw new RuntimeException(t);
+                    throw new RuntimeException(e);
                 }
             } catch(XMLStreamException e) {
-                throw new RuntimeException(e);
+                latest = e;
+                Throwable rootCause = AbstractFDSNQuerier.extractRootCause(e);
+                if (rootCause instanceof IOException) {
+                    if (rootCause instanceof java.net.SocketTimeoutException) {
+                        // timed out, so decrease increment and retry with smaller time window
+                        // also make the increaseThreashold smaller so we are not so aggressive
+                        // about expanding the time window
+                        decreaseQueryTimeWidth();
+                        increaseThreashold /= 2;
+                        return new CacheEvent[0];
+                    }
+                } else {
+                    throw new RuntimeException(e);
+                }
             } catch(OutOfMemoryError e) {
                 throw new RuntimeException("Out of memory", e);
             }
@@ -281,7 +275,8 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         try {
             MicroSecondDate now = ClockUtil.now();
             List<CacheEvent> out = new ArrayList<CacheEvent>();
-            EventIterator it = getQuakeML(setUpQuery(queryTime)).getEventParameters().getEvents();
+            Quakeml qml = getQuakeML(setUpQuery(queryTime));
+            EventIterator it = qml.getEventParameters().getEvents();
             if (!it.hasNext()) {
                 logger.debug("No events returned from query.");
             }
@@ -289,6 +284,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                 Event e = it.next();
                 out.add(toCacheEvent(e));
             }
+            qml.close();
             if (!caughtUpWithRealtime()) {
                 if (out.size() < increaseThreashold) {
                     increaseQueryTimeWidth();
@@ -298,14 +294,6 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                 }
             }
             updateQueryEdge(queryTime);
-            if (caughtUpWithRealtime() && hasNext()) {
-                sleepUntilTime = now.add(refreshInterval);
-                logger.debug("set sleepUntilTime " + sleepUntilTime + "  refresh=" + refreshInterval);
-                resetQueryTimeForLag();
-                lastQueryEnd = now;
-            } else {
-                logger.debug("not caught up with real time or hasNext: " + caughtUpWithRealtime() + " && " + hasNext());
-            }
             return out;
         } catch(SeisFileException e) {
             throw e;
@@ -435,11 +423,19 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         FDSNEventQueryParams timeWindowQueryParams = queryParams.clone();
         timeWindowQueryParams.setStartTime(queryTime.getBeginTime());
         timeWindowQueryParams.setEndTime(queryTime.getEndTime());
-        if (caughtUpWithRealtime() && lastQueryEnd != null) {
+        if (isEverCaughtUpToRealtime() && lastQueryEnd != null) {
             timeWindowQueryParams.setUpdatedAfter(lastQueryEnd.subtract(new TimeInterval(10, UnitImpl.HOUR)));
         }
         logger.debug("Query: " + timeWindowQueryParams.formURI());
         return timeWindowQueryParams;
+    }
+
+    @Override
+    protected MicroSecondDate resetQueryTimeForLag() {
+        MicroSecondDate out =  super.resetQueryTimeForLag();
+        lastQueryEnd = nextLastQueryEnd;
+        nextLastQueryEnd = ClockUtil.now();
+        return out;
     }
 
     FDSNEventQueryParams queryParams = new FDSNEventQueryParams();
@@ -447,6 +443,8 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
     MicroSecondTimeRangeSupplier eventTimeRangeSupplier;
 
     private MicroSecondDate lastQueryEnd;
+    
+    private MicroSecondDate nextLastQueryEnd;
 
     String url;
 

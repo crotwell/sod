@@ -48,18 +48,30 @@ public abstract class AbstractEventSource extends AbstractSource implements Even
 
     @Override
     public TimeInterval getWaitBeforeNext() {
-        if (sleepUntilTime != null) {
-            logger.debug(getName()+" "+"sleeping caught up, "+refreshInterval+" "+sleepUntilTime);
-            return sleepUntilTime.subtract(ClockUtil.now());
+        MicroSecondDate now = ClockUtil.now();
+        if (! caughtUpWithRealtime()) {
+            return new TimeInterval(0, UnitImpl.SECOND); 
         }
-        return new TimeInterval(0, UnitImpl.SECOND);
+        if (lastQueryTime == null) {
+            // on null, make time old enough to force a query
+            lastQueryTime = now.subtract(refreshInterval).subtract(nearRealTimeInterval);
+        }
+        TimeInterval sleepTime = now.subtract(lastQueryTime).add(refreshInterval);
+        if (sleepTime.getValue() < 0) {
+            caughtUpToRealtime = false;
+        }
+        logger.debug("getWaitBeforeNext() lq="+lastQueryTime+" sleep="+sleepTime.getValue(UnitImpl.SECOND)+"  now="+now+"  refesh="+refreshInterval.getValue(UnitImpl.SECOND));
+        return sleepTime;
     }
     
 
 
     protected boolean caughtUpWithRealtime() {
-        return ClockUtil.now().subtract(refreshInterval).before(getQueryStart())
-                || getQueryStart().add(new TimeInterval(10, UnitImpl.SECOND)).after(getEventTimeRange().getEndTime());
+        return caughtUpToRealtime;
+    }
+    
+    protected boolean isEverCaughtUpToRealtime() {
+        return everCaughtUpToRealtime;
     }
     
     /**
@@ -81,15 +93,26 @@ public abstract class AbstractEventSource extends AbstractSource implements Even
     protected MicroSecondTimeRange getQueryTime() {
         MicroSecondDate now = ClockUtil.now();
         MicroSecondDate queryStart = getQueryStart();
+        if (caughtUpWithRealtime()) {
+            // have caught up with real time, so go back by lag
+            queryStart = resetQueryTimeForLag();
+            caughtUpToRealtime = false;
+        }
         MicroSecondDate queryEnd = queryStart.add(increment);
         if (getEventTimeRange().getEndTime().before(queryEnd)) {
             queryEnd = getEventTimeRange().getEndTime();
+            logger.debug("Caught up with edge of event time range.");
+            caughtUpToRealtime = true;
+            everCaughtUpToRealtime = true;
         }
         if (now.before(queryEnd)) {
-            queryEnd = ClockUtil.now();
+            logger.debug("Caught up with now.");
+            queryEnd = now;
+            caughtUpToRealtime = true;
+            everCaughtUpToRealtime = true;
         }
-        if (now.subtract(getLag()).before(queryStart)) {
-            queryStart = now.subtract(getLag());
+        if (queryStart.after(ClockUtil.wayFuture())) {
+            throw new RuntimeException("start way in future: qs="+queryStart+" lag="+getLag()+" end="+queryEnd);
         }
         return new MicroSecondTimeRange(queryStart, queryEnd);
     }
@@ -105,13 +128,12 @@ public abstract class AbstractEventSource extends AbstractSource implements Even
      * Scoots the query time back by the event lag amount from the run
      * properties to the query start time at the earliest
      */
-    protected void resetQueryTimeForLag() {
+    protected MicroSecondDate resetQueryTimeForLag() {
         MicroSecondDate newEdge = getQueryStart().subtract(lag);
         if (newEdge.before(getEventTimeRange().getBeginTime())) {
-            setQueryEdge(getEventTimeRange().getBeginTime());
-        } else {
-            setQueryEdge(newEdge);
+            newEdge = getEventTimeRange().getBeginTime();
         }
+        return newEdge;
     }
 
     /**
@@ -129,6 +151,7 @@ public abstract class AbstractEventSource extends AbstractSource implements Even
      * sets the latest time queried
      */
     protected void setQueryEdge(MicroSecondDate edge) {
+        lastQueryTime = ClockUtil.now();
         SodDB sdb = SodDB.getSingleton();
         QueryTime qt = sdb.getQueryTime(getName(), NO_DNS);
         if (qt != null) {
@@ -173,14 +196,22 @@ public abstract class AbstractEventSource extends AbstractSource implements Even
     public TimeInterval getRefreshInterval() {
         return refreshInterval;
     }
+    
+    protected boolean caughtUpToRealtime = false;
+    
+    protected boolean everCaughtUpToRealtime = false;
+    
+    protected MicroSecondDate lastQueryTime = null;
 
     public static final String NO_DNS = "NO_DNS";
 
     protected MicroSecondDate sleepUntilTime = null;
     
     protected TimeInterval increment, lag;
-    
+
     protected TimeInterval refreshInterval = new TimeInterval(10, UnitImpl.MINUTE);
+    
+    protected TimeInterval nearRealTimeInterval = new TimeInterval(2, UnitImpl.MINUTE);
     
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(AbstractEventSource.class);
 

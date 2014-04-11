@@ -101,7 +101,7 @@ public class DelayedEventSource extends AbstractEventSource implements EventSour
         }
         return out.toArray(new CacheEvent[0]);
     }
-    
+
     public boolean checkEvent(CacheEvent e) {
         return ClockUtil.now().subtract(delay).after(e.getOrigin().getTime());
     }
