@@ -26,11 +26,13 @@ import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
+import edu.sc.seis.fissuresUtil.chooser.CoarseAvailableData;
 import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
 import edu.sc.seis.fissuresUtil.stationxml.ChannelSensitivityBundle;
 import edu.sc.seis.fissuresUtil.stationxml.StationXMLToFissures;
 import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.seisFile.SeisFileException;
+import edu.sc.seis.seisFile.fdsnws.AbstractFDSNQuerier;
 import edu.sc.seis.seisFile.fdsnws.FDSNStationQuerier;
 import edu.sc.seis.seisFile.fdsnws.FDSNStationQueryParams;
 import edu.sc.seis.seisFile.fdsnws.FDSNWSException;
@@ -42,7 +44,6 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.StationIterator;
 import edu.sc.seis.sod.BuildVersion;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.source.SodSourceException;
-import edu.sc.seis.sod.source.seismogram.CoarseFdsnAvailableData;
 import edu.sc.seis.sod.subsetter.station.StationPointDistance;
 
 public class FdsnStation extends AbstractNetworkSource {
@@ -59,7 +60,7 @@ public class FdsnStation extends AbstractNetworkSource {
     public FdsnStation(Element config) throws Exception {
         super(config);
         queryParams.setIncludeRestricted(false);
-        queryParams.setIncludeAvailability(true);
+        queryParams.setIncludeAvailability(false);
         if (config != null) {
             // otherwise just use defaults
             int port = SodUtil.loadInt(config, "port", -1);
@@ -92,6 +93,13 @@ public class FdsnStation extends AbstractNetworkSource {
                         String host = SodUtil.getNestedText(element);
                         queryParams.setHost(host);
                         this.name = host;
+                    } else if (element.getTagName().equals("fdsnwsPath")) {
+                        // mainly for beta testing
+                        String fdsnwsPath = SodUtil.getNestedText(element);
+                        if (fdsnwsPath != null && fdsnwsPath.length() != 0) {
+                            queryParams.setFdsnwsPath(fdsnwsPath);
+                            logger.debug("Set fdsnwsPath: "+fdsnwsPath);
+                        }
                     }
                 }
             }
@@ -120,7 +128,7 @@ public class FdsnStation extends AbstractNetworkSource {
             staQP.clearChannel(); // channel constraints make getting networks very slow
             staQP.clearStartAfter().clearStartBefore().clearStartTime(); // start and end times also slow as 
             staQP.clearEndAfter().clearEndBefore().clearEndTime();       // applied to channel not network
-            logger.debug("getNetworks"+staQP.formURI());
+            logger.debug("getNetworks "+staQP.formURI());
             FDSNStationXML staxml = internalGetStationXML(staQP);
             List<NetworkAttrImpl> out = new ArrayList<NetworkAttrImpl>();
             NetworkIterator netIt = staxml.getNetworks();
@@ -193,6 +201,7 @@ public class FdsnStation extends AbstractNetworkSource {
         try {
             FDSNStationQueryParams staQP = setupQueryParams();
             staQP.setLevel(FDSNStationQueryParams.LEVEL_CHANNEL);
+            staQP.setIncludeAvailability(true);
             staQP.clearNetwork()
                     .appendToNetwork(station.getId().network_id.network_code)
                     .clearStation()
@@ -223,7 +232,9 @@ public class FdsnStation extends AbstractNetworkSource {
                                                                                   new MicroSecondDate(da.getExtent().getEnd()));
                             List<MicroSecondTimeRange> mstrList = new ArrayList<MicroSecondTimeRange>();
                             mstrList.add(range);
-                            availableData.update(staQP.getHost(), csb.getChan().get_id(), mstrList);
+                            availableData.update(csb.getChan().get_id(), mstrList);
+                        } else {
+                            availableData.update(csb.getChan().get_id(), new ArrayList<MicroSecondTimeRange>());
                         }
                     }
                 }
@@ -307,7 +318,7 @@ public class FdsnStation extends AbstractNetworkSource {
         }
     }
     
-    public CoarseFdsnAvailableData getAvailableData() {
+    public CoarseAvailableData getAvailableData() {
         return availableData;
     }
 
@@ -348,16 +359,17 @@ public class FdsnStation extends AbstractNetworkSource {
         while (count == 0 || getRetryStrategy().shouldRetry(latest, this, count++)) {
             try {
                 FDSNStationXML out = setupQuerier(staQP).getFDSNStationXML();
-                getRetryStrategy().serverRecovered(this);
+                if (count > 0) { getRetryStrategy().serverRecovered(this); }
                 return out;
-            } catch(SeisFileException t) {
-                latest = t;
-                if (t.getCause() instanceof IOException) {
-                    latest = t;
-                } else if (t instanceof FDSNWSException && ((FDSNWSException)t).getHttpResponseCode() != 200) {
-                    latest = t;
+            } catch(SeisFileException e) {
+                latest = e;
+                Throwable rootCause = AbstractFDSNQuerier.extractRootCause(e);
+                if (rootCause instanceof IOException) {
+                    // try again on IOException
+                } else if (e instanceof FDSNWSException && ((FDSNWSException)e).getHttpResponseCode() != 200) {
+                    latest = e;
                 } else {
-                    throw new RuntimeException(t);
+                    throw new RuntimeException(e);
                 }
             } catch(OutOfMemoryError e) {
                 throw new RuntimeException("Out of memory", e);
@@ -370,7 +382,7 @@ public class FdsnStation extends AbstractNetworkSource {
         return queryParams;
     }
     
-    CoarseFdsnAvailableData availableData = new CoarseFdsnAvailableData();
+    CoarseAvailableData availableData = new CoarseAvailableData();
     
     HashMap<String, QuantityImpl> chanSensitivityMap = new HashMap<String, QuantityImpl>();
 

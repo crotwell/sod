@@ -23,11 +23,14 @@ import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.iris.Fissures.seismogramDC.RequestFilterUtil;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
+import edu.sc.seis.fissuresUtil.chooser.CoarseAvailableData;
+import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockStation;
 import edu.sc.seis.fissuresUtil.mseed.FissuresConvert;
 import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.time.ReduceTool;
 import edu.sc.seis.seisFile.ChannelTimeWindow;
 import edu.sc.seis.seisFile.SeisFileException;
+import edu.sc.seis.seisFile.fdsnws.AbstractFDSNQuerier;
 import edu.sc.seis.seisFile.fdsnws.FDSNDataSelectQuerier;
 import edu.sc.seis.seisFile.fdsnws.FDSNDataSelectQueryParams;
 import edu.sc.seis.seisFile.fdsnws.FDSNStationQuerier;
@@ -53,13 +56,14 @@ import edu.sc.seis.sod.source.network.WrappingNetworkSource;
 
 public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLocator {
 
-    private String host = FDSNDataSelectQueryParams.IRIS_HOST;
-
-    private int port = -1;
+    private FDSNDataSelectQueryParams queryParams = new FDSNDataSelectQueryParams();
 
     private int timeoutMillis = 10 * 1000;
 
-    CoarseFdsnAvailableData availableData;
+
+    FdsnStation fdsnStation = null;
+    
+    CoarseAvailableData availableData;
 
     private String username;
 
@@ -67,7 +71,6 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
 
     public FdsnDataSelect() {
         super("DefaultFDSNDataSelect");
-        host = FDSNDataSelectQueryParams.IRIS_HOST;
         timeoutMillis = 10 * 1000;
         username = "";
         password = "";
@@ -80,16 +83,28 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
 
     public FdsnDataSelect(Element config, String defaultHost) throws MalformedURLException, URISyntaxException {
         super(config, "DefaultFDSNDataSelect", 2);
-        host = SodUtil.loadText(config, "host", defaultHost);
-        port = SodUtil.loadInt(config, "port", -1);
+
+        int port = SodUtil.loadInt(config, "port", -1);
+        if (port > 0) {
+            queryParams.setPort(port);
+        }
+        String host = SodUtil.loadText(config, "host", defaultHost);
+        if (host != null && host.length() != 0) {
+            queryParams.setHost(host);
+        }
+        // mainly for beta testing
+        String fdsnwsPath = SodUtil.loadText(config, "fdsnwsPath", null);
+        if (fdsnwsPath != null && fdsnwsPath.length() != 0) {
+            queryParams.setFdsnwsPath(fdsnwsPath);
+        }
         username = SodUtil.loadText(config, "user", "");
         password = SodUtil.loadText(config, "password", "");
         timeoutMillis = 1000 * SodUtil.loadInt(config, "timeoutSecs", 10);
+
         checkFdsnStationLinkage();
     }
     
     private void checkFdsnStationLinkage() {
-        FdsnStation fdsnStation = null;
         NetworkSource wrappedNetSource = ((WrappingNetworkSource)Start.getNetworkArm().getNetworkSource());
         while (wrappedNetSource instanceof WrappingNetworkSource) {
             wrappedNetSource = ((WrappingNetworkSource)wrappedNetSource).getWrapped();
@@ -113,10 +128,10 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
         }
     }
     
-    public FdsnDataSelect(String host,int port, CoarseFdsnAvailableData fdsnStationAvailability) {
+    public FdsnDataSelect(String host,int port, CoarseAvailableData fdsnStationAvailability) {
         super(host, 2);
-        this.host = host;
-        this.port = port;
+        queryParams.setHost(host);
+        queryParams.setPort(port);
         this.availableData = fdsnStationAvailability;
     }
 
@@ -130,12 +145,12 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
             @Override
             public List<RequestFilter> availableData(List<RequestFilter> request) throws SeismogramSourceException {
                 if ( availableData == null) {
-                    return request;
+                    return internalAvailableData(request);
                 }
                 List<RequestFilter> out = new ArrayList<RequestFilter>();
                 for (RequestFilter rf : request) {
-                    if (availableData.isCached(host, rf.channel_id)) {
-                        List<MicroSecondTimeRange> avail = availableData.get(host, rf.channel_id);
+                    if (availableData.isCached(rf.channel_id)) {
+                        List<MicroSecondTimeRange> avail = availableData.get(rf.channel_id);
                         MicroSecondTimeRange reqRange = new MicroSecondTimeRange(rf);
                         for (MicroSecondTimeRange range : avail) {
                             MicroSecondTimeRange intersect = reqRange.intersection(range);
@@ -143,6 +158,8 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
                                 out.add(new RequestFilter(rf.channel_id, intersect.getBeginTime().getFissuresTime(), intersect.getEndTime().getFissuresTime()));
                             }
                         }
+                    } else {
+                        //fdsnStation.getChannels(MockStation.)
                     }
                 }
                 return out;
@@ -159,13 +176,14 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
                         getRetryStrategy().serverRecovered(this);
                         return result;
                     } catch(SeismogramSourceException t) {
+                        latest = t;
+                        Throwable rootCause = AbstractFDSNQuerier.extractRootCause(t);
                         if (t.getCause() == null) {
                             throw t;
-                        } else if (t.getCause() instanceof IOException
-                                || (t.getCause() != null && t.getCause().getCause() instanceof IOException)) {
-                            latest = t;
+                        } else if (rootCause instanceof IOException) {
+                            // try again on IOException
                         } else if (t.getCause() instanceof FDSNWSException && ((FDSNWSException)t.getCause()).getHttpResponseCode() != 200) {
-                            latest = t;
+                            // try again on IOException
                         } else {
                             throw t;
                         }
@@ -185,25 +203,25 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
                 try {
                     List<RequestFilter> out = new ArrayList<RequestFilter>();
                     if (request.size() != 0) {
-                        FDSNStationQueryParams queryParams = new FDSNStationQueryParams(host);
-                        if (port > 0) {
-                            queryParams.setPort(port);
+                        FDSNStationQueryParams staQueryParams = new FDSNStationQueryParams(queryParams.getHost());
+                        if (queryParams.getPort() > 0) {
+                            staQueryParams.setPort(queryParams.getPort());
                         }
-                        queryParams.setIncludeAvailability(true);
-                        queryParams.setLevel("channel");
+                        staQueryParams.setIncludeAvailability(true);
+                        staQueryParams.setLevel("channel");
                         for (RequestFilter rf : request) {
                             ChannelId c = rf.channel_id;
-                            queryParams.appendToNetwork(c.network_id.network_code);
-                            queryParams.appendToStation(c.station_code);
-                            queryParams.appendToLocation(c.site_code);
-                            queryParams.appendToChannel(c.channel_code);
+                            staQueryParams.appendToNetwork(c.network_id.network_code);
+                            staQueryParams.appendToStation(c.station_code);
+                            staQueryParams.appendToLocation(c.site_code);
+                            staQueryParams.appendToChannel(c.channel_code);
                         }
                         try {
-                            logger.info("availavle data query: "+queryParams.formURI());
+                            logger.info("availavle data query: "+staQueryParams.formURI());
                         } catch(URISyntaxException e) {
                             throw new RuntimeException(e);
                         }
-                        FDSNStationQuerier querier = new FDSNStationQuerier(queryParams);
+                        FDSNStationQuerier querier = new FDSNStationQuerier(staQueryParams);
                         NetworkIterator nIt = querier.getFDSNStationXML().getNetworks();
                         while (nIt.hasNext()) {
                             Network n = nIt.next();
@@ -245,10 +263,7 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
                     throws SeismogramSourceException {
                 List<LocalSeismogramImpl> out = new ArrayList<LocalSeismogramImpl>();
                 if (request.size() != 0) {
-                    FDSNDataSelectQueryParams queryParams = new FDSNDataSelectQueryParams(host);
-                    if (port > 0) {
-                        queryParams.setPort(port);
-                    }
+                    FDSNDataSelectQueryParams newQueryParams = queryParams.clone();
                     List<ChannelTimeWindow> queryRequest = new ArrayList<ChannelTimeWindow>();
                     for (RequestFilter rf : request) {
                         ChannelId c = rf.channel_id;
@@ -259,7 +274,7 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
                                                                new MicroSecondDate(rf.start_time),
                                                                new MicroSecondDate(rf.end_time)));
                     }
-                    List<DataRecord> drList = retrieveData(queryParams, queryRequest, getRetries());
+                    List<DataRecord> drList = retrieveData(newQueryParams, queryRequest, getRetries());
                     try {
                         List<LocalSeismogramImpl> perRFList = FissuresConvert.toFissures(drList);
                         perRFList = Arrays.asList(ReduceTool.merge(perRFList.toArray(new LocalSeismogramImpl[0])));
