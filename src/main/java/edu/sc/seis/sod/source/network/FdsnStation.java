@@ -61,6 +61,7 @@ public class FdsnStation extends AbstractNetworkSource {
         super(config);
         queryParams.setIncludeRestricted(false);
         queryParams.setIncludeAvailability(false);
+        includeAvailability = SodUtil.isTrue(config, "includeAvailability", true);
         if (config != null) {
             // otherwise just use defaults
             int port = SodUtil.loadInt(config, "port", -1);
@@ -201,7 +202,7 @@ public class FdsnStation extends AbstractNetworkSource {
         try {
             FDSNStationQueryParams staQP = setupQueryParams();
             staQP.setLevel(FDSNStationQueryParams.LEVEL_CHANNEL);
-            staQP.setIncludeAvailability(true);
+            staQP.setIncludeAvailability(includeAvailability);
             staQP.clearNetwork()
                     .appendToNetwork(station.getId().network_id.network_code)
                     .clearStation()
@@ -233,8 +234,14 @@ public class FdsnStation extends AbstractNetworkSource {
                             List<MicroSecondTimeRange> mstrList = new ArrayList<MicroSecondTimeRange>();
                             mstrList.add(range);
                             availableData.update(csb.getChan().get_id(), mstrList);
-                        } else {
+                        } else if (includeAvailability) {
                             availableData.update(csb.getChan().get_id(), new ArrayList<MicroSecondTimeRange>());
+                        } else {
+                            // didn't ask for availablility, so use channel effective times
+                            MicroSecondTimeRange range = new MicroSecondTimeRange(csb.getChan().getEffectiveTime());
+                            List<MicroSecondTimeRange> mstrList = new ArrayList<MicroSecondTimeRange>();
+                            mstrList.add(range);
+                            availableData.update(csb.getChan().get_id(), mstrList);
                         }
                     }
                 }
@@ -381,6 +388,8 @@ public class FdsnStation extends AbstractNetworkSource {
     public FDSNStationQueryParams getDefaultQueryParams() {
         return queryParams;
     }
+    
+    boolean includeAvailability = true;
     
     CoarseAvailableData availableData = new CoarseAvailableData();
     
