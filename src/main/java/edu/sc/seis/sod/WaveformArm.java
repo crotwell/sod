@@ -34,6 +34,7 @@ public class WaveformArm extends Thread implements Arm {
     }
     
     public void run() {
+        int noWorkLoopCounter = 0;
         logger.info("Starting WaveformArm");
         // wait on Network arm startup
         while( ! Start.getNetworkArm().isInitialStartupFinished()) {
@@ -51,7 +52,18 @@ public class WaveformArm extends Thread implements Arm {
                                 || SodDB.getSingleton().getNumWorkUnits(Standing.RETRY) != 0 || SodDB.getSingleton()
                                 .getNumWorkUnits(Standing.IN_PROG) != 0  || SodDB.getSingleton()
                                 .getNumWorkUnits(Standing.INIT) != 0)) {
-                    //logger.debug("Processor waiting for work unit to show up");
+                    if (noWorkLoopCounter > 10) {
+                        noWorkLoopCounter=0;
+                        logger.info("Processor waiting for work unit to show up: ptc= "+
+                                possibleToContinue() 
+                                +" enp="+ (SodDB.getSingleton().isENPTodo())  
+                                +" esp="+ (SodDB.getSingleton().isESPTodo()) 
+                                +" retry="+ (SodDB.getSingleton().getNumWorkUnits(Standing.RETRY) != 0)  
+                                +" prog="+ (SodDB.getSingleton().getNumWorkUnits(Standing.IN_PROG) != 0 )  
+                                +" init="+ (SodDB.getSingleton().getNumWorkUnits(Standing.INIT) != 0));
+                    } else {
+                        logger.debug("Processor waiting for work unit to show up ");
+                    }
                     try {
                         // sleep, but wake up if eventArm does notifyAll()
                         //logger.debug("waiting on event arm");
@@ -93,6 +105,7 @@ public class WaveformArm extends Thread implements Arm {
                     }
                 }
                 if(next != null) {
+                    noWorkLoopCounter = 0;
                     processorStartWork();
                     try {
                         next.run();
@@ -104,7 +117,7 @@ public class WaveformArm extends Thread implements Arm {
                     processorFinishWork();
                 } else {
                     // nothing to do in db, not possible to continue
-                    logger.debug("No work to do, quiting processing: " + possibleToContinue()
+                    logger.info("No work to do, quiting processing: " + possibleToContinue()
                             + " " + (SodDB.getSingleton().getNumWorkUnits(Standing.RETRY) != 0) + " "
                             + (SodDB.getSingleton().getNumWorkUnits(Standing.IN_PROG) != 0));
                     return;
