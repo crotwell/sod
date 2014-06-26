@@ -147,7 +147,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                             if (eArm != null) {
                                 eArm.getSubsetters().add(0, magRange);
                             }
-                        } else {
+                        } else if (queryParams.getHost().equals(AbstractQueryParams.IRIS_HOST)) {
                             queryParams.setMagnitudeType("preferred");
                         }
                         if (magRange.getMinValue() > -99) {
