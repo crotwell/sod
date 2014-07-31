@@ -1,6 +1,5 @@
 package edu.sc.seis.sod.subsetter.station;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.w3c.dom.Element;
@@ -16,10 +15,11 @@ import edu.sc.seis.sod.status.StringTree;
 public class StationCode implements StationSubsetter {
 
     public StationCode(Element config) throws ConfigurationException { 
-        if (SodUtil.getNestedText(config).trim().length() > 5) {
-            throw new ConfigurationException("Station codes are limited to 5 characters, not "+SodUtil.getNestedText(config).trim().length()+" as in '"+SodUtil.getNestedText(config).trim()+"'");
-        }
         code = SodUtil.getNestedText(config);
+        Pattern simpleCode = Pattern.compile("[A-Z0-9]+");
+        if (simpleCode.matcher(code).matches() && code.trim().length() > 5) {
+            throw new ConfigurationException("Station codes are limited to 5 characters, not "+code.trim().length()+" as in '"+code.trim()+"'");
+        }
         pattern  = Pattern.compile(createRegexFromGlob(code));
     }
 
