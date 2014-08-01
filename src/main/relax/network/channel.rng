@@ -7,7 +7,8 @@
         <choice>
             <xsd:annotation>
                 <summary>Ingredients for selecting channels</summary>
-                <description>This collects all of the subsetters that make decisions on the contents of a channel.</description>
+                <description>This collects all of the subsetters that make decisions on the contents of a channel.
+                In addition, any network or station subsetter may be used here within a logical subsetter.</description>
                 <velocity>#networkArmPage()</velocity>
             </xsd:annotation>
             <ref name="siteCode"/>
@@ -228,7 +229,8 @@
                 <summary>Matches all enclosed channel subsetters</summary>
                 <description>The output is the logical AND of the outputs of all included channel subsetters. This means
                     that it will evaluate to true only if all the enclosed channel subsetters evaluate to true. The
-                    subsetters after the first false outputted are not evaluated.</description>
+                    subsetters after the first false outputted are not evaluated.
+                    In addition, any network or station subsetter may be used here directly.</description>
                 <example>
                     <channelAND>
                         <channelEffectiveTimeOverlap>
@@ -257,7 +259,8 @@
                 <summary>Matches at least one enclosed channel subsetter</summary>
                 <description>The output is the logical OR of the outputs of all included Channeel subsetters. This means
                     that it will evaluate to true if at least one of the enclosed channel subsetters evaluates to true.
-                    The subsetters after the first true outputted are not evaluated.</description>
+                    The subsetters after the first true outputted are not evaluated.
+                    In addition, any network or station subsetter may be used here directly.</description>
                 <example>
                     <channelOR>
                         <channelEffectiveTimeOverlap>
@@ -285,7 +288,8 @@
             <xsd:annotation>
                 <summary>Matches the negated output of the enclosed channel subsetter</summary>
                 <description>The output is the logical NOT of the output of the enclosed channel subsetter. This means
-                    that it will evaluate to false if the enclosed channel subsetter evaluates to true, and vice versa.</description>
+                    that it will evaluate to false if the enclosed channel subsetter evaluates to true, and vice versa.
+                    In addition, any network or station subsetter may be used here directly.</description>
             </xsd:annotation>
             <ref name="channelPlus"/>
         </element>

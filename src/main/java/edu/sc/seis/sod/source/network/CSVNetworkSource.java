@@ -48,6 +48,7 @@ import edu.sc.seis.sod.subsetter.AreaSubsetter;
 public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource {
 
     public CSVNetworkSource(Element config) throws ConfigurationException {
+        super(config, "CSVNetworkSource");
         initStations(config);
         initChannels(config);
     }
@@ -101,6 +102,7 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
     }
 
     public CSVNetworkSource(String stationFile, String channelFile) throws ConfigurationException, FileNotFoundException, IOException {
+        super("CSVNetworkSource");
         stations = getStationsFromReader(AreaSubsetter.makeRelativeOrRecipeDirReader(stationFile));
         channels = getChannelsFromReader(AreaSubsetter.makeRelativeOrRecipeDirReader(channelFile),
                                          stations);

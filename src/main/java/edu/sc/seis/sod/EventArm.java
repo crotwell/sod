@@ -98,7 +98,14 @@ public class EventArm implements Arm {
                 Element el = (Element)node;
                 Object sodElement = SodUtil.load(el, new String[] {"eventArm", "origin", "event"});
                 if (sodElement instanceof EventSource) {
-                    sources.add((EventSource)sodElement);
+                    EventSource es = (EventSource)sodElement;
+                    for (EventSource existingES : sources) {
+                        if (es.getName().equals(existingES.getName())) {
+                            logger.warn("Source name already used, appending "+sources.size());
+                            es.appendToName(""+sources.size());
+                        }
+                    }
+                    sources.add(es);
                 } else if (sodElement instanceof OriginSubsetter) {
                     subsetters.add((OriginSubsetter)sodElement);
                 }
@@ -114,7 +121,7 @@ public class EventArm implements Arm {
             if ((lastTime.get(source) == null || lastTime.get(source).add(wait).before(ClockUtil.now()))
                     && source.hasNext()) {
                 CacheEvent[] next = source.next();
-                logger.info("Handling " + next.length + " events from " + source.getDescription());
+                logger.info("Handling " + next.length + " events from source " + source.getDescription());
                 handle(next);
                 lastTime.put(source, ClockUtil.now());
                 if (source.hasNext()) {
@@ -311,6 +318,11 @@ public class EventArm implements Arm {
 
     public EventSource[] getSources() {
         return (EventSource[])sources.toArray(new EventSource[0]);
+    }
+
+    
+    public List<OriginSubsetter> getSubsetters() {
+        return subsetters;
     }
 
     public Object getWaveformArmSync() {

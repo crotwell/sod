@@ -7,8 +7,8 @@
     </properties>
     <eventArm>
         <fdsnEvent>
-#if($baseurl)
-            <baseurl>$baseurl</baseurl>
+#if($server)
+            <host>$server</host>
 #end
 #if($box)
             <boxArea>

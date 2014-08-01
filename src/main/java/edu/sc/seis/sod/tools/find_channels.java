@@ -49,8 +49,7 @@ public class find_channels extends find_stations {
         add(createListOption("channels",
                              'c',
                              "channels",
-                             "The codes of channels to retrieve",
-                             "BH*"));
+                             "The codes of channels to retrieve"));
     }
 
     public static void main(String[] args) throws Exception {

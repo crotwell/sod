@@ -7,6 +7,7 @@ import edu.iris.Fissures.IfNetwork.Filter;
 import edu.iris.Fissures.IfNetwork.FilterType;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.bag.Transfer;
@@ -67,6 +68,12 @@ public class TransferResponse implements WaveformProcess, Threadable {
         try {
             Instrumentation inst = na.getInstrumentation(chan);
             InstrumentationLoader.checkResponse(inst.the_response);
+            UnitImpl inUnits = ((UnitImpl)inst.the_response.stages[0].input_units);
+            if ( ! (inUnits.isConvertableTo(UnitImpl.METER) 
+                    || inUnits.isConvertableTo(UnitImpl.METER_PER_SECOND) 
+                    || inUnits.isConvertableTo(UnitImpl.METER_PER_SECOND_PER_SECOND) )) {
+                throw new InvalidResponse("Response input units are not convertible to m, m/s or m/s/s, cannot apply correction."+inUnits);
+            }
             Filter filter = inst.the_response.stages[0].filters[0];
             if (filter.discriminator().value() != FilterType._POLEZERO) {
                 String filterType = " ("+filter.discriminator().value()+")";
@@ -77,7 +84,11 @@ public class TransferResponse implements WaveformProcess, Threadable {
                 }
                 throw new InvalidResponse("Instrumentation is not a of pole-zero type: "+filterType);
             }
+            try {
             return FissuresToSac.getPoleZero(inst.the_response);
+            } catch (IllegalArgumentException e) {
+                throw new InvalidResponse(e.getMessage(), e);
+            }
         } catch(ChannelNotFound e) {
             // channel not found is thrown if there is no response for a
             // channel at a time

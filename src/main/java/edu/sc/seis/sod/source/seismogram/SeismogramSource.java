@@ -9,7 +9,7 @@ import edu.sc.seis.sod.SodElement;
 
 public interface SeismogramSource extends SodElement {
     
-    public List<RequestFilter> available_data(List<RequestFilter> request);
+    public List<RequestFilter> availableData(List<RequestFilter> request) throws SeismogramSourceException;
     
     public List<LocalSeismogramImpl> retrieveData(List<RequestFilter> request) throws SeismogramSourceException;
     

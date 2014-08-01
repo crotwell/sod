@@ -85,7 +85,7 @@ public class SodUtil {
     }
 
     public static boolean isTrueText(String nestedText) {
-        if(nestedText.equals("TRUE")) {
+        if(nestedText.toUpperCase().equals("TRUE")) {
             return true;
         }
         return false;
@@ -571,6 +571,15 @@ public class SodUtil {
         Element child = XMLUtil.getElement(config, elementName);
         if(child != null) {
             return Integer.parseInt(XMLUtil.getText(child));
+        } else {
+            return defaultValue;
+        }
+    }
+
+    public static float loadFloat(Element config, String elementName, float defaultValue) {
+        Element child = XMLUtil.getElement(config, elementName);
+        if(child != null) {
+            return Float.parseFloat(XMLUtil.getText(child));
         } else {
             return defaultValue;
         }

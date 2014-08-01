@@ -49,7 +49,7 @@ public class RunProperties {
 				maxRetry = SodUtil.loadTimeInterval(maxRetryChild);
 			}
 			Element seismogramLatencyEl = SodUtil.getElement(el,
-					"seismogramLag");
+					"seismogramLatency");
 			if (seismogramLatencyEl != null) {
 				seismogramLatency = SodUtil
 						.loadTimeInterval(seismogramLatencyEl);
@@ -98,7 +98,7 @@ public class RunProperties {
 			}
             if (DOMHelper
                     .hasElement(el, "skipAvailableData")) {
-                skipAvailableData = true;
+                skipAvailableData = DOMHelper.extractBoolean(el, "skipAvailableData");
             }
 			Element hibernateExtraConfig = SodUtil.getElement(el, "hibernateConfig");
 			if (hibernateExtraConfig != null) {

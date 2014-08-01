@@ -39,13 +39,13 @@ public class CommandLineTool extends AbstractClient {
                        'r',
                        "recipe",
                        "Print the created recipe to stdout instead of running it"));
-        add(new FlaggedOption(AbstractFDSNClient.BASEURL,
+        add(new FlaggedOption("server",
                               JSAP.STRING_PARSER,
                               null,
                               false,
-                              JSAP.NO_SHORTFLAG,
-                              AbstractFDSNClient.BASEURL,
-                              "Base URL for queries, ie everything before the '?'"));
+                              'S',
+                              "server",
+                              "The server to use, default is 'service.iris.edu'"));
     }
 
     public VelocityContext getContext() {

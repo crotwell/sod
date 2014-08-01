@@ -44,7 +44,6 @@ public class WavWriter extends AbstractSeismogramWriter {
 
     @Override
     public void write(String loc, LocalSeismogramImpl seis, ChannelImpl chan, CacheEvent ev) throws Exception {
-        System.out.println("Speedup="+speedup);
         File f = new File(loc);
         FissuresToWAV fisToWAV = new FissuresToWAV(seis, speedup);
         DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(f)));

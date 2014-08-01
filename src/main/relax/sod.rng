@@ -84,12 +84,12 @@
         <element name="networkArm">
             <xsd:annotation>
                 <summary>Selects and processes networks, stations, sites and channels</summary>
-                <description>The network arm goes out to the server specified in the network finder,
+                <description>The network arm goes out to the server specified in the network source,
                     and retrieves all the networks, stations sites, and channels that server knows
                     about that pass the subsetters contained in the arm. It then runs those
                     successful items through the processors, all the while keeping the network
                     status items abreast of the process. If a source is not given, it defaults to the
-                    IRIS_NetworkDC at the DMC.</description>
+                    FDSN Station web service at the IRIS DMC.</description>
                     <velocity>#networkArmPage()</velocity>
             </xsd:annotation>
             <optional>
@@ -134,7 +134,14 @@
     <define name="waveformArm" >
         <element name="waveformArm">
             <xsd:annotation>
-                <summary>Downloads and processes waveforms individually</summary>
+                <summary>Operates on the networks and events returned by the network and event arms,
+                downloading and processesing waveforms individually</summary>
+                <description>Both types of waveform arm take the items returned by the network and
+                    event arms and generate the necessary requests to retrieve seismograms. The data
+                    received are then processed. The regular waveformArm takes each channel from the
+                    network arm and runs it through its subsetters and processors individually. The
+                    waveformVectorArm takes the channels from the network arm, groups them as
+                    motion vectors, and runs them through its items as a group.</description>
                 <velocity>#waveformArmPage()</velocity>
             </xsd:annotation>
             <optional>
@@ -170,9 +177,16 @@
     <define name="waveformVectorArm" >
         <element name="waveformVectorArm">
             <xsd:annotation>
-                <summary>Downloads and processes waveforms by channel groups</summary>
+                <summary>Operates on the networks and events returned by the network and event arms,
+                downloading and processesing waveforms by channel groups</summary>
                 <description>The waveformVectorArm groups three orthogonal components from a site
                     and then does its processing on them as a group.</description>
+                    <description>Both types of waveform arm take the items returned by the network and
+                    event arms and generate the necessary requests to retrieve seismograms. The data
+                    received are then processed. The regular waveformArm takes each channel from the
+                    network arm and runs it through its subsetters and processors individually. The
+                    waveformVectorArm takes the channels from the network arm, groups them as
+                    motion vectors, three orthogonal components, and runs them through its items as a group.</description>
                 <velocity>#waveformVectorArmPage()</velocity>
             </xsd:annotation>
             <optional>

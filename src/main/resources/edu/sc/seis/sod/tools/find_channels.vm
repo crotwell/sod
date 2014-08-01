@@ -2,8 +2,8 @@
 $additionalArms#end
     <networkArm>
         <fdsnStation>
-#if($baseurl)
-            <baseurl>$baseurl</baseurl>
+#if($server)
+            <host>$server</host>
 #end
 #foreach($code in $networks)
             <networkCode>$code</networkCode>

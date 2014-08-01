@@ -13,11 +13,13 @@ import edu.sc.seis.fissuresUtil.mockFissures.IfEvent.MockOrigin;
 import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.source.AbstractSource;
 
 
-public class PeriodicFakeEventSource implements EventSource {
+public class PeriodicFakeEventSource extends AbstractSource implements EventSource {
     
     protected PeriodicFakeEventSource(MicroSecondDate startTime, TimeInterval interval, int numEvents) {
+        super("PeriodicFakeEventSource");
         this.startTime = startTime;
         this.interval = interval;
         this.numEvents = numEvents;
@@ -25,6 +27,7 @@ public class PeriodicFakeEventSource implements EventSource {
     }
 
     public PeriodicFakeEventSource(Element config) throws ConfigurationException {
+        super(config, "PeriodicFakeEventSource ");
         startTime = SodUtil.loadTime(SodUtil.getElement(config, "startTime")).load();
         interval = SodUtil.loadTimeInterval(SodUtil.getElement(config, "interval"));
         numEvents = SodUtil.loadInt(config, "numEvents", -1);

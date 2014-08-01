@@ -3,6 +3,7 @@ package edu.sc.seis.sod;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.log4j.BasicConfigurator;
@@ -24,7 +25,48 @@ import edu.sc.seis.sod.channelGroup.SiteMatchRule;
 public class ChannelGroupTest {
 
     static {BasicConfigurator.configure();}
-    
+
+    @Test
+    public void testGroupBandGain() throws ConfigurationException {
+
+        List<ChannelImpl> chanList = new ArrayList<ChannelImpl>();
+        List<ChannelImpl> failures = new ArrayList<ChannelImpl>();
+        StationImpl mockStation = MockStation.createStation();
+        chanList.add(MockChannel.createChannel(mockStation, "00", "BHZ"));
+        chanList.add(MockChannel.createChannel(mockStation, "00", "BHN"));
+        chanList.add(MockChannel.createChannel(mockStation, "00", "BHE"));
+        chanList.add(MockChannel.createChannel(mockStation, "00", "HHZ"));
+        chanList.add(MockChannel.createChannel(mockStation, "00", "HHN"));
+        chanList.add(MockChannel.createChannel(mockStation, "00", "HHE"));
+        ChannelGrouper cger = new ChannelGrouper();
+        
+        HashMap<String, List<ChannelImpl>> map = cger.groupByNetStaBandGain(chanList);
+        for (String s : map.keySet()) {
+            List<ChannelImpl> subList = map.get(s);
+            assertEquals(3, subList.size());
+        }
+    }
+    @Test
+    public void testBAndHGroup() throws ConfigurationException {
+        List<ChannelImpl> chanList = new ArrayList<ChannelImpl>();
+        List<ChannelImpl> failures = new ArrayList<ChannelImpl>();
+        StationImpl mockStation = MockStation.createStation();
+        chanList.add(MockChannel.createChannel(mockStation, "00", "BHZ"));
+        chanList.add(MockChannel.createChannel(mockStation, "00", "BHN"));
+        chanList.add(MockChannel.createChannel(mockStation, "00", "BHE"));
+        chanList.add(MockChannel.createChannel(mockStation, "00", "HHZ"));
+        chanList.add(MockChannel.createChannel(mockStation, "00", "HHN"));
+        chanList.add(MockChannel.createChannel(mockStation, "00", "HHE"));
+        ChannelGrouper cger = new ChannelGrouper();
+        
+        List<ChannelGroup> cgList = cger.group(chanList, failures);
+        assertEquals("failures", 0, failures.size());
+        assertEquals("grouped", 2, cgList.size());
+        for (ChannelGroup cg : cgList) {
+            assertEquals(cg.getChannel1().get_code().substring(0, 1), cg.getChannel2().get_code().substring(0, 1)); 
+            assertEquals(cg.getChannel1().get_code().substring(0, 1), cg.getChannel3().get_code().substring(0, 1));     
+        }
+    }
     @Test
     public void testXK04Group() throws ConfigurationException {
         List<ChannelImpl> chanList = new ArrayList<ChannelImpl>();

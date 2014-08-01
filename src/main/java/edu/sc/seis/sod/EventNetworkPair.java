@@ -1,6 +1,7 @@
 package edu.sc.seis.sod;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
@@ -34,7 +35,7 @@ public class EventNetworkPair extends AbstractEventPair {
     public void run() {
         // don't bother with station if effective time does not
         // overlap event time
-
+        List<EventStationPair> alreadyInDb = SodDB.getSingleton().loadESPForNetwork(getEvent(), getNetwork());
         List<EventStationPair> staPairList = new ArrayList<EventStationPair>();
         try {
             EventEffectiveTimeOverlap overlap = new EventEffectiveTimeOverlap(getEvent());
@@ -54,6 +55,7 @@ public class EventNetworkPair extends AbstractEventPair {
                     try {
                         p = new EventStationPair(getEvent(), 
                                                  NetworkDB.getSingleton().getStation(stations[i].getDbid()));
+                        logger.debug("Created ESP "+p);
                     } catch(NotFound e) {
                         throw new RuntimeException("Should never happen but I guess it did!", e);
                     }
@@ -62,8 +64,29 @@ public class EventNetworkPair extends AbstractEventPair {
             }
             synchronized(WaveformArm.class) {
                 update(Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.SUCCESS));
-                for (EventStationPair p : staPairList) {
-                    SodDB.getSession().save(p);
+                Iterator<EventStationPair> it = staPairList.iterator();
+                while(it.hasNext()) {
+                    EventStationPair p = it.next();
+                    boolean found = false;
+                    for (EventStationPair dbEsp : alreadyInDb) {
+                        if (dbEsp.getStationDbId() == p.getStationDbId()) {
+                            found = true;
+                            p = dbEsp;
+                            break;
+                        }
+                    }
+                    if (found) {
+                        if (! (p.getStatus().getStanding().equals(Standing.REJECT) 
+                                || p.getStatus().getStanding().equals(Standing.SUCCESS))) {
+                            p.update(Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                              Standing.INIT));
+                        SodDB.getSession().update(p);
+                        } else {
+                            it.remove();
+                        }
+                    } else {
+                        SodDB.getSession().save(p);
+                    }
                 }
                 SodDB.commit();
             }

@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import org.w3c.dom.Element;
+
 import com.csvreader.CsvReader;
 
 import edu.iris.Fissures.Time;
@@ -15,7 +17,15 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.UserConfigurationException;
 
 
-public abstract class AbstractCSVSource {
+public abstract class AbstractCSVSource extends AbstractSource {
+
+    public AbstractCSVSource(Element config, String defaultName) {
+        super(config, defaultName);
+    }
+
+    public AbstractCSVSource(String name) {
+        super(name);
+    }
 
     public static final String LONGITUDE = "longitude";
     public static final String LATITUDE = "latitude";

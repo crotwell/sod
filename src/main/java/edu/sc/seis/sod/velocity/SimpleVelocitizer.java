@@ -19,6 +19,7 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.CookieJar;
@@ -46,7 +47,7 @@ public class SimpleVelocitizer {
 
     public String evaluate(String template,
                            EventAccessOperations event,
-                           Channel channel,
+                           ChannelImpl channel,
                            RequestFilter[] original,
                            RequestFilter[] available,
                            LocalSeismogramImpl[] seismograms,

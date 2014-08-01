@@ -75,7 +75,7 @@ public class CSVEventPrinter implements OriginSubsetter {
         buff.append(magContribBuf + COM);
         buff.append(preferred_origin.getCatalog() + COM);
         buff.append(preferred_origin.getContributor() + COM);
-        buff.append(eventAttr.name + COM);
+        buff.append("\""+eventAttr.name+"\"" + COM);
         FlinnEngdahlRegion region = eventAttr.region;
         buff.append(region.number + COM);
         buff.append("" + region.type.value());

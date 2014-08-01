@@ -110,7 +110,11 @@ public class VelocitySite extends Site {
     }
 
     public String getDepth() {
-        return FissuresFormatter.formatDepth(QuantityImpl.createQuantityImpl(site.getLocation().depth));
+        return FissuresFormatter.formatElevation(QuantityImpl.createQuantityImpl(site.getLocation().depth));
+    }
+
+    public String getElevation() {
+        return FissuresFormatter.formatElevation(QuantityImpl.createQuantityImpl(site.getLocation().elevation));
     }
 
     public String toString() {

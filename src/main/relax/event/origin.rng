@@ -34,7 +34,7 @@
             <ref name="originNOT"/>
             <ref name="externalOriginSubsetter"/>
             <ref name="youngerThan"/>
-            <ref name="printline"/>
+            <ref name="printlineEventProcess"/>
             <ref name="CSVEventPrinter"/>
             <ref name="similarEvent"/>
             <ref name="originScript"/>
@@ -158,8 +158,8 @@
                         The subsetters after the first false outputted are not evaluated.</description>
                     <example>
                         <originAND>
-                            <catalog>FINGER</catalog>
-                            <contributor>NEIC</contributor>
+                            <catalog>NEIC PDE</catalog>
+                            <contributor>NEIC ALERT</contributor>
                         </originAND>
                     </example>
                 </xsd:documentation>
@@ -179,8 +179,8 @@
                         to true. The subsetters after the first true outputted are not evaluated.</description>
                     <example>
                         <originOR>
-                            <catalog>FINGER</catalog>
-                            <contributor>NEIC</contributor>
+                            <catalog>NEIC PDE</catalog>
+                            <contributor>NEIC ALERT</contributor>
                         </originOR>
                     </example>
                 </xsd:documentation>
@@ -200,7 +200,7 @@
                         vice versa.</description>
                     <example>
                         <originNOT>
-                            <catalog>FINGER</catalog>
+                            <catalog>NEIC PDE</catalog>
                         </originNOT>
                     </example>
                 </xsd:documentation>
@@ -329,7 +329,7 @@
             <ref name="timeInterval"/>
         </element>
     </define>
-    <define name="printline">
+    <define name="printlineEventProcess">
         <element name="printlineEventProcess">
             <xsd:annotation>
                 <summary>Prints out each event on a new line</summary>

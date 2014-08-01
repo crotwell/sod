@@ -66,6 +66,9 @@
                     <ref name="hibernateConfig"/>
                 </optional>
                 <optional>
+                    <ref name="warnIfDatabaseExists"/>
+                </optional>
+                <optional>
                     <ref name="skipAvailableData"/>
                 </optional>
             </interleave>
@@ -285,6 +288,20 @@
                     that isn't active during the requested event interval in the event arm. By
                     adding this tag, SOD will ignore effective times and work on every item returned
                     by the network arm.</description>
+            </xsd:annotation>
+            <ref name="trueOrFalse"/>
+        </element>
+    </define>
+    <define name="warnIfDatabaseExists">
+        <element name="warnIfDatabaseExists">
+            <xsd:annotation>
+                <summary>Instructs SOD to skip the check for a preexisting database.</summary>
+                <description>SOD will print a warning message if you start it with a pre-existing
+                database. This is intended to help those that are rerunning a similar SOD run repeatedly
+                in the same directory where they do not want old results to contaminate the next run. 
+                However, in cases of a Standing Order, the opposite is wanted. Setting this property
+                to FALSE will disable the warning and 10 second wait time.
+                    </description>
             </xsd:annotation>
             <ref name="trueOrFalse"/>
         </element>

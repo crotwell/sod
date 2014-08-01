@@ -8,14 +8,14 @@
         <choice>
             <xsd:annotation>
                 <summary>Specifies the server to ask for seismograms.</summary>
-                <description> The default is the edu/iris/dmc IRIS_Datacenter</description>
+                <description> The default is the IRIS FDSN DataSelect web service.</description>
                 <velocity>#waveformArmPage()</velocity>
             </xsd:annotation>
-            <ref name="fixedDataCenter"/>
+            <ref name="fdsnDataSelect"/>
             <ref name="choiceSource"/>
             <ref name="tryInOrder"/>
             <ref name="winstonWaveServer"/>
-            <ref name="fdsnDataSelect"/>
+            <ref name="fixedDataCenter"/>
         </choice>
     </define>
     <define name="fixedDataCenter">
@@ -25,8 +25,7 @@
                 <description>
                 <deprecated>DHI servers at the IRIS DMC will be turned off June 2013. The fdsnDataSelect web service is the replacement.</deprecated>
                     This specifies the data center to use.
-                    See <a href="http://www.seis.sc.edu/wily/GetAllServers?corbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService&amp;description=IRIS nameserver">Wily</a>
-                    for a complete list of SeismogramDCs and their current status.</description>
+                </description>
             </xsd:annotation>
             <ref name="seismogramServerName"/>
             <ref name="seismogramServerDns"/>
@@ -116,16 +115,15 @@
                                     </earlier>
                                 </endTime>
                             </originTimeRange>
-                            <fixedDataCenter>
-                                <name>IRIS_PondDataCenter</name>
-                                <dns>edu/iris/dmc</dns>
-                            </fixedDataCenter>
+                            <fdsnDataSelect>
+                                <name>Local Caching server</name>
+                                <host>myserver.myuniversity.edu</host>
+                            </fdsnDataSelect>
                         </choice>
                         <otherwise>
-                            <fixedDataCenter>
-                                <name>IRIS_BudDataCenter</name>
-                                <dns>edu/iris/dmc</dns>
-                            </fixedDataCenter>
+                            <fdsnDataSelect>
+                                <name>IRIS Server</name>
+                            </fdsnDataSelect>
                         </otherwise>
                     </choiceSource>
                 </example>
@@ -152,14 +150,13 @@
                     example tries to get data from the BUD first and then POND if it isn't in the BUD.</description>
                 <example>
                     <tryInOrder>
-                            <fixedDataCenter>
-                                <name>IRIS_BudDataCenter</name>
-                                <dns>edu/iris/dmc</dns>
-                            </fixedDataCenter>
-                            <fixedDataCenter>
-                                <name>IRIS_PondDataCenter</name>
-                                <dns>edu/iris/dmc</dns>
-                            </fixedDataCenter>
+                            <fdsnDataSelect>
+                                <name>Local Caching server</name>
+                                <host>myserver.myuniversity.edu</host>
+                            </fdsnDataSelect>
+                            <fdsnDataSelect>
+                                <name>IRIS server</name>
+                            </fdsnDataSelect>
                     </tryInOrder>
                 </example>
             </xsd:annotation>
@@ -189,13 +186,25 @@
         <element name="fdsnDataSelect">
             <xsd:annotation>
                 <summary>Pick a FDSN dataselect web service</summary>
-                <description>This specifies a FDSN dataselect web service. The default is the IRIS DMC.
+                <description>This specifies a FDSN dataselect web service. The default is the IRIS DMC. This can
+                do a data availability via a corresponding FDSN Station web service, 
+                but because of the coarseness of the result, it is not as useful as
+                was in the older DHI servers, so the default is off, meaning SOD pretends 
+                the available data is always the same as the requested data.
+                The host parameter should be used to connect to another service. The baseurl and
+                port parameters should only be used to connect to a service that does not follow the
+                FDSN specification on how the URL should be formed.
                     </description>
             </xsd:annotation>
             <interleave>
                 <optional>
+                    <element name="fdsnStationAvailability">
+                        <data type="boolean"/>
+                    </element>
+                </optional>
+                <optional>
                     <element name="dobulk">
-                        <data type="string"/>
+                        <data type="boolean"/>
                     </element>
                 </optional>
                 <optional>
@@ -226,6 +235,11 @@
                         </optional>
                         <optional>
                             <element name="port">
+                                <data type="string"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="fdsnPath">
                                 <data type="string"/>
                             </element>
                         </optional>

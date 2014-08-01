@@ -19,6 +19,7 @@ import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.bag.DistAz;
+import edu.sc.seis.fissuresUtil.chooser.ThreadSafeDecimalFormat;
 import edu.sc.seis.fissuresUtil.xml.XMLStation;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.status.FissuresFormatter;
@@ -179,17 +180,18 @@ public class VelocityStation extends StationImpl {
     }
     
     public String getDepth() {
-        return FissuresFormatter.formatDepth(QuantityImpl.createQuantityImpl(sta.getLocation().depth));
+        // format as elevation as formatDepth uses KM and stations usually want depth in Meter
+        return FissuresFormatter.formatElevation(QuantityImpl.createQuantityImpl(sta.getLocation().depth));
     }
 
     public String getDepth(String format) {
-        double depthInKM = QuantityImpl.createQuantityImpl(sta.getLocation().depth)
-                .convertTo(UnitImpl.KILOMETER).value;
-        return new DecimalFormat(format).format(depthInKM);
+        double depthInM = QuantityImpl.createQuantityImpl(sta.getLocation().depth)
+                .convertTo(UnitImpl.METER).value;
+        return new DecimalFormat(format).format(depthInM);
     }
 
     public String getElevation() {
-        return FissuresFormatter.formatDepth(QuantityImpl.createQuantityImpl(sta.getLocation().elevation));
+        return FissuresFormatter.formatElevation(QuantityImpl.createQuantityImpl(sta.getLocation().elevation));
     }
 
     public String getElevation(String format) {
@@ -283,7 +285,7 @@ public class VelocityStation extends StationImpl {
         return position;
     }
 
-    static final DecimalFormat df = new DecimalFormat("0.00");
+    static final ThreadSafeDecimalFormat df = new ThreadSafeDecimalFormat("0.00");
 
     public void insertIntoContext(VelocityContext ctx) {
         ctx.put("station", this);

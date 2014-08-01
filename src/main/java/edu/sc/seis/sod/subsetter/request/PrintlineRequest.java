@@ -11,14 +11,14 @@ import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.AbstractPrintlineProcess;
 
-public class PrintlineRequestProcessor extends AbstractPrintlineProcess implements RequestSubsetter {
+public class PrintlineRequest extends AbstractPrintlineProcess implements RequestSubsetter {
 
-    public PrintlineRequestProcessor(Element config)
+    public PrintlineRequest(Element config)
             throws ConfigurationException {
         super(config);
     }
     
-    public static final String DEFAULT_TEMPLATE = "Got $originalRequests.size() from $channel for $event";
+    public static final String DEFAULT_TEMPLATE = "Request: $originalRequests.size() from $channel for $event #foreach($req in $request), $req.start_time.date_time to $req.end_time.date_time#end";
 
     public StringTree accept(CacheEvent event,
                           ChannelImpl channel,

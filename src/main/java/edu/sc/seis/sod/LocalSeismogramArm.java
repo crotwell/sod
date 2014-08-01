@@ -2,7 +2,9 @@ package edu.sc.seis.sod;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
@@ -23,6 +25,7 @@ import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.time.ReduceTool;
 import edu.sc.seis.fissuresUtil.time.SortTool;
 import edu.sc.seis.sod.hibernate.SodDB;
+import edu.sc.seis.sod.process.waveform.WaveformAsAvailableData;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.process.waveform.WaveformResult;
 import edu.sc.seis.sod.source.seismogram.DataCenterSource;
@@ -39,7 +42,7 @@ import edu.sc.seis.sod.subsetter.channel.ChannelEffectiveTimeOverlap;
 import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
 import edu.sc.seis.sod.subsetter.eventChannel.PassEventChannel;
 import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
-import edu.sc.seis.sod.subsetter.request.PassRequest;
+import edu.sc.seis.sod.subsetter.request.AtLeastOneRequest;
 import edu.sc.seis.sod.subsetter.request.RequestSubsetter;
 import edu.sc.seis.sod.subsetter.requestGenerator.RequestGenerator;
 
@@ -153,7 +156,12 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                 return;
             }
         }
-        processRequestSubsetter(ecp, SortTool.byBeginTimeAscending(infilters));
+        if (infilters.length == 0) {
+            ecp.update(Status.get(Stage.REQUEST_SUBSETTER, Standing.REJECT));
+            failLogger.info("No request generated: "+ecp.toString());
+        } else {
+            processRequestSubsetter(ecp, SortTool.byBeginTimeAscending(infilters));
+        }
     }
 
     private boolean firstRequest;
@@ -200,29 +208,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                     return;
                 }
             }
-            RequestFilter[] outfilters = null;
-            if(infilters.length > 0) {
-                logger.debug("Trying available_data for " + ChannelIdUtil.toString(infilters[0].channel_id) + " from "
-                        + infilters[0].start_time.date_time + " to " + infilters[0].end_time.date_time);
-            } else {
-                logger.debug("Empty request generated for " + ChannelIdUtil.toString(ecp.getChannel().get_id()));
-            }
-            if (Start.getRunProps().isSkipAvailableData()) {
-                outfilters = infilters;
-            } else {
-                logger.debug("before available_data call retries=");
-                MicroSecondDate before = new MicroSecondDate();
-                outfilters = DataCenterSource.toArray(dataCenter.available_data(DataCenterSource.toList(infilters)));
-                MicroSecondDate after = new MicroSecondDate();
-                logger.info("After successful available_data call, time taken=" + after.subtract(before).getValue(UnitImpl.SECOND)+" sec");
-                if(outfilters.length != 0) {
-                    logger.debug("Got available_data for " + ChannelIdUtil.toString(outfilters[0].channel_id) + " from "
-                                 + outfilters[0].start_time.date_time + " to " + outfilters[0].end_time.date_time);
-                } else {
-                    logger.debug("No available_data for " + ChannelIdUtil.toString(ecp.getChannel().get_id()));
-                }
-            }
-            processAvailableDataSubsetter(ecp, dataCenter, infilters, SortTool.byBeginTimeAscending(outfilters));
+            processAvailableDataSubsetter(ecp, dataCenter, infilters);
         } else {
             ecp.update(Status.get(Stage.REQUEST_SUBSETTER, Standing.REJECT));
             failLogger.info(ecp.toString());
@@ -230,19 +216,59 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
     }
 
     public void processAvailableDataSubsetter(EventChannelPair ecp,
-                                              SeismogramSource dataCenter,
-                                              RequestFilter[] infilters,
-                                              RequestFilter[] outfilters) {
-        StringTree passed;
+                                              SeismogramSource seismogramSource,
+                                              RequestFilter[] infilters) {
+        LinkedList<WaveformProcess> processList = new LinkedList<WaveformProcess>();
+        processList.addAll(processes);
+        RequestFilter[] outfilters = null;
+        if(infilters.length > 0) {
+            logger.debug("Trying available_data for " + ChannelIdUtil.toString(infilters[0].channel_id) + " from "
+                    + infilters[0].start_time.date_time + " to " + infilters[0].end_time.date_time);
+        } else {
+            logger.debug("Empty request generated for " + ChannelIdUtil.toString(ecp.getChannel().get_id()));
+        }
+        boolean noImplAvailableData = false;
+        if (Start.getRunProps().isSkipAvailableData()) {
+            outfilters = infilters;
+            // wrap availData as a WaveformProcess
+            processList.addFirst(new WaveformAsAvailableData(availData));
+        } else {
+            try {
+            logger.debug("before available_data call retries=");
+            MicroSecondDate before = new MicroSecondDate();
+            outfilters = DataCenterSource.toArray(seismogramSource.availableData(DataCenterSource.toList(infilters)));
+            MicroSecondDate after = new MicroSecondDate();
+            logger.info("After successful available_data call, time taken=" + after.subtract(before).getValue(UnitImpl.SECOND)+" sec");
+            if(outfilters.length != 0) {
+                logger.debug("Got available_data for " + ChannelIdUtil.toString(outfilters[0].channel_id) + " from "
+                             + outfilters[0].start_time.date_time + " to " + outfilters[0].end_time.date_time+" "+outfilters.length);
+            } else {
+                logger.debug("No available_data for " + ChannelIdUtil.toString(ecp.getChannel().get_id()));
+            }
+            } catch(SeismogramSourceException e) {
+                MotionVectorArm.handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e, seismogramSource, requestToString(infilters, null));
+                return;
+            } catch(NotImplementedException e) {
+                logger.info("After NoImpl available_data call, calc available from actual data");
+                noImplAvailableData = true;
+                outfilters = infilters;
+                // wrap availData as a WaveformProcess
+                processList.addFirst(new WaveformAsAvailableData(availData));
+            }
+        }
+        outfilters = SortTool.byBeginTimeAscending(outfilters);
+        StringTree passed = new Pass(availData); // init just for noImplAvailableData case
+        if (!noImplAvailableData) {
         synchronized(availData) {
             try {
                 passed = availData.accept(ecp.getEvent(), ecp.getChannel(), infilters, outfilters, ecp.getCookieJar());
             } catch(Throwable e) {
-                MotionVectorArm.handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e, dataCenter, requestToString(infilters, outfilters));
+                MotionVectorArm.handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e, seismogramSource, requestToString(infilters, outfilters));
                 return;
             }
         }
-        if(passed.isSuccess()) {
+        }
+        if(noImplAvailableData || passed.isSuccess()) {
             for(int i = 0; i < infilters.length; i++) {
                 logger.debug("Getting seismograms " + ChannelIdUtil.toString(infilters[i].channel_id) + " from "
                         + infilters[i].start_time.date_time + " to " + infilters[i].end_time.date_time);
@@ -256,12 +282,12 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                 
                 
                 try {
-                    localSeismograms = DataCenterSource.toSeisArray(dataCenter.retrieveData(DataCenterSource.toList(infilters)));
+                    localSeismograms = DataCenterSource.toSeisArray(seismogramSource.retrieveData(DataCenterSource.toList(infilters)));
                 } catch(SeismogramSourceException e) {
-                    MotionVectorArm.handle(ecp, Stage.DATA_RETRIEVAL, e, dataCenter, requestToString(infilters, outfilters));
+                    MotionVectorArm.handle(ecp, Stage.DATA_RETRIEVAL, e, seismogramSource, requestToString(infilters, outfilters));
                     return;
                 } catch(org.omg.CORBA.SystemException e) {
-                    MotionVectorArm.handle(ecp, Stage.DATA_RETRIEVAL, e, dataCenter, requestToString(infilters, outfilters));
+                    MotionVectorArm.handle(ecp, Stage.DATA_RETRIEVAL, e, seismogramSource, requestToString(infilters, outfilters));
                     return;
                 }
                 logger.debug("after successful retrieve_seismograms");
@@ -274,7 +300,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                             + ChannelIdUtil.toString(localSeismograms[0].channel_id));
                 }
             } else {
-                failLogger.info(ecp + " retrieve data returned no requestFilters: ");
+                failLogger.info(ecp + " retrieve data returned no seismograms: ");
                 localSeismograms = new LocalSeismogram[0];
             } // end of else
             MicroSecondDate after = new MicroSecondDate();
@@ -298,7 +324,9 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                 tempForCast.add(localSeismograms[i]);
             } // end of for (int i=0; i<localSeismograms.length; i++)
             LocalSeismogramImpl[] tempLocalSeismograms = (LocalSeismogramImpl[])tempForCast.toArray(new LocalSeismogramImpl[0]);
-            processSeismograms(ecp, dataCenter, infilters, outfilters, SortTool.byBeginTimeAscending(tempLocalSeismograms));
+            processSeismograms(ecp, seismogramSource, infilters, outfilters, 
+                               SortTool.byBeginTimeAscending(tempLocalSeismograms),
+                               processList);
         } else {
             if(ClockUtil.now().subtract(Start.getRunProps().getSeismogramLatency()).after(ecp.getEvent()
                     .getOrigin()
@@ -320,9 +348,10 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                                    SeismogramSource dataCenter,
                                    RequestFilter[] infilters,
                                    RequestFilter[] outfilters,
-                                   LocalSeismogramImpl[] localSeismograms) {
+                                   LocalSeismogramImpl[] localSeismograms,
+                                   List<WaveformProcess> processList) {
         WaveformProcess processor = null;
-        Iterator<WaveformProcess> it = processes.iterator();
+        Iterator<WaveformProcess> it = processList.iterator();
         WaveformResult result = new WaveformResult(true, localSeismograms, this);
         try {
             while (it.hasNext() && result.isSuccess()) {
@@ -408,7 +437,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
 
     private RequestGenerator requestGenerator;
 
-    private RequestSubsetter request = new PassRequest();
+    private RequestSubsetter request = new AtLeastOneRequest();
     
     private AvailableDataSubsetter availData = defaultAvailableDataSubsetter;
 

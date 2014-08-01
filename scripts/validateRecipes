@@ -1,0 +1,14 @@
+rm logs/*  ; ../build/explode/bin/sod  -V -p cwg.prop -q -f CMTReadySeismograms.xml ; echo CMTReadySeismograms.xml
+rm logs/*  ; ../build/explode/bin/sod  -V -p cwg.prop -q -f ammonChannels.xml ; echo ammonChannels.xml
+rm logs/*  ; ../build/explode/bin/sod  -V -p cwg.prop -q -f breqfast.xml ; echo breqfast.xml
+rm logs/*  ; ../build/explode/bin/sod  -V -p cwg.prop -q -f dmcWebService.xml ; echo dmcWebService.xml
+rm logs/*  ; ../build/explode/bin/sod  -V -p cwg.prop -q -f preferBroadband.xml ; echo preferBroadband.xml
+rm logs/*  ; ../build/explode/bin/sod  -V -p cwg.prop -q -f realtime.xml ; echo realtime.xml
+rm logs/*  ; ../build/explode/bin/sod  -V -p cwg.prop -q -f sAndSKSInTanzania.xml ; echo sAndSKSInTanzania.xml
+rm logs/*  ; ../build/explode/bin/sod  -V -p cwg.prop -q -f southAmericanSacFiles.xml ; echo southAmericanSacFiles.xml
+rm logs/*  ; ../build/explode/bin/sod  -V -p cwg.prop -q -f tutorial/waveform.xml ; echo tutorial/waveform.xml
+rm logs/*  ; ../build/explode/bin/sod  -V -p cwg.prop -q -f recfunc_ears.xml ; echo recfunc_ears.xml
+rm logs/*  ; ../build/explode/bin/sod  -V -p cwg.prop -q -f variableDataWindow.xml ; echo variableDataWindow.xml
+rm logs/*  ; ../build/explode/bin/sod  -V -p cwg.prop -q -f vector.xml ; echo vector.xml
+rm logs/*  ; ../build/explode/bin/sod  -V -p cwg.prop -q -f weed.xml ; echo weed.xml
+rm logs/*  ; ../build/explode/bin/sod  -V -p cwg.prop -q -f winston.xml ; echo winston.xml

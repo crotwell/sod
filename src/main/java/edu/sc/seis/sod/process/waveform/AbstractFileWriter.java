@@ -13,6 +13,9 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.status.FissuresFormatter;
+import edu.sc.seis.sod.status.Pass;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.VelocityFileElementParser;
 import edu.sc.seis.sod.velocity.ContextWrangler;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
@@ -36,10 +39,11 @@ public abstract class AbstractFileWriter {
     public String generate(CacheEvent event,
                            ChannelImpl channel,
                            LocalSeismogramImpl representativeSeismogram,
-                           int index) {
+                           int index,
+                           int numSeismograms) {
         VelocityContext ctx = ContextWrangler.createContext(event);
-        if(index > 0) {
-            ctx.put("index", "." + index);
+        if(numSeismograms > 1) {
+            ctx.put("index", "." + (index+1)); // names index base 1, array is base 0
         } else {
             ctx.put("index", "");
         }
@@ -85,12 +89,34 @@ public abstract class AbstractFileWriter {
         }
         return FissuresFormatter.filize(velocitizer.evaluate(template, ctx));
     }
+    
+    public StringTree checkParentDirs(String filename) {
+        File out = new File(filename);
+        File parent = out.getParentFile();
+        if(parent == null || (!parent.exists() && !parent.mkdirs())) {
+            String msg = "Unable to create directory " + parent;
+            if (parent == null) {
+                msg = "Unable to create directory, File.getParentFile() returns null: " + out.getPath();
+            }
+            StringTreeLeaf reason = new StringTreeLeaf(this,
+                                                       false,
+                                                       msg);
+            if (firstDirectoryCreationError) {
+                // this is probably something the user wants to see, at least once
+                firstDirectoryCreationError = false;
+                System.err.println("WARNING: "+reason.toString());
+            }
+            return reason;
+        }
+        return new Pass(this);
+        
+    }
 
     public void removeExisting(CacheEvent event,
                                ChannelImpl channel,
-                               LocalSeismogramImpl representativeSeismogram) {
+                               LocalSeismogramImpl representativeSeismogram, int numSeismograms) {
         for(int i = 0; true; i++) {
-            File cur = new File(generate(event, channel, representativeSeismogram, i));
+            File cur = new File(generate(event, channel, representativeSeismogram, i, numSeismograms));
             if(!cur.exists()) {
                 break;
             }
@@ -154,4 +180,6 @@ public abstract class AbstractFileWriter {
     public AbstractFileWriter() {
         super();
     }
+
+    boolean firstDirectoryCreationError = true;
 }

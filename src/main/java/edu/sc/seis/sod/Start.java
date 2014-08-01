@@ -63,6 +63,25 @@ public class Start {
         GlobalExceptionHandler.add(new Extractor() {
 
             public boolean canExtract(Throwable throwable) {
+                return (throwable instanceof FDSNWSException);
+            }
+
+            public String extract(Throwable throwable) {
+                String out = "";
+                if(throwable instanceof FDSNWSException) {
+                    FDSNWSException mie = (FDSNWSException)throwable;
+                    out += "URI: " + mie.getTargetURI() + "\n";
+                }
+                return out;
+            }
+
+            public Throwable getSubThrowable(Throwable throwable) {
+                return null;
+            }
+        });
+        GlobalExceptionHandler.add(new Extractor() {
+
+            public boolean canExtract(Throwable throwable) {
                 return (throwable instanceof org.apache.velocity.exception.MethodInvocationException);
             }
 
@@ -282,7 +301,11 @@ public class Start {
                 HibernateUtil.getConfiguration().addResource(res);
             }
         }
-        AbstractHibernateDB.deploySchema();
+        try {
+            AbstractHibernateDB.deploySchema();
+        } catch (Exception e) {
+            throw new ConfigurationException("Unable to set up database", e);
+        }
         // check that hibernate is ok
         SodDB sodDb = SodDB.getSingleton();
         sodDb.commit();

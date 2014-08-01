@@ -33,6 +33,6 @@ public class MinMax extends AbstractWaveformMeasure {
         List<Measurement> out = new ArrayList<Measurement>();
         out.add(new QuantityMeasurement("min", new QuantityImpl(stat.min(), seismograms[0].getUnit())));
         out.add(new QuantityMeasurement("max", new QuantityImpl(stat.max(), seismograms[0].getUnit())));
-        return new ListMeasurement("minmax", out);
+        return new ListMeasurement("MinMax", out);
     }
 }

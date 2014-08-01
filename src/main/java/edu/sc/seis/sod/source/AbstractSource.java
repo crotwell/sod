@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
+import edu.sc.seis.fissuresUtil.cache.ClassicRetryStrategy;
 import edu.sc.seis.fissuresUtil.cache.RetryStrategy;
 import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
 import edu.sc.seis.sod.CommonAccess;
@@ -19,6 +20,7 @@ public abstract class AbstractSource implements Source {
     public AbstractSource(String name, int retries) {
         this.name = name;
         retries = -1;
+        retryStrategy = new ClassicRetryStrategy(retries);
     }
 
     public AbstractSource(Element config, String defaultName) {
@@ -26,31 +28,13 @@ public abstract class AbstractSource implements Source {
     }
 
     public AbstractSource(Element config, String defaultName, int defaultRetries) {
-        name = SodUtil.loadText(config, NAME_ELEMENT, defaultName);
+        if (config.hasAttribute("name")) {
+            name = config.getAttribute("name");
+        } else {
+            name = SodUtil.loadText(config, NAME_ELEMENT, defaultName);
+        }
         retries = SodUtil.loadInt(config, RETRIES_ELEMENT, defaultRetries);
         retryStrategy = new UserReportRetryStrategy(getRetries());
-    }
-
-    protected boolean shouldRetryWithSleep(Throwable t, int tryCount) {
-        if (retryStrategy.shouldRetry(t, this, tryCount)) {
-            int sleepy = 2 * 1000;
-            if (tryCount < getRetries()) {
-                sleepy = (getRetries() - tryCount) * 10 * 1000;
-            } else {
-                if (tryCount < 10) {
-                    // exponential backoff
-                    sleepy = (int)Math.round(Math.pow(2, tryCount) * 1000);
-                } else {
-                    sleepy = 1024 * 1000; // max backoff
-                }
-            }
-            try {
-                Thread.sleep(sleepy);
-            } catch(InterruptedException e1) {}
-            return true;
-        } else {
-            return false;
-        }
     }
 
     /*
@@ -76,9 +60,17 @@ public abstract class AbstractSource implements Source {
     }
 
     public void setRetryStrategy(RetryStrategy retryStrategy) {
-        this.retryStrategy = retryStrategy;
+        if (retryStrategy != null) {
+            this.retryStrategy = retryStrategy;
+        } else {
+            throw new IllegalArgumentException("RetryStrategy cannot be null");
+        }
     }
 
+    public void appendToName(String suffix) {
+        name += suffix;
+    }
+    
     protected String name;
 
     private int retries = -1;

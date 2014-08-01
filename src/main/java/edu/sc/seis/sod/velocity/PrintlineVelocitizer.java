@@ -44,24 +44,29 @@ import edu.sc.seis.sod.velocity.seismogram.VelocitySeismogram;
  */
 public class PrintlineVelocitizer {
 
+    static VelocityContext mockContext = new VelocityContext();
+    
+    static {
+        VelocityEvent event = new VelocityEvent(MockEventAccessOperations.createEvent());
+        ChannelImpl chan = MockChannel.createChannel();
+        mockContext.put("event", event);
+                mockContext.put("channel", new VelocityChannel(chan));
+        mockContext.put("station", new VelocityStation(MockStation.createStation()));
+        mockContext.put("net", new VelocityNetwork((NetworkAttrImpl)MockChannel.createChannel().getNetworkAttr()));
+        List<LocalSeismogramImpl> seisList = new ArrayList<LocalSeismogramImpl>();
+        seisList.add(new VelocitySeismogram(MockSeismogram.createSpike(chan.getId()), chan));
+        mockContext.put("seismograms", seisList);
+        mockContext.put("index", new Integer(1));
+    }
+    
     /**
      * Evaluates the templates such that errors might be discovered
      */
     public PrintlineVelocitizer(String[] strings) throws ConfigurationException {
-        VelocityContext context = new VelocityContext();
-        context.put("event", new VelocityEvent(MockEventAccessOperations.createEvent()));
-        ChannelImpl chan = MockChannel.createChannel();
-        context.put("channel", new VelocityChannel(chan));
-        context.put("station", new VelocityStation(MockStation.createStation()));
-        context.put("net", new VelocityNetwork((NetworkAttrImpl)MockChannel.createChannel().getNetworkAttr()));
-        List<LocalSeismogramImpl> seisList = new ArrayList<LocalSeismogramImpl>();
-        seisList.add(new VelocitySeismogram(MockSeismogram.createSpike(chan.getId()), chan));
-        context.put("seismograms", seisList);
-        context.put("index", new Integer(1));
         for(int i = 0; i < strings.length; i++) {
             try {
                 StringWriter stringWriter = new StringWriter();
-                Velocity.evaluate(context,
+                Velocity.evaluate(mockContext,
                                   stringWriter,
                                   "PrintlineTest",
                                   strings[i]);
@@ -112,7 +117,7 @@ public class PrintlineVelocitizer {
     public String evaluate(String filename,
                            String template,
                            EventAccessOperations event,
-                           Channel channel,
+                           ChannelImpl channel,
                            RequestFilter[] request,
                            CookieJar cookieJar) throws IOException {
         return evaluate(filename,
@@ -127,7 +132,7 @@ public class PrintlineVelocitizer {
     public String evaluate(String filename,
                            String template,
                            EventAccessOperations event,
-                           Channel channel,
+                           ChannelImpl channel,
                            RequestFilter[] original,
                            RequestFilter[] available,
                            CookieJar cookieJar) throws IOException {
@@ -144,7 +149,7 @@ public class PrintlineVelocitizer {
     public String evaluate(String fileTemplate,
                            String template,
                            EventAccessOperations event,
-                           Channel channel,
+                           ChannelImpl channel,
                            RequestFilter[] original,
                            RequestFilter[] available,
                            LocalSeismogramImpl[] seismograms,
@@ -198,7 +203,7 @@ public class PrintlineVelocitizer {
             }
         }
     }
-
+    
     private SimpleVelocitizer simple = new SimpleVelocitizer();
 
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(PrintlineVelocitizer.class);

@@ -13,8 +13,13 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
 
+@Deprecated
 public class RequestPrint implements RequestSubsetter {
 
+    public RequestPrint() {
+        System.err.println("Deprecated: Please use <printlineRequest> instead.");
+    }
+    
     public StringTree accept(CacheEvent event,
                              ChannelImpl channel,
                           RequestFilter[] request,
@@ -31,4 +36,6 @@ public class RequestPrint implements RequestSubsetter {
                     + request[i].end_time.date_time);
         }
     }
+    
+    
 }

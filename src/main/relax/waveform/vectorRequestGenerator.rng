@@ -10,8 +10,8 @@
                 <summary>Ingredients that generating requests to the seismogram servers</summary>
                 <velocity>#waveformArmPage()</velocity>
             </xsd:annotation>
-            <ref name="vectorRequestGeneratorScript"/>
             <ref name="requestGenerator"/>
+            <ref name="vectorRequestGeneratorScript"/>
         </choice>
     </define>
     <define name="vectorRequestGeneratorScript">

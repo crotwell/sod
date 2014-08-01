@@ -9,6 +9,7 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodElement;
+import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.source.AbstractSource;
 
@@ -23,6 +24,7 @@ public class FixedDataCenter extends AbstractSource implements SodElement,
     
     public FixedDataCenter(Element element) {
         super(element, DEFAULT_SERVER_NAME);
+        dns = SodUtil.loadText(element, "dns", "edu/iris/dmc");
         if (getDNS().equals("edu/iris/dmc")) {
             System.err.println("WARNING: DHI servers will be turned off June 2013, please switch to <fdsnDataSelect>");
         }

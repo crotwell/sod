@@ -60,9 +60,10 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 
 @Deprecated
-public class StationXML implements NetworkSource {
+public class StationXML extends AbstractNetworkSource implements NetworkSource {
     
     public StationXML(Element config) throws ConfigurationException {
+        super(config);
         if (DOMHelper.hasElement(config, URL_ELEMENT)) {
             url = SodUtil.getNestedText(SodUtil.getElement(config, URL_ELEMENT));
             checkForOldIrisWebService(url);
@@ -112,7 +113,6 @@ public class StationXML implements NetworkSource {
                                     parsedURL.getPath(),
                                     newQuery,
                                     parsedURL.getFragment());
-                System.out.println("StationXML parsedURL: "+parsedURL);
             }
         } catch(URISyntaxException e) {
             throw new ConfigurationException("Invalid <url> element found.", e);

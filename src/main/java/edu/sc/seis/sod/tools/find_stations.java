@@ -67,8 +67,6 @@ public class find_stations extends CommandLineTool {
     protected void addDefaultParams() throws JSAPException {
         super.addParams();
         needsStationAndIfSpecified = new ArrayList();
-        add(ServerParser.createParam(null,
-                                     "The network server to use."));
         addStationParam(BoxAreaParser.createParam("A station constraining box as west/east/south/north"));
         addStationParam(DonutParser.createParam("A donut as lat/lon/minRadius/maxRadius"));
         addStationParam(createListOption("stations",

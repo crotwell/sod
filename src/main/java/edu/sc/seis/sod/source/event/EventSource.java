@@ -4,8 +4,9 @@ import edu.iris.Fissures.model.TimeInterval;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.sod.SodElement;
+import edu.sc.seis.sod.source.Source;
 
-public interface EventSource extends SodElement {
+public interface EventSource  extends Source {
 
     /**
      * @return - false when this event source will return no new events from
@@ -34,4 +35,5 @@ public interface EventSource extends SodElement {
     public MicroSecondTimeRange getEventTimeRange();
     
     public String getDescription();
+    
 }

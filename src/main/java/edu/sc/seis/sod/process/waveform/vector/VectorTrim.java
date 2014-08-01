@@ -3,7 +3,11 @@ package edu.sc.seis.sod.process.waveform.vector;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import edu.iris.Fissures.FissuresException;
+import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
@@ -21,6 +25,7 @@ import edu.sc.seis.sod.process.waveform.CollapseOverlaps;
 import edu.sc.seis.sod.process.waveform.Merge;
 import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.status.StringTreeLeaf;
+import edu.sc.seis.sod.subsetter.SubsetterException;
 
 public class VectorTrim implements WaveformVectorProcess, Threadable {
 
@@ -64,7 +69,7 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
                                             new StringTreeLeaf(this,
                                                                true,
                                                                "Each vector of equal size"));
-        } catch(IllegalArgumentException e) {
+        } catch(SubsetterException e) {
             return new WaveformVectorResult(seismograms,
                                             new StringTreeLeaf(this,
                                                                false,
@@ -73,7 +78,7 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
     }
 
     public LocalSeismogramImpl[][] trim(LocalSeismogramImpl[][] vector)
-            throws FissuresException {
+            throws FissuresException, SubsetterException {
         if(normalizeSampling(vector)) {
             LocalSeismogramImpl[][] cutSeis = cutVector(vector, findSmallestCoveringCuts(vector));
             // check time alignment
@@ -85,11 +90,11 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
             }
             return out;
         } else {
-            throw new IllegalArgumentException("Unable to normalize samplings on seismograms in vector.  These can not be trimmed to the same length");
+            throw new SubsetterException("Unable to normalize samplings on seismograms in vector.  These can not be trimmed to the same length");
         }
     }
     
-    public static LocalSeismogramImpl alignTimes(LocalSeismogramImpl main, LocalSeismogramImpl shifty) throws FissuresException {
+    public static LocalSeismogramImpl alignTimes(LocalSeismogramImpl main, LocalSeismogramImpl shifty) throws SubsetterException, FissuresException {
         shifty = SampleSyncronize.alignTimes(main, shifty);
         if (shifty.getNumPoints() == main.getNumPoints() +1) {
             // looks like we are long by one
@@ -107,9 +112,9 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
         } 
         if (shifty.getNumPoints() == main.getNumPoints()-1) {
             // Oops!
-            throw new RuntimeException("Oops, cut ends up with too few points");
+            throw new SubsetterException("Oops, cut ends up with too few points");
         }
-        throw new RuntimeException("Oops, can't handle different num points: main="+main.getNumPoints()+" shifty="+shifty.getNumPoints());
+        throw new SubsetterException("Oops, can't handle different num points: main="+main.getNumPoints()+" shifty="+shifty.getNumPoints());
     }
 
     public LocalSeismogramImpl[][] cutVector(LocalSeismogramImpl[][] vector,
@@ -176,6 +181,7 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
      */
     public boolean normalizeSampling(LocalSeismogramImpl[][] impls) {
         QuantityImpl lastPeriod = null;
+        ChannelId lastChan = null;
         for(int i = 0; i < impls.length; i++) {
             for(int j = 0; j < impls[i].length; j++) {
                 TimeInterval curPeriod = (TimeInterval)impls[i][j].getSampling()
@@ -183,9 +189,13 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
                         .convertTo(UnitImpl.SECOND);
                 if(lastPeriod != null) {
                     if(Math.abs(1 - lastPeriod.divideBy(curPeriod).getValue()) > .01) {
+                        logger.info("sampling not equal: "+i+","+j+" "
+                    +ChannelIdUtil.toStringNoDates(lastChan)+" "+lastPeriod+"  "
+                    +ChannelIdUtil.toStringNoDates(impls[i][j].channel_id)+" "+curPeriod);
                         return false;
                     }
                 }
+                lastChan = impls[i][j].channel_id;
                 lastPeriod = curPeriod;
             }
         }
@@ -203,4 +213,6 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
     
     private ANDWaveformProcessWrapper merger = new ANDWaveformProcessWrapper(new Merge());
     private ANDWaveformProcessWrapper collapser = new ANDWaveformProcessWrapper(new CollapseOverlaps());
+    
+    private static final Logger logger = LoggerFactory.getLogger(VectorTrim.class);
 }

@@ -30,7 +30,7 @@ public class WinstonWaveServerTest extends TestCase {
                                              ClockUtil.now().getFissuresTime());
         List<RequestFilter> in = new ArrayList<RequestFilter>();
         in.add(rf);
-        List<RequestFilter> out = wws.getSeismogramSource(null, null, null, null).available_data(in); // null
+        List<RequestFilter> out = wws.getSeismogramSource(null, null, null, null).availableData(in); // null
                                                                                                       // doesn't
                                                                                                       // matter
         assertTrue("some data", out.size() > 0);

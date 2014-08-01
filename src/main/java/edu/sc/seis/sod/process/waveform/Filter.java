@@ -25,7 +25,9 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
 
 public class Filter implements WaveformProcess, Threadable {
 
+    @Deprecated
     public Filter(Element config) throws ConfigurationException {
+        System.err.println("WARNING: <filter> is deprecated because of excessive memory and cpu usage, please switch to <oregonDSPFilter>");
         this.config = config;
         NodeList childNodes = config.getChildNodes();
         for(int counter = 0; counter < childNodes.getLength(); counter++) {

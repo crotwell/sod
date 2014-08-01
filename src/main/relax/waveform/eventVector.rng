@@ -111,7 +111,8 @@
                 <summary>Matches all included EventVector subsetters</summary>
                 <description>The output is the logical AND of the outputs of all included EventVector subsetters. This
                     means that it will evaluate to true only if all the included subsetters evaluate to true. The
-                    subsetters after the first false outputted are not evaluated.</description>
+                    subsetters after the first false outputted are not evaluated.
+                    In addition, any eventStation, event, channel, station or network subsetter may be used here directly.</description>
             </xsd:annotation>
             <oneOrMore>
                 <ref name="eventVectorPlus"/>
@@ -124,7 +125,8 @@
                 <summary>Matches at least one of included EventVector subsetters</summary>
                 <description>The output is the logical OR of the outputs of all included EventVector subsetters. This
                     means that at least one included subsetter must evaluate to true for this subsetter to evaluate to
-                    true. The subsetters after the first true outputted are not evaluated.</description>
+                    true. The subsetters after the first true outputted are not evaluated.
+                    In addition, any eventStation, event, channel, station or network subsetter may be used here directly.</description>
             </xsd:annotation>
             <oneOrMore>
                 <ref name="eventVectorPlus"/>
@@ -136,7 +138,8 @@
             <xsd:annotation>
                 <summary>Matches the negated output of the included EventVector subsetter</summary>
                 <description>The output is the logical NOT of the output of the included subsetter. This means that the
-                    included subsetter must evaluate to false for this subsetter to evaluate to true, and vice versa.</description>
+                    included subsetter must evaluate to false for this subsetter to evaluate to true, and vice versa.
+                    In addition, any eventStation, event, channel, station or network subsetter may be used here directly.</description>
             </xsd:annotation>
             <ref name="eventVectorPlus"/>
         </element>

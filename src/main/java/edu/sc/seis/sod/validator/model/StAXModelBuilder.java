@@ -25,6 +25,7 @@ import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.validator.ModelWalker;
 import edu.sc.seis.sod.validator.model.datatype.AnyText;
+import edu.sc.seis.sod.validator.model.datatype.BooleanDatatype;
 import edu.sc.seis.sod.validator.model.datatype.DoubleDatatype;
 import edu.sc.seis.sod.validator.model.datatype.FloatDatatype;
 import edu.sc.seis.sod.validator.model.datatype.IntegerDatatype;
@@ -192,8 +193,7 @@ public class StAXModelBuilder implements XMLStreamConstants {
             } else if(isData(tag)) {
                 kids.add(handleData());
             } else {
-                System.out.println("Unknown tag! " + tag + " " + definedGrammar);
-                System.exit(0);
+                throw new RuntimeException("Unknown tag! " + tag + " " + definedGrammar);
             }
         }
         if(kids.size() == 0) {
@@ -358,7 +358,11 @@ public class StAXModelBuilder implements XMLStreamConstants {
         }
         result.setNamespace(ns);
         result.setAnnotation(handleAnn());
+        try {
         result.setChild(handleAll());
+        } catch (RuntimeException e) {
+            throw new RuntimeException("in "+name, e);
+        }
         nextTag();
         return result;
     }
@@ -505,6 +509,8 @@ public class StAXModelBuilder implements XMLStreamConstants {
                 return new IntegerDatatype();
             } else if(type.equals("nonNegativeInteger")) {
                 return new NonnegativeIntegerDatatype();
+            } else if(type.equals("boolean")) {
+                return new BooleanDatatype();
             }
             return new Token();
         }
