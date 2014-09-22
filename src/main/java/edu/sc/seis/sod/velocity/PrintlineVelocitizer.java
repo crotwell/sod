@@ -63,6 +63,7 @@ public class PrintlineVelocitizer {
      * Evaluates the templates such that errors might be discovered
      */
     public PrintlineVelocitizer(String[] strings) throws ConfigurationException {
+        if ( ! System.getProperty("printlinevelocitizer.check").equalsIgnoreCase("false")) {
         for(int i = 0; i < strings.length; i++) {
             try {
                 StringWriter stringWriter = new StringWriter();
@@ -78,6 +79,7 @@ public class PrintlineVelocitizer {
                 throw new ConfigurationException("Exception caused by testing Velocity",
                                                  e);
             }
+        }
         }
     }
 
