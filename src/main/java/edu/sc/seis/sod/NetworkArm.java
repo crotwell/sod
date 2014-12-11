@@ -285,8 +285,8 @@ public class NetworkArm implements Arm {
                 // hard to imagine a network arm that can't find a single good network is useful, so just fail
                 // only fail if first time (lastQueryTime==null) so a server fail
                 // during a run will not cause a crash
-                logger.warn("Found no networks.  Make sure the network codes you entered are valid");
-                Start.armFailure(this, new NotFound("Found no networks. Make sure the network codes you entered in your recipe are valid"));
+                logger.warn(NO_NETWORKS_MSG);
+                Start.armFailure(this, new NotFound(NO_NETWORKS_MSG));
             }
             logger.info(successes.size() + " networks passed");
             statusChanged("Waiting for a request");
@@ -753,5 +753,9 @@ public class NetworkArm implements Arm {
     public ChannelGrouper getChannelGrouper() {
         return channelGrouper;
     }
+    
+    public static final String NO_NETWORKS_MSG = "Found no networks.  Make sure the network codes you entered are valid. "
+            +"This can also be caused by asking for a restricted networks without <includeRestricted>true</includeRestricted> in a <fdsnStation> network source.";
+            
     
 }// NetworkArm
