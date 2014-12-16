@@ -330,6 +330,6 @@ public class FissuresFormatter {
 
     public static String oneLineAndClean(String in) {
         if (in == null) { return "";}
-        return in.replaceAll("\\s+", " ").trim();
+        return in.replaceAll("\\s+", " ").replaceAll("\"", "").trim();
     }
 }
