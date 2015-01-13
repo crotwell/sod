@@ -10,7 +10,7 @@
             <stationCode>$code</stationCode>
 #end
 #foreach($code in $sites)
-            <locationCode>$code</siteLocation>
+            <locationCode>$code</locationCode>
 #end
 #foreach($code in $channels)
             <channelCode>$code</channelCode>
