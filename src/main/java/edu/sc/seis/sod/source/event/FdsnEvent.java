@@ -316,7 +316,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         }
     }
 
-    CacheEvent toCacheEvent(Event e) {
+    static CacheEvent toCacheEvent(Event e) {
         String desc = "";
         if (e.getDescriptionList().size() > 0) {
             desc = e.getDescriptionList().get(0).getText();
@@ -400,7 +400,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         return ce;
     }
 
-    edu.iris.Fissures.IfEvent.Magnitude toFissuresMagnitude(Magnitude m) {
+    static edu.iris.Fissures.IfEvent.Magnitude toFissuresMagnitude(Magnitude m) {
         String contributor = "";
         if (m.getCreationInfo() != null && m.getCreationInfo().getAuthor() != null) {
             contributor = m.getCreationInfo().getAuthor();
