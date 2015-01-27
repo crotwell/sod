@@ -48,6 +48,7 @@ public class Args {
                 toParse.add(args[i]);
             }
         }
+        add(new Switch("debug", JSAP.NO_SHORTFLAG, "debug", "extra debug output to log file"));
         add(new Switch("help", 'h', "help", "Print out this message"));
         add(new Switch("event-arm", 'e', "event-arm", "Only run the event arm"));
         add(new Switch("network-arm",
@@ -253,6 +254,10 @@ public class Args {
     
     public boolean isPrintRecipe() {
         return result.getBoolean(PRINT_RECIPE_SWITCH);
+    }
+
+    public boolean isDebug() {
+        return result.getBoolean("debug");
     }
 
     public boolean onlyValidate() {
