@@ -180,7 +180,7 @@ public class EventStationPair extends CookieEventPair {
     }
 
     public String toString() {
-        return "EventStationPair: (" + getDbid() + ") " + getEvent() + " " + StationIdUtil.toStringNoDates(getStation()) + " "
+        return "EventStationPair: (" + getDbid() + " -> "+getEvent().getDbid()+","+getStationDbId()+") " + getEvent() + " " + StationIdUtil.toStringFormatDates(getStation()) + " "
                 + getStatus();
     }
 
