@@ -112,6 +112,8 @@ logger.debug("refresh "+NetworkIdUtil.toString(net));
                         stationsBeingReloaded.remove(new Integer(stas[s].getDbid()));
                     }
                 }
+            } else {
+                logger.info("Not loading channels as no waveformArm or channel subsetters");
             }
             NetworkDB.commit(); // make sure session is clear
             return true;
