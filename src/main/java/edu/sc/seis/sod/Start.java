@@ -342,6 +342,10 @@ public class Start {
                 System.exit(1);
             }
         }
+        if (args.isDebug()) {
+            // kind of dangerous as depends on prop file using names R, C, E
+            props.setProperty("log4j.rootCategory", "debug, R, C, E");
+        }
         PropertyConfigurator.configure(props);
         // Error html dir and output should be set up now, so remove the
         // Std out reporter
