@@ -444,7 +444,7 @@ public class NetworkArm implements Arm {
     public List<ChannelImpl> getSuccessfulChannels(StationImpl station) {
         synchronized(refresh) {
             while(refresh.isNetworkBeingReloaded(((NetworkAttrImpl)station.getNetworkAttr()).getDbid())
-                    && refresh.isStationBeingReloaded(station.getDbid())) {
+                    || refresh.isStationBeingReloaded(station.getDbid())) {
                 try {
                     refresh.notifyAll();
                     refresh.wait();
