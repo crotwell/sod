@@ -18,6 +18,7 @@ import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
+import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
@@ -168,8 +169,8 @@ public class FdsnStation extends AbstractNetworkSource {
             staQP.setLevel(FDSNStationQueryParams.LEVEL_STATION);
             // now append the real network code
             staQP.appendToNetwork(net.getId().network_code);
-            staQP.setStartTime(new MicroSecondDate(net.getBeginTime()));
-            MicroSecondDate end = new MicroSecondDate(net.getEndTime());
+            staQP.setStartTime(new MicroSecondDate(net.getBeginTime()).add(ONE_SECOND));
+            MicroSecondDate end = new MicroSecondDate(net.getEndTime()).subtract(ONE_SECOND);
             if (end.before(ClockUtil.now())) {
                 staQP.setEndTime(end);
             }
@@ -207,8 +208,8 @@ public class FdsnStation extends AbstractNetworkSource {
                     .appendToNetwork(station.getId().network_id.network_code)
                     .clearStation()
                     .appendToStation(station.getId().station_code);
-            staQP.setStartTime(new MicroSecondDate(station.getBeginTime()));
-            MicroSecondDate end = new MicroSecondDate(station.getEndTime());
+            staQP.setStartTime(new MicroSecondDate(station.getBeginTime()).add(ONE_SECOND));
+            MicroSecondDate end = new MicroSecondDate(station.getEndTime()).subtract(ONE_SECOND);
             if (end.before(ClockUtil.now())) {
                 staQP.setEndTime(end);
             }
@@ -390,6 +391,8 @@ public class FdsnStation extends AbstractNetworkSource {
     }
     
     boolean includeAvailability = true;
+    
+    public static final TimeInterval ONE_SECOND = new TimeInterval(1, UnitImpl.SECOND);
     
     CoarseAvailableData availableData = new CoarseAvailableData();
     
