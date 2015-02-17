@@ -67,6 +67,9 @@ public class TransferResponse implements WaveformProcess, Threadable {
     public static SacPoleZero checkResponse(ChannelImpl chan, NetworkSource na) throws InvalidResponse, SodSourceException {
         try {
             Instrumentation inst = na.getInstrumentation(chan);
+            if (inst == null) {
+                throw new InvalidResponse("Response is null");
+            }
             InstrumentationLoader.checkResponse(inst.the_response);
             UnitImpl inUnits = ((UnitImpl)inst.the_response.stages[0].input_units);
             if ( ! (inUnits.isConvertableTo(UnitImpl.METER) 
