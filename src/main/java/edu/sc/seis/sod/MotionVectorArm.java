@@ -334,12 +334,9 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                         return;
                     }
                     Channel ecpChan = ecp.getChannelGroup().getChannels()[i];
-                    if (localSeismograms[i][j].channel_id.site_code.equals("")) {
-                        localSeismograms[i][j].channel_id.site_code = "  ";
-                    }
                     if (!ChannelIdUtil.areEqual(localSeismograms[i][j].channel_id, ecpChan.get_id())) {
                         // must be server error
-                        logger.warn("Channel id in returned seismogram doesn not match channelid in request. req="
+                        logger.warn("MV Channel id in returned seismogram doesn not match channelid in request. req="
                                 + ChannelIdUtil.toString(ecpChan.get_id()) + " seis="
                                 + ChannelIdUtil.toString(localSeismograms[i][j].channel_id));
                         // fix seis with original id
@@ -455,7 +452,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                 if (localSeismograms[i].length > 0
                         && !ChannelIdUtil.areEqual(localSeismograms[i][0].channel_id, rf[i][0].channel_id)) {
                     // must be server error
-                    logger.warn("X Channel id in returned seismogram doesn not match channelid in request. req="
+                    logger.warn("MV X Channel id in returned seismogram doesn not match channelid in request. req="
                             + ChannelIdUtil.toString(rf[i][0].channel_id) + " seis="
                             + ChannelIdUtil.toString(localSeismograms[i][0].channel_id));
                 }
