@@ -40,6 +40,7 @@ import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.UserConfigurationException;
 import edu.sc.seis.sod.source.AbstractCSVSource;
@@ -179,7 +180,7 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
         while (csvReader.readRecord()) {
             String netCode = csvReader.get(NET_CODE);
             String staCode = csvReader.get(STATION_CODE);
-            String siteCode = csvReader.get(SITE_CODE);
+            String siteCode = Channel.fixLocCode(csvReader.get(SITE_CODE));
             String chanCode = csvReader.get(CODE);
             StationImpl curStation = getStationForChannel(netCode, staCode);
             if (curStation == null) {
