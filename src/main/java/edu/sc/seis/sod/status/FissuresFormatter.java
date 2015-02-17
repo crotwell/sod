@@ -269,6 +269,7 @@ public class FissuresFormatter {
     }
 
     public static String filize(String path) {
+        if (path== null || path.length() == 0) {return "";}
         if(path.charAt(1) == ':' && path.charAt(2) == '\\') {
             return path.substring(0, 3) + filizeInternal(path.substring(3));
         }
