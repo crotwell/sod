@@ -90,7 +90,7 @@ public class ChannelFormatter extends Template implements ChannelTemplate {
             return new ChannelTemplate() {
 
                 public String getResult(Channel chan) {
-                    if(chan.get_id().site_code.equals("  ") && filizeResults) {
+                    if(chan.get_id().site_code.trim().length() == 0 && filizeResults) {
                         return "__";
                     }
                     return chan.get_id().site_code;
