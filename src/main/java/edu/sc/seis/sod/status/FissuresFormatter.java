@@ -57,6 +57,19 @@ public class FissuresFormatter {
         }
         return ChannelIdUtil.toStringNoDates(id);
     }
+    
+    public static String dasherizeSiteCode(String s) {
+        String out;
+        if (s == null) {
+            out = "--";
+        } else {
+            out = s.trim();
+            if (out.length() == 0) {
+                out = "--";
+            }
+        }
+        return out;
+    }
 
     public static String formatSite(SiteId id) {
         return SiteIdUtil.toStringNoDates(id);
