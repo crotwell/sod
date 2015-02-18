@@ -18,11 +18,11 @@ public class SiteCode implements ChannelSubsetter {
 
     public SiteCode(Element config) {
         this.code = SodUtil.getNestedText(config);
-        if(code == null || code.length() == 0) {
+        if(code == null || code.trim().length() == 0) {
             // site codes can be space-space and some
             // xml editors will prune the empty space, so we take
-            // the empty siteCode tag to mean space-space
-            code = "  ";
+            // the empty siteCode tag to mean the same as space-space
+            code = edu.sc.seis.seisFile.fdsnws.stationxml.Channel.EMPTY_LOC_CODE;
         }
         pattern = Pattern.compile(code);
     }
