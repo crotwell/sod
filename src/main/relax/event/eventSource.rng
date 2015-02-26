@@ -110,14 +110,16 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Querys events from a FDSN Event web service or file.</summary>
-                    <description>The default is to query the IRIS DMC FDSN Event web service, the host
+                    <description>The default is to query the USGS FDSN Event web service at earthquake.usgs.gov,
+                     the host
                      parameter should only be needed to query a different server. The baseURL, fdsnPath and port
                      parameters should only be used in the case of a server that does not follow the FDSN
                      specification as to how the service URL should be formed. Most of the other parameters
                      map directly to the same parameter in the old eventFinder source. The main exception, at
                      least for queries to the IRIS DMC, is that the catalog and contributor names are not
                      the same, and so you should refer to the web service documentation, available at
-                     <a href="http://service.iris.edu/fdsnws/event/1">http://service.iris.edu/fdsnws/event/1</a>
+                     the USGS, <a href="http://earthquake.usgs.gov/fdsnws/event/1">http://earthquake.usgs.gov/fdsnws/event/1</a>,
+                     or IRIS, <a href="IRIS http://service.iris.edu/fdsnws/event/1">http://service.iris.edu/fdsnws/event/1</a>,
                      for details.
                     </description>
                 </xsd:documentation>
