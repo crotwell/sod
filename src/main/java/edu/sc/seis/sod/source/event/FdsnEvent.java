@@ -348,7 +348,10 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
             }
             List<edu.iris.Fissures.IfEvent.Magnitude> fisMags = new ArrayList<edu.iris.Fissures.IfEvent.Magnitude>();
             for (Magnitude m : oMags) {
-                fisMags.add(toFissuresMagnitude(m));
+                if (m.getMag() != null) {
+                    //usgs web service has some magnitudes with only origin reference, skip these
+                    fisMags.add(toFissuresMagnitude(m));
+                }
             }
             if (o.getLatitude() != null && o.getLongitude() != null && o.getTime() != null) {
                 //usgs web service has some origins with only a depth, skip these
