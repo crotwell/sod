@@ -767,6 +767,8 @@ public class Start {
         armFailure = true;
         logger.error("Arm " + arm.getName()
                      + " failed: "+reason+" Sod is giving up and quiting.");
+        logger.debug("Arm " + arm.getName()
+                     + " failure stack trace: "+reason, new Exception(reason));
         wakeUpAllArms();
     }
     
