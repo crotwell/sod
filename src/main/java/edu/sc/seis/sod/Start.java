@@ -763,6 +763,13 @@ public class Start {
         System.exit(1);
     }
 
+    public static void simpleArmFailure(Arm arm, String reason) {
+        armFailure = true;
+        logger.error("Arm " + arm.getName()
+                     + " failed: "+reason+" Sod is giving up and quiting.");
+        wakeUpAllArms();
+    }
+    
     public static void armFailure(Arm arm, Throwable t) {
         armFailure = true;
         GlobalExceptionHandler.handle("Problem running "

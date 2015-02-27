@@ -40,6 +40,8 @@ public class RefreshNetworkArm extends TimerTask {
                     ((NetworkFinder)netArm.getInternalNetworkSource()).reset();
                 }
                 nets = netArm.getSuccessfulNetworksFromServer();
+                if (nets.size() == 0) {return;}
+                
                 // maybe previous update has not yet finished, only reload nets
                 // not already in list???
                 for (NetworkAttrImpl net : nets) {

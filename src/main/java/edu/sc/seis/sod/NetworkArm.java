@@ -286,7 +286,7 @@ public class NetworkArm implements Arm {
                 // only fail if first time (lastQueryTime==null) so a server fail
                 // during a run will not cause a crash
                 logger.warn(NO_NETWORKS_MSG);
-                Start.armFailure(this, new NotFound(NO_NETWORKS_MSG));
+                Start.simpleArmFailure(this, NO_NETWORKS_MSG);
             }
             logger.info(successes.size() + " networks passed");
             statusChanged("Waiting for a request");
