@@ -918,7 +918,8 @@ result = util.waveformResult(True, out)
                 <description>This calculates the signal to noise ratio (short/long) in the time window described by the offsets
                     around the given phases and passes if the ratio is greater than the given ratio. See the documentation
                     for the TauP Toolkit, http://www.seis.sc.edu/TauP for the phase naming convention. SOD uses the TauP
-                    Toolkit internally.</description>
+                    Toolkit internally. See compoundPhaseSignalToNoise for cases where the long time window should
+                    be relative to a separate phase.</description>
                 <example>
                     <phaseSignalToNoise>
                         <phaseName>ttp</phaseName>
