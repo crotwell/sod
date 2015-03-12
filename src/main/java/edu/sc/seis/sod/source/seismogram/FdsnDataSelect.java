@@ -140,6 +140,10 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
                                                 ChannelImpl channel,
                                                 RequestFilter[] infilters,
                                                 CookieJar cookieJar) throws Exception {
+        return getSeismogramSource();
+    }
+    
+    public SeismogramSource getSeismogramSource() {
         return new SeismogramSource() {
 
             @Override
