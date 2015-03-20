@@ -228,7 +228,7 @@ public class RunProperties {
 
 	private String statusDir = "status";
 
-	private int numWorkers = 1;
+	private int numWorkers = 6;
 
 	private boolean reopenEvents = false;
 
