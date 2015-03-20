@@ -1,7 +1,8 @@
 
 
 group = 'edu.sc.seis'
-version = '3.2.5-SNAPSHOT'
+version = '3.2.5'
+// also remember to change in sod.Version class
 
 apply plugin:'application'
 mainClassName = "edu.sc.seis.sod.Start"
