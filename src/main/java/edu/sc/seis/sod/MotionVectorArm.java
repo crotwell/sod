@@ -37,7 +37,11 @@ import edu.sc.seis.sod.process.waveform.vector.WaveformVectorAsAvailableData;
 import edu.sc.seis.sod.process.waveform.vector.WaveformVectorProcess;
 import edu.sc.seis.sod.process.waveform.vector.WaveformVectorProcessWrapper;
 import edu.sc.seis.sod.process.waveform.vector.WaveformVectorResult;
+import edu.sc.seis.sod.source.seismogram.BatchDataRequest;
+import edu.sc.seis.sod.source.seismogram.ConstantSeismogramSourceLocator;
 import edu.sc.seis.sod.source.seismogram.DataCenterSource;
+import edu.sc.seis.sod.source.seismogram.PromiseSeismogramList;
+import edu.sc.seis.sod.source.seismogram.PromiseSeismogramSource;
 import edu.sc.seis.sod.source.seismogram.SeismogramAuthorizationException;
 import edu.sc.seis.sod.source.seismogram.SeismogramSource;
 import edu.sc.seis.sod.source.seismogram.SeismogramSourceException;
@@ -125,6 +129,10 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
             request = new ANDRequestWrapper((RequestSubsetter)sodObject);
         } else if (sodObject instanceof SeismogramSourceLocator) {
             dcLocator = (SeismogramSourceLocator)sodObject;
+            if (dcLocator instanceof ConstantSeismogramSourceLocator) {
+                logger.info("Wrapping "+dcLocator+" to batch requests for speed.");
+                dcLocator = new BatchDataRequest(dcLocator);
+            }
         } else if (sodObject instanceof VectorAvailableDataSubsetter) {
             availData = (VectorAvailableDataSubsetter)sodObject;
         } else if (sodObject instanceof AvailableDataSubsetter) {
@@ -443,6 +451,23 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
     private LocalSeismogram[][] getData(EventVectorPair ecp, RequestFilter[][] rf, SeismogramSource seismogramSource)
             throws SeismogramSourceException {
         LocalSeismogram[][] localSeismograms = new LocalSeismogram[rf.length][];
+        
+        if (seismogramSource instanceof PromiseSeismogramSource) {
+            PromiseSeismogramSource promiseSource = (PromiseSeismogramSource)seismogramSource;
+            
+            List<List<RequestFilter>> in = new ArrayList<List<RequestFilter>>();
+            for (int i = 0; i < rf.length; i++) {
+                in.add(DataCenterSource.toList(rf[i]));
+            }
+            List<PromiseSeismogramList> promiseList = promiseSource.promiseRetrieveDataList(in);
+
+            for (int i = 0; i < localSeismograms.length; i++) {
+                PromiseSeismogramList pseisList = promiseList.get(i);
+                List<LocalSeismogramImpl> s = pseisList.getResult();
+                localSeismograms[i] = DataCenterSource.toSeisArray(s);
+            }
+        } else {
+        // old style before promises
         for (int i = 0; i < rf.length; i++) {
             if (rf[i].length != 0) {
                 
@@ -460,6 +485,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                 logger.debug("Failed, retrieve data, no requestFilters for component "+i+" continuing with remaining components.");
                 localSeismograms[i] = new LocalSeismogram[0];
             } // end of else
+        }
         }
         return localSeismograms;
     }

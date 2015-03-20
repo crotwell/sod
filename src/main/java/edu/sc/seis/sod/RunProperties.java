@@ -254,7 +254,7 @@ public class RunProperties {
 	
 	private String channelGroupingRules = null;
 	
-	private boolean skipAvailableData = false;
+	private boolean skipAvailableData = true;
 	
 	private List hibernateConfig = new ArrayList();
 }

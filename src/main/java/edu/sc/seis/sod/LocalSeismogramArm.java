@@ -28,6 +28,8 @@ import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.process.waveform.WaveformAsAvailableData;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.process.waveform.WaveformResult;
+import edu.sc.seis.sod.source.seismogram.BatchDataRequest;
+import edu.sc.seis.sod.source.seismogram.ConstantSeismogramSourceLocator;
 import edu.sc.seis.sod.source.seismogram.DataCenterSource;
 import edu.sc.seis.sod.source.seismogram.SeismogramSource;
 import edu.sc.seis.sod.source.seismogram.SeismogramSourceException;
@@ -76,6 +78,10 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
             request = (RequestSubsetter)sodObject;
         } else if(sodObject instanceof SeismogramSourceLocator) {
             dcLocator = (SeismogramSourceLocator)sodObject;
+            if (dcLocator instanceof ConstantSeismogramSourceLocator) {
+                logger.info("Wrapping "+dcLocator+" to batch requests for speed.");
+                dcLocator = new BatchDataRequest(dcLocator);
+            }
         } else if(sodObject instanceof AvailableDataSubsetter) {
             availData = (AvailableDataSubsetter)sodObject;
         } else if(sodObject instanceof WaveformProcess) {

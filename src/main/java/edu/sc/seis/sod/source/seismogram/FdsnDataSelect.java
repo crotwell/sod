@@ -54,7 +54,7 @@ import edu.sc.seis.sod.source.network.InstrumentationFromDB;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.source.network.WrappingNetworkSource;
 
-public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLocator {
+public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements SeismogramSourceLocator {
 
     private FDSNDataSelectQueryParams queryParams = new FDSNDataSelectQueryParams();
 
@@ -136,13 +136,6 @@ public class FdsnDataSelect extends AbstractSource implements SeismogramSourceLo
     }
 
     @Override
-    public SeismogramSource getSeismogramSource(CacheEvent event,
-                                                ChannelImpl channel,
-                                                RequestFilter[] infilters,
-                                                CookieJar cookieJar) throws Exception {
-        return getSeismogramSource();
-    }
-    
     public SeismogramSource getSeismogramSource() {
         return new SeismogramSource() {
 
