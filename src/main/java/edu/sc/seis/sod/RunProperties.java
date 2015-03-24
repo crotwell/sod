@@ -142,6 +142,10 @@ public class RunProperties {
 	public int getNumWaveformWorkerThreads() {
 		return numWorkers;
 	}
+	
+    public void setNumWaveformWorkerThreads(int numWorkers) {
+        this.numWorkers = numWorkers;
+    }
 
 	public boolean reopenEvents() {
 		return reopenEvents;
@@ -228,7 +232,7 @@ public class RunProperties {
 
 	private String statusDir = "status";
 
-	private int numWorkers = 6;
+	private int numWorkers = 1;
 
 	private boolean reopenEvents = false;
 
@@ -257,4 +261,5 @@ public class RunProperties {
 	private boolean skipAvailableData = true;
 	
 	private List hibernateConfig = new ArrayList();
+
 }
