@@ -39,6 +39,7 @@ import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.seisFile.SeisFileException;
 import edu.sc.seis.seisFile.fdsnws.AbstractFDSNQuerier;
 import edu.sc.seis.seisFile.fdsnws.AbstractQueryParams;
+import edu.sc.seis.seisFile.fdsnws.FDSNEventCatalogQuerier;
 import edu.sc.seis.seisFile.fdsnws.FDSNEventQuerier;
 import edu.sc.seis.seisFile.fdsnws.FDSNEventQueryParams;
 import edu.sc.seis.seisFile.fdsnws.FDSNWSException;
@@ -101,6 +102,8 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         if (fdsnwsPath != null && fdsnwsPath.length() != 0) {
             queryParams.setFdsnwsPath(fdsnwsPath);
         }
+        boolean foundCatalog = false;
+        boolean foundContributor = false;
         NodeList childNodes = config.getChildNodes();
         for (int counter = 0; counter < childNodes.getLength(); counter++) {
             Node node = childNodes.item(counter);
@@ -174,22 +177,56 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                                     + " not understood");
                         }
                     } else if (tagName.equals("catalog")) {
+                        foundCatalog = true;
                         queryParams.setCatalog(((Catalog)object).getCatalog());
                     } else if (tagName.equals("contributor")) {
                         queryParams.setContributor(((Contributor)object).getContributor());
-                        boolean foundCatalog = false;
+                        foundContributor = true;
                         for (int c = 0; c < childNodes.getLength(); c++) {
                             Node cnode = childNodes.item(counter);
                             if (cnode instanceof Element && ((Element)cnode).getTagName().equals("catalog")) {
                                 foundCatalog = true;
                             }
                         }
-                        if (!foundCatalog) {
+                        if (!foundCatalog && queryParams.getHost().equals(AbstractQueryParams.IRIS_HOST)) {
                             fixCatalogForContributor(((Contributor)object).getContributor());
                         }
                     }
                 }
             }
+        }
+        try {
+            if (foundContributor) {
+                FDSNEventCatalogQuerier querier = new FDSNEventCatalogQuerier(queryParams);
+                querier.setUserAgent(getUserAgent());
+                logger.info("contributor URL: "+querier.formURI());
+                checkAgainstKnownServer("contributor", querier.getContributors());
+                return;
+            }
+            if (foundCatalog) {
+                FDSNEventCatalogQuerier querier = new FDSNEventCatalogQuerier(queryParams);
+                querier.setUserAgent(getUserAgent());
+                logger.info("catalog URL: "+querier.formURI());
+                checkAgainstKnownServer("catalog", querier.getCatalogs());
+                return;
+            }
+        } catch(FDSNWSException e) {
+            throw new ConfigurationException("Trouble verifying catalog/contributor with server", e);
+        } catch(URISyntaxException e) {
+            throw new ConfigurationException("Trouble verifying catalog/contributor with server", e);
+        }
+    }
+
+    private void checkAgainstKnownServer(String askStyle, List<String> contribList) {
+        String askCatalog = queryParams.getParam(askStyle);
+        if (!contribList.contains(askCatalog)) {
+            String knownCatalogs = "";
+            for (String c : contribList) {
+                knownCatalogs += c + ", ";
+            }
+            knownCatalogs = knownCatalogs.substring(0, knownCatalogs.length()-2);
+            Start.informUserOfBadQueryAndExit("You asked for events from the " + askCatalog + " " + askStyle
+                    + " but the server does not think it has that "+askStyle+". Known "+askStyle+"s are: " + knownCatalogs+".", null);
         }
     }
 
@@ -225,20 +262,24 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         logger.debug(getName() + ".next() called for " + queryTime);
         int count = 0;
         Exception latest = null;
-        
         while (count == 0 || getRetryStrategy().shouldRetry(latest, this, count++)) {
             try {
                 List<CacheEvent> result = internalNext(queryTime);
-                if (count > 0) { getRetryStrategy().serverRecovered(this); }
+                if (count > 0) {
+                    getRetryStrategy().serverRecovered(this);
+                }
                 return result.toArray(new CacheEvent[0]);
             } catch(SeisFileException e) {
                 latest = e;
                 Throwable rootCause = AbstractFDSNQuerier.extractRootCause(e);
                 if (rootCause instanceof IOException) {
                     // try again on IOException
-                    if (rootCause instanceof java.net.SocketTimeoutException || rootCause instanceof InterruptedIOException) {
-                        // timed out, so decrease increment and retry with smaller time window
-                        // also make the increaseThreashold smaller so we are not so aggressive
+                    if (rootCause instanceof java.net.SocketTimeoutException
+                            || rootCause instanceof InterruptedIOException) {
+                        // timed out, so decrease increment and retry with
+                        // smaller time window
+                        // also make the increaseThreashold smaller so we are
+                        // not so aggressive
                         // about expanding the time window
                         decreaseQueryTimeWidth();
                         increaseThreashold /= 2;
@@ -254,8 +295,10 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                 Throwable rootCause = AbstractFDSNQuerier.extractRootCause(e);
                 if (rootCause instanceof IOException) {
                     if (rootCause instanceof java.net.SocketTimeoutException) {
-                        // timed out, so decrease increment and retry with smaller time window
-                        // also make the increaseThreashold smaller so we are not so aggressive
+                        // timed out, so decrease increment and retry with
+                        // smaller time window
+                        // also make the increaseThreashold smaller so we are
+                        // not so aggressive
                         // about expanding the time window
                         decreaseQueryTimeWidth();
                         increaseThreashold /= 2;
@@ -310,7 +353,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
     @Override
     public String getDescription() {
         try {
-            return queryParams.formURI().toString()+" with time range appended later.";
+            return queryParams.formURI().toString() + " with time range appended later.";
         } catch(URISyntaxException e) {
             throw new RuntimeException("Unable to for URL for description.", e);
         }
@@ -321,7 +364,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         if (e.getDescriptionList().size() > 0) {
             desc = e.getDescriptionList().get(0).getText();
         }
-        FlinnEngdahlRegion fe = new FlinnEngdahlRegionImpl(FlinnEngdahlType.GEOGRAPHIC_REGION, -1);
+        FlinnEngdahlRegion fe = new FlinnEngdahlRegionImpl(FlinnEngdahlType.GEOGRAPHIC_REGION, 0);
         for (EventDescription eDescription : e.getDescriptionList()) {
             if (eDescription.getIrisFECode() != -1) {
                 fe = new FlinnEngdahlRegionImpl(FlinnEngdahlType.GEOGRAPHIC_REGION, eDescription.getIrisFECode());
@@ -349,12 +392,14 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
             List<edu.iris.Fissures.IfEvent.Magnitude> fisMags = new ArrayList<edu.iris.Fissures.IfEvent.Magnitude>();
             for (Magnitude m : oMags) {
                 if (m.getMag() != null) {
-                    //usgs web service has some magnitudes with only origin reference, skip these
+                    // usgs web service has some magnitudes with only origin
+                    // reference, skip these
                     fisMags.add(toFissuresMagnitude(m));
                 }
             }
             if (o.getLatitude() != null && o.getLongitude() != null && o.getTime() != null) {
-                //usgs web service has some origins with only a depth, skip these
+                // usgs web service has some origins with only a depth, skip
+                // these
                 QuantityImpl depth = new QuantityImpl(o.getDepth().getValue(), UnitImpl.METER);
                 OriginImpl oImpl = new OriginImpl(o.getPublicId(),
                                                   o.getIrisCatalog(),
@@ -435,7 +480,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
 
     @Override
     protected MicroSecondDate resetQueryTimeForLag() {
-        MicroSecondDate out =  super.resetQueryTimeForLag();
+        MicroSecondDate out = super.resetQueryTimeForLag();
         lastQueryEnd = nextLastQueryEnd;
         nextLastQueryEnd = ClockUtil.now();
         return out;
@@ -446,7 +491,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
     MicroSecondTimeRangeSupplier eventTimeRangeSupplier;
 
     private MicroSecondDate lastQueryEnd;
-    
+
     private MicroSecondDate nextLastQueryEnd;
 
     String url;
@@ -454,9 +499,9 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
     int port = -1;
 
     URI parsedURL;
-    
+
     int increaseThreashold = 10;
-    
+
     int decreaseThreashold = 100;
 
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(FdsnEvent.class);

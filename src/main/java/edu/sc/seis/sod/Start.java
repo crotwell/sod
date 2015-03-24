@@ -265,8 +265,17 @@ public class Start {
 
     public static void informUserOfBadNetworkAndExit(String networkCode, NetworkNotFound nnf) {
         logger.error("Can't find "+networkCode+" network from server", nnf);
-        System.err.println("You told SOD to use the '"
-                + networkCode + "' network, but the server does not think it exists. SOD is now cowardly quitting.");
+        String msg = "You told SOD to use the '"
+                + networkCode + "' network, but the server does not think it exists.";
+        informUserOfBadQueryAndExit(msg, nnf);
+    }
+
+    public static void informUserOfBadQueryAndExit(String message, Exception e) {
+        logger.error(message, e);
+        System.err.println();
+        System.err.println(message);
+        System.err.println();
+        System.err.println("    SOD is now cowardly quitting.");
         armFailure = true;
         wakeUpAllArms();
     }
