@@ -39,6 +39,20 @@ public class VelocityEvent extends ProxyEventAccessOperations {
         this.event = event;
         this.origin = getOrigin();
     }
+    
+    public String getName() {
+        if (get_attributes().name != null & get_attributes().name.length() > 0) {
+            return get_attributes().name;
+        } else if (hasRegion()) {
+            return getRegion();
+        } else {
+            return getTime();
+        }
+    }
+    
+    public boolean hasRegion() {
+        return get_attributes().region != null && get_attributes().region.number > 0;
+    }
 
     public String getRegion() {
         return pr.getRegionName(get_attributes().region);

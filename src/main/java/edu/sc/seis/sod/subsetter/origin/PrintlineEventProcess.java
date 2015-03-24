@@ -22,11 +22,14 @@ public class PrintlineEventProcess extends AbstractPrintlineProcess implements O
     public StringTree accept(CacheEvent event,
                              EventAttrImpl attr,
                              OriginImpl origin) throws IOException {
+        if (attr.getRegion().number <= 0) {
+            
+        }
         velocitizer.evaluate(filename, template, event);
         return new StringTreeLeaf(this, true);
     }
 
-    public static final String DEFAULT_TEMPLATE = "$event.region ($event.latitude, $event.longitude) $event.depth $event.time $event.magnitude";
+    public static final String DEFAULT_TEMPLATE = "#if($event.hasRegion())$event.region#{else}$event.name#end ($event.latitude, $event.longitude) $event.depth $event.time $event.magnitude";
 
     public String getDefaultTemplate() {
         return DEFAULT_TEMPLATE;
