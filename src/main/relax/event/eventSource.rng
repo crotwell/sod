@@ -119,7 +119,7 @@
                      least for queries to the IRIS DMC, is that the catalog and contributor names are not
                      the same, and so you should refer to the web service documentation, available at
                      the USGS, <a href="http://earthquake.usgs.gov/fdsnws/event/1">http://earthquake.usgs.gov/fdsnws/event/1</a>,
-                     or IRIS, <a href="IRIS http://service.iris.edu/fdsnws/event/1">http://service.iris.edu/fdsnws/event/1</a>,
+                     or IRIS, <a href="http://service.iris.edu/fdsnws/event/1">http://service.iris.edu/fdsnws/event/1</a>,
                      for details.
                     </description>
                 </xsd:documentation>
