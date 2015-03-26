@@ -189,7 +189,7 @@
                     
                     For IRIS DMC usage, see http://ds.iris.edu/ds/nodes/dmc/services/usage/ for information
                 on resource limits. In particular for versions of SOD prior to 3.2.5 you should not
-                have more than 3 waveform worker threads or the rate limiter at the DMC will block
+                have more than 3 waveform worker threads or the rate limiter at the DMC may block
                 your requests, resulting in very slow performance. For later versions of SOD requests are
                 batched so more worker threads can be used. However, diminishing returns sets in very 
                 quickly, and many threads may end up being slower than a few.</description>
