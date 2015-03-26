@@ -185,7 +185,14 @@
                 <description>SOD can use multiple threads in the waveform arm to retrieve and
                     process data. This allows for SOD to stay busy on processing one event-channel
                     group while retrieving the data for another. Setting this to 2 can speed things
-                    up. The value defaults to 1. </description>
+                    up. The value defaults to 1. 
+                    
+                    For IRIS DMC usage, see http://ds.iris.edu/ds/nodes/dmc/services/usage/ for information
+                on resource limits. In particular for versions of SOD prior to 3.2.5 you should not
+                have more than 3 waveform worker threads or the rate limiter at the DMC will block
+                your requests, resulting in very slow performance. For later versions of SOD requests are
+                batched so more worker threads can be used. However, diminishing returns sets in very 
+                quickly, and many threads may end up being slower than a few.</description>
             </xsd:annotation>
             <data type="nonNegativeInteger">
                 <xsd:annotation>

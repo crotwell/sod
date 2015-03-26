@@ -194,6 +194,13 @@
                 The host parameter should be used to connect to another service. The baseurl and
                 port parameters should only be used to connect to a service that does not follow the
                 FDSN specification on how the URL should be formed.
+                
+                For IRIS DMC usage, see http://ds.iris.edu/ds/nodes/dmc/services/usage/ for information
+                on resource limits. In particular for versions of SOD prior to 3.2.5 you should not
+                have more than 3 waveform worker threads or the rate limiter at the DMC will block
+                your requests, resulting in very slow performance. For later versions of SOD requests are
+                batched so more worker threads can be used. However, diminishing returns sets in very 
+                quickly, and many threads may end up being slower than a few.
                     </description>
             </xsd:annotation>
             <interleave>
