@@ -13,6 +13,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import edu.iris.Fissures.BoxArea;
+import edu.iris.Fissures.Time;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.NetworkNotFound;
@@ -169,11 +170,7 @@ public class FdsnStation extends AbstractNetworkSource {
             staQP.setLevel(FDSNStationQueryParams.LEVEL_STATION);
             // now append the real network code
             staQP.appendToNetwork(net.getId().network_code);
-            staQP.setStartTime(new MicroSecondDate(net.getBeginTime()).add(ONE_SECOND));
-            MicroSecondDate end = new MicroSecondDate(net.getEndTime()).subtract(ONE_SECOND);
-            if (end.before(ClockUtil.now())) {
-                staQP.setEndTime(end);
-            }
+            setTimeParams(staQP, net.getBeginTime(), net.getEndTime());
             logger.debug("getStations "+staQP.formURI());
             FDSNStationXML staxml = internalGetStationXML(staQP);
             List<StationImpl> out = new ArrayList<StationImpl>();
@@ -208,11 +205,7 @@ public class FdsnStation extends AbstractNetworkSource {
                     .appendToNetwork(station.getId().network_id.network_code)
                     .clearStation()
                     .appendToStation(station.getId().station_code);
-            staQP.setStartTime(new MicroSecondDate(station.getBeginTime()).add(ONE_SECOND));
-            MicroSecondDate end = new MicroSecondDate(station.getEndTime()).subtract(ONE_SECOND);
-            if (end.before(ClockUtil.now())) {
-                staQP.setEndTime(end);
-            }
+            setTimeParams(staQP, station.getBeginTime(), station.getEndTime());
             logger.info("getChannels "+staQP.formURI());
             FDSNStationXML staxml = internalGetStationXML(staQP);
             List<ChannelImpl> out = new ArrayList<ChannelImpl>();
@@ -285,13 +278,8 @@ public class FdsnStation extends AbstractNetworkSource {
                     .clearLocation()
                     .appendToLocation(chan.getId().site_code)
                     .clearChannel()
-                    .appendToChannel(chan.getId().channel_code)
-                    .setEndAfter(new MicroSecondDate(chan.getId().begin_time))
-                    // ends after
-                    .setEndTime(new MicroSecondDate(chan.getId().begin_time)); // starts
-                                                                         // before
-                                                                         // or
-                                                                         // on
+                    .appendToChannel(chan.getId().channel_code);
+            setTimeParams(staQP, chan.getBeginTime(), chan.getEndTime());
             logger.debug("getInstrumentation "+staQP.formURI());
             FDSNStationXML staxml = internalGetStationXML(staQP);
             NetworkIterator netIt = staxml.getNetworks();
@@ -388,6 +376,14 @@ public class FdsnStation extends AbstractNetworkSource {
     
     public FDSNStationQueryParams getDefaultQueryParams() {
         return queryParams;
+    }
+    
+    static void setTimeParams(FDSNStationQueryParams staQP, Time startTime, Time endTime) {
+        staQP.setStartTime(new MicroSecondDate(startTime).add(ONE_SECOND));
+        MicroSecondDate end = new MicroSecondDate(endTime).subtract(ONE_SECOND);
+        if (end.before(ClockUtil.now())) {
+            staQP.setEndTime(end);
+        }
     }
     
     boolean includeAvailability = true;
