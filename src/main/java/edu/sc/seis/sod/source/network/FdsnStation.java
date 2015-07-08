@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
 
+import org.codehaus.stax2.validation.XMLValidationException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -25,6 +26,8 @@ import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.InstrumentationImpl;
 import edu.iris.Fissures.network.NetworkAttrImpl;
+import edu.iris.Fissures.network.NetworkIdUtil;
+import edu.iris.Fissures.network.StationIdUtil;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
@@ -46,6 +49,7 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.StationIterator;
 import edu.sc.seis.sod.BuildVersion;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.source.SodSourceException;
+import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.subsetter.station.StationPointDistance;
 
 public class FdsnStation extends AbstractNetworkSource {
@@ -64,6 +68,7 @@ public class FdsnStation extends AbstractNetworkSource {
         queryParams.setIncludeRestricted(false);
         queryParams.setIncludeAvailability(false);
         includeAvailability = SodUtil.isTrue(config, "includeAvailability", true);
+        validateXML = SodUtil.isTrue(config, "validate", false);
         if (config != null) {
             // otherwise just use defaults
             int port = SodUtil.loadInt(config, "port", -1);
@@ -146,6 +151,9 @@ public class FdsnStation extends AbstractNetworkSource {
         } catch(SeisFileException e) {
             throw new SodSourceException(e);
         } catch(XMLStreamException e) {
+            if (e instanceof XMLValidationException) {
+                logger.info("InvalidXML: getNetworks"+ e.getMessage().replace('\n', ' '));
+            }
             throw new SodSourceException(e);
         }
     }
@@ -191,6 +199,9 @@ public class FdsnStation extends AbstractNetworkSource {
         } catch(SeisFileException e) {
             throw new SodSourceException(e);
         } catch(XMLStreamException e) {
+            if (e instanceof XMLValidationException) {
+                logger.info("InvalidXML: "+NetworkIdUtil.toString(net.get_id())+" "+ e.getMessage().replace('\n', ' '));
+            }
             throw new SodSourceException(e);
         }
     }
@@ -247,6 +258,9 @@ public class FdsnStation extends AbstractNetworkSource {
         } catch(SeisFileException e) {
             throw new SodSourceException(e);
         } catch(XMLStreamException e) {
+            if (e instanceof XMLValidationException) {
+                logger.info("InvalidXML: "+StationIdUtil.toString(station.get_id())+" "+ e.getMessage().replace('\n', ' '));
+            }
             throw new SodSourceException(e);
         }
     }
@@ -309,6 +323,8 @@ public class FdsnStation extends AbstractNetworkSource {
             throw new SodSourceException("Problem forming URI", e);
         } catch(SeisFileException e) {
             throw new SodSourceException(e);
+        } catch(XMLValidationException e) {
+            throw new SodSourceException(e);
         } catch(XMLStreamException e) {
             throw new SodSourceException(e);
         }
@@ -345,6 +361,9 @@ public class FdsnStation extends AbstractNetworkSource {
     
     FDSNStationQuerier setupQuerier(FDSNStationQueryParams queryParams) {
         FDSNStationQuerier querier = new FDSNStationQuerier(queryParams);
+        if (validateXML) {
+            querier.setValidate(true);
+        }
         querier.setUserAgent("SOD/"+BuildVersion.getVersion());
         return querier;
     }
@@ -387,6 +406,8 @@ public class FdsnStation extends AbstractNetworkSource {
     }
     
     boolean includeAvailability = true;
+    
+    boolean validateXML = false;
     
     public static final TimeInterval ONE_SECOND = new TimeInterval(1, UnitImpl.SECOND);
     

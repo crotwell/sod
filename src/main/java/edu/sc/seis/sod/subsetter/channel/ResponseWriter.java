@@ -2,9 +2,11 @@ package edu.sc.seis.sod.subsetter.channel;
 
 import java.io.FileNotFoundException;
 
+import org.codehaus.stax2.validation.XMLValidationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.network.ChannelIdUtil;
@@ -13,6 +15,7 @@ import edu.iris.Fissures.network.ResponsePrint;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.source.SodSourceException;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
@@ -36,6 +39,13 @@ public class ResponseWriter implements ChannelSubsetter {
             Instrumentation inst = network.getInstrumentation(chan);
             String response = ResponsePrint.printResponse(chan.getId(), inst);
             velocitizer.evaluate(template, response, chan);
+        } catch(SodSourceException e) {
+            if (e.getCause() instanceof XMLValidationException) {
+                logger.info("InvalidXML: "+ChannelIdUtil.toString(chan.get_id())+" "+ e.getCause().getMessage().replace('\n', ' '));
+                return new Fail(this, "Returned XML from server is invalid: "+e.getCause().getMessage());
+            } else {
+                throw e;
+            }
         } catch(ChannelNotFound e) {
             return new Fail(this, "No instrumentation");
         } catch (InvalidResponse e) {
@@ -55,4 +65,7 @@ public class ResponseWriter implements ChannelSubsetter {
     private String template;
 
     private PrintlineVelocitizer velocitizer;
+    
+
+    private static Logger logger = LoggerFactory.getLogger(ResponseWriter.class);
 }
