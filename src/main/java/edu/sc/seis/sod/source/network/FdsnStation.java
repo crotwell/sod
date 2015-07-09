@@ -49,7 +49,6 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.StationIterator;
 import edu.sc.seis.sod.BuildVersion;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.source.SodSourceException;
-import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.subsetter.station.StationPointDistance;
 
 public class FdsnStation extends AbstractNetworkSource {
@@ -130,6 +129,7 @@ public class FdsnStation extends AbstractNetworkSource {
     
     @Override
     public List<? extends NetworkAttrImpl> getNetworks() throws SodSourceException {
+        List<NetworkAttrImpl> out = new ArrayList<NetworkAttrImpl>();
         try {
             FDSNStationQueryParams staQP = setupQueryParams();
             staQP.setLevel(FDSNStationQueryParams.LEVEL_NETWORK);
@@ -138,7 +138,6 @@ public class FdsnStation extends AbstractNetworkSource {
             staQP.clearEndAfter().clearEndBefore().clearEndTime();       // applied to channel not network
             logger.debug("getNetworks "+staQP.formURI());
             FDSNStationXML staxml = internalGetStationXML(staQP);
-            List<NetworkAttrImpl> out = new ArrayList<NetworkAttrImpl>();
             NetworkIterator netIt = staxml.getNetworks();
             while (netIt.hasNext()) {
                 edu.sc.seis.seisFile.fdsnws.stationxml.Network n = netIt.next();
@@ -150,16 +149,19 @@ public class FdsnStation extends AbstractNetworkSource {
             throw new SodSourceException("Problem forming URI", e);
         } catch(SeisFileException e) {
             throw new SodSourceException(e);
+        } catch(XMLValidationException e) {
+            logger.warn("InvalidXML: getting networks"+ e.getMessage().replace('\n', ' '));
+            // debug to get stack trace in log file, but not in warn which goes to stderr
+            logger.debug("InvalidXML: getting networks"+ e.getMessage().replace('\n', ' '), e);
+            return out;
         } catch(XMLStreamException e) {
-            if (e instanceof XMLValidationException) {
-                logger.info("InvalidXML: getNetworks"+ e.getMessage().replace('\n', ' '));
-            }
             throw new SodSourceException(e);
         }
     }
 
     @Override
     public List<? extends StationImpl> getStations(NetworkAttrImpl net) throws SodSourceException {
+        List<StationImpl> out = new ArrayList<StationImpl>();
         try {
             FDSNStationQueryParams staQP = setupQueryParams();
             // add any "virtual" network codes back to the query as they limit stations
@@ -181,7 +183,6 @@ public class FdsnStation extends AbstractNetworkSource {
             setTimeParams(staQP, net.getBeginTime(), net.getEndTime());
             logger.debug("getStations "+staQP.formURI());
             FDSNStationXML staxml = internalGetStationXML(staQP);
-            List<StationImpl> out = new ArrayList<StationImpl>();
             NetworkIterator netIt = staxml.getNetworks();
             while (netIt.hasNext()) {
                 edu.sc.seis.seisFile.fdsnws.stationxml.Network n = netIt.next();
@@ -198,16 +199,19 @@ public class FdsnStation extends AbstractNetworkSource {
             throw new SodSourceException("Problem forming URI", e);
         } catch(SeisFileException e) {
             throw new SodSourceException(e);
+        } catch(XMLValidationException e) {
+            // debug to get stack trace in log file, but not in warn which goes to stderr
+            logger.warn("InvalidXML: "+NetworkIdUtil.toString(net.get_id())+" "+ e.getMessage().replace('\n', ' '));
+            logger.debug("InvalidXML: "+NetworkIdUtil.toString(net.get_id())+" "+ e.getMessage().replace('\n', ' '), e);
+            return out;
         } catch(XMLStreamException e) {
-            if (e instanceof XMLValidationException) {
-                logger.info("InvalidXML: "+NetworkIdUtil.toString(net.get_id())+" "+ e.getMessage().replace('\n', ' '));
-            }
             throw new SodSourceException(e);
         }
     }
 
     @Override
     public List<? extends ChannelImpl> getChannels(StationImpl station) throws SodSourceException  {
+        List<ChannelImpl> out = new ArrayList<ChannelImpl>();
         try {
             FDSNStationQueryParams staQP = setupQueryParams();
             staQP.setLevel(FDSNStationQueryParams.LEVEL_CHANNEL);
@@ -219,7 +223,6 @@ public class FdsnStation extends AbstractNetworkSource {
             setTimeParams(staQP, station.getBeginTime(), station.getEndTime());
             logger.info("getChannels "+staQP.formURI());
             FDSNStationXML staxml = internalGetStationXML(staQP);
-            List<ChannelImpl> out = new ArrayList<ChannelImpl>();
             NetworkIterator netIt = staxml.getNetworks();
             while (netIt.hasNext()) {
                 edu.sc.seis.seisFile.fdsnws.stationxml.Network n = netIt.next();
@@ -257,10 +260,12 @@ public class FdsnStation extends AbstractNetworkSource {
             throw new SodSourceException("Problem forming URI", e);
         } catch(SeisFileException e) {
             throw new SodSourceException(e);
+        } catch(XMLValidationException e) {
+            // debug to get stack trace in log file, but not in warn which goes to stderr
+            logger.warn("InvalidXML: "+StationIdUtil.toString(station.get_id())+" "+ e.getMessage().replace('\n', ' '));
+            logger.debug("InvalidXML: "+StationIdUtil.toString(station.get_id())+" "+ e.getMessage().replace('\n', ' '), e);
+            return out;
         } catch(XMLStreamException e) {
-            if (e instanceof XMLValidationException) {
-                logger.info("InvalidXML: "+StationIdUtil.toString(station.get_id())+" "+ e.getMessage().replace('\n', ' '));
-            }
             throw new SodSourceException(e);
         }
     }
@@ -324,7 +329,10 @@ public class FdsnStation extends AbstractNetworkSource {
         } catch(SeisFileException e) {
             throw new SodSourceException(e);
         } catch(XMLValidationException e) {
-            throw new SodSourceException(e);
+            // debug to get stack trace in log file, but not in warn which goes to stderr
+            logger.warn("InvalidXML: "+ChannelIdUtil.toString(chan.get_id())+" "+ e.getMessage().replace('\n', ' '));
+            logger.warn("InvalidXML: "+ChannelIdUtil.toString(chan.get_id())+" "+ e.getMessage().replace('\n', ' '), e);
+            throw new InvalidResponse(e);
         } catch(XMLStreamException e) {
             throw new SodSourceException(e);
         }

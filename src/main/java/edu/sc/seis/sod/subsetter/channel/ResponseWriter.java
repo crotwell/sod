@@ -39,13 +39,6 @@ public class ResponseWriter implements ChannelSubsetter {
             Instrumentation inst = network.getInstrumentation(chan);
             String response = ResponsePrint.printResponse(chan.getId(), inst);
             velocitizer.evaluate(template, response, chan);
-        } catch(SodSourceException e) {
-            if (e.getCause() instanceof XMLValidationException) {
-                logger.info("InvalidXML: "+ChannelIdUtil.toString(chan.get_id())+" "+ e.getCause().getMessage().replace('\n', ' '));
-                return new Fail(this, "Returned XML from server is invalid: "+e.getCause().getMessage());
-            } else {
-                throw e;
-            }
         } catch(ChannelNotFound e) {
             return new Fail(this, "No instrumentation");
         } catch (InvalidResponse e) {
