@@ -38,6 +38,23 @@ public class TimeParser extends StringParser {
                 return "<networkStartTime/>";
             }
         }
+        // look for relative time, like -1d or -3m
+        Matcher m = relativeTimePattern.matcher(arg);
+        if (m.matches()) {
+            String s = "<earlier><value>"+m.group(1)+"</value>";
+            if ("h".equals(m.group(2))) {
+                s += "<unit>HOUR</unit>";
+            } else if ("d".equals(m.group(2))) {
+                s += "<unit>DAY</unit>";
+            } else if ("m".equals(m.group(2))) {
+                s += "<unit>MONTH</unit>";
+            } else if ("y".equals(m.group(2))) {
+                s += "<unit>YEAR</unit>";
+            } else {
+                throw new ParseException("I don't understand "+arg+", should be like -2h, -1d or -3m or -1y");
+            }
+            return s+"</earlier>";
+        }
         return parseDate(arg);
     }
     
@@ -85,6 +102,8 @@ public class TimeParser extends StringParser {
 
     private Pattern datePattern = Pattern.compile("(\\-?\\d{4})-?(\\d{2})?-?(\\d{2})?-?(\\d{2})?-?(\\d{2})?-?(\\d{2})?");
 
+    private Pattern relativeTimePattern = Pattern.compile("-(\\d+)([hdmy])");
+    
     public static FlaggedOption createYesterdayParam(String name,
                                                      String helpMessage,
                                                      boolean ceiling) {
