@@ -17,7 +17,7 @@ sourceSets {
 }
 
 dependencies {
-    compile project(':bag')
+    compile 'edu.sc.seis:bag:0.1alpha'
 //    compile project(':cormorant')
     
     compile "jline:jline:0.9.94"
@@ -38,6 +38,12 @@ dependencies {
     compile "net.sourceforge.javacsv:javacsv:2.0"
     runtime "org.codehaus.groovy:groovy-all:2.2.2"
 //    runtime "org.jruby:jruby:1.7.3"
+}
+
+configurations.all {
+    resolutionStrategy.dependencySubstitution {
+        substitute module("edu.sc.seis:bag") with project(":bag")
+    }
 }
 
 def dirName = project.name+'-'+version
