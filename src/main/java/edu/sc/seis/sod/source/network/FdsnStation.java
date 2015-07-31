@@ -130,6 +130,7 @@ public class FdsnStation extends AbstractNetworkSource {
     @Override
     public List<? extends NetworkAttrImpl> getNetworks() throws SodSourceException {
         List<NetworkAttrImpl> out = new ArrayList<NetworkAttrImpl>();
+        FDSNStationXML staxml = null;
         try {
             FDSNStationQueryParams staQP = setupQueryParams();
             staQP.setLevel(FDSNStationQueryParams.LEVEL_NETWORK);
@@ -137,7 +138,7 @@ public class FdsnStation extends AbstractNetworkSource {
             staQP.clearStartAfter().clearStartBefore().clearStartTime(); // start and end times also slow as 
             staQP.clearEndAfter().clearEndBefore().clearEndTime();       // applied to channel not network
             logger.debug("getNetworks "+staQP.formURI());
-            FDSNStationXML staxml = internalGetStationXML(staQP);
+            staxml = internalGetStationXML(staQP);
             NetworkIterator netIt = staxml.getNetworks();
             while (netIt.hasNext()) {
                 edu.sc.seis.seisFile.fdsnws.stationxml.Network n = netIt.next();
@@ -156,12 +157,17 @@ public class FdsnStation extends AbstractNetworkSource {
             return out;
         } catch(XMLStreamException e) {
             throw new SodSourceException(e);
+        } finally {
+            if (staxml != null) {
+                staxml.closeReader();
+            }
         }
     }
 
     @Override
     public List<? extends StationImpl> getStations(NetworkAttrImpl net) throws SodSourceException {
         List<StationImpl> out = new ArrayList<StationImpl>();
+        FDSNStationXML staxml = null;
         try {
             FDSNStationQueryParams staQP = setupQueryParams();
             // add any "virtual" network codes back to the query as they limit stations
@@ -182,7 +188,7 @@ public class FdsnStation extends AbstractNetworkSource {
             staQP.appendToNetwork(net.getId().network_code);
             setTimeParams(staQP, net.getBeginTime(), net.getEndTime());
             logger.debug("getStations "+staQP.formURI());
-            FDSNStationXML staxml = internalGetStationXML(staQP);
+            staxml = internalGetStationXML(staQP);
             NetworkIterator netIt = staxml.getNetworks();
             while (netIt.hasNext()) {
                 edu.sc.seis.seisFile.fdsnws.stationxml.Network n = netIt.next();
@@ -206,12 +212,17 @@ public class FdsnStation extends AbstractNetworkSource {
             return out;
         } catch(XMLStreamException e) {
             throw new SodSourceException(e);
+        } finally {
+            if (staxml != null) {
+                staxml.closeReader();
+            }
         }
     }
 
     @Override
     public List<? extends ChannelImpl> getChannels(StationImpl station) throws SodSourceException  {
         List<ChannelImpl> out = new ArrayList<ChannelImpl>();
+        FDSNStationXML staxml = null;
         try {
             FDSNStationQueryParams staQP = setupQueryParams();
             staQP.setLevel(FDSNStationQueryParams.LEVEL_CHANNEL);
@@ -222,7 +233,7 @@ public class FdsnStation extends AbstractNetworkSource {
                     .appendToStation(station.getId().station_code);
             setTimeParams(staQP, station.getBeginTime(), station.getEndTime());
             logger.info("getChannels "+staQP.formURI());
-            FDSNStationXML staxml = internalGetStationXML(staQP);
+            staxml = internalGetStationXML(staQP);
             NetworkIterator netIt = staxml.getNetworks();
             while (netIt.hasNext()) {
                 edu.sc.seis.seisFile.fdsnws.stationxml.Network n = netIt.next();
@@ -267,6 +278,10 @@ public class FdsnStation extends AbstractNetworkSource {
             return out;
         } catch(XMLStreamException e) {
             throw new SodSourceException(e);
+        } finally {
+            if (staxml != null) {
+                staxml.closeReader();
+            }
         }
     }
 
@@ -284,6 +299,7 @@ public class FdsnStation extends AbstractNetworkSource {
 
     @Override
     public Instrumentation getInstrumentation(ChannelImpl chan) throws SodSourceException, ChannelNotFound, InvalidResponse  {
+        FDSNStationXML staxml = null;
         try {
             if (chan == null) { throw new IllegalArgumentException("Channel is null");}
             if (chan.getId() == null) { throw new IllegalArgumentException("Channel id is null");}
@@ -298,9 +314,9 @@ public class FdsnStation extends AbstractNetworkSource {
                     .appendToLocation(chan.getId().site_code)
                     .clearChannel()
                     .appendToChannel(chan.getId().channel_code);
-            setTimeParams(staQP, chan.getBeginTime(), chan.getEndTime());
+            setTimeParamsToGetSingleChan(staQP, chan.getBeginTime(), chan.getEndTime());
             logger.debug("getInstrumentation "+staQP.formURI());
-            FDSNStationXML staxml = internalGetStationXML(staQP);
+            staxml = internalGetStationXML(staQP);
             NetworkIterator netIt = staxml.getNetworks();
             while (netIt.hasNext()) {
                 edu.sc.seis.seisFile.fdsnws.stationxml.Network n = netIt.next();
@@ -312,12 +328,12 @@ public class FdsnStation extends AbstractNetworkSource {
                     for (Channel c : s.getChannelList()) {
                         ChannelSensitivityBundle csb = StationXMLToFissures.convert(c, sImpl);
                         chanSensitivityMap.put(ChannelIdUtil.toString(csb.getChan().get_id()), csb.getSensitivity());
-                        InstrumentationImpl out = StationXMLToFissures.convertInstrumentation(c); // first
-                                                                               // one
-                                                                               // should
-                                                                               // be
-                                                                               // right
-                        staxml.closeReader();
+                        // first one should be right
+                        InstrumentationImpl out = StationXMLToFissures.convertInstrumentation(c); 
+                        if (staxml != null) {
+                            staxml.closeReader();
+                            staxml = null;
+                        }
                         return out;
                     }
                 }
@@ -335,6 +351,10 @@ public class FdsnStation extends AbstractNetworkSource {
             throw new InvalidResponse(e);
         } catch(XMLStreamException e) {
             throw new SodSourceException(e);
+        } finally {
+            if (staxml != null) {
+                staxml.closeReader();
+            }
         }
     }
     
@@ -379,12 +399,17 @@ public class FdsnStation extends AbstractNetworkSource {
     FDSNStationXML internalGetStationXML(FDSNStationQueryParams staQP) {
         int count = 0;
         SeisFileException latest = null;
+        FDSNStationXML out = null;
         while (count == 0 || getRetryStrategy().shouldRetry(latest, this, count++)) {
             try {
-                FDSNStationXML out = setupQuerier(staQP).getFDSNStationXML();
+                out = setupQuerier(staQP).getFDSNStationXML();
                 if (count > 0) { getRetryStrategy().serverRecovered(this); }
                 return out;
             } catch(SeisFileException e) {
+                if (out != null) {
+                    out.closeReader();
+                    out = null;
+                }
                 latest = e;
                 Throwable rootCause = AbstractFDSNQuerier.extractRootCause(e);
                 if (rootCause instanceof IOException) {
@@ -403,6 +428,14 @@ public class FdsnStation extends AbstractNetworkSource {
     
     public FDSNStationQueryParams getDefaultQueryParams() {
         return queryParams;
+    }
+
+    static void setTimeParamsToGetSingleChan(FDSNStationQueryParams staQP, Time startTime, Time endTime) {
+        staQP.setStartBefore(new MicroSecondDate(startTime).add(ONE_SECOND));
+        MicroSecondDate end = new MicroSecondDate(endTime);
+        if (end.before(ClockUtil.now())) {
+            staQP.setEndAfter(end.subtract(ONE_SECOND));
+        }
     }
     
     static void setTimeParams(FDSNStationQueryParams staQP, Time startTime, Time endTime) {
