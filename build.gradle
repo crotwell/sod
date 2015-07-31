@@ -25,6 +25,8 @@ dependencies {
     compile "rngconvUSC:rngconv:20030225"
     compile "de.erichseifert.gral:VectorGraphics2D:0.9"
     compile "de.erichseifert.gral:gral-core:0.9"
+    compile "org.eclipse.jetty:jetty-servlet:9.3.0+"
+    compile 'org.json:json:20140107'
 
     compile ("org.apache.velocity:velocity-tools:2.0") {
         exclude group: 'xml-apis',  module: 'xml-apis'
