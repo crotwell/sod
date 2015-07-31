@@ -83,7 +83,7 @@ public class OutputScheduler extends Thread implements ArmListener {
                             + "honey; I need hands outstretched to take it.");
                 String lcOSName = System.getProperty("os.name").toLowerCase();
                 boolean MAC_OS_X = lcOSName.startsWith("mac os x");
-                if(MAC_OS_X) {
+                if(MAC_OS_X && ! Start.getRunProps().isStatusWebKeepAlive()) {
                     // hopefully everything is done!
                     try {
                         Connection conn = ConnMgr.createConnection();
@@ -92,7 +92,8 @@ public class OutputScheduler extends Thread implements ArmListener {
                     } catch(SQLException e) {
                         GlobalExceptionHandler.handle(e);
                     }
-                    logger.debug("Using System.exit(0) only on the mac due to AWT thread not exiting.");
+                    logger.info("Using System.exit(0) only on the mac due to AWT thread not exiting.");
+                    System.err.println("Using System.exit(0) only on the mac due to AWT thread not exiting.");
                     System.exit(0);
                 }
                 return;

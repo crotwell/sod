@@ -56,6 +56,7 @@ import edu.sc.seis.sod.status.IndexTemplate;
 import edu.sc.seis.sod.status.OutputScheduler;
 import edu.sc.seis.sod.status.TemplateFileLoader;
 import edu.sc.seis.sod.validator.Validator;
+import edu.sc.seis.sod.web.WebAdmin;
 
 public class Start {
 
@@ -416,6 +417,10 @@ public class Start {
     public static NetworkArm getNetworkArm() {
         return network;
     }
+    
+    public static WaveformArm[] getWaveformArms() {
+        return waveforms;
+    }
 
     public static RunProperties getRunProps() {
         if(runProps == null) {
@@ -468,6 +473,11 @@ public class Start {
             checkDBVersion();
             checkConfig(creator.create());
         }
+        // start web interface
+        webAdmin = new WebAdmin();
+        add(webAdmin); // listen for arm fails
+        webAdmin.start();
+        
         // this next line sets up the status page for exception reporting,
         // so
         // it should be as early as possible in the startup sequence
@@ -752,6 +762,12 @@ public class Start {
             exit("Quitting due to error: " + e.getMessage());
         }
         logger.info("Finished starting all threads.");
+        try {
+            webAdmin.join();
+        } catch(InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     } // end of main ()
 
     public static void exit(String reason) {
@@ -807,6 +823,15 @@ public class Start {
             OutputScheduler.getDefault().notify();
         }
     }
+    
+    public static boolean isAnyWaveformArmActive() {
+        for (int i = 0; i < waveforms.length; i++) {
+            if (waveforms[i].isActive()) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public static boolean isArmFailure() {
         return armFailure;
@@ -837,6 +862,8 @@ public class Start {
     private static String commandName = "sod";
 
     private static MicroSecondDate startTime;
+    
+    private static WebAdmin webAdmin;
 
     private static String DATABASE_DIR = "SodDb";
 

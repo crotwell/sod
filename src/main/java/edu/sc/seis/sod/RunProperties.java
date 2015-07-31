@@ -203,6 +203,11 @@ public class RunProperties {
         return channelGroupingRules;
     }
 
+    public boolean isStatusWebKeepAlive() {
+        System.err.println("Keep alive true, so control-c to quit SOD.");
+        return true;
+    }
+
     public static final TimeInterval NO_TIME = new TimeInterval(0,
 			UnitImpl.SECOND);
 
