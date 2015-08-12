@@ -3,6 +3,7 @@ package edu.sc.seis.sod.web;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -27,6 +28,10 @@ import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.hibernate.EventDB;
 import edu.sc.seis.sod.hibernate.StatefulEvent;
 import edu.sc.seis.sod.hibernate.StatefulEventDB;
+import edu.sc.seis.sod.web.jsonapi.EventJson;
+import edu.sc.seis.sod.web.jsonapi.JsonApi;
+import edu.sc.seis.sod.web.jsonapi.JsonApiData;
+import edu.sc.seis.sod.web.jsonapi.NetworkJson;
 
 public class EventServlet extends HttpServlet {
 
@@ -37,46 +42,35 @@ public class EventServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String URL = req.getRequestURL().toString();
-        System.out.println("GET: "+URL);
+        System.out.println("GET: " + URL);
         Pattern singleEvent = Pattern.compile(".*/events/([0-9]+)");
         Matcher matcher = singleEvent.matcher(URL);
         resp.setContentType("application/json");
         PrintWriter writer = resp.getWriter();
         JSONWriter out = new JSONWriter(writer);
-        out.object();
         if (matcher.matches()) {
             String dbid = matcher.group(1);
             try {
                 StatefulEvent e = StatefulEventDB.getSingleton().getEvent(Integer.parseInt(dbid));
-                out.key("event");
-                encodeJson(e, out);
-                sideLoadOrigins(Collections.singletonList(e), out);
-            } catch(NoPreferredOrigin eee) {
-                // logger.error("No Preferred for event dbid: "+e.getDbid());
-            } catch(NumberFormatException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            } catch(NotFound e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
+                JsonApi.encodeJson(out, new EventJson(e, WebAdmin.getBaseUrl()));
+            } catch(NumberFormatException e) {
+                throw new RuntimeException(e);
+            } catch(NotFound e) {
+                throw new RuntimeException(e);
             }
         } else {
             // logger.debug("doGet all");
             try {
                 List<StatefulEvent> events = StatefulEventDB.getSingleton().getAll();
-                out.key("events").array();
-                for (StatefulEvent ve : events) {
-                    encodeJson(ve, out);
+                List<JsonApiData> eventJsonList = new ArrayList<JsonApiData>();
+                for (StatefulEvent statefulEvent : events) {
+                    eventJsonList.add(new EventJson(statefulEvent, WebAdmin.getBaseUrl()));
                 }
-                out.endArray();
-                sideLoadOrigins(events, out);
+                JsonApi.encodeJson(out, eventJsonList);
             } catch(JSONException e) {
-                throw new ServletException(e);
-            } catch(NoPreferredOrigin e) {
                 throw new ServletException(e);
             }
         }
-        out.endObject();
         writer.close();
     }
 
@@ -88,14 +82,16 @@ public class EventServlet extends HttpServlet {
             name = ve.getPreferred().getTime().getFissuresTime().date_time;
         }
         out.object()
-                .key("id").value(ve.getDbid())
+                .key("id")
+                .value(ve.getDbid())
                 .key("name")
                 .value(name)
                 .key("prefOrigin")
                 .value(ve.getPreferred().getDbid())
                 .key("prefMagnitude")
                 .value(ve.getPreferred().getDbid() + "_" + ve.getPreferred().getMagnitudes()[0].type)
-                .key("status").value(ve.getStatus().toString())
+                .key("status")
+                .value(ve.getStatus().toString())
                 .key("originList")
                 .array();
         for (Origin o : ve.getOrigins()) {
@@ -143,8 +139,8 @@ public class EventServlet extends HttpServlet {
         out.endObject();
     }
 
-    public static void sideLoadOrigins(List<StatefulEvent> eqs, JSONWriter out) throws ServletException,
-            IOException, JSONException, NoPreferredOrigin {
+    public static void sideLoadOrigins(List<StatefulEvent> eqs, JSONWriter out) throws ServletException, IOException,
+            JSONException, NoPreferredOrigin {
         out.key("origins").array();
         for (StatefulEvent ve : eqs) {
             Origin[] origins = ve.getOrigins();

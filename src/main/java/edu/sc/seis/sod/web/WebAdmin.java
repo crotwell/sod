@@ -48,8 +48,10 @@ public class WebAdmin implements ArmListener{
         ServletHandler servlets = new ServletHandler();
         servlets.addServletWithMapping(ArmStatusServlet.class, "/api/arms");
         servlets.addServletWithMapping(EventServlet.class, "/api/events");
+        servlets.addServletWithMapping(EventServlet.class, "/api/events/");
         servlets.addServletWithMapping(EventServlet.class, "/api/events/*");
         servlets.addServletWithMapping(NetworkServlet.class, "/api/networks");
+        servlets.addServletWithMapping(NetworkServlet.class, "/api/networks/");
         servlets.addServletWithMapping(NetworkServlet.class, "/api/networks/*");
         servlets.addServletWithMapping(StationsServlet.class, "/api/stations*");
  
@@ -64,6 +66,7 @@ public class WebAdmin implements ArmListener{
         final Server serverInContext = server;
         //server.join();  // this means web server quits when current thread quits
         logger.info("Web Admin started at "+server.getConnectors()[0].getName());
+        System.out.println("Web Admin started at "+server.getConnectors()[0].getName());
         /*
         if ( Start.getRunProps().isStatusWebKeepAlive() ) {
             keepAliveThread = new Thread(new Runnable() {
@@ -115,5 +118,10 @@ public class WebAdmin implements ArmListener{
         System.err.println("Before Join");
         server.join();
         System.err.println("After Join");
+    }
+
+    public static String getBaseUrl() {
+        // TODO Auto-generated method stub
+        return "/api";
     }
 }
