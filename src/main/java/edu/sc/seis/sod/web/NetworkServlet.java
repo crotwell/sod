@@ -40,7 +40,7 @@ public class NetworkServlet extends HttpServlet {
         try {
             String URL = req.getRequestURL().toString();
             System.out.println("GET: " + URL);
-            resp.setContentType("application/json");
+            resp.setContentType("application/vnd.api+json");
             PrintWriter writer = resp.getWriter();
             JSONWriter out = new JSONWriter(writer);
             NetworkDB netdb = NetworkDB.getSingleton();
@@ -58,20 +58,7 @@ public class NetworkServlet extends HttpServlet {
                 if (matcher.matches()) {
                     String netCode = matcher.group(1);
                     String year = matcher.group(3);
-                    
-                    List<NetworkAttrImpl> netList = netdb.getNetworkByCode(netCode);
-                    NetworkAttrImpl n = null;
-                    if (NetworkIdUtil.isTemporary(netCode) || year == null) {
-                        // might not be right if temp net but year not given...?
-                     n = netList.get(0); 
-                    } else {
-                        for (NetworkAttrImpl netImpl : netList) {
-                            if (NetworkIdUtil.getYear(netImpl.get_id()).equals(year)) {
-                                n = netImpl;
-                                break;
-                            }
-                        }
-                    }
+                    NetworkAttrImpl n = loadNet(netCode, year);
                     JsonApi.encodeJson(out, new NetworkJson(n, baseUrl));
                 } else {
                     matcher = stationListPattern.matcher(URL);
@@ -92,7 +79,8 @@ public class NetworkServlet extends HttpServlet {
                             if (matcher.matches()) {
                                 // logger.debug("station");
                                 String netCode = matcher.group(1);
-                                String staCode = matcher.group(2);
+                                String year = matcher.group(3);
+                                String staCode = matcher.group(7);
                                 StationImpl sta = netdb.getStationByCodes(netCode, staCode).get(0);
                                 JsonApi.encodeJson(out, new StationJson(sta, baseUrl));
                             }
@@ -105,21 +93,44 @@ public class NetworkServlet extends HttpServlet {
             throw new ServletException(e);
         } catch(NumberFormatException e) {
             throw new ServletException(e);
+        } finally {
+            NetworkDB.rollback();
         }
+    }
+    
+    public static NetworkAttrImpl loadNet(String netCode, String year) {
+        List<NetworkAttrImpl> netList = NetworkDB.getSingleton().getNetworkByCode(netCode);
+        NetworkAttrImpl n = null;
+        if (NetworkIdUtil.isTemporary(netCode) || year == null) {
+            // might not be right if temp net but year not given...?
+         n = netList.get(0); 
+        } else {
+            for (NetworkAttrImpl netImpl : netList) {
+                if (NetworkIdUtil.getYear(netImpl.get_id()).equals(year)) {
+                    n = netImpl;
+                    break;
+                }
+            }
+        }
+        return n;
     }
 
     String baseUrl;
 
     Pattern allNetworkPattern = Pattern.compile(".*/networks");
 
-    String networkPatternStr = ".*/networks/([A-Z0-9]+)(_([0-9])+)?";
+    public static String networkIdStr = "([A-Z0-9]+)(_([0-9]+))?";
+    public static String networkIdPatternStr = "/networks/"+networkIdStr;
+    public static String stationIdPatternStr = "/stations/"+networkIdStr+"\\.([A-Z0-9]+)";
+    public String networkPatternStr = ".*"+networkIdPatternStr;
+    
     Pattern networkPattern = Pattern.compile(networkPatternStr);
 
     Pattern stationListPattern = Pattern.compile(networkPatternStr+"/stations");
 
     Pattern stationRelationshipPattern = Pattern.compile(networkPatternStr+"/relationships/stations");
 
-    Pattern stationPattern = Pattern.compile(networkPatternStr+"/stations/([A-Z0-9]+)");
+    Pattern stationPattern = Pattern.compile(networkPatternStr+stationIdPatternStr);
     Pattern stationPattern2 = Pattern.compile(".*/networks/([A-Z0-9]+).([A-Z0-9]+)");
 
     Pattern channelPattern = Pattern.compile(".*/networks/([A-Z0-9]+).([A-Z0-9]+).([A-Z0-9][A-Z0-9]).([A-Z0-9][A-Z0-9][A-Z0-9])");

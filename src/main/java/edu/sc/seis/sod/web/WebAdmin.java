@@ -1,9 +1,15 @@
 package edu.sc.seis.sod.web;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.DefaultHandler;
@@ -53,11 +59,33 @@ public class WebAdmin implements ArmListener{
         servlets.addServletWithMapping(NetworkServlet.class, "/api/networks");
         servlets.addServletWithMapping(NetworkServlet.class, "/api/networks/");
         servlets.addServletWithMapping(NetworkServlet.class, "/api/networks/*");
-        servlets.addServletWithMapping(StationsServlet.class, "/api/stations*");
+        servlets.addServletWithMapping(StationsServlet.class, "/api/stations");
+        servlets.addServletWithMapping(StationsServlet.class, "/api/stations/");
+        servlets.addServletWithMapping(StationsServlet.class, "/api/stations/*");
+
+        servlets.addServletWithMapping(WaveformServlet.class, "/api/waveform");
+        servlets.addServletWithMapping(WaveformServlet.class, "/api/waveform/");
+        servlets.addServletWithMapping(WaveformServlet.class, "/api/waveform/*");
+
+        servlets.addServletWithMapping(EventStationServlet.class, "/api/eventstations");
+        servlets.addServletWithMapping(EventStationServlet.class, "/api/eventstations/");
+        servlets.addServletWithMapping(EventStationServlet.class, "/api/eventstations/*");
  
         // Add the ResourceHandler to the server.
         HandlerList handlers = new HandlerList();
-        handlers.setHandlers(new Handler[] { servlets, siteContext, new DefaultHandler() });
+        handlers.setHandlers(new Handler[] { servlets, siteContext, new DefaultHandler() {
+
+            @Override
+            public void handle(String target,
+                               Request baseRequest,
+                               HttpServletRequest request,
+                               HttpServletResponse response) throws IOException, ServletException {
+                System.out.println("missed get: "+request.getRequestURL());
+                super.handle(target, baseRequest, request, response);
+            }
+            
+        },
+        new DefaultHandler() });
         server.setHandler(handlers);
  
         // Start things up! By using the server.join() the server thread will join with the current thread.

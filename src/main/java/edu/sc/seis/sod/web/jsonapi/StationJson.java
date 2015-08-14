@@ -6,10 +6,8 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
-import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.network.StationIdUtil;
 import edu.iris.Fissures.network.StationImpl;
 
 
@@ -27,8 +25,7 @@ public class StationJson extends AbstractJsonApiData {
 
     @Override
     public String getId() {
-        // TODO Auto-generated method stub
-        return StationIdUtil.toStringNoDates(sta);
+        return new NetworkJson(sta.getNetworkAttrImpl(), baseUrl).getId()+"."+sta.get_code();
     }
 
     @Override
@@ -46,12 +43,19 @@ public class StationJson extends AbstractJsonApiData {
 
     @Override
     public boolean hasRelationships() {
-        return false;
+        return true;
     }
 
     @Override
     public void encodeRelationships(JSONWriter out) throws JSONException {
-        // TODO Auto-generated method stub
+        out.key("esps")
+                .object()
+                .key("links")
+                .object()
+                .key("related")
+                .value(formEventRelationshipURL(sta));
+        out.endObject(); // end links
+        out.endObject(); // end events
     }
     
     @Override
@@ -77,6 +81,12 @@ public class StationJson extends AbstractJsonApiData {
         NetworkJson netJson = new NetworkJson(sta.getNetworkAttr(), baseUrl);
         String out = baseUrl+"/networks/"+netJson.getId()+"/stations/"+getId();
         return out;
+    }
+    
+    public String formEventRelationshipURL(StationImpl sta) {
+        String out = baseUrl+"/stations/"+getId()+"/events";
+        return out;
+        
     }
     
     StationImpl sta;

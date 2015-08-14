@@ -649,6 +649,14 @@ public class SodDB extends AbstractHibernateDB {
         query.setEntity("event", event);
         return query.list();
     }
+    
+    public EventStationPair getEventStationPair(CacheEvent event, StationImpl station) {
+        String q = "from EventStationPair where event = :event and station = :station";
+        Query query = getSession().createQuery(q);
+        query.setEntity("event", event);
+        query.setEntity("station", station);
+        return (EventStationPair)query.uniqueResult();
+    }
 
     public List<StationImpl> getSuccessfulStationsForEvent(CacheEvent event) {
         String q = "select distinct ecp.esp.station from "
@@ -681,8 +689,15 @@ public class SodDB extends AbstractHibernateDB {
         query.setEntity("sta", sta);
         return query.list();
     }
+//   and status.stageInt = " + Stage.PROCESSOR.getVal()+" and
+    public List<EventStationPair> getSuccessfulESPForStation(StationImpl sta) {
+        String q = "from EventStationPair where station = :sta and status.standingInt = "+ Standing.SUCCESS.getVal();
+        Query query = getSession().createQuery(q);
+        query.setEntity("sta", sta);
+        return query.list();
+    }
 
-    public List<CacheEvent> getSuccessfulEventsForStation(StationImpl sta) {
+    public List<StatefulEvent> getSuccessfulEventsForStation(StationImpl sta) {
         String q = "select distinct ecp.event from "
                 + getEcpClass().getName()
                 + " ecp where ecp.esp.station = :sta  and ecp.status.stageInt = "

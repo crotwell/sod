@@ -45,7 +45,7 @@ public class EventServlet extends HttpServlet {
         System.out.println("GET: " + URL);
         Pattern singleEvent = Pattern.compile(".*/events/([0-9]+)");
         Matcher matcher = singleEvent.matcher(URL);
-        resp.setContentType("application/json");
+        resp.setContentType("application/vnd.api+json");
         PrintWriter writer = resp.getWriter();
         JSONWriter out = new JSONWriter(writer);
         if (matcher.matches()) {

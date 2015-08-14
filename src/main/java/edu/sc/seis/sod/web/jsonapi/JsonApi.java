@@ -70,4 +70,9 @@ public class JsonApi {
         out.endArray();
         out.endObject();
     }
+    
+    public static void encodeError(JSONWriter out, String message) {
+        System.err.println("JsonApi.Error: "+message);
+        out.object().key("errors").array().object().key("detail").value(message).endObject().endArray().endObject();
+    }
 }
