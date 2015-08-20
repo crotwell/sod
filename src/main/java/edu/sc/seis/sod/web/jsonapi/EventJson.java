@@ -58,6 +58,12 @@ public class EventJson extends AbstractJsonApiData {
                     .value("magnitude")
                     .endObject(); // end data
             out.endObject(); // end pref-magnitude
+            out.key("esps").object()
+            .key("links").object()
+            .key("related")
+            .value(formStationRelationshipURL());
+    out.endObject(); // end links
+    out.endObject(); // end events
         } catch(NoPreferredOrigin e) {
             // should never happen
             throw new RuntimeException("no pref origin???", e);
@@ -98,10 +104,18 @@ public class EventJson extends AbstractJsonApiData {
         }
         return out;
     }
+    
+    
 
     public static String createMagId(OriginImpl o, int magIndex) {
         return o.getDbid() + "m" + magIndex;
     }
 
+    public String formStationRelationshipURL() {
+        String out = baseUrl+"/events/"+getId()+"/stations";
+        return out;
+        
+    }
+    
     StatefulEvent event;
 }

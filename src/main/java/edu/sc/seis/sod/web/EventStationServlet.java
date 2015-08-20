@@ -2,6 +2,8 @@ package edu.sc.seis.sod.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,7 +16,11 @@ import org.hibernate.Query;
 import org.json.JSONWriter;
 
 import edu.sc.seis.fissuresUtil.hibernate.AbstractHibernateDB;
+import edu.sc.seis.sod.AbstractEventChannelPair;
 import edu.sc.seis.sod.EventStationPair;
+import edu.sc.seis.sod.Stage;
+import edu.sc.seis.sod.Standing;
+import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.web.jsonapi.EventStationJson;
 import edu.sc.seis.sod.web.jsonapi.JsonApi;
 
@@ -29,15 +35,28 @@ public class EventStationServlet extends HttpServlet {
         JSONWriter out = new JSONWriter(writer);
         Matcher m = eventStationPattern.matcher(URL);
         if(m.matches()) {
-            Query q = AbstractHibernateDB.getReadOnlySession().createQuery("from "+EventStationPair.class.getName()+" where dbid = "+m.group(1));
+            Query q = AbstractHibernateDB.getSession().createQuery("from "+EventStationPair.class.getName()+" where dbid = "+m.group(1));
             EventStationPair esp = (EventStationPair)q.uniqueResult();
-            EventStationJson jsonData = new EventStationJson(esp, WebAdmin.getBaseUrl());
+            q = AbstractHibernateDB.getReadOnlySession().createQuery("from "
+                + SodDB.getSingleton().getEcpClass().getName()
+                + " where esp = "+esp.getDbid()+"  and status.stageInt = "
+                + Stage.PROCESSOR.getVal()+" and status.standingInt = "+ Standing.SUCCESS.getVal());
+            List<AbstractEventChannelPair> ecpList = new ArrayList<AbstractEventChannelPair>();
+            List tmp = q.list();
+            for (Object obj : tmp) {
+                if (obj == null) {throw new RuntimeException("obj from hibernate is null");}
+                ecpList.add((AbstractEventChannelPair)obj);
+            }
+            EventStationJson jsonData = new EventStationJson(esp, ecpList, WebAdmin.getBaseUrl());
             JsonApi.encodeJson(out, jsonData);
         } else {
             JsonApi.encodeError(out, "url does not match "+eventStationPattern.pattern());
         }
+        writer.close();
+        AbstractHibernateDB.rollback();
     }
     
 
-    Pattern eventStationPattern = Pattern.compile(".*/eventstations/([0-9]+)");
+    Pattern eventStationPattern = Pattern.compile(".*/event-stations/([0-9]+)");
+    Pattern eventVectorPattern = Pattern.compile(".*/event-stations/([0-9]+)/event-vectors");
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -53,24 +54,14 @@ public class WebAdmin implements ArmListener{
         
         ServletHandler servlets = new ServletHandler();
         servlets.addServletWithMapping(ArmStatusServlet.class, "/api/arms");
-        servlets.addServletWithMapping(EventServlet.class, "/api/events");
-        servlets.addServletWithMapping(EventServlet.class, "/api/events/");
-        servlets.addServletWithMapping(EventServlet.class, "/api/events/*");
-        servlets.addServletWithMapping(NetworkServlet.class, "/api/networks");
-        servlets.addServletWithMapping(NetworkServlet.class, "/api/networks/");
-        servlets.addServletWithMapping(NetworkServlet.class, "/api/networks/*");
-        servlets.addServletWithMapping(StationsServlet.class, "/api/stations");
-        servlets.addServletWithMapping(StationsServlet.class, "/api/stations/");
-        servlets.addServletWithMapping(StationsServlet.class, "/api/stations/*");
 
-        servlets.addServletWithMapping(WaveformServlet.class, "/api/waveform");
-        servlets.addServletWithMapping(WaveformServlet.class, "/api/waveform/");
-        servlets.addServletWithMapping(WaveformServlet.class, "/api/waveform/*");
-
-        servlets.addServletWithMapping(EventStationServlet.class, "/api/eventstations");
-        servlets.addServletWithMapping(EventStationServlet.class, "/api/eventstations/");
-        servlets.addServletWithMapping(EventStationServlet.class, "/api/eventstations/*");
- 
+        addServlets(servlets, EventVectorServlet.class, "/api/events" );
+        addServlets(servlets, EventVectorServlet.class, "/api/networks" );
+        addServlets(servlets, EventVectorServlet.class, "/api/stations" );
+        addServlets(servlets, EventVectorServlet.class, "/api/event-stations" );
+        addServlets(servlets, EventVectorServlet.class, "/api/event-vectors" );
+        addServlets(servlets, EventVectorServlet.class, "/api/waveform" );
+        
         // Add the ResourceHandler to the server.
         HandlerList handlers = new HandlerList();
         handlers.setHandlers(new Handler[] { servlets, siteContext, new DefaultHandler() {
@@ -114,6 +105,12 @@ public class WebAdmin implements ArmListener{
             keepAliveThread.start();
         }
         */
+    }
+    
+    void addServlets(ServletHandler servlets, Class<? extends Servlet> servletClass, String url) {
+        servlets.addServletWithMapping(servletClass, "/api/event-vectors");
+        servlets.addServletWithMapping(servletClass, "/api/event-vectors/");
+        servlets.addServletWithMapping(servletClass, "/api/event-vectors/*");
     }
 
     @Override

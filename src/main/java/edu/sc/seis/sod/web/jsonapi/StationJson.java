@@ -35,7 +35,6 @@ public class StationJson extends AbstractJsonApiData {
         .key("start-time").value(sta.getBeginTime().date_time)
         .key("end-time").value(NetworkJson.encodeEndTime(sta.getEndTime()))
         .key("description").value(sta.getDescription())
-        .key("network").value(sta.getNetworkAttrImpl().get_code())
               .key("latitude").value(sta.getLocation().latitude)
               .key("longitude").value(sta.getLocation().longitude)
               .key("elevation").value(((QuantityImpl)sta.getLocation().elevation).getValue(UnitImpl.METER));
@@ -48,6 +47,12 @@ public class StationJson extends AbstractJsonApiData {
 
     @Override
     public void encodeRelationships(JSONWriter out) throws JSONException {
+        out.key("network").object();
+        out.key("data").object();
+        out.key("id").value(new NetworkJson(sta.getNetworkAttrImpl(), baseUrl).getId());
+        out.key("type").value("network");
+        out.endObject();
+        out.endObject();
         out.key("esps")
                 .object()
                 .key("links")

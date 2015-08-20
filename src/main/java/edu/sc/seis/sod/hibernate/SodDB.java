@@ -681,6 +681,13 @@ public class SodDB extends AbstractHibernateDB {
         return query.list();
     }
 
+    public List<EventStationPair> getSuccessfulESPForEvent(CacheEvent event) {
+        String q = "from EventStationPair where event = :event and status.standingInt = "+ Standing.SUCCESS.getVal();
+        Query query = getSession().createQuery(q);
+        query.setEntity("event", event);
+        return query.list();
+    }
+    
     public List<CacheEvent> getEventsForStation(StationImpl sta) {
         String q = "select distinct ecp.event from "
                 + getEcpClass().getName()
