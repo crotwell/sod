@@ -61,15 +61,21 @@ public class EventStationJson extends AbstractJsonApiData {
         out.endObject(); // end data
         out.endObject(); // end station
         if (ecpList != null) {
-            out.key("ecps").array();
+            out.key("ecps");
+            out.object();
+            out.key("data").array();
             for (AbstractEventChannelPair ecp : ecpList) {
-                out.value(ecp.getDbid());
+                out.object();
+                out.key("id").value(ecp.getDbid());
+                out.key("type").value("event-vector");
+                out.endObject();
             }
             out.endArray();
+            out.endObject();
         } else {
             out.key("ecps").object();
             out.key("links").object();
-            out.key("related").value(baseUrl + "/event-stations/" + getId() + "/ecps");
+            out.key("related").value(baseUrl + "/event-stations/" + getId() + "/event-vectors");
             out.endObject();// links
             out.endObject();// ecps
         }

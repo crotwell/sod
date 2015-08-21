@@ -14,12 +14,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONWriter;
 
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
 import edu.sc.seis.sod.EventStationPair;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.StatefulEvent;
+import edu.sc.seis.sod.web.jsonapi.ChannelJson;
 import edu.sc.seis.sod.web.jsonapi.EventJson;
 import edu.sc.seis.sod.web.jsonapi.EventStationJson;
 import edu.sc.seis.sod.web.jsonapi.JsonApi;
@@ -57,16 +59,18 @@ public class StationsServlet extends HttpServlet {
                 StationImpl sta = null;
                 try {
                     sta = netdb.getStation(Integer.parseInt(dbid));
+                    List<ChannelImpl> chans = netdb.getChannelsForStation(sta);
+                    if (sta != null) {
+                        JsonApi.encodeJson(out, new StationJson(sta, chans, WebAdmin.getBaseUrl()));
+                        
+                        resp.setStatus(HttpServletResponse.SC_OK);
+                    } else {
+                        JsonApi.encodeError(out, "Station is null for dbid " + dbid);
+                    }
                 } catch(NumberFormatException e) {
-                    JsonApi.encodeError(out, "NumberFormatException "+e.getMessage());
+                    JsonApi.encodeError(out, "NumberFormatException " + e.getMessage());
                 } catch(NotFound e) {
-                    JsonApi.encodeError(out, "NotFound "+e.getMessage());
-                }
-                if (sta != null) {
-                JsonApi.encodeJson(out, new StationJson(sta, WebAdmin.getBaseUrl()));
-                resp.setStatus(HttpServletResponse.SC_OK);
-                } else {
-                    JsonApi.encodeError(out, "Station is null for dbid "+dbid);
+                    JsonApi.encodeError(out, "NotFound " + e.getMessage());
                 }
                 writer.close();
             } else {
@@ -85,10 +89,30 @@ public class StationsServlet extends HttpServlet {
                     JsonApi.encodeJson(out, jsonData);
                     writer.close();
                     resp.setStatus(HttpServletResponse.SC_OK);
+                    
+
+                } else {
+                    matcher = stationChannelsPattern.matcher(URL);
+                    if (matcher.matches()) {
+                        // logger.debug("station");
+                        String netCode = matcher.group(1);
+                        String year = matcher.group(3);
+                        String staCode = matcher.group(4);
+                        StationImpl sta = netdb.getStationByCodes(netCode, staCode).get(0);
+                        List<ChannelImpl> chans = netdb.getChannelsForStation(sta);
+                        List<JsonApiData> jsonData = new ArrayList<JsonApiData>(chans.size());
+                        for (ChannelImpl channelImpl : chans) {
+                            jsonData.add(new ChannelJson(channelImpl, WebAdmin.getBaseUrl()));
+                        }
+                        JsonApi.encodeJson(out, jsonData);
+                        writer.close();
+                        resp.setStatus(HttpServletResponse.SC_OK);
+                    
                 } else {
                     JsonApi.encodeError(out, "bad url for servlet: regex=" + stationPattern.toString());
                     writer.close();
                     resp.sendError(500);
+                }
                 }
             }
         }
@@ -100,4 +124,6 @@ public class StationsServlet extends HttpServlet {
     Pattern stationPattern = Pattern.compile(".*" + NetworkServlet.stationIdPatternStr);
 
     Pattern stationEventsPattern = Pattern.compile(".*" + NetworkServlet.stationIdPatternStr + "/events");
+
+    Pattern stationChannelsPattern = Pattern.compile(".*" + NetworkServlet.stationIdPatternStr + "/channels");
 }

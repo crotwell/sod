@@ -55,12 +55,13 @@ public class WebAdmin implements ArmListener{
         ServletHandler servlets = new ServletHandler();
         servlets.addServletWithMapping(ArmStatusServlet.class, "/api/arms");
 
-        addServlets(servlets, EventVectorServlet.class, "/api/events" );
-        addServlets(servlets, EventVectorServlet.class, "/api/networks" );
-        addServlets(servlets, EventVectorServlet.class, "/api/stations" );
-        addServlets(servlets, EventVectorServlet.class, "/api/event-stations" );
-        addServlets(servlets, EventVectorServlet.class, "/api/event-vectors" );
-        addServlets(servlets, EventVectorServlet.class, "/api/waveform" );
+        addServlets(servlets, EventServlet.class, "events" );
+        addServlets(servlets, NetworkServlet.class, "networks" );
+        addServlets(servlets, StationsServlet.class, "stations" );
+        addServlets(servlets, ChannelServlet.class, "channels" );
+        addServlets(servlets, EventStationServlet.class, "event-stations" );
+        addServlets(servlets, EventVectorServlet.class, "event-vectors" );
+        addServlets(servlets, WaveformServlet.class, "waveform" );
         
         // Add the ResourceHandler to the server.
         HandlerList handlers = new HandlerList();
@@ -107,10 +108,10 @@ public class WebAdmin implements ArmListener{
         */
     }
     
-    void addServlets(ServletHandler servlets, Class<? extends Servlet> servletClass, String url) {
-        servlets.addServletWithMapping(servletClass, "/api/event-vectors");
-        servlets.addServletWithMapping(servletClass, "/api/event-vectors/");
-        servlets.addServletWithMapping(servletClass, "/api/event-vectors/*");
+    void addServlets(ServletHandler servlets, Class<? extends Servlet> servletClass, String partialUrl) {
+        servlets.addServletWithMapping(servletClass, "/api/"+partialUrl);
+        servlets.addServletWithMapping(servletClass, "/api/"+partialUrl+"/");
+        servlets.addServletWithMapping(servletClass, "/api/"+partialUrl+"/*");
     }
 
     @Override

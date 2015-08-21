@@ -32,7 +32,7 @@ public class EventVectorServlet extends HttpServlet {
         JSONWriter out = new JSONWriter(writer);
         Matcher m = eventStationPattern.matcher(URL);
         if (m.matches()) {
-            Query q = AbstractHibernateDB.getReadOnlySession().createQuery("from " + SodDB.getSingleton().getEcpClass().getName()
+            Query q = AbstractHibernateDB.getSession().createQuery("from " + SodDB.getSingleton().getEcpClass().getName()
                     + " where dbid = " + m.group(1));
             AbstractEventChannelPair esp = (AbstractEventChannelPair)q.uniqueResult();
             EventVectorJson jsonData = new EventVectorJson(esp, WebAdmin.getBaseUrl());
@@ -40,6 +40,8 @@ public class EventVectorServlet extends HttpServlet {
         } else {
             JsonApi.encodeError(out, "url does not match " + eventStationPattern.pattern());
         }
+        writer.close();
+        AbstractHibernateDB.rollback();
     }
 
     Pattern eventStationPattern = Pattern.compile(".*/eventvectors/([0-9]+)");

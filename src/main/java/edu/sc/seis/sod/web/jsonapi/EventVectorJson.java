@@ -30,23 +30,7 @@ public class EventVectorJson extends AbstractJsonApiData {
 
     @Override
     public void encodeAttributes(JSONWriter out) throws JSONException {
-        out.key("channels").array();
-        if (ecp instanceof EventChannelPair) {
-            out.object();
-            out.key("id").value(((EventChannelPair)ecp).getChannelDbId());
-            out.key("type").value("channel");
-            out.endObject();
-        } else {
-            EventVectorPair evp = (EventVectorPair)ecp;
-            ChannelImpl[] chans = evp.getChannelGroup().getChannels();
-            for (int i = 0; i < chans.length; i++) {
-                out.object();
-                out.key("id").value(((EventChannelPair)ecp).getChannelDbId());
-                out.key("type").value("channel");
-                out.endObject();
-            }
-        }
-        out.endArray();
+        out.key("sod-status").value(ecp.getStatus());
         super.encodeAttributes(out);
     }
 
@@ -63,6 +47,32 @@ public class EventVectorJson extends AbstractJsonApiData {
         out.key("type").value("event");
         out.endObject(); // end data
         out.endObject(); // end event
+
+        out.key("channels").array();
+        if (ecp instanceof EventChannelPair) {
+            out.object();
+            ChannelJson chanJson = new ChannelJson(((EventChannelPair)ecp).getChannel(), getBaseUrl());
+            out.key("id").value(chanJson.getId());
+            out.key("type").value(chanJson.getType());
+            out.key("links").object();
+            out.key("self").value(baseUrl + "/channel/" + chanJson.getId());
+            out.endObject(); // end links
+            out.endObject();
+        } else {
+            EventVectorPair evp = (EventVectorPair)ecp;
+            ChannelImpl[] chans = evp.getChannelGroup().getChannels();
+            for (int i = 0; i < chans.length; i++) {
+                out.object();
+                ChannelJson chanJson = new ChannelJson(chans[i], getBaseUrl());
+                out.key("id").value(chanJson.getId());
+                out.key("type").value(chanJson.getType());
+                out.key("links").object();
+                out.key("self").value(baseUrl + "/channel/" + chanJson.getId());
+                out.endObject(); // end links
+                out.endObject();
+            }
+        }
+        out.endArray();
     }
 
     AbstractEventChannelPair ecp;

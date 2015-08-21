@@ -8,14 +8,20 @@ import org.json.JSONWriter;
 
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.StationImpl;
 
 
 public class StationJson extends AbstractJsonApiData {
 
     public StationJson(StationImpl sta, String baseUrl) {
+        this(sta, null, baseUrl);
+    }
+     
+    public StationJson(StationImpl sta, List<ChannelImpl> chanList, String baseUrl) {
         super(baseUrl);
         this.sta = sta;
+        this.chanList = chanList;
     }
     
     @Override
@@ -51,8 +57,8 @@ public class StationJson extends AbstractJsonApiData {
         out.key("data").object();
         out.key("id").value(new NetworkJson(sta.getNetworkAttrImpl(), baseUrl).getId());
         out.key("type").value("network");
-        out.endObject();
-        out.endObject();
+        out.endObject();// end data
+        out.endObject();// net network
         out.key("esps")
                 .object()
                 .key("links")
@@ -60,7 +66,12 @@ public class StationJson extends AbstractJsonApiData {
                 .key("related")
                 .value(formEventRelationshipURL(sta));
         out.endObject(); // end links
-        out.endObject(); // end events
+        out.endObject(); // end esps
+        out.key("channels").object();
+        out.key("links").object();
+        out.key("related").value(formChannelRelationshipURL(sta));
+        out.endObject(); // end links
+        out.endObject(); // end channels
     }
     
     @Override
@@ -87,12 +98,17 @@ public class StationJson extends AbstractJsonApiData {
         String out = baseUrl+"/networks/"+netJson.getId()+"/stations/"+getId();
         return out;
     }
-    
+
     public String formEventRelationshipURL(StationImpl sta) {
         String out = baseUrl+"/stations/"+getId()+"/events";
         return out;
-        
+    }
+    public String formChannelRelationshipURL(StationImpl sta) {
+        String out = baseUrl+"/stations/"+getId()+"/channels";
+        return out;
     }
     
     StationImpl sta;
+    
+    List<ChannelImpl> chanList;
 }

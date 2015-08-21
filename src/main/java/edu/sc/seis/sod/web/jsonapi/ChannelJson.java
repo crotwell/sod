@@ -6,7 +6,9 @@ import org.json.JSONWriter;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.SamplingImpl;
 import edu.iris.Fissures.model.UnitImpl;
+import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
+import edu.iris.Fissures.network.StationImpl;
 
 
 public class ChannelJson extends AbstractJsonApiData {
@@ -18,25 +20,26 @@ public class ChannelJson extends AbstractJsonApiData {
     
     @Override
     public String getType() {
-        // TODO Auto-generated method stub
-        return null;
+        return "channel";
     }
 
     @Override
     public String getId() {
-        return chan.getSite().get_code()+"."+chan.get_code()+"."+chan.getId().begin_time.date_time;
+        return ""+chan.getDbid();
+       // StationJson staJson = new StationJson((StationImpl)chan.getSite().getStation(), baseUrl);
+       // return staJson.getId()+"."+chan.getSite().get_code()+"."+chan.get_code()+"."+chan.getId().begin_time.date_time;
     }
 
     @Override
     public void encodeAttributes(JSONWriter out) throws JSONException {
-        out.key("siteCode")
+        out.key("site-code")
         .value(chan.getSite().get_code())
-        .key("channelCode")
+        .key("channel-code")
         .value(chan.get_code())
         .key("station")
         .value(chan.getStationImpl().getDbid())
         .key("sps")
-        .value(((SamplingImpl)chan.getSamplingInfo()).getFrequency())
+        .value(((SamplingImpl)chan.getSamplingInfo()).getFrequency().getValue(UnitImpl.HERTZ))
         .key("latitude")
         .value(chan.getSite().getLocation().latitude)
         .key("longitude")
@@ -49,13 +52,16 @@ public class ChannelJson extends AbstractJsonApiData {
 
     @Override
     public boolean hasRelationships() {
-        // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 
     @Override
     public void encodeRelationships(JSONWriter out) throws JSONException {
-        // TODO Auto-generated method stub
+        StationJson staJson = new StationJson(chan.getStationImpl(), getBaseUrl());
+        out.key("station").object();
+        out.key("id").value(staJson.getId());
+        out.key("type").value(staJson.getType());
+        out.endObject();
     }
     
     @Override
