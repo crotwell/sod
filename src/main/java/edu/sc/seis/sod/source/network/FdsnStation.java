@@ -400,12 +400,13 @@ public class FdsnStation extends AbstractNetworkSource {
         int count = 0;
         SeisFileException latest = null;
         FDSNStationXML out = null;
-        while (count == 0 || getRetryStrategy().shouldRetry(latest, this, count++)) {
+        while (count == 0 || getRetryStrategy().shouldRetry(latest, this, count)) {
             try {
                 out = setupQuerier(staQP).getFDSNStationXML();
                 if (count > 0) { getRetryStrategy().serverRecovered(this); }
                 return out;
             } catch(SeisFileException e) {
+                count++;
                 if (out != null) {
                     out.closeReader();
                     out = null;

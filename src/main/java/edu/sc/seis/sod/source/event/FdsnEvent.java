@@ -262,7 +262,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         logger.debug(getName() + ".next() called for " + queryTime);
         int count = 0;
         Exception latest = null;
-        while (count == 0 || getRetryStrategy().shouldRetry(latest, this, count++)) {
+        while (count == 0 || getRetryStrategy().shouldRetry(latest, this, count)) {
             try {
                 List<CacheEvent> result = internalNext(queryTime);
                 if (count > 0) {
@@ -270,6 +270,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                 }
                 return result.toArray(new CacheEvent[0]);
             } catch(SeisFileException e) {
+                count++;
                 latest = e;
                 Throwable rootCause = AbstractFDSNQuerier.extractRootCause(e);
                 if (rootCause instanceof IOException) {
@@ -291,6 +292,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                     throw new RuntimeException(e);
                 }
             } catch(XMLStreamException e) {
+                count++;
                 latest = e;
                 Throwable rootCause = AbstractFDSNQuerier.extractRootCause(e);
                 if (rootCause instanceof IOException) {
