@@ -1,7 +1,11 @@
 package edu.sc.seis.sod.web;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,9 +17,17 @@ import javax.servlet.http.HttpServletResponse;
 import org.hibernate.Query;
 import org.json.JSONWriter;
 
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.fissuresUtil.hibernate.AbstractHibernateDB;
+import edu.sc.seis.fissuresUtil.hibernate.EventSeismogramFileReference;
+import edu.sc.seis.fissuresUtil.hibernate.SeismogramFileRefDB;
+import edu.sc.seis.fissuresUtil.hibernate.SeismogramFileReference;
+import edu.sc.seis.fissuresUtil.xml.SeismogramFileTypes;
+import edu.sc.seis.fissuresUtil.xml.UnsupportedFileTypeException;
 import edu.sc.seis.sod.AbstractEventChannelPair;
+import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.EventStationPair;
+import edu.sc.seis.sod.EventVectorPair;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.web.jsonapi.EventStationJson;
 import edu.sc.seis.sod.web.jsonapi.EventVectorJson;
@@ -27,22 +39,64 @@ public class EventVectorServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String URL = req.getRequestURL().toString();
         System.out.println("GET: " + URL);
-        resp.setContentType("application/vnd.api+json");
-        PrintWriter writer = resp.getWriter();
-        JSONWriter out = new JSONWriter(writer);
-        Matcher m = eventStationPattern.matcher(URL);
+        Matcher m = mseedPattern.matcher(URL);
         if (m.matches()) {
-            Query q = AbstractHibernateDB.getSession().createQuery("from " + SodDB.getSingleton().getEcpClass().getName()
-                    + " where dbid = " + m.group(1));
-            AbstractEventChannelPair esp = (AbstractEventChannelPair)q.uniqueResult();
-            EventVectorJson jsonData = new EventVectorJson(esp, WebAdmin.getBaseUrl());
-            JsonApi.encodeJson(out, jsonData);
+            // raw miniseed
+            AbstractEventChannelPair ecp = getECP(m.group(1));
+            ChannelImpl[] chans;
+            if (ecp instanceof EventVectorPair) {
+                chans = ((EventVectorPair)ecp).getChannelGroup().getChannels();
+            } else {
+                chans = new ChannelImpl[] {((EventChannelPair)ecp).getChannel()};
+            }
+            List<EventSeismogramFileReference> seisRefList = new ArrayList<EventSeismogramFileReference>();
+            for (int j = 0; j < chans.length; j++) {
+                seisRefList.addAll(SeismogramFileRefDB.getSingleton()
+                        .getSeismogramsForEventForChannel(ecp.getEvent(), chans[j].getId()));
+            }
+            resp.setContentType("application/vnd.fdsn.mseed");
+            OutputStream outBinary = resp.getOutputStream();
+            for (EventSeismogramFileReference ref : seisRefList) {
+                try {
+                    if (SeismogramFileTypes.fromInt(ref.getFileType()).equals(SeismogramFileTypes.MSEED)) {
+                        BufferedInputStream bufIn = new BufferedInputStream(ref.getFilePathAsURL().openStream());
+                        byte[] buf = new byte[1024];
+                        int bufNum = 0;
+                        while ((bufNum = bufIn.read(buf)) != -1) {
+                            outBinary.write(buf, 0, bufNum);
+                        }
+                        bufIn.close();
+                    }
+                } catch(UnsupportedFileTypeException e) {
+                    throw new RuntimeException("Should never happen", e);
+                }
+            }
+            outBinary.flush();
         } else {
-            JsonApi.encodeError(out, "url does not match " + eventStationPattern.pattern());
+            resp.setContentType("application/vnd.api+json");
+            PrintWriter writer = resp.getWriter();
+            JSONWriter out = new JSONWriter(writer);
+            m = eventStationPattern.matcher(URL);
+            if (m.matches()) {
+                AbstractEventChannelPair ecp = getECP(m.group(1));
+                EventVectorJson jsonData = new EventVectorJson(ecp, WebAdmin.getBaseUrl());
+                JsonApi.encodeJson(out, jsonData);
+            } else {
+                JsonApi.encodeError(out, "url does not match " + eventStationPattern.pattern());
+            }
+            writer.close();
         }
-        writer.close();
         AbstractHibernateDB.rollback();
     }
 
-    Pattern eventStationPattern = Pattern.compile(".*/eventvectors/([0-9]+)");
+    AbstractEventChannelPair getECP(String dbid) {
+        Query q = AbstractHibernateDB.getSession().createQuery("from " + SodDB.getSingleton().getEcpClass().getName()
+                + " where dbid = " + dbid);
+        AbstractEventChannelPair esp = (AbstractEventChannelPair)q.uniqueResult();
+        return esp;
+    }
+
+    Pattern eventStationPattern = Pattern.compile(".*/event-vectors/([0-9]+)");
+
+    Pattern mseedPattern = Pattern.compile(".*/event-vectors/([0-9]+)/mseed");
 }

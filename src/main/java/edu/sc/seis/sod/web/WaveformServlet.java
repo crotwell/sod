@@ -1,7 +1,10 @@
 package edu.sc.seis.sod.web;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,21 +14,32 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.Query;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.database.NotFound;
+import edu.sc.seis.fissuresUtil.hibernate.AbstractHibernateDB;
 import edu.sc.seis.fissuresUtil.hibernate.EventDB;
+import edu.sc.seis.fissuresUtil.hibernate.EventSeismogramFileReference;
 import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
+import edu.sc.seis.fissuresUtil.hibernate.SeismogramFileRefDB;
 import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
+import edu.sc.seis.fissuresUtil.xml.SeismogramFileTypes;
+import edu.sc.seis.fissuresUtil.xml.UnsupportedFileTypeException;
+import edu.sc.seis.sod.AbstractEventChannelPair;
+import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.EventStationPair;
+import edu.sc.seis.sod.EventVectorPair;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.web.jsonapi.EventStationJson;
+import edu.sc.seis.sod.web.jsonapi.EventVectorJson;
 import edu.sc.seis.sod.web.jsonapi.JsonApi;
 
 public class WaveformServlet extends HttpServlet {
@@ -34,69 +48,58 @@ public class WaveformServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String URL = req.getRequestURL().toString();
         System.out.println("GET: " + URL);
-        resp.setContentType("application/vnd.api+json");
-        PrintWriter writer = resp.getWriter();
-        JSONWriter out = new JSONWriter(writer);
-        try {
-            NetworkDB netdb = NetworkDB.getSingleton();
-            Matcher staMatcher = stationPattern.matcher(URL);
-            Matcher eventMatcher = eventPattern.matcher(URL);
-            if (staMatcher.find() && eventMatcher.find()) {
-
-                System.out.println("GET: " + URL+"  in matcher.find");
-                String netCode = staMatcher.group(1);
-                String year = staMatcher.group(3);
-                NetworkAttrImpl n = NetworkServlet.loadNet(netCode, year);
-                System.out.println("GET: " + URL+"  net "+n.get_code());
-
-                String staCode = staMatcher.group(7);
-                List<StationImpl> staList = NetworkDB.getSingleton().getStationForNet(n, staCode);
-                System.out.println("GET: " + URL+"  sta "+staCode+" "+staList.size());
-                CacheEvent e = EventDB.getSingleton().getEvent(Integer.parseInt(eventMatcher.group(1)));
-                System.out.println("GET: " + URL+"  event");
-                MicroSecondDate originTime = e.getPreferred().getTime();
-                StationImpl s = null;
-                for (StationImpl stationImpl : staList) {
-                    MicroSecondTimeRange staRange = new MicroSecondTimeRange(stationImpl.getEffectiveTime());
-                    if (staRange.contains(originTime)) {
-                        s = stationImpl;
-                        break;
-                    }
-                }
-                if (s != null) {
-                    System.out.println("GET: " + URL+"  s overlap e");
-                    EventStationPair esp = SodDB.getSingleton().getEventStationPair(e, s);
-                    System.out.println("GET: " + URL+"  esp");
-                    if (esp != null) {
-                    // fix for more than one station
-                    EventStationJson esJson = new EventStationJson(esp, WebAdmin.getBaseUrl());
-                    JsonApi.encodeJson(out, esJson);
+        Matcher m = mseedPattern.matcher(URL);
+        if (m.matches()) {
+            // raw miniseed
+            AbstractEventChannelPair ecp = getECP(m.group(1));
+            ChannelImpl[] chans;
+            if (ecp instanceof EventVectorPair) {
+                chans = ((EventVectorPair)ecp).getChannelGroup().getChannels();
+            } else {
+                chans = new ChannelImpl[] {((EventChannelPair)ecp).getChannel()};
+            }
+            List<EventSeismogramFileReference> seisRefList = new ArrayList<EventSeismogramFileReference>();
+            for (int j = 0; j < chans.length; j++) {
+                seisRefList.addAll(SeismogramFileRefDB.getSingleton()
+                        .getSeismogramsForEventForChannel(ecp.getEvent(), chans[j].getId()));
+            }
+            resp.setContentType("application/vnd.fdsn.mseed");
+            OutputStream outBinary = resp.getOutputStream();
+            System.out.println("SeisFileRef size: "+seisRefList.size());
+            for (EventSeismogramFileReference ref : seisRefList) {
+                System.out.println("FileRef: "+ref.getFilePath());
+                try {
+                    if (SeismogramFileTypes.fromInt(ref.getFileType()).equals(SeismogramFileTypes.MSEED)) {
+                        BufferedInputStream bufIn = new BufferedInputStream(ref.getFilePathAsURL().openStream());
+                        byte[] buf = new byte[1024];
+                        int bufNum = 0;
+                        while ((bufNum = bufIn.read(buf)) != -1) {
+                            outBinary.write(buf, 0, bufNum);
+                        }
+                        bufIn.close();
                     } else {
-                        System.out.println("GET: " + URL+"  esp nnot found");
-                        JsonApi.encodeError(out, "EventStation Pair not found");
-                        resp.sendError(404);
+                        System.err.println("Not miniseed: "+ref.getFileType());
                     }
-                } else {
-                    System.out.println("GET: " + URL+"  station not found out of "+staList.size());
-                    JsonApi.encodeError(out, "Station not found");
-                    writer.close();
-                    resp.sendError(404);
+                } catch(UnsupportedFileTypeException e) {
+                    throw new RuntimeException("Should never happen", e);
                 }
             }
+            outBinary.flush();
+        } else {
+            PrintWriter writer = resp.getWriter();
+            JSONWriter out = new JSONWriter(writer);
+            JsonApi.encodeError(out, "url does not match " + mseedPattern.pattern());
             writer.close();
-        } catch(JSONException e) {
-            throw new ServletException(e);
-        } catch(NumberFormatException e) {
-            throw new ServletException(e);
-        } catch(NotFound e) {
-            JsonApi.encodeError(out, "Event not found");
-            resp.sendError(500);
-        } catch(NoPreferredOrigin e) {
-            throw new ServletException(e);
         }
+        AbstractHibernateDB.rollback();
     }
 
-    Pattern stationPattern = Pattern.compile(NetworkServlet.networkIdPatternStr + NetworkServlet.stationIdPatternStr);
+    AbstractEventChannelPair getECP(String dbid) {
+        Query q = AbstractHibernateDB.getSession().createQuery("from " + SodDB.getSingleton().getEcpClass().getName()
+                + " where dbid = " + dbid);
+        AbstractEventChannelPair esp = (AbstractEventChannelPair)q.uniqueResult();
+        return esp;
+    }
 
-    Pattern eventPattern = Pattern.compile("/events/([0-9]+)");
+    Pattern mseedPattern = Pattern.compile(".*/waveforms?/([0-9]+)");
 }

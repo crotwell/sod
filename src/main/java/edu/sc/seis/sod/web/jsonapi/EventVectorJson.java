@@ -48,7 +48,8 @@ public class EventVectorJson extends AbstractJsonApiData {
         out.endObject(); // end data
         out.endObject(); // end event
 
-        out.key("channels").array();
+        out.key("channels").object();
+        out.key("data").array();
         if (ecp instanceof EventChannelPair) {
             out.object();
             ChannelJson chanJson = new ChannelJson(((EventChannelPair)ecp).getChannel(), getBaseUrl());
@@ -73,6 +74,17 @@ public class EventVectorJson extends AbstractJsonApiData {
             }
         }
         out.endArray();
+        out.endObject();
+
+        out.key("waveform").object();
+        out.key("data").object();
+        out.key("id").value(getId());
+        out.key("type").value("waveform");
+        out.key("links").object();
+        out.key("self").value(baseUrl + "/waveforms/" + getId());
+        out.endObject();// links
+        out.endObject();// data
+        out.endObject();// ecps
     }
 
     AbstractEventChannelPair ecp;

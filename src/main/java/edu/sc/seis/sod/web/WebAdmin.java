@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.web;
 
 import java.io.IOException;
+import java.net.BindException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,11 +34,8 @@ public class WebAdmin implements ArmListener{
     
     public void start() throws Exception
     {
-        // Create a basic Jetty server object that will listen on port 8080.  Note that if you set this to port 0
-        // then a randomly available port will be assigned that you can either look in the logs for the port,
-        // or programmatically obtain it for use in test cases.
-        server = new Server(8080);
- 
+        
+        
         List<Handler> handlerList = new ArrayList<Handler>();
         
         // Create the ResourceHandler. It is the object that will actually handle the request for a given file. It is
@@ -62,6 +60,7 @@ public class WebAdmin implements ArmListener{
         addServlets(servlets, EventStationServlet.class, "event-stations" );
         addServlets(servlets, EventVectorServlet.class, "event-vectors" );
         addServlets(servlets, WaveformServlet.class, "waveform" );
+        addServlets(servlets, WaveformServlet.class, "waveforms" );
         
         // Add the ResourceHandler to the server.
         HandlerList handlers = new HandlerList();
@@ -78,15 +77,34 @@ public class WebAdmin implements ArmListener{
             
         },
         new DefaultHandler() });
+        
+     // Create a basic Jetty server object that will listen on port 8080.  Note that if you set this to port 0
+        // then a randomly available port will be assigned that you can either look in the logs for the port,
+        // or programmatically obtain it for use in test cases.
+        int initialPort = 8080;
+        int port = initialPort;
+        int maxPortTries = 10;
+        while(server == null) {
+            try {
+            server = new Server(port);
         server.setHandler(handlers);
  
         // Start things up! By using the server.join() the server thread will join with the current thread.
         // See "http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Thread.html#join()" for more details.
         server.start();
+            } catch(BindException e) {
+                if (port-initialPort < maxPortTries) {
+                logger.info("port "+port+" in use, trying next in line.", e.getMessage());
+                port++;
+                } else {
+                    throw e;
+                }
+            }
+        }
         final Server serverInContext = server;
         //server.join();  // this means web server quits when current thread quits
-        logger.info("Web Admin started at "+server.getConnectors()[0].getName());
-        System.out.println("Web Admin started at "+server.getConnectors()[0].getName());
+        logger.info("Web Admin started at "+server.getURI());
+        System.out.println("Web Admin started at "+server.getURI());
         /*
         if ( Start.getRunProps().isStatusWebKeepAlive() ) {
             keepAliveThread = new Thread(new Runnable() {
