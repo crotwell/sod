@@ -50,8 +50,12 @@ $additionalArms#end
         </networkOR>
 #else
         <networkNOT>
+          <networkOR>
+            <!-- exclude SY network as it is synthetic -->
+            <networkCode>SY</networkCode>
             <!-- exclude PI network as it is passcal test data -->
             <networkCode>PI</networkCode>
+          </networkOR>
         </networkNOT>
 #end
 #if($needsStationAND)
