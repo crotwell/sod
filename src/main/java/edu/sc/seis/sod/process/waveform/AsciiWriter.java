@@ -4,9 +4,11 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.text.DecimalFormat;
 
 import org.w3c.dom.Element;
 
+import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
@@ -43,18 +45,29 @@ public class AsciiWriter extends AbstractSeismogramWriter {
         File f = new File(location);
         PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(f)));
         writer.println("# "+ChannelIdUtil.toStringNoDates(chan.getId())+" "+seis.getNumPoints()+" "+seis.getSampling().getPeriod()+" "+seis.getBeginTime()+" "+seis.getUnit());
+        if (SHAKEheader) {
+            writer.println(seis.getNumPoints()+"      "+seis.getSampling().getPeriod().getValue(UnitImpl.SECOND));
+        }
         if(seis.can_convert_to_long()) {
             int[] asInts = seis.get_as_longs();
             for(int i = 0; i < asInts.length; i++) {
                 writer.println(asInts[i]);
             }
         } else if(seis.can_convert_to_float()) {
+            DecimalFormat df = new DecimalFormat(format);
             float[] asFloats = seis.get_as_floats();
             for(int i = 0; i < asFloats.length; i++) {
-                writer.println(asFloats[i]);
+                writer.print(df.format(asFloats[i]));
+                if (i % columns == columns-1) {
+                    writer.println();
+                }
             }
         }
         writer.close();
         AbstractSeismogramWriter.addBytesWritten(f.length());
     }
+    
+    int columns = 2;
+    String format = " 0.000000E00  ;-0.000000E00  ";
+    boolean SHAKEheader = true;
 }
