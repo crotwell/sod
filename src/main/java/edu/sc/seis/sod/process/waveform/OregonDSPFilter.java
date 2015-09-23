@@ -214,9 +214,9 @@ public class OregonDSPFilter implements WaveformProcess {
 
     double epsilon = 1;
 
-    QuantityImpl lowFreqCorner;
+    QuantityImpl lowFreqCorner = new QuantityImpl(1e-99, UnitImpl.HERTZ);
 
-    QuantityImpl highFreqCorner;
+    QuantityImpl highFreqCorner = new QuantityImpl(1e99, UnitImpl.HERTZ);
 
     int numPoles = 2;
 
