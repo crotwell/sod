@@ -44,14 +44,14 @@ public class AsciiWriter extends AbstractSeismogramWriter {
     public void write(String location, LocalSeismogramImpl seis, ChannelImpl chan, CacheEvent ev) throws Exception {
         File f = new File(location);
         PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(f)));
-        writer.println("# "+ChannelIdUtil.toStringNoDates(chan.getId())+" "+seis.getNumPoints()+" "+seis.getSampling().getPeriod()+" "+seis.getBeginTime()+" "+seis.getUnit());
+        writer.println("# "+ChannelIdUtil.toStringNoDates(chan.getId())+" "+seis.getNumPoints()+" "+seis.getSampling().getPeriod()+" "+seis.getBeginTime()+" "+seis.getUnit()+winEOL);
         if (SHAKEheader) {
             writer.println(seis.getNumPoints()+"      "+seis.getSampling().getPeriod().getValue(UnitImpl.SECOND));
         }
         if(seis.can_convert_to_long()) {
             int[] asInts = seis.get_as_longs();
             for(int i = 0; i < asInts.length; i++) {
-                writer.println(asInts[i]);
+                writer.println(asInts[i]+winEOL);
             }
         } else if(seis.can_convert_to_float()) {
             DecimalFormat df = new DecimalFormat(format);
@@ -59,7 +59,7 @@ public class AsciiWriter extends AbstractSeismogramWriter {
             for(int i = 0; i < asFloats.length; i++) {
                 writer.print(df.format(asFloats[i]));
                 if (i % columns == columns-1) {
-                    writer.println();
+                    writer.println(winEOL);
                 }
             }
         }
@@ -68,6 +68,8 @@ public class AsciiWriter extends AbstractSeismogramWriter {
     }
     
     int columns = 2;
-    String format = " 0.000000E00  ;-0.000000E00  ";
+    String format = " +0.000000E00  ; -0.000000E00  ";
     boolean SHAKEheader = true;
+    String winEOL = "";
+  //  String winEOL = "\r";
 }
