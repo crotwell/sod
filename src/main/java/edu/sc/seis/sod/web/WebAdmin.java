@@ -1,9 +1,8 @@
 package edu.sc.seis.sod.web;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.BindException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
@@ -18,11 +17,11 @@ import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
+import org.eclipse.jetty.util.resource.Resource;
 
 import edu.sc.seis.sod.Arm;
 import edu.sc.seis.sod.ArmListener;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.RunProperties;
 import edu.sc.seis.sod.Start;
 
 
@@ -36,8 +35,6 @@ public class WebAdmin implements ArmListener{
     {
         
         
-        List<Handler> handlerList = new ArrayList<Handler>();
-        
         // Create the ResourceHandler. It is the object that will actually handle the request for a given file. It is
         // a Jetty Handler object so it is suitable for chaining with other handlers as you will see in other examples.
         ResourceHandler resource_handler = new ResourceHandler();
@@ -45,12 +42,12 @@ public class WebAdmin implements ArmListener{
         // In this example it is the current directory but it can be configured to anything that the jvm has access to.
         resource_handler.setDirectoriesListed(true);
         resource_handler.setWelcomeFiles(new String[]{ "index.html" });
-        resource_handler.setResourceBase("site");
-        ContextHandler siteContext = new ContextHandler("/site");
+        resource_handler.setBaseResource(Resource.newResource(new File("site")));
+        ContextHandler siteContext = new ContextHandler("/");
         siteContext.setHandler(resource_handler);
-        handlerList.add(siteContext);
         
         ServletHandler servlets = new ServletHandler();
+        servlets.setEnsureDefaultServlet(false);
         servlets.addServletWithMapping(ArmStatusServlet.class, "/api/arms");
 
         addServlets(servlets, EventServlet.class, "events" );
@@ -64,7 +61,7 @@ public class WebAdmin implements ArmListener{
         
         // Add the ResourceHandler to the server.
         HandlerList handlers = new HandlerList();
-        handlers.setHandlers(new Handler[] { servlets, siteContext, new DefaultHandler() {
+        handlers.setHandlers(new Handler[] { siteContext, servlets, new DefaultHandler() {
 
             @Override
             public void handle(String target,
