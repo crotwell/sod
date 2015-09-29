@@ -45,7 +45,6 @@ import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.model.UnitRangeImpl;
-import edu.sc.seis.bag.BagUtil;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
@@ -225,7 +224,7 @@ public class SodUtil {
             interpreter = new PythonInterpreter();
             interpreter.exec("import sys");
             interpreter.exec("sys.path.append('.')");
-            BagUtil.addClassAdapters();
+        //    BagUtil.addClassAdapters();
         }
         return interpreter;
     }
