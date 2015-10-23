@@ -67,6 +67,25 @@
                 </description>
                 <summary>Selects and processes events</summary>
                 <velocity>#eventArmPage()</velocity>
+                <example>
+                    <eventArm>
+                        <fdsnEvent>
+                            <originTimeRange>
+                                <startTime>
+                                    2015-01-01T00:00:00.000Z
+                                </startTime>
+                                <endTime>
+                                    2015-01-31T23:59:59.999Z
+                                </endTime>
+                            </originTimeRange>
+                            <magnitudeRange>
+                                <min>6.0</min>
+                            </magnitudeRange>
+                        </fdsnEvent>
+                        <removeEventDuplicate/>
+                        <printlineEventProcess/>
+                    </eventArm>
+                </example>
             </xsd:annotation>
             <oneOrMore>
                 <ref name="eventSource"/>
