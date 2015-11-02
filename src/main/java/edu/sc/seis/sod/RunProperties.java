@@ -204,8 +204,11 @@ public class RunProperties {
     }
 
     public boolean isStatusWebKeepAlive() {
-        System.err.println("Keep alive true, so control-c to quit SOD.");
-        return true;
+        return statusWebKeepAlive;
+    }
+
+    public void setStatusWebKeepAlive(boolean b) {
+        statusWebKeepAlive = b;
     }
 
     public static final TimeInterval NO_TIME = new TimeInterval(0,
@@ -264,6 +267,8 @@ public class RunProperties {
 	private String channelGroupingRules = null;
 	
 	private boolean skipAvailableData = true;
+	
+	private boolean statusWebKeepAlive = false;
 	
 	private List hibernateConfig = new ArrayList();
 

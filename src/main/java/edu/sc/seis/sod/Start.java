@@ -474,9 +474,14 @@ public class Start {
             checkConfig(creator.create());
         }
         // start web interface
-        webAdmin = new WebAdmin();
-        add(webAdmin); // listen for arm fails
-        webAdmin.start();
+        if (args.isStatus()) {
+            Start.getRunProps().setStatusWebKeepAlive(true);
+        }
+        if(args.isStatus() || Start.getRunProps().isStatusWebKeepAlive()) {
+            webAdmin = new WebAdmin();
+            add(webAdmin); // listen for arm fails
+            webAdmin.start();
+        }
         
         // this next line sets up the status page for exception reporting,
         // so
@@ -762,11 +767,12 @@ public class Start {
             exit("Quitting due to error: " + e.getMessage());
         }
         logger.info("Finished starting all threads.");
-        try {
-            webAdmin.join();
-        } catch(InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        if (webAdmin != null) {
+            try {
+                webAdmin.join();
+            } catch(InterruptedException e) {
+                logger.warn("WebAdmin interrupted.", e);
+            }
         }
     } // end of main ()
 

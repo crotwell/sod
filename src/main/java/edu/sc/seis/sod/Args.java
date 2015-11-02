@@ -83,6 +83,10 @@ public class Args {
                        'v',
                        "version",
                        "Print SOD's version and exit"));
+        add(new Switch("status",
+                       's',
+                       "status",
+                       "Run SOD's status web server and do not quit at end of recipe"));
         add(new Switch(QUIT_ON_ERROR_SWITCH,
                        JSAP.NO_SHORTFLAG,
                        QUIT_ON_ERROR_SWITCH,
@@ -258,6 +262,10 @@ public class Args {
 
     public boolean isDebug() {
         return result.getBoolean("debug");
+    }
+
+    public boolean isStatus() {
+        return result.getBoolean("status");
     }
 
     public boolean onlyValidate() {
