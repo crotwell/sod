@@ -58,6 +58,7 @@ public class WebAdmin implements ArmListener{
         addServlets(servlets, EventVectorServlet.class, "event-vectors" );
         addServlets(servlets, WaveformServlet.class, "waveform" );
         addServlets(servlets, WaveformServlet.class, "waveforms" );
+        addServlets(servlets, TauPServlet.class, "taup");
         
         // Add the ResourceHandler to the server.
         HandlerList handlers = new HandlerList();
@@ -83,16 +84,16 @@ public class WebAdmin implements ArmListener{
         int maxPortTries = 10;
         while(server == null) {
             try {
-            server = new Server(port);
-        server.setHandler(handlers);
+                server = new Server(port);
+                server.setHandler(handlers);
  
         // Start things up! By using the server.join() the server thread will join with the current thread.
         // See "http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Thread.html#join()" for more details.
-        server.start();
+                server.start();
             } catch(BindException e) {
                 if (port-initialPort < maxPortTries) {
-                logger.info("port "+port+" in use, trying next in line.", e.getMessage());
-                port++;
+                    logger.info("port "+port+" in use, trying next in line.", e.getMessage());
+                    port++;
                 } else {
                     throw e;
                 }
@@ -102,8 +103,7 @@ public class WebAdmin implements ArmListener{
         //server.join();  // this means web server quits when current thread quits
         logger.info("Web Admin started at "+server.getURI());
         System.out.println("Web Admin started at "+server.getURI());
-        /*
-        if ( Start.getRunProps().isStatusWebKeepAlive() ) {
+        if ( Start.getArgs().isStatus() || Start.getRunProps().isStatusWebKeepAlive() ) {
             keepAliveThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -120,7 +120,7 @@ public class WebAdmin implements ArmListener{
             }, "JettyKeepAlive");
             keepAliveThread.start();
         }
-        */
+        
     }
     
     void addServlets(ServletHandler servlets, Class<? extends Servlet> servletClass, String partialUrl) {
@@ -129,24 +129,40 @@ public class WebAdmin implements ArmListener{
         servlets.addServletWithMapping(servletClass, "/api/"+partialUrl+"/*");
     }
 
+    
+    
     @Override
     public void finished(Arm arm) {
-        if ( ! Start.getRunProps().isStatusWebKeepAlive() &&  ! Start.isAnyWaveformArmActive()) {
-            try {
-                System.err.println("All finished, stopping web admin");
-                server.stop();
-            } catch(Exception e) {
-                logger.error("Unable to stop jetty web server", e);
-            }
-        }
+        checkIfStayAlive();
     }
 
     @Override
     public void starting(Arm arm) throws ConfigurationException {
+        
     }
 
     @Override
     public void started() throws ConfigurationException {
+        // do this here in case SOD is already done on startup, so no arms actually finish
+        // and if we don't check we will stay alive forever even if we shouldn't
+        checkIfStayAlive();
+    }
+    
+    void checkIfStayAlive() {
+        System.err.println("check if stay alive");
+        if (! Start.isAnyWaveformArmActive()) {
+            // last arm has finished
+            if ( Start.getRunProps().isStatusWebKeepAlive() ) {
+                System.err.println("--status to keep SOD alive true, so control-c to quit SOD.");
+            } else {
+                try {
+                    System.err.println("All finished, stopping web admin");
+                    server.stop();
+                } catch(Exception e) {
+                    logger.error("Unable to stop jetty web server", e);
+                }
+            }
+        }
     }
     
     Thread keepAliveThread;
