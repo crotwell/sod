@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.model.ISOTime;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
@@ -33,7 +34,7 @@ public class SimpleVelocitizer {
 
     public static String format(MicroSecondDate date, String format) {
         DateFormat dateFormat = new SimpleDateFormat(format);
-        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        dateFormat.setTimeZone(ISOTime.UTC);
         return dateFormat.format(date);
     }
 

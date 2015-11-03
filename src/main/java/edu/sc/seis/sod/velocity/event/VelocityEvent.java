@@ -15,6 +15,7 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.event.OriginImpl;
+import edu.iris.Fissures.model.ISOTime;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
@@ -270,7 +271,7 @@ public class VelocityEvent extends ProxyEventAccessOperations {
         return new CacheEvent(event);
     }
 
-    private static ThreadSafeSimpleDateFormat fullDateIdentifier = new ThreadSafeSimpleDateFormat("yyyy/MM/dd/HH/mm/ss", TimeZone.getTimeZone("GMT"));
+    private static ThreadSafeSimpleDateFormat fullDateIdentifier = new ThreadSafeSimpleDateFormat("yyyy/MM/dd/HH/mm/ss", ISOTime.UTC);
 
     public static String makeDateIdentifier(VelocityEvent event) {
         synchronized(fullDateIdentifier) {

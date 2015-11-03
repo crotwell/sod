@@ -14,6 +14,7 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.model.ISOTime;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
@@ -194,9 +195,9 @@ public class BreqFastRequest implements RequestSubsetter {
 
     static final String nl = "\n";
 
-    ThreadSafeSimpleDateFormat format = new ThreadSafeSimpleDateFormat("yyyy MM dd HH mm ss.", TimeZone.getTimeZone("GMT"));
+    ThreadSafeSimpleDateFormat format = new ThreadSafeSimpleDateFormat("yyyy MM dd HH mm ss.", ISOTime.UTC);
 
-    ThreadSafeSimpleDateFormat tenths = new ThreadSafeSimpleDateFormat("SSS", TimeZone.getTimeZone("GMT"));
+    ThreadSafeSimpleDateFormat tenths = new ThreadSafeSimpleDateFormat("SSS", ISOTime.UTC);
 
     ParseRegions regions;
 

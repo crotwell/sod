@@ -9,6 +9,7 @@ import org.apache.velocity.VelocityContext;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.model.ISOTime;
 import edu.sc.seis.fissuresUtil.chooser.ThreadSafeSimpleDateFormat;
 import edu.sc.seis.fissuresUtil.display.configuration.BorderConfiguration;
 import edu.sc.seis.fissuresUtil.display.configuration.BorderTitleConfiguration;
@@ -63,7 +64,7 @@ public class SeismogramTitler {
         return (BorderConfiguration[])borderConfigs.toArray(new BorderConfiguration[0]);
     }
     
-    private ThreadSafeSimpleDateFormat df = new ThreadSafeSimpleDateFormat("yyyy-MM-dd HH:mm:ss z", TimeZone.getTimeZone("GMT"));
+    private ThreadSafeSimpleDateFormat df = new ThreadSafeSimpleDateFormat("yyyy-MM-dd HH:mm:ss z", ISOTime.UTC);
 
     private SimpleVelocitizer sv;
 

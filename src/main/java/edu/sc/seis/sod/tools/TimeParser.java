@@ -11,6 +11,7 @@ import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.ParseException;
 import com.martiansoftware.jsap.StringParser;
 
+import edu.iris.Fissures.model.ISOTime;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
@@ -64,13 +65,13 @@ public class TimeParser extends StringParser {
     
     public static String format(MicroSecondDate d) {
         DateFormat passcalFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        passcalFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        passcalFormat.setTimeZone(ISOTime.UTC);
         return passcalFormat.format(d);
     }
     
     public static String formatForParsing(MicroSecondDate d) {
         DateFormat passcalFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-        passcalFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        passcalFormat.setTimeZone(ISOTime.UTC);
         return passcalFormat.format(d);
     }
     
