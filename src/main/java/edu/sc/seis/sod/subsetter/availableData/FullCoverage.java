@@ -20,7 +20,7 @@ public class FullCoverage implements AvailableDataSubsetter, SodElement {
                              CookieJar cookieJar) {
         double coveragePercentage = pc.percentCovered(request, available);
         return new StringTreeLeaf(this,
-                                  coveragePercentage >= 100,
+                                  coveragePercentage > 99, // use >99 as >=100 often fails with 99.99999 coverage
                                   coveragePercentage
                                           + " percent of data covered");
     }
