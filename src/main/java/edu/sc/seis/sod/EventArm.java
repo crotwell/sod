@@ -35,8 +35,7 @@ import edu.sc.seis.sod.subsetter.origin.OriginSubsetter;
  * specified in the configuration file (xml file). Created: Thu Mar 14 14:09:52
  * 2002
  * 
- * @author <a href="mailto:">Philip Crotwell </a>
- * @version
+ * @author Philip Crotwell
  */
 public class EventArm implements Arm {
 

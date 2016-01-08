@@ -439,7 +439,6 @@ public class NetworkArm implements Arm {
      * Obtains the Channels corresponding to the station, processes them using
      * the ChannelSubsetter and returns an array of those that pass
      * 
-     * @throws NetworkNotFound
      */
     public List<ChannelImpl> getSuccessfulChannels(StationImpl station) {
         synchronized(refresh) {

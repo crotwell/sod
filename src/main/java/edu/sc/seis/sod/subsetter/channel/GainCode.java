@@ -9,7 +9,7 @@ import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
 /**
- * @author <a href="mailto:">Srinivasa Telukutla </a>
+ * @author Srinivasa Telukutla
  */
 public class GainCode implements ChannelSubsetter {
 

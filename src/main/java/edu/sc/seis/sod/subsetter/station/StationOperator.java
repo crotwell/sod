@@ -18,8 +18,7 @@ import edu.sc.seis.sod.status.StringTree;
  * </pre>
  * Created: Thu Mar 14 14:02:33 2002
  *
- * @author <a href="mailto:">Philip Crotwell</a>
- * @version
+ * @author Philip Crotwell
  */
 
 public class StationOperator implements StationSubsetter {

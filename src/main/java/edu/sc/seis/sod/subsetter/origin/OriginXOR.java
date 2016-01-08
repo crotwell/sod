@@ -32,16 +32,11 @@ import edu.sc.seis.sod.status.StringTreeBranch;
  *      &lt;/magnitudeRange&gt;
  *      &lt;/originNOT&gt;
  *</pre>
- */
-
-/**
- * OriginXOR.java
  *
  *
  * Created: Thu Mar 14 14:02:33 2002
  *
- * @author <a href="mailto:">Philip Crotwell</a>
- * @version
+ * @author Philip Crotwell
  */
 
 public final class OriginXOR extends EventLogicalSubsetter

@@ -14,8 +14,7 @@ import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
  * 
  * Created: Wed Mar 20 14:00:32 2002
  * 
- * @author <a href="mailto:">Srinivasa Telukutla</a>
- * @version
+ * @author Srinivasa Telukutla
  */
 public class CommonAccess {
 

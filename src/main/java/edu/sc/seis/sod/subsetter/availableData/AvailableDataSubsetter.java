@@ -10,8 +10,7 @@ import edu.sc.seis.sod.subsetter.Subsetter;
 /**
  * AvailableDataSubsetter.java Created: Thu Dec 13 17:18:32 2001
  * 
- * @author <a href="mailto:">Philip Crotwell </a>
- * @version
+ * @author Philip Crotwell
  */
 public interface AvailableDataSubsetter extends Subsetter {
 

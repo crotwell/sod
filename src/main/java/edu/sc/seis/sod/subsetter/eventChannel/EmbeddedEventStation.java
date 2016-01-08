@@ -20,7 +20,7 @@ import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
  *
  * Created: Wed Oct 30 11:54:58 2002
  *
- * @author <a href="mailto:">Philip Crotwell</a>
+ * @author Philip Crotwell
  * @version
  */
 

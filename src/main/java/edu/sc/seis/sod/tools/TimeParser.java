@@ -21,7 +21,7 @@ import edu.sc.seis.sod.SodUtil;
 public class TimeParser extends StringParser {
     
     /**
-     * @param  - should unspecified fields be floored or ceilinged.
+     * @param ceiling should unspecified fields be floored or ceilinged.
      */
     public TimeParser(boolean ceiling){
         this.ceiling = ceiling;

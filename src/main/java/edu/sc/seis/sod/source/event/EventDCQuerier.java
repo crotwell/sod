@@ -163,7 +163,7 @@ public class EventDCQuerier {
     }
 
     /**
-     * Reorder the magnitudes in o such that a magnitude >= minMag and <= maxMag
+     * Reorder the magnitudes in o such that a magnitude &gt;= minMag and &lt;= maxMag
      * with a type in searchTypes is in the 0th position of the magnitudes array
      * 
      * @return - True if a magnitude is found and moved into the 0th position

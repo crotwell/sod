@@ -13,8 +13,7 @@ import edu.sc.seis.sod.SodUtil;
 /**
  * DistanceRange.java Created: Mon Apr 8 16:09:49 2002
  * 
- * @author <a href="mailto:">Srinivasa Telukutla </a>
- * @version
+ * @author Srinivasa Telukutla
  */
 public class DistanceRangeSubsetter implements SodElement {
 

@@ -51,7 +51,6 @@ public class SodDB extends AbstractHibernateDB {
      * specifying which table we are using, the queries are several orders of magnitude
      * faster and do not use huge amounts of memory, which matters a lot when the 
      * number of ecps becomes large.
-     * @param ecpClass
      */
     protected SodDB() {
     } // only for singleton

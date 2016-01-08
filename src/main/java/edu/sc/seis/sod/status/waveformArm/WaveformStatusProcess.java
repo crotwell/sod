@@ -15,8 +15,7 @@ import edu.sc.seis.sod.subsetter.Subsetter;
  *
  * Created: Fri Oct 18 14:57:48 2002
  *
- * @author <a href="mailto:">Srinivasa Telukutla</a>
- * @version
+ * @author Srinivasa Telukutla
  */
 
 public interface WaveformStatusProcess extends Subsetter{
