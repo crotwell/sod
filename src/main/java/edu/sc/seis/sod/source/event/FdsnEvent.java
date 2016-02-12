@@ -288,6 +288,10 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                     }
                 } else if (e instanceof FDSNWSException && ((FDSNWSException)e).getHttpResponseCode() != 200) {
                     latest = e;
+                    if (((FDSNWSException)e).getHttpResponseCode() == 400) {
+                        // badly formed query, cowardly quit
+                        Start.simpleArmFailure(Start.getEventArm(), BAD_PARAM_MESSAGE+" "+((FDSNWSException)e).getMessage()+" on "+((FDSNWSException)e).getTargetURI());
+                    }
                 } else {
                     throw new RuntimeException(e);
                 }
@@ -513,6 +517,11 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
     public static final String HOST_ELEMENT = "host";
 
     public static final String PORT_ELEMENT = "port";
+
+    public static final String BAD_PARAM_MESSAGE = "The remote web service just indicated that the query was badly formed. "
+            +"This may be because it does not support all of the parameters that SOD uses or it could be a bug in SOD. "
+            +"Check your recipe and "
+            +"if you cannot figure it out contact the developers at sod@seis.sc.edu. ";
 
     String userAgent = "SOD/" + BuildVersion.getVersion();
 

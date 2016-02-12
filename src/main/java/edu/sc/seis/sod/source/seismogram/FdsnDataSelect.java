@@ -49,6 +49,7 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.source.AbstractSource;
+import edu.sc.seis.sod.source.event.FdsnEvent;
 import edu.sc.seis.sod.source.network.FdsnStation;
 import edu.sc.seis.sod.source.network.InstrumentationFromDB;
 import edu.sc.seis.sod.source.network.NetworkSource;
@@ -326,6 +327,12 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
                 } catch(FDSNWSException e) {
                     if (querier.getResponseCode() == 401 || querier.getResponseCode() == 403) {
                         throw new SeismogramAuthorizationException("Authorization failure to " + e.getTargetURI(), e);
+
+                    } else if (querier.getResponseCode() == 400) {
+                        // badly formed query, cowardly quit
+                        Start.simpleArmFailure(Start.getWaveformArms()[0], 
+                                               FdsnEvent.BAD_PARAM_MESSAGE+" "+((FDSNWSException)e).getMessage()+" on "+((FDSNWSException)e).getTargetURI());
+                        throw new SeismogramSourceException(e);
                     } else {
                         throw new SeismogramSourceException(e);
                     }
