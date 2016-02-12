@@ -417,6 +417,10 @@ public class Start {
         return network;
     }
 
+    public static WaveformArm[] getWaveformArmArray() {
+        return waveforms;
+    }
+
     public static RunProperties getRunProps() {
         if(runProps == null) {
             try {
@@ -802,6 +806,9 @@ public class Start {
                     arms[i].notifyAll();
                 }
             }
+        }
+        for (int i = 0; i < waveforms.length; i++) {
+            waveforms[i].notifyAll();
         }
         synchronized(OutputScheduler.getDefault()) {
             OutputScheduler.getDefault().notify();

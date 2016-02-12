@@ -330,7 +330,7 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
 
                     } else if (querier.getResponseCode() == 400) {
                         // badly formed query, cowardly quit
-                        Start.simpleArmFailure(Start.getWaveformArms()[0], 
+                        Start.simpleArmFailure(Start.getWaveformArmArray()[0], 
                                                FdsnEvent.BAD_PARAM_MESSAGE+" "+((FDSNWSException)e).getMessage()+" on "+((FDSNWSException)e).getTargetURI());
                         throw new SeismogramSourceException(e);
                     } else {
