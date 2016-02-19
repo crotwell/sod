@@ -168,10 +168,17 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                             queryParams.area(box.min_latitude, box.max_latitude, box.min_longitude, box.max_longitude);
                         } else if (area instanceof PointDistanceArea) {
                             PointDistanceArea donut = (PointDistanceArea)area;
+                            if ((float)((QuantityImpl)donut.min_distance).getValue(UnitImpl.DEGREE) > 0) {
                             queryParams.donut(donut.latitude,
                                               donut.longitude,
                                               (float)((QuantityImpl)donut.min_distance).getValue(UnitImpl.DEGREE),
                                               (float)((QuantityImpl)donut.max_distance).getValue(UnitImpl.DEGREE));
+                            } else {
+                                // don't send minradius if only care about maxradius
+                                queryParams.ring(donut.latitude,
+                                              donut.longitude,
+                                              (float)((QuantityImpl)donut.max_distance).getValue(UnitImpl.DEGREE));
+                            }
                         } else {
                             throw new ConfigurationException("Area of class " + area.getClass().getName()
                                     + " not understood");
