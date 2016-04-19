@@ -5,11 +5,14 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
+import edu.sc.seis.sod.source.seismogram.BatchDataRequest;
 import edu.sc.seis.sod.source.seismogram.FdsnDataSelect;
 import edu.sc.seis.sod.source.seismogram.SeismogramSourceLocator;
 import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
@@ -20,6 +23,16 @@ import edu.sc.seis.sod.subsetter.eventStation.PassEventStation;
 
 
 public abstract class AbstractWaveformRecipe  {
+    
+    
+    public AbstractWaveformRecipe() {
+        try {
+            dcLocator = new BatchDataRequest(new FdsnDataSelect());
+        } catch(ConfigurationException e) {
+            logger.warn("Unable to instatiate BatchDataRequest, using thread per request", e);
+            dcLocator = new FdsnDataSelect();
+        }
+    }
     
     public void addStatusMonitor(WaveformMonitor monitor) {
         statusMonitors.add(monitor);
@@ -100,4 +113,6 @@ public abstract class AbstractWaveformRecipe  {
 
     protected static final AvailableDataSubsetter defaultAvailableDataSubsetter = new SomeCoverage();
     
+    private static final Logger logger = LoggerFactory.getLogger(AbstractWaveformRecipe.class);
+
 }
