@@ -106,7 +106,7 @@ public abstract class AbstractEventSource extends AbstractSource implements Even
             everCaughtUpToRealtime = true;
         }
         if (now.before(queryEnd)) {
-            logger.debug("Caught up with now.");
+            logger.info("Caught up with now.");
             queryEnd = now;
             caughtUpToRealtime = true;
             everCaughtUpToRealtime = true;
@@ -120,8 +120,13 @@ public abstract class AbstractEventSource extends AbstractSource implements Even
     public void increaseQueryTimeWidth() {
         increment = (TimeInterval)increment.multiplyBy(2);
     }
+    
+    /** decrease the time increment for queries, but only if it is larger than the minimum = 1Day 
+     * to avoid many tiny queries to the server. */
     public void decreaseQueryTimeWidth() {
-        increment = (TimeInterval)increment.multiplyBy(.75);
+        if (getIncrement().greaterThan(MIN_INCREMENT)) {
+            increment = (TimeInterval)increment.multiplyBy(.75);
+        }
     }
 
     /**
@@ -220,4 +225,6 @@ public abstract class AbstractEventSource extends AbstractSource implements Even
     public static final String EVENT_REFRESH_INTERVAL = "eventRefreshInterval";
     
     public static final String EVENT_LAG = "eventLag";
+
+    public static final TimeInterval MIN_INCREMENT = new TimeInterval(1, UnitImpl.DAY);
 }
