@@ -267,6 +267,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
     public CacheEvent[] next() {
         MicroSecondTimeRange queryTime = getQueryTime();
         logger.debug(getName() + ".next() called for " + queryTime);
+        logger.debug("eventTimeRangeSupplier.getMSTR(): "+eventTimeRangeSupplier.getMSTR());
         int count = 0;
         Exception latest = null;
         while (count == 0 || getRetryStrategy().shouldRetry(latest, this, count)) {
@@ -289,8 +290,14 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                         // also make the increaseThreashold smaller so we are
                         // not so aggressive
                         // about expanding the time window
-                        decreaseQueryTimeWidth();
-                        increaseThreashold /= 2;
+                        // but only do this if the query is for more than one day 
+                        // to avoid many tiny requests
+                        if (getIncrement().greaterThan(MIN_INCREMENT)) {
+                            decreaseQueryTimeWidth();
+                            if (increaseThreashold > 2) {
+                                increaseThreashold /= 2;
+                            }
+                        }
                         return new CacheEvent[0];
                     }
                 } else if (e instanceof FDSNWSException && ((FDSNWSException)e).getHttpResponseCode() != 200) {
@@ -313,8 +320,14 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                         // also make the increaseThreashold smaller so we are
                         // not so aggressive
                         // about expanding the time window
+                        // but only do this if the query is for more than one day 
+                        // to avoid many tiny requests
+                        if (getIncrement().greaterThan(MIN_INCREMENT)) {
                         decreaseQueryTimeWidth();
-                        increaseThreashold /= 2;
+                        if (increaseThreashold > 2) {
+                            increaseThreashold /= 2;
+                        }
+                        }
                         return new CacheEvent[0];
                     }
                 } else {
@@ -524,7 +537,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
     public static final String HOST_ELEMENT = "host";
 
     public static final String PORT_ELEMENT = "port";
-
+    
     public static final String BAD_PARAM_MESSAGE = "The remote web service just indicated that the query was badly formed. "
             +"This may be because it does not support all of the parameters that SOD uses or it could be a bug in SOD. "
             +"Check your recipe and "
