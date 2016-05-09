@@ -548,6 +548,11 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
             +"Check your recipe and "
             +"if you cannot figure it out contact the developers at sod@seis.sc.edu. ";
 
+    public static final String BAD_PARAM_MESSAGE = "The remote web service just indicated that the query was badly formed. "
+            +"This may be because it does not support all of the parameters that SOD uses or it could be a bug in SOD. "
+            +"Check your recipe and "
+            +"if you cannot figure it out contact the developers at sod@seis.sc.edu. ";
+
     String userAgent = "SOD/" + BuildVersion.getVersion();
 
     public String getUserAgent() {
