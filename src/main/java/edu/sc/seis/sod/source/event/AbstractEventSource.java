@@ -114,6 +114,9 @@ public abstract class AbstractEventSource extends AbstractSource implements Even
         if (queryStart.after(ClockUtil.wayFuture())) {
             throw new RuntimeException("start way in future: qs="+queryStart+" lag="+getLag()+" end="+queryEnd);
         }
+        if (queryEnd.subtract(queryStart).lessThan(new TimeInterval(1, UnitImpl.MINUTE))) {
+            logger.warn("Query for very short time window: start:"+queryStart+" end:"+queryEnd+" inc:"+increment+" now:"+now+"  cuwrt:"+caughtUpToRealtime+" ecuwrt:"+everCaughtUpToRealtime+"  tot end:"+getEventTimeRange().getEndTime());
+        }
         return new MicroSecondTimeRange(queryStart, queryEnd);
     }
     
