@@ -56,7 +56,7 @@ import edu.sc.seis.sod.subsetter.station.StationPointDistance;
 public class FdsnStation extends AbstractNetworkSource {
 
     public FdsnStation() {
-        super("default", -1);
+        super("defaultFDSNNetwork", -1);
     }
     
     public FdsnStation(String name, int retries, FDSNStationQueryParams queryParams) {
