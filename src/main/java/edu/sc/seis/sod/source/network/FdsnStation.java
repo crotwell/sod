@@ -404,7 +404,9 @@ public class FdsnStation extends AbstractNetworkSource {
         FDSNStationXML out = null;
         while (count == 0 || getRetryStrategy().shouldRetry(latest, this, count)) {
             try {
-                out = setupQuerier(staQP).getFDSNStationXML();
+                // querier is closed when the FDSNStationXML is closed internal to it
+                FDSNStationQuerier querier = setupQuerier(staQP);
+                out = querier.getFDSNStationXML();
                 if (count > 0) { getRetryStrategy().serverRecovered(this); }
                 return out;
             } catch(SeisFileException e) {
