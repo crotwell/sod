@@ -1,9 +1,7 @@
 <?xml version="1.0"?>
 <sod>
     <eventArm>
-        <eventFinder>
-            <name>IRIS_EventDC</name>
-            <dns>edu/iris/dmc</dns>
+        <fdsnEvent>
             <originTimeRange>
                 <startTime>
                     <year>2003</year>
@@ -19,8 +17,7 @@
             <magnitudeRange>
                 <min>5</min>
             </magnitudeRange>
-            <catalog>WHDF</catalog>
-        </eventFinder>
+        </fsdnEvent>
         <externalOriginSubsetter>
             <classname>edu.sc.seis.sod.example.LatOMatic</classname>
             <maxLat>45</maxLat>
