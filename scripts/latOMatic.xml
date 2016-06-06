@@ -17,7 +17,7 @@
             <magnitudeRange>
                 <min>5</min>
             </magnitudeRange>
-        </fsdnEvent>
+        </fdsnEvent>
         <externalOriginSubsetter>
             <classname>edu.sc.seis.sod.example.LatOMatic</classname>
             <maxLat>45</maxLat>
