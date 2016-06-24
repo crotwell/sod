@@ -818,7 +818,11 @@ public class Start {
             }
         }
         for (int i = 0; i < waveforms.length; i++) {
-            waveforms[i].notifyAll();
+            if (waveforms[i] != null) {
+                synchronized(waveforms[i]) {
+                    waveforms[i].notifyAll();
+                }
+            }
         }
         synchronized(OutputScheduler.getDefault()) {
             OutputScheduler.getDefault().notify();
