@@ -50,7 +50,7 @@ public class UserReportRetryStrategy extends ClassicRetryStrategy {
                 } else {
                     print("The "
                           + serverId
-                          + " server just produced an error ("+exc.getClass().getName()
+                          + " server just produced an error ("+exc.getClass().getName()+" "+exc.getMessage()
                           +").  SOD will continue trying it until it recovers at which point an all clear message will be issued.  If it never recovers, email sod@seis.sc.edu with this report and we can inform the server maintainer.  If you're tired of waiting, press Ctrl-C to quit.  "
                           + addlInfo);
                 }

@@ -344,7 +344,8 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         try {
             MicroSecondDate now = ClockUtil.now();
             List<CacheEvent> out = new ArrayList<CacheEvent>();
-            Quakeml qml = getQuakeML(setUpQuery(queryTime));
+            FDSNEventQuerier querier = getQuakeMLQuerier(setUpQuery(queryTime));
+            Quakeml qml = querier.getQuakeML();
             EventIterator it = qml.getEventParameters().getEvents();
             if (!it.hasNext()) {
                 logger.debug("No events returned from query.");
@@ -486,11 +487,11 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         return new edu.iris.Fissures.IfEvent.Magnitude(type, m.getMag().getValue(), contributor);
     }
 
-    Quakeml getQuakeML(FDSNEventQueryParams timeWindowQueryParams) throws MalformedURLException, IOException,
+    FDSNEventQuerier getQuakeMLQuerier(FDSNEventQueryParams timeWindowQueryParams) throws MalformedURLException, IOException,
             URISyntaxException, XMLStreamException, SeisFileException {
         FDSNEventQuerier querier = new FDSNEventQuerier(timeWindowQueryParams);
         querier.setUserAgent(getUserAgent());
-        return querier.getQuakeML();
+        return querier;
     }
 
     FDSNEventQueryParams setUpQuery(MicroSecondTimeRange queryTime) throws URISyntaxException {
