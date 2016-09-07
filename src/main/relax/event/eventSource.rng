@@ -188,12 +188,10 @@
                 <optional>
                     <ref name="originDepthRange"/>
                 </optional>
-                <optional>
                <choice>
                    <ref name="originTimeRange"/>
                    <ref name="networkTimeRange"/>
                </choice>
-                </optional>
                 <optional>
                     <ref name="magnitudeRange"/>
                 </optional>
