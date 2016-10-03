@@ -27,7 +27,13 @@ public class TauPServlet  extends HttpServlet {
         try {
             String URL = req.getRequestURL().toString();
             System.out.println("GET: " + URL);
-            resp.setContentType("application/vnd.api+json");
+            if (req.getHeader("accept") != null && req.getHeader("accept").contains("application/vnd.api+json")) {
+                resp.setContentType("application/vnd.api+json");
+                System.out.println("      contentType: application/vnd.api+json");
+            } else {
+                resp.setContentType("application/json");
+                System.out.println("      contentType: application/json");
+            }
             PrintWriter writer = resp.getWriter();
             JSONWriter out = new JSONWriter(writer);
             Map<String, String[]> params = req.getParameterMap();
