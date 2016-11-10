@@ -272,8 +272,9 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         Exception latest = null;
         while (count == 0 || getRetryStrategy().shouldRetry(latest, this, count)) {
             try {
+                count++;
                 List<CacheEvent> result = internalNext(queryTime);
-                if (count > 0) {
+                if (count > 1) {
                     getRetryStrategy().serverRecovered(this);
                 }
                 return result.toArray(new CacheEvent[0]);
