@@ -11,7 +11,7 @@ import edu.sc.seis.sod.subsetter.Subsetter;
  * 
  * Created: Thu Dec 13 17:15:47 2001
  * 
- * @author <a href="mailto:">Philip Crotwell</a>
+ * @author Philip Crotwell
  * @version
  */
 public interface ChannelSubsetter extends Subsetter {

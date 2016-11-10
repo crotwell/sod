@@ -1,7 +1,7 @@
 
 
 group = 'edu.sc.seis'
-version = '3.2.7-SNAPSHOT'
+version = '3.2.8-SNAPSHOT'
 // also remember to change in sod.Version class
 
 apply plugin:'application'
@@ -154,7 +154,6 @@ def getDExtras() {
                 'java.awt.headless':'true', 
                 'org.omg.CORBA.ORBClass':'org.jacorb.orb.ORB', 
                 'swing.volatileImageBufferEnabled':'false', 
-                'java.endorsed.dirs':'${LIB}/endorsed', 
                 'jacorb.connection.client.pending_reply_timeout':'20000',
                 'jacorb.connection.client.idle_timeout':'90000',
                 'jacorb.home':'${SOD_HOME}' ,
@@ -279,11 +278,6 @@ task transformGrouper(type: XSLT) {
 }
 
 
-javadoc.options.links('http://wiki.fissuresidl.googlecode.com/hg/javadoc/')
-javadoc.options.links('http://wiki.fissuresimpl.googlecode.com/hg/javadoc/')
-javadoc.options.links('http://wiki.fissuresutil.googlecode.com/hg/javadoc/')
-javadoc.options.links('http://wiki.seedcodec.googlecode.com/hg/javadoc/')
-javadoc.options.links('http://wiki.seisfile.googlecode.com/hg/javadoc/')
 
 doc.dependsOn(copySodSite)
 assemble.dependsOn(tarDist)

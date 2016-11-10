@@ -9,7 +9,7 @@ public interface Source {
      *
      * For non-corba servers, this string can be anything that seems reasonable and is relatively unique
      * 
-     * @returns a <code>String</code> value
+     * @return a <code>String</code> value
      */
     public abstract String getName();
     

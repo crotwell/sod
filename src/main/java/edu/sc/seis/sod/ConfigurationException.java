@@ -6,8 +6,7 @@ package edu.sc.seis.sod;
  * 
  * Created: Fri Mar 15 15:34:04 2002
  * 
- * @author <a href="mailto:">Philip Crotwell</a>
- * @version
+ * @author Philip Crotwell
  */
 public class ConfigurationException extends Exception {
 

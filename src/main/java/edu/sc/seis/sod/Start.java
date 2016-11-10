@@ -422,6 +422,10 @@ public class Start {
         return waveforms;
     }
 
+    public static WaveformArm[] getWaveformArmArray() {
+        return waveforms;
+    }
+
     public static RunProperties getRunProps() {
         if(runProps == null) {
             try {
@@ -572,10 +576,20 @@ public class Start {
     private void startArms() throws Exception {
         if (waveformRecipe != null) {
             if (runProps.reopenSuspended()) {
-                SodDB.getSingleton().reopenSuspendedEventChannelPairs(Start.getRunProps()
+                Runnable reopenEvents = new Runnable() {
+                    public void run() {
+                        // check for ECPairs that need to be reprocessed
+                        SodDB.getSingleton().reopenSuspendedEventChannelPairs(Start.getRunProps()
                                                                               .getEventChannelPairProcessing(),
-                                                                      (waveformRecipe instanceof LocalSeismogramArm));
+                                                                              (waveformRecipe instanceof LocalSeismogramArm));
+                        SodDB.commit();
+                    }
+                    
+                };
+                Thread t = new Thread(reopenEvents, "Reopen Suspended ECPS");
+                t.start();
             }
+
             // check for events that are "in progress" due to halt or reset
             StatefulEventDB eventDb = StatefulEventDB.getSingleton();
             for (StatefulEvent ev = eventDb.getNext(Standing.IN_PROG); ev != null; ev = eventDb.getNext(Standing.IN_PROG)) {
@@ -822,6 +836,13 @@ public class Start {
             if (arms[i] != null) {
                 synchronized(arms[i]) {
                     arms[i].notifyAll();
+                }
+            }
+        }
+        for (int i = 0; i < waveforms.length; i++) {
+            if (waveforms[i] != null) {
+                synchronized(waveforms[i]) {
+                    waveforms[i].notifyAll();
                 }
             }
         }

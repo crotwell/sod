@@ -40,6 +40,7 @@ import edu.iris.Fissures.Time;
 import edu.iris.Fissures.Unit;
 import edu.iris.Fissures.model.BoxAreaImpl;
 import edu.iris.Fissures.model.GlobalAreaImpl;
+import edu.iris.Fissures.model.ISOTime;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.TimeInterval;
@@ -491,7 +492,7 @@ public class SodUtil {
                                           int minute,
                                           int second,
                                           boolean ceiling) {
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+        Calendar cal = Calendar.getInstance(ISOTime.UTC);
         cal.set(Calendar.YEAR, year);
         fillInField(Calendar.MONTH, month - 1, ceiling, cal);
         fillInField(Calendar.DAY_OF_MONTH, day, ceiling, cal);

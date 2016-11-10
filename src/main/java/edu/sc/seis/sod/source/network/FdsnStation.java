@@ -48,13 +48,15 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.NetworkIterator;
 import edu.sc.seis.seisFile.fdsnws.stationxml.StationIterator;
 import edu.sc.seis.sod.BuildVersion;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.source.SodSourceException;
+import edu.sc.seis.sod.source.event.FdsnEvent;
 import edu.sc.seis.sod.subsetter.station.StationPointDistance;
 
 public class FdsnStation extends AbstractNetworkSource {
 
     public FdsnStation() {
-        super("default", -1);
+        super("defaultFDSNNetwork", -1);
     }
     
     public FdsnStation(String name, int retries, FDSNStationQueryParams queryParams) {
@@ -400,12 +402,15 @@ public class FdsnStation extends AbstractNetworkSource {
         int count = 0;
         SeisFileException latest = null;
         FDSNStationXML out = null;
-        while (count == 0 || getRetryStrategy().shouldRetry(latest, this, count++)) {
+        while (count == 0 || getRetryStrategy().shouldRetry(latest, this, count)) {
             try {
-                out = setupQuerier(staQP).getFDSNStationXML();
+                // querier is closed when the FDSNStationXML is closed internal to it
+                FDSNStationQuerier querier = setupQuerier(staQP);
+                out = querier.getFDSNStationXML();
                 if (count > 0) { getRetryStrategy().serverRecovered(this); }
                 return out;
             } catch(SeisFileException e) {
+                count++;
                 if (out != null) {
                     out.closeReader();
                     out = null;
@@ -416,6 +421,10 @@ public class FdsnStation extends AbstractNetworkSource {
                     // try again on IOException
                 } else if (e instanceof FDSNWSException && ((FDSNWSException)e).getHttpResponseCode() != 200) {
                     latest = e;
+                    if (((FDSNWSException)e).getHttpResponseCode() == 400) {
+                        // badly formed query, cowardly quit
+                        Start.simpleArmFailure(Start.getNetworkArm(), FdsnEvent.BAD_PARAM_MESSAGE+" "+((FDSNWSException)e).getMessage()+" on "+((FDSNWSException)e).getTargetURI());
+                    }
                 } else {
                     throw new RuntimeException(e);
                 }

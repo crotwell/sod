@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sod>
     <eventArm>
-        <eventFinder>
-            <name>IRIS_EventDC</name>
-            <dns>edu/iris/dmc</dns>
+        <fdsnEvent>
             <originTimeRange>
                 <startTime>
                     <year>2003</year>
@@ -19,8 +17,7 @@
             <magnitudeRange>
                 <min>5</min>
             </magnitudeRange>
-            <catalog>NEIC PDE</catalog>
-        </eventFinder>
+        </fdsnEvent>
         <removeEventDuplicate/>
         <originScript type="jython">
            # preferredOrigin.getLocation().depth.getValue() / preferredOrigin.magnitudeList.get(0).value > 10
@@ -29,10 +26,8 @@
         <printlineEventProcess/>
     </eventArm>
     <networkArm>
-        <networkFinder>
-            <name>IRIS_NetworkDC</name>
-            <dns>edu/iris/dmc</dns>
-        </networkFinder>
+        <fdsnStation>
+        </fdsnStation>
         <networkAND>
             <networkOR>	
                 <networkCode>IU</networkCode>
@@ -129,10 +124,7 @@
                 else:
                    result = True
         </requestScript>
-        <fixedDataCenter>
-            <name>IRIS_PondDataCenter</name>
-            <dns>edu/iris/dmc</dns>
-        </fixedDataCenter>
+        <fdsnDataSelect/>
         <someCoverage/>
         <seismogramScript type="jython" >
         from jarray import array

@@ -10,8 +10,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * Created: Tue Jul  2 09:32:52 2002
  *
- * @author <a href="mailto:">Philip Crotwell</a>
- * @version
+ * @author Philip Crotwell
  */
 
 public class SimpleContentHandler extends DefaultHandler {

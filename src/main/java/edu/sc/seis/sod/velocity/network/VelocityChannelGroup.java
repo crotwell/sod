@@ -55,7 +55,7 @@ public class VelocityChannelGroup {
 
     /**
      * Gets the horizontals as X and Y, so that the first channel's azimuth is
-     * the seconds + 90 degrees, ie x -> east and y -> north. If this is not possible, then a zero length
+     * the seconds + 90 degrees, ie x == east and y == north. If this is not possible, then a zero length
      * array is returned.
      */
     public List<VelocityChannel> getHorizontalXY() {

@@ -10,8 +10,7 @@ import edu.sc.seis.sod.subsetter.Subsetter;
 /**
  * LocalSeismogramProcess.java Created: Thu Dec 13 18:03:03 2001
  * 
- * @author <a href="mailto:">Philip Crotwell </a>
- * @version
+ * @author Philip Crotwell
  */
 public interface WaveformProcess extends Subsetter {
 

@@ -13,7 +13,7 @@ import edu.sc.seis.sod.subsetter.AreaSubsetter;
 /**
  * SiteArea.java Created: Thu Mar 14 14:02:33 2002
  * 
- * @author <a href="mailto:">Philip Crotwell </a>
+ * @author Philip Crotwell
  * @version This class is used to represent the subsetter SiteArea. Site Area
  *          implements ChannelSubsetter and can be any one of GlobalArea or BoxArea
  *          or PointDistanceArea or FlinneEngdahlArea.

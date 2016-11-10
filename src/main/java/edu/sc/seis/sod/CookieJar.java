@@ -15,8 +15,7 @@ import org.apache.velocity.context.Context;
  * velocity template files. The Event and Channel are placed in the context with
  * names "sod_event" and "sod_channel". Created: Thu Dec 13 18:18:48 2001
  * 
- * @author <a href="mailto:">Philip Crotwell </a>
- * @version
+ * @author Philip Crotwell
  */
 public class CookieJar implements Context {
 

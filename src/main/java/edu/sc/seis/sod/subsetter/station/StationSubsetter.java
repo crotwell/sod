@@ -10,8 +10,7 @@ import edu.sc.seis.sod.subsetter.Subsetter;
  *
  * Created: Thu Dec 13 17:05:33 2001
  *
- * @author <a href="mailto:">Philip Crotwell</a>
- * @version
+ * @author Philip Crotwell
  */
 
 public interface StationSubsetter extends Subsetter{

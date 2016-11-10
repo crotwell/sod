@@ -89,7 +89,7 @@ public abstract class AbstractVelocityStatus implements WaveformMonitor,
      */
     public abstract int getNumDirDeep();
 
-    /** loads the default template, given by the <template>tag in the config. */
+    /** loads the default template, given by the &lt;template&gt; tag in the config. */
     protected String loadTemplate() throws IOException {
         return loadTemplate(templateName);
     }
@@ -111,7 +111,7 @@ public abstract class AbstractVelocityStatus implements WaveformMonitor,
     }
 
     /**
-     * Schedules the default template (from the <template>element in the config,
+     * Schedules the default template, from the &lt;template&gt; element in the config,
      * for output.
      */
     public void scheduleOutput(final String filename, final Context context) {

@@ -16,7 +16,6 @@ import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.fissuresUtil.bag.ButterworthFilter;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.time.RangeTool;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
@@ -63,9 +62,10 @@ public class OregonDSPFilter implements WaveformProcess {
                         epsilon = Double.parseDouble(XMLUtil.getText(element));
                     } else if (element.getTagName().equals("filterType")) {
                         if (XMLUtil.getText(element).equals("CAUSAL")) {
-                            filterType = ButterworthFilter.CAUSAL;
+                            filterType = CAUSAL;
                         } else {
-                            filterType = ButterworthFilter.NONCAUSAL;
+                            filterType = NONCAUSAL;
+                            throw new ConfigurationException("Noncausal filter not yet implemented");
                         }
                     } else if (element.getTagName().equals("butterworth")) {
                         filterName = element.getTagName();
@@ -214,12 +214,16 @@ public class OregonDSPFilter implements WaveformProcess {
 
     double epsilon = 1;
 
-    QuantityImpl lowFreqCorner;
+    QuantityImpl lowFreqCorner = new QuantityImpl(1e-99, UnitImpl.HERTZ);
 
-    QuantityImpl highFreqCorner;
+    QuantityImpl highFreqCorner = new QuantityImpl(1e99, UnitImpl.HERTZ);
 
     int numPoles = 2;
 
-    int filterType = ButterworthFilter.NONCAUSAL;
+    int filterType = NONCAUSAL;
+    
+    public static final int CAUSAL = 0;
+    
+    public static final int NONCAUSAL = 1;
 
 }

@@ -11,8 +11,7 @@ import edu.sc.seis.sod.status.StringTree;
  *
  * Created: Thu Dec 13 17:09:18 2001
  *
- * @author <a href="mailto:">Philip Crotwell</a>
- * @version
+ * @author Philip Crotwell
  */
 
 public class  PassStation implements StationSubsetter{

@@ -168,10 +168,17 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                             queryParams.area(box.min_latitude, box.max_latitude, box.min_longitude, box.max_longitude);
                         } else if (area instanceof PointDistanceArea) {
                             PointDistanceArea donut = (PointDistanceArea)area;
+                            if ((float)((QuantityImpl)donut.min_distance).getValue(UnitImpl.DEGREE) > 0) {
                             queryParams.donut(donut.latitude,
                                               donut.longitude,
                                               (float)((QuantityImpl)donut.min_distance).getValue(UnitImpl.DEGREE),
                                               (float)((QuantityImpl)donut.max_distance).getValue(UnitImpl.DEGREE));
+                            } else {
+                                // don't send minradius if only care about maxradius
+                                queryParams.ring(donut.latitude,
+                                              donut.longitude,
+                                              (float)((QuantityImpl)donut.max_distance).getValue(UnitImpl.DEGREE));
+                            }
                         } else {
                             throw new ConfigurationException("Area of class " + area.getClass().getName()
                                     + " not understood");
@@ -260,16 +267,19 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
     public CacheEvent[] next() {
         MicroSecondTimeRange queryTime = getQueryTime();
         logger.debug(getName() + ".next() called for " + queryTime);
+        logger.debug("eventTimeRangeSupplier.getMSTR(): "+eventTimeRangeSupplier.getMSTR());
         int count = 0;
         Exception latest = null;
-        while (count == 0 || getRetryStrategy().shouldRetry(latest, this, count++)) {
+        while (count == 0 || getRetryStrategy().shouldRetry(latest, this, count)) {
             try {
+                count++;
                 List<CacheEvent> result = internalNext(queryTime);
-                if (count > 0) {
+                if (count > 1) {
                     getRetryStrategy().serverRecovered(this);
                 }
                 return result.toArray(new CacheEvent[0]);
             } catch(SeisFileException e) {
+                count++;
                 latest = e;
                 Throwable rootCause = AbstractFDSNQuerier.extractRootCause(e);
                 if (rootCause instanceof IOException) {
@@ -281,16 +291,27 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                         // also make the increaseThreashold smaller so we are
                         // not so aggressive
                         // about expanding the time window
-                        decreaseQueryTimeWidth();
-                        increaseThreashold /= 2;
+                        // but only do this if the query is for more than one day 
+                        // to avoid many tiny requests
+                        if (getIncrement().greaterThan(MIN_INCREMENT)) {
+                            decreaseQueryTimeWidth();
+                            if (increaseThreashold > 2) {
+                                increaseThreashold /= 2;
+                            }
+                        }
                         return new CacheEvent[0];
                     }
                 } else if (e instanceof FDSNWSException && ((FDSNWSException)e).getHttpResponseCode() != 200) {
                     latest = e;
+                    if (((FDSNWSException)e).getHttpResponseCode() == 400) {
+                        // badly formed query, cowardly quit
+                        Start.simpleArmFailure(Start.getEventArm(), BAD_PARAM_MESSAGE+" "+((FDSNWSException)e).getMessage()+" on "+((FDSNWSException)e).getTargetURI());
+                    }
                 } else {
                     throw new RuntimeException(e);
                 }
             } catch(XMLStreamException e) {
+                count++;
                 latest = e;
                 Throwable rootCause = AbstractFDSNQuerier.extractRootCause(e);
                 if (rootCause instanceof IOException) {
@@ -300,8 +321,14 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                         // also make the increaseThreashold smaller so we are
                         // not so aggressive
                         // about expanding the time window
+                        // but only do this if the query is for more than one day 
+                        // to avoid many tiny requests
+                        if (getIncrement().greaterThan(MIN_INCREMENT)) {
                         decreaseQueryTimeWidth();
-                        increaseThreashold /= 2;
+                        if (increaseThreashold > 2) {
+                            increaseThreashold /= 2;
+                        }
+                        }
                         return new CacheEvent[0];
                     }
                 } else {
@@ -318,7 +345,8 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         try {
             MicroSecondDate now = ClockUtil.now();
             List<CacheEvent> out = new ArrayList<CacheEvent>();
-            Quakeml qml = getQuakeML(setUpQuery(queryTime));
+            FDSNEventQuerier querier = getQuakeMLQuerier(setUpQuery(queryTime));
+            Quakeml qml = querier.getQuakeML();
             EventIterator it = qml.getEventParameters().getEvents();
             if (!it.hasNext()) {
                 logger.debug("No events returned from query.");
@@ -460,11 +488,11 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         return new edu.iris.Fissures.IfEvent.Magnitude(type, m.getMag().getValue(), contributor);
     }
 
-    Quakeml getQuakeML(FDSNEventQueryParams timeWindowQueryParams) throws MalformedURLException, IOException,
+    FDSNEventQuerier getQuakeMLQuerier(FDSNEventQueryParams timeWindowQueryParams) throws MalformedURLException, IOException,
             URISyntaxException, XMLStreamException, SeisFileException {
         FDSNEventQuerier querier = new FDSNEventQuerier(timeWindowQueryParams);
         querier.setUserAgent(getUserAgent());
-        return querier.getQuakeML();
+        return querier;
     }
 
     FDSNEventQueryParams setUpQuery(MicroSecondTimeRange queryTime) throws URISyntaxException {
@@ -511,6 +539,11 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
     public static final String HOST_ELEMENT = "host";
 
     public static final String PORT_ELEMENT = "port";
+    
+    public static final String BAD_PARAM_MESSAGE = "The remote web service just indicated that the query was badly formed. "
+            +"This may be because it does not support all of the parameters that SOD uses or it could be a bug in SOD. "
+            +"Check your recipe and "
+            +"if you cannot figure it out contact the developers at sod@seis.sc.edu. ";
 
     String userAgent = "SOD/" + BuildVersion.getVersion();
 

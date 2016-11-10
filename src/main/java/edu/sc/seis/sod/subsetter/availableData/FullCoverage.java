@@ -45,8 +45,8 @@ public class FullCoverage implements AvailableDataSubsetter, SodElement {
         }
         
         return new StringTreeLeaf(this,
-                                  coveragePercentage >= 100,
-                                  reason+" "+coveragePercentage
+                                  coveragePercentage > 99, // use >99 as >=100 often fails with 99.99999 coverage
+                                  reason+coveragePercentage
                                           + " percent of data covered");
     }
 

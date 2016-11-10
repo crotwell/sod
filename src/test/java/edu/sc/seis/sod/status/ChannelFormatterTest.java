@@ -7,6 +7,7 @@ import java.util.TimeZone;
 
 import junit.framework.TestCase;
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.model.ISOTime;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannel;
 import edu.sc.seis.sod.XMLConfigUtil;
@@ -33,7 +34,7 @@ public class ChannelFormatterTest extends TestCase{
 
     public void testBeginTime(){
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        sdf.setTimeZone(ISOTime.UTC);
         ChannelFormatter cf = create("<beginTime>HH:mm</beginTime>");
         assertEquals(sdf.format(new MicroSecondDate(chan.get_id().begin_time)),
                      cf.getResult(chan));

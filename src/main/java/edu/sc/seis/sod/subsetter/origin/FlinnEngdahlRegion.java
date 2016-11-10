@@ -12,9 +12,6 @@ import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
-/**
- * @author <a href="mailto:">Philip Crotwell </a>
- */
 public abstract class FlinnEngdahlRegion implements OriginSubsetter {
 
     public FlinnEngdahlRegion(Element config) {

@@ -12,12 +12,14 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.AreaSubsetter;
 
 /**
- * Created: Thu Mar 14 14:02:33 2002
- * 
- * @author <a href="mailto:">Philip Crotwell </a> This class is used to
+ * This class is used to
  *         represent the subsetter EventArea. Event Area implements
  *         EventSubsetter and can be any one of GlobalArea or BoxArea or
  *         PointDistanceArea or FlinneEngdahlArea.
+ *         
+ * Created: Thu Mar 14 14:02:33 2002
+ * 
+ * @author Philip Crotwell 
  */
 public class EventArea extends AreaSubsetter implements OriginSubsetter,
         SodElement {

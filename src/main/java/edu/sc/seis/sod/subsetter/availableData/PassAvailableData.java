@@ -11,12 +11,6 @@ import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.availableData.vector.VectorAvailableDataSubsetter;
 
-/**
- * Describe class <code>NullAvailableDataSubsetter</code> here.
- * 
- * @author <a href="mailto:">Srinivasa Telukutla </a>
- * @version 1.0
- */
 public class PassAvailableData implements AvailableDataSubsetter,
         VectorAvailableDataSubsetter {
 

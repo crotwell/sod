@@ -1,9 +1,7 @@
 <?xml version="1.0"?>
 <sod>
     <eventArm>
-        <eventFinder>
-            <name>IRIS_EventDC</name>
-            <dns>edu/iris/dmc</dns>
+        <fdsnEvent>
             <originTimeRange>
                 <startTime>
                     <year>2003</year>
@@ -19,8 +17,7 @@
             <magnitudeRange>
                 <min>5</min>
             </magnitudeRange>
-            <catalog>NEIC PDE</catalog>
-        </eventFinder>
+        </fdsnEvent>
         <printlineEventProcess><template>From server: $event</template></printlineEventProcess><originOR>
             <originAND>
                 <magnitudeRange>

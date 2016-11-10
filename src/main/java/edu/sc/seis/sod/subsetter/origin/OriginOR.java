@@ -15,8 +15,7 @@ import edu.sc.seis.sod.status.StringTreeBranch;
 /**
  * OriginOR.java Created: Thu Mar 14 14:02:33 2002
  * 
- * @author <a href="mailto:">Philip Crotwell </a>
- * @version
+ * @author Philip Crotwell
  */
 public final class OriginOR extends EventLogicalSubsetter implements
         OriginSubsetter {

@@ -11,7 +11,7 @@ import edu.sc.seis.sod.CookieJar;
 /**
  * Describe class <code>NullRequestGenerator</code> here.
  *
- * @author <a href="mailto:">Srinivasa Telukutla</a>
+ * @author Srinivasa Telukutla
  * @version 1.0
  */
 public class NullRequestGenerator implements RequestGenerator {

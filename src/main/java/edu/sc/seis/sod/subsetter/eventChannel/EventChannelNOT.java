@@ -12,12 +12,6 @@ import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
-/**
- * Describe class <code>EventChannelNOT</code> here.
- * 
- * @author <a href="mailto:">Srinivasa Telukutla </a>
- * @version 1.0
- */
 public final class EventChannelNOT extends EventChannelLogicalSubsetter
         implements EventChannelSubsetter {
 
@@ -36,4 +30,4 @@ public final class EventChannelNOT extends EventChannelLogicalSubsetter
         }
         return new StringTreeLeaf(this, true, "empty NOT");
     }
-}// EventChannelAND
+}
