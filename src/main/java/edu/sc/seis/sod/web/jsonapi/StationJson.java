@@ -100,7 +100,7 @@ public class StationJson extends AbstractJsonApiData {
     }
 
     public String formEventRelationshipURL(StationImpl sta) {
-        String out = baseUrl+"/stations/"+getId()+"/events";
+        String out = baseUrl+"/stations/"+getId()+"/quakes";
         return out;
     }
     public String formChannelRelationshipURL(StationImpl sta) {

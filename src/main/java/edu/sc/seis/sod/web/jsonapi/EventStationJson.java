@@ -27,7 +27,7 @@ public class EventStationJson extends AbstractJsonApiData {
 
     @Override
     public String getType() {
-        return "event-station";
+        return "quake-station";
     }
 
     @Override
@@ -42,12 +42,12 @@ public class EventStationJson extends AbstractJsonApiData {
 
     @Override
     public void encodeRelationships(JSONWriter out) throws JSONException {
-        out.key("event").object();
+        out.key("quake").object();
         out.key("data").object();
         out.key("id").value("" + esp.getEventDbId());
-        out.key("type").value("event");
+        out.key("type").value("quake");
         out.key("links").object();
-        out.key("self").value(baseUrl + "/events/" + esp.getEventDbId());
+        out.key("self").value(baseUrl + "/quakes/" + esp.getEventDbId());
         out.endObject(); // end links
         out.endObject(); // end data
         out.endObject(); // end event
@@ -67,7 +67,7 @@ public class EventStationJson extends AbstractJsonApiData {
             for (AbstractEventChannelPair ecp : ecpList) {
                 out.object();
                 out.key("id").value(ecp.getDbid());
-                out.key("type").value("event-vector");
+                out.key("type").value("quake-vector");
                 out.endObject();
             }
             out.endArray();
@@ -75,7 +75,7 @@ public class EventStationJson extends AbstractJsonApiData {
         } else {
             out.key("ecps").object();
             out.key("links").object();
-            out.key("related").value(baseUrl + "/event-stations/" + getId() + "/event-vectors");
+            out.key("related").value(baseUrl + "/quake-stations/" + getId() + "/quake-vectors");
             out.endObject();// links
             out.endObject();// ecps
         }

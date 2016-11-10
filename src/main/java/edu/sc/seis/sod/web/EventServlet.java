@@ -84,6 +84,8 @@ public class EventServlet extends HttpServlet {
                     throw new RuntimeException(e);
                 }
             } else {
+                matcher = allEvents.matcher(URL);
+                if (matcher.matches()) {
                 // logger.debug("doGet all");
                 try {
                     List<StatefulEvent> events = StatefulEventDB.getSingleton().getAll();
@@ -95,12 +97,19 @@ public class EventServlet extends HttpServlet {
                 } catch(JSONException e) {
                     throw new ServletException(e);
                 }
+                } else {
+                    JsonApi.encodeError(out, "bad url for servlet: regex=" + allEvents +" or "+singleEvent+" or "+eventStations);
+                    writer.close();
+                    resp.sendError(500);
+                }
             }
         }
         writer.close();
     }
+    
+    Pattern allEvents = Pattern.compile(".*/quakes");
 
-    Pattern singleEvent = Pattern.compile(".*/events/([0-9]+)");
+    Pattern singleEvent = Pattern.compile(".*/quakes/([0-9]+)");
 
-    Pattern eventStations = Pattern.compile(".*/events/([0-9]+)/stations");
+    Pattern eventStations = Pattern.compile(".*/quakes/([0-9]+)/stations");
 }

@@ -102,7 +102,7 @@ public class EventVectorServlet extends HttpServlet {
         return esp;
     }
 
-    Pattern eventStationPattern = Pattern.compile(".*/event-vectors/([0-9]+)");
+    Pattern eventStationPattern = Pattern.compile(".*/quake-vectors/([0-9]+)");
 
-    Pattern mseedPattern = Pattern.compile(".*/event-vectors/([0-9]+)/mseed");
+    Pattern mseedPattern = Pattern.compile(".*/quake-vectors/([0-9]+)/mseed");
 }

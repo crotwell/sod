@@ -136,7 +136,7 @@ public class StationsServlet extends HttpServlet {
 
     Pattern stationPattern = Pattern.compile(".*" + NetworkServlet.stationIdPatternStr);
 
-    Pattern stationEventsPattern = Pattern.compile(".*" + NetworkServlet.stationIdPatternStr + "/events");
+    Pattern stationEventsPattern = Pattern.compile(".*" + NetworkServlet.stationIdPatternStr + "/quakes");
 
     Pattern stationChannelsPattern = Pattern.compile(".*" + NetworkServlet.stationIdPatternStr + "/channels");
 }

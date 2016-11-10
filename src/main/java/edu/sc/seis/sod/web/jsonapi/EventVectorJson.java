@@ -20,7 +20,7 @@ public class EventVectorJson extends AbstractJsonApiData {
 
     @Override
     public String getType() {
-        return "event-vector";
+        return "quake-vector";
     }
 
     @Override
@@ -41,10 +41,10 @@ public class EventVectorJson extends AbstractJsonApiData {
 
     @Override
     public void encodeRelationships(JSONWriter out) throws JSONException {
-        out.key("event").object();
+        out.key("quake").object();
         out.key("data").object();
         out.key("id").value("" + ecp.getEventDbId());
-        out.key("type").value("event");
+        out.key("type").value("quake");
         out.endObject(); // end data
         out.endObject(); // end event
 

@@ -18,7 +18,7 @@ public class EventJson extends AbstractJsonApiData {
 
     @Override
     public String getType() {
-        return "event";
+        return "quake";
     }
 
     @Override
@@ -112,7 +112,7 @@ public class EventJson extends AbstractJsonApiData {
     }
 
     public String formStationRelationshipURL() {
-        String out = baseUrl+"/events/"+getId()+"/stations";
+        String out = baseUrl+"/quakes/"+getId()+"/stations";
         return out;
         
     }

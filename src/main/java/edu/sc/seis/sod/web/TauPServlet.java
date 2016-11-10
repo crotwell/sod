@@ -13,9 +13,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
+import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
+import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
 import edu.sc.seis.fissuresUtil.bag.TauPUtil;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
+import edu.sc.seis.fissuresUtil.database.NotFound;
+import edu.sc.seis.fissuresUtil.hibernate.EventDB;
 import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
 import edu.sc.seis.sod.web.jsonapi.TauPJson;
 
@@ -56,6 +61,14 @@ public class TauPServlet  extends HttpServlet {
                 List<Arrival> arrivalList = taup.calcTravelTimes(distDeg, depth, phases);
                 TauPJson json = new TauPJson(WebAdmin.getBaseUrl());
                 json.encode(arrivalList, out);
+            } else if (params.containsKey(STATION) && params.containsKey(EVENT)) {
+                int stationDbid = Integer.parseInt(params.get(STATION)[0]);
+                StationImpl sta = NetworkDB.getSingleton().getStation(stationDbid);
+                int eventDbid = Integer.parseInt(params.get(EVENT)[0]);
+                CacheEvent evt = EventDB.getSingleton().getEvent(eventDbid);
+                List<Arrival> arrivalList = taup.calcTravelTimes(sta, evt.getPreferred(), phases);
+                TauPJson json = new TauPJson(WebAdmin.getBaseUrl());
+                json.encode(arrivalList, out);
             }
             writer.close();
         } catch(TauModelException e) {
@@ -63,6 +76,10 @@ public class TauPServlet  extends HttpServlet {
         } catch(JSONException e) {
             throw new ServletException(e);
         } catch(NumberFormatException e) {
+            throw new ServletException(e);
+        } catch(NotFound e) {
+            throw new ServletException(e);
+        } catch(NoPreferredOrigin e) {
             throw new ServletException(e);
         } finally {
             NetworkDB.rollback();
@@ -74,4 +91,6 @@ public class TauPServlet  extends HttpServlet {
     public static final String PHASES = "phases";
     public static final String[] DEFAULT_PHASES = {"p", "s", "P", "S"};
     public static final String DISTDEG = "distdeg";
+    public static final String STATION = "station";
+    public static final String EVENT = "event";
 }

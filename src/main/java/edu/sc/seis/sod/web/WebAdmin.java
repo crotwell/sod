@@ -50,12 +50,12 @@ public class WebAdmin implements ArmListener{
         servlets.setEnsureDefaultServlet(false);
         servlets.addServletWithMapping(ArmStatusServlet.class, "/api/arms");
 
-        addServlets(servlets, EventServlet.class, "events" );
+        addServlets(servlets, EventServlet.class, "quakes" );
         addServlets(servlets, NetworkServlet.class, "networks" );
         addServlets(servlets, StationsServlet.class, "stations" );
         addServlets(servlets, ChannelServlet.class, "channels" );
-        addServlets(servlets, EventStationServlet.class, "event-stations" );
-        addServlets(servlets, EventVectorServlet.class, "event-vectors" );
+        addServlets(servlets, EventStationServlet.class, "quake-stations" );
+        addServlets(servlets, EventVectorServlet.class, "quake-vectors" );
         addServlets(servlets, WaveformServlet.class, "waveform" );
         addServlets(servlets, WaveformServlet.class, "waveforms" );
         addServlets(servlets, TauPServlet.class, "taup");

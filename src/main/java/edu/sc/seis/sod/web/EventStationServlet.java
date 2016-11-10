@@ -82,7 +82,7 @@ public class EventStationServlet extends HttpServlet {
         AbstractHibernateDB.rollback();
     }
 
-    Pattern eventStationPattern = Pattern.compile(".*/event-stations/([0-9]+)");
+    Pattern eventStationPattern = Pattern.compile(".*/quake-stations/([0-9]+)");
 
-    Pattern eventVectorPattern = Pattern.compile(".*/event-stations/([0-9]+)/event-vectors");
+    Pattern eventVectorPattern = Pattern.compile(".*/quake-stations/([0-9]+)/quake-vectors");
 }
