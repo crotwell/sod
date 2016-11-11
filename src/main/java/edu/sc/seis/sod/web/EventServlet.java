@@ -46,14 +46,14 @@ public class EventServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String URL = req.getRequestURL().toString();
-        System.out.println("GET: " + URL);
+        logger.info("GET: " + URL);
         Matcher matcher = singleEvent.matcher(URL);
         if (req.getHeader("accept") != null && req.getHeader("accept").contains("application/vnd.api+json")) {
             resp.setContentType("application/vnd.api+json");
-            System.out.println("      contentType: application/vnd.api+json");
+            logger.info("      contentType: application/vnd.api+json");
         } else {
             resp.setContentType("application/json");
-            System.out.println("      contentType: application/json");
+            logger.info("      contentType: application/json");
         }
         PrintWriter writer = resp.getWriter();
         JSONWriter out = new JSONWriter(writer);
@@ -98,6 +98,7 @@ public class EventServlet extends HttpServlet {
                     throw new ServletException(e);
                 }
                 } else {
+                    logger.warn("bad url for servlet: regex=" + allEvents +" or "+singleEvent+" or "+eventStations);
                     JsonApi.encodeError(out, "bad url for servlet: regex=" + allEvents +" or "+singleEvent+" or "+eventStations);
                     writer.close();
                     resp.sendError(500);
@@ -112,4 +113,6 @@ public class EventServlet extends HttpServlet {
     Pattern singleEvent = Pattern.compile(".*/quakes/([0-9]+)");
 
     Pattern eventStations = Pattern.compile(".*/quakes/([0-9]+)/stations");
+    
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(EventServlet.class);
 }

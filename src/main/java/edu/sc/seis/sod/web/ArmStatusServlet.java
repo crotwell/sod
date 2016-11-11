@@ -43,13 +43,13 @@ public class ArmStatusServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String URL = req.getRequestURL().toString();
-        System.out.println("GET: " + URL);
+        logger.info("GET: " + URL);
         if (req.getHeader("accept") != null && req.getHeader("accept").contains("application/vnd.api+json")) {
             resp.setContentType("application/vnd.api+json");
-            System.out.println("      contentType: application/vnd.api+json");
+            logger.info("      contentType: application/vnd.api+json");
         } else {
             resp.setContentType("application/json");
-            System.out.println("      contentType: application/json");
+            logger.info("      contentType: application/json");
         }
         PrintWriter writer = resp.getWriter();
         JSONWriter out = new JSONWriter(writer);
@@ -68,6 +68,11 @@ public class ArmStatusServlet extends HttpServlet {
             if (matcher.matches()) {
                 SodConfig config = SodDB.getSingleton().getCurrentConfig();
                 String recipe = config.getConfig();
+            } else {
+                logger.warn("Bad URL for servlet: "+URL);
+                JsonApi.encodeError(out, "bad url for servlet: " + URL);
+                writer.close();
+                resp.sendError(500);
             }
         }
         writer.close();
@@ -97,6 +102,8 @@ public class ArmStatusServlet extends HttpServlet {
 
     Pattern armsPattern = Pattern.compile(".*/arms");
     Pattern recipePattern = Pattern.compile(".*/arms/([^/]+)/recipe");
+    
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(ArmStatusServlet.class);
     
 }
 
@@ -158,4 +165,5 @@ class LastWaveformStatus implements WaveformMonitor {
     public void update(EventNetworkPair ecp) {
         this.lastEventNetwork = ecp;
     }
+    
 }

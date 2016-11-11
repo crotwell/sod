@@ -39,13 +39,13 @@ public class NetworkServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             String URL = req.getRequestURL().toString();
-            System.out.println("GET: " + URL);
+            logger.info("GET: " + URL);
             if (req.getHeader("accept") != null && req.getHeader("accept").contains("application/vnd.api+json")) {
                 resp.setContentType("application/vnd.api+json");
-                System.out.println("      contentType: application/vnd.api+json");
+                logger.info("      contentType: application/vnd.api+json");
             } else {
                 resp.setContentType("application/json");
-                System.out.println("      contentType: application/json");
+                logger.info("      contentType: application/json");
             }
             PrintWriter writer = resp.getWriter();
             JSONWriter out = new JSONWriter(writer);
@@ -89,6 +89,11 @@ public class NetworkServlet extends HttpServlet {
                                 String staCode = matcher.group(7);
                                 StationImpl sta = netdb.getStationByCodes(netCode, staCode).get(0);
                                 JsonApi.encodeJson(out, new StationJson(sta, baseUrl));
+                            } else {
+                                logger.warn("Bad URL for servlet: "+URL);
+                                JsonApi.encodeError(out, "bad url for servlet: " + URL);
+                                writer.close();
+                                resp.sendError(500);
                             }
                         }
                     }
@@ -140,4 +145,6 @@ public class NetworkServlet extends HttpServlet {
     Pattern stationPattern2 = Pattern.compile(".*/networks/([A-Z0-9]+).([A-Z0-9]+)");
 
     Pattern channelPattern = Pattern.compile(".*/networks/([A-Z0-9]+).([A-Z0-9]+).([A-Z0-9][A-Z0-9]).([A-Z0-9][A-Z0-9][A-Z0-9])");
+
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(NetworkServlet.class);
 }

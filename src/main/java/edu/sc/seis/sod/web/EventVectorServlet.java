@@ -38,7 +38,7 @@ public class EventVectorServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String URL = req.getRequestURL().toString();
-        System.out.println("GET: " + URL);
+        logger.info("GET: " + URL);
         Matcher m = mseedPattern.matcher(URL);
         if (m.matches()) {
             // raw miniseed
@@ -75,10 +75,10 @@ public class EventVectorServlet extends HttpServlet {
         } else {
             if (req.getHeader("accept") != null && req.getHeader("accept").contains("application/vnd.api+json")) {
                 resp.setContentType("application/vnd.api+json");
-                System.out.println("      contentType: application/vnd.api+json");
+                logger.info("      contentType: application/vnd.api+json");
             } else {
                 resp.setContentType("application/json");
-                System.out.println("      contentType: application/json");
+                logger.info("      contentType: application/json");
             }
             PrintWriter writer = resp.getWriter();
             JSONWriter out = new JSONWriter(writer);
@@ -88,7 +88,10 @@ public class EventVectorServlet extends HttpServlet {
                 EventVectorJson jsonData = new EventVectorJson(ecp, WebAdmin.getBaseUrl());
                 JsonApi.encodeJson(out, jsonData);
             } else {
-                JsonApi.encodeError(out, "url does not match " + eventStationPattern.pattern());
+                logger.warn("Bad URL for servlet: "+URL);
+                JsonApi.encodeError(out, "bad url for servlet: " + URL);
+                writer.close();
+                resp.sendError(500);
             }
             writer.close();
         }
@@ -105,4 +108,6 @@ public class EventVectorServlet extends HttpServlet {
     Pattern eventStationPattern = Pattern.compile(".*/quake-vectors/([0-9]+)");
 
     Pattern mseedPattern = Pattern.compile(".*/quake-vectors/([0-9]+)/mseed");
+    
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(EventVectorServlet.class);
 }

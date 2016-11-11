@@ -69,7 +69,7 @@ public class WebAdmin implements ArmListener{
                                Request baseRequest,
                                HttpServletRequest request,
                                HttpServletResponse response) throws IOException, ServletException {
-                System.out.println("missed get: "+request.getRequestURL());
+                logger.warn("missed get: "+request.getRequestURL());
                 super.handle(target, baseRequest, request, response);
             }
             

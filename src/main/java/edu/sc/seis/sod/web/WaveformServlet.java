@@ -47,7 +47,7 @@ public class WaveformServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String URL = req.getRequestURL().toString();
-        System.out.println("GET: " + URL);
+        logger.info("GET: " + URL);
         Matcher m = mseedPattern.matcher(URL);
         if (m.matches()) {
             // raw miniseed
@@ -65,9 +65,9 @@ public class WaveformServlet extends HttpServlet {
             }
             resp.setContentType("application/vnd.fdsn.mseed");
             OutputStream outBinary = resp.getOutputStream();
-            System.out.println("SeisFileRef size: "+seisRefList.size());
+            logger.info("SeisFileRef size: "+seisRefList.size());
             for (EventSeismogramFileReference ref : seisRefList) {
-                System.out.println("FileRef: "+ref.getFilePath());
+                logger.info("FileRef: "+ref.getFilePath());
                 try {
                     if (SeismogramFileTypes.fromInt(ref.getFileType()).equals(SeismogramFileTypes.MSEED)) {
                         BufferedInputStream bufIn = new BufferedInputStream(ref.getFilePathAsURL().openStream());
@@ -78,7 +78,12 @@ public class WaveformServlet extends HttpServlet {
                         }
                         bufIn.close();
                     } else {
-                        System.err.println("Not miniseed: "+ref.getFileType());
+                        logger.warn("Not miniseed: "+ref.getFileType());
+                        PrintWriter writer = resp.getWriter();
+                        JSONWriter out = new JSONWriter(writer);
+                        JsonApi.encodeError(out, "Waveform data not miniseed: "+ref.getFileType());
+                        resp.sendError(500);
+                        writer.close();
                     }
                 } catch(UnsupportedFileTypeException e) {
                     throw new RuntimeException("Should never happen", e);
@@ -102,4 +107,6 @@ public class WaveformServlet extends HttpServlet {
     }
 
     Pattern mseedPattern = Pattern.compile(".*/waveforms?/([0-9]+)");
+    
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(WaveformServlet.class);
 }

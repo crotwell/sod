@@ -22,6 +22,7 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.hibernate.EventDB;
 import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
+import edu.sc.seis.sod.web.jsonapi.JsonApi;
 import edu.sc.seis.sod.web.jsonapi.TauPJson;
 
 
@@ -31,13 +32,13 @@ public class TauPServlet  extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             String URL = req.getRequestURL().toString();
-            System.out.println("GET: " + URL);
+            logger.info("GET: " + URL);
             if (req.getHeader("accept") != null && req.getHeader("accept").contains("application/vnd.api+json")) {
                 resp.setContentType("application/vnd.api+json");
-                System.out.println("      contentType: application/vnd.api+json");
+                logger.info("      contentType: application/vnd.api+json");
             } else {
                 resp.setContentType("application/json");
-                System.out.println("      contentType: application/json");
+                logger.info("      contentType: application/json");
             }
             PrintWriter writer = resp.getWriter();
             JSONWriter out = new JSONWriter(writer);
@@ -69,6 +70,11 @@ public class TauPServlet  extends HttpServlet {
                 List<Arrival> arrivalList = taup.calcTravelTimes(sta, evt.getPreferred(), phases);
                 TauPJson json = new TauPJson(WebAdmin.getBaseUrl());
                 json.encode(arrivalList, out);
+            } else {
+                logger.warn("Bad URL for servlet: "+URL);
+                JsonApi.encodeError(out, "bad url for servlet: " + URL);
+                writer.close();
+                resp.sendError(500);
             }
             writer.close();
         } catch(TauModelException e) {
@@ -93,4 +99,6 @@ public class TauPServlet  extends HttpServlet {
     public static final String DISTDEG = "distdeg";
     public static final String STATION = "station";
     public static final String EVENT = "event";
+    
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(TauPServlet.class);
 }

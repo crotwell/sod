@@ -31,13 +31,13 @@ public class EventStationServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String URL = req.getRequestURL().toString();
-        System.out.println("GET: " + URL);
+        logger.info("GET: " + URL);
         if (req.getHeader("accept") != null && req.getHeader("accept").contains("application/vnd.api+json")) {
             resp.setContentType("application/vnd.api+json");
-            System.out.println("      contentType: application/vnd.api+json");
+            logger.info("      contentType: application/vnd.api+json");
         } else {
             resp.setContentType("application/json");
-            System.out.println("      contentType: application/json");
+            logger.info("      contentType: application/json");
         }
         PrintWriter writer = resp.getWriter();
         JSONWriter out = new JSONWriter(writer);
@@ -75,7 +75,10 @@ public class EventStationServlet extends HttpServlet {
                 }
                 JsonApi.encodeJson(out, jsonData);
             } else {
+                logger.warn("url does not match " + eventStationPattern.pattern());
                 JsonApi.encodeError(out, "url does not match " + eventStationPattern.pattern());
+                writer.close();
+                resp.sendError(500);
             }
         }
         writer.close();
@@ -85,4 +88,6 @@ public class EventStationServlet extends HttpServlet {
     Pattern eventStationPattern = Pattern.compile(".*/quake-stations/([0-9]+)");
 
     Pattern eventVectorPattern = Pattern.compile(".*/quake-stations/([0-9]+)/quake-vectors");
+    
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(EventStationServlet.class);
 }
