@@ -1,7 +1,7 @@
 
 
 group = 'edu.sc.seis'
-version = '3.2.8-SNAPSHOT'
+version = '3.2.8-SNAPSHOT-WEBSTATUS'
 // also remember to change in sod.Version class
 
 apply plugin:'application'
