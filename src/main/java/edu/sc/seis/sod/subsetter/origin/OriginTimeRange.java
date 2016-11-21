@@ -6,6 +6,7 @@ import edu.iris.Fissures.event.EventAttrImpl;
 import edu.iris.Fissures.event.OriginImpl;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
+import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.sod.ConfigurationException;
@@ -25,6 +26,14 @@ public class OriginTimeRange implements OriginSubsetter, MicroSecondTimeRangeSup
     private MicroSecondDateSupplier makeLoader(Element config, String time)
             throws ConfigurationException {
         Element timeEl = DOMHelper.getElement(config, time);
+        if (timeEl == null && time.indexOf("end") != -1) {
+            // if no endtime, use <future/>
+            return new MicroSecondDateSupplier() {
+                public MicroSecondDate load() {
+                    return ClockUtil.wayFuture();
+                }
+            };
+        }
         Element network = null;
         for(int i = 0; i < timeEl.getChildNodes().getLength(); i++) {
             if(timeEl.getChildNodes().item(i) instanceof Element) {

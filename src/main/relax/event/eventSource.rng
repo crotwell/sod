@@ -117,10 +117,11 @@
                      specification as to how the service URL should be formed. Most of the other parameters
                      map directly to the same parameter in the old eventFinder source. The main exception, at
                      least for queries to the IRIS DMC, is that the catalog and contributor names are not
-                     the same, and so you should refer to the web service documentation, available at
+                     the same, and so you should refer to the web service documentation for the server you are using for details. For IRIS and USGS they are available at
                      the USGS, <a href="http://earthquake.usgs.gov/fdsnws/event/1">http://earthquake.usgs.gov/fdsnws/event/1</a>,
-                     or IRIS, <a href="http://service.iris.edu/fdsnws/event/1">http://service.iris.edu/fdsnws/event/1</a>,
-                     for details.
+                     or IRIS, <a href="http://service.iris.edu/fdsnws/event/1">http://service.iris.edu/fdsnws/event/1</a>.
+                     For queries that should continue into the future, either
+                     specify the end time as &lt;endTime&gt;&lt;future/&gt;%lt/endTime&gt; or leave it out, which defaults to the same thing.
                     </description>
                     <example>
                         <fdsnEvent>

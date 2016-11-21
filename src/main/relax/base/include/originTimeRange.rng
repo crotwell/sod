@@ -9,6 +9,8 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Matches events whose time occurs within the given range</summary>
+                    <description>Matches events where the origin time lies within (inclusive) of the two time. The time may be given as an ISO time string, or the special elements &lt;now/&gt; or &lt;future/&gt; which correspond to the start time of the run and a date far into the future respectively. If the endTime is not given, it defaults to future, meaning that the event just needs to occur after the start time.
+                    </description>
                 </xsd:documentation>
             </xsd:annotation>
         <element name="startTime">
@@ -19,14 +21,16 @@
             </xsd:annotation>
             <ref name="originTime"/>
         </element>
-        <element name="endTime">
-            <xsd:annotation>
-                <example>
-                    <endTime>20021030T00:00:00.001Z</endTime>
-                </example>
-            </xsd:annotation>
-            <ref name="originTime"/>
-        </element>
+        <optional>
+            <element name="endTime">
+                <xsd:annotation>
+                    <example>
+                        <endTime>20021030T00:00:00.001Z</endTime>
+                    </example>
+                </xsd:annotation>
+                <ref name="originTime"/>
+            </element>
+        </optional>
         </element>
     </define>
     <define name="originTime">
