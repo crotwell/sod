@@ -125,8 +125,9 @@ public class Version{
       new Version("3.2.4", false),
       new Version("3.2.5", false),
       new Version("3.2.6", false),
-      new Version("3.2.7", false)
-//    new Version("3.2.8-SNAPSHOT", false)
+      new Version("3.2.7", false),
+      new Version("3.2.8", false)
+//    new Version("3.2.9-SNAPSHOT", false)
     };
 
 }
