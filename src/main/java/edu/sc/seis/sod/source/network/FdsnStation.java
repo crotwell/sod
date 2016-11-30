@@ -320,6 +320,7 @@ public class FdsnStation extends AbstractNetworkSource {
             logger.debug("getInstrumentation "+staQP.formURI());
             staxml = internalGetStationXML(staQP);
             NetworkIterator netIt = staxml.getNetworks();
+            MicroSecondTimeRange chanTR = new MicroSecondTimeRange(chan.getEffectiveTime());
             while (netIt.hasNext()) {
                 edu.sc.seis.seisFile.fdsnws.stationxml.Network n = netIt.next();
                 NetworkAttrImpl netAttr = StationXMLToFissures.convert(n);
@@ -328,15 +329,21 @@ public class FdsnStation extends AbstractNetworkSource {
                     edu.sc.seis.seisFile.fdsnws.stationxml.Station s = staIt.next();
                     StationImpl sImpl = StationXMLToFissures.convert(s, netAttr);
                     for (Channel c : s.getChannelList()) {
-                        ChannelSensitivityBundle csb = StationXMLToFissures.convert(c, sImpl);
-                        chanSensitivityMap.put(ChannelIdUtil.toString(csb.getChan().get_id()), csb.getSensitivity());
-                        // first one should be right
-                        InstrumentationImpl out = StationXMLToFissures.convertInstrumentation(c); 
-                        if (staxml != null) {
-                            staxml.closeReader();
-                            staxml = null;
+                        MicroSecondTimeRange cTR = new MicroSecondTimeRange(new MicroSecondDate(c.getStartDate()),
+                                                                            new MicroSecondDate(c.getEndDate()));
+                        if (! cTR.equals(chanTR)) {
+                            logger.info("Instrumentation channel time range not same as channel time range for "+ChannelIdUtil.toStringFormatDates(chan.getId())+": "+chanTR+" "+cTR);
+                        } else {
+                            ChannelSensitivityBundle csb = StationXMLToFissures.convert(c, sImpl);
+                            chanSensitivityMap.put(ChannelIdUtil.toString(csb.getChan().get_id()), csb.getSensitivity());
+                            // should be right channel, hopefully there was only one anyway
+                            InstrumentationImpl out = StationXMLToFissures.convertInstrumentation(c); 
+                            if (staxml != null) {
+                                staxml.closeReader();
+                                staxml = null;
+                            }
+                            return out;
                         }
-                        return out;
                     }
                 }
             }
@@ -444,6 +451,8 @@ public class FdsnStation extends AbstractNetworkSource {
         MicroSecondDate end = new MicroSecondDate(endTime);
         if (end.before(ClockUtil.now())) {
             staQP.setEndAfter(end.subtract(ONE_SECOND));
+        } else {
+            staQP.setEndAfter(ClockUtil.now());
         }
     }
     

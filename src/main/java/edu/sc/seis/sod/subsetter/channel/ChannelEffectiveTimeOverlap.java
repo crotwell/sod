@@ -26,6 +26,10 @@ public class ChannelEffectiveTimeOverlap extends EffectiveTimeOverlap implements
     public ChannelEffectiveTimeOverlap(MicroSecondDate start, MicroSecondDate end) {
         super(start, end);
     }
+    
+    public ChannelEffectiveTimeOverlap(ChannelImpl chan) {
+        this(chan.getEffectiveTime());
+    }
 
     public StringTree accept(ChannelImpl channel, NetworkSource network) {
         return new StringTreeLeaf(this, overlaps(channel.getEffectiveTime()));
