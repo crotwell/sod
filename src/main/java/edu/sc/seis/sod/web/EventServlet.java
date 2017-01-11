@@ -27,6 +27,7 @@ import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.hibernate.EventDB;
+import edu.sc.seis.sod.AbstractEventChannelPair;
 import edu.sc.seis.sod.EventStationPair;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.StatefulEvent;
@@ -74,7 +75,17 @@ public class EventServlet extends HttpServlet {
                 StatefulEvent event;
                 try {
                     event = StatefulEventDB.getSingleton().getEvent(dbid);
-                    List<EventStationPair> espList = SodDB.getSingleton().getSuccessfulESPForEvent(event);
+                    
+                    // want only successful ESP that actually have successful ECP, otherwise even-station may pass 
+                    // but no even-channels or waveforms pass
+                    List<AbstractEventChannelPair> ecpList = SodDB.getSingleton().getSuccessful(event);
+                    List<EventStationPair> espList = new ArrayList<EventStationPair>();
+                    for (AbstractEventChannelPair ecp : ecpList) {
+                        if ( ! espList.contains(ecp.getEsp())) {
+                            espList.add(ecp.getEsp());
+                        }
+                    }
+                    
                     List<JsonApiData> jsonData = new ArrayList<JsonApiData>(espList.size());
                     for (EventStationPair esp : espList) {
                         jsonData.add(new EventStationJson(esp, WebAdmin.getBaseUrl()));
