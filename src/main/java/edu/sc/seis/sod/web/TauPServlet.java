@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -14,6 +16,8 @@ import org.json.JSONException;
 import org.json.JSONWriter;
 
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
+import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
@@ -22,6 +26,7 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.hibernate.EventDB;
 import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
+import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.sod.web.jsonapi.JsonApi;
 import edu.sc.seis.sod.web.jsonapi.TauPJson;
 
@@ -63,8 +68,38 @@ public class TauPServlet  extends HttpServlet {
                 TauPJson json = new TauPJson(WebAdmin.getBaseUrl());
                 json.encode(arrivalList, out);
             } else if (params.containsKey(STATION) && params.containsKey(EVENT)) {
-                int stationDbid = Integer.parseInt(params.get(STATION)[0]);
-                StationImpl sta = NetworkDB.getSingleton().getStation(stationDbid);
+                StationImpl sta = null;
+                Matcher staMatcher = netStaCodePattern.matcher(params.get(STATION)[0]);
+                if (staMatcher.matches()) {
+                    String netCode = staMatcher.group(1);
+                    String year = staMatcher.group(3);
+                    String staCode = staMatcher.group(4);
+                    List<StationImpl> staList = NetworkDB.getSingleton().getStationByCodes(netCode, staCode);
+                    if (year == null && ! NetworkIdUtil.isTemporary(netCode)) {
+                        // perm net code, should only be one
+                        sta = staList.get(0);
+                    } else if (year == null) {
+                        JsonApi.encodeError(out, "temp netcode requires code_year: " + URL);
+                        writer.close();
+                        resp.sendError(500);
+                    } else {
+                        MicroSecondDate netBegin = new MicroSecondDate(year+"1231T23:59:59.000Z");
+                        for (StationImpl stationImpl : staList) {
+                            MicroSecondTimeRange staTR = new MicroSecondTimeRange(stationImpl.getEffectiveTime());
+                            if (staTR.contains(netBegin)) {
+                                sta = stationImpl;
+                            }
+                        }
+                    }
+                    if (sta == null) {
+                        JsonApi.encodeError(out, "station not found: " + URL);
+                        writer.close();
+                        resp.sendError(500);
+                    }
+                } else {
+                    int stationDbid = Integer.parseInt(params.get(STATION)[0]);
+                    sta = NetworkDB.getSingleton().getStation(stationDbid);   
+                }
                 int eventDbid = Integer.parseInt(params.get(EVENT)[0]);
                 CacheEvent evt = EventDB.getSingleton().getEvent(eventDbid);
                 List<Arrival> arrivalList = taup.calcTravelTimes(sta, evt.getPreferred(), phases);
@@ -91,6 +126,8 @@ public class TauPServlet  extends HttpServlet {
             NetworkDB.rollback();
         }
     }
+    
+    Pattern netStaCodePattern = Pattern.compile(NetworkServlet.networkIdStationCodeStr);
     
     public static final String MODEL = "model";
     public static final String EVDEPTH = "evdepth";

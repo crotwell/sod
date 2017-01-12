@@ -141,8 +141,9 @@ public class NetworkServlet extends HttpServlet {
 
     Pattern stationRelationshipPattern = Pattern.compile(networkPatternStr+"/relationships/stations");
 
+    public static String networkIdStationCodeStr = networkIdStr+".([A-Z0-9]+)";
     Pattern stationPattern = Pattern.compile(networkPatternStr+stationIdPatternStr);
-    Pattern stationPattern2 = Pattern.compile(".*/networks/([A-Z0-9]+).([A-Z0-9]+)");
+    Pattern stationPattern2 = Pattern.compile(".*/networks/"+networkIdStationCodeStr);
 
     Pattern channelPattern = Pattern.compile(".*/networks/([A-Z0-9]+).([A-Z0-9]+).([A-Z0-9][A-Z0-9]).([A-Z0-9][A-Z0-9][A-Z0-9])");
 
