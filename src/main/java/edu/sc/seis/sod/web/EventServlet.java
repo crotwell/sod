@@ -2,10 +2,12 @@ package edu.sc.seis.sod.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,16 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
-import edu.iris.Fissures.IfEvent.Magnitude;
-import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
-import edu.iris.Fissures.IfEvent.Origin;
-import edu.iris.Fissures.event.OriginImpl;
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.network.StationImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.database.NotFound;
-import edu.sc.seis.fissuresUtil.hibernate.EventDB;
 import edu.sc.seis.sod.AbstractEventChannelPair;
 import edu.sc.seis.sod.EventStationPair;
 import edu.sc.seis.sod.hibernate.SodDB;
@@ -36,12 +29,22 @@ import edu.sc.seis.sod.web.jsonapi.EventJson;
 import edu.sc.seis.sod.web.jsonapi.EventStationJson;
 import edu.sc.seis.sod.web.jsonapi.JsonApi;
 import edu.sc.seis.sod.web.jsonapi.JsonApiData;
-import edu.sc.seis.sod.web.jsonapi.NetworkJson;
 
 public class EventServlet extends HttpServlet {
 
     public EventServlet() {
-        // TODO Auto-generated constructor stub
+
+        Timer t = new Timer("RevCacheOMatic updater", true);
+        t.schedule(new TimerTask() {
+
+            public void run() {
+                try {
+                    updateSuccessfulEvents();
+                } catch(Throwable t) {
+                    logger.error("Trying to update seccessful events", t);
+                }
+            }
+        }, 0, 60 * 1000);
     }
 
     @Override
@@ -99,10 +102,12 @@ public class EventServlet extends HttpServlet {
                 if (matcher.matches()) {
                 // logger.debug("doGet all");
                 try {
-                    List<StatefulEvent> events = StatefulEventDB.getSingleton().getAll();
+                    List<StatefulEvent> events = eventWithSuccessfulCache;
                     List<JsonApiData> eventJsonList = new ArrayList<JsonApiData>();
                     for (StatefulEvent statefulEvent : events) {
-                        eventJsonList.add(new EventJson(statefulEvent, WebAdmin.getBaseUrl()));
+                        EventJson eventJson = new EventJson(statefulEvent, WebAdmin.getBaseUrl());
+                        eventJson.setNumSuccessful(numSuccessful.get(statefulEvent));
+                        eventJsonList.add(eventJson);
                     }
                     JsonApi.encodeJson(out, eventJsonList);
                 } catch(JSONException e) {
@@ -118,6 +123,25 @@ public class EventServlet extends HttpServlet {
         }
         writer.close();
     }
+    
+    void updateSuccessfulEvents() {
+        StatefulEventDB db = StatefulEventDB.getSingleton();
+        List<StatefulEvent> events = db.getAll();
+        for (Iterator iterator = events.iterator(); iterator.hasNext();) {
+            StatefulEvent statefulEvent = (StatefulEvent)iterator.next();
+            int numSuccess = SodDB.getSingleton().getNumSuccessful(statefulEvent);
+            if (numSuccess == 0) {
+                iterator.remove();
+            } else {
+                numSuccessful.put(statefulEvent, numSuccess);
+            }
+        }
+        eventWithSuccessfulCache = events;
+    }
+    
+    List<StatefulEvent> eventWithSuccessfulCache = new ArrayList<StatefulEvent>();
+    
+    HashMap<StatefulEvent, Integer> numSuccessful = new HashMap<StatefulEvent, Integer>();
     
     Pattern allEvents = Pattern.compile(".*/quakes");
 
