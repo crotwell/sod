@@ -7,6 +7,9 @@
 package edu.sc.seis.sod.process.waveform;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -29,6 +32,10 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Threadable;
+import edu.sc.seis.sod.measure.ListMeasurement;
+import edu.sc.seis.sod.measure.Measurement;
+import edu.sc.seis.sod.measure.ScalarMeasurement;
+import edu.sc.seis.sod.measure.TimeMeasurement;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
 /** Calculates triggers, via LongShortSignalToNoise, and checks to see if a
@@ -92,7 +99,13 @@ public class PhaseSignalToNoise  implements WaveformProcess, Threadable {
         LongShortTrigger trigger = calcTrigger(event, channel, seismograms);
         if (trigger != null) {
             if (trigger.getValue() > ratio) {
-                cookieJar.put(getCookieName(), trigger);
+                List<Measurement> trigList = new ArrayList<Measurement>();
+                trigList.add(new TimeMeasurement("when", trigger.getWhen()));
+                trigList.add(new ScalarMeasurement("value", trigger.getValue()));
+                trigList.add(new ScalarMeasurement("sta", trigger.getSTA()));
+                trigList.add(new ScalarMeasurement("lta", trigger.getLTA()));
+                ListMeasurement triggerMeasurment = new ListMeasurement(getCookieName(), trigList);
+                cookieJar.put(getCookieName(), triggerMeasurment);
                 return new WaveformResult(seismograms,
                                                  new StringTreeLeaf(this, true));
             }

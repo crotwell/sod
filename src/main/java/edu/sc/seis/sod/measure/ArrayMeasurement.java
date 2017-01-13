@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.measure;
 
+import org.json.JSONArray;
 
 public class ArrayMeasurement extends Measurement {
 
@@ -18,5 +19,11 @@ public class ArrayMeasurement extends Measurement {
         return out;
     }
     
+    @Override
+    public Object valueAsJSON() {
+        JSONArray out = new JSONArray(value);
+        return out;
+    }
+
     protected float[] value;
 }

@@ -2,6 +2,8 @@ package edu.sc.seis.sod.measure;
 
 import java.util.List;
 
+import org.json.JSONObject;
+
 
 public class ListMeasurement extends Measurement {
 
@@ -36,4 +38,16 @@ public class ListMeasurement extends Measurement {
         out += "</list>";
         return out;
     }
+
+
+    @Override
+    public Object valueAsJSON() {
+        JSONObject out = new JSONObject();
+        for (Measurement item : list) {
+            out.put(item.getName(), item.valueAsJSON());
+        }
+        return out;
+    }
+    
+    
 }

@@ -2,6 +2,8 @@ package edu.sc.seis.sod.measure;
 
 import java.io.Serializable;
 
+import org.json.JSONObject;
+
 
 public abstract class Measurement implements Serializable {
 
@@ -14,6 +16,10 @@ public abstract class Measurement implements Serializable {
     }
 
     public abstract String toXMLFragment();
+    
+    /* returns the value of the measurement as either a String, Double, Boolean, Long, or JSONObject or JSONArray.
+     * */
+    public abstract Object valueAsJSON();
 
     public String getName() {
         return name;

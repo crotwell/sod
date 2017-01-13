@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.measure;
 
+import edu.iris.Fissures.NotImplemented;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 
 public class SeismogramMeasurement extends Measurement {
@@ -16,7 +17,13 @@ public class SeismogramMeasurement extends Measurement {
 
     @Override
     public String toXMLFragment() {
-        // TODO Auto-generated method stub
-        return null;
+        throw new RuntimeException("SeismogramMeasurement.toXMLFragment() not yet implemented.");
     }
+
+    @Override
+    public Object valueAsJSON() {
+        throw new RuntimeException("SeismogramMeasurement.valueAsJSON() not yet implemented.");
+    }
+    
+    
 }
