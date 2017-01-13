@@ -60,7 +60,7 @@ public class TauPServlet  extends HttpServlet {
             }
             String[] phases = DEFAULT_PHASES;
             if (params.containsKey(PHASES)) {
-                phases = params.get(PHASES);
+                phases = params.get(PHASES)[0].split(",");
             }
             if (params.containsKey(DISTDEG)) {
                 double distDeg = Double.parseDouble(params.get(DISTDEG)[0]);
