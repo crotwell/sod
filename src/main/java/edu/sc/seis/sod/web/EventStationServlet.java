@@ -46,6 +46,11 @@ public class EventStationServlet extends HttpServlet {
             Query q = AbstractHibernateDB.getSession().createQuery("from " + EventStationPair.class.getName()
                     + " where dbid = " + m.group(1));
             EventStationPair esp = (EventStationPair)q.uniqueResult();
+            if (esp == null) {
+                JsonApi.encodeError(out, "esp not found " + m.group(1));
+                writer.close();
+                resp.sendError(500);
+            }
             q = AbstractHibernateDB.getSession().createQuery("from " + SodDB.getSingleton().getEcpClass().getName()
                     + " where esp = " + esp.getDbid() + "  and status.stageInt = " + Stage.PROCESSOR.getVal()
                     + " and status.standingInt = " + Standing.SUCCESS.getVal());
