@@ -5,6 +5,7 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
+import edu.sc.seis.fissuresUtil.bag.DistAz;
 import edu.sc.seis.sod.AbstractEventChannelPair;
 import edu.sc.seis.sod.EventStationPair;
 
@@ -33,6 +34,10 @@ public class EventStationJson extends AbstractJsonApiData {
     @Override
     public void encodeAttributes(JSONWriter out) throws JSONException {
         out.key("sod-status").value(esp.getStatus().toString());
+        DistAz distaz = new DistAz(esp.getStation(), esp.getEvent());
+        out.key("distdeg").value(distaz.getDelta());
+        out.key("azimuth").value(distaz.getAz());
+        out.key("backazimuth").value(distaz.getBaz());
     }
 
     @Override
