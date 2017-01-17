@@ -29,8 +29,8 @@ public class EventJson extends AbstractJsonApiData {
     @Override
     public void encodeAttributes(JSONWriter out) throws JSONException {
         out.key("name").value(event.get_attributes().name).key("sod-status").value(event.getStatus().toString());
-        if (numSuccessful != null) {
-            out.key("num-successful").value(numSuccessful);
+        if (numSuccessfulStations != null) {
+            out.key("num-successful-stations").value(numSuccessfulStations);
         }
     }
 
@@ -120,15 +120,15 @@ public class EventJson extends AbstractJsonApiData {
         
     }
     
-    public Integer getNumSuccessful() {
-        return numSuccessful;
+    public Integer getNumSuccessfulStations() {
+        return numSuccessfulStations;
     }
     
-    public void setNumSuccessful(Integer numSuccessful) {
-        this.numSuccessful = numSuccessful;
+    public void setNumSuccessfulStations(Integer numSuccessful) {
+        this.numSuccessfulStations = numSuccessful;
     }
 
     StatefulEvent event;
     
-    Integer numSuccessful = null;
+    Integer numSuccessfulStations = null;
 }

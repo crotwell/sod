@@ -106,7 +106,7 @@ public class EventServlet extends HttpServlet {
                     List<JsonApiData> eventJsonList = new ArrayList<JsonApiData>();
                     for (StatefulEvent statefulEvent : events) {
                         EventJson eventJson = new EventJson(statefulEvent, WebAdmin.getBaseUrl());
-                        eventJson.setNumSuccessful(numSuccessful.get(statefulEvent));
+                        eventJson.setNumSuccessfulStations(numSuccessful.get(statefulEvent));
                         eventJsonList.add(eventJson);
                     }
                     JsonApi.encodeJson(out, eventJsonList);
