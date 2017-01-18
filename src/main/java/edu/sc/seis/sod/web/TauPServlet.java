@@ -2,6 +2,7 @@ package edu.sc.seis.sod.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -17,6 +18,7 @@ import org.json.JSONWriter;
 
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.TauP.Arrival;
@@ -28,6 +30,8 @@ import edu.sc.seis.fissuresUtil.hibernate.EventDB;
 import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
 import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.sod.web.jsonapi.JsonApi;
+import edu.sc.seis.sod.web.jsonapi.JsonApiData;
+import edu.sc.seis.sod.web.jsonapi.NetworkJson;
 import edu.sc.seis.sod.web.jsonapi.TauPJson;
 
 
@@ -65,8 +69,8 @@ public class TauPServlet  extends HttpServlet {
             if (params.containsKey(DISTDEG)) {
                 double distDeg = Double.parseDouble(params.get(DISTDEG)[0]);
                 List<Arrival> arrivalList = taup.calcTravelTimes(distDeg, depth, phases);
-                TauPJson json = new TauPJson(WebAdmin.getBaseUrl());
-                json.encode(arrivalList, out);
+                encodeArrivalsList(out, arrivalList);
+                
             } else if (params.containsKey(STATION) && params.containsKey(EVENT)) {
                 StationImpl sta = null;
                 Matcher staMatcher = netStaCodePattern.matcher(params.get(STATION)[0]);
@@ -103,8 +107,8 @@ public class TauPServlet  extends HttpServlet {
                 int eventDbid = Integer.parseInt(params.get(EVENT)[0]);
                 CacheEvent evt = EventDB.getSingleton().getEvent(eventDbid);
                 List<Arrival> arrivalList = taup.calcTravelTimes(sta, evt.getPreferred(), phases);
-                TauPJson json = new TauPJson(WebAdmin.getBaseUrl());
-                json.encode(arrivalList, out);
+
+                encodeArrivalsList(out, arrivalList);
             } else {
                 logger.warn("Bad URL for servlet: "+URL);
                 JsonApi.encodeError(out, "bad url for servlet: " + URL);
@@ -127,6 +131,14 @@ public class TauPServlet  extends HttpServlet {
         }
     }
     
+    private void encodeArrivalsList(JSONWriter out, List<Arrival> arrivalList) {
+        List<JsonApiData> jsonList = new ArrayList<JsonApiData>();
+        for (Arrival arrival : arrivalList) {
+            jsonList.add(new TauPJson(arrival, WebAdmin.getBaseUrl()));
+        }
+        JsonApi.encodeJson(out, jsonList);
+    }
+
     Pattern netStaCodePattern = Pattern.compile(NetworkServlet.networkIdStationCodeStr);
     
     public static final String MODEL = "model";
