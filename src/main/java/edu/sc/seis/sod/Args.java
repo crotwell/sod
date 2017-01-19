@@ -63,6 +63,10 @@ public class Args {
                        'c',
                        CLEAN_SWITCH,
                        "Clean the database before starting, any existing results are lost."));
+        add(new Switch(CONTINUE_SWITCH,
+                       JSAP.NO_SHORTFLAG,
+                       CONTINUE_SWITCH,
+                       "Continue an existing run, db is known to exist so skip the 10 second wait"));
         add(new Switch("quick",
                        'q',
                        "quick",
@@ -255,6 +259,10 @@ public class Args {
     public boolean isClean() {
         return result.getBoolean(CLEAN_SWITCH);
     }
+
+    public boolean isContinue() {
+        return result.getBoolean(CONTINUE_SWITCH);
+    }
     
     public boolean isPrintRecipe() {
         return result.getBoolean(PRINT_RECIPE_SWITCH);
@@ -322,6 +330,7 @@ public class Args {
         return out;
     }
 
+    public static final String CONTINUE_SWITCH = "continue";
     public static final String CLEAN_SWITCH = "clean";
     public static final String QUIT_ON_ERROR_SWITCH = "quitOnError";
     public static final String PRINT_RECIPE_SWITCH = "print-recipe";

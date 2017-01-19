@@ -324,7 +324,7 @@ public class Start {
     protected String HSQL_FILE_URL = "jdbc:hsqldb:file:";
     
     protected void warnIfDatabaseExists() {
-        if (getRunProps().warnIfDatabaseExists()) {
+        if ( ! args.isContinue() && getRunProps().warnIfDatabaseExists()) {
             // only matters if hsql???
             if (ConnMgr.getURL().startsWith(HSQL_FILE_URL)) {
                 File dbFile = new File(ConnMgr.getURL().substring(HSQL_FILE_URL.length())+".log");
