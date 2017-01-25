@@ -31,7 +31,7 @@ public class SodConfigServlet  extends HttpServlet {
         }
         PrintWriter writer = resp.getWriter();
         JSONWriter out = new JSONWriter(writer);
-        JsonApi.encodeJson(out, new SodConfigJson(config, WebAdmin.getBaseUrl()));
+        JsonApi.encodeJson(out, new SodConfigJson(config, WebAdmin.getApiBaseUrl()));
         resp.setStatus(HttpServletResponse.SC_OK);
         writer.close();
     }

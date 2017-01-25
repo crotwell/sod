@@ -45,7 +45,7 @@ public class ChannelServlet extends HttpServlet {
             try {
                 chan = netdb.getChannel(Integer.parseInt(dbid));
                 if (chan != null) {
-                    JsonApi.encodeJson(out, new ChannelJson(chan, WebAdmin.getBaseUrl()));
+                    JsonApi.encodeJson(out, new ChannelJson(chan, WebAdmin.getApiBaseUrl()));
                     resp.setStatus(HttpServletResponse.SC_OK);
                 } else {
                     JsonApi.encodeError(out, "Channel is null for dbid " + dbid);

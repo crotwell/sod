@@ -134,7 +134,7 @@ public class TauPServlet  extends HttpServlet {
     private void encodeArrivalsList(JSONWriter out, List<Arrival> arrivalList) {
         List<JsonApiData> jsonList = new ArrayList<JsonApiData>();
         for (Arrival arrival : arrivalList) {
-            jsonList.add(new TauPJson(arrival, WebAdmin.getBaseUrl()));
+            jsonList.add(new TauPJson(arrival, WebAdmin.getApiBaseUrl()));
         }
         JsonApi.encodeJson(out, jsonList);
     }

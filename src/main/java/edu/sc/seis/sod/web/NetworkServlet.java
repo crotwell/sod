@@ -28,7 +28,7 @@ import edu.sc.seis.sod.web.jsonapi.StationJson;
 public class NetworkServlet extends HttpServlet {
 
     public NetworkServlet() {
-        this(WebAdmin.getBaseUrl());
+        this(WebAdmin.getApiBaseUrl());
     }
 
     public NetworkServlet(String baseUrl) {

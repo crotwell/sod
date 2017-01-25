@@ -85,7 +85,7 @@ public class EventServlet extends HttpServlet {
             String dbid = matcher.group(1);
             try {
                 StatefulEvent e = StatefulEventDB.getSingleton().getEvent(Integer.parseInt(dbid));
-                JsonApi.encodeJson(out, new EventJson(e, WebAdmin.getBaseUrl()));
+                JsonApi.encodeJson(out, new EventJson(e, WebAdmin.getApiBaseUrl()));
             } catch(NumberFormatException e) {
                 throw new RuntimeException(e);
             } catch(NotFound e) {
@@ -111,7 +111,7 @@ public class EventServlet extends HttpServlet {
                     
                     List<JsonApiData> jsonData = new ArrayList<JsonApiData>(espList.size());
                     for (EventStationPair esp : espList) {
-                        jsonData.add(new EventStationJson(esp, WebAdmin.getBaseUrl()));
+                        jsonData.add(new EventStationJson(esp, WebAdmin.getApiBaseUrl()));
                     }
                     JsonApi.encodeJson(out, jsonData);
                 } catch(NotFound e) {
@@ -125,7 +125,7 @@ public class EventServlet extends HttpServlet {
                     List<StatefulEvent> events = eventWithSuccessfulCache;
                     List<JsonApiData> eventJsonList = new ArrayList<JsonApiData>();
                     for (StatefulEvent statefulEvent : events) {
-                        EventJson eventJson = new EventJson(statefulEvent, WebAdmin.getBaseUrl());
+                        EventJson eventJson = new EventJson(statefulEvent, WebAdmin.getApiBaseUrl());
                         eventJson.setNumSuccessfulStations(numSuccessful.get(statefulEvent));
                         eventJsonList.add(eventJson);
                     }

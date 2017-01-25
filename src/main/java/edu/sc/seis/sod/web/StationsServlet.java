@@ -58,7 +58,7 @@ public class StationsServlet extends HttpServlet {
             List<StationImpl> staList = netdb.getStationByCodes(netCode, staCode);
             if (staList.size() > 0) {
             StationImpl sta = staList.get(0);
-            JsonApi.encodeJson(out, new StationJson(sta, WebAdmin.getBaseUrl()));
+            JsonApi.encodeJson(out, new StationJson(sta, WebAdmin.getApiBaseUrl()));
             resp.setStatus(HttpServletResponse.SC_OK);
             writer.close();
             } else {
@@ -75,7 +75,7 @@ public class StationsServlet extends HttpServlet {
                     sta = netdb.getStation(Integer.parseInt(dbid));
                     List<ChannelImpl> chans = netdb.getChannelsForStation(sta);
                     if (sta != null) {
-                        JsonApi.encodeJson(out, new StationJson(sta, chans, WebAdmin.getBaseUrl()));
+                        JsonApi.encodeJson(out, new StationJson(sta, chans, WebAdmin.getApiBaseUrl()));
                         
                         resp.setStatus(HttpServletResponse.SC_OK);
                     } else {
@@ -107,7 +107,7 @@ public class StationsServlet extends HttpServlet {
                     }
                     List<JsonApiData> jsonData = new ArrayList<JsonApiData>(eventList.size());
                     for (EventStationPair esp : eventList) {
-                        jsonData.add(new EventStationJson(esp, WebAdmin.getBaseUrl()));
+                        jsonData.add(new EventStationJson(esp, WebAdmin.getApiBaseUrl()));
                     }
                     JsonApi.encodeJson(out, jsonData);
                     writer.close();
@@ -125,7 +125,7 @@ public class StationsServlet extends HttpServlet {
                         List<ChannelImpl> chans = netdb.getChannelsForStation(sta);
                         List<JsonApiData> jsonData = new ArrayList<JsonApiData>(chans.size());
                         for (ChannelImpl channelImpl : chans) {
-                            jsonData.add(new ChannelJson(channelImpl, WebAdmin.getBaseUrl()));
+                            jsonData.add(new ChannelJson(channelImpl, WebAdmin.getApiBaseUrl()));
                         }
                         JsonApi.encodeJson(out, jsonData);
                         writer.close();

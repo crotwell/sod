@@ -182,8 +182,7 @@ public class WebAdmin implements ArmListener{
         System.err.println("After Join");
     }
 
-    public static String getBaseUrl() {
-        // TODO Auto-generated method stub
+    public static String getApiBaseUrl() {
         return "/"+API;
     }
 }

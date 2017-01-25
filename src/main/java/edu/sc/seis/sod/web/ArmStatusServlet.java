@@ -56,11 +56,11 @@ public class ArmStatusServlet extends HttpServlet {
         Matcher matcher = armsPattern.matcher(URL);
         if (matcher.matches()) {
             List<JsonApiData> json = new ArrayList<JsonApiData>();
-            json.add(new ArmStatusJson(Start.getNetworkArm(), WebAdmin.getBaseUrl()));
-            json.add(new ArmStatusJson(Start.getEventArm(), WebAdmin.getBaseUrl()));
+            json.add(new ArmStatusJson(Start.getNetworkArm(), WebAdmin.getApiBaseUrl()));
+            json.add(new ArmStatusJson(Start.getEventArm(), WebAdmin.getApiBaseUrl()));
             WaveformArm[] waveformArms = Start.getWaveformArms();
             for (int i = 0; i < waveformArms.length; i++) {
-                json.add(new ArmStatusJson(waveformArms[i], WebAdmin.getBaseUrl()));
+                json.add(new ArmStatusJson(waveformArms[i], WebAdmin.getApiBaseUrl()));
             }
             JsonApi.encodeJson(out, json);
         } else {

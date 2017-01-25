@@ -62,7 +62,7 @@ public class EventStationServlet extends HttpServlet {
                 }
                 ecpList.add((AbstractEventChannelPair)obj);
             }
-            EventStationJson jsonData = new EventStationJson(esp, ecpList, WebAdmin.getBaseUrl());
+            EventStationJson jsonData = new EventStationJson(esp, ecpList, WebAdmin.getApiBaseUrl());
             JsonApi.encodeJson(out, jsonData);
         } else {
             m = eventVectorPattern.matcher(URL);
@@ -76,7 +76,7 @@ public class EventStationServlet extends HttpServlet {
                     if (obj == null) {
                         throw new RuntimeException("obj from hibernate is null");
                     }
-                    jsonData.add(new EventVectorJson((AbstractEventChannelPair)obj, WebAdmin.getBaseUrl()));
+                    jsonData.add(new EventVectorJson((AbstractEventChannelPair)obj, WebAdmin.getApiBaseUrl()));
                 }
                 JsonApi.encodeJson(out, jsonData);
             } else {

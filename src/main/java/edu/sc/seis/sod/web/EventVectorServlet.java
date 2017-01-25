@@ -85,7 +85,7 @@ public class EventVectorServlet extends HttpServlet {
             m = eventStationPattern.matcher(URL);
             if (m.matches()) {
                 AbstractEventChannelPair ecp = getECP(m.group(1));
-                EventVectorJson jsonData = new EventVectorJson(ecp, WebAdmin.getBaseUrl());
+                EventVectorJson jsonData = new EventVectorJson(ecp, WebAdmin.getApiBaseUrl());
                 JsonApi.encodeJson(out, jsonData);
             } else {
                 logger.warn("Bad URL for servlet: "+URL);
