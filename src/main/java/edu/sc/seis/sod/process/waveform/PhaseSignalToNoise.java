@@ -110,7 +110,7 @@ public class PhaseSignalToNoise  implements WaveformProcess, Threadable {
                                                  new StringTreeLeaf(this, true));
             }
             return new WaveformResult(seismograms,
-                                             new StringTreeLeaf(this, false, "trigger="+trigger.getValue()+" < "+ratio));
+                                             new StringTreeLeaf(this, false, phaseName+" trigger="+trigger.getValue()+" < "+ratio));
         } else {
             return new WaveformResult(seismograms,
                                              new StringTreeLeaf(this, false, "trigger is null"));
