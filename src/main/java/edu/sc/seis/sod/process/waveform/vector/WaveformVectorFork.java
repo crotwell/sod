@@ -116,11 +116,13 @@ public class WaveformVectorFork implements WaveformVectorProcess, Threadable {
         WaveformVectorResult result = new WaveformVectorResult(seismograms,
                                                                new StringTreeLeaf(this,
                                                                                   true));
+        // copy channels in case rotate changes them
+        ChannelGroup intChannelGroup = new ChannelGroup(channelGroup.getChannels().clone());
         while(it.hasNext() && result.isSuccess()) {
             WaveformVectorProcess processor = (WaveformVectorProcess)it.next();
             result = MotionVectorArm.runProcessorThreadCheck(processor,
                                                              event,
-                                                             channelGroup,
+                                                             intChannelGroup,
                                                              request,
                                                              available,
                                                              result.getSeismograms(),
