@@ -255,8 +255,8 @@
             <xsd:annotation>
                 <summary>Apply a filter using the OregonDSP library</summary>
                 <description>Applies a filter to the seismograms. 
-                The filter can be <butterworth/>, <chebyshevI/> or <chebyshevII/>
-                with butterworth being the default. The passband is one of <bandpass/>, <lowpass/> or <highpass/> with
+                The filter can be &lt;butterworth/&gt;, &lt;chebyshevI/&gt; or &lt;chebyshevII/&gt;
+                with butterworth being the default. The passband is one of &lt;bandpass/&gt;, &lt;lowpass/&gt; or &lt;highpass/&gt; with
                 bandpass being the default. When using a lowpass filter only the highFreqCorner is used, and similarly
                 for highpass only the lowFreqCorner is used. The filterType can be CAUSAL or NONCAUSAL
                     or TWOPASS, with the last two being equivalent and NONCAUSAL being the default. 
