@@ -2,6 +2,7 @@ package edu.sc.seis.sod.web;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.BindException;
 
 import javax.servlet.Servlet;
@@ -27,6 +28,9 @@ import edu.sc.seis.sod.Start;
 
 public class WebAdmin implements ArmListener{
 
+    public static final String SITE = "site";
+    public static final String API = "api";
+
     public WebAdmin() {
         // TODO Auto-generated constructor stub
     }
@@ -42,13 +46,13 @@ public class WebAdmin implements ArmListener{
         // In this example it is the current directory but it can be configured to anything that the jvm has access to.
         resource_handler.setDirectoriesListed(true);
         resource_handler.setWelcomeFiles(new String[]{ "index.html" });
-        resource_handler.setBaseResource(Resource.newResource(new File("site")));
+        resource_handler.setBaseResource(Resource.newResource(new File(SITE)));
         ContextHandler siteContext = new ContextHandler("/");
         siteContext.setHandler(resource_handler);
         
         ServletHandler servlets = new ServletHandler();
         servlets.setEnsureDefaultServlet(false);
-        servlets.addServletWithMapping(ArmStatusServlet.class, "/api/arms");
+        servlets.addServletWithMapping(ArmStatusServlet.class, "/"+API+"/"+"arms");
 
         addServlets(servlets, EventServlet.class, "quakes" );
         addServlets(servlets, NetworkServlet.class, "networks" );
@@ -63,7 +67,7 @@ public class WebAdmin implements ArmListener{
         
         // Add the ResourceHandler to the server.
         HandlerList handlers = new HandlerList();
-        handlers.setHandlers(new Handler[] { siteContext, servlets, new DefaultHandler() {
+        handlers.setHandlers(new Handler[] { siteContext, servlets, new AlwaysEmberIndexHandler(), new DefaultHandler() {
 
             @Override
             public void handle(String target,
@@ -125,9 +129,9 @@ public class WebAdmin implements ArmListener{
     }
     
     void addServlets(ServletHandler servlets, Class<? extends Servlet> servletClass, String partialUrl) {
-        servlets.addServletWithMapping(servletClass, "/api/"+partialUrl);
-        servlets.addServletWithMapping(servletClass, "/api/"+partialUrl+"/");
-        servlets.addServletWithMapping(servletClass, "/api/"+partialUrl+"/*");
+        servlets.addServletWithMapping(servletClass, "/"+API+"/"+partialUrl);
+        servlets.addServletWithMapping(servletClass, "/"+API+"/"+partialUrl+"/");
+        servlets.addServletWithMapping(servletClass, "/"+API+"/"+partialUrl+"/*");
     }
 
     
@@ -180,6 +184,6 @@ public class WebAdmin implements ArmListener{
 
     public static String getBaseUrl() {
         // TODO Auto-generated method stub
-        return "/api";
+        return "/"+API;
     }
 }
