@@ -19,12 +19,17 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
+import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.sod.AbstractEventChannelPair;
 import edu.sc.seis.sod.EventStationPair;
+import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.StatefulEvent;
 import edu.sc.seis.sod.hibernate.StatefulEventDB;
+import edu.sc.seis.sod.status.eventArm.EventMonitor;
 import edu.sc.seis.sod.web.jsonapi.EventJson;
 import edu.sc.seis.sod.web.jsonapi.EventStationJson;
 import edu.sc.seis.sod.web.jsonapi.JsonApi;
@@ -44,7 +49,22 @@ public class EventServlet extends HttpServlet {
                     logger.error("Trying to update seccessful events", t);
                 }
             }
-        }, 0, 60 * 1000);
+        }, 0, 900 * 1000);
+        Start.getEventArm().add(new EventMonitor() {
+            @Override
+            public void setArmStatus(String status) throws Exception {
+                // TODO Auto-generated method stub
+            }
+            @Override
+            public void change(CacheEvent event, Status status) {
+                try {
+                    updateInCache(new StatefulEvent(event, status));
+                } catch(NoPreferredOrigin e) {
+                    throw new RuntimeException("should not happen.", e);
+                }
+            }
+            
+        });
     }
 
     @Override
@@ -137,6 +157,13 @@ public class EventServlet extends HttpServlet {
             }
         }
         eventWithSuccessfulCache = events;
+    }
+    
+    void updateInCache(StatefulEvent statefulEvent) {
+        int numSuccess = SodDB.getSingleton().getNumSuccessful(statefulEvent);
+        if (numSuccess > 0) {
+            eventWithSuccessfulCache.add(statefulEvent);
+        }
     }
     
     List<StatefulEvent> eventWithSuccessfulCache = new ArrayList<StatefulEvent>();
