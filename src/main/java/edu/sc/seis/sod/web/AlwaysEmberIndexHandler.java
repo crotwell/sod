@@ -21,9 +21,10 @@ public class AlwaysEmberIndexHandler extends DefaultHandler {
             String URL = request.getRequestURL().toString();
             logger.info("GET: (as alwaysEmberIndex)" + URL);
             loadIndexHtml();
+            response.setContentType("text/html");
+            response.setStatus(HttpServletResponse.SC_OK);
             PrintWriter out = response.getWriter();
             out.print(indexHtml);
-            response.setStatus(HttpServletResponse.SC_OK);
             out.close();
             baseRequest.setHandled(true);
         } else {
@@ -36,11 +37,11 @@ public class AlwaysEmberIndexHandler extends DefaultHandler {
         if (indexHtml == null) {
             BufferedReader reader = new BufferedReader(new FileReader(WebAdmin.SITE + "/index.html"));
             char[] cbuf = new char[4096];
-            String temp = "";
+            StringBuffer temp = new StringBuffer();
             while (reader.read(cbuf) > 0) {
-                temp += cbuf;
+                temp.append(cbuf);
             }
-            indexHtml = temp;
+            indexHtml = temp.toString();
         }
     }
 
