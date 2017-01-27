@@ -1,7 +1,11 @@
 package edu.sc.seis.sod.process.waveform;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
@@ -10,6 +14,9 @@ import edu.sc.seis.fissuresUtil.hibernate.SeismogramFileRefDB;
 import edu.sc.seis.fissuresUtil.xml.SeismogramFileTypes;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.measure.ListMeasurement;
+import edu.sc.seis.sod.measure.Measurement;
+import edu.sc.seis.sod.measure.TimeRangeMeasurement;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.velocity.PrintlineVelocitizer;
 
@@ -37,6 +44,14 @@ AbstractFileWriter implements WaveformProcess {
                                   CookieJar cookieJar) throws Exception {
         if (cookieJar == null) {throw new NullPointerException("CookieJar cannot be null");}
         if (channel == null) {throw new NullPointerException("Channel cannot be null");}
+        List<Measurement> reqList = new ArrayList<Measurement>();
+        for (int i = 0; i < original.length; i++) {
+            reqList.add(new TimeRangeMeasurement("request"+i, 
+                                                 new MicroSecondDate(original[i].start_time), 
+                                                 new MicroSecondDate(original[i].end_time)));
+        }
+        ListMeasurement requestList = new ListMeasurement("request", reqList);
+        cookieJar.put("request", requestList);
         if(seismograms.length > 0) {
             removeExisting(event, channel, seismograms[0], seismograms.length);
             for(int i = 0; i < seismograms.length; i++) {

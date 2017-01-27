@@ -11,8 +11,7 @@ public class TimeMeasurement extends Measurement {
 
     @Override
     public String toXMLFragment() {
-        // TODO Auto-generated method stub
-        return null;
+        return value.getFissuresTime().date_time;
     }
 
     @Override
