@@ -94,6 +94,7 @@ public class WaveformServlet extends HttpServlet {
             PrintWriter writer = resp.getWriter();
             JSONWriter out = new JSONWriter(writer);
             JsonApi.encodeError(out, "url does not match " + mseedPattern.pattern());
+            resp.sendError(500);
             writer.close();
         }
         AbstractHibernateDB.rollback();
