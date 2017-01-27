@@ -24,6 +24,8 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.sod.AbstractEventChannelPair;
 import edu.sc.seis.sod.EventStationPair;
+import edu.sc.seis.sod.Stage;
+import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.hibernate.SodDB;
@@ -56,11 +58,10 @@ public class EventServlet extends HttpServlet {
                 // TODO Auto-generated method stub
             }
             @Override
-            public void change(CacheEvent event, Status status) {
-                try {
-                    updateInCache(new StatefulEvent(event, status));
-                } catch(NoPreferredOrigin e) {
-                    throw new RuntimeException("should not happen.", e);
+            public void change(StatefulEvent event) {
+                if (event.getStatus().getStanding().equals(Standing.SUCCESS) 
+                        && event.getStatus().getStage().equals(Stage.EVENT_CHANNEL_POPULATION)) {
+                    updateInCache(event);
                 }
             }
             

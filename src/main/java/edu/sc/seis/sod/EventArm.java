@@ -297,7 +297,7 @@ public class EventArm implements Arm {
     public void change(StatefulEvent event) {
         synchronized(statusMonitors) {
             for (EventMonitor evMon : statusMonitors) {
-                evMon.change(event, event.getStatus());
+                evMon.change(event);
             }
         }
     }

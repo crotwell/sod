@@ -21,6 +21,7 @@ import edu.sc.seis.sod.EventVectorPair;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Status;
+import edu.sc.seis.sod.hibernate.StatefulEvent;
 import edu.sc.seis.sod.status.FileWritingTemplate;
 import edu.sc.seis.sod.status.GenericTemplate;
 import edu.sc.seis.sod.status.TemplateFileLoader;
@@ -103,7 +104,7 @@ public class EventStatusTemplate extends FileWritingTemplate implements
         write();
     }
 
-    public void change(CacheEvent event, Status status) {
+    public void change(StatefulEvent event) {
         if(!addedToWaveformArm && Start.getWaveformRecipe() != null) {
             Start.getWaveformRecipe().addStatusMonitor(this);
             addedToWaveformArm = true;

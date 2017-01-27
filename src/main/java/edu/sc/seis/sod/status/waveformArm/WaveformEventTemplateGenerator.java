@@ -18,6 +18,7 @@ import edu.sc.seis.sod.EventVectorPair;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Status;
+import edu.sc.seis.sod.hibernate.StatefulEvent;
 import edu.sc.seis.sod.status.EventFormatter;
 import edu.sc.seis.sod.status.FileWritingTemplate;
 import edu.sc.seis.sod.status.TemplateFileLoader;
@@ -46,14 +47,14 @@ public class WaveformEventTemplateGenerator implements EventMonitor,
         }
     }
 
-    public void change(CacheEvent event, Status status) {
+    public void change(StatefulEvent event ) {
         if(!added) {
             if(Start.getWaveformRecipe() != null) {
                 Start.getWaveformRecipe().addStatusMonitor(template);
                 added = true;
             }
         }
-        template.update(event, status);
+        template.update(event, event.getStatus());
     }
 
     public void setArmStatus(String status) {}

@@ -5,14 +5,13 @@
  */
 
 package edu.sc.seis.sod.status.eventArm;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.SodElement;
-import edu.sc.seis.sod.Status;
+import edu.sc.seis.sod.hibernate.StatefulEvent;
 
 public interface EventMonitor extends SodElement {
 
     public void setArmStatus(String status) throws Exception;
-
-    public void change(CacheEvent event, Status status);
+    
+    public void change(StatefulEvent event);
 }
 

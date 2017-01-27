@@ -11,6 +11,7 @@ import org.w3c.dom.Element;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.sod.Status;
+import edu.sc.seis.sod.hibernate.StatefulEvent;
 
 public class StatusPrintln implements EventMonitor{
     public StatusPrintln(Element config){}
@@ -19,7 +20,7 @@ public class StatusPrintln implements EventMonitor{
         System.out.println("Event Arm: " + status);
     }
 
-    public void change(CacheEvent event, Status status) {
-        System.out.println(status + ": " + EventUtil.getEventInfo(event));
+    public void change(StatefulEvent event ) {
+        System.out.println(event.getStatus() + ": " + EventUtil.getEventInfo(event));
     }
 }

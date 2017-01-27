@@ -27,6 +27,7 @@ import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.WaveformArm;
 import edu.sc.seis.sod.hibernate.SodDB;
+import edu.sc.seis.sod.hibernate.StatefulEvent;
 import edu.sc.seis.sod.status.eventArm.EventMonitor;
 import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
 import edu.sc.seis.sod.web.jsonapi.ArmStatusJson;
@@ -82,8 +83,7 @@ public class ArmStatusServlet extends HttpServlet {
     EventMonitor eventMon = new EventMonitor() {
         
         String status = "unknown";
-        CacheEvent lastEvent;
-        Status lastEventStatus;
+        StatefulEvent lastEvent;
         
         @Override
         public void setArmStatus(String status) throws Exception {
@@ -91,9 +91,8 @@ public class ArmStatusServlet extends HttpServlet {
         }
 
         @Override
-        public void change(CacheEvent event, Status status) {
+        public void change(StatefulEvent event ) {
             this.lastEvent = event;
-            this.lastEventStatus = status;
         }
         
     };

@@ -13,6 +13,7 @@ import edu.sc.seis.fissuresUtil.map.colorizer.event.FreshnessEventColorizer;
 import edu.sc.seis.fissuresUtil.map.layers.EventLayer;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.Status;
+import edu.sc.seis.sod.hibernate.StatefulEvent;
 import edu.sc.seis.sod.hibernate.StatefulEventDB;
 import edu.sc.seis.sod.status.FileWritingTemplate;
 import edu.sc.seis.sod.status.MapPool;
@@ -36,7 +37,7 @@ public class MapEventStatus implements SodElement, EventMonitor, Runnable {
                 + el.getAttribute("xlink:href");
     }
 
-    public void change(CacheEvent event, Status status) {
+    public void change(StatefulEvent event) {
         OutputScheduler.getDefault().schedule(this);
     }
 
