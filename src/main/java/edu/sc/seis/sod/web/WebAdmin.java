@@ -181,7 +181,13 @@ public class WebAdmin implements ArmListener{
         server.join();
         System.err.println("After Join");
     }
+    
+    public static SuccessfulEventCache getSuccessfulEventCache() {
+        return eventCache;
+    }
 
+    static SuccessfulEventCache eventCache = new SuccessfulEventCache();
+    
     public static String getApiBaseUrl() {
         return "/"+API;
     }

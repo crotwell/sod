@@ -40,32 +40,6 @@ import edu.sc.seis.sod.web.jsonapi.JsonApiData;
 public class EventServlet extends HttpServlet {
 
     public EventServlet() {
-
-        Timer t = new Timer("RevCacheOMatic updater", true);
-        t.schedule(new TimerTask() {
-
-            public void run() {
-                try {
-                    updateSuccessfulEvents();
-                } catch(Throwable t) {
-                    logger.error("Trying to update seccessful events", t);
-                }
-            }
-        }, 0, 900 * 1000);
-        Start.getEventArm().add(new EventMonitor() {
-            @Override
-            public void setArmStatus(String status) throws Exception {
-                // TODO Auto-generated method stub
-            }
-            @Override
-            public void change(StatefulEvent event) {
-                if (event.getStatus().getStanding().equals(Standing.SUCCESS) 
-                        && event.getStatus().getStage().equals(Stage.EVENT_CHANNEL_POPULATION)) {
-                    updateInCache(event);
-                }
-            }
-            
-        });
     }
 
     @Override
@@ -123,11 +97,12 @@ public class EventServlet extends HttpServlet {
                 if (matcher.matches()) {
                 // logger.debug("doGet all");
                 try {
-                    List<StatefulEvent> events = eventWithSuccessfulCache;
+                    SuccessfulEventCache cache = WebAdmin.getSuccessfulEventCache();
+                    List<StatefulEvent> events = cache.getEventWithSuccessful();
                     List<JsonApiData> eventJsonList = new ArrayList<JsonApiData>();
                     for (StatefulEvent statefulEvent : events) {
                         EventJson eventJson = new EventJson(statefulEvent, WebAdmin.getApiBaseUrl());
-                        eventJson.setNumSuccessfulStations(numSuccessful.get(statefulEvent));
+                        eventJson.setNumSuccessfulStations(cache.getNumSuccessful(statefulEvent));
                         eventJsonList.add(eventJson);
                     }
                     JsonApi.encodeJson(out, eventJsonList);
@@ -144,32 +119,6 @@ public class EventServlet extends HttpServlet {
         }
         writer.close();
     }
-    
-    void updateSuccessfulEvents() {
-        StatefulEventDB db = StatefulEventDB.getSingleton();
-        List<StatefulEvent> events = db.getAll();
-        for (Iterator iterator = events.iterator(); iterator.hasNext();) {
-            StatefulEvent statefulEvent = (StatefulEvent)iterator.next();
-            int numSuccess = SodDB.getSingleton().getNumSuccessful(statefulEvent);
-            if (numSuccess == 0) {
-                iterator.remove();
-            } else {
-                numSuccessful.put(statefulEvent, numSuccess);
-            }
-        }
-        eventWithSuccessfulCache = events;
-    }
-    
-    void updateInCache(StatefulEvent statefulEvent) {
-        int numSuccess = SodDB.getSingleton().getNumSuccessful(statefulEvent);
-        if (numSuccess > 0) {
-            eventWithSuccessfulCache.add(statefulEvent);
-        }
-    }
-    
-    List<StatefulEvent> eventWithSuccessfulCache = new ArrayList<StatefulEvent>();
-    
-    HashMap<StatefulEvent, Integer> numSuccessful = new HashMap<StatefulEvent, Integer>();
     
     Pattern allEvents = Pattern.compile(".*/quakes");
 
