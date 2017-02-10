@@ -58,10 +58,11 @@ public class EventStationJson extends AbstractJsonApiData {
         out.endObject(); // end event
         out.key("station").object();
         out.key("data").object();
-        out.key("id").value(new StationJson(esp.getStation(), getBaseUrl()).getId());
+        StationJson staJson = new StationJson(esp.getStation(), getBaseUrl());
+        out.key("id").value(staJson.getId());
         out.key("type").value("station");
         out.key("links").object();
-        out.key("self").value(baseUrl + "/stations/" +  esp.getStationDbId());
+        out.key("self").value(baseUrl + "/stations/" +  staJson.getId());
         out.endObject(); // end links
         out.endObject(); // end data
         out.endObject(); // end station
