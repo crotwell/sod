@@ -106,8 +106,8 @@ public class WebAdmin implements ArmListener{
         }
         final Server serverInContext = server;
         //server.join();  // this means web server quits when current thread quits
-        logger.info("Web Admin started at "+server.getURI());
-        System.out.println("Web Admin started at "+server.getURI());
+        logger.info("Web Admin started at "+server.getURI()+" port:"+port);
+        System.out.println("Web Admin started at "+server.getURI()+" port:"+port);
         if ( Start.getArgs().isStatus() || Start.getRunProps().isStatusWebKeepAlive() ) {
             keepAliveThread = new Thread(new Runnable() {
                 @Override
