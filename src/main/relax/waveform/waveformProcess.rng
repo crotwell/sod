@@ -541,7 +541,14 @@
                     </asciiWriter>
                 </example>
             </xsd:annotation>
-            <ref name="seisWriterBase"/>
+            <interleave>
+                <ref name="seisWriterBase"/>
+                <optional>
+                    <element name="columns">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+            </interleave>
         </element>
     </define>
     <define name="wavWriter">

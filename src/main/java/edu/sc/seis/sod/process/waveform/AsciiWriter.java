@@ -16,6 +16,7 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.xml.SeismogramFileTypes;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.SodUtil;
 
 
 public class AsciiWriter extends AbstractSeismogramWriter {
@@ -27,6 +28,7 @@ public class AsciiWriter extends AbstractSeismogramWriter {
              extractFileTemplate(el, DEFAULT_FILE_TEMPLATE),
              extractPrefix(el),
              DOMHelper.hasElement(el, "storeSeismogramsInDB"));
+        this.columns = SodUtil.loadInt(el, "columns", 1);
     }
     
     public AsciiWriter(String workingDir, String fileTemplate, String prefix, boolean storeSeismogramsInDB)
@@ -67,7 +69,7 @@ public class AsciiWriter extends AbstractSeismogramWriter {
         AbstractSeismogramWriter.addBytesWritten(f.length());
     }
     
-    int columns = 2;
+    int columns = 1;
     String format = " +0.000000E00  ; -0.000000E00  ";
     boolean SHAKEheader = true;
     String winEOL = "";
