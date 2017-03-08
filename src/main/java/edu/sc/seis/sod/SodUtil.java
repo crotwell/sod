@@ -633,7 +633,7 @@ public class SodUtil {
 
     public static UnitRangeImpl loadUnitRange(Element config) throws ConfigurationException {
         Unit unit = null;
-        double min = Double.MIN_VALUE;
+        double min = -1*Double.MAX_VALUE;
         double max = Double.MAX_VALUE;
         NodeList children = config.getChildNodes();
         for(int i = 0; i < children.getLength(); i++) {
