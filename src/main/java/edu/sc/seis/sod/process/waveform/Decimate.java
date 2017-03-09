@@ -9,6 +9,8 @@ import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.fissuresUtil.bag.Arithmatic;
+import edu.sc.seis.fissuresUtil.bag.Statistics;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
@@ -61,11 +63,25 @@ public class Decimate implements WaveformProcess, Threadable {
                                                       seismograms[0].getSampling()
                                                               .getFrequency()
                                                               .divideBy(2*d.getFactor())); // nyquist is 1/2 sample rate
-                WaveformResult filtered = antiAliasFilter.apply(seismograms);
+                // remove mean before filter
+                double[] mean = new double[seismograms.length];
+                LocalSeismogramImpl[] demeanedSeis = new LocalSeismogramImpl[seismograms.length];
+                for (int i = 0; i < seismograms.length; i++) {
+                    Statistics stats = new Statistics(seismograms[i]);
+                    mean[i] = stats.mean();
+                    demeanedSeis[i] = rmean.apply(seismograms[i]);
+                }
+                
+                WaveformResult filtered = antiAliasFilter.apply(demeanedSeis);
+
                 if (! filtered.isSuccess()) {
                     return new WaveformResult(seismograms, new StringTreeBranch(this, false, filtered.getReason()));
                 }
+                // add mean back in again
                 filteredSeis = filtered.getSeismograms();
+                for (int i = 0; i < filteredSeis.length; i++) {
+                    filteredSeis[i] = Arithmatic.add(filteredSeis[i], (float)mean[i]);
+                }
             }
             for (int i = 0; i < out.length; i++) {
                 out[i] = d.apply(filteredSeis[i]);
@@ -91,4 +107,6 @@ public class Decimate implements WaveformProcess, Threadable {
     public static final String ANTIALIAS_NAME = "antiAliasFilter";
 
     private static final QuantityImpl ZERO = new QuantityImpl(0, UnitImpl.HERTZ);
+    
+    private edu.sc.seis.fissuresUtil.bag.RMean rmean = new edu.sc.seis.fissuresUtil.bag.RMean();
 }
