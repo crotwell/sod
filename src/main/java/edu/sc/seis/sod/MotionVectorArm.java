@@ -542,7 +542,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                ecp.update(Status.get(stage, Standing.CORBA_FAILURE));
            } else if (t instanceof SeismogramAuthorizationException) {
                // let this go up and cause arm failure as likely bad user,password
-               Start.armFailure(Start.getWaveformArms()[0], t);
+               Start.armFailure(Start.getWaveformArmArray()[0], t);
            } else if (t instanceof SeismogramSourceException) {
                if (t.getCause() != null && t.getCause() instanceof MissingBlockette1000) {
                    ecp.update(Status.get(stage, Standing.REJECT));
