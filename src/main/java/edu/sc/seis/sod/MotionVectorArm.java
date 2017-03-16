@@ -132,7 +132,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
             if (dcLocator instanceof ConstantSeismogramSourceLocator) {
                 logger.info("Wrapping "+dcLocator+" to batch requests for speed. Using 6 threads.");
                 dcLocator = new BatchDataRequest(dcLocator);
-                Start.getRunProps().setNumWaveformWorkerThreads(6);
+                Start.getRunProps().setNumWaveformWorkerThreads(2);
             }
         } else if (sodObject instanceof VectorAvailableDataSubsetter) {
             availData = (VectorAvailableDataSubsetter)sodObject;
@@ -529,6 +529,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
         return message;
     }
     
+    /* This is also used by LocalSeismogramArm. */
     protected static void handle(AbstractEventChannelPair ecp, Stage stage, Throwable t, SeismogramSource seismogramSource, String requestString) {
        try {
            if (t instanceof OutOfMemoryError) {
@@ -539,17 +540,18 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
            } else if (t instanceof org.omg.CORBA.SystemException) {
                // don't log exception here, let RetryStragtegy do it
                ecp.update(Status.get(stage, Standing.CORBA_FAILURE));
+           } else if (t instanceof SeismogramAuthorizationException) {
+               // let this go up and cause arm failure as likely bad user,password
+               Start.armFailure(Start.getWaveformArms()[0], t);
            } else if (t instanceof SeismogramSourceException) {
                if (t.getCause() != null && t.getCause() instanceof MissingBlockette1000) {
-                   
+                   ecp.update(Status.get(stage, Standing.REJECT));
+                   failLogger.info("Data decompression failure, miniseed without B1000 is not miniseed. "+ ecp +" "+t.getMessage());
                } else if (t.getCause() != null && t.getCause() instanceof SocketTimeoutException) {
                    // treat just like CORBA SystemException so it is retried later
                    // don't log exception here, let RetryStragtegy do it
                    ecp.update(Status.get(stage, Standing.CORBA_FAILURE));
                }
-           } else if (t instanceof SeismogramAuthorizationException) {
-               ecp.update(Status.get(stage, Standing.REJECT));
-               failLogger.info("Data decompression failure, miniseed without B1000 is not miniseed. "+ ecp +" "+t.getMessage());
            } else {
                ecp.update(t, Status.get(stage, Standing.SYSTEM_FAILURE));
                String message = "";
