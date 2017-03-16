@@ -46,6 +46,11 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
 
     private String password;
 
+    public static final String BAD_AUTH_MESSAGE = "The remote web service just indicated that the query was not authorized. "
+    +"This may be because your username, password is wrong, the service does not support authentication or it could be a bug in SOD. "
+    +"Check your recipe and "
+    +"if you cannot figure it out contact the developers at sod@seis.sc.edu. ";
+
     public FdsnDataSelect() {
         super("DefaultFDSNDataSelect");
         timeoutMillis = 10 * 1000;
@@ -122,11 +127,14 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
                     } catch(SeismogramSourceException t) {
                         latest = t;
                         Throwable rootCause = AbstractFDSNQuerier.extractRootCause(t);
-                        if (t.getCause() == null) {
+                        if (t instanceof SeismogramAuthorizationException) {
+                            // generally this means user has bad password or is not authorized, shamelessly quit
+                            throw t;
+                        } else if (t.getCause() == null) {
                             throw t;
                         } else if (rootCause instanceof IOException) {
                             // try again on IOException
-                        } else if (t.getCause() instanceof FDSNWSException && ((FDSNWSException)t.getCause()).getHttpResponseCode() != 200) {
+                        } else if (t.getCause() instanceof FDSNWSException && ((FDSNWSException)t.getCause()).getHttpResponseCode() != 200 && ((FDSNWSException)t.getCause()).getHttpResponseCode() != 401) {
                             // try again on IOException
                         } else {
                             throw t;
@@ -204,8 +212,11 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
                     }
                 } catch(FDSNWSException e) {
                     if (querier.getResponseCode() == 401 || querier.getResponseCode() == 403) {
+                        Start.simpleArmFailure(Start.getWaveformArmArray()[0], 
+                                               BAD_AUTH_MESSAGE+" "+querier.getResponseCode()
+                                               +"     "+((FDSNWSException)e).getMessage()
+                                               +" on "+((FDSNWSException)e).getTargetURI());
                         throw new SeismogramAuthorizationException("Authorization failure to " + e.getTargetURI(), e);
-
                     } else if (querier.getResponseCode() == 400) {
                         // badly formed query, cowardly quit
                         Start.simpleArmFailure(Start.getWaveformArmArray()[0], 

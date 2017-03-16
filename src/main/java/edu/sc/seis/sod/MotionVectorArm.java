@@ -480,6 +480,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
         return message;
     }
     
+    /* This is also used by LocalSeismogramArm. */
     protected static void handle(AbstractEventChannelPair ecp, Stage stage, Throwable t, SeismogramSource seismogramSource, String requestString) {
        try {
            if (t instanceof OutOfMemoryError) {
@@ -487,17 +488,18 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                // code might trigger further OutofMem
                t.printStackTrace(System.err);
                logger.error("", t);
+           } else if (t instanceof SeismogramAuthorizationException) {
+               // let this go up and cause arm failure as likely bad user,password
+               Start.armFailure(Start.getWaveformArmArray()[0], t);
            } else if (t instanceof SeismogramSourceException) {
                if (t.getCause() != null && t.getCause() instanceof MissingBlockette1000) {
-                   
+                   ecp.update(Status.get(stage, Standing.REJECT));
+                   failLogger.info("Data decompression failure, miniseed without B1000 is not miniseed. "+ ecp +" "+t.getMessage());
                } else if (t.getCause() != null && t.getCause() instanceof SocketTimeoutException) {
                    // it is retried later
                    // don't log exception here, let RetryStragtegy do it
                    ecp.update(Status.get(stage, Standing.CORBA_FAILURE));
                }
-           } else if (t instanceof SeismogramAuthorizationException) {
-               ecp.update(Status.get(stage, Standing.REJECT));
-               failLogger.info("Data decompression failure, miniseed without B1000 is not miniseed. "+ ecp +" "+t.getMessage());
            } else {
                ecp.update(t, Status.get(stage, Standing.SYSTEM_FAILURE));
                String message = "";
