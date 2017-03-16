@@ -27,7 +27,7 @@ public class SodConfigJson  extends AbstractJsonApiData {
 
     @Override
     public void encodeAttributes(JSONWriter out) throws JSONException {
-        out.key("timestamp").value(new MicroSecondDate(config.getTime().getTime()).getFissuresTime().date_time);
+        out.key("timestamp").value(new MicroSecondDate(config.getTime()).getFissuresTime().date_time);
         out.key("config").value(config.getConfig());
     }
     
