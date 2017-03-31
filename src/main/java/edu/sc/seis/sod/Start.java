@@ -37,7 +37,6 @@ import edu.sc.seis.seisFile.fdsnws.FDSNWSException;
 import edu.sc.seis.sod.hibernate.AbstractHibernateDB;
 import edu.sc.seis.sod.hibernate.ConnMgr;
 import edu.sc.seis.sod.hibernate.HibernateUtil;
-import edu.sc.seis.sod.hibernate.Initializer;
 import edu.sc.seis.sod.hibernate.NetworkNotFound;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.StatefulEventDB;
@@ -348,13 +347,21 @@ public class Start {
         }
     }
 
+
+
+    public static void loadProps(InputStream propStream, Properties baseProps)
+            throws IOException {
+        baseProps.load(propStream);
+        propStream.close();
+    }
+    
     private void loadProps() throws IOException {
         // get some defaults
-        Initializer.loadProps((Start.class).getClassLoader()
+        loadProps((Start.class).getClassLoader()
                 .getResourceAsStream(DEFAULT_PROPS), props);
         if(args.hasProps()) {
             try {
-                Initializer.loadProps(args.getProps(), props);
+                loadProps(args.getProps(), props);
             } catch(IOException io) {
                 System.err.println("Unable to load props file: "
                         + io.getMessage());
@@ -363,8 +370,16 @@ public class Start {
             }
         }
         if (args.isDebug()) {
-            // kind of dangerous as depends on prop file using names R, C, E
-            props.setProperty("log4j.rootCategory", "debug, R, C, E");
+            String rootCat = props.getProperty("log4j.rootCategory");
+            if (rootCat != null && rootCat.length()>0 && rootCat.contains(",")) {
+                String head = rootCat.substring(0, rootCat.indexOf(','));
+                String tail = rootCat.substring(rootCat.indexOf(','));
+                props.setProperty("log4j.rootCategory", "debug"+tail);
+                logger.info("--debug so resetting log4j.rootCategory from '"+rootCat+"' to '"+props.getProperty("log4j.rootCategory")+"'");
+            } else {
+                // oh well, just guess
+                props.setProperty("log4j.rootCategory", "debug, R, C, E");
+            }
         }
         PropertyConfigurator.configure(props);
         // Error html dir and output should be set up now, so remove the
