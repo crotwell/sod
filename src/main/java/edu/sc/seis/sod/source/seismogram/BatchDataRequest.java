@@ -23,6 +23,7 @@ public class BatchDataRequest implements SeismogramSourceLocator, Runnable {
     ConstantSeismogramSourceLocator wrappedLocator;
     static int NUM_LOADER_THREADS = 2;
     Thread[] loader = new Thread[NUM_LOADER_THREADS];
+    int loaderSleep = 100 * NUM_LOADER_THREADS; // rate limit less than 10 per sec
 
     public BatchDataRequest(SeismogramSourceLocator wrappedLocator) throws ConfigurationException {
         if ( ! ( wrappedLocator instanceof ConstantSeismogramSourceLocator)) {
@@ -66,7 +67,11 @@ public class BatchDataRequest implements SeismogramSourceLocator, Runnable {
                         batchProxy.seismogramSourceException(e);
                     }
                 }
-                
+                try {
+                    // rate limit
+                    Thread.sleep(loaderSleep);
+                } catch(InterruptedException e) {
+                }
             }
         }
     }
