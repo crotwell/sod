@@ -160,6 +160,11 @@
                         <data type="string"/>
                     </element>
                 </optional>
+                <optional>
+                    <element name="realm">
+                        <data type="string"/>
+                    </element>
+                </optional>
                 <choice>
                     <optional>
                         <element name="baseurl">

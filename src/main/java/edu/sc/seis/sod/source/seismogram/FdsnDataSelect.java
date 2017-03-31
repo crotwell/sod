@@ -45,6 +45,14 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
     private String username;
 
     private String password;
+    
+    private String realm;
+    
+    private int queryCount = 0;
+    
+    private int authFailCount = 0;
+    
+    public static final String IRIS_REALM = "IRIS";
 
     public static final String BAD_AUTH_MESSAGE = "The remote web service just indicated that the query was not authorized. "
     +"This may be because your username, password is wrong, the service does not support authentication or it could be a bug in SOD. "
@@ -56,6 +64,7 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
         timeoutMillis = 10 * 1000;
         username = "";
         password = "";
+        realm = "";
         checkFdsnStationLinkage();
     }
 
@@ -81,6 +90,7 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
         }
         username = SodUtil.loadText(config, "user", "");
         password = SodUtil.loadText(config, "password", "");
+        realm = SodUtil.loadText(config, "realm", null);// null realm means ANY
         timeoutMillis = 1000 * SodUtil.loadInt(config, "timeoutSecs", 10);
 
         checkFdsnStationLinkage();
@@ -196,7 +206,7 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
                 querier.setReadTimeout(timeoutMillis);
                 String restrictedStr = "query: ";
                 if (username != null && username.length() != 0 && password != null && password.length() != 0) {
-                    querier.enableRestrictedData(username, password);
+                    querier.enableRestrictedData(username, password, realm);
                     restrictedStr = "restricted "+restrictedStr;
                 }
                 try {
@@ -210,13 +220,30 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
                     while (drIt.hasNext()) {
                         drList.add(drIt.next());
                     }
+                    queryCount++;
                 } catch(FDSNWSException e) {
                     if (querier.getResponseCode() == 401 || querier.getResponseCode() == 403) {
-                        Start.simpleArmFailure(Start.getWaveformArmArray()[0], 
-                                               BAD_AUTH_MESSAGE+" "+querier.getResponseCode()
-                                               +"     "+((FDSNWSException)e).getMessage()
-                                               +" on "+((FDSNWSException)e).getTargetURI());
-                        throw new SeismogramAuthorizationException("Authorization failure to " + e.getTargetURI(), e);
+                        if (queryCount < 3 && authFailCount != 0) {
+                            // if we get an auth fail early on, but not very first, halt to warn the user they 
+                            // probably have entered a bad password. If later, try again
+                            // as sometimes have seen auth fails with same pw even after
+                            // dozens of successes
+                            Start.simpleArmFailure(Start.getWaveformArmArray()[0], 
+                                                   BAD_AUTH_MESSAGE+" "+querier.getResponseCode()
+                                                   +"     "+((FDSNWSException)e).getMessage()
+                                                   +" on "+((FDSNWSException)e).getTargetURI());
+                            throw new SeismogramAuthorizationException("Authorization failure to " + e.getTargetURI(), e);
+                        } else {
+                            authFailCount++;
+                            tryCount--;
+                            logger.info(authFailCount+" Authentication failures, but will trying "+tryCount+" more times: "+querier.getResponseCode()+" "+((FDSNWSException)e).getTargetURI());
+                            if (tryCount > 0) {
+                                return retrieveData(queryParams, queryRequest, tryCount);
+                            } else {
+                                // not sure I like this...
+                                throw new SeismogramSourceException("Auth fail retries exceeded", e);
+                            }
+                        }
                     } else if (querier.getResponseCode() == 400) {
                         // badly formed query, cowardly quit
                         Start.simpleArmFailure(Start.getWaveformArmArray()[0], 
@@ -238,6 +265,8 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
                     }
                 } catch(IOException e) {
                     throw new SeismogramSourceException(e);
+                } finally {
+                    querier.close();
                 }
                 return drList;
             }
