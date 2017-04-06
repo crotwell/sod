@@ -442,7 +442,15 @@
                     little endian byte order.  It defaults to writing in big endian order.</p>
                     <p>The sacHeaderScript allows manipulation of the sac file before it is written. This is a
                     type of script similar to seismogramScript. 
-                    The event is put as "event", the channel as "channel" and the sac file as "sac". </p></description>
+                    The event is put as "event", the channel as "channel" and the sac file as "sac". </p>
+                    <p>Because of the limitations of the SAC header in specifying the data units, this will not set 
+                    the idep header. In the case of having applied the response via transferResponse, the
+                    units will be displacement in meters in most cases, but setting the idep header to IDISP
+                    would imply the units are nanometers. Similarly for a velocity seismogram where only the overall
+                    gain has been applied, the units are most likely to be velocity in meters per second, but the
+                    IVEL value implies nanometers per second. Should you wish to set this header, you should be
+                    careful that the output data is scaled appropriately for the header value you use.</p>
+                    </description>
                 <example>
                     <sacWriter>
                         <workingDir>seismograms</workingDir>
