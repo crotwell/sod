@@ -64,6 +64,7 @@ public class WebAdmin implements ArmListener{
         addServlets(servlets, WaveformServlet.class, "waveforms" );
         addServlets(servlets, TauPServlet.class, "taup");
         addServlets(servlets, SodConfigServlet.class, "sod-configs");
+        addServlets(servlets, PerusalServlet.class, "perusals");
         
         // Add the ResourceHandler to the server.
         HandlerList handlers = new HandlerList();
