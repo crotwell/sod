@@ -8,14 +8,24 @@ import org.json.JSONWriter;
 
 public class JsonApi {
 
+    public static final String DETAIL = "detail";
+    public static final String ERRORS = "errors";
+    public static final String RELATIONSHIPS = "relationships";
+    public static final String LINKS = "links";
+    public static final String ATTRIBUTES = "attributes";
+    public static final String TYPE = "type";
+    public static final String ID = "id";
+    public static final String INCLUDED = "included";
+    public static final String DATA = "data";
+
     public static void encodeJson(JSONWriter out, JsonApiData data) throws JSONException {
         out.object();
-        out.key("data").object();
+        out.key(DATA).object();
         encodeInner(out, data);
         out.endObject();
         List<JsonApiData> include = data.included();
         if (include.size() > 0) {
-            out.key("included").array();
+            out.key(INCLUDED).array();
             for (JsonApiData jsonApiData : include) {
                 out.object();
                 encodeInner(out, jsonApiData);
@@ -27,33 +37,44 @@ public class JsonApi {
     }
     
     static void encodeInner(JSONWriter out, JsonApiData data) {
-        out.key("id").value(data.getId());
-        out.key("type").value(data.getType());
-        out.key("attributes").object();
+        out.key(ID).value(data.getId());
+        out.key(TYPE).value(data.getType());
+        out.key(ATTRIBUTES).object();
         data.encodeAttributes(out);
         out.endObject();
         if(data.hasLinks()) {
-            out.key("links").object();
+            out.key(LINKS).object();
             data.encodeLinks(out);
             out.endObject();
         }
         if(data.hasRelationships()) {
-            out.key("relationships").object();
+            out.key(RELATIONSHIPS).object();
             data.encodeRelationships(out);
             out.endObject();
         }
     }
 
-    public static void encodeJson(JSONWriter out, List<JsonApiData> dataList) throws JSONException {
+    public static void encodeJsonWithoutInclude(JSONWriter out, List<JsonApiData> dataList) throws JSONException {
         out.object();
-        out.key("data").array();
+        internalEncodeJsonWithoutInclude(out, dataList);
+        out.endObject();
+    }
+    
+    protected static void internalEncodeJsonWithoutInclude(JSONWriter out, List<JsonApiData> dataList) throws JSONException {
+        out.key(DATA).array();
         for (JsonApiData jsonApiData : dataList) {
             out.object();
-            out.key("id").value(jsonApiData.getId());
-            out.key("type").value(jsonApiData.getType());
+            out.key(ID).value(jsonApiData.getId());
+            out.key(TYPE).value(jsonApiData.getType());
             out.endObject();
         }
         out.endArray();
+    }
+    
+    public static void encodeJson(JSONWriter out, List<JsonApiData> dataList) throws JSONException {
+        out.object();
+        
+        internalEncodeJsonWithoutInclude(out, dataList);
         
         List<JsonApiData> toInclude = new ArrayList<JsonApiData>();
         toInclude.addAll(dataList);
@@ -61,7 +82,7 @@ public class JsonApi {
             toInclude.addAll(jsonApiData.included());
         }
 
-        out.key("included").array();
+        out.key(INCLUDED).array();
         for (JsonApiData jsonApiData : toInclude) {
             out.object();
             encodeInner(out, jsonApiData);
@@ -73,6 +94,6 @@ public class JsonApi {
     
     public static void encodeError(JSONWriter out, String message) {
         System.err.println("JsonApi.Error: "+message);
-        out.object().key("errors").array().object().key("detail").value(message).endObject().endArray().endObject();
+        out.object().key(ERRORS).array().object().key(DETAIL).value(message).endObject().endArray().endObject();
     }
 }

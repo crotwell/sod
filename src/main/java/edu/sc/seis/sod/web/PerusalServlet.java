@@ -9,6 +9,9 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -38,6 +41,10 @@ import edu.sc.seis.sod.web.jsonapi.JsonApiData;
 import edu.sc.seis.sod.web.jsonapi.PerusalJson;
 
 public class PerusalServlet extends HttpServlet {
+
+    private static final String PREV_ESP = "prevESP";
+
+    public static final String CURR_ESP = "currESP";
 
     public PerusalServlet() {
         this(WebAdmin.getApiBaseUrl());
@@ -74,13 +81,12 @@ public class PerusalServlet extends HttpServlet {
                 for (String p : perusalIds) {
                     jsonList.add(new PerusalJson(p, baseUrl));
                 }
-                JsonApi.encodeJson(out, jsonList);
+                JsonApi.encodeJsonWithoutInclude(out, jsonList);
             } else {
                 matcher = idPattern.matcher(URL);
                 if (matcher.matches()) {
                     String pId = matcher.group(1);
                     JSONObject p = loadPerusal(pId);
-                    updateNext(p);
                     writer.print(p);
                 } else {
                     logger.warn("Bad URL for servlet: " + URL);
@@ -103,15 +109,15 @@ public class PerusalServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         JSONObject inJson = loadFromReader(req.getReader());
         System.out.println("POST: " + inJson.toString(2));
-        JSONObject dataObj = inJson.getJSONObject("data");
+        JSONObject dataObj = inJson.getJSONObject(JsonApi.DATA);
         if (dataObj != null) {
-            String type = dataObj.getString("type");
-            String id = dataObj.optString("id");
+            String type = dataObj.getString(JsonApi.TYPE);
+            String id = dataObj.optString(JsonApi.ID);
             if (type.equals("perusal")) {
                 if (id.length() == 0) {
                     // empty id, so new, create
                     id = java.util.UUID.randomUUID().toString();
-                    dataObj.put("id", id);
+                    dataObj.put(JsonApi.ID, id);
                 }
                 // security, limit to simple filename
                 Matcher m = filenamePattern.matcher(id);
@@ -119,16 +125,8 @@ public class PerusalServlet extends HttpServlet {
                     resp.sendError(400, "Bad id: " + id);
                     return;
                 }
-                BufferedWriter out = null;
-                try {
-                    out = new BufferedWriter(new FileWriter(new File(perusalDir, id)));
-                    out.write(inJson.toString(2));
-                } finally {
-                    if (out != null) {
-                        out.close();
-                    }
-                }
                 updateNext(inJson);
+                savePerusal(id, inJson);
                 PrintWriter w = resp.getWriter();
                 w.print(inJson.toString(2));
                 w.close();
@@ -150,9 +148,55 @@ public class PerusalServlet extends HttpServlet {
 
     // @Override
     protected void doPatch(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("doPatch");
-        // temp...
-        doPut(req, resp);
+        String URL = req.getRequestURL().toString();
+        System.out.println("doPatch " + URL);
+        Matcher matcher = idPattern.matcher(URL);
+        PrintWriter writer = resp.getWriter();
+        JSONWriter out = new JSONWriter(writer);
+        try {
+            if (matcher.matches()) {
+                String id = matcher.group(1);
+                JSONObject p = loadPerusal(id);
+                JSONObject inJson = loadFromReader(req.getReader());
+
+                JSONObject pRelated = p.getJSONObject(JsonApi.DATA).getJSONObject(JsonApi.RELATIONSHIPS);
+                JSONObject pAttr = p.getJSONObject(JsonApi.DATA).getJSONObject(JsonApi.ATTRIBUTES);
+                JSONObject inRelated = inJson.getJSONObject(JsonApi.DATA).getJSONObject(JsonApi.RELATIONSHIPS);
+                JSONObject inAttr = inJson.getJSONObject(JsonApi.DATA).optJSONObject(JsonApi.ATTRIBUTES);
+                if (inAttr != null) {
+                    if (pAttr == null) {
+                        pAttr = new JSONObject();
+                        p.getJSONObject(JsonApi.DATA).put(JsonApi.ATTRIBUTES, pAttr);
+                    }
+                    Iterator<String> keyIt = inAttr.keys();
+                    while(keyIt.hasNext()) {
+                        String key = keyIt.next();
+                        pAttr.put(key, inAttr.get(key));
+                    }
+                }
+                if(inRelated != null) {
+                    if (pRelated == null) {
+                        pRelated = new JSONObject();
+                        p.getJSONObject(JsonApi.DATA).put(JsonApi.RELATIONSHIPS, pRelated);
+                    }
+                    Iterator<String> keyIt = inRelated.keys();
+                    while(keyIt.hasNext()) {
+                        String key = keyIt.next();
+                        pRelated.put(key, inRelated.get(key));
+                    }
+                }
+                updateNext(p);
+                savePerusal(id, p);
+                writer.print(p);
+            } else {
+                logger.warn("Bad URL for servlet: " + URL);
+                JsonApi.encodeError(out, "bad url for servlet: " + URL);
+                writer.close();
+                resp.sendError(500);
+            }
+        } finally {
+            writer.close();
+        }
     }
 
     @Override
@@ -165,7 +209,7 @@ public class PerusalServlet extends HttpServlet {
             File f = new File(perusalDir, pId);
             f.delete();
         }
-        resp.getWriter().close();//empty content
+        resp.getWriter().close();// empty content
     }
 
     @Override
@@ -185,6 +229,22 @@ public class PerusalServlet extends HttpServlet {
                 return matcher.matches();
             }
         }));
+    }
+
+    private void savePerusal(String id, JSONObject inJson) throws IOException {
+        BufferedWriter out = null;
+        try {
+            File pFile = new File(perusalDir, id);
+            if (pFile.exists()) {
+                Files.move(pFile.toPath(), new File(perusalDir, id+".old").toPath(), StandardCopyOption.REPLACE_EXISTING);
+            }
+            out = new BufferedWriter(new FileWriter(pFile));
+            out.write(inJson.toString(2));
+        } finally {
+            if (out != null) {
+                out.close();
+            }
+        }
     }
 
     protected JSONObject loadPerusal(String id) throws IOException {
@@ -222,15 +282,15 @@ public class PerusalServlet extends HttpServlet {
     }
 
     protected void updateNext(JSONObject p) {
-        JSONObject related = p.getJSONObject("data").getJSONObject("relationships");
-        JSONObject attr = p.getJSONObject("data").getJSONObject("attributes");
-        JSONObject curr = related.optJSONObject("currESP");
-        JSONObject prev = related.optJSONObject("prevESP");
-        if (curr == null || curr.getJSONObject("data").getString("id").length() == 0) {
+        JSONObject related = p.getJSONObject(JsonApi.DATA).getJSONObject(JsonApi.RELATIONSHIPS);
+        JSONObject attr = p.getJSONObject(JsonApi.DATA).getJSONObject(JsonApi.ATTRIBUTES);
+        JSONObject curr = related.optJSONObject(CURR_ESP);
+        JSONObject prev = related.optJSONObject(PREV_ESP);
+        if (curr == null || curr.getJSONObject(JsonApi.DATA).getString(JsonApi.ID).length() == 0) {
             // no next, so find
             int prevDbId = 0;
             EventStationPair next = null;
-            if (prev == null || prev.getJSONObject("data").getString("id").length() == 0) {
+            if (prev == null || prev.getJSONObject(JsonApi.DATA).getString(JsonApi.ID).length() == 0) {
                 // no prev, so first time
                 if (attr.getString(KEY_PRIMARY_SORT).equalsIgnoreCase(KEY_SORT_BY_EVENT)) {
                     next = getNextPrimaryEvent(null);
@@ -240,7 +300,7 @@ public class PerusalServlet extends HttpServlet {
                     // no more left
                 }
             } else {
-                prevDbId = Integer.parseInt(prev.getJSONObject("data").getString("id"));
+                prevDbId = Integer.parseInt(prev.getJSONObject(JsonApi.DATA).getString(JsonApi.ID));
                 String q = "from EventStationPair where dbid = " + prevDbId;
                 Query query = SodDB.getSession().createQuery(q);
                 EventStationPair esp = (EventStationPair)query.uniqueResult();
@@ -277,10 +337,10 @@ public class PerusalServlet extends HttpServlet {
                 EventStationJson esJson = new EventStationJson(next, baseUrl);
                 JSONObject nextJSON = new JSONObject();
                 JSONObject dataJSON = new JSONObject();
-                dataJSON.put("type", esJson.getType());
-                dataJSON.put("id", esJson.getId());
-                nextJSON.put("data", dataJSON);
-                related.put("currESP", nextJSON);
+                dataJSON.put(JsonApi.TYPE, esJson.getType());
+                dataJSON.put(JsonApi.ID, esJson.getId());
+                nextJSON.put(JsonApi.DATA, dataJSON);
+                related.put(CURR_ESP, nextJSON);
             }
         }
     }
@@ -337,6 +397,8 @@ public class PerusalServlet extends HttpServlet {
 
     private File perusalDir;
 
+    private static final JSONObject EMPTY_JSON = new JSONObject();
+    
     public static final String KEY_PRIMARY_SORT = "primary-sort";
 
     public static final String KEY_STATION_SORT = "station-sort";
