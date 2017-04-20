@@ -10,7 +10,7 @@ public class PerusalJson extends AbstractJsonApiData {
 
     @Override
     public String getType() {
-        return "perusal";
+        return PERUSAL;
     }
 
     @Override
@@ -23,5 +23,7 @@ public class PerusalJson extends AbstractJsonApiData {
     int currentESPair;
     
     String order;
+
+    public static final String PERUSAL = "perusal";
     
 }

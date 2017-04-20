@@ -192,4 +192,14 @@ public class WebAdmin implements ArmListener{
     public static String getApiBaseUrl() {
         return "/"+API;
     }
+
+    public static void setJsonHeader(HttpServletRequest req, HttpServletResponse resp) {
+        if (req.getHeader("accept") != null && req.getHeader("accept").contains("application/vnd.api+json")) {
+            resp.setContentType("application/vnd.api+json");
+            logger.info("      contentType: application/vnd.api+json");
+        } else {
+            resp.setContentType("application/json");
+            logger.info("      contentType: application/json");
+        }
+    }
 }

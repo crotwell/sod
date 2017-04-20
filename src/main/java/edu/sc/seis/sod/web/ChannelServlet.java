@@ -28,13 +28,7 @@ public class ChannelServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String URL = req.getRequestURL().toString();
         logger.info("GET: " + URL);
-        if (req.getHeader("accept") != null && req.getHeader("accept").contains("application/vnd.api+json")) {
-            resp.setContentType("application/vnd.api+json");
-            logger.info("      contentType: application/vnd.api+json");
-        } else {
-            resp.setContentType("application/json");
-            logger.info("      contentType: application/json");
-        }
+        WebAdmin.setJsonHeader(req, resp);
         PrintWriter writer = resp.getWriter();
         JSONWriter out = new JSONWriter(writer);
         NetworkDB netdb = NetworkDB.getSingleton();

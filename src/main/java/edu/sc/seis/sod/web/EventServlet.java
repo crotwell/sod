@@ -47,13 +47,7 @@ public class EventServlet extends HttpServlet {
         String URL = req.getRequestURL().toString();
         logger.info("GET: " + URL);
         Matcher matcher = singleEvent.matcher(URL);
-        if (req.getHeader("accept") != null && req.getHeader("accept").contains("application/vnd.api+json")) {
-            resp.setContentType("application/vnd.api+json");
-            logger.info("      contentType: application/vnd.api+json");
-        } else {
-            resp.setContentType("application/json");
-            logger.info("      contentType: application/json");
-        }
+        WebAdmin.setJsonHeader(req, resp);
         PrintWriter writer = resp.getWriter();
         JSONWriter out = new JSONWriter(writer);
         if (matcher.matches()) {

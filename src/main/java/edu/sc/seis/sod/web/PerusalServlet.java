@@ -8,8 +8,6 @@ import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.Writer;
-import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
@@ -32,7 +30,6 @@ import org.json.JSONWriter;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
 import edu.sc.seis.sod.EventStationPair;
-import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.StatefulEvent;
 import edu.sc.seis.sod.web.jsonapi.EventStationJson;
@@ -63,14 +60,9 @@ public class PerusalServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             String URL = req.getRequestURL().toString();
+            System.out.println("GET: " + URL);
             logger.info("GET: " + URL);
-            if (req.getHeader("accept") != null && req.getHeader("accept").contains("application/vnd.api+json")) {
-                resp.setContentType("application/vnd.api+json");
-                logger.info("      contentType: application/vnd.api+json");
-            } else {
-                resp.setContentType("application/json");
-                logger.info("      contentType: application/json");
-            }
+            WebAdmin.setJsonHeader(req, resp);
             PrintWriter writer = resp.getWriter();
             JSONWriter out = new JSONWriter(writer);
             Matcher matcher = allPattern.matcher(URL);
@@ -107,13 +99,14 @@ public class PerusalServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        WebAdmin.setJsonHeader(req, resp);
         JSONObject inJson = loadFromReader(req.getReader());
         System.out.println("POST: " + inJson.toString(2));
         JSONObject dataObj = inJson.getJSONObject(JsonApi.DATA);
         if (dataObj != null) {
             String type = dataObj.getString(JsonApi.TYPE);
             String id = dataObj.optString(JsonApi.ID);
-            if (type.equals("perusal")) {
+            if (type.equals(PerusalJson.PERUSAL)) {
                 if (id.length() == 0) {
                     // empty id, so new, create
                     id = java.util.UUID.randomUUID().toString();
@@ -148,6 +141,7 @@ public class PerusalServlet extends HttpServlet {
 
     // @Override
     protected void doPatch(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        WebAdmin.setJsonHeader(req, resp);
         String URL = req.getRequestURL().toString();
         System.out.println("doPatch " + URL);
         Matcher matcher = idPattern.matcher(URL);
@@ -202,6 +196,7 @@ public class PerusalServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String URL = req.getRequestURL().toString();
+        System.out.println("DELETE: " + URL);
         logger.info("DELETE: " + URL);
         Matcher matcher = idPattern.matcher(URL);
         if (matcher.matches()) {
