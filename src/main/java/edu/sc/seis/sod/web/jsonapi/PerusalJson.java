@@ -20,10 +20,8 @@ public class PerusalJson extends AbstractJsonApiData {
     
     String id;
     
-    int currentESPair;
-    
     String order;
 
-    public static final String PERUSAL = "perusal";
+    public static final String PERUSAL = "perusals";
     
 }

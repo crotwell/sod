@@ -39,9 +39,11 @@ import edu.sc.seis.sod.web.jsonapi.PerusalJson;
 
 public class PerusalServlet extends HttpServlet {
 
-    private static final String PREV_ESP = "prevESP";
+    private static final String PREV_ESP = "prev";
 
-    public static final String CURR_ESP = "currESP";
+    public static final String CURR_ESP = "curr";
+
+    public static final String NEXT_ESP = "next";
 
     public PerusalServlet() {
         this(WebAdmin.getApiBaseUrl());
@@ -79,7 +81,7 @@ public class PerusalServlet extends HttpServlet {
                 if (matcher.matches()) {
                     String pId = matcher.group(1);
                     JSONObject p = loadPerusal(pId);
-                    writer.print(p);
+                    writer.print(p.toString(2));
                 } else {
                     logger.warn("Bad URL for servlet: " + URL);
                     JsonApi.encodeError(out, "bad url for servlet: " + URL);
@@ -100,8 +102,9 @@ public class PerusalServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         WebAdmin.setJsonHeader(req, resp);
+        String URL = req.getRequestURL().toString();
         JSONObject inJson = loadFromReader(req.getReader());
-        System.out.println("POST: " + inJson.toString(2));
+        System.out.println("POST: " + URL + "  " + inJson.toString(2));
         JSONObject dataObj = inJson.getJSONObject(JsonApi.DATA);
         if (dataObj != null) {
             String type = dataObj.getString(JsonApi.TYPE);
@@ -152,7 +155,6 @@ public class PerusalServlet extends HttpServlet {
                 String id = matcher.group(1);
                 JSONObject p = loadPerusal(id);
                 JSONObject inJson = loadFromReader(req.getReader());
-
                 JSONObject pRelated = p.getJSONObject(JsonApi.DATA).getJSONObject(JsonApi.RELATIONSHIPS);
                 JSONObject pAttr = p.getJSONObject(JsonApi.DATA).getJSONObject(JsonApi.ATTRIBUTES);
                 JSONObject inRelated = inJson.getJSONObject(JsonApi.DATA).getJSONObject(JsonApi.RELATIONSHIPS);
@@ -163,25 +165,25 @@ public class PerusalServlet extends HttpServlet {
                         p.getJSONObject(JsonApi.DATA).put(JsonApi.ATTRIBUTES, pAttr);
                     }
                     Iterator<String> keyIt = inAttr.keys();
-                    while(keyIt.hasNext()) {
+                    while (keyIt.hasNext()) {
                         String key = keyIt.next();
                         pAttr.put(key, inAttr.get(key));
                     }
                 }
-                if(inRelated != null) {
+                if (inRelated != null) {
                     if (pRelated == null) {
                         pRelated = new JSONObject();
                         p.getJSONObject(JsonApi.DATA).put(JsonApi.RELATIONSHIPS, pRelated);
                     }
                     Iterator<String> keyIt = inRelated.keys();
-                    while(keyIt.hasNext()) {
+                    while (keyIt.hasNext()) {
                         String key = keyIt.next();
                         pRelated.put(key, inRelated.get(key));
                     }
                 }
                 updateNext(p);
                 savePerusal(id, p);
-                writer.print(p);
+                writer.print(p.toString(2));
             } else {
                 logger.warn("Bad URL for servlet: " + URL);
                 JsonApi.encodeError(out, "bad url for servlet: " + URL);
@@ -231,7 +233,9 @@ public class PerusalServlet extends HttpServlet {
         try {
             File pFile = new File(perusalDir, id);
             if (pFile.exists()) {
-                Files.move(pFile.toPath(), new File(perusalDir, id+".old").toPath(), StandardCopyOption.REPLACE_EXISTING);
+                Files.move(pFile.toPath(),
+                           new File(perusalDir, id + ".old").toPath(),
+                           StandardCopyOption.REPLACE_EXISTING);
             }
             out = new BufferedWriter(new FileWriter(pFile));
             out.write(inJson.toString(2));
@@ -276,68 +280,105 @@ public class PerusalServlet extends HttpServlet {
         return out;
     }
 
+    protected int extractESP_dbid(JSONObject curr) {
+        if (curr == null) {
+            return -1;
+        }
+        if (!curr.has(JsonApi.DATA)) {
+            return -1;
+        }
+        JSONObject data = curr.optJSONObject(JsonApi.DATA);
+        if (data == null) {
+            return -1;
+        }
+        if (!data.has(JsonApi.ID)) {
+            return -1;
+        }
+        return Integer.parseInt(data.optString(JsonApi.ID, "-4"));
+    }
+
     protected void updateNext(JSONObject p) {
+        System.out.println("updateNext: " + p.toString(2));
         JSONObject related = p.getJSONObject(JsonApi.DATA).getJSONObject(JsonApi.RELATIONSHIPS);
         JSONObject attr = p.getJSONObject(JsonApi.DATA).getJSONObject(JsonApi.ATTRIBUTES);
         JSONObject curr = related.optJSONObject(CURR_ESP);
         JSONObject prev = related.optJSONObject(PREV_ESP);
-        if (curr == null || curr.getJSONObject(JsonApi.DATA).getString(JsonApi.ID).length() == 0) {
+        System.err.println("curr data: " + curr.optJSONObject(JsonApi.DATA));
+        int currDbid = extractESP_dbid(curr);
+        if (currDbid < 0) {
             // no next, so find
-            int prevDbId = 0;
-            EventStationPair next = null;
-            if (prev == null || prev.getJSONObject(JsonApi.DATA).getString(JsonApi.ID).length() == 0) {
-                // no prev, so first time
-                if (attr.getString(KEY_PRIMARY_SORT).equalsIgnoreCase(KEY_SORT_BY_EVENT)) {
-                    next = getNextPrimaryEvent(null);
-                    // no more left
-                } else {
-                    next = getNextPrimaryStation(null);
-                    // no more left
-                }
-            } else {
-                prevDbId = Integer.parseInt(prev.getJSONObject(JsonApi.DATA).getString(JsonApi.ID));
-                String q = "from EventStationPair where dbid = " + prevDbId;
-                Query query = SodDB.getSession().createQuery(q);
-                EventStationPair esp = (EventStationPair)query.uniqueResult();
-                List<EventStationPair> nextESPList;
-                StatefulEvent currEvent = esp.getEvent();
-                StationImpl currStation = esp.getStation();
-                if (attr.getString(KEY_PRIMARY_SORT).equalsIgnoreCase(KEY_SORT_BY_EVENT)) {
-                    nextESPList = SodDB.getSingleton().getSuccessfulESPForStation(currStation);
-                } else {
-                    nextESPList = SodDB.getSingleton().getSuccessfulESPForEvent(currEvent);
-                }
-                Iterator<EventStationPair> iterator = nextESPList.iterator();
-                while (iterator.hasNext()) {
-                    EventStationPair eventStationPair = iterator.next();
-                    if (eventStationPair.getDbid() == prevDbId) {
-                        // found it
-                        break;
-                    }
-                }
-                if (iterator.hasNext()) {
-                    next = iterator.next();
-                } else {
-                    // no next in sub-sort, go to next in primary
-                    if (attr.getString(KEY_PRIMARY_SORT).equalsIgnoreCase(KEY_SORT_BY_EVENT)) {
-                        next = getNextPrimaryEvent(currEvent);
-                        // no more left
-                    } else {
-                        next = getNextPrimaryStation(currStation);
-                        // no more left
-                    }
-                }
-            }
-            if (next != null) {
-                EventStationJson esJson = new EventStationJson(next, baseUrl);
-                JSONObject nextJSON = new JSONObject();
+            String primarySort = attr.optString(KEY_PRIMARY_SORT, KEY_SORT_BY_QUAKE);
+            String quakeSort = attr.optString(KEY_PRIMARY_SORT, KEY_SORT_BY_TIME);
+            String stationSort = attr.optString(KEY_PRIMARY_SORT, KEY_SORT_BY_DISTANCE);
+            int prevDbId = extractESP_dbid(prev);
+            EventStationPair currESP = findNext(prevDbId, primarySort, quakeSort, stationSort);
+            if (currESP != null) {
+                EventStationJson esJson = new EventStationJson(currESP, baseUrl);
+                JSONObject currJSON = new JSONObject();
                 JSONObject dataJSON = new JSONObject();
                 dataJSON.put(JsonApi.TYPE, esJson.getType());
                 dataJSON.put(JsonApi.ID, esJson.getId());
+                currJSON.put(JsonApi.DATA, dataJSON);
+                related.put(CURR_ESP, currJSON);
+                EventStationPair nextESP = findNext(currESP.getDbid(), primarySort, quakeSort, stationSort);
+                esJson = new EventStationJson(nextESP, baseUrl);
+                JSONObject nextJSON = new JSONObject();
+                dataJSON = new JSONObject();
+                dataJSON.put(JsonApi.TYPE, esJson.getType());
+                dataJSON.put(JsonApi.ID, esJson.getId());
                 nextJSON.put(JsonApi.DATA, dataJSON);
-                related.put(CURR_ESP, nextJSON);
+                related.put(NEXT_ESP, nextJSON);
             }
         }
+    }
+
+    private EventStationPair findNext(long prevDbId, String primarySort, String quakeSort, String stationSort) {
+        EventStationPair next = null;
+        if (prevDbId <= 0) {
+            // no prev, so first time
+            if (primarySort.equalsIgnoreCase(KEY_SORT_BY_QUAKE)) {
+                next = getNextPrimaryEvent(null);
+                // no more left
+            } else {
+                next = getNextPrimaryStation(null);
+                // no more left
+            }
+        } else {
+            String q = "from EventStationPair where dbid = " + prevDbId;
+            Query query = SodDB.getSession().createQuery(q);
+            EventStationPair esp = (EventStationPair)query.uniqueResult();
+            List<EventStationPair> nextESPList;
+            StatefulEvent currEvent = esp.getEvent();
+            StationImpl currStation = esp.getStation();
+            if (primarySort.equalsIgnoreCase(KEY_SORT_BY_QUAKE)) {
+                // same quake, look for next station
+                nextESPList = SodDB.getSingleton().getSuccessfulESPForStation(currStation);
+            } else {
+                // same stations, look for next quake
+                nextESPList = SodDB.getSingleton().getSuccessfulESPForEvent(currEvent);
+            }
+            Iterator<EventStationPair> iterator = nextESPList.iterator();
+            while (iterator.hasNext()) {
+                EventStationPair eventStationPair = iterator.next();
+                if (eventStationPair.getDbid() == prevDbId) {
+                    // found it
+                    break;
+                }
+            }
+            if (iterator.hasNext()) {
+                next = iterator.next();
+            } else {
+                // no next in sub-sort, go to next in primary
+                if (primarySort.equalsIgnoreCase(KEY_SORT_BY_QUAKE)) {
+                    next = getNextPrimaryEvent(currEvent);
+                    // no more left
+                } else {
+                    next = getNextPrimaryStation(currStation);
+                    // no more left
+                }
+            }
+        }
+        return next;
     }
 
     private EventStationPair getNextPrimaryStation(StationImpl currStation) {
@@ -354,8 +395,12 @@ public class PerusalServlet extends HttpServlet {
         while (staIt.hasNext()) {
             StationImpl s = staIt.next();
             List<EventStationPair> nextESPList = SodDB.getSingleton().getSuccessfulESPForStation(s);
-            if (nextESPList.size() > 0) {
-                return nextESPList.get(0);
+            Iterator<EventStationPair> espIt = nextESPList.iterator();
+            while (espIt.hasNext()) {
+                EventStationPair nEsp = espIt.next();
+                if (SodDB.getSingleton().getNumSuccessful(nEsp.getEvent(), nEsp.getStation()) > 0) {
+                    return nEsp;
+                }
             }
         }
         return null;
@@ -375,8 +420,12 @@ public class PerusalServlet extends HttpServlet {
         while (eventIt.hasNext()) {
             StatefulEvent e = eventIt.next();
             List<EventStationPair> nextESPList = SodDB.getSingleton().getSuccessfulESPForEvent(e);
-            if (nextESPList.size() > 0) {
-                return nextESPList.get(0);
+            Iterator<EventStationPair> espIt = nextESPList.iterator();
+            while (espIt.hasNext()) {
+                EventStationPair nEsp = espIt.next();
+                if (SodDB.getSingleton().getNumSuccessful(nEsp.getEvent(), nEsp.getStation()) > 0) {
+                    return nEsp;
+                }
             }
         }
         return null;
@@ -393,16 +442,20 @@ public class PerusalServlet extends HttpServlet {
     private File perusalDir;
 
     private static final JSONObject EMPTY_JSON = new JSONObject();
-    
+
     public static final String KEY_PRIMARY_SORT = "primary-sort";
 
     public static final String KEY_STATION_SORT = "station-sort";
 
-    public static final String KEY_EVENT_SORT = "event-sort";
+    public static final String KEY_EVENT_SORT = "quake-sort";
 
-    public static final String KEY_SORT_BY_EVENT = "event";
+    public static final String KEY_SORT_BY_QUAKE = "quake";
 
     public static final String KEY_SORT_BY_STATION = "station";
+
+    public static final String KEY_SORT_BY_TIME = "time";
+
+    public static final String KEY_SORT_BY_DISTANCE = "distance";
 
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(PerusalServlet.class);
 }
