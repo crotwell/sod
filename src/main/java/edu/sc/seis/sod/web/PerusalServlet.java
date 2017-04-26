@@ -206,6 +206,7 @@ public class PerusalServlet extends HttpServlet {
             File f = new File(perusalDir, pId);
             f.delete();
         }
+        resp.setStatus(resp.SC_NO_CONTENT);
         resp.getWriter().close();// empty content
     }
 
@@ -303,33 +304,57 @@ public class PerusalServlet extends HttpServlet {
         JSONObject attr = p.getJSONObject(JsonApi.DATA).getJSONObject(JsonApi.ATTRIBUTES);
         JSONObject curr = related.optJSONObject(CURR_ESP);
         JSONObject prev = related.optJSONObject(PREV_ESP);
+        JSONObject next = related.optJSONObject(NEXT_ESP);
         System.err.println("curr data: " + curr.optJSONObject(JsonApi.DATA));
-        int currDbid = extractESP_dbid(curr);
-        if (currDbid < 0) {
+        int currDbId = extractESP_dbid(curr);
+        int prevDbId = extractESP_dbid(prev);
+        int nextDbId = extractESP_dbid(next);
+        String primarySort = attr.optString(KEY_PRIMARY_SORT, KEY_SORT_BY_QUAKE);
+        String quakeSort = attr.optString(KEY_PRIMARY_SORT, KEY_SORT_BY_TIME);
+        String stationSort = attr.optString(KEY_PRIMARY_SORT, KEY_SORT_BY_DISTANCE);
+        if (currDbId < 0) {
             // no next, so find
-            String primarySort = attr.optString(KEY_PRIMARY_SORT, KEY_SORT_BY_QUAKE);
-            String quakeSort = attr.optString(KEY_PRIMARY_SORT, KEY_SORT_BY_TIME);
-            String stationSort = attr.optString(KEY_PRIMARY_SORT, KEY_SORT_BY_DISTANCE);
-            int prevDbId = extractESP_dbid(prev);
-            EventStationPair currESP = findNext(prevDbId, primarySort, quakeSort, stationSort);
-            if (currESP != null) {
-                EventStationJson esJson = new EventStationJson(currESP, baseUrl);
-                JSONObject currJSON = new JSONObject();
-                JSONObject dataJSON = new JSONObject();
-                dataJSON.put(JsonApi.TYPE, esJson.getType());
-                dataJSON.put(JsonApi.ID, esJson.getId());
-                currJSON.put(JsonApi.DATA, dataJSON);
-                related.put(CURR_ESP, currJSON);
-                EventStationPair nextESP = findNext(currESP.getDbid(), primarySort, quakeSort, stationSort);
-                esJson = new EventStationJson(nextESP, baseUrl);
-                JSONObject nextJSON = new JSONObject();
-                dataJSON = new JSONObject();
-                dataJSON.put(JsonApi.TYPE, esJson.getType());
-                dataJSON.put(JsonApi.ID, esJson.getId());
-                nextJSON.put(JsonApi.DATA, dataJSON);
-                related.put(NEXT_ESP, nextJSON);
+            if (prevDbId > 0) {
+                // have prev, so set curr and next based on prev
+                EventStationPair currESP = findNext(prevDbId, primarySort, quakeSort, stationSort);
+                if (currESP != null) {
+                    EventStationJson esJson = new EventStationJson(currESP, baseUrl);
+                    related.put(CURR_ESP, formJsonRelatedFromESP(esJson));
+                    EventStationPair nextESP = findNext(currESP.getDbid(), primarySort, quakeSort, stationSort);
+                    esJson = new EventStationJson(nextESP, baseUrl);
+                    related.put(NEXT_ESP, formJsonRelatedFromESP(esJson));
+                }
+            } else if (nextDbId > 0) {
+                // have next but not prev, curr, so back out curr and prev from
+                // next
+            } else {
+                // nothing, so start at beginning
+                EventStationPair currESP = findNext(-1, primarySort, quakeSort, stationSort);
+                if (currESP != null) {
+                    EventStationJson esJson = new EventStationJson(currESP, baseUrl);
+                    related.put(CURR_ESP, formJsonRelatedFromESP(esJson));
+                    EventStationPair nextESP = findNext(currESP.getDbid(), primarySort, quakeSort, stationSort);
+                    esJson = new EventStationJson(nextESP, baseUrl);
+                    related.put(NEXT_ESP, formJsonRelatedFromESP(esJson));
+                }
+            }
+        } else {
+            // have curr, so find prev and next based off curr
+            EventStationPair nextESP = findNext(currDbId, primarySort, quakeSort, stationSort);
+            if (nextESP != null) {
+                EventStationJson esJson = new EventStationJson(nextESP, baseUrl);
+                related.put(NEXT_ESP, formJsonRelatedFromESP(esJson));
             }
         }
+    }
+
+    private JSONObject formJsonRelatedFromESP(EventStationJson esJson) {
+        JSONObject currJSON = new JSONObject();
+        JSONObject dataJSON = new JSONObject();
+        dataJSON.put(JsonApi.TYPE, esJson.getType());
+        dataJSON.put(JsonApi.ID, esJson.getId());
+        currJSON.put(JsonApi.DATA, dataJSON);
+        return currJSON;
     }
 
     private EventStationPair findNext(long prevDbId, String primarySort, String quakeSort, String stationSort) {
@@ -352,10 +377,10 @@ public class PerusalServlet extends HttpServlet {
             StationImpl currStation = esp.getStation();
             if (primarySort.equalsIgnoreCase(KEY_SORT_BY_QUAKE)) {
                 // same quake, look for next station
-                nextESPList = SodDB.getSingleton().getSuccessfulESPForStation(currStation);
+                nextESPList = SodDB.getSingleton().getSuccessfulESPForEvent(currEvent);
             } else {
                 // same stations, look for next quake
-                nextESPList = SodDB.getSingleton().getSuccessfulESPForEvent(currEvent);
+                nextESPList = SodDB.getSingleton().getSuccessfulESPForStation(currStation);
             }
             Iterator<EventStationPair> iterator = nextESPList.iterator();
             while (iterator.hasNext()) {
@@ -365,17 +390,19 @@ public class PerusalServlet extends HttpServlet {
                     break;
                 }
             }
-            if (iterator.hasNext()) {
+            while (iterator.hasNext()) {
                 next = iterator.next();
-            } else {
-                // no next in sub-sort, go to next in primary
-                if (primarySort.equalsIgnoreCase(KEY_SORT_BY_QUAKE)) {
-                    next = getNextPrimaryEvent(currEvent);
-                    // no more left
-                } else {
-                    next = getNextPrimaryStation(currStation);
-                    // no more left
+                if (SodDB.getSingleton().getNumSuccessful(next.getEvent(), next.getStation()) > 0) {
+                    return next;
                 }
+            }
+            // no next in sub-sort, go to next in primary
+            if (primarySort.equalsIgnoreCase(KEY_SORT_BY_QUAKE)) {
+                next = getNextPrimaryEvent(currEvent);
+                // no more left
+            } else {
+                next = getNextPrimaryStation(currStation);
+                // no more left
             }
         }
         return next;
@@ -385,9 +412,10 @@ public class PerusalServlet extends HttpServlet {
         List<StationImpl> allStationList = Arrays.asList(NetworkDB.getSingleton().getAllStations());
         // should sort here
         Iterator<StationImpl> staIt = allStationList.iterator();
+        StationImpl currS = null;
         while (currStation != null && staIt.hasNext()) {
-            StationImpl s = staIt.next();
-            if (s.getDbid() == currStation.getDbid()) {
+            currS = staIt.next();
+            if (currS.getDbid() == currStation.getDbid()) {
                 // found it
                 break;
             }
