@@ -1,13 +1,18 @@
 package edu.sc.seis.sod.web.jsonapi;
 
+import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONWriter;
 
 import edu.sc.seis.fissuresUtil.bag.DistAz;
 import edu.sc.seis.sod.AbstractEventChannelPair;
+import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.EventStationPair;
+import edu.sc.seis.sod.measure.Measurement;
+import edu.sc.seis.sod.measure.TextMeasurement;
 
 public class EventStationJson extends AbstractJsonApiData {
 
@@ -85,6 +90,31 @@ public class EventStationJson extends AbstractJsonApiData {
             out.endObject();// links
             out.endObject();// ecps
         }
+        Map<String, Serializable> cookies = esp.getCookies();
+
+        out.key("measurements");
+        out.object();
+        out.key("links").object();
+        out.key("self").value(baseUrl + "/quake-stations/" + getId() + "/relationships/measurements");
+        out.key("related").value(baseUrl + "/quake-stations/" + getId() + "/measurements");
+        out.endObject();// links
+//        out.key("data").array();
+//        for (String cookieName : cookies.keySet()) {
+//            Serializable cookie = cookies.get(cookieName);
+//            if (cookie instanceof Measurement) {
+//            out.object();
+//            out.key("id").value(cookie.dbid);
+//            if (cookie instanceof TextMeasurement) {
+//                out.key("type").value("measurement-text");
+//            } else {
+//                out.key("type").value("measurement");
+//            }
+//            out.endObject();
+//            }
+//        }
+//        out.endArray();
+        out.endObject();
+        
     }
 
     @Override

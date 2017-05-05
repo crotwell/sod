@@ -65,6 +65,9 @@ public class WebAdmin implements ArmListener{
         addServlets(servlets, TauPServlet.class, "taup");
         addServlets(servlets, SodConfigServlet.class, "sod-configs");
         addServlets(servlets, PerusalServlet.class, "perusals");
+        addServlets(servlets, MeasurementToolServlet.class, "measurement-tools");
+        addServlets(servlets, MeasurementTextServlet.class, "measurement");
+        addServlets(servlets, MeasurementTextServlet.class, "measurement-texts");
         
         // Add the ResourceHandler to the server.
         HandlerList handlers = new HandlerList();
@@ -128,12 +131,12 @@ public class WebAdmin implements ArmListener{
         }
         
     }
-    
+
     void addServlets(ServletHandler servlets, Class<? extends Servlet> servletClass, String partialUrl) {
         servlets.addServletWithMapping(servletClass, "/"+API+"/"+partialUrl);
         servlets.addServletWithMapping(servletClass, "/"+API+"/"+partialUrl+"/");
         servlets.addServletWithMapping(servletClass, "/"+API+"/"+partialUrl+"/*");
-    }
+     }
 
     
     

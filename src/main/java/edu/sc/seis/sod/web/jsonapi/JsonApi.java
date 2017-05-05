@@ -1,9 +1,12 @@
 package edu.sc.seis.sod.web.jsonapi;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.json.JSONWriter;
 
 public class JsonApi {
@@ -95,5 +98,16 @@ public class JsonApi {
     public static void encodeError(JSONWriter out, String message) {
         System.err.println("JsonApi.Error: "+message);
         out.object().key(ERRORS).array().object().key(DETAIL).value(message).endObject().endArray().endObject();
+    }
+
+    public static JSONObject loadFromReader(BufferedReader in) throws IOException {
+        StringBuffer json = new StringBuffer();
+        char[] buf = new char[1024];
+        int numRead = 0;
+        while ((numRead = in.read(buf)) != -1) {
+            json.append(String.valueOf(buf, 0, numRead));
+        }
+        JSONObject out = new JSONObject(json.toString());
+        return out;
     }
 }
