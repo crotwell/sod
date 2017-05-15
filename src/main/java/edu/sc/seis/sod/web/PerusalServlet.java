@@ -45,6 +45,8 @@ public class PerusalServlet  extends JsonToFileServlet {
         // TODO Auto-generated constructor stub
     }
 
+    private static final String FIRST_ESP = "first";
+
     private static final String PREV_ESP = "prev";
 
     public static final String CURR_ESP = "curr";
@@ -84,21 +86,23 @@ public class PerusalServlet  extends JsonToFileServlet {
     protected void updateMeasurementPerusalLink(JSONObject p) throws IOException {
         String pId = p.getJSONObject(JsonApi.DATA).getString(JsonApi.ID);
         JSONObject related = p.getJSONObject(JsonApi.DATA).getJSONObject(JsonApi.RELATIONSHIPS);
-        JSONArray tools = related.getJSONObject("tools").getJSONArray(JsonApi.DATA);
+        if (related.has("tools")) {
+            JSONArray tools = related.getJSONObject("tools").getJSONArray(JsonApi.DATA);
 
-        MeasurementToolServlet mtServlet = new MeasurementToolServlet();
-        for( int i=0; i<tools.length(); i++) {
-            JSONObject mt = tools.getJSONObject(i);
-            logger.debug("Try to update perusal on "+mt.toString(2));
-            String mId = mt.getString(JsonApi.ID);
-            logger.debug("Got mId: "+mId);
-            JSONObject mObj = mtServlet.load(mId);
-            logger.debug("Load MT "+mObj.toString(2));
-            JSONObject mObjPerusal = mObj.getJSONObject(JsonApi.DATA).getJSONObject(JsonApi.RELATIONSHIPS).getJSONObject("perusal").getJSONObject(JsonApi.DATA);
-            logger.debug("Got mObjPerusal");
-            if( mObjPerusal.isNull(JsonApi.ID) || ! pId.equals(mObjPerusal.getString(JsonApi.ID))) {
-                mObjPerusal.put(JsonApi.ID, pId);
-                mtServlet.save(mId, mObj);
+            MeasurementToolServlet mtServlet = new MeasurementToolServlet();
+            for( int i=0; i<tools.length(); i++) {
+                JSONObject mt = tools.getJSONObject(i);
+                logger.debug("Try to update perusal on "+mt.toString(2));
+                String mId = mt.getString(JsonApi.ID);
+                logger.debug("Got mId: "+mId);
+                JSONObject mObj = mtServlet.load(mId);
+                logger.debug("Load MT "+mObj.toString(2));
+                JSONObject mObjPerusal = mObj.getJSONObject(JsonApi.DATA).getJSONObject(JsonApi.RELATIONSHIPS).getJSONObject("perusal").getJSONObject(JsonApi.DATA);
+                logger.debug("Got mObjPerusal");
+                if( mObjPerusal.isNull(JsonApi.ID) || ! pId.equals(mObjPerusal.getString(JsonApi.ID))) {
+                    mObjPerusal.put(JsonApi.ID, pId);
+                    mtServlet.save(mId, mObj);
+                }
             }
         }
     }
@@ -107,18 +111,25 @@ public class PerusalServlet  extends JsonToFileServlet {
         System.out.println("updateNext: " + p.toString(2));
         JSONObject related = p.getJSONObject(JsonApi.DATA).getJSONObject(JsonApi.RELATIONSHIPS);
         JSONObject attr = p.getJSONObject(JsonApi.DATA).getJSONObject(JsonApi.ATTRIBUTES);
+        JSONObject first = related.optJSONObject(FIRST_ESP);
         JSONObject curr = related.optJSONObject(CURR_ESP);
         JSONObject prev = related.optJSONObject(PREV_ESP);
         JSONObject next = related.optJSONObject(NEXT_ESP);
         System.err.println("curr data: " + curr.optJSONObject(JsonApi.DATA));
+        int firstDbId = extractESP_dbid(first);
         int currDbId = extractESP_dbid(curr);
         int prevDbId = extractESP_dbid(prev);
         int nextDbId = extractESP_dbid(next);
         String primarySort = attr.optString(KEY_PRIMARY_SORT, KEY_SORT_BY_QUAKE);
         String quakeSort = attr.optString(KEY_PRIMARY_SORT, KEY_SORT_BY_TIME);
         String stationSort = attr.optString(KEY_PRIMARY_SORT, KEY_SORT_BY_DISTANCE);
+        if (firstDbId>0 && currDbId < 0 && prevDbId < 0 && nextDbId < 0) {
+            // likely going back to beginning, set prevDbId to firstDbId so if below will pick up
+            // at right place
+            prevDbId = firstDbId;
+        }
         if (currDbId < 0) {
-            // no next, so find
+            // no curr, so find
             if (prevDbId > 0) {
                 // have prev, so set curr and next based on prev
                 EventStationPair currESP = findNext(prevDbId, primarySort, quakeSort, stationSort);
@@ -138,6 +149,7 @@ public class PerusalServlet  extends JsonToFileServlet {
                 if (currESP != null) {
                     EventStationJson esJson = new EventStationJson(currESP, baseUrl);
                     related.put(CURR_ESP, formJsonRelatedFromESP(esJson));
+                    related.put(FIRST_ESP, formJsonRelatedFromESP(esJson)); // also set first
                     EventStationPair nextESP = findNext(currESP.getDbid(), primarySort, quakeSort, stationSort);
                     esJson = new EventStationJson(nextESP, baseUrl);
                     related.put(NEXT_ESP, formJsonRelatedFromESP(esJson));
@@ -151,7 +163,7 @@ public class PerusalServlet  extends JsonToFileServlet {
                 related.put(NEXT_ESP, formJsonRelatedFromESP(esJson));
             }
         }
-
+        
         System.out.println("Done updateNext: " + p.toString(2));
     }
 

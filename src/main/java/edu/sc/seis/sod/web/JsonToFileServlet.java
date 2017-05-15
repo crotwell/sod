@@ -103,6 +103,7 @@ public abstract class JsonToFileServlet extends HttpServlet {
         String URL = req.getRequestURL().toString();
         JSONObject inJson = JsonApi.loadFromReader(req.getReader());
         System.out.println("POST: " + URL + "  " + inJson.toString(2));
+        logger.debug("POST: " + URL + "  " + inJson.toString(2));
         JSONObject dataObj = inJson.getJSONObject(JsonApi.DATA);
         if (dataObj != null) {
             String type = dataObj.getString(JsonApi.TYPE);
@@ -151,6 +152,7 @@ public abstract class JsonToFileServlet extends HttpServlet {
         WebAdmin.setJsonHeader(req, resp);
         String URL = req.getRequestURL().toString();
         System.out.println("JsonToFileServlet doPatch " + URL);
+        logger.debug("JsonToFileServlet doPatch " + URL);
         Matcher matcher = idPattern.matcher(URL);
         PrintWriter writer = resp.getWriter();
         JSONWriter out = new JSONWriter(writer);
@@ -225,7 +227,7 @@ public abstract class JsonToFileServlet extends HttpServlet {
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             if (req.getMethod().equals("PATCH")) {
-                System.out.println("JsonToFileServlet.service PATCH");
+                logger.debug("JsonToFileServlet.service PATCH");
                 doPatch(req, resp);
             } else {
                 super.service(req, resp);
@@ -250,7 +252,10 @@ public abstract class JsonToFileServlet extends HttpServlet {
         BufferedWriter out = null;
         try {
             File pFile = new File(jsonDir, id);
-            System.out.println("Save to "+pFile.getAbsolutePath());
+            logger.debug("Save to "+pFile.getAbsolutePath());
+            if (pFile.getAbsolutePath().contains("quakeStationMeasurements")) {
+                logger.debug("json: "+inJson.toString(2));
+            }
             if (pFile.exists()) {
                 Files.move(pFile.toPath(),
                            new File(jsonDir, id + ".old").toPath(),
@@ -273,10 +278,11 @@ public abstract class JsonToFileServlet extends HttpServlet {
             try {
                 File f = new File(jsonDir, id);
                 if (f.exists()) {
-                    System.out.println("Load from "+f.getAbsolutePath());
-                in = new BufferedReader(new FileReader(f));
-                return JsonApi.loadFromReader(in);
+                    logger.debug("Load from "+f.getAbsolutePath());
+                    in = new BufferedReader(new FileReader(f));
+                    return JsonApi.loadFromReader(in);
                 } else {
+                    logger.debug("no file, createEmpty");
                     return createEmpty(id);
                 }
             } finally {
