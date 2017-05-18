@@ -71,6 +71,15 @@ public abstract class JsonToFileServlet extends HttpServlet {
                     out.endObject();
                 }
                 out.endArray();
+                out.key(JsonApi.INCLUDED).array();
+                String comma = "";
+                for (String pId : jsonlIds) {
+                    JSONObject p = load(pId).getJSONObject(JsonApi.DATA);
+                    writer.println(comma);
+                    writer.println(p.toString(2));
+                    comma = ",";
+                }
+                out.endArray();
                 out.endObject();
                
             } else {
@@ -78,6 +87,7 @@ public abstract class JsonToFileServlet extends HttpServlet {
                 if (matcher.matches()) {
                     String pId = matcher.group(1);
                     JSONObject p = load(pId);
+                    updateAfterLoad(p);
                     writer.print(p.toString(2));
                 } else {
                     logger.warn("Bad URL for servlet: type="+jsonType+" url:" + URL);
@@ -107,7 +117,7 @@ public abstract class JsonToFileServlet extends HttpServlet {
         JSONObject dataObj = inJson.getJSONObject(JsonApi.DATA);
         if (dataObj != null) {
             String type = dataObj.getString(JsonApi.TYPE);
-            String id = dataObj.optString(JsonApi.ID);
+            String id = dataObj.optString(JsonApi.ID);//missing id means newly created
             if (type.equals(jsonType)) {
                 if (id.length() == 0) {
                     // empty id, so new, create
@@ -125,6 +135,7 @@ public abstract class JsonToFileServlet extends HttpServlet {
                 PrintWriter w = resp.getWriter();
                 w.print(inJson.toString(2));
                 w.close();
+                logger.debug("POST: " + URL + "  Done");
             } else {
                 resp.sendError(400, "type  wrong/missing: " + type+" != "+jsonType);
                 return;
@@ -200,6 +211,7 @@ public abstract class JsonToFileServlet extends HttpServlet {
             throw new ServletException(e);
         } finally {
             writer.close();
+            logger.debug("PATCH: " + URL + "  Done");
         }
     }
 
@@ -218,6 +230,7 @@ public abstract class JsonToFileServlet extends HttpServlet {
         resp.setStatus(resp.SC_NO_CONTENT);
         resp.getWriter().close();// empty content
 
+        logger.info("DELETE: " + URL+" Done");
         } catch(JSONException e) {
             throw new ServletException(e);
         }
@@ -305,6 +318,10 @@ public abstract class JsonToFileServlet extends HttpServlet {
     }
     
     protected void updateBeforeSave(JSONObject p) throws IOException {
+        
+    }
+    
+    protected void updateAfterLoad(JSONObject p) throws IOException {
         
     }
 

@@ -18,9 +18,7 @@ public class QuakeStationMeasurementsServlet extends JsonToFileServlet {
     }
 
     @Override
-    protected JSONObject load(String id) throws IOException {
-        // TODO Auto-generated method stub
-        JSONObject out = super.load(id);
+    protected void updateAfterLoad(JSONObject out) throws IOException {
         JSONArray data = out.getJSONArray(JsonApi.DATA);
         JSONArray included = new JSONArray();
         MeasurementTextServlet mtServlet = new MeasurementTextServlet();
@@ -31,7 +29,6 @@ public class QuakeStationMeasurementsServlet extends JsonToFileServlet {
         if (included.length() > 0) {
             out.put(JsonApi.INCLUDED, included);
         }
-        return out;
     }
 
     @Override

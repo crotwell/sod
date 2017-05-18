@@ -1,32 +1,16 @@
 package edu.sc.seis.sod.web;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Query;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONWriter;
 
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
@@ -35,8 +19,6 @@ import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.StatefulEvent;
 import edu.sc.seis.sod.web.jsonapi.EventStationJson;
 import edu.sc.seis.sod.web.jsonapi.JsonApi;
-import edu.sc.seis.sod.web.jsonapi.JsonApiData;
-import edu.sc.seis.sod.web.jsonapi.PerusalJson;
 
 public class PerusalServlet  extends JsonToFileServlet {
 
@@ -83,6 +65,17 @@ public class PerusalServlet  extends JsonToFileServlet {
         }
     }
     
+    @Override
+    protected void updateAfterLoad(JSONObject p) throws IOException {
+        JSONObject related = p.getJSONObject(JsonApi.DATA).getJSONObject(JsonApi.RELATIONSHIPS);
+        JSONObject curr = related.optJSONObject(CURR_ESP);
+        int currDbId = extractESP_dbid(curr);
+        if (currDbId < 0 ) {
+            // need curr, so updateNext
+            updateNext(p);
+        }
+    }
+
     protected void updateMeasurementPerusalLink(JSONObject p) throws IOException {
         String pId = p.getJSONObject(JsonApi.DATA).getString(JsonApi.ID);
         JSONObject related = p.getJSONObject(JsonApi.DATA).getJSONObject(JsonApi.RELATIONSHIPS);
@@ -141,8 +134,15 @@ public class PerusalServlet  extends JsonToFileServlet {
                     related.put(NEXT_ESP, formJsonRelatedFromESP(esJson));
                 }
             } else if (nextDbId > 0) {
-                // have next but not prev, curr, so back out curr and prev from
-                // next
+                // have next but not prev, curr, so move next to curr and leave prev null
+                // this might not be right in case of client trying to do "double-previous" but...
+                curr = next;
+                currDbId = nextDbId;
+                related.put(CURR_ESP, curr);
+                EventStationPair nextESP = findNext(currDbId, primarySort, quakeSort, stationSort);
+                EventStationJson esJson = new EventStationJson(nextESP, baseUrl);
+                related.put(NEXT_ESP, formJsonRelatedFromESP(esJson));
+                
             } else {
                 // nothing, so start at beginning
                 EventStationPair currESP = findNext(-1, primarySort, quakeSort, stationSort);
