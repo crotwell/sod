@@ -20,6 +20,7 @@ public class JsonApi {
     public static final String ID = "id";
     public static final String INCLUDED = "included";
     public static final String DATA = "data";
+    public static final String SELF = "self";
 
     public static void encodeJson(JSONWriter out, JsonApiData data) throws JSONException {
         out.object();
