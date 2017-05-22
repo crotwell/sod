@@ -1,15 +1,24 @@
 package edu.sc.seis.sod.web;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.net.BindException;
+import java.util.Collections;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.eclipse.jetty.security.ConstraintMapping;
+import org.eclipse.jetty.security.ConstraintSecurityHandler;
+import org.eclipse.jetty.security.HashLoginService;
+import org.eclipse.jetty.security.LoginService;
+import org.eclipse.jetty.security.authentication.DigestAuthenticator;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
@@ -19,6 +28,7 @@ import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.util.resource.Resource;
+import org.eclipse.jetty.util.security.Constraint;
 
 import edu.sc.seis.sod.Arm;
 import edu.sc.seis.sod.ArmListener;
@@ -30,6 +40,7 @@ public class WebAdmin implements ArmListener{
 
     public static final String SITE = "site";
     public static final String API = "api";
+    public static final String JSON_DATA_DIR = "jsonData";
 
     public WebAdmin() {
         // TODO Auto-generated constructor stub
@@ -68,7 +79,7 @@ public class WebAdmin implements ArmListener{
         addServlets(servlets, MeasurementToolServlet.class, "measurement-tools");
         addServlets(servlets, MeasurementTextServlet.class, "measurement");
         addServlets(servlets, MeasurementTextServlet.class, "measurement-texts");
-        
+                
         // Add the ResourceHandler to the server.
         HandlerList handlers = new HandlerList();
         handlers.setHandlers(new Handler[] { siteContext, servlets, new AlwaysEmberIndexHandler(), new DefaultHandler() {
@@ -85,6 +96,39 @@ public class WebAdmin implements ArmListener{
         },
         new DefaultHandler() });
         
+// Security #############
+// see https://git.eclipse.org/c/jetty/org.eclipse.jetty.project.git/tree/examples/embedded/src/main/java/org/eclipse/jetty/embedded/SecuredHelloHandler.java
+        LoginService loginService = new HashLoginService("MyRealm",
+                getJsonDataDir()+"/realm.properties");
+        
+        // test realm.properties, if not exist create with default password
+        File realmProps = new File(getJsonDataDir()+"/realm.properties");
+        if ( ! realmProps.exists()) {
+            PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(realmProps)));
+            out.println("# This file defines the password for the SOD status pages.");
+            out.println("# Format is username: password[,rolename ...]");
+            out.println("# Roles can be user or admin");
+            out.println("# Default is user 'sod' and password 'sod':");
+            out.println("#   sod: sod,user");
+            out.println("sod: sod,user");
+            out.close();
+        }
+        
+        ConstraintSecurityHandler security = new ConstraintSecurityHandler();
+        security.setHandler(handlers);
+        Constraint constraint = new Constraint();
+        constraint.setName("auth");
+        constraint.setAuthenticate(true);
+        constraint.setRoles(new String[] { "user", "admin" });
+        ConstraintMapping mapping = new ConstraintMapping();
+        mapping.setPathSpec("/*");
+        mapping.setConstraint(constraint);
+        security.setConstraintMappings(Collections.singletonList(mapping));
+        security.setAuthenticator(new DigestAuthenticator());
+        security.setLoginService(loginService);
+        
+// end Security ###########
+        
      // Create a basic Jetty server object that will listen on port 8080.  Note that if you set this to port 0
         // then a randomly available port will be assigned that you can either look in the logs for the port,
         // or programmatically obtain it for use in test cases.
@@ -94,7 +138,12 @@ public class WebAdmin implements ArmListener{
         while(server == null) {
             try {
                 server = new Server(port);
-                server.setHandler(handlers);
+                // Unsecure
+                //server.setHandler(handlers);
+                // with Security #############
+                server.addBean(loginService);
+                server.setHandler(security);
+                // end Security #############
  
         // Start things up! By using the server.join() the server thread will join with the current thread.
         // See "http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Thread.html#join()" for more details.
@@ -194,6 +243,10 @@ public class WebAdmin implements ArmListener{
     
     public static String getApiBaseUrl() {
         return "/"+API;
+    }
+    
+    public static String getJsonDataDir() {
+        return JSON_DATA_DIR;
     }
 
     public static void setJsonHeader(HttpServletRequest req, HttpServletResponse resp) {
