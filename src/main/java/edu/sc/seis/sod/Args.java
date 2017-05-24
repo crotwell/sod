@@ -91,6 +91,10 @@ public class Args {
                        's',
                        "status",
                        "Run SOD's status web server and do not quit at end of recipe"));
+        add(new Switch("unsecure",
+                       JSAP.NO_SHORTFLAG,
+                       "unsecure",
+                       "Run SOD's status web server without password protection. Not recommended on public internet."));
         add(new Switch(QUIT_ON_ERROR_SWITCH,
                        JSAP.NO_SHORTFLAG,
                        QUIT_ON_ERROR_SWITCH,
@@ -274,6 +278,10 @@ public class Args {
 
     public boolean isStatus() {
         return result.getBoolean("status");
+    }
+    
+    public boolean isStatusUnsecure() {
+        return result.getBoolean("unsecure");
     }
 
     public boolean onlyValidate() {

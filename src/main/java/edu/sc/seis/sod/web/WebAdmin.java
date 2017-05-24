@@ -139,11 +139,15 @@ public class WebAdmin implements ArmListener{
             try {
                 server = new Server(port);
                 // Unsecure
-                //server.setHandler(handlers);
+                if ( Start.getRunProps().isStatusUnsecure() ) {
+                    System.out.println("Warning: running status in unsecure mode, no password protection. This is dangerous. You have been warned!!!");
+                    server.setHandler(handlers);
+                } else {
                 // with Security #############
-                server.addBean(loginService);
-                server.setHandler(security);
+                    server.addBean(loginService);
+                    server.setHandler(security);
                 // end Security #############
+                }
  
         // Start things up! By using the server.join() the server thread will join with the current thread.
         // See "http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Thread.html#join()" for more details.

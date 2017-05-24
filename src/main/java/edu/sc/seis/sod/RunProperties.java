@@ -211,6 +211,14 @@ public class RunProperties {
         statusWebKeepAlive = b;
     }
 
+    public boolean isStatusUnsecure() {
+        return statusUnsecure;
+    }
+
+    public void setStatusUnsecure(boolean b) {
+        statusUnsecure = b;
+    }
+
     public static final TimeInterval NO_TIME = new TimeInterval(0,
 			UnitImpl.SECOND);
 
@@ -269,6 +277,8 @@ public class RunProperties {
 	private boolean skipAvailableData = true;
 	
 	private boolean statusWebKeepAlive = false;
+	
+	private boolean statusUnsecure = false;
 	
 	private List hibernateConfig = new ArrayList();
 

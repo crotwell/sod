@@ -478,6 +478,9 @@ public class Start {
             checkConfig(creator.create());
         }
         // start web interface
+        if (args.isStatusUnsecure()) {
+            Start.getRunProps().setStatusUnsecure(true);
+        }
         if (args.isStatus()) {
             Start.getRunProps().setStatusWebKeepAlive(true);
         }
