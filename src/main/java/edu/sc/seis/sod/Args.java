@@ -19,8 +19,6 @@ import com.martiansoftware.jsap.ParseException;
 import com.martiansoftware.jsap.StringParser;
 import com.martiansoftware.jsap.Switch;
 
-import edu.sc.seis.fissuresUtil.simple.Initializer;
-
 public class Args {
 
     private static final String COMMAND_NAME = "sod";
@@ -31,11 +29,6 @@ public class Args {
         for(int i = 0; i < args.length; i++) {
             if(args[i].equals("-conf")) {
                 args[i] = "-f";
-            }
-            for(int j = 0; j < Initializer.POSSIBLE_PROP_OPTION_NAMES.length; j++) {
-                if(args[i].equals(Initializer.POSSIBLE_PROP_OPTION_NAMES[j])) {
-                    args[i] = "-p";
-                }
             }
             if(args[i].equals("-demo") || args[i].equals("--demo")) {
                 // replace demo with a like -f command
