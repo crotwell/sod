@@ -1,7 +1,7 @@
 
 
 group = 'edu.sc.seis'
-version = '3.2.8-SNAPSHOT-WEBSTATUS'
+version = '4.0.0-SNAPSHOT-WEBSTATUS'
 // also remember to change in sod.Version class
 
 apply plugin:'application'
@@ -17,16 +17,26 @@ sourceSets {
 }
 
 dependencies {
-    compile 'edu.sc.seis:bag:0.1alpha'
+    compile 'edu.sc.seis:sod-mock:4.0.0-SNAPSHOT'
+    compile 'edu.sc.seis:sod-model:4.0.0-SNAPSHOT'
+    compile 'edu.sc.seis:sod-util:4.0.0-SNAPSHOT'
+    compile 'edu.sc.seis:sod-bag:4.0.0-SNAPSHOT'
 //    compile project(':cormorant')
+    compile project(':TauP')
     
     compile "jline:jline:0.9.94"
+    compile "com.martiansoftware:jsap:2.1"
     compile "thaiopensource:jing:20091111"
     compile "rngconvUSC:rngconv:20030225"
     compile "de.erichseifert.gral:VectorGraphics2D:0.9"
     compile "de.erichseifert.gral:gral-core:0.9"
     compile "org.eclipse.jetty:jetty-servlet:9.4.5+"
     compile 'org.json:json:20140107'
+
+
+    compile "org.hibernate:hibernate-ehcache:5.2.10.Final"
+    compile "org.hibernate:hibernate-core:5.2.10.Final"
+    runtime "org.hibernate:hibernate-c3p0:5.2.10.Final"
 
     compile ("org.apache.velocity:velocity-tools:2.0") {
         exclude group: 'xml-apis',  module: 'xml-apis'
@@ -36,15 +46,22 @@ dependencies {
         exclude group: 'javax.servlet',  module: 'servlet-api'
     }
 
+
+    compile "xerces:xercesImpl:2.10.0"
+    compile "xalan:xalan:2.7.1"
+
     compile "edu.sc.seis.mapData:dcwpo_browse:1.0"
     compile "net.sourceforge.javacsv:javacsv:2.0"
-    runtime "org.codehaus.groovy:groovy-all:2.2.2"
+//    runtime "org.codehaus.groovy:groovy-all:2.2.2"
 //    runtime "org.jruby:jruby:1.7.3"
 }
 
 configurations.all {
     resolutionStrategy.dependencySubstitution {
-        substitute module("edu.sc.seis:bag") with project(":bag")
+        substitute module("edu.sc.seis:sod-mock") with project(":sod-mock")
+        substitute module("edu.sc.seis:sod-model") with project(":sod-model")
+        substitute module("edu.sc.seis:sod-bag") with project(":sod-bag")
+        substitute module("edu.sc.seis:sod-util") with project(":sod-util")
     }
 }
 
