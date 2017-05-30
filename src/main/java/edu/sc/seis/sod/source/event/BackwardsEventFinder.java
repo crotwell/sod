@@ -2,15 +2,15 @@ package edu.sc.seis.sod.source.event;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
+import edu.sc.seis.sod.model.event.CacheEvent;
 
 
-public class BackwardsEventFinder extends EventFinder {
+public class BackwardsEventFinder extends AbstractEventSource {
 
     public BackwardsEventFinder(Element config) throws Exception {
-        super(config);
+        super(config, "BackwardsEventSource");
     }
     
     public String getDescription() {

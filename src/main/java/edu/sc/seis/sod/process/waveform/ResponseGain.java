@@ -1,17 +1,16 @@
 package edu.sc.seis.sod.process.waveform;
 
-import edu.iris.Fissures.IfNetwork.ChannelId;
-import edu.iris.Fissures.IfNetwork.ChannelNotFound;
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.network.ChannelIdUtil;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Threadable;
+import edu.sc.seis.sod.hibernate.ChannelNotFound;
+import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.model.common.QuantityImpl;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.station.ChannelIdUtil;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.station.InvalidResponse;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
@@ -51,9 +50,9 @@ public class ResponseGain implements WaveformProcess, Threadable {
                 Unit recordedUnits = inst.the_response.stages[0].input_units;
                  */
                 for(int i = 0; i < seismograms.length; i++) {
-                    out[i] = edu.sc.seis.fissuresUtil.bag.ResponseGain.apply(seismograms[i],
-                                                                             (float)sensitivity.value,
-                                                                             sensitivity.the_units);
+                    out[i] = edu.sc.seis.sod.bag.ResponseGain.apply(seismograms[i],
+                                                                             (float)sensitivity.getValue(),
+                                                                             sensitivity.getUnit());
                 } // end of for (int i=0; i<seismograms.length; i++)
                 return new WaveformResult(out, new StringTreeLeaf(this, true));
             } catch(ChannelNotFound e) {
@@ -63,7 +62,7 @@ public class ResponseGain implements WaveformProcess, Threadable {
                                           new StringTreeLeaf(this,
                                                              false,
                                                              "No instrumentation found for time "
-                                                                     + seismograms[0].begin_time.date_time));
+                                                                     + seismograms[0].begin_time.getISOTime()));
             } catch(InvalidResponse e) {
                 return new WaveformResult(out,
                                           new StringTreeLeaf(this,

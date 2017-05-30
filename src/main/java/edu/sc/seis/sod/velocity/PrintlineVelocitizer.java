@@ -12,21 +12,19 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.exception.ParseErrorException;
 
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.NetworkAttr;
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.network.NetworkAttrImpl;
-import edu.iris.Fissures.network.StationImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.fissuresUtil.mockFissures.IfEvent.MockEventAccessOperations;
-import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannel;
-import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockStation;
-import edu.sc.seis.fissuresUtil.mockFissures.IfSeismogramDC.MockSeismogram;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.UserConfigurationException;
+import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.mock.event.MockEventAccessOperations;
+import edu.sc.seis.sod.mock.seismogram.MockSeismogram;
+import edu.sc.seis.sod.mock.station.MockChannel;
+import edu.sc.seis.sod.mock.station.MockStation;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.station.NetworkAttrImpl;
+import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.velocity.event.VelocityEvent;
 import edu.sc.seis.sod.velocity.network.VelocityChannel;
@@ -86,13 +84,13 @@ public class PrintlineVelocitizer {
 
     public String evaluate(String fileTemplate,
                            String template,
-                           NetworkAttr attr) throws IOException {
+                           NetworkAttrImpl attr) throws IOException {
         return evalulate(fileTemplate,
                          template,
                          ContextWrangler.createContext(attr));
     }
 
-    public String evaluate(String fileTemplate, String template, Channel chan)
+    public String evaluate(String fileTemplate, String template, ChannelImpl chan)
             throws IOException {
         return evalulate(fileTemplate,
                          template,
@@ -107,7 +105,7 @@ public class PrintlineVelocitizer {
     }
 
     public String evaluate(String fileTemplate, String template, 
-                           EventAccessOperations event, StationImpl sta, CookieJar cookieJar)
+                           CacheEvent event, StationImpl sta, CookieJar cookieJar)
             throws IOException {
         VelocityContext cntxt = ContextWrangler.createContext(sta);
         ContextWrangler.insertIntoContext(event, cntxt);
@@ -119,7 +117,7 @@ public class PrintlineVelocitizer {
 
     public String evaluate(String filename,
                            String template,
-                           EventAccessOperations event,
+                           CacheEvent event,
                            ChannelImpl channel,
                            RequestFilter[] request,
                            CookieJar cookieJar) throws IOException {
@@ -134,7 +132,7 @@ public class PrintlineVelocitizer {
 
     public String evaluate(String filename,
                            String template,
-                           EventAccessOperations event,
+                           CacheEvent event,
                            ChannelImpl channel,
                            RequestFilter[] original,
                            RequestFilter[] available,
@@ -151,7 +149,7 @@ public class PrintlineVelocitizer {
 
     public String evaluate(String fileTemplate,
                            String template,
-                           EventAccessOperations event,
+                           CacheEvent event,
                            ChannelImpl channel,
                            RequestFilter[] original,
                            RequestFilter[] available,
@@ -169,7 +167,7 @@ public class PrintlineVelocitizer {
 
     public String evaluate(String fileTemplate,
                            String template,
-                           EventAccessOperations event) throws IOException {
+                           CacheEvent event) throws IOException {
         return evalulate(fileTemplate,
                          template,
                          ContextWrangler.createContext(event));

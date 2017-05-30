@@ -5,12 +5,12 @@ import java.util.List;
 
 import org.apache.velocity.VelocityContext;
 
-import edu.iris.Fissures.Location;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.ChannelId;
-import edu.sc.seis.fissuresUtil.cache.EventUtil;
-import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
+import edu.sc.seis.sod.model.common.Location;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.station.ChannelGroup;
+import edu.sc.seis.sod.model.station.ChannelId;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.util.display.EventUtil;
 
 
 public class VelocityChannelGroup {
@@ -27,7 +27,7 @@ public class VelocityChannelGroup {
         return out;
     }
 
-    public boolean contains(Channel c) {
+    public boolean contains(ChannelImpl c) {
         return wrapped.contains(c);
     }
 
@@ -72,14 +72,14 @@ public class VelocityChannelGroup {
      * seismogram that has been rotated to GCP, ie it has R or T as its
      * orientation code.
      */
-    public VelocityChannel getChannel(ChannelId chanId, EventAccessOperations event) {
+    public VelocityChannel getChannel(ChannelId chanId, CacheEvent event) {
         if (wrapped.getVertical() != null) {
             return new VelocityChannel(wrapped.getChannel(chanId, event));
         }
         return null;
     }
 
-    public VelocityChannel getRadial(EventAccessOperations event) {
+    public VelocityChannel getRadial(CacheEvent event) {
         return getRadial(EventUtil.extractOrigin(event).getLocation());
     }
 
@@ -87,7 +87,7 @@ public class VelocityChannelGroup {
         return new VelocityChannel(wrapped.getRadial(eventLoc));
     }
 
-    public VelocityChannel getTransverse(EventAccessOperations event) {
+    public VelocityChannel getTransverse(CacheEvent event) {
         return getTransverse(EventUtil.extractOrigin(event).getLocation());
     }
 

@@ -4,11 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.TimeUtils;
-import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.model.common.ISOTime;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
 import edu.sc.seis.sod.source.event.MicroSecondTimeRangeSupplier;
 
 public abstract class EffectiveTimeOverlap implements Subsetter{
@@ -17,8 +17,8 @@ public abstract class EffectiveTimeOverlap implements Subsetter{
         this.timeRange = timeRange;
     }
     
-    public EffectiveTimeOverlap(edu.iris.Fissures.TimeRange range) {
-        this(new MicroSecondDate(range.start_time), new MicroSecondDate(range.end_time));
+    public EffectiveTimeOverlap(MicroSecondTimeRange range) {
+        this(range.getBeginTime(), range.getEndTime());
     }
 
     public EffectiveTimeOverlap(final MicroSecondDate start, final MicroSecondDate end) {
@@ -32,13 +32,13 @@ public abstract class EffectiveTimeOverlap implements Subsetter{
         timeRange = SodUtil.loadTimeRange(config);
     }
 
-    public boolean overlaps(edu.iris.Fissures.TimeRange otherRange) {
-        MicroSecondDate otherStart = new MicroSecondDate(otherRange.start_time);
+    public boolean overlaps(MicroSecondTimeRange otherRange) {
+        MicroSecondDate otherStart = otherRange.getBeginTime();
         MicroSecondDate otherEnd;
-        if (otherRange.end_time.date_time.equals(edu.iris.Fissures.TIME_UNKNOWN.value)) {
-            otherEnd = new MicroSecondDate(TimeUtils.future);
+        if (otherRange.getEndTime() == null) {
+            otherEnd = new MicroSecondDate(ISOTime.future);
         } else {
-            otherEnd = new MicroSecondDate(otherRange.end_time);
+            otherEnd = otherRange.getEndTime();
         } // end of else
         return overlaps(otherStart, otherEnd);
     }

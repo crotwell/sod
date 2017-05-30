@@ -6,21 +6,19 @@
 
 package edu.sc.seis.sod;
 
-import edu.sc.seis.fissuresUtil.cache.JobTracker;
-import edu.sc.seis.fissuresUtil.cache.WorkerThreadPool;
-import edu.sc.seis.fissuresUtil.chooser.UpdateCheckerJob;
+import edu.sc.seis.sod.util.thread.UpdateCheckerJob;
+import edu.sc.seis.sod.util.thread.WorkerThreadPool;
 
 public class UpdateChecker  {
 
     public UpdateChecker(boolean gui) {
         UpdateCheckerJob job = new UpdateCheckerJob("SOD update checker",
                                                     "SOD",
-                                                    Version.current().getVersion(),
+                                                    VersionHistory.current().getVersion(),
                                                     updateURL,
                                                     gui,
                                                     forceCheck);
         job.setUsePreferencesForStorage(false); // sod doesn't ask, so check on each startup
-        JobTracker.getTracker().add(job);
         WorkerThreadPool.getDefaultPool().invokeLater(job);
     }
 

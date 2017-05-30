@@ -6,23 +6,23 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.Orientation;
-import edu.iris.Fissures.Time;
-import edu.iris.Fissures.TimeRange;
-import edu.iris.Fissures.IfNetwork.ChannelId;
-import edu.iris.Fissures.IfNetwork.SiteId;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.SamplingImpl;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.network.SiteImpl;
-import edu.iris.Fissures.network.StationImpl;
-import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.seisFile.waveserver.MenuItem;
 import edu.sc.seis.seisFile.waveserver.WaveServer;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.Orientation;
+import edu.sc.seis.sod.model.common.SamplingImpl;
+import edu.sc.seis.sod.model.common.Time;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.TimeRange;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.station.ChannelId;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.station.SiteId;
+import edu.sc.seis.sod.model.station.SiteImpl;
+import edu.sc.seis.sod.model.station.StationImpl;
+import edu.sc.seis.sod.util.time.ClockUtil;
 
 
 public class WinstonNetworkSource extends CSVNetworkSource {
@@ -58,7 +58,7 @@ public class WinstonNetworkSource extends CSVNetworkSource {
             if (menuItem.getStartDate().before(ClockUtil.now())) {
                 // sometime non-seismic channels are messed up in winston and have really bizarre times
                 // only use if start time is before now
-                chanStart = new MicroSecondDate(Math.round(1000000 * menuItem.getStart())).getFissuresTime();
+                chanStart = new MicroSecondDate(Math.round(1000000 * menuItem.getStart()));
             }
             TimeRange chanTime = new TimeRange(chanStart,
                                                DEFAULT_END);

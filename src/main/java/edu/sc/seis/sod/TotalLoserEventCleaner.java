@@ -3,16 +3,21 @@ package edu.sc.seis.sod;
 import java.util.Iterator;
 import java.util.TimerTask;
 
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.hibernate.SodDB;
-import edu.sc.seis.sod.hibernate.StatefulEvent;
 import edu.sc.seis.sod.hibernate.StatefulEventDB;
+import edu.sc.seis.sod.hibernate.eventpair.EventChannelPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventNetworkPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventStationPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventVectorPair;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.event.StatefulEvent;
+import edu.sc.seis.sod.model.status.Standing;
+import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.util.time.ClockUtil;
 
 /**
  * This task runs immediately on instantiation and then once a week after that.

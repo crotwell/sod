@@ -3,7 +3,7 @@ package edu.sc.seis.sod.status;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import edu.sc.seis.fissuresUtil.exceptionHandler.ExceptionReporterUtils;
+import edu.sc.seis.sod.util.exceptionHandler.ExceptionReporterUtils;
 
 public class StringTreeLeaf extends StringTree {
 

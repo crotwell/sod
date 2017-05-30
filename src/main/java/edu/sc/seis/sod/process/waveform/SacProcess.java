@@ -1,8 +1,8 @@
 package edu.sc.seis.sod.process.waveform;
 
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.seisFile.sac.SacTimeSeries;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.station.ChannelImpl;
 
 interface SacProcess {
 

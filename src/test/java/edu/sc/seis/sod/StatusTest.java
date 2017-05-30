@@ -6,6 +6,7 @@
 
 package edu.sc.seis.sod;
 
+import edu.sc.seis.sod.model.status.Status;
 import junit.framework.TestCase;
 
 public class StatusTest extends TestCase {

@@ -1,31 +1,31 @@
 package edu.sc.seis.sod.process.waveform;
 
-import edu.iris.Fissures.Time;
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.fissuresUtil.mockFissures.IfSeismogramDC.MockSeismogram;
+import edu.sc.seis.sod.mock.seismogram.MockSeismogram;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.Time;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
 
 /**
  * @author groves Created on Sep 8, 2004
  */
 public class CoverageTestData {
 
-    private CoverageTestData(LocalSeismogramImpl[] seis, Time begin, Time end) {
+    private CoverageTestData(LocalSeismogramImpl[] seis, MicroSecondDate begin, MicroSecondDate end) {
         this.seis = seis;
         request = new RequestFilter[] {new RequestFilter(null, begin, end)};
     }
 
     public static CoverageTestData makeTooLateBeginAndTooEarlyEnd() {
-        Time rfBegin = spikeBegin.add(ONE_SECOND).getFissuresTime();
-        Time rfEnd = spikeEnd.add(ONE_SECOND).getFissuresTime();
+        MicroSecondDate rfBegin = spikeBegin.add(ONE_SECOND);
+        MicroSecondDate rfEnd = spikeEnd.add(ONE_SECOND);
         return new CoverageTestData(spikeArray, rfBegin, rfEnd);
     }
 
     public static CoverageTestData makeTooEarlyEndTime() {
-        Time rfEnd = spikeEnd.add(ONE_SECOND).getFissuresTime();
+        MicroSecondDate rfEnd = spikeEnd.add(ONE_SECOND);
         return new CoverageTestData(spikeArray, timeSpikeBegin, rfEnd);
     }
 
@@ -34,8 +34,8 @@ public class CoverageTestData {
     }
 
     public static CoverageTestData makeOverage() {
-        Time rfBegin = spikeBegin.add(ONE_SECOND).getFissuresTime();
-        Time rfEnd = spikeEnd.subtract(ONE_SECOND).getFissuresTime();
+        MicroSecondDate rfBegin = spikeBegin.add(ONE_SECOND);
+        MicroSecondDate rfEnd = spikeEnd.subtract(ONE_SECOND);
         return new CoverageTestData(spikeArray, rfBegin, rfEnd);
     }
 
@@ -46,8 +46,8 @@ public class CoverageTestData {
     }
 
     public static CoverageTestData makeCompleteMiss() {
-        Time rfBegin = spikeBegin.add(THREE_HOURS).getFissuresTime();
-        Time rfEnd = spikeEnd.add(THREE_HOURS).getFissuresTime();
+        MicroSecondDate rfBegin = spikeBegin.add(THREE_HOURS);
+        MicroSecondDate rfEnd = spikeEnd.add(THREE_HOURS);
         return new CoverageTestData(new LocalSeismogramImpl[0], rfBegin, rfEnd);
     }
 
@@ -91,9 +91,9 @@ public class CoverageTestData {
 
     private static MicroSecondDate spikeEnd = spikeSeis.getEndTime();
 
-    private static Time timeSpikeBegin = spikeBegin.getFissuresTime();
+    private static MicroSecondDate timeSpikeBegin = spikeBegin;
 
-    private static Time timeSpikeEnd = spikeEnd.getFissuresTime();
+    private static MicroSecondDate timeSpikeEnd = spikeEnd;
 
     public LocalSeismogramImpl[] seis;
 

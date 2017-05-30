@@ -4,12 +4,11 @@ import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import junit.framework.TestCase;
-
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-import edu.iris.Fissures.model.UnitImpl;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import junit.framework.TestCase;
 
 
 public class SodUtilTest extends TestCase {
@@ -21,27 +20,27 @@ public class SodUtilTest extends TestCase {
         //MAY  1 (122), 2004
         Element el = XMLConfigUtil.parse("<startTime><year>2004</year><month>05</month></startTime>"); 
         MicroSecondDateSupplier t = SodUtil.loadTime(el, false);
-        assertEquals("month without day begin: "+t.load().getFissuresTime().date_time, "2004-05-01T"+DAY_START, t.load().getFissuresTime().date_time);
+        assertEquals("month without day begin: "+t.load(), "2004-05-01T"+DAY_START, t.load());
         t = SodUtil.loadTime(el, true);
-        assertEquals("month without day end: "+t.load().getFissuresTime().date_time, "2004-05-31T"+DAY_END, t.load().getFissuresTime().date_time);
+        assertEquals("month without day end: "+t.load(), "2004-05-31T"+DAY_END, t.load());
         // year, month, day 
         el = XMLConfigUtil.parse("<startTime><year>2004</year><month>05</month><day>7</day></startTime>"); 
         t = SodUtil.loadTime(el, false);
-        assertEquals("year, month, day begin: "+t.load().getFissuresTime().date_time, "2004-05-07T"+DAY_START, t.load().getFissuresTime().date_time);
+        assertEquals("year, month, day begin: "+t.load(), "2004-05-07T"+DAY_START, t.load());
         t = SodUtil.loadTime(el, true);
-        assertEquals("year, month, day end: "+t.load().getFissuresTime().date_time, "2004-05-07T"+DAY_END, t.load().getFissuresTime().date_time);
+        assertEquals("year, month, day end: "+t.load(), "2004-05-07T"+DAY_END, t.load());
         // leap year
         el = XMLConfigUtil.parse("<startTime><year>2004</year><month>02</month></startTime>"); 
         t = SodUtil.loadTime(el, false);
-        assertEquals("leap year month without day begin: "+t.load().getFissuresTime().date_time, "2004-02-01T"+DAY_START, t.load().getFissuresTime().date_time);
+        assertEquals("leap year month without day begin: "+t.load(), "2004-02-01T"+DAY_START, t.load());
         t = SodUtil.loadTime(el, true);
-        assertEquals("leap year month without day end: "+t.load().getFissuresTime().date_time, "2004-02-29T"+DAY_END, t.load().getFissuresTime().date_time);
+        assertEquals("leap year month without day end: "+t.load(), "2004-02-29T"+DAY_END, t.load());
         // only year
         el = XMLConfigUtil.parse("<startTime><year>2004</year></startTime>"); 
         t = SodUtil.loadTime(el, false);
-        assertEquals("year without month begin: "+t.load().getFissuresTime().date_time, "2004-01-01T"+DAY_START, t.load().getFissuresTime().date_time);
+        assertEquals("year without month begin: "+t.load(), "2004-01-01T"+DAY_START, t.load());
         t = SodUtil.loadTime(el, true);
-        assertEquals("year without month end: "+t.load().getFissuresTime().date_time, "2004-12-31T"+DAY_END, t.load().getFissuresTime().date_time);
+        assertEquals("year without month end: "+t.load(), "2004-12-31T"+DAY_END, t.load());
         
     }
     

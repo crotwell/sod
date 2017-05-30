@@ -10,15 +10,15 @@ import java.util.StringTokenizer;
 
 import org.w3c.dom.Element;
 
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.sod.EventChannelPair;
-import edu.sc.seis.sod.EventNetworkPair;
-import edu.sc.seis.sod.EventStationPair;
-import edu.sc.seis.sod.EventVectorPair;
-import edu.sc.seis.sod.Stage;
-import edu.sc.seis.sod.Standing;
-import edu.sc.seis.sod.Status;
+import edu.sc.seis.sod.hibernate.eventpair.EventChannelPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventNetworkPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventStationPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventVectorPair;
+import edu.sc.seis.sod.model.status.Stage;
+import edu.sc.seis.sod.model.status.Standing;
+import edu.sc.seis.sod.model.status.Status;
 import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
+import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
 
 public class WaveformCountProcessor implements WaveformMonitor {
 

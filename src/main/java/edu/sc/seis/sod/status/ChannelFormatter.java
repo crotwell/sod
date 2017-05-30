@@ -6,10 +6,10 @@ import java.util.Iterator;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.Status;
+import edu.sc.seis.sod.model.station.ChannelIdUtil;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.status.Status;
 
 public class ChannelFormatter extends Template implements ChannelTemplate {
 
@@ -51,7 +51,7 @@ public class ChannelFormatter extends Template implements ChannelTemplate {
     protected Object textTemplate(final String text) {
         return new ChannelTemplate() {
 
-            public String getResult(Channel chan) {
+            public String getResult(ChannelImpl chan) {
                 return text;
             }
         };
@@ -61,35 +61,35 @@ public class ChannelFormatter extends Template implements ChannelTemplate {
         if(tag.equals("stationCode")) {
             return new ChannelTemplate() {
 
-                public String getResult(Channel chan) {
+                public String getResult(ChannelImpl chan) {
                     return chan.get_id().station_code;
                 }
             };
         } else if(tag.equals("channelCode")) {
             return new ChannelTemplate() {
 
-                public String getResult(Channel chan) {
+                public String getResult(ChannelImpl chan) {
                     return chan.get_id().channel_code;
                 }
             };
         } else if(tag.equals("networkCode")) {
             return new ChannelTemplate() {
 
-                public String getResult(Channel chan) {
+                public String getResult(ChannelImpl chan) {
                     return chan.get_id().network_id.network_code;
                 }
             };
         } else if(tag.equals("stationCode")) {
             return new ChannelTemplate() {
 
-                public String getResult(Channel chan) {
+                public String getResult(ChannelImpl chan) {
                     return chan.get_code();
                 }
             };
         } else if(tag.equals("siteCode")) {
             return new ChannelTemplate() {
 
-                public String getResult(Channel chan) {
+                public String getResult(ChannelImpl chan) {
                     if(chan.get_id().site_code.trim().length() == 0 && filizeResults) {
                         return "__";
                     }
@@ -99,7 +99,7 @@ public class ChannelFormatter extends Template implements ChannelTemplate {
         } else if(tag.equals("beginTime")) {
             return new ChannelTemplate() {
 
-                public String getResult(Channel chan) {
+                public String getResult(ChannelImpl chan) {
                     return btt.getResult(chan.get_id().begin_time);
                 }
 
@@ -108,7 +108,7 @@ public class ChannelFormatter extends Template implements ChannelTemplate {
         } else if(tag.equals("endTime")) {
             return new ChannelTemplate() {
 
-                public String getResult(Channel chan) {
+                public String getResult(ChannelImpl chan) {
                     return btt.getResult(chan.getEndTime());
                 }
 
@@ -117,63 +117,63 @@ public class ChannelFormatter extends Template implements ChannelTemplate {
         } else if(tag.equals("beginTimeUnformatted")) {
             return new ChannelTemplate() {
 
-                public String getResult(Channel chan) {
-                    return chan.get_id().begin_time.date_time;
+                public String getResult(ChannelImpl chan) {
+                    return chan.get_id().begin_time.getISOTime();
                 }
             };
         } else if(tag.equals("dip")) {
             return new ChannelTemplate() {
 
-                public String getResult(Channel chan) {
+                public String getResult(ChannelImpl chan) {
                     return format(chan.getOrientation().dip);
                 }
             };
         } else if(tag.equals("azimuth")) {
             return new ChannelTemplate() {
 
-                public String getResult(Channel chan) {
+                public String getResult(ChannelImpl chan) {
                     return format(chan.getOrientation().azimuth);
                 }
             };
         } else if(tag.equals("name")) {
             return new ChannelTemplate() {
 
-                public String getResult(Channel chan) {
+                public String getResult(ChannelImpl chan) {
                     return chan.getName();
                 }
             };
         } else if(tag.equals("lat")) {
             return new ChannelTemplate() {
 
-                public String getResult(Channel chan) {
+                public String getResult(ChannelImpl chan) {
                     return format(chan.getSite().getLocation().latitude);
                 }
             };
         } else if(tag.equals("lon")) {
             return new ChannelTemplate() {
 
-                public String getResult(Channel chan) {
+                public String getResult(ChannelImpl chan) {
                     return format(chan.getSite().getLocation().longitude);
                 }
             };
         } else if(tag.equals("lon")) {
             return new ChannelTemplate() {
 
-                public String getResult(Channel chan) {
+                public String getResult(ChannelImpl chan) {
                     return format(chan.getSite().getLocation().longitude);
                 }
             };
         } else if(tag.equals("status") && cgt != null) {
             return new ChannelTemplate() {
 
-                public String getResult(Channel chan) {
+                public String getResult(ChannelImpl chan) {
                     return cgt.getStatus(chan);
                 }
             };
         } else if(tag.equals("standing") && cgt != null) {
             return new ChannelTemplate() {
 
-                public String getResult(Channel chan) {
+                public String getResult(ChannelImpl chan) {
                     Status status = (Status)cgt.channelMap.get(chan);
                     return status.getStanding().toString();
                 }
@@ -181,7 +181,7 @@ public class ChannelFormatter extends Template implements ChannelTemplate {
         } else if(tag.equals("id")) {
             return new ChannelTemplate() {
 
-                public String getResult(Channel chan) {
+                public String getResult(ChannelImpl chan) {
                     return ChannelIdUtil.toString(chan.get_id());
                 }
             };
@@ -197,7 +197,7 @@ public class ChannelFormatter extends Template implements ChannelTemplate {
 
     private DecimalFormat formatter = new DecimalFormat("#.#");
 
-    public String getResult(Channel chan) {
+    public String getResult(ChannelImpl chan) {
         StringBuffer buf = new StringBuffer();
         Iterator it = templates.iterator();
         while(it.hasNext()) {

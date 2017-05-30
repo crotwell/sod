@@ -12,16 +12,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.json.JSONObject;
 import org.json.JSONWriter;
 
-import edu.sc.seis.fissuresUtil.hibernate.AbstractHibernateDB;
-import edu.sc.seis.sod.AbstractEventChannelPair;
-import edu.sc.seis.sod.EventStationPair;
-import edu.sc.seis.sod.Stage;
-import edu.sc.seis.sod.Standing;
+import edu.sc.seis.sod.hibernate.AbstractHibernateDB;
 import edu.sc.seis.sod.hibernate.SodDB;
+import edu.sc.seis.sod.hibernate.eventpair.AbstractEventChannelPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventStationPair;
+import edu.sc.seis.sod.model.status.Stage;
+import edu.sc.seis.sod.model.status.Standing;
 import edu.sc.seis.sod.web.jsonapi.EventStationJson;
 import edu.sc.seis.sod.web.jsonapi.EventVectorJson;
 import edu.sc.seis.sod.web.jsonapi.JsonApi;

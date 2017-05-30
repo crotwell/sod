@@ -18,24 +18,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import edu.iris.Fissures.BoxArea;
-import edu.iris.Fissures.FlinnEngdahlRegion;
-import edu.iris.Fissures.FlinnEngdahlType;
-import edu.iris.Fissures.GlobalArea;
-import edu.iris.Fissures.Location;
-import edu.iris.Fissures.LocationType;
-import edu.iris.Fissures.PointDistanceArea;
-import edu.iris.Fissures.IfParameterMgr.ParameterRef;
-import edu.iris.Fissures.event.EventAttrImpl;
-import edu.iris.Fissures.event.OriginImpl;
-import edu.iris.Fissures.model.FlinnEngdahlRegionImpl;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
-import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.seisFile.SeisFileException;
 import edu.sc.seis.seisFile.fdsnws.AbstractFDSNQuerier;
 import edu.sc.seis.seisFile.fdsnws.AbstractQueryParams;
@@ -46,14 +28,26 @@ import edu.sc.seis.seisFile.fdsnws.FDSNWSException;
 import edu.sc.seis.seisFile.fdsnws.quakeml.Event;
 import edu.sc.seis.seisFile.fdsnws.quakeml.EventDescription;
 import edu.sc.seis.seisFile.fdsnws.quakeml.EventIterator;
-import edu.sc.seis.seisFile.fdsnws.quakeml.Magnitude;
 import edu.sc.seis.seisFile.fdsnws.quakeml.Origin;
 import edu.sc.seis.seisFile.fdsnws.quakeml.Quakeml;
-import edu.sc.seis.sod.BuildVersion;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventArm;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.model.common.Location;
+import edu.sc.seis.sod.model.common.LocationType;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
+import edu.sc.seis.sod.model.common.ParameterRef;
+import edu.sc.seis.sod.model.common.QuantityImpl;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.event.EventAttrImpl;
+import edu.sc.seis.sod.model.event.FlinnEngdahlRegion;
+import edu.sc.seis.sod.model.event.FlinnEngdahlType;
+import edu.sc.seis.sod.model.event.Magnitude;
+import edu.sc.seis.sod.model.event.OriginImpl;
 import edu.sc.seis.sod.source.AbstractSource;
 import edu.sc.seis.sod.source.network.AbstractNetworkSource;
 import edu.sc.seis.sod.subsetter.DepthRange;
@@ -61,6 +55,8 @@ import edu.sc.seis.sod.subsetter.origin.Catalog;
 import edu.sc.seis.sod.subsetter.origin.Contributor;
 import edu.sc.seis.sod.subsetter.origin.MagnitudeRange;
 import edu.sc.seis.sod.subsetter.origin.OriginDepthRange;
+import edu.sc.seis.sod.util.time.ClockUtil;
+
 
 public class FdsnEvent extends AbstractEventSource implements EventSource {
 
@@ -432,7 +428,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                 OriginImpl oImpl = new OriginImpl(o.getPublicId(),
                                                   o.getIrisCatalog(),
                                                   o.getIrisContributor(),
-                                                  new MicroSecondDate(o.getTime().getValue()).getFissuresTime(),
+                                                  new MicroSecondDate(o.getTime().getValue()),
                                                   new Location(o.getLatitude().getValue(),
                                                                o.getLongitude().getValue(),
                                                                new QuantityImpl(0, UnitImpl.METER),

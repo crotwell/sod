@@ -14,10 +14,10 @@ import com.bbn.openmap.omGraphics.OMGraphicList;
 import edu.sc.seis.fissuresUtil.display.DisplayUtils;
 import edu.sc.seis.fissuresUtil.map.colorizer.event.EventColorizer;
 import edu.sc.seis.fissuresUtil.map.graphics.OMEvent;
-import edu.sc.seis.sod.Stage;
-import edu.sc.seis.sod.Standing;
-import edu.sc.seis.sod.Status;
-import edu.sc.seis.sod.hibernate.StatefulEvent;
+import edu.sc.seis.sod.model.event.StatefulEvent;
+import edu.sc.seis.sod.model.status.Stage;
+import edu.sc.seis.sod.model.status.Standing;
+import edu.sc.seis.sod.model.status.Status;
 
 public class StatusColorizer implements EventColorizer {
     private static final Color SUCCESS_COLOR = DisplayUtils.STATION;

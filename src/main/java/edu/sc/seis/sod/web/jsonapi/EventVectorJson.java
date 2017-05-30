@@ -6,11 +6,11 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.sc.seis.sod.AbstractEventChannelPair;
-import edu.sc.seis.sod.EventChannelPair;
-import edu.sc.seis.sod.EventVectorPair;
+import edu.sc.seis.sod.hibernate.eventpair.AbstractEventChannelPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventChannelPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventVectorPair;
 import edu.sc.seis.sod.measure.Measurement;
+import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.process.waveform.AbstractSeismogramWriter;
 
 public class EventVectorJson extends AbstractJsonApiData {

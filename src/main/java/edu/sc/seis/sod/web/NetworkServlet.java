@@ -15,11 +15,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
-import edu.iris.Fissures.network.NetworkAttrImpl;
-import edu.iris.Fissures.network.NetworkIdUtil;
-import edu.iris.Fissures.network.StationImpl;
-import edu.sc.seis.fissuresUtil.database.NotFound;
-import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
+import edu.sc.seis.sod.hibernate.NetworkDB;
+import edu.sc.seis.sod.model.station.NetworkAttrImpl;
+import edu.sc.seis.sod.model.station.NetworkIdUtil;
+import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.web.jsonapi.JsonApi;
 import edu.sc.seis.sod.web.jsonapi.JsonApiData;
 import edu.sc.seis.sod.web.jsonapi.NetworkJson;

@@ -3,13 +3,13 @@ package edu.sc.seis.sod.process.waveform;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.IfTimeSeries.EncodedData;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
-import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.seismogram.EncodedData;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.station.ChannelImpl;
 
 public class CompressionType implements WaveformProcess {
 

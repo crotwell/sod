@@ -7,17 +7,17 @@ package edu.sc.seis.sod.status.waveformArm;
 
 import java.sql.SQLException;
 
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
-import edu.sc.seis.fissuresUtil.chooser.ThreadSafeDecimalFormat;
-import edu.sc.seis.sod.Stage;
-import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.hibernate.SodDB;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.status.Stage;
+import edu.sc.seis.sod.model.status.Standing;
+import edu.sc.seis.sod.model.status.Status;
 import edu.sc.seis.sod.status.AllTypeTemplate;
+import edu.sc.seis.sod.util.display.ThreadSafeDecimalFormat;
+import edu.sc.seis.sod.util.time.ClockUtil;
 
 public class WPHTemplate extends AllTypeTemplate {
 

@@ -13,17 +13,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONWriter;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.network.StationImpl;
-import edu.sc.seis.fissuresUtil.database.NotFound;
-import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
-import edu.sc.seis.sod.AbstractEventChannelPair;
-import edu.sc.seis.sod.EventStationPair;
+import edu.sc.seis.sod.hibernate.NetworkDB;
 import edu.sc.seis.sod.hibernate.SodDB;
-import edu.sc.seis.sod.hibernate.StatefulEvent;
+import edu.sc.seis.sod.hibernate.eventpair.AbstractEventChannelPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventStationPair;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.web.jsonapi.ChannelJson;
-import edu.sc.seis.sod.web.jsonapi.EventJson;
 import edu.sc.seis.sod.web.jsonapi.EventStationJson;
 import edu.sc.seis.sod.web.jsonapi.JsonApi;
 import edu.sc.seis.sod.web.jsonapi.JsonApiData;

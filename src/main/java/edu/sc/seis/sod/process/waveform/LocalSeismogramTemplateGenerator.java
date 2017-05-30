@@ -14,18 +14,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.status.FileWritingTemplate;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.status.TemplateFileLoader;
 import edu.sc.seis.sod.status.waveformArm.LocalSeismogramTemplate;
+import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
 
 public class LocalSeismogramTemplateGenerator implements WaveformProcess {
 
@@ -110,13 +109,13 @@ public class LocalSeismogramTemplateGenerator implements WaveformProcess {
         return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
     }
 
-    public File getOutputFile(CacheEvent event, Channel chan) {
+    public File getOutputFile(CacheEvent event, ChannelImpl chan) {
         return new File(getOutputLocation(event, chan, true));
     }
 
     /** this is relative to the status directory */
     private String getOutputLocation(CacheEvent event,
-                                    Channel chan,
+                                    ChannelImpl chan,
                                     boolean useStatusDir) {
         return out.getDirectory(event, chan, useStatusDir) + fileName;
     }

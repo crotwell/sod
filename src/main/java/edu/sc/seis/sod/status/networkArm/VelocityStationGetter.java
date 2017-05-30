@@ -10,12 +10,12 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-import edu.iris.Fissures.IfNetwork.NetworkId;
-import edu.iris.Fissures.network.NetworkAttrImpl;
-import edu.iris.Fissures.network.NetworkIdUtil;
-import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.hibernate.SodDB;
+import edu.sc.seis.sod.model.station.NetworkAttrImpl;
+import edu.sc.seis.sod.model.station.NetworkId;
+import edu.sc.seis.sod.model.station.NetworkIdUtil;
+import edu.sc.seis.sod.model.station.StationImpl;
 
 public class VelocityStationGetter {
 

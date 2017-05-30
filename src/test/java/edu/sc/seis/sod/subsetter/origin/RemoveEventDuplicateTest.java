@@ -1,9 +1,9 @@
 package edu.sc.seis.sod.subsetter.origin;
 
-import junit.framework.TestCase;
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.model.common.QuantityImpl;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import junit.framework.TestCase;
 
 
 

@@ -6,14 +6,13 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfEvent.Origin;
-import edu.iris.Fissures.event.EventAttrImpl;
-import edu.iris.Fissures.event.OriginImpl;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.QuantityImpl;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.event.EventAttrImpl;
+import edu.sc.seis.sod.model.event.OriginImpl;
 import edu.sc.seis.sod.source.event.EventSource;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
@@ -57,7 +56,7 @@ public class SimilarEvent extends RemoveEventDuplicate {
         return new Fail(this);
     }
 
-    public List<CacheEvent> getEventsNearTimeAndDepth(Origin preferred_origin) {
+    public List<CacheEvent> getEventsNearTimeAndDepth(OriginImpl preferred_origin) {
         ArrayList<CacheEvent> out = new ArrayList<CacheEvent>();
         Iterator<CacheEvent> it = eventList.iterator();
         while(it.hasNext()) {
@@ -70,13 +69,13 @@ public class SimilarEvent extends RemoveEventDuplicate {
         return out;
     }
     
-    private boolean isTimeOK(CacheEvent event, Origin preferred_origin) {
+    private boolean isTimeOK(CacheEvent event, OriginImpl preferred_origin) {
         MicroSecondDate eventTime = new MicroSecondDate(event.getOrigin().getOriginTime());
         MicroSecondDate originTime = new MicroSecondDate(preferred_origin.getOriginTime());
         return eventTime.difference(originTime).lessThanEqual(timeVariance);
     }
     
-    private boolean isDepthOK(CacheEvent event, Origin preferred_origin) {
+    private boolean isDepthOK(CacheEvent event, OriginImpl preferred_origin) {
         QuantityImpl eventDepth = (QuantityImpl)event.getOrigin().getLocation().depth;
         QuantityImpl originDepth = (QuantityImpl)preferred_origin.getLocation().depth;
         double difference = eventDepth.subtract(originDepth).getValue(depthVariance.get_unit());

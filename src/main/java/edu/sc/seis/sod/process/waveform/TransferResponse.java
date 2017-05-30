@@ -2,29 +2,28 @@ package edu.sc.seis.sod.process.waveform;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfNetwork.ChannelNotFound;
-import edu.iris.Fissures.IfNetwork.Filter;
-import edu.iris.Fissures.IfNetwork.FilterType;
-import edu.iris.Fissures.IfNetwork.Instrumentation;
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.fissuresUtil.bag.Transfer;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.cache.InstrumentationLoader;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
-import edu.sc.seis.fissuresUtil.sac.FissuresToSac;
-import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
 import edu.sc.seis.seisFile.sac.SacPoleZero;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Threadable;
+import edu.sc.seis.sod.bag.Transfer;
+import edu.sc.seis.sod.hibernate.ChannelNotFound;
+import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.station.Filter;
+import edu.sc.seis.sod.model.station.FilterType;
+import edu.sc.seis.sod.model.station.Instrumentation;
+import edu.sc.seis.sod.model.station.InvalidResponse;
 import edu.sc.seis.sod.source.SodSourceException;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.StringTreeLeaf;
+import edu.sc.seis.sod.util.convert.sac.FissuresToSac;
 
 
 /**
@@ -70,7 +69,7 @@ public class TransferResponse implements WaveformProcess, Threadable {
             if (inst == null) {
                 throw new InvalidResponse("Response is null");
             }
-            InstrumentationLoader.checkResponse(inst.the_response);
+            Instrumentation.checkResponse(inst.the_response);
             UnitImpl inUnits = ((UnitImpl)inst.the_response.stages[0].input_units);
             if ( ! (inUnits.isConvertableTo(UnitImpl.METER) 
                     || inUnits.isConvertableTo(UnitImpl.METER_PER_SECOND) 

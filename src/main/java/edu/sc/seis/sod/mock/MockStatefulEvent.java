@@ -1,9 +1,9 @@
 package edu.sc.seis.sod.mock;
 
-import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
-import edu.sc.seis.fissuresUtil.mockFissures.IfEvent.MockEventAccessOperations;
-import edu.sc.seis.sod.Status;
-import edu.sc.seis.sod.hibernate.StatefulEvent;
+import edu.sc.seis.sod.mock.event.MockEventAccessOperations;
+import edu.sc.seis.sod.model.event.NoPreferredOrigin;
+import edu.sc.seis.sod.model.event.StatefulEvent;
+import edu.sc.seis.sod.model.status.Status;
 
 
 public class MockStatefulEvent {

@@ -4,21 +4,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.iris.Fissures.Time;
-import edu.iris.Fissures.IfNetwork.ChannelId;
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.IfSeismogramDC.SeismogramAttr;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.SamplingImpl;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.iris.Fissures.seismogramDC.RequestFilterUtil;
-import edu.iris.Fissures.seismogramDC.SeismogramAttrImpl;
-import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.seisFile.earthworm.TraceBuf2;
 import edu.sc.seis.seisFile.waveserver.MenuItem;
 import edu.sc.seis.seisFile.waveserver.WaveServer;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
+import edu.sc.seis.sod.model.common.SamplingImpl;
+import edu.sc.seis.sod.model.common.Time;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.seismogram.RequestFilterUtil;
+import edu.sc.seis.sod.model.seismogram.SeismogramAttrImpl;
+import edu.sc.seis.sod.model.station.ChannelId;
 
 public class WinstonWaveServerSource implements SeismogramSource {
      
@@ -64,7 +63,7 @@ public class WinstonWaveServerSource implements SeismogramSource {
                         MicroSecondTimeRange rfRange = new MicroSecondTimeRange(rf);
                         if (menuRange.intersects(rfRange)) {
                             MicroSecondTimeRange intersection = menuRange.intersection(rfRange);
-                            out.add(new RequestFilter(rf.channel_id, intersection.getBeginTime().getFissuresTime(), intersection.getEndTime().getFissuresTime()));
+                            out.add(new RequestFilter(rf.channel_id, intersection.getBeginTime(), intersection.getEndTime()));
                         }
                     }
                 }
@@ -100,8 +99,8 @@ public class WinstonWaveServerSource implements SeismogramSource {
     }
     
     public static LocalSeismogramImpl toFissures(TraceBuf2 buf, ChannelId chan) {
-        SeismogramAttr seisAttr = new SeismogramAttrImpl("via WaveServer:"+Math.random(),
-                                                         toDate(buf.getStartTime()).getFissuresTime(),
+        SeismogramAttrImpl seisAttr = new SeismogramAttrImpl("via WaveServer:"+Math.random(),
+                                                         new Time(toDate(buf.getStartTime())),
                                                          buf.getNumSamples(),
                                                          new SamplingImpl(1,
                                                                           new TimeInterval(1/buf.getSampleRate(),

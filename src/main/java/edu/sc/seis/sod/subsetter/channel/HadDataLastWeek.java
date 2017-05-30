@@ -4,19 +4,19 @@ import java.util.HashMap;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfNetwork.ChannelId;
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.network.ChannelIdUtil;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.station.ChannelId;
+import edu.sc.seis.sod.model.station.ChannelIdUtil;
+import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.source.seismogram.FixedDataCenter;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
+import edu.sc.seis.sod.util.time.ClockUtil;
 
 /**
  * @author groves Created on May 6, 2005
@@ -49,9 +49,9 @@ public class HadDataLastWeek implements ChannelSubsetter {
         for(int i = 0; i < reqs.length; i++) {
             reqs[i] = new RequestFilter(channel.get_id(),
                                         now.subtract(makeDayInterval(i + 1))
-                                                .getFissuresTime(),
+                                                ,
                                         now.subtract(makeDayInterval(i))
-                                                .getFissuresTime());
+                                                );
         }
         if(fixDC.getDataCenter().available_data(reqs).length > 0) {
             logger.debug(ChannelIdUtil.toStringNoDates(channel) + " had data");

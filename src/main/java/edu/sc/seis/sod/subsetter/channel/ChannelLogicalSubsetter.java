@@ -7,9 +7,9 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;

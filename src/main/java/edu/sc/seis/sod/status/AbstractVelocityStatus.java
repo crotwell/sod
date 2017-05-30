@@ -20,11 +20,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.process.waveform.LocalSeismogramTemplateGenerator;
 import edu.sc.seis.sod.status.networkArm.NetworkMonitor;
 import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
+import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
 
 public abstract class AbstractVelocityStatus implements WaveformMonitor,
         NetworkMonitor {

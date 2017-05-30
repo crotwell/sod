@@ -8,35 +8,35 @@ package edu.sc.seis.sod.process.waveform;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Threadable;
+import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
 public class Taper implements WaveformProcess, Threadable {
     public Taper (Element config) {
-        int type = edu.sc.seis.fissuresUtil.bag.Taper.HANNING;
+        int type = edu.sc.seis.sod.bag.Taper.HANNING;
         Element typeElement = SodUtil.getElement(config, "type");
         if (typeElement != null) {
             String typeStr = SodUtil.getText(typeElement);
             if (typeStr.equals("hanning")) {
-                type = edu.sc.seis.fissuresUtil.bag.Taper.HANNING;
+                type = edu.sc.seis.sod.bag.Taper.HANNING;
             } else if (typeStr.equals("hamming")) {
-                type = edu.sc.seis.fissuresUtil.bag.Taper.HANNING;
+                type = edu.sc.seis.sod.bag.Taper.HANNING;
             } else if (typeStr.equals("cosine")) {
-                type = edu.sc.seis.fissuresUtil.bag.Taper.COSINE;
+                type = edu.sc.seis.sod.bag.Taper.COSINE;
             }
         }
         Element widthElement = SodUtil.getElement(config, "width");
         if (widthElement != null) {
             float width = Float.parseFloat(SodUtil.getText(widthElement));
-            taper = new edu.sc.seis.fissuresUtil.bag.Taper(type, width);
+            taper = new edu.sc.seis.sod.bag.Taper(type, width);
         } else {
-            taper = new edu.sc.seis.fissuresUtil.bag.Taper(type);
+            taper = new edu.sc.seis.sod.bag.Taper(type);
         }
     }
 
@@ -57,6 +57,6 @@ public class Taper implements WaveformProcess, Threadable {
         return new WaveformResult(out, new StringTreeLeaf(this, true));
     }
 
-    edu.sc.seis.fissuresUtil.bag.Taper taper;
+    edu.sc.seis.sod.bag.Taper taper;
 }
 

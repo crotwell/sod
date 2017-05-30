@@ -3,13 +3,12 @@ package edu.sc.seis.sod.velocity.seismogram;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.network.ChannelIdUtil;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
-import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.station.ChannelGroup;
+import edu.sc.seis.sod.model.station.ChannelIdUtil;
+import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 import edu.sc.seis.sod.velocity.network.VelocityChannel;
 
@@ -18,7 +17,7 @@ import edu.sc.seis.sod.velocity.network.VelocityChannel;
  */
 public class VelocityRequest {
 
-    public VelocityRequest(RequestFilter rf, Channel chan) {
+    public VelocityRequest(RequestFilter rf, ChannelImpl chan) {
         this(rf, new VelocityChannel((ChannelImpl)chan));
     }
 
@@ -56,7 +55,7 @@ public class VelocityRequest {
 
     private MicroSecondTimeRange range;
 
-    public static List<VelocityRequest> wrap(RequestFilter[] original, Channel chan) {
+    public static List<VelocityRequest> wrap(RequestFilter[] original, ChannelImpl chan) {
         List<VelocityRequest> results = new ArrayList<VelocityRequest>(original.length);
         for(int i = 0; i < original.length; i++) {
             results.add(new VelocityRequest(original[i], chan));

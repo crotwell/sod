@@ -1,11 +1,10 @@
 package edu.sc.seis.sod.status.waveformArm;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
-import edu.iris.Fissures.IfNetwork.Site;
-import edu.iris.Fissures.IfNetwork.Station;
-import edu.sc.seis.sod.Status;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Site;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
+import edu.sc.seis.sod.model.status.Status;
 import edu.sc.seis.sod.subsetter.Subsetter;
 
 

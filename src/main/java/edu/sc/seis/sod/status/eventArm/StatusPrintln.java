@@ -8,10 +8,8 @@ package edu.sc.seis.sod.status.eventArm;
 
 import org.w3c.dom.Element;
 
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.cache.EventUtil;
-import edu.sc.seis.sod.Status;
-import edu.sc.seis.sod.hibernate.StatefulEvent;
+import edu.sc.seis.sod.model.event.StatefulEvent;
+import edu.sc.seis.sod.util.display.EventUtil;
 
 public class StatusPrintln implements EventMonitor{
     public StatusPrintln(Element config){}

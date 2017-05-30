@@ -3,10 +3,10 @@ package edu.sc.seis.sod.subsetter.origin;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import edu.sc.seis.sod.mock.event.MockEventAccessOperations;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.event.EventAttrImpl;
 import junit.framework.TestCase;
-import edu.iris.Fissures.event.EventAttrImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.mockFissures.IfEvent.MockEventAccessOperations;
 
 
 public class SimilarEventTest extends TestCase {

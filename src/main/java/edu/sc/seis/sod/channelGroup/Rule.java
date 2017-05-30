@@ -7,12 +7,12 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.network.NetworkAttrImpl;
-import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.NetworkArm;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.model.station.ChannelGroup;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.station.NetworkAttrImpl;
 import edu.sc.seis.sod.subsetter.channel.ChannelSubsetter;
 import edu.sc.seis.sod.subsetter.channel.PassChannel;
 import edu.sc.seis.sod.subsetter.network.NetworkSubsetter;

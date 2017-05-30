@@ -1,16 +1,16 @@
 package edu.sc.seis.sod.subsetter;
 
-import edu.iris.Fissures.Time;
-import edu.iris.Fissures.TimeRange;
-import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.NetworkAttr;
-import edu.iris.Fissures.IfNetwork.Site;
-import edu.iris.Fissures.IfNetwork.Station;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.sc.seis.sod.hibernate.StatefulEvent;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.Time;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.TimeRange;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.event.NoPreferredOrigin;
+import edu.sc.seis.sod.model.event.StatefulEvent;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.station.NetworkAttrImpl;
+import edu.sc.seis.sod.model.station.SiteImpl;
+import edu.sc.seis.sod.model.station.StationImpl;
 
 /**
  * EventEffectiveTimeOverlap.java Created: Wed Mar 19 10:49:54 2003
@@ -30,23 +30,23 @@ public class EventEffectiveTimeOverlap extends EffectiveTimeOverlap {
         Time otime = event.getOrigin().getOriginTime();
         if (otime == null) {throw new RuntimeException("origin time is null");}
         MicroSecondDate originTime = new MicroSecondDate(otime);
-        return new TimeRange(originTime.getFissuresTime(),
-                             originTime.add(DEFAULT_OFFSET).getFissuresTime());
+        return new TimeRange(originTime,
+                             originTime.add(DEFAULT_OFFSET));
     }
 
-    public boolean overlaps(NetworkAttr net) {
+    public boolean overlaps(NetworkAttrImpl net) {
         return overlaps(net.getEffectiveTime());
     }
 
-    public boolean overlaps(Station station) {
+    public boolean overlaps(StationImpl station) {
         return overlaps(station.getEffectiveTime());
     }
 
-    public boolean overlaps(Site site) {
+    public boolean overlaps(SiteImpl site) {
         return overlaps(site.getEffectiveTime());
     }
 
-    public boolean overlaps(Channel channel) {
+    public boolean overlaps(ChannelImpl channel) {
         return overlaps(channel.getEffectiveTime());
     }
 

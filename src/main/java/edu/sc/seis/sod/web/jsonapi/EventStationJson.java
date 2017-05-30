@@ -7,12 +7,9 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
-import edu.sc.seis.fissuresUtil.bag.DistAz;
-import edu.sc.seis.sod.AbstractEventChannelPair;
-import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.EventStationPair;
-import edu.sc.seis.sod.measure.Measurement;
-import edu.sc.seis.sod.measure.TextMeasurement;
+import edu.sc.seis.sod.hibernate.eventpair.AbstractEventChannelPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventStationPair;
+import edu.sc.seis.sod.model.common.DistAz;
 
 public class EventStationJson extends AbstractJsonApiData {
 

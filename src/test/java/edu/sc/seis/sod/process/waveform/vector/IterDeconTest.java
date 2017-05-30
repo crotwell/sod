@@ -7,17 +7,17 @@ import java.io.DataInputStream;
 
 import org.junit.Test;
 
-import edu.iris.Fissures.model.SamplingImpl;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.fissuresUtil.bag.IterDecon;
-import edu.sc.seis.fissuresUtil.bag.IterDeconResult;
-import edu.sc.seis.fissuresUtil.freq.Cmplx;
-import edu.sc.seis.fissuresUtil.mockFissures.IfSeismogramDC.MockSeismogram;
-import edu.sc.seis.fissuresUtil.sac.FissuresToSac;
 import edu.sc.seis.seisFile.sac.SacTimeSeries;
+import edu.sc.seis.sod.bag.Cmplx;
+import edu.sc.seis.sod.bag.IterDecon;
+import edu.sc.seis.sod.bag.IterDeconResult;
+import edu.sc.seis.sod.mock.seismogram.MockSeismogram;
+import edu.sc.seis.sod.model.common.SamplingImpl;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.process.waveform.OregonDspFFT;
+import edu.sc.seis.sod.util.convert.sac.FissuresToSac;
 
 // JUnitDoclet end import
 /**

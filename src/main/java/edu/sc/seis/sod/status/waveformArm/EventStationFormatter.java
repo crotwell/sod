@@ -6,19 +6,16 @@
 
 package edu.sc.seis.sod.status.waveformArm;
 
-import java.text.DecimalFormat;
-
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfNetwork.Station;
-import edu.iris.Fissures.network.StationImpl;
-import edu.sc.seis.fissuresUtil.bag.DistAz;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.chooser.ThreadSafeDecimalFormat;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.hibernate.SodDB;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.status.StationFormatter;
 import edu.sc.seis.sod.status.StationTemplate;
+import edu.sc.seis.sod.util.display.ThreadSafeDecimalFormat;
 
 public class EventStationFormatter extends StationFormatter{
     public EventStationFormatter(Element el) throws ConfigurationException{

@@ -4,15 +4,15 @@ import org.w3c.dom.Element;
 
 import com.oregondsp.signalProcessing.filter.iir.PassbandType;
 
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Threadable;
+import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.model.common.QuantityImpl;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.status.StringTreeBranch;
 
 public class Decimate implements WaveformProcess, Threadable {
@@ -25,12 +25,12 @@ public class Decimate implements WaveformProcess, Threadable {
         if (SodUtil.getElement(config, TOSPS_NAME) != null) {
             toSampleRate = Float.parseFloat(SodUtil.loadText(config, TOSPS_NAME, "not used"));
         } else if (SodUtil.getElement(config, FACTOR_NAME) != null) {
-            decimate = new edu.sc.seis.fissuresUtil.bag.Decimate(Integer.parseInt(SodUtil.getNestedText(SodUtil.getElement(config,
+            decimate = new edu.sc.seis.sod.bag.Decimate(Integer.parseInt(SodUtil.getNestedText(SodUtil.getElement(config,
                                                                                                                            FACTOR_NAME))));
         } else {
             System.err.println("WARNING, naked int in <decimate> is depricated, please use <" + TOSPS_NAME + "> or <"
                     + FACTOR_NAME + ">.");
-            decimate = new edu.sc.seis.fissuresUtil.bag.Decimate(Integer.parseInt(SodUtil.getNestedText(config)));
+            decimate = new edu.sc.seis.sod.bag.Decimate(Integer.parseInt(SodUtil.getNestedText(config)));
         }
     }
 
@@ -47,9 +47,9 @@ public class Decimate implements WaveformProcess, Threadable {
         LocalSeismogramImpl[] out = new LocalSeismogramImpl[seismograms.length];
         LocalSeismogramImpl[] filteredSeis = seismograms;
         if (seismograms.length != 0) {
-            edu.sc.seis.fissuresUtil.bag.Decimate d = decimate;
+            edu.sc.seis.sod.bag.Decimate d = decimate;
             if (d == null) {
-                d = new edu.sc.seis.fissuresUtil.bag.Decimate((int)Math.ceil(seismograms[0].getSampling()
+                d = new edu.sc.seis.sod.bag.Decimate((int)Math.ceil(seismograms[0].getSampling()
                         .getFrequency()
                         .getValue(UnitImpl.HERTZ)
                         / toSampleRate));
@@ -82,7 +82,7 @@ public class Decimate implements WaveformProcess, Threadable {
 
     OregonDSPFilter antiAliasFilter;
 
-    edu.sc.seis.fissuresUtil.bag.Decimate decimate;
+    edu.sc.seis.sod.bag.Decimate decimate;
 
     public static final String TOSPS_NAME = "maxSamplesPerSec";
 

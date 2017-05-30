@@ -2,10 +2,10 @@ package edu.sc.seis.sod.subsetter.station;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.Location;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.network.StationImpl;
-import edu.sc.seis.fissuresUtil.bag.DistAz;
+import edu.sc.seis.sod.model.common.DistAz;
+import edu.sc.seis.sod.model.common.Location;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;

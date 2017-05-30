@@ -5,9 +5,9 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
-import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
-import edu.iris.Fissures.event.OriginImpl;
-import edu.sc.seis.sod.hibernate.StatefulEvent;
+import edu.sc.seis.sod.model.event.NoPreferredOrigin;
+import edu.sc.seis.sod.model.event.OriginImpl;
+import edu.sc.seis.sod.model.event.StatefulEvent;
 
 public class EventJson extends AbstractJsonApiData {
 

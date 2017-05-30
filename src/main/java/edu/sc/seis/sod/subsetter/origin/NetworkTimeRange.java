@@ -2,20 +2,20 @@ package edu.sc.seis.sod.subsetter.origin;
 
 import java.util.List;
 
-import edu.iris.Fissures.event.EventAttrImpl;
-import edu.iris.Fissures.event.OriginImpl;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.network.NetworkAttrImpl;
-import edu.iris.Fissures.network.StationImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.sod.Arm;
 import edu.sc.seis.sod.ArmListener;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.NetworkArm;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.UserConfigurationException;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.event.EventAttrImpl;
+import edu.sc.seis.sod.model.event.OriginImpl;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.station.NetworkAttrImpl;
+import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.source.event.MicroSecondTimeRangeSupplier;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;

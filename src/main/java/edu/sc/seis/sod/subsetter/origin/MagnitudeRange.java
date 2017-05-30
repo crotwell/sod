@@ -7,17 +7,17 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import edu.iris.Fissures.IfEvent.Magnitude;
-import edu.iris.Fissures.event.EventAttrImpl;
-import edu.iris.Fissures.event.OriginImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.event.EventAttrImpl;
+import edu.sc.seis.sod.model.event.Magnitude;
+import edu.sc.seis.sod.model.event.OriginImpl;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.MagType;
 import edu.sc.seis.sod.subsetter.RangeSubsetter;
+import edu.sc.seis.sod.util.display.EventUtil;
 
 public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter {
 

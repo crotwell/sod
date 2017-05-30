@@ -1,11 +1,11 @@
 package edu.sc.seis.sod.status.eventArm;
 
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.w3c.dom.Element;
 
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.database.NotFound;
-import edu.sc.seis.fissuresUtil.hibernate.EventDB;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.hibernate.EventDB;
+import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.status.AllTypeTemplate;
 import edu.sc.seis.sod.status.EventFormatter;
 

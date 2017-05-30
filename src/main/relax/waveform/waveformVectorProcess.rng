@@ -23,7 +23,6 @@
               are treaded as if they are in a ANDWaveformProcessWrapper -->
             <ref name="seismogramProcess"/>
             <ref name="externalVectorProcess"/>
-            <ref name="vectorImageProcess"/>
             <ref name="particleMotionPlot"/>
             <ref name="sampleSyncronize"/>
             <ref name="rotateGCP"/>
@@ -219,40 +218,6 @@
                 </example>
             </xsd:annotation>
             <ref name="externalClass"/>
-        </element>
-    </define>
-    <define name="vectorImageProcess">
-        <element name="vectorImageProcess">
-            <optional>
-                <attribute name="id"/>
-            </optional>
-            <ref name="seismogramImageBase"/>
-            <optional>
-                <ref name="titleBorder"/>
-            </optional>
-            <optional>
-                <ref name="globalizedAmpConfig"/>
-            </optional>
-            <optional>
-                <element name="displayTemplate">
-                    <ref name="basicSeismogramDisplayContents"/>
-                </element>
-            </optional>
-            <optional>
-                <element name="verticalDisplayConfig">
-                    <ref name="basicSeismogramDisplayContents"/>
-                </element>
-            </optional>
-            <optional>
-                <element name="northDisplayConfig">
-                    <ref name="basicSeismogramDisplayContents"/>
-                </element>
-            </optional>
-            <optional>
-                <element name="eastDisplayConfig">
-                    <ref name="basicSeismogramDisplayContents"/>
-                </element>
-            </optional>
         </element>
     </define>
     <define name="particleMotionPlot">

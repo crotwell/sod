@@ -1,9 +1,8 @@
 package edu.sc.seis.sod.source.event;
 
-import edu.iris.Fissures.model.TimeInterval;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
-import edu.sc.seis.sod.SodElement;
+import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.source.Source;
 
 public interface EventSource  extends Source {

@@ -11,13 +11,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.status.eventArm.LastEventTemplate;
 import edu.sc.seis.sod.status.waveformArm.NumSuccessfulECPTemplate;
 import edu.sc.seis.sod.status.waveformArm.SacDataWrittenTemplate;
 import edu.sc.seis.sod.status.waveformArm.WPHTemplate;
+import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
 
 public class FileWritingTemplate extends Template implements GenericTemplate, Runnable {
     protected FileWritingTemplate(String baseDir, String loc) throws IOException  {

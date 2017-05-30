@@ -1,7 +1,6 @@
 package edu.sc.seis.sod.measure;
 
-import edu.iris.Fissures.NotImplemented;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 
 public class SeismogramMeasurement extends Measurement {
 

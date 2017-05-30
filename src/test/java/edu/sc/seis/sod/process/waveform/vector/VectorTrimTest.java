@@ -5,20 +5,20 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
-import junit.framework.TestCase;
-import edu.iris.Fissures.FissuresException;
-import edu.iris.Fissures.model.ISOTime;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.SamplingImpl;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.fissuresUtil.bag.Cut;
-import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannelId;
-import edu.sc.seis.fissuresUtil.mockFissures.IfSeismogramDC.MockSeismogram;
-import edu.sc.seis.fissuresUtil.sac.SacToFissures;
-import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
+import edu.sc.seis.sod.bag.Cut;
+import edu.sc.seis.sod.mock.seismogram.MockSeismogram;
+import edu.sc.seis.sod.mock.station.MockChannelId;
+import edu.sc.seis.sod.model.common.FissuresException;
+import edu.sc.seis.sod.model.common.ISOTime;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
+import edu.sc.seis.sod.model.common.SamplingImpl;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.subsetter.SubsetterException;
+import edu.sc.seis.sod.util.convert.sac.SacToFissures;
+import junit.framework.TestCase;
 
 public class VectorTrimTest extends TestCase {
 

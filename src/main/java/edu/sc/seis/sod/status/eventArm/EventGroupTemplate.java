@@ -3,9 +3,9 @@ import java.util.Iterator;
 
 import org.w3c.dom.Element;
 
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.hibernate.StatefulEvent;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.event.StatefulEvent;
 import edu.sc.seis.sod.status.EventFormatter;
 import edu.sc.seis.sod.status.GenericTemplate;
 import edu.sc.seis.sod.status.Template;

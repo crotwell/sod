@@ -7,14 +7,13 @@ import java.io.IOException;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.FlinnEngdahlRegion;
-import edu.iris.Fissures.Location;
-import edu.iris.Fissures.Quantity;
-import edu.iris.Fissures.IfEvent.Magnitude;
-import edu.iris.Fissures.event.EventAttrImpl;
-import edu.iris.Fissures.event.OriginImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
+import edu.sc.seis.sod.model.common.Location;
+import edu.sc.seis.sod.model.common.QuantityImpl;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.event.EventAttrImpl;
+import edu.sc.seis.sod.model.event.Magnitude;
+import edu.sc.seis.sod.model.event.OriginImpl;
 import edu.sc.seis.sod.source.event.CSVEventSource;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
@@ -41,13 +40,13 @@ public class CSVEventPrinter implements OriginSubsetter {
                              EventAttrImpl eventAttr,
                              OriginImpl preferred_origin) throws Exception {
         StringBuffer buff = new StringBuffer();
-        buff.append(preferred_origin.getOriginTime().date_time + COM);
+        buff.append(preferred_origin.getOriginTime().getISOTime() + COM);
         Location loc = preferred_origin.getLocation();
         buff.append(loc.latitude + COM);
         buff.append(loc.longitude + COM);
-        Quantity q = loc.depth;
-        buff.append(q.value + COM);
-        buff.append(q.the_units + COM);
+        QuantityImpl q = loc.depth;
+        buff.append(q.getValue() + COM);
+        buff.append(q.getUnit() + COM);
         StringBuffer magValBuf = new StringBuffer();
         StringBuffer magTypeBuf = new StringBuffer();
         StringBuffer magContribBuf = new StringBuffer();
@@ -76,7 +75,7 @@ public class CSVEventPrinter implements OriginSubsetter {
         buff.append(preferred_origin.getCatalog() + COM);
         buff.append(preferred_origin.getContributor() + COM);
         buff.append("\""+eventAttr.name+"\"" + COM);
-        FlinnEngdahlRegion region = eventAttr.region;
+        edu.sc.seis.sod.model.event.FlinnEngdahlRegion region = eventAttr.region;
         buff.append(region.number + COM);
         buff.append("" + region.type.value());
         if(file == null) {

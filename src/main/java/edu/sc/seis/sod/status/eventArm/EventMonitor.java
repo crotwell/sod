@@ -6,7 +6,7 @@
 
 package edu.sc.seis.sod.status.eventArm;
 import edu.sc.seis.sod.SodElement;
-import edu.sc.seis.sod.hibernate.StatefulEvent;
+import edu.sc.seis.sod.model.event.StatefulEvent;
 
 public interface EventMonitor extends SodElement {
 

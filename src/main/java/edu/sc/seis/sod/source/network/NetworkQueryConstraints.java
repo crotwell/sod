@@ -1,14 +1,13 @@
 package edu.sc.seis.sod.source.network;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.subsetter.Subsetter;
 import edu.sc.seis.sod.subsetter.channel.ChannelCode;
 import edu.sc.seis.sod.subsetter.channel.ChannelOR;
@@ -20,6 +19,7 @@ import edu.sc.seis.sod.subsetter.network.NetworkSubsetter;
 import edu.sc.seis.sod.subsetter.station.StationCode;
 import edu.sc.seis.sod.subsetter.station.StationOR;
 import edu.sc.seis.sod.subsetter.station.StationSubsetter;
+import edu.sc.seis.sod.util.time.ClockUtil;
 
 
 public class NetworkQueryConstraints {
@@ -43,10 +43,10 @@ public class NetworkQueryConstraints {
     public NetworkQueryConstraints(NetworkSubsetter attrSubsetter,
                                    StationSubsetter stationSubsetter,
                                    List<ChannelSubsetter> channelSubsetterList,
-                                   edu.iris.Fissures.TimeRange timeRange) {
+                                   MicroSecondTimeRange timeRange) {
         if (timeRange != null) {
-            this.beginConstraint = new MicroSecondDate(timeRange.start_time);
-            this.endConstraint = new MicroSecondDate(timeRange.end_time);
+            this.beginConstraint = timeRange.getBeginTime();
+            this.endConstraint = timeRange.getEndTime();
             if (endConstraint.after(ClockUtil.now().subtract(new TimeInterval(1, UnitImpl.HOUR)))) {
                 endConstraint = null;
             }

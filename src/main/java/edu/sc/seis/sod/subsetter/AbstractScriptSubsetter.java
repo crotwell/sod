@@ -9,7 +9,6 @@ import javax.script.ScriptException;
 
 import org.w3c.dom.Element;
 
-import edu.sc.seis.bag.Bag;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.status.Pass;

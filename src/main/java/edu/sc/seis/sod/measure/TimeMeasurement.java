@@ -1,6 +1,6 @@
 package edu.sc.seis.sod.measure;
 
-import edu.iris.Fissures.model.MicroSecondDate;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
 
 public class TimeMeasurement extends Measurement {
 
@@ -11,12 +11,12 @@ public class TimeMeasurement extends Measurement {
 
     @Override
     public String toXMLFragment() {
-        return value.getFissuresTime().date_time;
+        return value.getISOString();
     }
 
     @Override
     public Object valueAsJSON() {
-        return value.getFissuresTime().date_time;
+        return value.getISOString();
     }
     
     MicroSecondDate value;

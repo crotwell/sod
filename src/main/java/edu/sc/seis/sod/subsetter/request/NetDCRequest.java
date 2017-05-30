@@ -6,12 +6,12 @@ import java.util.TimeZone;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.sc.seis.fissuresUtil.chooser.ThreadSafeSimpleDateFormat;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.util.display.ThreadSafeSimpleDateFormat;
 
 public class NetDCRequest extends BreqFastRequest {
 
@@ -19,7 +19,7 @@ public class NetDCRequest extends BreqFastRequest {
         super(config);
     }
 
-    protected void insertRequest(Channel channel,
+    protected void insertRequest(ChannelImpl channel,
                                  RequestFilter[] request,
                                  Writer out,
                                  int i) throws IOException {
@@ -34,7 +34,7 @@ public class NetDCRequest extends BreqFastRequest {
                 + nl);
     }
 
-    protected void insertEventHeader(EventAccessOperations event, Writer out, String label)
+    protected void insertEventHeader(CacheEvent event, Writer out, String label)
             throws IOException {
         out.write(".NETDC_REQUEST" + nl);
         insert(out, "name");

@@ -2,7 +2,8 @@ package edu.sc.seis.sod.measure;
 
 import org.json.JSONObject;
 
-import edu.iris.Fissures.model.MicroSecondDate;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+
 
 public class TimeRangeMeasurement extends Measurement {
 
@@ -14,14 +15,14 @@ public class TimeRangeMeasurement extends Measurement {
 
     @Override
     public String toXMLFragment() {
-        return "<timeRange name=\"" + getName() + "\"><start>" + start.getFissuresTime().date_time+ "</start><end>" + end.getFissuresTime().date_time + "</end></timeRange>";
+        return "<timeRange name=\"" + getName() + "\"><start>" + start.getISOString()+ "</start><end>" + end.getISOString() + "</end></timeRange>";
     }
 
     @Override
     public Object valueAsJSON() {
         JSONObject out = new JSONObject();
-        out.append("start", start.getFissuresTime().date_time);
-        out.append("end", end.getFissuresTime().date_time);
+        out.append("start", start.getISOString());
+        out.append("end", end.getISOString());
         return out;
     }
     

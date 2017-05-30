@@ -10,67 +10,12 @@
                 <velocity>#eventArmPage()</velocity>
             </xsd:annotation>
             <ref name="fdsnEvent"/>
-            <ref name="eventFinder"/>
             <ref name="backwardsEventFinder"/>
             <ref name="CSVEventSource"/>
             <ref name="periodicFakeEventSource"/>
             <ref name="nowFakeEventSource"/>
             <ref name="delayedEventSource"/>
         </choice>
-    </define>
-    <define name="eventFinder">
-        <element name="eventFinder">
-            <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary> Retrieve events from an EventFinder. </summary>
-                    <description> A Fissures/DHI EventDC service is located via the name and dns tags. The EventFinder
-                        is acquired from the EventDC, and a query is sent with the given arguments. The events returned
-                        are then sent through the EventArm for processing.
- A listing of known catalogs for the IRIS FDSN Event web service can be found
-                        <a href="http://service.iris.edu/fdsnws/event/1/catalogs">here</a>.
-                        The server defaults to the edu/iris/dmc IRIS_EventDC.</description>
-                    <deprecated>This is deprecated in favor of the new fdsnEvent source.</deprecated>
-                </xsd:documentation>
-            </xsd:annotation>
-            <interleave>
-			    <optional><ref name="name"/></optional>
-			    <optional><ref name="dns"/></optional>
-	    		<optional>
-	    			<element name="retries">
-						<xsd:annotation>
-						  <summary>Number of consecutive failures before quiting</summary>
-						  <description>In the event of server errors, SOD will retry 
-						  the query to the server for retries times before failing.
-						  The default is -1 which means to try forever.</description>
-   				         </xsd:annotation>
-						<data type="integer"/>
-					</element>
-			    </optional>
-	            <optional>
-	                <choice>
- 	                   <ref name="globalArea"/>
- 	                   <ref name="boxArea"/>
- 	                   <ref name="pointDistance"/>
- 	               </choice>
- 	           </optional>
-	            <optional>
-	                <ref name="originDepthRange"/>
-	            </optional>
- 	           <choice>
- 	               <ref name="originTimeRange"/>
- 	               <ref name="networkTimeRange"/>
- 	           </choice>
-	            <optional>
-	                <ref name="magnitudeRange"/>
-	            </optional>
-	            <zeroOrMore>
-	                <ref name="catalog"/>
-	            </zeroOrMore>
-	            <zeroOrMore>
-	                <ref name="contributor"/>
-	            </zeroOrMore>
-            </interleave>
-        </element>
     </define>
     <define name="networkTimeRange">
         <element name="networkTimeRange">

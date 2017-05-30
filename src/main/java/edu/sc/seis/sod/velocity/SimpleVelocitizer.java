@@ -7,7 +7,6 @@ import java.io.Writer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Properties;
-import java.util.TimeZone;
 
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
@@ -15,15 +14,14 @@ import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.slf4j.Logger;
 
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.model.ISOTime;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.model.common.ISOTime;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
 
 /**
  * @author groves
@@ -38,16 +36,16 @@ public class SimpleVelocitizer {
         return dateFormat.format(date);
     }
 
-    public String evaluate(String template, Channel chan) {
+    public String evaluate(String template, ChannelImpl chan) {
         return evaluate(template, ContextWrangler.createContext(chan));
     }
 
-    public String evaluate(String template, EventAccessOperations event) {
+    public String evaluate(String template, CacheEvent event) {
         return evaluate(template, ContextWrangler.createContext(event));
     }
 
     public String evaluate(String template,
-                           EventAccessOperations event,
+                           CacheEvent event,
                            ChannelImpl channel,
                            RequestFilter[] original,
                            RequestFilter[] available,

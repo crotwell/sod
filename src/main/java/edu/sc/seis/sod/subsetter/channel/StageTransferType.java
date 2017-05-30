@@ -2,9 +2,9 @@ package edu.sc.seis.sod.subsetter.channel;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfNetwork.Stage;
-import edu.iris.Fissures.IfNetwork.TransferType;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
+import edu.sc.seis.sod.model.station.Stage;
+import edu.sc.seis.sod.model.station.TransferType;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 

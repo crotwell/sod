@@ -10,19 +10,18 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.velocity.VelocityContext;
 
-import edu.iris.Fissures.IfNetwork.Station;
-import edu.iris.Fissures.IfNetwork.StationId;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.network.NetworkAttrImpl;
-import edu.iris.Fissures.network.StationIdUtil;
-import edu.iris.Fissures.network.StationImpl;
-import edu.sc.seis.fissuresUtil.bag.DistAz;
-import edu.sc.seis.fissuresUtil.chooser.ThreadSafeDecimalFormat;
-import edu.sc.seis.fissuresUtil.xml.XMLStation;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
+import edu.sc.seis.sod.model.common.DistAz;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.QuantityImpl;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.station.NetworkAttrImpl;
+import edu.sc.seis.sod.model.station.StationId;
+import edu.sc.seis.sod.model.station.StationIdUtil;
+import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.status.FissuresFormatter;
+import edu.sc.seis.sod.util.display.ThreadSafeDecimalFormat;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 import edu.sc.seis.sod.velocity.event.VelocityEvent;
 
@@ -81,34 +80,34 @@ public class VelocityStation extends StationImpl {
     }
 
     public MicroSecondDate getStartDate() {
-        return new MicroSecondDate(getEffectiveTime().start_time);
+        return new MicroSecondDate(getEffectiveTime().getBeginTime());
     }
 
     public MicroSecondDate getEndDate() {
-        return new MicroSecondDate(getEffectiveTime().end_time);
+        return new MicroSecondDate(getEffectiveTime().getEndTime());
     }
 
     public String getStart() {
-        return FissuresFormatter.formatDate(getEffectiveTime().start_time);
+        return FissuresFormatter.formatDate(getEffectiveTime().getBeginTime());
     }
 
     public String getStart(String dateFormat) {
         if(dateFormat.equals("longfile")) {
-            return FissuresFormatter.formatDateForFile(getEffectiveTime().start_time);
+            return FissuresFormatter.formatDateForFile(getEffectiveTime().getBeginTime());
         }
-        return SimpleVelocitizer.format(new MicroSecondDate(getEffectiveTime().start_time),
+        return SimpleVelocitizer.format(new MicroSecondDate(getEffectiveTime().getBeginTime()),
                                         dateFormat);
     }
 
     public String getEnd() {
-        return FissuresFormatter.formatDate(getEffectiveTime().end_time);
+        return FissuresFormatter.formatDate(getEffectiveTime().getEndTime());
     }
 
     public String getEnd(String dateFormat) {
         if(dateFormat.equals("longfile")) {
-            return FissuresFormatter.formatDateForFile(getEffectiveTime().end_time);
+            return FissuresFormatter.formatDateForFile(getEffectiveTime().getEndTime());
         }
-        return SimpleVelocitizer.format(new MicroSecondDate(getEffectiveTime().end_time),
+        return SimpleVelocitizer.format(new MicroSecondDate(getEffectiveTime().getEndTime()),
                                         dateFormat);
     }
 
@@ -186,7 +185,7 @@ public class VelocityStation extends StationImpl {
 
     public String getDepth(String format) {
         double depthInM = QuantityImpl.createQuantityImpl(sta.getLocation().depth)
-                .convertTo(UnitImpl.METER).value;
+                .convertTo(UnitImpl.METER).getValue();
         return new DecimalFormat(format).format(depthInM);
     }
 
@@ -196,7 +195,7 @@ public class VelocityStation extends StationImpl {
 
     public String getElevation(String format) {
         double elevInMeters = QuantityImpl.createQuantityImpl(sta.getLocation().elevation)
-                .convertTo(UnitImpl.METER).value;
+                .convertTo(UnitImpl.METER).getValue();
         return new DecimalFormat(format).format(elevInMeters);
     }
 
@@ -231,13 +230,6 @@ public class VelocityStation extends StationImpl {
         return "stations/" + getNetCode() + "/" + getCode();
     }
 
-    public String toXML() throws XMLStreamException {
-        StringWriter writer = new StringWriter();
-        XMLStreamWriter xmlWriter = XMLUtil.getStaxOutputFactory().createXMLStreamWriter(writer);
-        XMLStation.insert(xmlWriter, this);
-        return writer.toString();
-    }
-
     public String toString() {
         return StationIdUtil.toStringNoDates(get_id());
     }
@@ -252,8 +244,8 @@ public class VelocityStation extends StationImpl {
                 return true;
             }
         }
-        if(o instanceof Station) {
-            Station oSta = (Station)o;
+        if(o instanceof StationImpl) {
+            StationImpl oSta = (StationImpl)o;
             return StationIdUtil.areEqual(oSta, sta);
         }
         return false;
@@ -297,7 +289,7 @@ public class VelocityStation extends StationImpl {
         return sta;
     }
 
-    public static VelocityStation[] wrap(Station[] stations) {
+    public static VelocityStation[] wrap(StationImpl[] stations) {
         VelocityStation[] out = new VelocityStation[stations.length];
         for(int i = 0; i < out.length; i++) {
             out[i] = new VelocityStation((StationImpl)stations[i]);
@@ -305,9 +297,9 @@ public class VelocityStation extends StationImpl {
         return out;
     }
     
-    public static List<VelocityStation> wrapList(List<? extends Station> stations) {
+    public static List<VelocityStation> wrapList(List<? extends StationImpl> stations) {
         List<VelocityStation> out = new ArrayList<VelocityStation>();
-        for(Station s : stations) {
+        for(StationImpl s : stations) {
             if (s instanceof VelocityStation) {
                 out.add((VelocityStation)s);
             } else {

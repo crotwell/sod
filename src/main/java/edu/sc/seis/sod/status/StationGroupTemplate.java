@@ -14,11 +14,11 @@ import java.util.Map;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import edu.iris.Fissures.IfNetwork.Station;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.Standing;
-import edu.sc.seis.sod.Status;
+import edu.sc.seis.sod.model.status.Standing;
+import edu.sc.seis.sod.model.status.Status;
 
 public class StationGroupTemplate extends Template implements GenericTemplate {
 

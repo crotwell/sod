@@ -4,8 +4,8 @@ import java.util.Iterator;
 
 import org.w3c.dom.Element;
 
-import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
 
 public class MicroSecondTimeRangeFormatter extends Template implements
         MicroSecondTimeRangeTemplate {
@@ -35,8 +35,7 @@ public class MicroSecondTimeRangeFormatter extends Template implements
             return new MicroSecondTimeRangeTemplate() {
 
                 public String getResult(MicroSecondTimeRange timeRange) {
-                    return tt.getResult(timeRange.getBeginTime()
-                            .getFissuresTime());
+                    return tt.getResult(timeRange.getBeginTime());
                 }
 
                 TimeTemplate tt = new TimeTemplate(el, true);
@@ -45,8 +44,7 @@ public class MicroSecondTimeRangeFormatter extends Template implements
             return new MicroSecondTimeRangeTemplate() {
 
                 public String getResult(MicroSecondTimeRange timeRange) {
-                    return tt.getResult(timeRange.getEndTime()
-                            .getFissuresTime());
+                    return tt.getResult(timeRange.getEndTime());
                 }
 
                 TimeTemplate tt = new TimeTemplate(el, true);

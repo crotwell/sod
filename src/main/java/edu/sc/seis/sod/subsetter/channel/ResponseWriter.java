@@ -2,25 +2,23 @@ package edu.sc.seis.sod.subsetter.channel;
 
 import java.io.FileNotFoundException;
 
-import org.codehaus.stax2.validation.XMLValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfNetwork.ChannelNotFound;
-import edu.iris.Fissures.IfNetwork.Instrumentation;
-import edu.iris.Fissures.network.ChannelIdUtil;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.network.ResponsePrint;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.source.SodSourceException;
+import edu.sc.seis.sod.bag.ResponsePrint;
+import edu.sc.seis.sod.hibernate.ChannelNotFound;
+import edu.sc.seis.sod.model.station.ChannelIdUtil;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.station.Instrumentation;
+import edu.sc.seis.sod.model.station.InvalidResponse;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.VelocityFileElementParser;
+import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.velocity.PrintlineVelocitizer;
 
 public class ResponseWriter implements ChannelSubsetter {

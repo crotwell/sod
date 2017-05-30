@@ -3,15 +3,14 @@ package edu.sc.seis.sod.subsetter.channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.iris.Fissures.IfNetwork.ChannelNotFound;
-import edu.iris.Fissures.IfNetwork.Instrumentation;
-import edu.iris.Fissures.IfNetwork.Response;
-import edu.iris.Fissures.IfNetwork.Stage;
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.network.ChannelIdUtil;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.sc.seis.fissuresUtil.cache.InstrumentationLoader;
-import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
+import edu.sc.seis.sod.hibernate.ChannelNotFound;
+import edu.sc.seis.sod.model.common.QuantityImpl;
+import edu.sc.seis.sod.model.station.ChannelIdUtil;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.station.Instrumentation;
+import edu.sc.seis.sod.model.station.InvalidResponse;
+import edu.sc.seis.sod.model.station.Response;
+import edu.sc.seis.sod.model.station.Stage;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
@@ -25,7 +24,7 @@ public class RepairSensitivity implements ChannelSubsetter {
         Instrumentation instrumentation;
         try {
             QuantityImpl sensitivity = network.getSensitivity(channel);
-            if(InstrumentationLoader.isValidSensitivity(sensitivity)) {
+            if(Instrumentation.isValidSensitivity(sensitivity)) {
                 return new Pass(this);
             }
             // try via instrumentation
@@ -35,7 +34,7 @@ public class RepairSensitivity implements ChannelSubsetter {
         } catch (InvalidResponse e) {
             return new Fail(this, "Invalid instrumentation: "+ e.getMessage());
         }
-        if(InstrumentationLoader.isValid(instrumentation)) {
+        if(Instrumentation.isValid(instrumentation)) {
             return new Pass(this);
         }
         Response resp = instrumentation.the_response;
@@ -44,8 +43,8 @@ public class RepairSensitivity implements ChannelSubsetter {
             return new StringTreeLeaf(this, false, "No stages in the response of "
                                       + ChannelIdUtil.toString(channel.get_id()));
         }
-        InstrumentationLoader.repairResponse(instrumentation.the_response);
-        return new StringTreeLeaf(this, InstrumentationLoader.isValid(instrumentation.the_response));
+        Instrumentation.repairResponse(instrumentation.the_response);
+        return new StringTreeLeaf(this, Instrumentation.isValid(instrumentation.the_response));
     }
 
     private Logger logger = LoggerFactory.getLogger(RepairSensitivity.class);

@@ -11,9 +11,9 @@ import java.util.StringTokenizer;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
-import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.Status;
+import edu.sc.seis.sod.model.station.NetworkIdUtil;
+import edu.sc.seis.sod.model.status.Status;
 
 public class NetworkFormatter extends Template implements NetworkTemplate {
 
@@ -94,7 +94,7 @@ public class NetworkFormatter extends Template implements NetworkTemplate {
             return new NetworkTemplate() {
 
                 public String getResult(NetworkAttr net) {
-                    return net.get_id().begin_time.date_time;
+                    return net.get_id().begin_time.getISOTime();
                 }
             };
         } else if(tag.equals("name")) {

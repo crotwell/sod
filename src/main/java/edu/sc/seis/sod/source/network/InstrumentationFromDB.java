@@ -2,14 +2,14 @@ package edu.sc.seis.sod.source.network;
 
 import java.util.HashMap;
 
-import edu.iris.Fissures.IfNetwork.ChannelNotFound;
-import edu.iris.Fissures.IfNetwork.Instrumentation;
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.network.ChannelIdUtil;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.sc.seis.fissuresUtil.hibernate.ChannelSensitivity;
-import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
-import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
+import edu.sc.seis.sod.hibernate.ChannelNotFound;
+import edu.sc.seis.sod.hibernate.ChannelSensitivity;
+import edu.sc.seis.sod.hibernate.NetworkDB;
+import edu.sc.seis.sod.model.common.QuantityImpl;
+import edu.sc.seis.sod.model.station.ChannelIdUtil;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.station.Instrumentation;
+import edu.sc.seis.sod.model.station.InvalidResponse;
 import edu.sc.seis.sod.source.SodSourceException;
 
 public class InstrumentationFromDB extends WrappingNetworkSource implements NetworkSource {

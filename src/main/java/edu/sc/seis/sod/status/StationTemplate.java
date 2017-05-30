@@ -6,9 +6,9 @@
 
 package edu.sc.seis.sod.status;
 
-import edu.iris.Fissures.IfNetwork.Station;
+import edu.sc.seis.sod.model.station.StationImpl;
 
 public interface StationTemplate {
-    public String getResult(Station station);
+    public String getResult(StationImpl station);
 }
 

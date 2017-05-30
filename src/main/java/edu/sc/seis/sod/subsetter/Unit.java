@@ -2,9 +2,9 @@ package edu.sc.seis.sod.subsetter;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.model.common.UnitImpl;
 
 /**
  * Unit.java
@@ -32,7 +32,7 @@ public class Unit implements SodElement{
      *
      * @return an <code>edu.iris.Fissures.Unit</code> value
      */
-    public edu.iris.Fissures.Unit getUnit() {
+    public UnitImpl getUnit() {
         String unitName = SodUtil.getNestedText(config);
         if(unitName.equals("SECOND")) return UnitImpl.SECOND;
         else if(unitName.equals("MINUTE")) return UnitImpl.MINUTE;

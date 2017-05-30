@@ -3,8 +3,8 @@ package edu.sc.seis.sod.status;
 
 import java.util.TimeZone;
 
-import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.chooser.ThreadSafeSimpleDateFormat;
+import edu.sc.seis.sod.util.time.ClockUtil;
 
 public class NowTemplate extends AllTypeTemplate{
 

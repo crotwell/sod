@@ -6,18 +6,17 @@ import java.util.List;
 
 import org.apache.velocity.VelocityContext;
 
-import edu.iris.Fissures.IfNetwork.NetworkAttr;
-import edu.iris.Fissures.IfNetwork.NetworkId;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.network.NetworkAttrImpl;
-import edu.iris.Fissures.network.NetworkIdUtil;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.station.NetworkAttrImpl;
+import edu.sc.seis.sod.model.station.NetworkId;
+import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
 /**
  * @author groves Created on Jan 7, 2005
  */
-public class VelocityNetwork extends NetworkAttr {
+public class VelocityNetwork extends NetworkAttrImpl {
 
     /**
      * Creates a VelocityNetwork with no stations. Will throw
@@ -80,15 +79,11 @@ public class VelocityNetwork extends NetworkAttr {
     }
     
     public String getRawBeginDate() {
-        return net.get_id().begin_time.date_time;
-    }
-
-    public String getRawBeginLeapSeconds() {
-        return "" + net.get_id().begin_time.leap_seconds_version;
+        return net.get_id().begin_time.getISOTime();
     }
 
     public MicroSecondDate getStart() {
-        return new MicroSecondDate(getEffectiveTime().start_time);
+        return new MicroSecondDate(getEffectiveTime().getBeginTime());
     }
     
     public String getStart(String format){
@@ -103,7 +98,7 @@ public class VelocityNetwork extends NetworkAttr {
     }
 
     public MicroSecondDate getEnd() {
-        return new MicroSecondDate(getEffectiveTime().end_time);
+        return new MicroSecondDate(getEffectiveTime().getEndTime());
     }
     
     public String getEnd(String format){
@@ -159,7 +154,7 @@ public class VelocityNetwork extends NetworkAttr {
         ctx.put("net", this);
     }
 
-    public static VelocityNetwork wrap(NetworkAttr net) {
+    public static VelocityNetwork wrap(NetworkAttrImpl net) {
         if(net instanceof VelocityNetwork) {
             return (VelocityNetwork)net;
         }

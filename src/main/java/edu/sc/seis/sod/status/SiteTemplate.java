@@ -6,7 +6,7 @@
 
 package edu.sc.seis.sod.status;
 
-import edu.iris.Fissures.IfNetwork.Site;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Site;
 
 public interface SiteTemplate {
 

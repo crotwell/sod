@@ -6,28 +6,25 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TimerTask;
 
-import edu.iris.Fissures.IfNetwork.ChannelNotFound;
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.network.ChannelIdUtil;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.network.NetworkAttrImpl;
-import edu.iris.Fissures.network.NetworkIdUtil;
-import edu.iris.Fissures.network.StationImpl;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
-import edu.sc.seis.fissuresUtil.hibernate.ChannelSensitivity;
-import edu.sc.seis.fissuresUtil.hibernate.InstrumentationBlob;
-import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
-import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
+import edu.sc.seis.sod.hibernate.ChannelNotFound;
+import edu.sc.seis.sod.hibernate.ChannelSensitivity;
+import edu.sc.seis.sod.hibernate.NetworkDB;
+import edu.sc.seis.sod.model.common.QuantityImpl;
+import edu.sc.seis.sod.model.station.ChannelGroup;
+import edu.sc.seis.sod.model.station.ChannelIdUtil;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.station.InvalidResponse;
+import edu.sc.seis.sod.model.station.NetworkAttrImpl;
+import edu.sc.seis.sod.model.station.NetworkIdUtil;
+import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.source.SodSourceException;
 import edu.sc.seis.sod.source.network.LoadedNetworkSource;
-import edu.sc.seis.sod.source.network.NetworkFinder;
+import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
 
 public class RefreshNetworkArm extends TimerTask {
 
     public RefreshNetworkArm(NetworkArm netArm) {
         this.netArm = netArm;
-        InstrumentationBlob.setORB(CommonAccess.getORB());
     }
 
     public void run() {
@@ -36,9 +33,6 @@ public class RefreshNetworkArm extends TimerTask {
             List<NetworkAttrImpl> nets;
             List<NetworkAttrImpl> needReload = new LinkedList<NetworkAttrImpl>();
             synchronized(this) {
-                if (netArm.getInternalNetworkSource() instanceof NetworkFinder) {
-                    ((NetworkFinder)netArm.getInternalNetworkSource()).reset();
-                }
                 nets = netArm.getSuccessfulNetworksFromServer();
                 if (nets.size() == 0) {return;}
                 

@@ -7,26 +7,26 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.TestCase;
-import edu.iris.Fissures.Location;
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.iris.dmc.seedcodec.CodecException;
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.SeismicPhase;
-import edu.sc.seis.fissuresUtil.bag.DistAz;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.cache.EventUtil;
-import edu.sc.seis.fissuresUtil.mockFissures.MockLocation;
-import edu.sc.seis.fissuresUtil.mockFissures.IfEvent.MockEventAccessOperations;
-import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannel;
-import edu.sc.seis.fissuresUtil.mockFissures.IfSeismogramDC.MockSeismogram;
-import edu.sc.seis.fissuresUtil.sac.FissuresToSac;
 import edu.sc.seis.seisFile.sac.SacTimeSeries;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.mock.MockLocation;
+import edu.sc.seis.sod.mock.event.MockEventAccessOperations;
+import edu.sc.seis.sod.mock.seismogram.MockSeismogram;
+import edu.sc.seis.sod.mock.station.MockChannel;
+import edu.sc.seis.sod.model.common.DistAz;
+import edu.sc.seis.sod.model.common.Location;
+import edu.sc.seis.sod.model.common.QuantityImpl;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.status.FissuresFormatter;
+import edu.sc.seis.sod.util.convert.sac.FissuresToSac;
+import edu.sc.seis.sod.util.display.EventUtil;
+import junit.framework.TestCase;
 
 public class SacWriterTest extends TestCase {
 

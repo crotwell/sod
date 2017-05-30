@@ -3,8 +3,8 @@ package edu.sc.seis.sod.web.jsonapi;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
-import edu.iris.Fissures.model.MicroSecondDate;
 import edu.sc.seis.sod.SodConfig;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
 
 public class SodConfigJson  extends AbstractJsonApiData {
 
@@ -27,7 +27,7 @@ public class SodConfigJson  extends AbstractJsonApiData {
 
     @Override
     public void encodeAttributes(JSONWriter out) throws JSONException {
-        out.key("timestamp").value(new MicroSecondDate(config.getTime()).getFissuresTime().date_time);
+        out.key("timestamp").value(new MicroSecondDate(config.getTime()).getISOString());
         out.key("config").value(config.getConfig());
     }
     

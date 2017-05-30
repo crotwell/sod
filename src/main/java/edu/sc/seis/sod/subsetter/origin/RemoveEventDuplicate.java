@@ -9,22 +9,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfEvent.Origin;
-import edu.iris.Fissures.event.EventAttrImpl;
-import edu.iris.Fissures.event.OriginImpl;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.sc.seis.fissuresUtil.bag.DistAz;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.Standing;
-import edu.sc.seis.sod.hibernate.StatefulEvent;
 import edu.sc.seis.sod.hibernate.StatefulEventDB;
+import edu.sc.seis.sod.model.common.DistAz;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
+import edu.sc.seis.sod.model.common.QuantityImpl;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.event.EventAttrImpl;
+import edu.sc.seis.sod.model.event.OriginImpl;
+import edu.sc.seis.sod.model.event.StatefulEvent;
+import edu.sc.seis.sod.model.status.Standing;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
@@ -80,18 +79,18 @@ public class RemoveEventDuplicate implements OriginSubsetter {
         return new StringTreeLeaf(this, true);
     }
     
-    public boolean isDistanceClose(CacheEvent eventA, Origin originB) {
-        Origin curOrig = eventA.getOrigin();
+    public boolean isDistanceClose(CacheEvent eventA, OriginImpl originB) {
+        OriginImpl curOrig = eventA.getOrigin();
         DistAz distAz = new DistAz(curOrig.getLocation(), originB.getLocation());
         if (distanceVariance.getUnit().isConvertableTo(UnitImpl.DEGREE)) {
-            return distAz.getDelta() < distanceVariance.convertTo(UnitImpl.DEGREE).value;
+            return distAz.getDelta() < distanceVariance.convertTo(UnitImpl.DEGREE).getValue();
         } else {
             // use earth radius of 6371 km
-            return distAz.getDelta()*6371 < distanceVariance.convertTo(UnitImpl.KILOMETER).value;
+            return distAz.getDelta()*6371 < distanceVariance.convertTo(UnitImpl.KILOMETER).getValue();
         }
     }
     
-    public List getEventsNearTimeAndDepth(Origin preferred_origin) throws SQLException {
+    public List getEventsNearTimeAndDepth(OriginImpl preferred_origin) throws SQLException {
         MicroSecondDate originTime = new MicroSecondDate(preferred_origin.getOriginTime());
         MicroSecondDate minTime = originTime.subtract(new TimeInterval(timeVariance));
         MicroSecondDate maxTime = originTime.add(new TimeInterval(timeVariance));

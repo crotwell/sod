@@ -8,22 +8,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfEvent.Magnitude;
-import edu.iris.Fissures.IfEvent.Origin;
-import edu.iris.Fissures.event.MagnitudeUtil;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.chooser.ThreadSafeSimpleDateFormat;
-import edu.sc.seis.fissuresUtil.display.ParseRegions;
-import edu.sc.seis.fissuresUtil.display.UnitDisplayUtil;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.hibernate.SodDB;
-import edu.sc.seis.sod.hibernate.StatefulEvent;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.event.MagnitudeUtil;
+import edu.sc.seis.sod.model.event.StatefulEvent;
+import edu.sc.seis.sod.model.status.Standing;
 import edu.sc.seis.sod.status.eventArm.EventTemplate;
+import edu.sc.seis.sod.util.display.EventUtil;
+import edu.sc.seis.sod.util.display.ParseRegions;
+import edu.sc.seis.sod.util.display.UnitDisplayUtil;
+import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
 
 public class EventFormatter extends Template implements EventTemplate {
 
@@ -208,7 +206,7 @@ public class EventFormatter extends Template implements EventTemplate {
                 return sdf.format(new MicroSecondDate(getOrigin(ev).getOriginTime()));
             } catch(NumberFormatException e) {
                 throw new RuntimeException("Offending date_time: "
-                        + getOrigin(ev).getOriginTime().date_time, e);
+                        + getOrigin(ev).getOriginTime().getISOTime(), e);
             }
         }
 

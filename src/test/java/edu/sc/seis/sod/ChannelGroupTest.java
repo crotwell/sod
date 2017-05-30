@@ -1,6 +1,6 @@
 package edu.sc.seis.sod;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,17 +9,12 @@ import java.util.List;
 import org.apache.log4j.BasicConfigurator;
 import org.junit.Test;
 
-import com.mchange.util.AssertException;
-
-import edu.iris.Fissures.IfNetwork.Site;
-import edu.iris.Fissures.IfNetwork.SiteId;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.network.SiteImpl;
-import edu.iris.Fissures.network.StationImpl;
-import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
-import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannel;
-import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockStation;
 import edu.sc.seis.sod.channelGroup.SiteMatchRule;
+import edu.sc.seis.sod.mock.station.MockChannel;
+import edu.sc.seis.sod.mock.station.MockStation;
+import edu.sc.seis.sod.model.station.ChannelGroup;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.station.StationImpl;
 
 
 public class ChannelGroupTest {

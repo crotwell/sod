@@ -38,9 +38,9 @@ public class UnitRange implements SodElement {
         unitRange = SodUtil.loadUnitRange(unitRangeElement);
     }
 
-    public edu.iris.Fissures.UnitRange getUnitRange() {
+    public edu.sc.seis.sod.model.common.UnitRangeImpl getUnitRange() {
         return unitRange;
     }
 
-    private edu.iris.Fissures.UnitRange unitRange = null;
+    private edu.sc.seis.sod.model.common.UnitRangeImpl unitRange = null;
 }// UnitRange

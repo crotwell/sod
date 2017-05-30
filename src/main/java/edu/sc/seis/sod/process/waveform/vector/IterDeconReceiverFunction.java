@@ -34,8 +34,8 @@ import edu.sc.seis.fissuresUtil.bag.ZeroPowerException;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.measure.ListMeasurement;
 import edu.sc.seis.sod.measure.Measurement;
 import edu.sc.seis.sod.measure.ScalarMeasurement;
@@ -285,7 +285,7 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
         ChannelImpl recFuncChan = new ChannelImpl(recFuncChanId, name, orientation, channelGroup.getChannel1()
                 .getSamplingInfo(), channelGroup.getChannel1().getEffectiveTime(), channelGroup.getChannel1().getSite());
         LocalSeismogramImpl predSeis = new LocalSeismogramImpl("recFunc/" + chanCode + "/" + refSeismogram.get_id(),
-                                                               begin.getFissuresTime(),
+                                                               begin,
                                                                data.length,
                                                                refSeismogram.sampling_info,
                                                                unit,

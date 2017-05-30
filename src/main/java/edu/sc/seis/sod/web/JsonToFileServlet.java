@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -27,11 +26,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONWriter;
 
-import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
-import edu.sc.seis.sod.web.jsonapi.AbstractJsonApiData;
+import edu.sc.seis.sod.hibernate.NetworkDB;
 import edu.sc.seis.sod.web.jsonapi.JsonApi;
-import edu.sc.seis.sod.web.jsonapi.JsonApiData;
-import edu.sc.seis.sod.web.jsonapi.PerusalJson;
 
 public abstract class JsonToFileServlet extends HttpServlet {
 

@@ -5,15 +5,16 @@
  */
 
 package edu.sc.seis.sod.mock;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.network.StationImpl;
-import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannel;
-import edu.sc.seis.sod.EventChannelPair;
-import edu.sc.seis.sod.EventStationPair;
-import edu.sc.seis.sod.Stage;
-import edu.sc.seis.sod.Standing;
-import edu.sc.seis.sod.Status;
-import edu.sc.seis.sod.hibernate.StatefulEvent;
+
+import edu.sc.seis.sod.hibernate.eventpair.EventChannelPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventStationPair;
+import edu.sc.seis.sod.mock.station.MockChannel;
+import edu.sc.seis.sod.model.event.StatefulEvent;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.station.StationImpl;
+import edu.sc.seis.sod.model.status.Stage;
+import edu.sc.seis.sod.model.status.Standing;
+import edu.sc.seis.sod.model.status.Status;
 
 
 

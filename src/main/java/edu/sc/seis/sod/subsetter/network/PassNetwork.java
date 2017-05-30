@@ -1,6 +1,6 @@
 package edu.sc.seis.sod.subsetter.network;
 
-import edu.iris.Fissures.network.NetworkAttrImpl;
+import edu.sc.seis.sod.model.station.NetworkAttrImpl;
 import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
 

@@ -3,13 +3,10 @@ package edu.sc.seis.sod.channelGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
-import edu.sc.seis.sod.SodUtil;
-
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+
+import edu.sc.seis.sod.model.station.ChannelGroup;
+import edu.sc.seis.sod.model.station.ChannelImpl;
 
 public class SiteMatchRule extends SiteChannelRule {
 

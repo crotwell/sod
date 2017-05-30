@@ -3,7 +3,7 @@
  */
 package edu.sc.seis.sod;
 
-import edu.iris.Fissures.model.MicroSecondDate;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
 
 public interface MicroSecondDateSupplier {
 

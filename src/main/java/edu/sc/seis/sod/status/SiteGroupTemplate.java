@@ -12,9 +12,9 @@ import java.util.Map;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfNetwork.Site;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Site;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.Status;
+import edu.sc.seis.sod.model.status.Status;
 
 
 

@@ -12,9 +12,9 @@ import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.MotionVectorArm;
 import edu.sc.seis.sod.Threadable;
+import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.status.StringTreeBranch;
 
 public class WaveformVectorAlwaysSuccess extends VectorResultWrapper implements Threadable {

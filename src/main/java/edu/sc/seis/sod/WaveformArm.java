@@ -3,22 +3,30 @@ package edu.sc.seis.sod;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.network.NetworkAttrImpl;
-import edu.iris.Fissures.network.NetworkIdUtil;
-import edu.sc.seis.fissuresUtil.cache.EventUtil;
-import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
-import edu.sc.seis.fissuresUtil.database.NotFound;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
+
+import edu.sc.seis.sod.hibernate.NetworkDB;
 import edu.sc.seis.sod.hibernate.SodDB;
-import edu.sc.seis.sod.hibernate.StatefulEvent;
 import edu.sc.seis.sod.hibernate.StatefulEventDB;
+import edu.sc.seis.sod.hibernate.eventpair.AbstractEventChannelPair;
+import edu.sc.seis.sod.hibernate.eventpair.AbstractEventPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventNetworkPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventStationPair;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.event.NoPreferredOrigin;
+import edu.sc.seis.sod.model.event.StatefulEvent;
+import edu.sc.seis.sod.model.station.NetworkAttrImpl;
+import edu.sc.seis.sod.model.station.NetworkIdUtil;
+import edu.sc.seis.sod.model.status.Stage;
+import edu.sc.seis.sod.model.status.Standing;
+import edu.sc.seis.sod.model.status.Status;
 import edu.sc.seis.sod.status.OutputScheduler;
 import edu.sc.seis.sod.subsetter.EventEffectiveTimeOverlap;
+import edu.sc.seis.sod.util.display.EventUtil;
+import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.util.time.ClockUtil;
 
 public class WaveformArm extends Thread implements Arm {
 
@@ -105,6 +113,7 @@ public class WaveformArm extends Thread implements Arm {
                     }
                 }
                 if(next != null) {
+                    next.addStatusNotify(recipe);
                     noWorkLoopCounter = 0;
                     processorStartWork();
                     try {

@@ -9,22 +9,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.FissuresException;
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfSeismogramDC.LocalSeismogram;
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.network.ChannelIdUtil;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.iris.Fissures.seismogramDC.RequestFilterUtil;
 import edu.iris.dmc.seedcodec.CodecException;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
-import edu.sc.seis.fissuresUtil.time.ReduceTool;
-import edu.sc.seis.fissuresUtil.time.SortTool;
 import edu.sc.seis.sod.hibernate.SodDB;
+import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.EventChannelPair;
+import edu.sc.seis.sod.model.common.FissuresException;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.seismogram.RequestFilterUtil;
+import edu.sc.seis.sod.model.station.ChannelIdUtil;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.status.Stage;
+import edu.sc.seis.sod.model.status.Standing;
+import edu.sc.seis.sod.model.status.Status;
 import edu.sc.seis.sod.process.waveform.WaveformAsAvailableData;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.process.waveform.WaveformResult;
@@ -47,6 +47,9 @@ import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
 import edu.sc.seis.sod.subsetter.request.AtLeastOneRequest;
 import edu.sc.seis.sod.subsetter.request.RequestSubsetter;
 import edu.sc.seis.sod.subsetter.requestGenerator.RequestGenerator;
+import edu.sc.seis.sod.util.time.ClockUtil;
+import edu.sc.seis.sod.util.time.ReduceTool;
+import edu.sc.seis.sod.util.time.SortTool;
 
 public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subsetter {
 
@@ -230,7 +233,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
         RequestFilter[] outfilters = null;
         if(infilters.length > 0) {
             logger.debug("Trying available_data for " + ChannelIdUtil.toString(infilters[0].channel_id) + " from "
-                    + infilters[0].start_time.date_time + " to " + infilters[0].end_time.date_time);
+                    + infilters[0].start_time.getISOTime() + " to " + infilters[0].end_time.getISOTime());
         } else {
             logger.debug("Empty request generated for " + ChannelIdUtil.toString(ecp.getChannel().get_id()));
         }
@@ -248,7 +251,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
             logger.info("After successful available_data call, time taken=" + after.subtract(before).getValue(UnitImpl.SECOND)+" sec");
             if(outfilters.length != 0) {
                 logger.debug("Got available_data for " + ChannelIdUtil.toString(outfilters[0].channel_id) + " from "
-                             + outfilters[0].start_time.date_time + " to " + outfilters[0].end_time.date_time+" "+outfilters.length);
+                             + outfilters[0].start_time.getISOTime() + " to " + outfilters[0].end_time.getISOTime()+" "+outfilters.length);
             } else {
                 logger.debug("No available_data for " + ChannelIdUtil.toString(ecp.getChannel().get_id()));
             }
@@ -278,11 +281,11 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
         if(noImplAvailableData || passed.isSuccess()) {
             for(int i = 0; i < infilters.length; i++) {
                 logger.debug("Getting seismograms " + ChannelIdUtil.toString(infilters[i].channel_id) + " from "
-                        + infilters[i].start_time.date_time + " to " + infilters[i].end_time.date_time);
+                        + infilters[i].start_time.getISOTime() + " to " + infilters[i].end_time.getISOTime());
             } // end of for (int i=0; i<outFilters.length; i++)
             // Using infilters as asking for extra should not hurt
             MicroSecondDate before = new MicroSecondDate();
-            LocalSeismogram[] localSeismograms = new LocalSeismogram[0];
+            LocalSeismogramImpl[] localSeismograms = new LocalSeismogramImpl[0];
             if(outfilters.length != 0) {
                 
                 
@@ -308,7 +311,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                 }
             } else {
                 failLogger.info(ecp + " retrieve data returned no seismograms: ");
-                localSeismograms = new LocalSeismogram[0];
+                localSeismograms = new LocalSeismogramImpl[0];
             } // end of else
             MicroSecondDate after = new MicroSecondDate();
             logger.info("After getting "+localSeismograms.length+" seismograms, time taken=" + after.subtract(before).getValue(UnitImpl.SECOND)+" sec");
@@ -319,7 +322,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                     logger.error("Got null in seismogram array " + ChannelIdUtil.toString(ecp.getChannel().get_id()));
                     return;
                 }
-                Channel ecpChan = ecp.getChannel();
+                ChannelImpl ecpChan = ecp.getChannel();
                 if(!ChannelIdUtil.areEqual(localSeismograms[i].channel_id, infilters[0].channel_id)) {
                     // must be server error
                     logger.warn("Channel id in returned seismogram doesn not match channelid in request. req="

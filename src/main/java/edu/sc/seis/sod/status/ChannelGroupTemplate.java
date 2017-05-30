@@ -10,11 +10,11 @@ import java.util.Map;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import edu.iris.Fissures.IfNetwork.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.Standing;
-import edu.sc.seis.sod.Status;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.status.Standing;
+import edu.sc.seis.sod.model.status.Status;
 
 public class ChannelGroupTemplate extends Template implements GenericTemplate{
     Map channelMap = new HashMap();
@@ -28,7 +28,7 @@ public class ChannelGroupTemplate extends Template implements GenericTemplate{
         synchronized(channelMap){
             Iterator it = channelMap.keySet().iterator();
             while(it.hasNext()){
-                Channel curChan = (Channel)it.next();
+                ChannelImpl curChan = (ChannelImpl)it.next();
                 Status status = (Status)channelMap.get(curChan);
                 if ((useStanding.size()==0 && ! notUseStanding.contains(status.getStanding()))
                     || useStanding.contains(status.getStanding())) {
@@ -44,18 +44,18 @@ public class ChannelGroupTemplate extends Template implements GenericTemplate{
 
     protected Object textTemplate(final String text) {
         return new ChannelTemplate(){
-            public String getResult(Channel chan) { return text; }
+            public String getResult(ChannelImpl chan) { return text; }
         };
     }
 
-    public void change(Channel chan, Status status){
+    public void change(ChannelImpl chan, Status status){
         synchronized(channelMap) {
             if(status == null)throw new IllegalArgumentException("Status should not be null");
             channelMap.put(chan, status);
         }
     }
 
-    public String getStatus(Channel chan){
+    public String getStatus(ChannelImpl chan){
         return channelMap.get(chan).toString();
     }
 

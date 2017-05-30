@@ -4,15 +4,15 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfEvent.Origin;
-import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
-import edu.sc.seis.fissuresUtil.bag.TauPUtil;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.bag.TauPUtil;
+import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.event.OriginImpl;
+import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
@@ -50,7 +50,7 @@ public class PhaseExists implements EventStationSubsetter {
     public StringTree accept(CacheEvent event,
                              StationImpl station,
                           CookieJar cookieJar) throws Exception {
-        Origin origin = event.get_preferred_origin();
+        OriginImpl origin = event.get_preferred_origin();
         List<Arrival> arrivals = tauPTime.calcTravelTimes(station,
                                                       origin,
                                                       new String[] {phaseName});

@@ -5,11 +5,11 @@
  */
 package edu.sc.seis.sod.subsetter.request;
 
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.network.ChannelIdUtil;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.station.ChannelIdUtil;
+import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
 
@@ -32,8 +32,8 @@ public class RequestPrint implements RequestSubsetter {
         for(int i = 0; i < request.length; i++) {
             System.out.println("Request "
                     + ChannelIdUtil.toStringNoDates(request[i].channel_id) + " from "
-                    + request[i].start_time.date_time + " to "
-                    + request[i].end_time.date_time);
+                    + request[i].start_time.getISOTime() + " to "
+                    + request[i].end_time.getISOTime());
         }
     }
     

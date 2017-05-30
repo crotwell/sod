@@ -12,24 +12,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.FissuresException;
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfSeismogramDC.LocalSeismogram;
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.network.ChannelIdUtil;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.iris.Fissures.seismogramDC.RequestFilterUtil;
 import edu.iris.dmc.seedcodec.CodecException;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
-import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
-import edu.sc.seis.fissuresUtil.time.ReduceTool;
 import edu.sc.seis.seisFile.mseed.MissingBlockette1000;
 import edu.sc.seis.sod.hibernate.SodDB;
+import edu.sc.seis.sod.hibernate.eventpair.AbstractEventChannelPair;
+import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.EventVectorPair;
+import edu.sc.seis.sod.model.common.FissuresException;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.seismogram.RequestFilterUtil;
+import edu.sc.seis.sod.model.station.ChannelGroup;
+import edu.sc.seis.sod.model.station.ChannelIdUtil;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.status.Stage;
+import edu.sc.seis.sod.model.status.Standing;
+import edu.sc.seis.sod.model.status.Status;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.process.waveform.vector.ANDWaveformProcessWrapper;
 import edu.sc.seis.sod.process.waveform.vector.WaveformProcessWrapper;
@@ -67,6 +68,9 @@ import edu.sc.seis.sod.subsetter.request.vector.VectorRequestSubsetter;
 import edu.sc.seis.sod.subsetter.requestGenerator.RequestGenerator;
 import edu.sc.seis.sod.subsetter.requestGenerator.vector.RequestGeneratorWrapper;
 import edu.sc.seis.sod.subsetter.requestGenerator.vector.VectorRequestGenerator;
+import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.util.time.ClockUtil;
+import edu.sc.seis.sod.util.time.ReduceTool;
 
 
 public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter {
@@ -264,7 +268,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
             outfilters = new RequestFilter[ecp.getChannelGroup().getChannels().length][];
             for (int i = 0; i < outfilters.length; i++) {
                 logger.debug("Trying available_data for " + ChannelIdUtil.toString(infilters[0][0].channel_id)
-                             + " from " + infilters[0][0].start_time.date_time + " to " + infilters[0][0].end_time.date_time);
+                             + " from " + infilters[0][0].start_time.getISOTime() + " to " + infilters[0][0].end_time.getISOTime());
                 logger.debug("before available_data call");
                 try {
                     outfilters[i] = DataCenterSource.toArray(seismogramSource.availableData(DataCenterSource.toList(infilters[i])));
@@ -278,8 +282,8 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                 }
                 if (outfilters[i].length != 0) {
                     logger.debug("Got available_data for " + ChannelIdUtil.toString(outfilters[i][0].channel_id)
-                                 + " from " + outfilters[i][0].start_time.date_time + " to "
-                                 + outfilters[i][0].end_time.date_time);
+                                 + " from " + outfilters[i][0].start_time.getISOTime() + " to "
+                                 + outfilters[i][0].end_time.getISOTime());
                 } else {
                     logger.debug("No available_data for " + ChannelIdUtil.toString(infilters[i][0].channel_id));
                 }
@@ -311,11 +315,11 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
             for (int i = 0; i < infilters.length; i++) {
                 for (int j = 0; j < infilters[i].length; j++) {
                     logger.debug("Getting seismograms " + ChannelIdUtil.toString(infilters[i][j].channel_id) + " from "
-                            + infilters[i][j].start_time.date_time + " to " + infilters[i][j].end_time.date_time);
+                            + infilters[i][j].start_time.getISOTime() + " to " + infilters[i][j].end_time.getISOTime());
                 } // end of for (int i=0; i<outFilters.length; i++)
             }
             MicroSecondDate before = new MicroSecondDate();
-            LocalSeismogram[][] localSeismograms = new LocalSeismogram[ecp.getChannelGroup().getChannels().length][0];
+            LocalSeismogramImpl[][] localSeismograms = new LocalSeismogramImpl[ecp.getChannelGroup().getChannels().length][0];
             LocalSeismogramImpl[][] tempLocalSeismograms = new LocalSeismogramImpl[ecp.getChannelGroup().getChannels().length][0];
             // Using infilters as asking for more than is there probably doesn't
             // hurt
@@ -342,7 +346,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                         logger.error("Got null in seismogram array for channel " + i + " for " + ecp);
                         return;
                     }
-                    Channel ecpChan = ecp.getChannelGroup().getChannels()[i];
+                    ChannelImpl ecpChan = ecp.getChannelGroup().getChannels()[i];
                     if (!ChannelIdUtil.areEqual(localSeismograms[i][j].channel_id, ecpChan.get_id())) {
                         // must be server error
                         logger.warn("MV Channel id in returned seismogram doesn not match channelid in request. req="
@@ -449,9 +453,9 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
         return result;
     }
 
-    private LocalSeismogram[][] getData(EventVectorPair ecp, RequestFilter[][] rf, SeismogramSource seismogramSource)
+    private LocalSeismogramImpl[][] getData(EventVectorPair ecp, RequestFilter[][] rf, SeismogramSource seismogramSource)
             throws SeismogramSourceException {
-        LocalSeismogram[][] localSeismograms = new LocalSeismogram[rf.length][];
+        LocalSeismogramImpl[][] localSeismograms = new LocalSeismogramImpl[rf.length][];
         
         if (seismogramSource instanceof PromiseSeismogramSource) {
             PromiseSeismogramSource promiseSource = (PromiseSeismogramSource)seismogramSource;
@@ -484,38 +488,11 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                 }
             } else {
                 logger.debug("Failed, retrieve data, no requestFilters for component "+i+" continuing with remaining components.");
-                localSeismograms[i] = new LocalSeismogram[0];
+                localSeismograms[i] = new LocalSeismogramImpl[0];
             } // end of else
         }
         }
         return localSeismograms;
-    }
-
-    private String statusRequest(String id, ProxySeismogramDC dataCenter) throws FissuresException {
-        int retries = 0;
-        int MAX_RETRY = 5;
-        while (retries < MAX_RETRY) {
-            try {
-                return dataCenter.request_status(id);
-            } catch(org.omg.CORBA.SystemException e) {
-                retries++;
-                logger.debug("after failed request_status, retries=" + retries);
-                if (retries < MAX_RETRY) {
-                    logger.info("Caught CORBA exception, retrying..." + retries, e);
-                    try {
-                        Thread.sleep(1000 * retries);
-                    } catch(InterruptedException ex) {}
-                    if (retries % 2 == 0) {
-                        // reget from Name service every other
-                        // time
-                        dataCenter.reset();
-                    }
-                } else {
-                    throw e;
-                }
-            }
-        }
-        throw new RuntimeException("Should never happen");
     }
 
     private static void handle(EventVectorPair ecp, Stage stage, Throwable t) {

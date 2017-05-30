@@ -2,13 +2,12 @@ package edu.sc.seis.sod.velocity;
 
 import org.apache.velocity.VelocityContext;
 
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.velocity.network.VelocityChannel;
 import edu.sc.seis.sod.velocity.network.VelocityInstrumentation;
 import edu.sc.seis.sod.velocity.seismogram.VelocityRequest;
@@ -19,7 +18,7 @@ import edu.sc.seis.sod.velocity.seismogram.VelocitySeismogram;
  */
 public class WaveformProcessContext extends VelocityContext {
 
-    public WaveformProcessContext(EventAccessOperations event,
+    public WaveformProcessContext(CacheEvent event,
                                   ChannelImpl channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,

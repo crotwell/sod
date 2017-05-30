@@ -2,9 +2,9 @@ package edu.sc.seis.sod.subsetter;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.model.BoxAreaImpl;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.UserConfigurationException;
+import edu.sc.seis.sod.model.common.BoxAreaImpl;
 
 public class LongitudeRange extends RangeSubsetter implements SodElement {
 

@@ -1,7 +1,7 @@
 package edu.sc.seis.sod.subsetter.channel;
 
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.sc.seis.fissuresUtil.bag.NegativeSensitivity;
+import edu.sc.seis.sod.bag.NegativeSensitivity;
+import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;

@@ -5,16 +5,15 @@
  */
 package edu.sc.seis.sod.subsetter.origin;
 
-import junit.framework.TestCase;
-
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfEvent.Magnitude;
-import edu.iris.Fissures.event.EventAttrImpl;
-import edu.iris.Fissures.event.OriginImpl;
-import edu.sc.seis.fissuresUtil.display.ParseRegions;
-import edu.sc.seis.fissuresUtil.mockFissures.IfEvent.MockOrigin;
 import edu.sc.seis.sod.XMLConfigUtil;
+import edu.sc.seis.sod.mock.event.MockOrigin;
+import edu.sc.seis.sod.model.event.EventAttrImpl;
+import edu.sc.seis.sod.model.event.Magnitude;
+import edu.sc.seis.sod.model.event.OriginImpl;
+import edu.sc.seis.sod.util.display.ParseRegions;
+import junit.framework.TestCase;
 
 public class MagnitudeRangeTest extends TestCase {
 

@@ -6,9 +6,7 @@ import java.util.Set;
 import org.omg.CORBA.TRANSIENT;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 
-import edu.sc.seis.fissuresUtil.cache.BulletproofVestFactory;
-import edu.sc.seis.fissuresUtil.cache.ClassicRetryStrategy;
-import edu.sc.seis.fissuresUtil.cache.CorbaServerWrapper;
+import edu.sc.seis.sod.retry.ClassicRetryStrategy;
 import edu.sc.seis.sod.source.AbstractSource;
 
 public class UserReportRetryStrategy extends ClassicRetryStrategy {
@@ -23,7 +21,7 @@ public class UserReportRetryStrategy extends ClassicRetryStrategy {
     }
 
     public UserReportRetryStrategy() {
-        this(BulletproofVestFactory.getDefaultNumRetry());
+        this(getDefaultNumRetry());
     }
 
     public synchronized boolean shouldRetry(Throwable exc,
@@ -35,8 +33,7 @@ public class UserReportRetryStrategy extends ClassicRetryStrategy {
                 print("SOD was unable to find a "
                         + serverId
                         + " in the name service.  Check\n"
-                        + getWilyURL()
-                        + "\n for that server to make sure you've put the correct location in your ingredient for that server.  If you're sure it's correct, just wait.  SOD will continue trying to find it until it's readded to the name server at which point an all clear message will be issued.  If you're tired of waiting, press Ctrl-C to quit.  "
+                        + "\n to make sure you've put the correct location in your ingredient for that server.  If you're sure it's correct, just wait.  SOD will continue trying to find it until it's readded to the name server at which point an all clear message will be issued.  If you're tired of waiting, press Ctrl-C to quit.  "
                         + addlInfo);
             } else {
                 if (Start.getArgs().isQuitOnError()) {
@@ -75,30 +72,16 @@ public class UserReportRetryStrategy extends ClassicRetryStrategy {
     }
 
     private String makeServerId(Object server) {
-        if (server instanceof CorbaServerWrapper) {
-        return ((CorbaServerWrapper)server).getFullName() + " " + ((CorbaServerWrapper)server).getServerType();
-        } else if (server instanceof AbstractSource) {
+        if (server instanceof AbstractSource) {
             return ((AbstractSource)server).getName();
         } else {
             return server.toString();
         }
     }
 
-    public static String getWilyURL() {
-        String nsLoc = CommonAccess.getNameServiceAddress();
-        if(nsLoc.equals("corbaloc:iiop:dmc.iris.washington.edu:6371/NameService")) {
-            return "http://www.seis.sc.edu/ns/IRIS";
-        } else if(nsLoc.equals("corbaloc:iiop:nameservice.seis.sc.edu:6371/NameService")) {
-            return "http://www.seis.sc.edu/ns/SC";
-        }
-        return WILY_NS_URL + nsLoc;
-    }
-
     private Object addlInfo;
 
     private Set bustedServers = new HashSet();
-
-    public static final String WILY_NS_URL = "http://www.seis.sc.edu/wily/GetAllServers?corbaLoc=";
 
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(UserReportRetryStrategy.class);
 }

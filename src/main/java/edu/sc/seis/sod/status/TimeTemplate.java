@@ -9,11 +9,10 @@ import java.util.TimeZone;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.Time;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
-import edu.sc.seis.fissuresUtil.chooser.ThreadSafeSimpleDateFormat;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.util.display.ThreadSafeSimpleDateFormat;
+import edu.sc.seis.sod.util.time.ClockUtil;
 
 public class TimeTemplate implements GenericTemplate {
 
@@ -22,7 +21,7 @@ public class TimeTemplate implements GenericTemplate {
         this.representTimeInFuture = representTimeInFuture;
     }
 
-    public TimeTemplate(Element config, Time time) {
+    public TimeTemplate(Element config, MicroSecondDate time) {
         this(config, true);
         setTime(time);
     }
@@ -35,11 +34,11 @@ public class TimeTemplate implements GenericTemplate {
         return new ThreadSafeSimpleDateFormat("yyyy-MM-dd HH:mm:ss z", TimeZone.getTimeZone("GMT"));
     }
 
-    public void setTime(Time t) {
+    public void setTime(MicroSecondDate t) {
         time = new MicroSecondDate(t);
     }
 
-    public String getResult(Time t) {
+    public String getResult(MicroSecondDate t) {
         setTime(t);
         return getResult();
     }

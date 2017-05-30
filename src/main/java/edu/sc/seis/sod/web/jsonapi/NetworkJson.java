@@ -3,16 +3,16 @@ package edu.sc.seis.sod.web.jsonapi;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
-import edu.iris.Fissures.Time;
-import edu.iris.Fissures.IfNetwork.NetworkAttr;
-import edu.iris.Fissures.model.ISOTime;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.network.NetworkIdUtil;
-import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
+import edu.sc.seis.sod.model.common.ISOTime;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.Time;
+import edu.sc.seis.sod.model.station.NetworkAttrImpl;
+import edu.sc.seis.sod.model.station.NetworkIdUtil;
+import edu.sc.seis.sod.util.time.ClockUtil;
 
 public class NetworkJson extends AbstractJsonApiData {
 
-    public NetworkJson(NetworkAttr net, String baseUrl) {
+    public NetworkJson(NetworkAttrImpl net, String baseUrl) {
         super(baseUrl);
         this.net = net;
     }
@@ -26,7 +26,7 @@ public class NetworkJson extends AbstractJsonApiData {
     public String getId() {
         String s = net.get_code();
         if (NetworkIdUtil.isTemporary(net.getId())) {
-            s += "_" + net.getBeginTime().date_time.substring(0, 4); // append
+            s += "_" + net.getBeginTime().getISOString().substring(0, 4); // append
                                                                      // start
                                                                      // year
         }
@@ -38,7 +38,7 @@ public class NetworkJson extends AbstractJsonApiData {
         out.key("network-code")
                 .value(net.getId().network_code)
                 .key("start-time")
-                .value(net.getId().begin_time.date_time)
+                .value(net.getId().begin_time.getISOString())
                 .key("end-time")
                 .value(encodeEndTime(net.getEndTime()))
                 .key("description")
@@ -74,23 +74,22 @@ public class NetworkJson extends AbstractJsonApiData {
         out.key("self").value(formNetworkURL(net));
     }
 
-    public String formStationRelationshipURL(NetworkAttr net) {
+    public String formStationRelationshipURL(NetworkAttrImpl net) {
         String out = baseUrl + "/networks/" + getId() + "/relationships/stations";
         return out;
     }
 
-    public String formNetworkURL(NetworkAttr net) {
+    public String formNetworkURL(NetworkAttrImpl net) {
         String out = baseUrl + "/networks/" + getId();
         return out;
     }
 
-    public String formStationListURL(NetworkAttr net) {
+    public String formStationListURL(NetworkAttrImpl net) {
         String out = baseUrl + "/networks/" + getId() + "/stations";
         return out;
     }
 
-    public static Object encodeEndTime(Time endTime) {
-        MicroSecondDate endDate = new MicroSecondDate(endTime);
+    public static Object encodeEndTime(MicroSecondDate endDate) {
         if (endDate.before(ClockUtil.now())) {
             return ISOTime.getISOString(endDate);
         } else {
@@ -98,5 +97,5 @@ public class NetworkJson extends AbstractJsonApiData {
         }
     }
 
-    NetworkAttr net;
+    NetworkAttrImpl net;
 }

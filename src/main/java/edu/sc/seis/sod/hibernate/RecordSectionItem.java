@@ -1,15 +1,15 @@
 package edu.sc.seis.sod.hibernate;
 
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.sc.seis.fissuresUtil.bag.DistAz;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
+import edu.sc.seis.sod.model.common.DistAz;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.station.ChannelImpl;
 
 public class RecordSectionItem {
 
     public RecordSectionItem(String orientationId,
                              String recordSectionId,
                              CacheEvent event,
-                             Channel channel,
+                             ChannelImpl channel,
                              float sToN,
                              boolean inBest) {
         super();
@@ -30,7 +30,7 @@ public class RecordSectionItem {
 
     protected CacheEvent event;
 
-    protected Channel channel;
+    protected ChannelImpl channel;
 
     protected String recordSectionId;
 
@@ -58,11 +58,11 @@ public class RecordSectionItem {
         this.event = event;
     }
 
-    public Channel getChannel() {
+    public ChannelImpl getChannel() {
         return channel;
     }
 
-    protected void setChannel(Channel channel) {
+    protected void setChannel(ChannelImpl channel) {
         this.channel = channel;
     }
 

@@ -11,24 +11,23 @@ import java.sql.SQLException;
 import org.apache.velocity.VelocityContext;
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.Site;
-import edu.iris.Fissures.IfNetwork.Station;
-import edu.iris.Fissures.network.NetworkAttrImpl;
-import edu.iris.Fissures.network.NetworkIdUtil;
-import edu.iris.Fissures.network.StationIdUtil;
-import edu.iris.Fissures.network.StationImpl;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.sod.EventChannelPair;
-import edu.sc.seis.sod.EventNetworkPair;
-import edu.sc.seis.sod.EventStationPair;
-import edu.sc.seis.sod.EventVectorPair;
-import edu.sc.seis.sod.Stage;
-import edu.sc.seis.sod.Standing;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Site;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.Status;
+import edu.sc.seis.sod.hibernate.eventpair.EventChannelPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventNetworkPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventStationPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventVectorPair;
+import edu.sc.seis.sod.model.station.NetworkAttrImpl;
+import edu.sc.seis.sod.model.station.NetworkIdUtil;
+import edu.sc.seis.sod.model.station.StationIdUtil;
+import edu.sc.seis.sod.model.station.StationImpl;
+import edu.sc.seis.sod.model.status.Stage;
+import edu.sc.seis.sod.model.status.Standing;
+import edu.sc.seis.sod.model.status.Status;
 import edu.sc.seis.sod.status.AbstractVelocityStatus;
 import edu.sc.seis.sod.status.networkArm.NetworkMonitor;
+import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
 
 
 

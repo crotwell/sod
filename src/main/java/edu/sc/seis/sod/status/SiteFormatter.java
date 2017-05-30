@@ -11,9 +11,9 @@ import java.util.Iterator;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfNetwork.Site;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Site;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.Status;
+import edu.sc.seis.sod.model.status.Status;
 
 
 
@@ -155,7 +155,7 @@ public class SiteFormatter extends Template implements SiteTemplate {
         else if (tag.equals("beginTimeUnformatted")){
             return new SiteTemplate(){
                 public String getResult(Site site){
-                    return site.get_id().begin_time.date_time;
+                    return site.get_id().begin_time.getISOTime();
                 }
             };
         }

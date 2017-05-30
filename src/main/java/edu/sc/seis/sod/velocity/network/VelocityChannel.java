@@ -5,12 +5,11 @@ import java.util.List;
 
 import org.apache.velocity.VelocityContext;
 
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.ChannelId;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.network.ChannelIdUtil;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.network.SiteImpl;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.station.ChannelId;
+import edu.sc.seis.sod.model.station.ChannelIdUtil;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.station.SiteImpl;
 import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
@@ -86,11 +85,11 @@ public class VelocityChannel extends ChannelImpl {
     }
 
     public MicroSecondDate getStartDate() {
-        return new MicroSecondDate(getEffectiveTime().start_time);
+        return new MicroSecondDate(getEffectiveTime().getBeginTime());
     }
 
     public String getStart() {
-        return FissuresFormatter.formatDate(getEffectiveTime().start_time);
+        return FissuresFormatter.formatDate(getEffectiveTime().getBeginTime());
     }
 
     public String getStart(String format) {
@@ -98,11 +97,11 @@ public class VelocityChannel extends ChannelImpl {
     }
 
     public MicroSecondDate getEndDate() {
-        return new MicroSecondDate(getEffectiveTime().end_time);
+        return new MicroSecondDate(getEffectiveTime().getEndTime());
     }
 
     public String getEnd() {
-        return FissuresFormatter.formatDate(getEffectiveTime().end_time);
+        return FissuresFormatter.formatDate(getEffectiveTime().getEndTime());
     }
 
     public String getEnd(String format) {
@@ -136,7 +135,7 @@ public class VelocityChannel extends ChannelImpl {
     
     private ChannelImpl chan;
 
-    public static VelocityChannel[] wrap(Channel[] chans) {
+    public static VelocityChannel[] wrap(ChannelImpl[] chans) {
         VelocityChannel[] velChans = new VelocityChannel[chans.length];
         for(int i = 0; i < velChans.length; i++) {
             velChans[i] = wrap(chans[i]);
@@ -158,7 +157,7 @@ public class VelocityChannel extends ChannelImpl {
         getSite().insertIntoContext(ctx);
     }
 
-    public static VelocityChannel wrap(Channel chan) {
+    public static VelocityChannel wrap(ChannelImpl chan) {
         if(chan instanceof VelocityChannel) {
             return (VelocityChannel)chan;
         }

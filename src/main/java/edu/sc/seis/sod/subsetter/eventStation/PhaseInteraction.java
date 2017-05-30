@@ -5,22 +5,23 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.BoxArea;
-import edu.iris.Fissures.GlobalArea;
-import edu.iris.Fissures.event.OriginImpl;
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.SphericalCoords;
 import edu.sc.seis.TauP.TauModelException;
 import edu.sc.seis.TauP.TauP_Path;
 import edu.sc.seis.TauP.TauP_Pierce;
 import edu.sc.seis.TauP.TimeDist;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.model.common.Area;
+import edu.sc.seis.sod.model.common.BoxAreaImpl;
+import edu.sc.seis.sod.model.common.GlobalAreaImpl;
+import edu.sc.seis.sod.model.common.QuantityImpl;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.event.OriginImpl;
+import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
@@ -69,7 +70,7 @@ public class PhaseInteraction implements EventStationSubsetter {
         OriginImpl origin = event.getOrigin();
         double originDepth;
         double eventStationDistance;
-        originDepth = ((QuantityImpl)origin.getLocation().depth).convertTo(UnitImpl.KILOMETER).value;
+        originDepth = ((QuantityImpl)origin.getLocation().depth).convertTo(UnitImpl.KILOMETER).getValue();
         tauPPath.setSourceDepth(originDepth);
         eventStationDistance = SphericalCoords.distance(origin.getLocation().latitude,
                                                         origin.getLocation().longitude,
@@ -99,7 +100,7 @@ public class PhaseInteraction implements EventStationSubsetter {
         double originDepth;
         double eventStationDistance;
         OriginImpl origin = event.getOrigin();
-        originDepth = ((QuantityImpl)origin.getLocation().depth).convertTo(UnitImpl.KILOMETER).value;
+        originDepth = ((QuantityImpl)origin.getLocation().depth).convertTo(UnitImpl.KILOMETER).getValue();
         tauPPierce.setSourceDepth(originDepth);
         eventStationDistance = SphericalCoords.distance(origin.getLocation().latitude,
                                                         origin.getLocation().longitude,
@@ -231,12 +232,12 @@ public class PhaseInteraction implements EventStationSubsetter {
             }
             if(minDepth.lessThanEqual(timeDistDepth)
                     && maxDepth.greaterThanEqual(timeDistDepth)) {
-                minDistance = new QuantityImpl(minDistance.value + counter,
+                minDistance = new QuantityImpl(minDistance.getValue() + counter,
                                                UnitImpl.DEGREE);
                 maxDistance = new QuantityImpl((360 + counter)
-                        - minDistance.value, UnitImpl.DEGREE);
+                        - minDistance.getValue(), UnitImpl.DEGREE);
                 QuantityImpl tempDistance = new QuantityImpl(counter
-                        - timeDistDistance.value, UnitImpl.DEGREE);
+                        - timeDistDistance.getValue(), UnitImpl.DEGREE);
                 if((minDistance.lessThanEqual(timeDistDistance) && maxDistance.greaterThanEqual(timeDistDistance))
                         || (minDistance.lessThanEqual(tempDistance) && maxDistance.greaterThanEqual(tempDistance))) { return true; }
             }
@@ -264,7 +265,7 @@ public class PhaseInteraction implements EventStationSubsetter {
                                                   double azimuth,
                                                   OriginImpl origin,
                                                   String type) throws Exception {
-        edu.iris.Fissures.Area area = ((Absolute)phaseInteractionType).getArea();
+        Area area = ((Absolute)phaseInteractionType).getArea();
         for(int i = 0; i < requiredArrivals.size(); i++) {
             TimeDist[] timeDist;
             if(type.equals("PIERCE")) {
@@ -290,7 +291,7 @@ public class PhaseInteraction implements EventStationSubsetter {
                 }
                 if(minDepth.lessThanEqual(timeDistDepth)
                         && maxDepth.greaterThanEqual(timeDistDepth)) {
-                    if(area == null || area instanceof GlobalArea) return true;
+                    if(area == null || area instanceof GlobalAreaImpl) return true;
                     double tLat = SphericalCoords.latFor(origin.getLocation().latitude,
                                                          origin.getLocation().longitude,
                                                          timeDist[counter].getDepth(),
@@ -299,8 +300,8 @@ public class PhaseInteraction implements EventStationSubsetter {
                                                          origin.getLocation().longitude,
                                                          timeDist[counter].getDepth(),
                                                          azimuth);
-                    if(area instanceof BoxArea) {
-                        BoxArea boxArea = (BoxArea)area;
+                    if(area instanceof BoxAreaImpl) {
+                        BoxAreaImpl boxArea = (BoxAreaImpl)area;
                         if(tLat >= boxArea.min_latitude
                                 && tLat <= boxArea.max_latitude
                                 && tLon >= boxArea.min_longitude

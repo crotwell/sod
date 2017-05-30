@@ -2,13 +2,13 @@ package edu.sc.seis.sod.subsetter;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.model.UnitRangeImpl;
-import edu.sc.seis.fissuresUtil.bag.DistAz;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.model.common.DistAz;
+import edu.sc.seis.sod.model.common.QuantityImpl;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.common.UnitRangeImpl;
 
 /**
  * DistanceRange.java Created: Mon Apr 8 16:09:49 2002
@@ -34,7 +34,7 @@ public class DistanceRangeSubsetter implements SodElement {
         }
     }
 
-    public edu.iris.Fissures.UnitRange getUnitRange() {
+    public UnitRangeImpl getUnitRange() {
         return unitRange;
     }
 

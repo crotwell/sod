@@ -1,7 +1,7 @@
 package edu.sc.seis.sod.velocity.network;
 
-import edu.iris.Fissures.IfNetwork.Sensitivity;
-import edu.sc.seis.fissuresUtil.chooser.ThreadSafeDecimalFormat;
+import edu.sc.seis.sod.model.station.Sensitivity;
+import edu.sc.seis.sod.util.display.ThreadSafeDecimalFormat;
 
 
 public class VelocitySensitivity {

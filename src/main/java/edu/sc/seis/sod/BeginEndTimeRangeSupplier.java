@@ -1,6 +1,6 @@
 package edu.sc.seis.sod;
 
-import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
+import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
 import edu.sc.seis.sod.source.event.MicroSecondTimeRangeSupplier;
 
 

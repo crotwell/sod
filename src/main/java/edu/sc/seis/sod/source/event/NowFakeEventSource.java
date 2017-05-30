@@ -2,13 +2,13 @@ package edu.sc.seis.sod.source.event;
 
 import org.w3c.dom.Element;
 
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
-import edu.sc.seis.fissuresUtil.mockFissures.IfEvent.MockEventAttr;
-import edu.sc.seis.fissuresUtil.mockFissures.IfEvent.MockOrigin;
-import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.mock.event.MockEventAttr;
+import edu.sc.seis.sod.mock.event.MockOrigin;
+import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.util.time.ClockUtil;
 
 
 public class NowFakeEventSource extends PeriodicFakeEventSource {

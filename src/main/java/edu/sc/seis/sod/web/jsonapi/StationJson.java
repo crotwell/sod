@@ -6,10 +6,10 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.network.StationImpl;
+import edu.sc.seis.sod.model.common.QuantityImpl;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.station.StationImpl;
 
 
 public class StationJson extends AbstractJsonApiData {
@@ -38,7 +38,7 @@ public class StationJson extends AbstractJsonApiData {
     public void encodeAttributes(JSONWriter out) throws JSONException {
         out.key("station-code").value(sta.get_code())
         .key("name").value(sta.getName())
-        .key("start-time").value(sta.getBeginTime().date_time)
+        .key("start-time").value(sta.getBeginTime().getISOString())
         .key("end-time").value(NetworkJson.encodeEndTime(sta.getEndTime()))
         .key("description").value(sta.getDescription())
               .key("latitude").value(sta.getLocation().latitude)

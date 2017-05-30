@@ -2,17 +2,15 @@ package edu.sc.seis.sod.subsetter.requestGenerator;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.TauP.TauModelException;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.station.ChannelImpl;
 
 public class PhaseRequest implements RequestGenerator {
 
@@ -48,7 +46,7 @@ public class PhaseRequest implements RequestGenerator {
                     negateEndOffsetRatio = true;
                 }
                 if(beginOffset != null) {
-                    phaseReq = new edu.sc.seis.fissuresUtil.bag.PhaseRequest(beginPhase,
+                    phaseReq = new edu.sc.seis.sod.bag.PhaseRequest(beginPhase,
                                                                              beginOffset,
                                                                              endPhase,
                                                                              endOffsetRatio,
@@ -56,7 +54,7 @@ public class PhaseRequest implements RequestGenerator {
                                                                              negateEndOffsetRatio,
                                                                              model);
                 } else {
-                    phaseReq = new edu.sc.seis.fissuresUtil.bag.PhaseRequest(beginPhase,
+                    phaseReq = new edu.sc.seis.sod.bag.PhaseRequest(beginPhase,
                                                                              beginOffsetRatio,
                                                                              beginOffsetRatioMinimum,
                                                                              negateBeginOffsetRatio,
@@ -69,13 +67,13 @@ public class PhaseRequest implements RequestGenerator {
             } else {
                 endOffset = SodUtil.loadTimeInterval(endEl);
                 if(beginOffset != null) {
-                    phaseReq = new edu.sc.seis.fissuresUtil.bag.PhaseRequest(beginPhase,
+                    phaseReq = new edu.sc.seis.sod.bag.PhaseRequest(beginPhase,
                                                                              beginOffset,
                                                                              endPhase,
                                                                              endOffset,
                                                                              model);
                 } else {
-                    phaseReq = new edu.sc.seis.fissuresUtil.bag.PhaseRequest(beginPhase,
+                    phaseReq = new edu.sc.seis.sod.bag.PhaseRequest(beginPhase,
                                                                              beginOffsetRatio,
                                                                              beginOffsetRatioMinimum,
                                                                              negateBeginOffsetRatio,
@@ -94,7 +92,7 @@ public class PhaseRequest implements RequestGenerator {
                         String endPhase,
                         TimeInterval endOffset,
                         String model) throws TauModelException {
-        phaseReq = new edu.sc.seis.fissuresUtil.bag.PhaseRequest(beginPhase, beginOffset, endPhase, endOffset, model);
+        phaseReq = new edu.sc.seis.sod.bag.PhaseRequest(beginPhase, beginOffset, endPhase, endOffset, model);
     }
 
     public RequestFilter[] generateRequest(CacheEvent event,
@@ -107,14 +105,14 @@ public class PhaseRequest implements RequestGenerator {
         return new RequestFilter[] {rf};
     }
 
-    public RequestFilter generateRequest(EventAccessOperations event,
-                                           Channel channel) throws Exception {
+    public RequestFilter generateRequest(CacheEvent event,
+                                           ChannelImpl channel) throws Exception {
         return phaseReq.generateRequest(event, channel);
     }
     
-    public edu.sc.seis.fissuresUtil.bag.PhaseRequest getPhaseReq() {
+    public edu.sc.seis.sod.bag.PhaseRequest getPhaseReq() {
         return phaseReq;
     }
 
-    private edu.sc.seis.fissuresUtil.bag.PhaseRequest phaseReq;
+    private edu.sc.seis.sod.bag.PhaseRequest phaseReq;
 }// PhaseRequest

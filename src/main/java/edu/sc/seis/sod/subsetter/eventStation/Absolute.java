@@ -4,9 +4,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import edu.iris.Fissures.Area;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.model.common.Area;
 import edu.sc.seis.sod.subsetter.DepthRange;
 
 public class Absolute extends PhaseInteractionType {
@@ -29,7 +29,7 @@ public class Absolute extends PhaseInteractionType {
         }
     }
 
-    public edu.iris.Fissures.Area getArea() {
+    public Area getArea() {
         return this.area;
     }
 

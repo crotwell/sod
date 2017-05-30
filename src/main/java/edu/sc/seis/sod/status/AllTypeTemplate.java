@@ -5,11 +5,10 @@
  */
 package edu.sc.seis.sod.status;
 
-import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
-import edu.iris.Fissures.IfNetwork.Site;
-import edu.iris.Fissures.IfNetwork.Station;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Site;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
+import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.status.eventArm.EventTemplate;
 
 public abstract class AllTypeTemplate implements SiteTemplate, StationTemplate,

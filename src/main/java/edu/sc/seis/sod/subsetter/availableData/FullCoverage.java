@@ -3,19 +3,18 @@ package edu.sc.seis.sod.subsetter.availableData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.network.ChannelIdUtil;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.seismogramDC.RequestFilterUtil;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.time.CoverageTool;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodElement;
-import edu.sc.seis.sod.process.waveform.WaveformResult;
+import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.seismogram.RequestFilterUtil;
+import edu.sc.seis.sod.model.station.ChannelIdUtil;
+import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
+import edu.sc.seis.sod.util.time.CoverageTool;
 
 public class FullCoverage implements AvailableDataSubsetter, SodElement {
 
@@ -41,7 +40,7 @@ public class FullCoverage implements AvailableDataSubsetter, SodElement {
 
         String reason = "Data does not cover "+notCovered.length+" sections of the request. ";
         for (int i = 0; i < notCovered.length; i++) {
-            reason += notCovered[i].start_time.date_time + " to " + notCovered[i].end_time.date_time+",  ";
+            reason += notCovered[i].start_time.getISOTime() + " to " + notCovered[i].end_time.getISOTime()+",  ";
         }
         
         return new StringTreeLeaf(this,

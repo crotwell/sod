@@ -6,10 +6,10 @@
 
 package edu.sc.seis.sod.subsetter.requestGenerator.vector;
 
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
-import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.station.ChannelGroup;
 import edu.sc.seis.sod.subsetter.Subsetter;
 
 public interface VectorRequestGenerator extends Subsetter {

@@ -1,7 +1,7 @@
 package edu.sc.seis.sod.subsetter.requestGenerator;
 
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.UnitImpl;
 
 public class RandomTimeInterval extends TimeInterval {
 

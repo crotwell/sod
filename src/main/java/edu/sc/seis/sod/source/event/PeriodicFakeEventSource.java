@@ -2,18 +2,18 @@ package edu.sc.seis.sod.source.event;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfEvent.Magnitude;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
-import edu.sc.seis.fissuresUtil.mockFissures.IfEvent.MockEventAttr;
-import edu.sc.seis.fissuresUtil.mockFissures.IfEvent.MockOrigin;
-import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.mock.event.MockEventAttr;
+import edu.sc.seis.sod.mock.event.MockOrigin;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.event.Magnitude;
 import edu.sc.seis.sod.source.AbstractSource;
+import edu.sc.seis.sod.util.time.ClockUtil;
 
 
 public class PeriodicFakeEventSource extends AbstractSource implements EventSource {

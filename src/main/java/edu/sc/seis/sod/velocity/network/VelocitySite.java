@@ -2,20 +2,19 @@ package edu.sc.seis.sod.velocity.network;
 
 import org.apache.velocity.VelocityContext;
 
-import edu.iris.Fissures.IfNetwork.Site;
-import edu.iris.Fissures.IfNetwork.SiteId;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.network.SiteIdUtil;
-import edu.iris.Fissures.network.SiteImpl;
-import edu.iris.Fissures.network.StationImpl;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.QuantityImpl;
+import edu.sc.seis.sod.model.station.SiteId;
+import edu.sc.seis.sod.model.station.SiteIdUtil;
+import edu.sc.seis.sod.model.station.SiteImpl;
+import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
 /**
  * @author groves Created on Jan 7, 2005
  */
-public class VelocitySite extends Site {
+public class VelocitySite extends SiteImpl {
 
     public VelocitySite(SiteImpl s) {
         this.site = s;
@@ -51,34 +50,34 @@ public class VelocitySite extends Site {
     }
 
     public MicroSecondDate getStartDate() {
-        return new MicroSecondDate(effective_time.start_time);
+        return new MicroSecondDate(effective_time.getBeginTime());
     }
 
     public MicroSecondDate getEndDate() {
-        return new MicroSecondDate(effective_time.end_time);
+        return new MicroSecondDate(effective_time.getEndTime());
     }
 
     public String getStart() {
-        return FissuresFormatter.formatDate(effective_time.start_time);
+        return FissuresFormatter.formatDate(effective_time.getBeginTime());
     }
 
     public String getStart(String dateFormat) {
         if(dateFormat.equals("longfile")) {
-            return FissuresFormatter.formatDateForFile(effective_time.start_time);
+            return FissuresFormatter.formatDateForFile(effective_time.getBeginTime());
         }
-        return SimpleVelocitizer.format(new MicroSecondDate(effective_time.start_time),
+        return SimpleVelocitizer.format(new MicroSecondDate(effective_time.getBeginTime()),
                                         dateFormat);
     }
 
     public String getEnd() {
-        return FissuresFormatter.formatDate(effective_time.end_time);
+        return FissuresFormatter.formatDate(effective_time.getEndTime());
     }
 
     public String getEnd(String dateFormat) {
         if(dateFormat.equals("longfile")) {
-            return FissuresFormatter.formatDateForFile(effective_time.end_time);
+            return FissuresFormatter.formatDateForFile(effective_time.getEndTime());
         }
-        return SimpleVelocitizer.format(new MicroSecondDate(effective_time.end_time),
+        return SimpleVelocitizer.format(new MicroSecondDate(effective_time.getEndTime()),
                                         dateFormat);
     }
 

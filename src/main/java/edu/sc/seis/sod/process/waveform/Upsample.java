@@ -4,21 +4,21 @@ import org.w3c.dom.Element;
 
 import com.oregondsp.signalProcessing.filter.iir.PassbandType;
 
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.model.common.QuantityImpl;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.status.StringTreeBranch;
 
 
 public class Upsample implements WaveformProcess {
 
     public Upsample(int factor) {
-        upsample = new edu.sc.seis.fissuresUtil.bag.Upsample(factor);
+        upsample = new edu.sc.seis.sod.bag.Upsample(factor);
 
     }
     
@@ -30,7 +30,7 @@ public class Upsample implements WaveformProcess {
         if (SodUtil.getElement(config, TOSPS_NAME) != null) {
             toSampleRate = Float.parseFloat(SodUtil.loadText(config, TOSPS_NAME, "not used"));
         } else if (SodUtil.getElement(config, FACTOR_NAME) != null) {
-            upsample = new edu.sc.seis.fissuresUtil.bag.Upsample(Integer.parseInt(SodUtil.getNestedText(SodUtil.getElement(config,
+            upsample = new edu.sc.seis.sod.bag.Upsample(Integer.parseInt(SodUtil.getNestedText(SodUtil.getElement(config,
                                                                                                                            FACTOR_NAME))));
         }
     }
@@ -48,9 +48,9 @@ public class Upsample implements WaveformProcess {
         LocalSeismogramImpl[] out = new LocalSeismogramImpl[seismograms.length];
         LocalSeismogramImpl[] filteredSeis = seismograms;
         if (seismograms.length != 0) {
-            edu.sc.seis.fissuresUtil.bag.Upsample u = upsample;
+            edu.sc.seis.sod.bag.Upsample u = upsample;
             if (u == null) {
-                u = new edu.sc.seis.fissuresUtil.bag.Upsample((int)Math.floor(seismograms[0].getSampling()
+                u = new edu.sc.seis.sod.bag.Upsample((int)Math.floor(seismograms[0].getSampling()
                         .getFrequency()
                         .getValue(UnitImpl.HERTZ)
                         / toSampleRate));
@@ -83,7 +83,7 @@ public class Upsample implements WaveformProcess {
 
     OregonDSPFilter antiAliasFilter;
 
-    edu.sc.seis.fissuresUtil.bag.Upsample upsample;
+    edu.sc.seis.sod.bag.Upsample upsample;
 
     public static final String TOSPS_NAME = "minSamplesPerSec";
 

@@ -2,10 +2,10 @@ package edu.sc.seis.sod.subsetter.channel;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.TimeRange;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
+import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
@@ -19,7 +19,7 @@ public class ChannelEffectiveTimeOverlap extends EffectiveTimeOverlap implements
         super(config);
     }
 
-    public ChannelEffectiveTimeOverlap(TimeRange tr) {
+    public ChannelEffectiveTimeOverlap(MicroSecondTimeRange tr) {
         super(tr);
     }
 

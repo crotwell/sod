@@ -2,15 +2,14 @@ package edu.sc.seis.sod.velocity;
 
 import org.apache.velocity.VelocityContext;
 
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.NetworkAttr;
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.network.StationImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
-import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.station.ChannelGroup;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.station.NetworkAttrImpl;
+import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.velocity.event.VelocityEvent;
 import edu.sc.seis.sod.velocity.network.VelocityChannel;
@@ -32,7 +31,7 @@ public class ContextWrangler {
         return ctx;
     }
 
-    public static VelocityContext createContext(EventAccessOperations event) {
+    public static VelocityContext createContext(CacheEvent event) {
         VelocityContext ctx = createContext();
         insertIntoContext(event, ctx);
         return ctx;
@@ -45,33 +44,33 @@ public class ContextWrangler {
         return ctx;
     }
 
-    public static VelocityEvent insertIntoContext(EventAccessOperations event,
+    public static VelocityEvent insertIntoContext(CacheEvent event,
                                                   VelocityContext ctx) {
         VelocityEvent ev = VelocityEvent.wrap(event);
         ctx.put("event", ev);
         return ev;
     }
 
-    public static VelocityContext createContext(NetworkAttr net) {
+    public static VelocityContext createContext(NetworkAttrImpl net) {
         VelocityContext ctx = createContext();
         insertIntoContext(net, ctx);
         return ctx;
     }
 
-    public static VelocityNetwork insertIntoContext(NetworkAttr net,
+    public static VelocityNetwork insertIntoContext(NetworkAttrImpl net,
                                                     VelocityContext ctx) {
         VelocityNetwork velNet = VelocityNetwork.wrap(net);
         velNet.insertIntoContext(ctx);
         return velNet;
     }
 
-    public static VelocityContext createContext(Channel chan) {
+    public static VelocityContext createContext(ChannelImpl chan) {
         VelocityContext ctx = createContext();
         insertIntoContext(chan, ctx);
         return ctx;
     }
 
-    public static VelocityChannel insertIntoContext(Channel chan,
+    public static VelocityChannel insertIntoContext(ChannelImpl chan,
                                                     VelocityContext ctx) {
         VelocityChannel velChan = VelocityChannel.wrap(chan);
         velChan.insertIntoContext(ctx);
@@ -85,7 +84,7 @@ public class ContextWrangler {
         return velChan;
     }
 
-    public static VelocityContext createContext(EventAccessOperations event,
+    public static VelocityContext createContext(CacheEvent event,
                                                 ChannelImpl channel,
                                                 RequestFilter[] original,
                                                 RequestFilter[] available,
@@ -101,7 +100,7 @@ public class ContextWrangler {
     }
 
     public static VelocitySeismogram insertIntoContext(LocalSeismogramImpl seis,
-                                                       Channel chan,
+                                                       ChannelImpl chan,
                                                        VelocityContext ctx) {
         VelocitySeismogram velSeis = VelocitySeismogram.wrap(seis,
                                                              insertIntoContext(chan,

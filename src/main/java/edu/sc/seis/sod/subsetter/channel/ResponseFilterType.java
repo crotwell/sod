@@ -2,9 +2,9 @@ package edu.sc.seis.sod.subsetter.channel;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfNetwork.Filter;
-import edu.iris.Fissures.IfNetwork.FilterType;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
+import edu.sc.seis.sod.model.station.Filter;
+import edu.sc.seis.sod.model.station.FilterType;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 

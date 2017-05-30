@@ -15,71 +15,7 @@
             <ref name="choiceSource"/>
             <ref name="tryInOrder"/>
             <ref name="winstonWaveServer"/>
-            <ref name="fixedDataCenter"/>
         </choice>
-    </define>
-    <define name="fixedDataCenter">
-        <element name="fixedDataCenter">
-            <xsd:annotation>
-                <summary>Pick a central data repository</summary>
-                <description>
-                <deprecated>DHI servers at the IRIS DMC will be turned off June 2013. The fdsnDataSelect web service is the replacement.</deprecated>
-                    This specifies the data center to use.
-                </description>
-            </xsd:annotation>
-            <ref name="seismogramServerName"/>
-            <ref name="seismogramServerDns"/>
-	    <optional>
-	      <element name="retries">
-		<xsd:annotation>
-		  <summary>Number of consecutive failures before quiting</summary>
-		  <description>In the event of server errors, SOD will retry 
-		  the query to the server for retries times before failing.
-		  The default is -1 which means to try forever.</description>
-            </xsd:annotation>
-		<data type="integer"/>
-	      </element>
-	    </optional>
-	</element>
-    </define>
-    <define name="seismogramServerName">
-        <element name="name">
-            <xsd:annotation>
-                <summary>Name of a data center</summary>
-                <description>The server's name is used in combination with a dns value to find a
-                    data center. The names "IRIS_BudDataCenter", "IRIS_PondDataCenter", and
-                    "IRIS_ArchiveDataCenter" must be used in combination with the "edu/iris/dmc" dns
-                    value. The name "NCEDC_DataCenter" must be used in conjunction with the
-                    "edu/berkley/geo/quake" dns value. The name "SCEPPSeismogramDC" must be used in
-                    conjunction with a DNS value "edu/sc/seis".</description>
-            </xsd:annotation>
-            <choice>
-                <value>IRIS_DataCenter</value>
-                <value>IRIS_BudDataCenter</value>
-                <value>IRIS_PondDataCenter</value>
-                <value>IRIS_ArchiveDataCenter</value>
-                <value>NCEDC_DataCenter</value>
-                <value>SCEDC_DataCenter</value>
-                <value>SCEPPSeismogramDC</value>
-                <data type="string"/>
-            </choice>
-        </element>
-    </define>
-    <define name="seismogramServerDns">
-        <element name="dns">
-            <xsd:annotation>
-                <summary>DNS location of a server</summary>
-                <description>The server's dns is used in combination with a 
-		name value to locate a server. Names are unique with a dns.</description>
-            </xsd:annotation>
-            <choice>
-                <value>edu/iris/dmc</value>
-                <value>edu/berkley/geo/quake</value>
-                <value>edu/caltech/scedc</value>
-                <value>edu/sc/seis</value>
-                <data type="string"/>
-            </choice>
-        </element>
     </define>
     <define name="choiceSource">
         <element name="choiceSource">

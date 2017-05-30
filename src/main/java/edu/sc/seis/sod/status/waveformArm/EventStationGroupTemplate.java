@@ -12,17 +12,17 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfNetwork.Station;
-import edu.iris.Fissures.network.StationImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.hibernate.SodDB;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.status.AllTextTemplate;
 import edu.sc.seis.sod.status.StationTemplate;
 import edu.sc.seis.sod.status.Template;
 import edu.sc.seis.sod.status.eventArm.EventTemplate;
+import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
 
 public class EventStationGroupTemplate extends Template implements EventTemplate{
     public EventStationGroupTemplate(Element el) throws ConfigurationException{

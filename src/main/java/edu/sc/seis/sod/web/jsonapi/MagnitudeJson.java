@@ -3,7 +3,7 @@ package edu.sc.seis.sod.web.jsonapi;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
-import edu.iris.Fissures.IfEvent.Magnitude;
+import edu.sc.seis.sod.model.event.Magnitude;
 
 
 

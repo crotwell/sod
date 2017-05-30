@@ -17,7 +17,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
-import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,9 +25,6 @@ import javax.script.ScriptEngineManager;
 import javax.xml.transform.TransformerException;
 
 import org.apache.xpath.XPathAPI;
-import org.python.core.PyJavaType;
-import org.python.core.PyObject;
-import org.python.util.PythonInterpreter;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -36,20 +32,17 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
-import edu.iris.Fissures.Time;
-import edu.iris.Fissures.Unit;
-import edu.iris.Fissures.model.BoxAreaImpl;
-import edu.iris.Fissures.model.GlobalAreaImpl;
-import edu.iris.Fissures.model.ISOTime;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.model.UnitRangeImpl;
-import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
+import edu.sc.seis.sod.model.common.BoxAreaImpl;
+import edu.sc.seis.sod.model.common.GlobalAreaImpl;
+import edu.sc.seis.sod.model.common.ISOTime;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.QuantityImpl;
+import edu.sc.seis.sod.model.common.Time;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.common.UnitRangeImpl;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.process.waveform.vector.WaveformVectorProcess;
 import edu.sc.seis.sod.source.event.MicroSecondTimeRangeSupplier;
@@ -71,6 +64,8 @@ import edu.sc.seis.sod.subsetter.request.vector.VectorRequestSubsetter;
 import edu.sc.seis.sod.subsetter.requestGenerator.RandomTimeInterval;
 import edu.sc.seis.sod.subsetter.requestGenerator.RequestGenerator;
 import edu.sc.seis.sod.subsetter.station.StationSubsetter;
+import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.util.time.ClockUtil;
 
 public class SodUtil {
 
@@ -156,9 +151,6 @@ public class SodUtil {
             if(tagName.startsWith("External")) {
                 return loadExternal(tagName, armNames, config);
             }
-            if(tagName.startsWith("Jython")) {
-                return loadJython(tagName, armNames, config);
-            }
             return loadClass(load(tagName, armNames), config);
         } catch(InvocationTargetException e) {
             // occurs if the constructor throws an exception
@@ -220,32 +212,6 @@ public class SodUtil {
         return Class.forName(baseName + "." + tagName);
     }
 
-    public static PythonInterpreter getPythonInterpreter() {
-        if (interpreter == null) {
-            interpreter = new PythonInterpreter();
-            interpreter.exec("import sys");
-            interpreter.exec("sys.path.append('.')");
-        //    BagUtil.addClassAdapters();
-        }
-        return interpreter;
-    }
-    
-    public static synchronized Object loadJython(String tagName, String[] armNames, Element config)
-    throws Exception {
-        Class mustImplement = load(tagName.substring("jython".length()), armNames);
-        if (getElement(config, "inline") != null) {
-            String jythonCode = getNestedText(getElement(config, "inline"));
-            return inlineJython(tagName+pythonClassNum++, mustImplement, jythonCode);
-        } else {
-            String moduleName = getNestedText(SodUtil.getElement(config, "module"));
-            String className = getNestedText(SodUtil.getElement(config, "class"));
-            PythonInterpreter interp = getPythonInterpreter();
-            interp.exec("from "+moduleName+" import "+className);
-            PyObject jyWaveformProcessClass = interp.get(className);
-            PyObject pyWaveformProcessObj = jyWaveformProcessClass.__call__( PyJavaType.wrapJavaObject(config));
-            return mustImplement.cast(pyWaveformProcessObj.__tojava__(mustImplement));
-        }
-    }
     
     public void listKnownScriptEngines() {
         ScriptEngineManager mgr = new ScriptEngineManager();
@@ -268,98 +234,6 @@ public class SodUtil {
         }
     }
 
-    protected static synchronized Object inlineJython(String className, Class mustImplement, String jythonCode) throws ClassNotFoundException {
-        try {
-        String[] lines = jythonCode.split("[\\r\\n]+");
-        PythonInterpreter interp = getPythonInterpreter();
-        interp.setOut(System.out);
-        interp.setErr(System.err);
-        interp.exec("from array import array");
-        interp.exec("from "+mustImplement.getPackage().getName()+" import "+mustImplement.getSimpleName());
-        interp.exec("from edu.sc.seis.sod.status import Pass, Fail");
-        interp.exec("from edu.sc.seis.sod.process.waveform import WaveformResult");
-        interp.exec("from edu.sc.seis.sod.process.waveform.vector import WaveformVectorResult");
-        interp.exec("from edu.iris.Fissures.seismogramDC import LocalSeismogramImpl");
-        String classDef = "class "+className+"("+mustImplement.getSimpleName()+"):\n"+
-         "  def __init__(self):\n"+
-         "      print 'in inline constructor'\n"+
-         "      pass\n"+
-         "  def accept(self, "+getJythonAcceptArgs(mustImplement)+"):\n"+
-         "      print 'in inline accept'\n";
-        int numSpaces = 0;
-        int firstLine = 0;
-        while (lines[firstLine].trim().length() == 0) {
-            firstLine++;
-        }
-        while (lines[firstLine].charAt(numSpaces) == ' ') {
-            numSpaces++;
-        }
-        Pattern pattern = Pattern.compile(" {0,"+numSpaces+"}");
-        for (int i = 0; i < lines.length; i++) {
-            String trimmedLine = lines[i];
-            Matcher matcher = pattern.matcher(trimmedLine);
-            if (trimmedLine.length() > 0 && matcher.find()) {
-                trimmedLine = trimmedLine.substring(matcher.end());
-            }
-            classDef += "      "+trimmedLine+"\n";
-        }
-        logger.info("inline jython class: \n\n"+classDef+"\n\n");
-        interp.exec(classDef);
-        PyObject jyWaveformProcessClass = interp.get(className);
-        
-        PyObject pyWaveformProcessObj = jyWaveformProcessClass.__call__();
-        
-        Object out = pyWaveformProcessObj.__tojava__(mustImplement);
-        return mustImplement.cast(out);
-        }catch(RuntimeException e) {
-            System.err.println("RuntimeException in SodUtil.inlineJython"+ e.getMessage());
-            e.printStackTrace();
-            throw e;
-        }
-    }
-    
-    protected static String getJythonAcceptArgs(Class mustImplement) {
-        if (mustImplement.equals(NetworkSubsetter.class)) {
-            return "networkAttr";
-        }if (mustImplement.equals(StationSubsetter.class)) {
-            return "station, networkSource";
-        }if (mustImplement.equals(ChannelSubsetter.class)) {
-            return "channel, networkSource";
-        }if (mustImplement.equals(OriginSubsetter.class)) {
-            return "eventAccess, eventAttr, preferred_origin";
-        }if (mustImplement.equals(EventStationSubsetter.class)) {
-            return "event, station, cookieJar";
-        }
-        if (mustImplement.equals(EventChannelSubsetter.class) || mustImplement.equals(RequestGenerator.class)) {
-            return "event, channel, cookieJar";
-        }
-        if (mustImplement.equals(EventVectorSubsetter.class)) {
-            return "event, channelGroup, cookieJar";
-        }
-        if (mustImplement.equals(RequestSubsetter.class)) {
-            return "event, channel, request, cookieJar";
-        }
-        if (mustImplement.equals(VectorRequestSubsetter.class)) {
-            return "event, channelGroup, request, cookieJar";
-        }
-        if (mustImplement.equals(AvailableDataSubsetter.class)) {
-            return "event, channel, original, available, cookieJar";
-        }
-        if (mustImplement.equals(VectorAvailableDataSubsetter.class)) {
-            return "event, channelGroup, original, available, cookieJar";
-        }
-        if (mustImplement.equals(WaveformProcess.class)) {
-            return "event, channel, original, available, seismograms, cookieJar";
-        }
-        if (mustImplement.equals(WaveformVectorProcess.class)) {
-            return "event, channelGroup, original, available, seismograms, cookieJar";
-        }
-        if (mustImplement.equals(SeismogramSourceLocator.class)) {
-            return "event, channel, infilters, cookieJar";
-        }
-        // should not happen
-        throw new IllegalArgumentException("Class mustImplement: "+mustImplement+" is not recognized.");
-    }
     
     /**
      * loads the class named in the element "classname" in config with config as
@@ -448,7 +322,7 @@ public class SodUtil {
             }
         }
         return new MicroSecondDateSupplier() {
-            final MicroSecondDate date = new MicroSecondDate(new Time(getNestedText(el).trim(), 0));
+            final MicroSecondDate date = new MicroSecondDate(new Time(getNestedText(el).trim()));
             public MicroSecondDate load() {  return date; }
         };
     }
@@ -631,7 +505,7 @@ public class SodUtil {
     }
 
     public static UnitRangeImpl loadUnitRange(Element config) throws ConfigurationException {
-        Unit unit = null;
+        UnitImpl unit = null;
         double min = Double.MIN_VALUE;
         double max = Double.MAX_VALUE;
         NodeList children = config.getChildNodes();
@@ -884,10 +758,6 @@ public class SodUtil {
         return c.getName().substring(c.getName().lastIndexOf(".") + 1);
     }
     
-    public static PythonInterpreter interpreter;
-    
-    public static int pythonClassNum = 1;
-
     public static final UnitImpl[] LENGTH_UNITS = {UnitImpl.KILOMETER,
                                                    UnitImpl.METER,
                                                    UnitImpl.CENTIMETER,

@@ -10,9 +10,9 @@ import java.util.List;
 import org.apache.velocity.context.AbstractContext;
 import org.apache.velocity.context.Context;
 
-import edu.iris.Fissures.network.NetworkAttrImpl;
-import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
 import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.hibernate.NetworkDB;
+import edu.sc.seis.sod.model.station.NetworkAttrImpl;
 import edu.sc.seis.sod.source.SodSourceException;
 
 public class NetworkArmContext extends AbstractContext {

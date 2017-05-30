@@ -7,10 +7,10 @@ import java.util.List;
 import org.w3c.dom.Element;
 
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.EventChannelPair;
-import edu.sc.seis.sod.EventNetworkPair;
-import edu.sc.seis.sod.EventStationPair;
-import edu.sc.seis.sod.EventVectorPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventChannelPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventNetworkPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventStationPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventVectorPair;
 import edu.sc.seis.sod.status.eventArm.EventGroupTemplate;
 
 public class WaveformEventGroup extends EventGroupTemplate implements WaveformMonitor{

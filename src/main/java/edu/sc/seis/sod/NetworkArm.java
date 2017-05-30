@@ -5,32 +5,31 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Timer;
 
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.NetworkId;
-import edu.iris.Fissures.IfNetwork.NetworkNotFound;
-import edu.iris.Fissures.IfNetwork.Station;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.network.ChannelIdUtil;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.network.NetworkAttrImpl;
-import edu.iris.Fissures.network.NetworkIdUtil;
-import edu.iris.Fissures.network.StationIdUtil;
-import edu.iris.Fissures.network.StationImpl;
-import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
-import edu.sc.seis.fissuresUtil.database.NotFound;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
-import edu.sc.seis.fissuresUtil.hibernate.NetworkDB;
-import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
+import edu.sc.seis.sod.hibernate.NetworkDB;
+import edu.sc.seis.sod.hibernate.NetworkNotFound;
 import edu.sc.seis.sod.hibernate.SodDB;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.station.ChannelGroup;
+import edu.sc.seis.sod.model.station.ChannelIdUtil;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.station.NetworkAttrImpl;
+import edu.sc.seis.sod.model.station.NetworkId;
+import edu.sc.seis.sod.model.station.NetworkIdUtil;
+import edu.sc.seis.sod.model.station.StationIdUtil;
+import edu.sc.seis.sod.model.station.StationImpl;
+import edu.sc.seis.sod.model.status.Stage;
+import edu.sc.seis.sod.model.status.Standing;
+import edu.sc.seis.sod.model.status.Status;
 import edu.sc.seis.sod.source.SodSourceException;
 import edu.sc.seis.sod.source.event.EventSource;
 import edu.sc.seis.sod.source.network.FdsnStation;
@@ -51,6 +50,8 @@ import edu.sc.seis.sod.subsetter.network.PassNetwork;
 import edu.sc.seis.sod.subsetter.station.PassStation;
 import edu.sc.seis.sod.subsetter.station.StationEffectiveTimeOverlap;
 import edu.sc.seis.sod.subsetter.station.StationSubsetter;
+import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.util.time.ClockUtil;
 
 public class NetworkArm implements Arm {
 
@@ -67,7 +68,7 @@ public class NetworkArm implements Arm {
             lastQueryTime = sodDb.getQueryTime(getInternalNetworkSource().getName(), "");
             
             // only do timer if positive interval and waveform arm exists, otherwise run in thread
-            if (getRefreshInterval().value > 0 && Start.getWaveformRecipe() != null) {
+            if (getRefreshInterval().getValue() > 0 && Start.getWaveformRecipe() != null) {
                 Timer timer = new Timer("Refresh NetworkArm", true);
                 long period = (long)getInternalNetworkSource().getRefreshInterval().getValue(UnitImpl.MILLISECOND);
                 long firstDelay = lastQueryTime==null ? 0 : lastQueryTime.delayUntilNextRefresh(getRefreshInterval());
@@ -122,7 +123,7 @@ public class NetworkArm implements Arm {
             } // end of if (node instanceof Element)
         } // end of for (int i=0; i<children.getSize(); i++)
         
-        edu.iris.Fissures.TimeRange timeRange = configureEffectiveTimeCheckers();
+        MicroSecondTimeRange timeRange = configureEffectiveTimeCheckers();
         NetworkQueryConstraints constraints = new NetworkQueryConstraints(attrSubsetter,
                                                                           stationSubsetter,
                                                                           chanSubsetters,
@@ -130,7 +131,7 @@ public class NetworkArm implements Arm {
         getNetworkSource().setConstraints(constraints);
     }
 
-    private edu.iris.Fissures.TimeRange configureEffectiveTimeCheckers() {
+    private MicroSecondTimeRange configureEffectiveTimeCheckers() {
         EventArm arm = Start.getEventArm();
         if(arm != null && !Start.getRunProps().allowDeadNets()) {
             EventSource[] sources = arm.getSources();
@@ -139,7 +140,7 @@ public class NetworkArm implements Arm {
                 fullTime = new MicroSecondTimeRange(fullTime,
                                                     sources[i].getEventTimeRange());
             }
-            edu.iris.Fissures.TimeRange eventQueryTimes = fullTime.getFissuresTimeRange();
+            MicroSecondTimeRange eventQueryTimes = fullTime;
             netEffectiveSubsetter = new NetworkEffectiveTimeOverlap(eventQueryTimes);
             staEffectiveSubsetter = new StationEffectiveTimeOverlap(eventQueryTimes);
             chanEffectiveSubsetter = new ChannelEffectiveTimeOverlap(eventQueryTimes);
@@ -358,7 +359,7 @@ public class NetworkArm implements Arm {
             }
             statusChanged("Getting stations for "
                     + net.getName());
-            ArrayList<Station> arrayList = new ArrayList<Station>();
+            ArrayList<StationImpl> arrayList = new ArrayList<StationImpl>();
             try {
                 List<? extends StationImpl> stations = getInternalNetworkSource().getStations(netAttr);
                 /*
@@ -619,7 +620,7 @@ public class NetworkArm implements Arm {
         }
     }
 
-    private void change(Channel chan, Status newStatus) {
+    private void change(ChannelImpl chan, Status newStatus) {
         synchronized(statusMonitors) {
             for (NetworkMonitor netMon : statusMonitors) {
                 try {
@@ -635,7 +636,7 @@ public class NetworkArm implements Arm {
         }
     }
 
-    private void change(Station sta, Status newStatus) {
+    private void change(StationImpl sta, Status newStatus) {
         synchronized(statusMonitors) {
             for (NetworkMonitor netMon : statusMonitors) {
                 try {

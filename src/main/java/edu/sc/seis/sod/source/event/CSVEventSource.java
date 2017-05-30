@@ -12,25 +12,24 @@ import org.w3c.dom.Element;
 
 import com.csvreader.CsvReader;
 
-import edu.iris.Fissures.FlinnEngdahlRegion;
-import edu.iris.Fissures.FlinnEngdahlType;
-import edu.iris.Fissures.Location;
-import edu.iris.Fissures.LocationType;
-import edu.iris.Fissures.Time;
-import edu.iris.Fissures.Unit;
-import edu.iris.Fissures.IfEvent.Magnitude;
-import edu.iris.Fissures.IfParameterMgr.ParameterRef;
-import edu.iris.Fissures.event.EventAttrImpl;
-import edu.iris.Fissures.event.OriginImpl;
 import edu.iris.Fissures.model.FlinnEngdahlRegionImpl;
-import edu.iris.Fissures.model.ISOTime;
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.model.UnsupportedFormat;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.UserConfigurationException;
+import edu.sc.seis.sod.model.common.ISOTime;
+import edu.sc.seis.sod.model.common.Location;
+import edu.sc.seis.sod.model.common.LocationType;
+import edu.sc.seis.sod.model.common.ParameterRef;
+import edu.sc.seis.sod.model.common.QuantityImpl;
+import edu.sc.seis.sod.model.common.Time;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.common.UnsupportedFormat;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.event.EventAttrImpl;
+import edu.sc.seis.sod.model.event.FlinnEngdahlRegion;
+import edu.sc.seis.sod.model.event.FlinnEngdahlType;
+import edu.sc.seis.sod.model.event.Magnitude;
+import edu.sc.seis.sod.model.event.OriginImpl;
 import edu.sc.seis.sod.subsetter.AreaSubsetter;
 
 /**
@@ -109,10 +108,10 @@ public class CSVEventSource extends SimpleEventSource {
             // first up: the only required field...
             Time time = new Time(csvReader.get(TIME), 0);
             try {
-                new ISOTime(time.date_time);
+                new ISOTime(time.getISOTime());
             } catch(UnsupportedFormat uf) {
                 throw new UserConfigurationException("The time '"
-                        + time.date_time + "' in record "
+                        + time.getISOTime() + "' in record "
                         + csvReader.getCurrentRecord() + " is invalid.");
             }
             float latitude = 0f;
@@ -127,7 +126,7 @@ public class CSVEventSource extends SimpleEventSource {
             if(headers.contains(DEPTH)) {
                 depth = Double.parseDouble(csvReader.get(DEPTH));
             }
-            Unit depthUnit = UnitImpl.KILOMETER;
+            UnitImpl depthUnit = UnitImpl.KILOMETER;
             if(headers.contains(DEPTH_UNITS)) {
                 String unitName = csvReader.get(DEPTH_UNITS);
                 try {

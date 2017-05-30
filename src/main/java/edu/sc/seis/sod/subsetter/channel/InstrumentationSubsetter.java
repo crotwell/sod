@@ -1,10 +1,10 @@
 package edu.sc.seis.sod.subsetter.channel;
 
-import edu.iris.Fissures.IfNetwork.ChannelNotFound;
-import edu.iris.Fissures.IfNetwork.Instrumentation;
-import edu.iris.Fissures.IfNetwork.SeismicHardware;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
+import edu.sc.seis.sod.hibernate.ChannelNotFound;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.station.Instrumentation;
+import edu.sc.seis.sod.model.station.InvalidResponse;
+import edu.sc.seis.sod.model.station.SeismicHardwareImpl;
 import edu.sc.seis.sod.source.SodSourceException;
 import edu.sc.seis.sod.source.network.NetworkSource;
 
@@ -15,13 +15,13 @@ import edu.sc.seis.sod.source.network.NetworkSource;
  */
 public abstract class InstrumentationSubsetter implements ChannelSubsetter {
 
-    protected SeismicHardware getSeismicHardware(ChannelImpl channel,
+    protected SeismicHardwareImpl getSeismicHardware(ChannelImpl channel,
                                                  NetworkSource network)
             throws ChannelNotFound, InvalidResponse, SodSourceException {
         return getSeismicHardware(network.getInstrumentation(channel));
     }
 
-    protected abstract SeismicHardware getSeismicHardware(Instrumentation inst);
+    protected abstract SeismicHardwareImpl getSeismicHardware(Instrumentation inst);
 
     protected boolean acceptId(ChannelImpl channel,
                                NetworkSource network,

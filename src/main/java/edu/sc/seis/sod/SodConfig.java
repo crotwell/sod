@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.Timestamp;
 
-import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
+import edu.sc.seis.sod.util.time.ClockUtil;
 
 public class SodConfig {
 

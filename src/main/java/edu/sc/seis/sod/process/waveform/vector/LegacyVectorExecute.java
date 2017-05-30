@@ -13,7 +13,7 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
-import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.process.waveform.AbstractSeismogramWriter;
 import edu.sc.seis.sod.process.waveform.LegacyExecute;
 import edu.sc.seis.sod.status.StringTreeLeaf;

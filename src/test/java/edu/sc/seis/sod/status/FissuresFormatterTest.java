@@ -5,12 +5,12 @@
  */
 package edu.sc.seis.sod.status;
 
-import junit.framework.TestCase;
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.network.StationImpl;
-import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannel;
-import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockStation;
+import edu.sc.seis.sod.mock.station.MockChannel;
+import edu.sc.seis.sod.mock.station.MockStation;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.velocity.network.VelocityStation;
+import junit.framework.TestCase;
 
 public class FissuresFormatterTest extends TestCase {
 
@@ -44,5 +44,5 @@ public class FissuresFormatterTest extends TestCase {
         assertEquals("Long name with newlines", vsta.getName());
     }
     
-    private Channel chan;
+    private ChannelImpl chan;
 }

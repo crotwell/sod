@@ -3,12 +3,11 @@ package edu.sc.seis.sod.web.jsonapi;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
-import edu.iris.Fissures.Location;
-import edu.iris.Fissures.Time;
-import edu.iris.Fissures.event.OriginImpl;
-import edu.iris.Fissures.model.ISOTime;
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.model.UnitImpl;
+import edu.sc.seis.sod.model.common.ISOTime;
+import edu.sc.seis.sod.model.common.Location;
+import edu.sc.seis.sod.model.common.QuantityImpl;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.event.OriginImpl;
 
 
 public class OriginJson extends AbstractJsonApiData {

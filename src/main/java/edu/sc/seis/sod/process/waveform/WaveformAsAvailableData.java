@@ -1,10 +1,10 @@
 package edu.sc.seis.sod.process.waveform;
 
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.subsetter.availableData.AvailableDataSubsetter;
 
 
@@ -31,7 +31,7 @@ public class WaveformAsAvailableData implements WaveformProcess {
         for (int i = 0; i < seisAvailable.length; i++) {
             seisAvailable[i] = new RequestFilter(seismograms[i].getChannelID(),
                                                  seismograms[i].begin_time,
-                                                 seismograms[i].getEndTime().getFissuresTime());
+                                                 seismograms[i].getEndTime());
         }
         return seisAvailable;
     }

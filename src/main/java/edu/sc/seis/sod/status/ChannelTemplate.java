@@ -1,8 +1,8 @@
 package edu.sc.seis.sod.status;
 
-import edu.iris.Fissures.IfNetwork.Channel;
+import edu.sc.seis.sod.model.station.ChannelImpl;
 
 public interface ChannelTemplate{
-    public String getResult(Channel chan);
+    public String getResult(ChannelImpl chan);
 }
 

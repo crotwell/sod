@@ -9,17 +9,17 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.sc.seis.fissuresUtil.database.ConnMgr;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.Arm;
 import edu.sc.seis.sod.ArmListener;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.NetworkArm;
 import edu.sc.seis.sod.PeriodicCheckpointer;
 import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.hibernate.ConnMgr;
 import edu.sc.seis.sod.hibernate.SodDB;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
 
 public class OutputScheduler extends Thread implements ArmListener {
 

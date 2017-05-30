@@ -1,6 +1,6 @@
 package edu.sc.seis.sod.velocity.seismogram;
 
-import edu.iris.Fissures.model.TimeInterval;
+import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.subsetter.requestGenerator.PhaseRequest;
 
 
@@ -31,7 +31,7 @@ public class VelocityPhaseRequest {
         if ( ti.getValue() < 0) {
             sign = "-";
         }
-        return sign+ti.value+" "+ti.getUnit();
+        return sign+ti.getValue()+" "+ti.getUnit();
     }
     
     public String toString() {

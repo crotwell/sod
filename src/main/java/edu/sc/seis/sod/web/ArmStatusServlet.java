@@ -3,9 +3,7 @@ package edu.sc.seis.sod.web;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,18 +14,16 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONWriter;
 
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.sod.AbstractEventChannelPair;
-import edu.sc.seis.sod.EventChannelPair;
-import edu.sc.seis.sod.EventNetworkPair;
-import edu.sc.seis.sod.EventStationPair;
-import edu.sc.seis.sod.EventVectorPair;
 import edu.sc.seis.sod.SodConfig;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.WaveformArm;
 import edu.sc.seis.sod.hibernate.SodDB;
-import edu.sc.seis.sod.hibernate.StatefulEvent;
+import edu.sc.seis.sod.hibernate.eventpair.AbstractEventChannelPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventChannelPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventNetworkPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventStationPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventVectorPair;
+import edu.sc.seis.sod.model.event.StatefulEvent;
 import edu.sc.seis.sod.status.eventArm.EventMonitor;
 import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
 import edu.sc.seis.sod.web.jsonapi.ArmStatusJson;

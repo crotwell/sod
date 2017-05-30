@@ -6,7 +6,7 @@
 
 package edu.sc.seis.sod.subsetter;
 
-import edu.sc.seis.fissuresUtil.bag.DistAz;
+import edu.sc.seis.sod.model.common.DistAz;
 
 public class AzimuthUtils{
     public static boolean isAzimuthBetween(DistAz dz, double min, double max){

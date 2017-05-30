@@ -1,11 +1,11 @@
 package edu.sc.seis.sod.process.waveform;
 
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.Threadable;
+import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
 /**
@@ -39,5 +39,5 @@ public class RMean implements WaveformProcess, Threadable {
         return new WaveformResult(out, new StringTreeLeaf(this, true));
     }
 
-    private edu.sc.seis.fissuresUtil.bag.RMean rmean = new edu.sc.seis.fissuresUtil.bag.RMean();
+    private edu.sc.seis.sod.bag.RMean rmean = new edu.sc.seis.sod.bag.RMean();
 }// RMean

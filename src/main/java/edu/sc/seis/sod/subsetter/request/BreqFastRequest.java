@@ -5,33 +5,30 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.TimeZone;
 
 import org.apache.velocity.VelocityContext;
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfEvent.Origin;
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.model.ISOTime;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.cache.EventUtil;
-import edu.sc.seis.fissuresUtil.chooser.ThreadSafeSimpleDateFormat;
-import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.model.common.ISOTime;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.QuantityImpl;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.event.OriginImpl;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.VelocityFileElementParser;
+import edu.sc.seis.sod.util.display.EventUtil;
+import edu.sc.seis.sod.util.display.ParseRegions;
+import edu.sc.seis.sod.util.display.ThreadSafeSimpleDateFormat;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 import edu.sc.seis.sod.velocity.WaveformProcessContext;
 
@@ -66,7 +63,7 @@ public class BreqFastRequest implements RequestSubsetter {
         return SodUtil.getText(SodUtil.getElement(config, name));
     }
 
-    protected synchronized boolean writeToBFEmail(EventAccessOperations event,
+    protected synchronized boolean writeToBFEmail(CacheEvent event,
                                                   ChannelImpl channel,
                                                   RequestFilter[] request) {
         VelocityContext ctx = new WaveformProcessContext(event,
@@ -131,7 +128,7 @@ public class BreqFastRequest implements RequestSubsetter {
         out.write("." + fieldName + " " + getConfig(configName) + nl);
     }
 
-    protected void insertRequest(Channel channel,
+    protected void insertRequest(ChannelImpl channel,
                                  RequestFilter[] request,
                                  Writer out,
                                  int i) throws IOException {
@@ -145,7 +142,7 @@ public class BreqFastRequest implements RequestSubsetter {
                 + nl);
     }
 
-    protected void insertEventHeader(EventAccessOperations event,
+    protected void insertEventHeader(CacheEvent event,
                                      Writer out,
                                      String label) throws IOException {
         insert(out, "name");
@@ -157,7 +154,7 @@ public class BreqFastRequest implements RequestSubsetter {
         insert(out, "media");
         insert(out, "altmedia1", "ALTERNATIVE MEDIA");
         insert(out, "altmedia2", "ALTERNATIVE MEDIA");
-        Origin o = EventUtil.extractOrigin(event);
+        OriginImpl o = EventUtil.extractOrigin(event);
         out.write(".SOURCE " + "~" + o.getCatalog() + " " + o.getContributor()
                 + "~unknown~unknown~" + nl);
         MicroSecondDate oTime = new MicroSecondDate(o.getOriginTime());

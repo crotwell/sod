@@ -14,13 +14,14 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import edu.iris.Fissures.Location;
-import edu.sc.seis.fissuresUtil.bag.AreaUtil;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.UserConfigurationException;
+import edu.sc.seis.sod.bag.AreaUtil;
+import edu.sc.seis.sod.model.common.Area;
+import edu.sc.seis.sod.model.common.Location;
 
 public class AreaSubsetter {
 
@@ -31,7 +32,7 @@ public class AreaSubsetter {
             for (int i = 0; i < children.getLength(); i++) {
                 Node node = children.item(i);
                 if (node instanceof Element) {
-                    area = (edu.iris.Fissures.Area)SodUtil.load((Element)node, "");
+                    area = (Area)SodUtil.load((Element)node, "");
                     break;
                 }
             }
@@ -93,7 +94,7 @@ public class AreaSubsetter {
         return AreaUtil.inArea(area, loc);
     }
 
-    protected edu.iris.Fissures.Area area = null;
+    protected Area area = null;
 
     protected Location[] locationArray;
 }

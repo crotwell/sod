@@ -31,30 +31,33 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import edu.iris.Fissures.IfNetwork.NetworkNotFound;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.sc.seis.fissuresUtil.Dissendium;
-import edu.sc.seis.fissuresUtil.cache.RetryStrategy;
-import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
-import edu.sc.seis.fissuresUtil.database.ConnMgr;
-import edu.sc.seis.fissuresUtil.exceptionHandler.Extractor;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.fissuresUtil.exceptionHandler.MailExceptionReporter;
-import edu.sc.seis.fissuresUtil.exceptionHandler.MissingPropertyException;
-import edu.sc.seis.fissuresUtil.exceptionHandler.ResultMailer;
-import edu.sc.seis.fissuresUtil.exceptionHandler.SystemOutReporter;
-import edu.sc.seis.fissuresUtil.exceptionHandler.WindowConnectionInterceptor;
-import edu.sc.seis.fissuresUtil.hibernate.AbstractHibernateDB;
-import edu.sc.seis.fissuresUtil.hibernate.HibernateUtil;
-import edu.sc.seis.fissuresUtil.simple.Initializer;
 import edu.sc.seis.seisFile.fdsnws.FDSNWSException;
+import edu.sc.seis.sod.hibernate.AbstractHibernateDB;
+import edu.sc.seis.sod.hibernate.ConnMgr;
+import edu.sc.seis.sod.hibernate.HibernateUtil;
+import edu.sc.seis.sod.hibernate.Initializer;
+import edu.sc.seis.sod.hibernate.NetworkNotFound;
 import edu.sc.seis.sod.hibernate.SodDB;
-import edu.sc.seis.sod.hibernate.StatefulEvent;
 import edu.sc.seis.sod.hibernate.StatefulEventDB;
+import edu.sc.seis.sod.hibernate.eventpair.EventChannelPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventVectorPair;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.Version;
+import edu.sc.seis.sod.model.event.StatefulEvent;
+import edu.sc.seis.sod.model.status.Standing;
+import edu.sc.seis.sod.retry.RetryStrategy;
 import edu.sc.seis.sod.status.IndexTemplate;
 import edu.sc.seis.sod.status.OutputScheduler;
 import edu.sc.seis.sod.status.TemplateFileLoader;
+import edu.sc.seis.sod.util.exceptionHandler.Extractor;
+import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.util.exceptionHandler.MailExceptionReporter;
+import edu.sc.seis.sod.util.exceptionHandler.MissingPropertyException;
+import edu.sc.seis.sod.util.exceptionHandler.ResultMailer;
+import edu.sc.seis.sod.util.exceptionHandler.SystemOutReporter;
+import edu.sc.seis.sod.util.exceptionHandler.WindowConnectionInterceptor;
+import edu.sc.seis.sod.util.time.ClockUtil;
 import edu.sc.seis.sod.validator.Validator;
 import edu.sc.seis.sod.web.WebAdmin;
 
@@ -196,7 +199,7 @@ public class Start {
             GlobalExceptionHandler.handle("Trouble creating xml document", e);
         }
         logger.info("logging configured");
-        logger.info("SOD version "+Version.current().getVersion());
+        logger.info("SOD version "+VersionHistory.current().getVersion());
         logger.info("Args: "+args.toString());
         logger.info("Recipe: "+configFileName);
         if(!commandLineToolRun) {
@@ -211,7 +214,6 @@ public class Start {
             System.out.flush();
             System.exit(0);
         }
-        Dissendium.insertOrbProp(Start.props);
         if (args.isQuickAndDirty()) {
             Start.props.put("fissuresUtil.database.url", "jdbc:hsqldb:mem:SodDB");
             logger.info("Database: memory");
@@ -470,7 +472,6 @@ public class Start {
             cleanHSQLDatabase();
         }
         initDatabase();
-        CommonAccess.initialize(props, args.getInitialArgs());
         if(!commandLineToolRun) {
             new UpdateChecker(false);
             handleStartupRunProperties();
@@ -692,9 +693,9 @@ public class Start {
             if(dbVersion == null) {
                 throw new RuntimeException("db version is null");
             }
-            if(Version.hasSchemaChangedSince(dbVersion.getVersion())) {
+            if(VersionHistory.hasSchemaChangedSince(dbVersion.getVersion())) {
                 System.err.println("SOD version: "
-                        + Version.current().getVersion());
+                        + VersionHistory.current().getVersion());
                 System.err.println("Database version: "
                         + dbVersion.getVersion());
                 System.err.println("Your database was created with an older version "

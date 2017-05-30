@@ -10,32 +10,31 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
 
-import edu.iris.Fissures.Location;
-import edu.iris.Fissures.Time;
-import edu.iris.Fissures.TimeRange;
-import edu.iris.Fissures.IfEvent.Magnitude;
-import edu.iris.Fissures.IfEvent.Origin;
-import edu.iris.Fissures.IfNetwork.ChannelId;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
-import edu.iris.Fissures.IfNetwork.NetworkAttr;
-import edu.iris.Fissures.IfNetwork.NetworkId;
-import edu.iris.Fissures.IfNetwork.SiteId;
-import edu.iris.Fissures.IfNetwork.Station;
-import edu.iris.Fissures.IfNetwork.StationId;
-import edu.iris.Fissures.event.MagnitudeUtil;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.network.ChannelIdUtil;
-import edu.iris.Fissures.network.NetworkIdUtil;
-import edu.iris.Fissures.network.SiteIdUtil;
-import edu.iris.Fissures.network.StationIdUtil;
-import edu.sc.seis.fissuresUtil.bag.DistAz;
-import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
-import edu.sc.seis.fissuresUtil.chooser.ThreadSafeSimpleDateFormat;
-import edu.sc.seis.fissuresUtil.display.ChoiceDecimalFormat;
-import edu.sc.seis.fissuresUtil.display.ParseRegions;
-import edu.sc.seis.fissuresUtil.display.UnitDisplayUtil;
+import edu.sc.seis.sod.model.common.DistAz;
+import edu.sc.seis.sod.model.common.Location;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.QuantityImpl;
+import edu.sc.seis.sod.model.common.Time;
+import edu.sc.seis.sod.model.common.TimeRange;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.event.Magnitude;
+import edu.sc.seis.sod.model.event.MagnitudeUtil;
+import edu.sc.seis.sod.model.event.OriginImpl;
+import edu.sc.seis.sod.model.station.ChannelId;
+import edu.sc.seis.sod.model.station.ChannelIdUtil;
+import edu.sc.seis.sod.model.station.NetworkAttrImpl;
+import edu.sc.seis.sod.model.station.NetworkId;
+import edu.sc.seis.sod.model.station.NetworkIdUtil;
+import edu.sc.seis.sod.model.station.SiteId;
+import edu.sc.seis.sod.model.station.SiteIdUtil;
+import edu.sc.seis.sod.model.station.StationId;
+import edu.sc.seis.sod.model.station.StationIdUtil;
+import edu.sc.seis.sod.model.station.StationImpl;
+import edu.sc.seis.sod.util.display.ChoiceDecimalFormat;
+import edu.sc.seis.sod.util.display.ParseRegions;
+import edu.sc.seis.sod.util.display.ThreadSafeSimpleDateFormat;
+import edu.sc.seis.sod.util.display.UnitDisplayUtil;
+import edu.sc.seis.sod.util.time.ClockUtil;
 
 /**
  * this class largely exists as an access for various utility methods for
@@ -91,19 +90,19 @@ public class FissuresFormatter {
         return id.network_code + formatYear(new MicroSecondDate(id.begin_time));
     }
 
-    public static String networkName(NetworkAccess net) {
-        return networkName(net.get_attributes());
-    }
+//    public static String networkName(NetworkAccess net) {
+//        return networkName(net.get_attributes());
+//    }
 
-    public static String networkName(NetworkAttr net) {
+    public static String networkName(NetworkAttrImpl net) {
         return net.getName();
     }
 
-    public static String stationName(Station station) {
+    public static String stationName(StationImpl station) {
         return station.getName();
     }
 
-    public static QuantityImpl getDepth(Origin origin) {
+    public static QuantityImpl getDepth(OriginImpl origin) {
         return getDepth(origin.getLocation());
     }
 
@@ -115,11 +114,11 @@ public class FissuresFormatter {
         return QuantityImpl.createQuantityImpl(loc.elevation);
     }
 
-    public static float getLatitude(Station station) {
+    public static float getLatitude(StationImpl station) {
         return getLatitude(station.getLocation());
     }
 
-    public static float getLatitude(Origin origin) {
+    public static float getLatitude(OriginImpl origin) {
         return getLatitude(origin.getLocation());
     }
 
@@ -135,11 +134,11 @@ public class FissuresFormatter {
         return buf.toString();
     }
 
-    public static float getLongitude(Station station) {
+    public static float getLongitude(StationImpl station) {
         return getLongitude(station.getLocation());
     }
 
-    public static float getLongitude(Origin origin) {
+    public static float getLongitude(OriginImpl origin) {
         return getLongitude(origin.getLocation());
     }
 
@@ -169,27 +168,27 @@ public class FissuresFormatter {
         return array.length;
     }
 
-    public static MicroSecondDate getEffectiveBegin(Station station) {
+    public static MicroSecondDate getEffectiveBegin(StationImpl station) {
         return new MicroSecondDate(station.getBeginTime());
     }
 
-    public static MicroSecondDate getEffectiveEnd(Station station) {
+    public static MicroSecondDate getEffectiveEnd(StationImpl station) {
         return new MicroSecondDate(station.getEndTime());
     }
 
     public static MicroSecondDate getRangeBegin(TimeRange range) {
-        return new MicroSecondDate(range.start_time);
+        return new MicroSecondDate(range.getBeginTime());
     }
 
     public static MicroSecondDate getRangeEnd(TimeRange range) {
-        return new MicroSecondDate(range.end_time);
+        return new MicroSecondDate(range.getEndTime());
     }
 
     public static QuantityImpl getDistance(ArrayList list) {
-        return getDistance((Station)list.get(0), (Origin)list.get(1));
+        return getDistance((StationImpl)list.get(0), (OriginImpl)list.get(1));
     }
 
-    public static QuantityImpl getDistance(Station station, Origin origin) {
+    public static QuantityImpl getDistance(StationImpl station, OriginImpl origin) {
         if(station == null) {
             throw new NullPointerException("station is null");
         }
@@ -213,7 +212,7 @@ public class FissuresFormatter {
         return new QuantityImpl(d.getDelta(), UnitImpl.DEGREE);
     }
 
-    public static QuantityImpl getAzimuth(Station station, Origin origin) {
+    public static QuantityImpl getAzimuth(StationImpl station, OriginImpl origin) {
         return getAzimuth(station.getLocation(), origin.getLocation());
     }
 
@@ -222,7 +221,7 @@ public class FissuresFormatter {
         return new QuantityImpl(d.getAz(), UnitImpl.DEGREE);
     }
 
-    public static QuantityImpl getBackAzimuth(Station station, Origin origin) {
+    public static QuantityImpl getBackAzimuth(StationImpl station, OriginImpl origin) {
         return getBackAzimuth(station.getLocation(), origin.getLocation());
     }
 
@@ -251,7 +250,7 @@ public class FissuresFormatter {
         return formatDateForFile(new MicroSecondDate(t));
     }
 
-    public static String formatDateForFile(Origin origin) {
+    public static String formatDateForFile(OriginImpl origin) {
         return formatDateForFile(new MicroSecondDate(origin.getOriginTime()));
     }
 

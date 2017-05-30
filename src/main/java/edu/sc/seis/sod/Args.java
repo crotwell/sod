@@ -112,7 +112,7 @@ public class Args {
                        "Run an demo recipe. Use with -r to see the demo recipe."));
         result = jsap.parse((String[])toParse.toArray(new String[0]));
         if(result.getBoolean("version")) {
-            System.out.println("SOD " + Version.current().getVersion());
+            System.out.println("SOD " + VersionHistory.current().getVersion());
             System.exit(0);
         }
         if(result.getBoolean("help")) {

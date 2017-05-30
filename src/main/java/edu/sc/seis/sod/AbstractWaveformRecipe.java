@@ -10,7 +10,12 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.hibernate.eventpair.CookieEventPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventChannelPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventNetworkPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventStationPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventVectorPair;
+import edu.sc.seis.sod.hibernate.eventpair.StatusNotify;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.source.seismogram.BatchDataRequest;
 import edu.sc.seis.sod.source.seismogram.FdsnDataSelect;
@@ -20,9 +25,10 @@ import edu.sc.seis.sod.subsetter.availableData.AvailableDataSubsetter;
 import edu.sc.seis.sod.subsetter.availableData.SomeCoverage;
 import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
 import edu.sc.seis.sod.subsetter.eventStation.PassEventStation;
+import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
 
 
-public abstract class AbstractWaveformRecipe  {
+public abstract class AbstractWaveformRecipe implements StatusNotify {
     
     
     public AbstractWaveformRecipe() {

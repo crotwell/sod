@@ -2,8 +2,8 @@ package edu.sc.seis.sod.channelGroup;
 
 import java.util.List;
 
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
+import edu.sc.seis.sod.model.station.ChannelGroup;
+import edu.sc.seis.sod.model.station.ChannelImpl;
 
 
 public abstract class SiteChannelRule {

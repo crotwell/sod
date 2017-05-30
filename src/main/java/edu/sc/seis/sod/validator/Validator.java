@@ -12,7 +12,7 @@ import com.thaiopensource.util.SinglePropertyMap;
 import com.thaiopensource.validate.ValidateProperty;
 import com.thaiopensource.validate.ValidationDriver;
 
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
 
 public class Validator {
 

@@ -14,12 +14,12 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.Stage;
-import edu.sc.seis.sod.Standing;
-import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.hibernate.StatefulEventDB;
+import edu.sc.seis.sod.model.status.Stage;
+import edu.sc.seis.sod.model.status.Standing;
+import edu.sc.seis.sod.model.status.Status;
+import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
 
 public class EventSorter {
 	public EventSorter() {

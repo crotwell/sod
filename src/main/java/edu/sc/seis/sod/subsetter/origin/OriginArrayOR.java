@@ -4,11 +4,10 @@ import java.util.Iterator;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfEvent.Origin;
-import edu.iris.Fissures.event.EventAttrImpl;
-import edu.iris.Fissures.event.OriginImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.event.EventAttrImpl;
+import edu.sc.seis.sod.model.event.OriginImpl;
 import edu.sc.seis.sod.status.ShortCircuit;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
@@ -39,7 +38,7 @@ public class OriginArrayOR  extends EventLogicalSubsetter
         Iterator it = filterList.iterator();
         if (it.hasNext()) {
             OriginSubsetter filter = (OriginSubsetter)it.next();
-            Origin[] origins = event.get_origins();
+            OriginImpl[] origins = event.get_origins();
             StringTree[] result = new StringTree[origins.length];
             for(int counter = 0; counter < origins.length; counter++) {
                 result[counter] = filter.accept(event, eventAttr, (OriginImpl)origins[counter]);

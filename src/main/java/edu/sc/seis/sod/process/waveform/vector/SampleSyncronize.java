@@ -1,12 +1,13 @@
 package edu.sc.seis.sod.process.waveform.vector;
 
-import edu.iris.Fissures.FissuresException;
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
-import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.model.common.FissuresException;
+import edu.sc.seis.sod.model.common.Time;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.station.ChannelGroup;
 
 
 public class SampleSyncronize implements WaveformVectorProcess {
@@ -45,7 +46,7 @@ public class SampleSyncronize implements WaveformVectorProcess {
                                                                               shifty.getSampling().getPeriod().getValue()),
                                                            shifty.getSampling().getPeriod().getUnit());
         LocalSeismogramImpl out = new LocalSeismogramImpl(shifty, shifty.getData());
-        out.begin_time = shifty.getBeginTime().subtract(moduleSamplePeriod).getFissuresTime();
+        out.begin_time = new Time(shifty.getBeginTime().subtract(moduleSamplePeriod));
         return out;
     }
     

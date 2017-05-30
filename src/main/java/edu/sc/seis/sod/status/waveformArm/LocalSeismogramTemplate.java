@@ -19,9 +19,8 @@ import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.w3c.dom.Element;
 
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.process.waveform.LocalSeismogramTemplateGenerator;
 import edu.sc.seis.sod.status.FileWritingTemplate;
 import edu.sc.seis.sod.status.GenericTemplate;
@@ -29,6 +28,7 @@ import edu.sc.seis.sod.status.MenuTemplate;
 import edu.sc.seis.sod.status.OutputScheduler;
 import edu.sc.seis.sod.status.Template;
 import edu.sc.seis.sod.status.TemplateFileLoader;
+import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
 
 public class LocalSeismogramTemplate extends Template{
     public LocalSeismogramTemplate(Element el, String baseDir)

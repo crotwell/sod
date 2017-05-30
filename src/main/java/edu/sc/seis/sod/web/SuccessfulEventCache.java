@@ -7,12 +7,12 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import edu.sc.seis.sod.Stage;
-import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.hibernate.SodDB;
-import edu.sc.seis.sod.hibernate.StatefulEvent;
 import edu.sc.seis.sod.hibernate.StatefulEventDB;
+import edu.sc.seis.sod.model.event.StatefulEvent;
+import edu.sc.seis.sod.model.status.Stage;
+import edu.sc.seis.sod.model.status.Standing;
 import edu.sc.seis.sod.status.eventArm.EventMonitor;
 
 public class SuccessfulEventCache {

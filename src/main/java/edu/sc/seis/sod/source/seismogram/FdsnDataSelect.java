@@ -7,27 +7,12 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.stream.XMLStreamException;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.FissuresException;
-import edu.iris.Fissures.IfNetwork.ChannelId;
-import edu.iris.Fissures.IfNetwork.NetworkId;
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.network.ChannelIdUtil;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.iris.Fissures.seismogramDC.RequestFilterUtil;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.chooser.CoarseAvailableData;
-import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockStation;
-import edu.sc.seis.fissuresUtil.mseed.FissuresConvert;
-import edu.sc.seis.fissuresUtil.time.MicroSecondTimeRange;
-import edu.sc.seis.fissuresUtil.time.ReduceTool;
 import edu.sc.seis.seisFile.ChannelTimeWindow;
 import edu.sc.seis.seisFile.SeisFileException;
 import edu.sc.seis.seisFile.fdsnws.AbstractFDSNQuerier;
@@ -45,15 +30,22 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.StationIterator;
 import edu.sc.seis.seisFile.mseed.DataRecord;
 import edu.sc.seis.seisFile.mseed.DataRecordIterator;
 import edu.sc.seis.sod.BuildVersion;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.source.AbstractSource;
+import edu.sc.seis.sod.model.common.FissuresException;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.station.ChannelId;
+import edu.sc.seis.sod.model.station.ChannelIdUtil;
+import edu.sc.seis.sod.model.station.NetworkId;
 import edu.sc.seis.sod.source.event.FdsnEvent;
 import edu.sc.seis.sod.source.network.FdsnStation;
-import edu.sc.seis.sod.source.network.InstrumentationFromDB;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.source.network.WrappingNetworkSource;
+import edu.sc.seis.sod.util.convert.mseed.FissuresConvert;
+import edu.sc.seis.sod.util.time.ReduceTool;
 
 public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements SeismogramSourceLocator {
 
@@ -153,7 +145,7 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
                         for (MicroSecondTimeRange range : avail) {
                             MicroSecondTimeRange intersect = reqRange.intersection(range);
                             if (intersect != null) {
-                                out.add(new RequestFilter(rf.channel_id, intersect.getBeginTime().getFissuresTime(), intersect.getEndTime().getFissuresTime()));
+                                out.add(new RequestFilter(rf.channel_id, intersect.getBeginTime(), intersect.getEndTime()S));
                             }
                         }
                     } else {
@@ -231,13 +223,13 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
                                     DataAvailability da = channel.getDataAvailability();
                                     if (da != null && da.getExtent() != null) {
                                         out.add(new RequestFilter(new ChannelId(new NetworkId(n.getCode(),
-                                                                                              new MicroSecondDate(n.getStartDate()).getFissuresTime()),
+                                                                                              new MicroSecondDate(n.getStartDate())),
                                                                                 s.getCode(),
                                                                                 channel.getLocCode(),
                                                                                 channel.getCode(),
-                                                                                new MicroSecondDate(channel.getStartDate()).getFissuresTime()),
-                                                                  new MicroSecondDate(da.getExtent().getStart()).getFissuresTime(),
-                                                                  new MicroSecondDate(da.getExtent().getEnd()).getFissuresTime()));
+                                                                                new MicroSecondDate(channel.getStartDate())),
+                                                                  new MicroSecondDate(da.getExtent().getStart()),
+                                                                  new MicroSecondDate(da.getExtent().getEnd())));
                                     } else {
 //                                        logger.info("No DataAvailability for "+n.getCode()+"."+s.getCode()+"."+
 //                                                                                channel.getLocCode()+"."+

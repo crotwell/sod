@@ -9,10 +9,10 @@
                 <summary>All of the items that process seismograms</summary>
                 <description>At this point in the waveform arm, data has been retrieved. Therefore, these items all work
                     on the received data. Some of them like rMean and rTrend perform manipulations on the data. Others
-                    like sacWriter and seismogramImageProcess write out information based on the data. Some
+                    like sacWriter write out information based on the data. Some
                     like fullDataCoverage and phaseSignalToNoise subset the items based on the data&apos;s
                     properties. If several items are used, the data from each step feeds into the next. So if a
-                    seismogramImageProcessor follows a phaseCut the image drawn will be of the data after the cut. If
+                    sacWriter follows a phaseCut the file saved will be of the data after the cut. If
                     you don&apos;t want a processor&apos;s work to effect later steps use the forkProcess to
                     isolate it.</description>
                 <include/>
@@ -23,7 +23,6 @@
             <ref name="mseedWriter"/>
             <ref name="asciiWriter"/>
             <ref name="wavWriter"/>
-            <ref name="recordSectionDisplayGenerator"/>
             <ref name="responseGain"/>
             <ref name="phaseCut"/>
             <ref name="requestCut"/>
@@ -42,7 +41,6 @@
             <ref name="seismogramAlwaysSuccess"/>
             <ref name="phaseSignalToNoise"/>
             <ref name="compoundPhaseSignalToNoise"/>
-            <ref name="seismogramImageProcess"/>
             <ref name="legacyExecute"/>
             <ref name="seismogramAND"/>
             <ref name="seismogramOR"/>
@@ -674,114 +672,6 @@
             </optional>
         </interleave>
     </define>
-    <define name="recordSectionDisplayGenerator">
-        <element name="recordSectionDisplayGenerator">
-            <xsd:annotation>
-                <summary>Generates the recordsection display for each event</summary>
-                <description>Loads seismograms from files created by the sacWriter or mseedWriter processor and generates the
-                    recordsection image file</description>
-                <example>
-                    <recordSectionDisplayGenerator>
-                        <id>RecordSection_</id>
-                        <fileNameBase>recordSection</fileNameBase>
-                        <idealNumberOfSeismograms>10</idealNumberOfSeismograms>
-                        <distanceRange>
-                            <min>0</min>
-                            <max>180</max>
-                        </distanceRange>
-                        <recordSectionSize>
-                            <width>400</width>
-                            <height>400</height>
-                        </recordSectionSize>
-                    </recordSectionDisplayGenerator>
-                </example>
-            </xsd:annotation>
-            <element name="orientationId">
-                <data type="string"/>
-            </element>
-            <element name="recordSectionId">
-                <data type="string"/>
-            </element>
-            <optional>
-                <element name="writerName">
-                    <data type="string"/>
-                </element>
-            </optional>
-            <optional>
-                <ref name="workingDir"/>
-            </optional>
-            <optional>
-                <ref name="seisFileLocation"/>
-            </optional>
-            <optional>
-                <element name="eventChannelSubsetter">
-                    <ref name="eventChannelPlus"/>
-                </element>
-            </optional>
-            <optional>
-                <element name="fileNameBase">
-                    <data type="string"/>
-                </element>
-            </optional>
-            <optional>
-                <element name="idealNumberOfSeismograms">
-                    <xsd:annotation>
-                        <description>specifies the ideal number of seismograms to include in this record section. If
-                            possible, this many evenly spaced seismograms will be included</description>
-                    </xsd:annotation>
-                    <data type="integer"/>
-                </element>
-            </optional>
-            <optional>
-                <element name="maxNumberOfSeismograms">
-                    <xsd:annotation>
-                        <description>specifies the maximum number of seismograms to include in this record section. If
-                            the spacing of the ideal number is less than satisfactory, this many seismograms may be included</description>
-                    </xsd:annotation>
-                    <data type="integer"/>
-                </element>
-            </optional>
-            <optional>
-                <element name="distanceRange">
-                    <ref name="degreeRange"/>
-                </element>
-            </optional>
-            <optional>
-                <element name="percentSeisHeight">
-                    <xsd:annotation>
-                        <description>Height of the seismogram as a percentage of recordsection height</description>
-                    </xsd:annotation>
-                    <data type="double"/>
-                </element>
-            </optional>
-            <optional>
-                <ref name="recordSectionSize"/>
-            </optional>
-            <element name="displayConfig">
-                <ref name="recordSectionDisplayContents"/>
-            </element>
-        </element>
-    </define>
-    <define name="recordSectionSize">
-        <element name="recordSectionSize">
-            <xsd:annotation>
-                <summary>Specifies the size of the recordsection</summary>
-                <description>Specifies the size of the recordsection</description>
-                <example>
-                    <recordSectionSize>
-                        <width>500</width>
-                        <height>500</height>
-                    </recordSectionSize>
-                </example>
-            </xsd:annotation>
-            <element name="width">
-                <data type="integer"/>
-            </element>
-            <element name="height">
-                <data type="integer"/>
-            </element>
-        </element>
-    </define>
     <define name="externalWaveformProcess">
         <element name="externalWaveformProcess">
             <xsd:annotation>
@@ -1033,19 +923,6 @@ result = util.waveformResult(True, out)
             <element name="ratio">
                 <data type="float"/>
             </element>
-        </element>
-    </define>
-    <define name="seismogramImageProcess">
-        <element name="seismogramImageProcess">
-            <xsd:annotation>
-                <summary>Make images of the processed seismograms</summary>
-            </xsd:annotation>
-            <ref name="seismogramImageBase"/>
-            <optional>
-                <element name="displayConfig">
-                    <ref name="basicSeismogramDisplayContents"/>
-                </element>
-            </optional>
         </element>
     </define>
     <define name="legacyExecute">

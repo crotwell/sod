@@ -2,13 +2,13 @@ package edu.sc.seis.sod.process.waveform;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.measure.ArrayMeasurement;
 import edu.sc.seis.sod.measure.Measurement;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.station.ChannelImpl;
 ;
 public class OregonDspFFT extends AbstractWaveformMeasure {
 
@@ -30,23 +30,23 @@ public class OregonDspFFT extends AbstractWaveformMeasure {
     }
 
     public static float[] forward(float[] realData) {
-        return edu.sc.seis.fissuresUtil.bag.OregonDspFFT.forward(realData);
+        return OregonDspFFT.forward(realData);
     }
     
     /**
      * Performs the inverse fft operation of the realFFT call. 
      */
     public static float[] inverse(float[] realData) {
-        return edu.sc.seis.fissuresUtil.bag.OregonDspFFT.inverse(realData);
+        return OregonDspFFT.inverse(realData);
     }
 
 
     public static float[] correlate(float[] x, float[] y) {
-        return edu.sc.seis.fissuresUtil.bag.OregonDspFFT.correlate(x, y);
+        return OregonDspFFT.correlate(x, y);
     }
 
     public static float[] convolve(float[] x, float[] y, float delta) {
-        return edu.sc.seis.fissuresUtil.bag.OregonDspFFT.convolve(x, y, delta);
+        return OregonDspFFT.convolve(x, y, delta);
     }
 
 

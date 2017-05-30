@@ -5,11 +5,11 @@ import java.util.regex.Pattern;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.FilterNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.FilterNetworkDC;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;

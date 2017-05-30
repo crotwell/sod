@@ -1,6 +1,6 @@
 package edu.sc.seis.sod.status;
 
-import edu.sc.seis.fissuresUtil.exceptionHandler.ExceptionReporterUtils;
+import edu.sc.seis.sod.util.exceptionHandler.ExceptionReporterUtils;
 
 public class StringTreeBranch extends StringTree {
 

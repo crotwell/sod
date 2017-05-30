@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.network.ChannelImpl;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;

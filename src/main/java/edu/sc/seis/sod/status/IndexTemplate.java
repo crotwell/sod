@@ -14,23 +14,21 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.fissuresUtil.exceptionHandler.HTMLReporter;
 import edu.sc.seis.sod.AbstractWaveformRecipe;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventArm;
-import edu.sc.seis.sod.EventChannelPair;
-import edu.sc.seis.sod.EventNetworkPair;
-import edu.sc.seis.sod.EventStationPair;
-import edu.sc.seis.sod.EventVectorPair;
 import edu.sc.seis.sod.NetworkArm;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.Stage;
-import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.Status;
+import edu.sc.seis.sod.hibernate.eventpair.EventChannelPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventNetworkPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventStationPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventVectorPair;
+import edu.sc.seis.sod.model.station.NetworkAttrImpl;
+import edu.sc.seis.sod.model.status.Stage;
+import edu.sc.seis.sod.model.status.Standing;
+import edu.sc.seis.sod.model.status.Status;
 import edu.sc.seis.sod.process.waveform.LocalSeismogramTemplateGenerator;
 import edu.sc.seis.sod.status.eventArm.EventStatusTemplate;
 import edu.sc.seis.sod.status.eventArm.MapEventStatus;
@@ -39,6 +37,8 @@ import edu.sc.seis.sod.status.waveformArm.WaveformEventTemplateGenerator;
 import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
 import edu.sc.seis.sod.status.waveformArm.WaveformNetworkStatus;
 import edu.sc.seis.sod.status.waveformArm.WaveformStationStatus;
+import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.util.exceptionHandler.HTMLReporter;
 
 public class IndexTemplate extends FileWritingTemplate implements
         WaveformMonitor {

@@ -8,37 +8,36 @@ import java.util.List;
 import java.util.Queue;
 
 import org.hibernate.LockMode;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.dialect.function.SQLFunctionTemplate;
 
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.ChannelId;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.network.ChannelIdUtil;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.network.NetworkAttrImpl;
-import edu.iris.Fissures.network.StationImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
-import edu.sc.seis.fissuresUtil.database.ConnMgr;
-import edu.sc.seis.fissuresUtil.hibernate.AbstractHibernateDB;
-import edu.sc.seis.sod.AbstractEventChannelPair;
-import edu.sc.seis.sod.AbstractEventPair;
-import edu.sc.seis.sod.EventChannelPair;
-import edu.sc.seis.sod.EventNetworkPair;
-import edu.sc.seis.sod.EventStationPair;
-import edu.sc.seis.sod.EventVectorPair;
 import edu.sc.seis.sod.QueryTime;
 import edu.sc.seis.sod.RunProperties;
 import edu.sc.seis.sod.SodConfig;
-import edu.sc.seis.sod.Stage;
-import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.Status;
-import edu.sc.seis.sod.Version;
+import edu.sc.seis.sod.VersionHistory;
+import edu.sc.seis.sod.hibernate.eventpair.AbstractEventChannelPair;
+import edu.sc.seis.sod.hibernate.eventpair.AbstractEventPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventChannelPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventNetworkPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventStationPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventVectorPair;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.common.Version;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.event.StatefulEvent;
+import edu.sc.seis.sod.model.station.ChannelId;
+import edu.sc.seis.sod.model.station.ChannelIdUtil;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.model.station.NetworkAttrImpl;
+import edu.sc.seis.sod.model.station.StationImpl;
+import edu.sc.seis.sod.model.status.Stage;
+import edu.sc.seis.sod.model.status.Standing;
+import edu.sc.seis.sod.model.status.Status;
+import edu.sc.seis.sod.util.time.ClockUtil;
 
 public class SodDB extends AbstractHibernateDB {
 
@@ -103,7 +102,7 @@ public class SodDB extends AbstractHibernateDB {
         standingList += " ) ";
         String query;
         String setStmt;
-        if(processingRule.equals(RunProperties.AT_LEAST_ONCE)) {
+        if(processingRule.equals(AT_LEAST_ONCE)) {
             setStmt = " stageInt = "+Stage.EVENT_CHANNEL_POPULATION.getVal()+", standingInt = "+Standing.INIT.getVal();
         } else {
             setStmt = " standingInt = "+Standing.SYSTEM_FAILURE.getVal();
@@ -452,7 +451,7 @@ public class SodDB extends AbstractHibernateDB {
     public EventVectorPair put(EventVectorPair eventVectorPair) {
         Session session = getSession();
         session.lock(eventVectorPair.getEvent(), LockMode.NONE);
-        Channel[] chan = eventVectorPair.getChannelGroup().getChannels();
+        ChannelImpl[] chan = eventVectorPair.getChannelGroup().getChannels();
         for(int i = 0; i < chan.length; i++) {
             session.lock(chan[i], LockMode.NONE);
         }
@@ -1008,14 +1007,14 @@ public class SodDB extends AbstractHibernateDB {
             Version out = (Version)result.get(0);
             return out;
         }
-        Version v = Version.current();
+        Version v = VersionHistory.current();
         session.save(v);
         return v;
     }
 
     protected Version putDBVersion() {
         Version v = getDBVersion();
-        Version current = Version.current();
+        Version current = VersionHistory.current();
         current.setDbid(v.getDbid());
         getSession().merge(current);
         commit();
@@ -1117,5 +1116,10 @@ public class SodDB extends AbstractHibernateDB {
     }
 
     private static SodDB singleton;
+    
+
+    public static final String AT_LEAST_ONCE = "atLeastOnce";
+
+    public static final String AT_MOST_ONCE = "atMostOnce";
     
 }

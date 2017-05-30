@@ -14,28 +14,26 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import edu.iris.Fissures.FissuresException;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.TauP.TauModelException;
-import edu.sc.seis.fissuresUtil.bag.LongShortTrigger;
-import edu.sc.seis.fissuresUtil.bag.PhaseNonExistent;
-import edu.sc.seis.fissuresUtil.bag.SimplePhaseStoN;
-import edu.sc.seis.fissuresUtil.bag.TauPUtil;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Threadable;
+import edu.sc.seis.sod.bag.LongShortTrigger;
+import edu.sc.seis.sod.bag.PhaseNonExistent;
+import edu.sc.seis.sod.bag.SimplePhaseStoN;
+import edu.sc.seis.sod.bag.TauPUtil;
+import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.measure.ListMeasurement;
 import edu.sc.seis.sod.measure.Measurement;
 import edu.sc.seis.sod.measure.ScalarMeasurement;
 import edu.sc.seis.sod.measure.TimeMeasurement;
+import edu.sc.seis.sod.model.common.FissuresException;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.event.NoPreferredOrigin;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
 /** Calculates triggers, via LongShortSignalToNoise, and checks to see if a
@@ -126,8 +124,8 @@ public class PhaseSignalToNoise  implements WaveformProcess, Threadable {
     /** This method exists to make the trigger available to other subsetters
      * or processors so they don't have to call accept, which adds it to the
      * cookieJar. */
-    public LongShortTrigger calcTrigger(EventAccessOperations event,
-                                        Channel channel,
+    public LongShortTrigger calcTrigger(CacheEvent event,
+                                        ChannelImpl channel,
                                         LocalSeismogramImpl[] seismograms) throws NoPreferredOrigin, FissuresException, PhaseNonExistent, TauModelException {
         // find the first seismogram with a non-null trigger, probably the first
         // that overlaps the timewindow, and return it.

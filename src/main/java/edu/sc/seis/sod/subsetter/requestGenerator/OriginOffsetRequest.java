@@ -2,17 +2,17 @@ package edu.sc.seis.sod.subsetter.requestGenerator;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfEvent.Origin;
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.event.OriginImpl;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.sod.util.display.EventUtil;
 
 /**
  * OriginOffsetRequest.java Created: Wed Apr 2 16:06:39 2003
@@ -33,13 +33,13 @@ public class OriginOffsetRequest implements RequestGenerator {
                                            ChannelImpl channel,
                                            CookieJar cookieJar)
             throws Exception {
-        Origin origin = EventUtil.extractOrigin(event);
+        OriginImpl origin = EventUtil.extractOrigin(event);
         MicroSecondDate originDate = new MicroSecondDate(origin.getOriginTime());
         MicroSecondDate bDate = originDate.add(beginOffset);
         MicroSecondDate eDate = originDate.add(endOffset);
         RequestFilter[] filters = {new RequestFilter(channel.get_id(),
-                                                     bDate.getFissuresTime(),
-                                                     eDate.getFissuresTime())};
+                                                     bDate,
+                                                     eDate)};
         return filters;
     }
 

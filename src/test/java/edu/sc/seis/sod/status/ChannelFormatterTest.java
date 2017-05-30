@@ -3,14 +3,13 @@ package edu.sc.seis.sod.status;
 
 
 import java.text.SimpleDateFormat;
-import java.util.TimeZone;
 
-import junit.framework.TestCase;
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.model.ISOTime;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannel;
 import edu.sc.seis.sod.XMLConfigUtil;
+import edu.sc.seis.sod.mock.station.MockChannel;
+import edu.sc.seis.sod.model.common.ISOTime;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.station.ChannelImpl;
+import junit.framework.TestCase;
 
 public class ChannelFormatterTest extends TestCase{
     public ChannelFormatterTest(String name){ super(name); }
@@ -56,5 +55,5 @@ public class ChannelFormatterTest extends TestCase{
 
     private String close = "</channelFormat>";
 
-    private Channel chan;
+    private ChannelImpl chan;
 }

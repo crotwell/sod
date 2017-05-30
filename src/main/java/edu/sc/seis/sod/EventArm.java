@@ -12,23 +12,25 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfEvent.Origin;
-import edu.iris.Fissures.event.EventAttrImpl;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.hibernate.SodDB;
-import edu.sc.seis.sod.hibernate.StatefulEvent;
 import edu.sc.seis.sod.hibernate.StatefulEventDB;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.event.EventAttrImpl;
+import edu.sc.seis.sod.model.event.OriginImpl;
+import edu.sc.seis.sod.model.event.StatefulEvent;
+import edu.sc.seis.sod.model.status.Stage;
+import edu.sc.seis.sod.model.status.Standing;
+import edu.sc.seis.sod.model.status.Status;
 import edu.sc.seis.sod.source.event.EventSource;
 import edu.sc.seis.sod.status.OutputScheduler;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.eventArm.EventMonitor;
 import edu.sc.seis.sod.subsetter.origin.OriginSubsetter;
+import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.util.time.ClockUtil;
 
 /**
  * This class handles the subsetting of the Events based on the subsetters
@@ -175,7 +177,7 @@ public class EventArm implements Arm {
         return false;
     }
 
-    public EventAccessOperations getLastEvent() {
+    public CacheEvent getLastEvent() {
         return lastEvent;
     }
 
@@ -248,11 +250,11 @@ public class EventArm implements Arm {
      * This exists so that we can try getting more info about an event for the
      * logging without causing further exceptions.
      */
-    private String bestEffortEventToString(EventAccessOperations event) {
+    private String bestEffortEventToString(CacheEvent event) {
         String s = "";
         try {
-            Origin o = event.get_preferred_origin();
-            s = " otime=" + o.getOriginTime().date_time;
+            OriginImpl o = event.get_preferred_origin();
+            s = " otime=" + o.getOriginTime().getISOString();
             s += " loc=" + o.getLocation().latitude + ", " + o.getLocation().longitude;
         } catch(Throwable e) {
             s += e;

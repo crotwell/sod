@@ -4,16 +4,16 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.network.StationImpl;
-import edu.sc.seis.fissuresUtil.bag.DistAz;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.hibernate.SodDB;
+import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.model.common.DistAz;
+import edu.sc.seis.sod.model.common.QuantityImpl;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
@@ -35,10 +35,10 @@ public class RemoveStationDuplicate implements EventStationSubsetter {
     public boolean isDistanceClose(StationImpl staA, StationImpl staB) {
         DistAz distAz = new DistAz(staA.getLocation(), staB.getLocation());
         if (maxDistance.getUnit().isConvertableTo(UnitImpl.DEGREE)) {
-        return distAz.getDelta() < maxDistance.convertTo(UnitImpl.DEGREE).value;
+        return distAz.getDelta() < maxDistance.convertTo(UnitImpl.DEGREE).getValue();
         } else {
             // use earth radius of 6371 km
-            return distAz.getDelta()*6371 < maxDistance.convertTo(UnitImpl.KILOMETER).value;
+            return distAz.getDelta()*6371 < maxDistance.convertTo(UnitImpl.KILOMETER).getValue();
         }
     }
     

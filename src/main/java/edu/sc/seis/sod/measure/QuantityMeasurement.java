@@ -2,7 +2,8 @@ package edu.sc.seis.sod.measure;
 
 import org.json.JSONObject;
 
-import edu.iris.Fissures.model.QuantityImpl;
+import edu.sc.seis.sod.model.common.QuantityImpl;
+
 
 
 public class QuantityMeasurement extends Measurement {
@@ -21,8 +22,8 @@ public class QuantityMeasurement extends Measurement {
     @Override
     public JSONObject valueAsJSON() {
         JSONObject out = new JSONObject();
-        out.append("unit", quantity.the_units.name);
-        out.append("value", quantity.value);
+        out.append("unit", quantity.getUnit().name);
+        out.append("value", quantity.getValue());
         return out;
     }
 

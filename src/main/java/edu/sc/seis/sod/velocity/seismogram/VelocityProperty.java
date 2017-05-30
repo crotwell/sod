@@ -1,6 +1,6 @@
 package edu.sc.seis.sod.velocity.seismogram;
 
-import edu.iris.Fissures.IfSeismogramDC.Property;
+import edu.sc.seis.sod.model.seismogram.Property;
 
 public class VelocityProperty {
 

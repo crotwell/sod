@@ -4,36 +4,32 @@ import java.io.StringWriter;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.List;
-import java.util.TimeZone;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import edu.iris.Fissures.FlinnEngdahlRegion;
-import edu.iris.Fissures.FlinnEngdahlType;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
-import edu.iris.Fissures.IfEvent.Origin;
-import edu.iris.Fissures.event.OriginImpl;
-import edu.iris.Fissures.model.ISOTime;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.cache.ProxyEventAccessOperations;
-import edu.sc.seis.fissuresUtil.chooser.ThreadSafeDecimalFormat;
-import edu.sc.seis.fissuresUtil.chooser.ThreadSafeSimpleDateFormat;
-import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.fissuresUtil.xml.XMLEvent;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
+import edu.sc.seis.sod.model.common.ISOTime;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.QuantityImpl;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.event.FlinnEngdahlRegion;
+import edu.sc.seis.sod.model.event.FlinnEngdahlType;
+import edu.sc.seis.sod.model.event.NoPreferredOrigin;
+import edu.sc.seis.sod.model.event.OriginImpl;
 import edu.sc.seis.sod.status.FissuresFormatter;
+import edu.sc.seis.sod.util.display.ParseRegions;
+import edu.sc.seis.sod.util.display.ThreadSafeDecimalFormat;
+import edu.sc.seis.sod.util.display.ThreadSafeSimpleDateFormat;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 import edu.sc.seis.sod.velocity.network.VelocityStation;
 
 /**
  * @author groves Created on Dec 14, 2004
  */
-public class VelocityEvent extends ProxyEventAccessOperations {
+public class VelocityEvent extends CacheEvent {
 
     public VelocityEvent(CacheEvent event) {
         if (event == null) {throw new NullPointerException("event cannot be null");}
@@ -160,7 +156,7 @@ public class VelocityEvent extends ProxyEventAccessOperations {
 
     public String getDepth(String format) {
         double depthInKM = QuantityImpl.createQuantityImpl(origin.getLocation().depth)
-                .convertTo(UnitImpl.KILOMETER).value;
+                .convertTo(UnitImpl.KILOMETER).getValue();
         return new DecimalFormat(format).format(depthInKM);
     }
 
@@ -170,7 +166,7 @@ public class VelocityEvent extends ProxyEventAccessOperations {
 
     public String getElevation(String format) {
         double elevInMeters = QuantityImpl.createQuantityImpl(origin.getLocation().elevation)
-                .convertTo(UnitImpl.METER).value;
+                .convertTo(UnitImpl.METER).getValue();
         return new DecimalFormat(format).format(elevInMeters);
     }
 
@@ -216,7 +212,7 @@ public class VelocityEvent extends ProxyEventAccessOperations {
         return getCacheEvent().getPreferred();
     }
     
-    public Origin[] getOrigins() {
+    public OriginImpl[] getOrigins() {
         return getCacheEvent().getOrigins();
     }
 
@@ -253,13 +249,6 @@ public class VelocityEvent extends ProxyEventAccessOperations {
         return position;
     }
 
-    public String toXML() throws XMLStreamException {
-        StringWriter writer = new StringWriter();
-        XMLStreamWriter xmlWriter = XMLUtil.getStaxOutputFactory().createXMLStreamWriter(writer);
-        XMLEvent.insert(xmlWriter, this);
-        return writer.toString();
-    }
-
     public String getURL() {
         return "earthquakes/" + makeDateIdentifier(this);
     }
@@ -286,7 +275,7 @@ public class VelocityEvent extends ProxyEventAccessOperations {
         }
     }
 
-    private Origin origin;
+    private OriginImpl origin;
 
     private int[] position;
 
@@ -297,12 +286,12 @@ public class VelocityEvent extends ProxyEventAccessOperations {
     public static VelocityEvent[] wrap(List evs) {
         VelocityEvent[] velEvs = new VelocityEvent[evs.size()];
         for(int i = 0; i < velEvs.length; i++) {
-            velEvs[i] = wrap((EventAccessOperations)evs.get(i));
+            velEvs[i] = wrap((CacheEvent)evs.get(i));
         }
         return velEvs;
     }
 
-    public static VelocityEvent[] wrap(EventAccessOperations[] evs) {
+    public static VelocityEvent[] wrap(CacheEvent[] evs) {
         VelocityEvent[] velEvs = new VelocityEvent[evs.length];
         for(int i = 0; i < velEvs.length; i++) {
             velEvs[i] = wrap(evs[i]);
@@ -310,13 +299,11 @@ public class VelocityEvent extends ProxyEventAccessOperations {
         return velEvs;
     }
 
-    public static VelocityEvent wrap(EventAccessOperations event) {
+    public static VelocityEvent wrap(CacheEvent event) {
         if(event instanceof VelocityEvent) {
             return (VelocityEvent)event;
-        } else if(event instanceof CacheEvent) {
-            return new VelocityEvent((CacheEvent)event);
         } else {
-            return new VelocityEvent(new CacheEvent(event));
+            return new VelocityEvent(event);
         }
     }
 }

@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.network.NetworkAttrImpl;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.model.station.NetworkAttrImpl;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.subsetter.LogicalSubsetter;
