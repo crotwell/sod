@@ -28,8 +28,6 @@ dependencies {
     compile "com.martiansoftware:jsap:2.1"
     compile "thaiopensource:jing:20091111"
     compile "rngconvUSC:rngconv:20030225"
-    compile "de.erichseifert.gral:VectorGraphics2D:0.9"
-    compile "de.erichseifert.gral:gral-core:0.9"
     compile "org.eclipse.jetty:jetty-servlet:9.4.5+"
     compile 'org.json:json:20140107'
 

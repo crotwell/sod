@@ -33,7 +33,6 @@
             <ref name="taper"/>
             <ref name="externalWaveformProcess"/>
             <ref name="seismogramScript"/>
-            <ref name="localSeismogramStatus"/>
             <ref name="filter"/>
             <ref name="oregonDSPFFT"/>
             <ref name="oregonDSPFilter"/>
@@ -754,20 +753,6 @@ result = util.waveformResult(True, out)
                     </element>
                 </optional>
             </interleave>
-        </element>
-    </define>
-    <define name="localSeismogramStatus">
-        <element name="localSeismogramTemplateGenerator">
-            <xsd:annotation>
-                <summary>Generate HTML status pages about the processed seismograms</summary>
-            </xsd:annotation>
-            <element name="template">
-                <data type="string">
-                    <xsd:annotation>
-                        <example>jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml</example>
-                    </xsd:annotation>
-                </data>
-            </element>
         </element>
     </define>
     <define name="forkProcess">
