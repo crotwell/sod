@@ -22,6 +22,7 @@ import edu.sc.seis.seisFile.client.AbstractClient;
 import edu.sc.seis.sod.Args;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.UserConfigurationException;
+import edu.sc.seis.sod.VersionHistory;
 import edu.sc.seis.sod.hibernate.Initializer;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
@@ -110,7 +111,7 @@ public class CommandLineTool extends AbstractClient {
             System.exit(0);
         }
         if(ls.shouldPrintVersion()) {
-            System.err.println(ls.commandName + " " + Version.current().getVersion());
+            System.err.println(ls.commandName + " " + VersionHistory.current().getVersion());
             System.exit(0);
         }
         if(!ls.isSuccess()) {
