@@ -1,18 +1,15 @@
 package edu.sc.seis.sod.hibernate;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 
 import edu.sc.seis.fissuresUtil.xml.URLDataSetSeismogram;
 import edu.sc.seis.sod.bag.Cut;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
@@ -74,7 +71,8 @@ public class SeismogramFileRefDB extends AbstractHibernateDB {
                 + "  found:" + esRefList.size());
         return esRefList;
     }
-
+    
+/*
     public URLDataSetSeismogram getDataSetSeismogram(ChannelId chan, CacheEvent event, RequestFilter rf) {
         logger.debug("getDataSetSeismogram: " + getTXID() + "  " + ChannelIdUtil.toStringNoDates(chan) + "  " + event
                 + "  " + rf.start_time.getISOTime() + "  " + rf.end_time.getISOTime());
@@ -100,7 +98,8 @@ public class SeismogramFileRefDB extends AbstractHibernateDB {
                                         ChannelIdUtil.toStringFormatDates(chan),
                                         rf);
     }
-
+*/
+    
     public RequestFilter[] findMatchingSeismograms(RequestFilter[] requestArray, boolean ignoreNetworkTimes) {
         List results = queryDatabaseForSeismograms(requestArray, false, ignoreNetworkTimes);
         RequestFilter[] request = (RequestFilter[])results.toArray(new RequestFilter[results.size()]);
@@ -171,17 +170,13 @@ public class SeismogramFileRefDB extends AbstractHibernateDB {
                 try {
                     File seismogramFile = new File(seisRef.getFilePath());
                     SeismogramFileTypes filetype = SeismogramFileTypes.fromInt(seisRef.getFileType());
-                    LocalSeismogramImpl[] curSeis;
+                    LocalSeismogramImpl curSeis = URLDataSetSeismogram.getSeismogram(seismogramFile, filetype);
                     
-                    URLDataSetSeismogram urlSeis = new URLDataSetSeismogram(seismogramFile.toURL(), filetype);
-                    curSeis = urlSeis.getSeismograms();
-                    
-                    for (int j = 0; j < curSeis.length; j++) {
-                        LocalSeismogramImpl seis = cutter.applyEncoded(curSeis[j]);
+                        LocalSeismogramImpl seis = cutter.applyEncoded(curSeis);
                         if (seis != null) {
                             resultCollector.add(seis);
                         }
-                    }
+                    
                 } catch(Exception e) {
                     GlobalExceptionHandler.handle("Problem occured while returning seismograms from the database."
                             + "\n" + "The problem file is located at " + seisRef.getFilePath(), e);

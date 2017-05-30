@@ -7,7 +7,6 @@ import java.io.FileOutputStream;
 
 import org.w3c.dom.Element;
 
-import edu.sc.seis.fissuresUtil.sound.FissuresToWAV;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.hibernate.SeismogramFileTypes;
@@ -44,7 +43,7 @@ public class WavWriter extends AbstractSeismogramWriter {
     @Override
     public void write(String loc, LocalSeismogramImpl seis, ChannelImpl chan, CacheEvent ev) throws Exception {
         File f = new File(loc);
-        FissuresToWAV fisToWAV = new FissuresToWAV(seis, speedup);
+        edu.sc.seis.sod.util.convert.wav.FissuresToWAV fisToWAV = new edu.sc.seis.sod.util.convert.wav.FissuresToWAV(seis, speedup);
         DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(f)));
         fisToWAV.writeWAV(out, new MicroSecondTimeRange(seis));
         out.close();
