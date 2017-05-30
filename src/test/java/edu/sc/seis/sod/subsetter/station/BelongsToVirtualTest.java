@@ -2,21 +2,17 @@ package edu.sc.seis.sod.subsetter.station;
 
 import java.util.List;
 
-import junit.framework.TestCase;
-import edu.iris.Fissures.IfNetwork.NetworkNotFound;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.network.NetworkAttrImpl;
-import edu.iris.Fissures.network.StationImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
-import edu.sc.seis.fissuresUtil.cache.VestingNetworkDC;
-import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockNetworkAttr;
-import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockStation;
-import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.NamedNetDC;
-import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
 import edu.sc.seis.sod.UserConfigurationException;
+import edu.sc.seis.sod.hibernate.NetworkNotFound;
 import edu.sc.seis.sod.mock.MockNetworkSource;
-import edu.sc.seis.sod.source.network.NetworkFinder;
+import edu.sc.seis.sod.mock.station.MockNetworkAttr;
+import edu.sc.seis.sod.mock.station.MockStation;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.station.CacheNetworkAccess;
+import edu.sc.seis.sod.model.station.NetworkAttrImpl;
+import edu.sc.seis.sod.model.station.StationImpl;
+import junit.framework.TestCase;
 
 public class BelongsToVirtualTest extends TestCase {
 

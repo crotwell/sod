@@ -9,12 +9,12 @@ import org.w3c.dom.Element;
 
 import com.csvreader.CsvReader;
 
-import edu.iris.Fissures.Time;
-import edu.iris.Fissures.model.ISOTime;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.model.UnsupportedFormat;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.UserConfigurationException;
+import edu.sc.seis.sod.model.common.ISOTime;
+import edu.sc.seis.sod.model.common.Time;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.common.UnsupportedFormat;
 
 
 public abstract class AbstractCSVSource extends AbstractSource {
@@ -61,8 +61,8 @@ public abstract class AbstractCSVSource extends AbstractSource {
     public static final String DEPTH_UNITS = "depthUnits";
     public static final String ELEVATION_UNITS = "elevationUnits";
     public static final String UNKNOWN = "unknown";
-    public static final Time DEFAULT_TIME = new Time("1970-01-01T00:00:00Z", 0);
-    public static final Time DEFAULT_END = edu.iris.Fissures.model.TimeUtils.timeUnknown;
+    public static final Time DEFAULT_TIME = new Time("1970-01-01T00:00:00Z");
+    public static final Time DEFAULT_END = new Time(ISOTime.future);
 
     public List<String> validateHeaders(CsvReader csvReader) throws IOException, FileNotFoundException,
             ConfigurationException {
@@ -129,12 +129,12 @@ public abstract class AbstractCSVSource extends AbstractSource {
     public static Time loadTime(List<String> headers, CsvReader csvReader, String headerName, Time defaultTime)
             throws UserConfigurationException, IOException {
                 if(headers.contains(headerName)) {
-                    Time time = new Time(csvReader.get(headerName), 0);
+                    Time time;
                     try {
-                        new ISOTime(time.date_time);
+                        time = new Time(csvReader.get(headerName));
                     } catch(UnsupportedFormat uf) {
                         throw new UserConfigurationException("The time '"
-                                                             + time.date_time + "' in record "
+                                                             + csvReader.get(headerName) + "' in record "
                                                              + csvReader.getCurrentRecord() + ", column "+headerName+" is invalid.");
                     }
                 }

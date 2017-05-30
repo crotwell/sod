@@ -7,39 +7,38 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.FissuresException;
-import edu.iris.Fissures.Location;
-import edu.iris.Fissures.Orientation;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
-import edu.iris.Fissures.IfEvent.Origin;
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.ChannelId;
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.SamplingImpl;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.network.ChannelIdUtil;
-import edu.iris.Fissures.network.ChannelImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
-import edu.sc.seis.fissuresUtil.bag.IncompatibleSeismograms;
-import edu.sc.seis.fissuresUtil.bag.IterDecon;
-import edu.sc.seis.fissuresUtil.bag.IterDeconResult;
-import edu.sc.seis.fissuresUtil.bag.Rotate;
-import edu.sc.seis.fissuresUtil.bag.TauPUtil;
-import edu.sc.seis.fissuresUtil.bag.ZeroPowerException;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.bag.IncompatibleSeismograms;
+import edu.sc.seis.sod.bag.IterDecon;
+import edu.sc.seis.sod.bag.IterDeconResult;
+import edu.sc.seis.sod.bag.Rotate;
+import edu.sc.seis.sod.bag.TauPUtil;
+import edu.sc.seis.sod.bag.ZeroPowerException;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.measure.ListMeasurement;
 import edu.sc.seis.sod.measure.Measurement;
 import edu.sc.seis.sod.measure.ScalarMeasurement;
 import edu.sc.seis.sod.measure.SeismogramMeasurement;
+import edu.sc.seis.sod.model.common.FissuresException;
+import edu.sc.seis.sod.model.common.Location;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.Orientation;
+import edu.sc.seis.sod.model.common.SamplingImpl;
+import edu.sc.seis.sod.model.common.Time;
+import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.event.NoPreferredOrigin;
+import edu.sc.seis.sod.model.event.OriginImpl;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.station.ChannelGroup;
+import edu.sc.seis.sod.model.station.ChannelId;
+import edu.sc.seis.sod.model.station.ChannelIdUtil;
+import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.process.waveform.AbstractSeismogramWriter;
 import edu.sc.seis.sod.process.waveform.MseedWriter;
 import edu.sc.seis.sod.process.waveform.SacWriter;
@@ -106,8 +105,8 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
                           RequestFilter[][] available,
                           LocalSeismogramImpl[][] seismograms,
                           CookieJar cookieJar) throws Exception {
-            Channel chan = channelGroup.getChannels()[0];
-            Origin origin = event.get_preferred_origin();
+            ChannelImpl chan = channelGroup.getChannels()[0];
+            OriginImpl origin = event.get_preferred_origin();
             ChannelId[] chanIds = new ChannelId[channelGroup.getChannels().length];
             for (int i = 0; i < chanIds.length; i++) {
                 chanIds[i] = channelGroup.getChannels()[i].get_id();
@@ -152,19 +151,19 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
         
     }
 
-    public IterDeconResult[] process(EventAccessOperations event,
+    public IterDeconResult[] process(CacheEvent event,
                                      ChannelGroup channelGroup,
                                      LocalSeismogramImpl[] localSeis) throws NoPreferredOrigin, FissuresException,
             IncompatibleSeismograms, TauModelException, ZeroPowerException {
-        Channel[] xyChan = channelGroup.getHorizontalXY();
+        ChannelImpl[] xyChan = channelGroup.getHorizontalXY();
         if (xyChan.length < 2) {
             throw new IncompatibleSeismograms("Unable to find horizontal channels: "+channelGroup.getChannel1().get_code()
                                               +" "+channelGroup.getChannel2().get_code()
                                               +" "+channelGroup.getChannel3().get_code());
         }
-        Channel xChan = xyChan[0];
-        Channel yChan = xyChan[1];
-        Channel zChan = channelGroup.getVertical();
+        ChannelImpl xChan = xyChan[0];
+        ChannelImpl yChan = xyChan[1];
+        ChannelImpl zChan = channelGroup.getVertical();
         
         if (yChan == null || xChan == null || zChan == null) {
             logger.error("problem one channel component is null ");
@@ -190,7 +189,7 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
         }
         
         Location staLoc = zChan.getSite().getStation().getLocation();
-        Origin origin = event.get_preferred_origin();
+        OriginImpl origin = event.get_preferred_origin();
         Location evtLoc = origin.getLocation();
         LocalSeismogramImpl[] rotSeis = Rotate.rotateGCP(xSeis,
                                                          xChan.getOrientation(),
@@ -235,7 +234,7 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
                                             float[] zdata,
                                             float period,
                                             Location staLoc,
-                                            Origin origin) throws TauModelException, ZeroPowerException {
+                                            OriginImpl origin) throws TauModelException, ZeroPowerException {
         if (component.length == 0) {
             throw new ArrayIndexOutOfBoundsException("Component length is " + component.length);
         }
@@ -285,7 +284,7 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
         ChannelImpl recFuncChan = new ChannelImpl(recFuncChanId, name, orientation, channelGroup.getChannel1()
                 .getSamplingInfo(), channelGroup.getChannel1().getEffectiveTime(), channelGroup.getChannel1().getSite());
         LocalSeismogramImpl predSeis = new LocalSeismogramImpl("recFunc/" + chanCode + "/" + refSeismogram.get_id(),
-                                                               begin,
+                                                               new Time(begin),
                                                                data.length,
                                                                refSeismogram.sampling_info,
                                                                unit,

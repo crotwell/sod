@@ -2,22 +2,22 @@ package edu.sc.seis.sod.process.waveform.vector;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.Location;
-import edu.iris.Fissures.Orientation;
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.network.ChannelIdUtil;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.fissuresUtil.bag.Rotate;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
-import edu.sc.seis.fissuresUtil.hibernate.ChannelGroup;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Threadable;
+import edu.sc.seis.sod.bag.Rotate;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.model.common.Location;
+import edu.sc.seis.sod.model.common.Orientation;
+import edu.sc.seis.sod.model.event.CacheEvent;
+import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.station.ChannelGroup;
+import edu.sc.seis.sod.model.station.ChannelIdUtil;
+import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.status.StringTreeLeaf;
+import edu.sc.seis.sod.util.display.EventUtil;
 
 /**
  * @author crotwell Created on May 20, 2005
@@ -49,7 +49,7 @@ public class RotateGCP implements WaveformVectorProcess, Threadable {
         }
         seismograms = trimResult.getSeismograms();
         // find x & y channel, y should be x+90 degrees and horizontal
-        Channel[] horizontal = channelGroup.getHorizontalXY(ninetyDegreeTol);
+        ChannelImpl[] horizontal = channelGroup.getHorizontalXY(ninetyDegreeTol);
         if(horizontal.length == 0) {
             Orientation o1 = channelGroup.getChannel1().getOrientation();
             Orientation o2 = channelGroup.getChannel2().getOrientation();

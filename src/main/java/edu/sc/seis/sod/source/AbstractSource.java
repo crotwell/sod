@@ -4,12 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-import edu.sc.seis.fissuresUtil.cache.ClassicRetryStrategy;
-import edu.sc.seis.fissuresUtil.cache.RetryStrategy;
-import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
-import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.UserReportRetryStrategy;
+import edu.sc.seis.sod.retry.ClassicRetryStrategy;
+import edu.sc.seis.sod.retry.RetryStrategy;
 
 public abstract class AbstractSource implements Source {
 
@@ -49,10 +47,6 @@ public abstract class AbstractSource implements Source {
 
     public int getRetries() {
         return retries;
-    }
-
-    public FissuresNamingService getFissuresNamingService() {
-        return CommonAccess.getNameService();
     }
 
     public RetryStrategy getRetryStrategy() {
