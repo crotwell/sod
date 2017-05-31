@@ -46,7 +46,7 @@ public class SampleSyncronize implements WaveformVectorProcess {
                                                                               shifty.getSampling().getPeriod().getValue()),
                                                            shifty.getSampling().getPeriod().getUnit());
         LocalSeismogramImpl out = new LocalSeismogramImpl(shifty, shifty.getData());
-        out.begin_time = new Time(shifty.getBeginTime().subtract(moduleSamplePeriod));
+        out.begin_time = shifty.getBeginTime().subtract(moduleSamplePeriod);
         return out;
     }
     

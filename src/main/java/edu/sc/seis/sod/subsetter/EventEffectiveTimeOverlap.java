@@ -1,7 +1,6 @@
 package edu.sc.seis.sod.subsetter;
 
 import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.Time;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.common.UnitImpl;
@@ -27,9 +26,8 @@ public class EventEffectiveTimeOverlap extends EffectiveTimeOverlap {
 
     static TimeRange createTimeRange(StatefulEvent event)
             throws NoPreferredOrigin {
-        Time otime = event.getOrigin().getOriginTime();
-        if (otime == null) {throw new RuntimeException("origin time is null");}
-        MicroSecondDate originTime = new MicroSecondDate(otime);
+        MicroSecondDate originTime = event.getOrigin().getOriginTime();
+        if (originTime == null) {throw new RuntimeException("origin time is null");}
         return new TimeRange(originTime,
                              originTime.add(DEFAULT_OFFSET));
     }

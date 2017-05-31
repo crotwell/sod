@@ -13,13 +13,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import edu.iris.Fissures.BoxArea;
-import edu.iris.Fissures.IfNetwork.NetworkNotFound;
-import edu.iris.Fissures.network.InstrumentationImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
-import edu.sc.seis.fissuresUtil.chooser.CoarseAvailableData;
-import edu.sc.seis.fissuresUtil.stationxml.ChannelSensitivityBundle;
-import edu.sc.seis.fissuresUtil.stationxml.StationXMLToFissures;
 import edu.sc.seis.seisFile.SeisFileException;
 import edu.sc.seis.seisFile.fdsnws.AbstractFDSNQuerier;
 import edu.sc.seis.seisFile.fdsnws.FDSNStationQuerier;
@@ -34,12 +27,14 @@ import edu.sc.seis.sod.BuildVersion;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
+import edu.sc.seis.sod.hibernate.NetworkNotFound;
+import edu.sc.seis.sod.model.common.BoxAreaImpl;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
 import edu.sc.seis.sod.model.common.QuantityImpl;
-import edu.sc.seis.sod.model.common.Time;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.station.CacheNetworkAccess;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
 import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.model.station.Instrumentation;
@@ -51,6 +46,8 @@ import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.source.SodSourceException;
 import edu.sc.seis.sod.source.event.FdsnEvent;
 import edu.sc.seis.sod.subsetter.station.StationPointDistance;
+import edu.sc.seis.sod.util.convert.stationxml.ChannelSensitivityBundle;
+import edu.sc.seis.sod.util.convert.stationxml.StationXMLToFissures;
 import edu.sc.seis.sod.util.time.ClockUtil;
 
 public class FdsnStation extends AbstractNetworkSource {
@@ -82,7 +79,7 @@ public class FdsnStation extends AbstractNetworkSource {
                 if (node instanceof Element) {
                     Element element = (Element)node;
                     if (element.getTagName().equals("stationBoxArea")) {
-                        BoxArea a = SodUtil.loadBoxArea(element);
+                        BoxAreaImpl a = SodUtil.loadBoxArea(element);
                         queryParams.area(a.min_latitude, a.max_latitude, a.min_longitude, a.max_longitude);
                     } else if (element.getTagName().equals("stationPointDistance")) {
                         StationPointDistance pd = (StationPointDistance)SodUtil.load(element, new String[] {"station"});
@@ -331,7 +328,7 @@ public class FdsnStation extends AbstractNetworkSource {
                         ChannelSensitivityBundle csb = StationXMLToFissures.convert(c, sImpl);
                         chanSensitivityMap.put(ChannelIdUtil.toString(csb.getChan().get_id()), csb.getSensitivity());
                         // first one should be right
-                        InstrumentationImpl out = StationXMLToFissures.convertInstrumentation(c); 
+                        Instrumentation out = StationXMLToFissures.convertInstrumentation(c); 
                         if (staxml != null) {
                             staxml.closeReader();
                             staxml = null;
@@ -439,7 +436,7 @@ public class FdsnStation extends AbstractNetworkSource {
         return queryParams;
     }
 
-    static void setTimeParamsToGetSingleChan(FDSNStationQueryParams staQP, Time startTime, Time endTime) {
+    static void setTimeParamsToGetSingleChan(FDSNStationQueryParams staQP, MicroSecondDate startTime, MicroSecondDate endTime) {
         staQP.setStartBefore(new MicroSecondDate(startTime).add(ONE_SECOND));
         MicroSecondDate end = new MicroSecondDate(endTime);
         if (end.before(ClockUtil.now())) {
@@ -447,7 +444,7 @@ public class FdsnStation extends AbstractNetworkSource {
         }
     }
     
-    static void setTimeParams(FDSNStationQueryParams staQP, Time startTime, Time endTime) {
+    static void setTimeParams(FDSNStationQueryParams staQP, MicroSecondDate startTime, MicroSecondDate endTime) {
         staQP.setStartTime(new MicroSecondDate(startTime).add(ONE_SECOND));
         MicroSecondDate end = new MicroSecondDate(endTime).subtract(ONE_SECOND);
         if (end.before(ClockUtil.now())) {

@@ -21,11 +21,11 @@ public class WinstonWaveServerTest extends TestCase {
     @Test
     public void testAvailable() throws Exception {
         WinstonWaveServer wws = new WinstonWaveServer("eeyore.seis.sc.edu", 16022);
-        RequestFilter rf = new RequestFilter(new ChannelId(new NetworkId("CO", new Time(ClockUtil.wayPast())),
+        RequestFilter rf = new RequestFilter(new ChannelId(new NetworkId("CO", ClockUtil.wayPast()),
                                                            "JSC",
                                                            "00",
                                                            "HHZ",
-                                                           new Time(ClockUtil.wayPast())),
+                                                           ClockUtil.wayPast()),
                                              ClockUtil.yesterday(),
                                              ClockUtil.now());
         List<RequestFilter> in = new ArrayList<RequestFilter>();
@@ -42,11 +42,11 @@ public class WinstonWaveServerTest extends TestCase {
         WinstonWaveServer wws = new WinstonWaveServer("eeyore.seis.sc.edu", 16022);
         //MicroSecondDate requestStart = new MicroSecondDate("2011-08-10T12:34:56Z");
         MicroSecondDate requestStart = ClockUtil.now().subtract(new TimeInterval(10, UnitImpl.MINUTE));
-        RequestFilter rf = new RequestFilter(new ChannelId(new NetworkId("CO", new Time(ClockUtil.wayPast())),
+        RequestFilter rf = new RequestFilter(new ChannelId(new NetworkId("CO", ClockUtil.wayPast()),
                                                            "JSC",
                                                            "00",
                                                            "HHZ",
-                                                           new Time(ClockUtil.wayPast())), 
+                                                           ClockUtil.wayPast()), 
                                                            requestStart,
                                                            requestStart.add(new TimeInterval(10, UnitImpl.MINUTE)));
         List<RequestFilter> in = new ArrayList<RequestFilter>();

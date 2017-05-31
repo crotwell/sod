@@ -27,7 +27,6 @@ import edu.sc.seis.sod.model.common.Location;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.Orientation;
 import edu.sc.seis.sod.model.common.SamplingImpl;
-import edu.sc.seis.sod.model.common.Time;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
@@ -284,7 +283,7 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
         ChannelImpl recFuncChan = new ChannelImpl(recFuncChanId, name, orientation, channelGroup.getChannel1()
                 .getSamplingInfo(), channelGroup.getChannel1().getEffectiveTime(), channelGroup.getChannel1().getSite());
         LocalSeismogramImpl predSeis = new LocalSeismogramImpl("recFunc/" + chanCode + "/" + refSeismogram.get_id(),
-                                                               new Time(begin),
+                                                               begin,
                                                                data.length,
                                                                refSeismogram.sampling_info,
                                                                unit,

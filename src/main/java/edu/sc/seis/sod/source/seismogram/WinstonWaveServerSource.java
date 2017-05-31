@@ -10,7 +10,6 @@ import edu.sc.seis.seisFile.waveserver.WaveServer;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
 import edu.sc.seis.sod.model.common.SamplingImpl;
-import edu.sc.seis.sod.model.common.Time;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
@@ -29,12 +28,8 @@ public class WinstonWaveServerSource implements SeismogramSource {
         return new MicroSecondDate(Math.round(d*1000000));
     }
     
-    public static double toEpochSeconds(Time d) {
-        return new MicroSecondDate(d).getMicroSecondTime() / 1000000.0;
-    }
-
-    public static double toY2KSeconds(Time d) {
-        return toY2KSeconds(new MicroSecondDate(d));
+    public static double toEpochSeconds(MicroSecondDate d) {
+        return d.getMicroSecondTime() / 1000000.0;
     }
     
     public static double toY2KSeconds(MicroSecondDate d) {
@@ -100,7 +95,7 @@ public class WinstonWaveServerSource implements SeismogramSource {
     
     public static LocalSeismogramImpl toFissures(TraceBuf2 buf, ChannelId chan) {
         SeismogramAttrImpl seisAttr = new SeismogramAttrImpl("via WaveServer:"+Math.random(),
-                                                         new Time(toDate(buf.getStartTime())),
+                                                         new MicroSecondDate(toDate(buf.getStartTime())),
                                                          buf.getNumSamples(),
                                                          new SamplingImpl(1,
                                                                           new TimeInterval(1/buf.getSampleRate(),

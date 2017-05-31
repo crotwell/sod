@@ -13,7 +13,6 @@ import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.Orientation;
 import edu.sc.seis.sod.model.common.SamplingImpl;
-import edu.sc.seis.sod.model.common.Time;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.common.UnitImpl;
@@ -54,7 +53,7 @@ public class WinstonNetworkSource extends CSVNetworkSource {
             float dip = ChannelImpl.getDip(chanCode);
             
             SamplingImpl sampling = new SamplingImpl(1, new TimeInterval(1, UnitImpl.SECOND));
-            Time chanStart = curStation.getBeginTime();
+            MicroSecondDate chanStart = curStation.getBeginTime();
             if (menuItem.getStartDate().before(ClockUtil.now())) {
                 // sometime non-seismic channels are messed up in winston and have really bizarre times
                 // only use if start time is before now
@@ -66,7 +65,7 @@ public class WinstonNetworkSource extends CSVNetworkSource {
                                                                 staCode,
                                                                 siteCode,
                                                                 chanCode,
-                                                                chanTime.start_time),
+                                                                chanTime.getBeginTime()),
                                                   "",
                                                   new Orientation(azimuth, dip),
                                                   sampling,
@@ -74,7 +73,7 @@ public class WinstonNetworkSource extends CSVNetworkSource {
                                                   new SiteImpl(new SiteId(curStation.get_id().network_id,
                                                                           staCode,
                                                                           siteCode,
-                                                                          chanTime.start_time), curStation, ""));
+                                                                          chanTime.getBeginTime()), curStation, ""));
             channels.add(channelImpl);
             } catch (Throwable t) {
                 logger.warn("problem with channel, "+netCode+"."+staCode+"."+siteCode+"."+chanCode+" skipping", t);

@@ -14,7 +14,6 @@ import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
 import edu.sc.seis.sod.model.common.QuantityImpl;
-import edu.sc.seis.sod.model.common.Time;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
@@ -97,7 +96,7 @@ public class GapFill extends Merge {
         TimeSeriesDataSel fillData = filler.fill(first, second);
         LocalSeismogramImpl fillSeis = new LocalSeismogramImpl(first.get_id()+"_gapFill",
                                                                first.getProperties(),
-                                                               new Time(first.getEndTime().add(first.getSampling().getPeriod())),
+                                                               first.getEndTime().add(first.getSampling().getPeriod()),
                                                                calcNumGapPoints(first, second),
                                                                first.getSampling(),
                                                                first.getUnit(), first.getChannelID(),

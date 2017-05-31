@@ -19,6 +19,7 @@ import edu.sc.seis.sod.UserConfigurationException;
 import edu.sc.seis.sod.model.common.ISOTime;
 import edu.sc.seis.sod.model.common.Location;
 import edu.sc.seis.sod.model.common.LocationType;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.ParameterRef;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.Time;
@@ -106,7 +107,7 @@ public class CSVEventSource extends SimpleEventSource {
         while(csvReader.readRecord()) {
             // time to start populating field values
             // first up: the only required field...
-            Time time = new Time(csvReader.get(TIME), 0);
+            MicroSecondDate time = new MicroSecondDate(csvReader.get(TIME));
             try {
                 new ISOTime(time.getISOTime());
             } catch(UnsupportedFormat uf) {

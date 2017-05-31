@@ -22,6 +22,7 @@ import edu.sc.seis.sod.UserConfigurationException;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
 import edu.sc.seis.sod.model.common.Location;
 import edu.sc.seis.sod.model.common.LocationType;
+import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.Orientation;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.SamplingImpl;
@@ -138,15 +139,15 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
             float longitude = loadFloat(headers, csvReader, LONGITUDE, 0);
             double elevation = loadDouble(headers, csvReader, ELEVATION, 0);
             double depth = loadDouble(headers, csvReader, DEPTH, 0);
-            Unit elevationUnit = loadUnit(headers, csvReader, ELEVATION_UNITS, UnitImpl.METER);
-            Unit depthUnit = loadUnit(headers, csvReader, DEPTH_UNITS, UnitImpl.METER);
+            UnitImpl elevationUnit = loadUnit(headers, csvReader, ELEVATION_UNITS, UnitImpl.METER);
+            UnitImpl depthUnit = loadUnit(headers, csvReader, DEPTH_UNITS, UnitImpl.METER);
             Location location = new Location(latitude,
                                              longitude,
                                              new QuantityImpl(elevation, elevationUnit),
                                              new QuantityImpl(depth, depthUnit),
                                              LocationType.GEOGRAPHIC);
             NetworkId netId = new NetworkId(netCode, loadTime(headers, csvReader, NET_START, DEFAULT_TIME));
-            Time staBegin = loadTime(headers, csvReader, START, DEFAULT_TIME);
+            MicroSecondDate staBegin = loadTime(headers, csvReader, START, DEFAULT_TIME);
             StationId staId = new StationId(netId, staCode, staBegin);
             StationImpl station = new StationImpl(staId,
                                                   loadString(headers, csvReader, NAME, ""),
@@ -178,7 +179,7 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
         while (csvReader.readRecord()) {
             String netCode = csvReader.get(NET_CODE);
             String staCode = csvReader.get(STATION_CODE);
-            String siteCode = Channel.fixLocCode(csvReader.get(SITE_CODE));
+            String siteCode = ChannelImpl.fixLocCode(csvReader.get(SITE_CODE));
             String chanCode = csvReader.get(CODE);
             StationImpl curStation = getStationForChannel(netCode, staCode);
             if (curStation == null) {
@@ -192,8 +193,8 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
                 float longitude = loadFloat(headers, csvReader, LONGITUDE, 0);
                 double elevation = loadDouble(headers, csvReader, ELEVATION, 0);
                 double depth = loadDouble(headers, csvReader, DEPTH, 0);
-                Unit elevationUnit = loadUnit(headers, csvReader, ELEVATION_UNITS, UnitImpl.METER);
-                Unit depthUnit = loadUnit(headers, csvReader, DEPTH_UNITS, UnitImpl.METER);
+                UnitImpl elevationUnit = loadUnit(headers, csvReader, ELEVATION_UNITS, UnitImpl.METER);
+                UnitImpl depthUnit = loadUnit(headers, csvReader, DEPTH_UNITS, UnitImpl.METER);
                 location = new Location(latitude,
                                         longitude,
                                         new QuantityImpl(elevation, elevationUnit),
@@ -202,7 +203,7 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
             } else {
                 location = curStation.getLocation();
             }
-            Time chanBegin = loadTime(headers, csvReader, START, DEFAULT_TIME);
+            MicroSecondDate chanBegin = loadTime(headers, csvReader, START, DEFAULT_TIME);
             float azimuth = loadFloat(headers, csvReader, AZIMUTH, ChannelImpl.getAzimuth(chanCode));
             float dip = loadFloat(headers, csvReader, DIP, ChannelImpl.getDip(chanCode));
             SamplingImpl sampling;

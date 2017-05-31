@@ -236,18 +236,10 @@ public class FissuresFormatter {
         }
     }
 
-    public static String formatDate(Time t) {
-        return formatDate(new MicroSecondDate(t));
-    }
-
     public static String formatDateForFile(Date d) {
         synchronized(longFileFormat) {
             return longFileFormat.format(d);
         }
-    }
-
-    public static String formatDateForFile(Time t) {
-        return formatDateForFile(new MicroSecondDate(t));
     }
 
     public static String formatDateForFile(OriginImpl origin) {

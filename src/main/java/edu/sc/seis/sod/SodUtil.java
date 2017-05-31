@@ -17,8 +17,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
@@ -39,31 +37,15 @@ import edu.sc.seis.sod.model.common.GlobalAreaImpl;
 import edu.sc.seis.sod.model.common.ISOTime;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.QuantityImpl;
-import edu.sc.seis.sod.model.common.Time;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.common.UnitRangeImpl;
-import edu.sc.seis.sod.process.waveform.WaveformProcess;
-import edu.sc.seis.sod.process.waveform.vector.WaveformVectorProcess;
 import edu.sc.seis.sod.source.event.MicroSecondTimeRangeSupplier;
-import edu.sc.seis.sod.source.seismogram.SeismogramSourceLocator;
 import edu.sc.seis.sod.status.TemplateFileLoader;
 import edu.sc.seis.sod.subsetter.LatitudeRange;
 import edu.sc.seis.sod.subsetter.LongitudeRange;
-import edu.sc.seis.sod.subsetter.availableData.AvailableDataSubsetter;
-import edu.sc.seis.sod.subsetter.availableData.vector.VectorAvailableDataSubsetter;
-import edu.sc.seis.sod.subsetter.channel.ChannelSubsetter;
-import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
-import edu.sc.seis.sod.subsetter.eventChannel.vector.EventVectorSubsetter;
-import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
-import edu.sc.seis.sod.subsetter.network.NetworkSubsetter;
 import edu.sc.seis.sod.subsetter.origin.OriginPointDistance;
-import edu.sc.seis.sod.subsetter.origin.OriginSubsetter;
-import edu.sc.seis.sod.subsetter.request.RequestSubsetter;
-import edu.sc.seis.sod.subsetter.request.vector.VectorRequestSubsetter;
 import edu.sc.seis.sod.subsetter.requestGenerator.RandomTimeInterval;
-import edu.sc.seis.sod.subsetter.requestGenerator.RequestGenerator;
-import edu.sc.seis.sod.subsetter.station.StationSubsetter;
 import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.util.time.ClockUtil;
 
@@ -322,7 +304,7 @@ public class SodUtil {
             }
         }
         return new MicroSecondDateSupplier() {
-            final MicroSecondDate date = new MicroSecondDate(new Time(getNestedText(el).trim()));
+            final MicroSecondDate date = new MicroSecondDate(new MicroSecondDate(getNestedText(el).trim()));
             public MicroSecondDate load() {  return date; }
         };
     }
