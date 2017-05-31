@@ -3,10 +3,8 @@ package edu.sc.seis.sod.source.network;
 import java.util.List;
 
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
-import edu.sc.seis.sod.hibernate.NetworkNotFound;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.TimeInterval;
-import edu.sc.seis.sod.model.station.CacheNetworkAccess;
 import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.model.station.Instrumentation;
 import edu.sc.seis.sod.model.station.InvalidResponse;
@@ -19,10 +17,6 @@ import edu.sc.seis.sod.source.Source;
 public interface NetworkSource extends Source {
 
     public TimeInterval getRefreshInterval();
-
-    public CacheNetworkAccess getNetwork(NetworkAttrImpl attr);
-
-    public List<? extends CacheNetworkAccess> getNetworkByName(String name) throws NetworkNotFound;
 
     public List<? extends NetworkAttrImpl> getNetworks() throws SodSourceException;
 

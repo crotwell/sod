@@ -1,13 +1,11 @@
 package edu.sc.seis.sod.hibernate;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
-import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.station.ChannelGroup;
 import edu.sc.seis.sod.model.station.ChannelId;
@@ -286,19 +284,6 @@ public class NetworkDB extends AbstractHibernateDB {
                                                         new Integer(dbid));
         if(out == null) {
             throw new NotFound();
-        }
-        return out;
-    }
-
-    public List<CacheNetworkAccess> getAllNets(ProxyNetworkDC networkDC) {
-        Query query = getSession().createQuery(getAllNetsString);
-        List<NetworkAttrImpl> result = query.list();
-        List<CacheNetworkAccess> out = new ArrayList<CacheNetworkAccess>();
-        Iterator<NetworkAttrImpl> it = result.iterator();
-        while(it.hasNext()) {
-            NetworkAttrImpl attr = it.next();
-            CacheNetworkAccess cnet = new LazyNetworkAccess(attr, networkDC);
-            out.add(cnet);
         }
         return out;
     }

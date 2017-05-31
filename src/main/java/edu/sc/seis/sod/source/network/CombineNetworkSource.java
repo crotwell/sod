@@ -11,7 +11,6 @@ import org.w3c.dom.NodeList;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
-import edu.sc.seis.sod.hibernate.NetworkNotFound;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
@@ -59,8 +58,8 @@ public class CombineNetworkSource extends AbstractNetworkSource implements Netwo
         return out;
     }
 
-    @Override
-    public CacheNetworkAccess getNetwork(NetworkAttrImpl attr) {
+    
+    public NetworkSource getNetworkSource(NetworkAttrImpl attr) {
         String code = NetworkIdUtil.toStringNoDates(attr);
         NetworkSource source;
         try {
@@ -68,18 +67,7 @@ public class CombineNetworkSource extends AbstractNetworkSource implements Netwo
         } catch(SodSourceException e) {
             throw new RuntimeException("Network not found: "+NetworkIdUtil.toString(attr));
         }
-        return source.getNetwork(attr);
-    }
-
-    @Override
-    public List<? extends CacheNetworkAccess> getNetworkByName(String name) throws NetworkNotFound {
-        for (NetworkSource source : wrapped) {
-            List<? extends CacheNetworkAccess> out = source.getNetworkByName(name);
-            if (out != null && out.size() != 0) {
-                return out;
-            }
-        }
-        return new ArrayList<CacheNetworkAccess>();
+        return source;
     }
 
     @Override

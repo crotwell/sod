@@ -12,7 +12,6 @@ import org.w3c.dom.Element;
 
 import com.csvreader.CsvReader;
 
-import edu.iris.Fissures.model.FlinnEngdahlRegionImpl;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.UserConfigurationException;
@@ -22,7 +21,6 @@ import edu.sc.seis.sod.model.common.LocationType;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.ParameterRef;
 import edu.sc.seis.sod.model.common.QuantityImpl;
-import edu.sc.seis.sod.model.common.Time;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.common.UnsupportedFormat;
 import edu.sc.seis.sod.model.event.CacheEvent;
@@ -209,9 +207,9 @@ public class CSVEventSource extends SimpleEventSource {
                     feType = FlinnEngdahlType.GEOGRAPHIC_REGION;
                 }
             }
-            FlinnEngdahlRegion feRegion = new FlinnEngdahlRegionImpl(feType, 0);
+            FlinnEngdahlRegion feRegion = new FlinnEngdahlRegion(feType, 0);
             if(headers.contains(FE_REGION)) {
-                feRegion = new FlinnEngdahlRegionImpl(feType,
+                feRegion = new FlinnEngdahlRegion(feType,
                                                       Integer.parseInt(csvReader.get(FE_REGION)));
             }
             events.add(new CacheEvent(new EventAttrImpl(name, feRegion), origin));

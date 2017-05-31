@@ -14,12 +14,10 @@ import org.w3c.dom.Element;
 
 import com.csvreader.CsvReader;
 
-import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.UserConfigurationException;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
-import edu.sc.seis.sod.hibernate.NetworkNotFound;
 import edu.sc.seis.sod.model.common.Location;
 import edu.sc.seis.sod.model.common.LocationType;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
@@ -178,7 +176,7 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
         while (csvReader.readRecord()) {
             String netCode = csvReader.get(NET_CODE);
             String staCode = csvReader.get(STATION_CODE);
-            String siteCode = ChannelImpl.fixLocCode(csvReader.get(SITE_CODE));
+            String siteCode = edu.sc.seis.seisFile.fdsnws.stationxml.Channel.fixLocCode(csvReader.get(SITE_CODE));
             String chanCode = csvReader.get(CODE);
             StationImpl curStation = getStationForChannel(netCode, staCode);
             if (curStation == null) {
@@ -297,16 +295,6 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
     @Override
     public Instrumentation getInstrumentation(ChannelImpl chanId) throws ChannelNotFound, InvalidResponse {
         throw new ChannelNotFound();
-    }
-
-    @Override
-    public CacheNetworkAccess getNetwork(NetworkAttrImpl attr) {
-        return new CacheNetworkAccess(null, attr);
-    }
-
-    @Override
-    public List<? extends CacheNetworkAccess> getNetworkByName(String name) throws NetworkNotFound {
-        throw new NetworkNotFound();
     }
 
     @Override

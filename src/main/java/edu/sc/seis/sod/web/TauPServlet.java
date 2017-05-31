@@ -15,13 +15,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONException;
 import org.json.JSONWriter;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
 import edu.sc.seis.sod.bag.TauPUtil;
 import edu.sc.seis.sod.hibernate.EventDB;
 import edu.sc.seis.sod.hibernate.NetworkDB;
+import edu.sc.seis.sod.hibernate.NotFound;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
 import edu.sc.seis.sod.model.event.CacheEvent;

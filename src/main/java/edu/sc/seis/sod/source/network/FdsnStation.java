@@ -34,7 +34,6 @@ import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
-import edu.sc.seis.sod.model.station.CacheNetworkAccess;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
 import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.model.station.Instrumentation;
@@ -114,16 +113,6 @@ public class FdsnStation extends AbstractNetworkSource {
     
     public void includeRestricted(boolean val) {
         queryParams.setIncludeRestricted(val);
-    }
-
-    @Override
-    public CacheNetworkAccess getNetwork(NetworkAttrImpl attr) {
-        return new CacheNetworkAccess(null, attr);
-    }
-
-    @Override
-    public List<? extends CacheNetworkAccess> getNetworkByName(String name) throws NetworkNotFound {
-        throw new NetworkNotFound();
     }
     
     @Override

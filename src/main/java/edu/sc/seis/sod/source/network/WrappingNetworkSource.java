@@ -2,9 +2,7 @@ package edu.sc.seis.sod.source.network;
 
 import java.util.List;
 
-import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
-import edu.sc.seis.sod.hibernate.NetworkNotFound;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.station.ChannelImpl;
@@ -30,16 +28,6 @@ public abstract class WrappingNetworkSource extends AbstractNetworkSource implem
     @Override
     public List<? extends ChannelImpl> getChannels(StationImpl station) throws SodSourceException {
         return getWrapped().getChannels(station);
-    }
-
-    @Override
-    public CacheNetworkAccess getNetwork(NetworkAttrImpl attr) {
-        return getWrapped().getNetwork(attr);
-    }
-
-    @Override
-    public List<? extends CacheNetworkAccess> getNetworkByName(String name) throws NetworkNotFound {
-        return getWrapped().getNetworkByName(name);
     }
 
     @Override

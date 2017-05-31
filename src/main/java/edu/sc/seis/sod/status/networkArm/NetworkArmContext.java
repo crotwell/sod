@@ -45,11 +45,7 @@ public class NetworkArmContext extends AbstractContext {
                 && !(key.startsWith("X") || key.startsWith("Y") || key.startsWith("Z"))) {
             // try as a network code
             List<NetworkAttrImpl> dbAttrs =  netDb.getNetworkByCode(key);
-            for (NetworkAttrImpl attr : dbAttrs) {
-                if(attr.get_code().equals(key)) {
-                    return Start.getNetworkArm().getNetworkSource().getNetwork(attr);
-                }
-            }
+            return dbAttrs;
         }
         // else
         return null;

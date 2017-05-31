@@ -36,7 +36,6 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.StationXMLException;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
-import edu.sc.seis.sod.hibernate.NetworkNotFound;
 import edu.sc.seis.sod.model.common.ISOTime;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
@@ -126,14 +125,6 @@ public class StationXML extends AbstractNetworkSource implements NetworkSource {
 
     public TimeInterval getRefreshInterval() {
         return refreshInterval;
-    }
-
-    public CacheNetworkAccess getNetwork(NetworkAttrImpl attr) {
-        return new CacheNetworkAccess(null, attr);
-    }
-
-    public List<? extends CacheNetworkAccess> getNetworkByName(String name) throws NetworkNotFound {
-        throw new NetworkNotFound();
     }
 
     public List<? extends NetworkAttrImpl> getNetworks() {

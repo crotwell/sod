@@ -5,11 +5,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
-import edu.sc.seis.sod.hibernate.NetworkNotFound;
+import edu.sc.seis.sod.mock.station.MockNetworkAccess;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
-import edu.sc.seis.sod.model.station.CacheNetworkAccess;
 import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.model.station.Instrumentation;
 import edu.sc.seis.sod.model.station.InvalidResponse;
@@ -42,27 +41,6 @@ public class MockNetworkSource extends AbstractNetworkSource implements NetworkS
     @Override
     public TimeInterval getRefreshInterval() {
         return refresh;
-    }
-
-    @Override
-    public CacheNetworkAccess getNetwork(NetworkAttrImpl attr) {
-        for (int i = 0; i < nets.length; i++) {
-            if (NetworkIdUtil.areEqual(nets[i].get_attributes().getId(), attr.getId())) {
-                return new CacheNetworkAccess(nets[i]);
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public List<? extends CacheNetworkAccess> getNetworkByName(String name) throws NetworkNotFound {
-        ArrayList<CacheNetworkAccess> out = new ArrayList<CacheNetworkAccess>();
-        for (int i = 0; i < nets.length; i++) {
-            if (nets[i].get_attributes().getName().equals( name)) {
-                out.add( new CacheNetworkAccess(nets[i]));
-            }
-        }
-        return out;
     }
 
     @Override
@@ -111,7 +89,7 @@ public class MockNetworkSource extends AbstractNetworkSource implements NetworkS
         //no op
     }
 
-    NetworkAccess[] nets = new NetworkAccess[] { MockNetworkAccess.createNetworkAccess(),
+    MockNetworkAccess[] nets = new MockNetworkAccess[] { MockNetworkAccess.createNetworkAccess(),
                                                  MockNetworkAccess.createOtherNetworkAccess(),
                                                  MockNetworkAccess.createManySplendoredNetworkAccess() };
     

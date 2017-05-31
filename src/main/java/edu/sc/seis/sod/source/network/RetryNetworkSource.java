@@ -3,9 +3,7 @@ package edu.sc.seis.sod.source.network;
 import java.io.IOException;
 import java.util.List;
 
-import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
-import edu.sc.seis.sod.hibernate.NetworkNotFound;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.station.ChannelImpl;
@@ -31,16 +29,6 @@ public class RetryNetworkSource extends WrappingNetworkSource implements Network
     @Override
     public TimeInterval getRefreshInterval() {
         return wrapped.getRefreshInterval();
-    }
-
-    @Override
-    public CacheNetworkAccess getNetwork(NetworkAttrImpl attr) {
-        return wrapped.getNetwork(attr);
-    }
-
-    @Override
-    public List<? extends CacheNetworkAccess> getNetworkByName(String name) throws NetworkNotFound {
-        return wrapped.getNetworkByName(name);
     }
 
     @Override
