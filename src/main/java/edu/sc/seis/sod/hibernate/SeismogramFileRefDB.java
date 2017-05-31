@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.query.Query;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 
 import edu.sc.seis.fissuresUtil.xml.URLDataSetSeismogram;
 import edu.sc.seis.sod.bag.Cut;

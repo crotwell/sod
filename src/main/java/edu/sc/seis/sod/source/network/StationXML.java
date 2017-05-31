@@ -24,13 +24,7 @@ import javax.xml.stream.events.XMLEvent;
 
 import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfNetwork.NetworkNotFound;
-import edu.iris.Fissures.network.InstrumentationImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
-import edu.sc.seis.fissuresUtil.stationxml.ChannelSensitivityBundle;
-import edu.sc.seis.fissuresUtil.stationxml.StationChannelBundle;
-import edu.sc.seis.fissuresUtil.stationxml.StationXMLToFissures;
 import edu.sc.seis.seisFile.fdsnws.FDSNStationQueryParams;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.FDSNStationXML;
@@ -42,6 +36,7 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.StationXMLException;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
+import edu.sc.seis.sod.hibernate.NetworkNotFound;
 import edu.sc.seis.sod.model.common.ISOTime;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
@@ -56,6 +51,9 @@ import edu.sc.seis.sod.model.station.NetworkAttrImpl;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.model.station.StationIdUtil;
 import edu.sc.seis.sod.model.station.StationImpl;
+import edu.sc.seis.sod.util.convert.stationxml.ChannelSensitivityBundle;
+import edu.sc.seis.sod.util.convert.stationxml.StationChannelBundle;
+import edu.sc.seis.sod.util.convert.stationxml.StationXMLToFissures;
 import edu.sc.seis.sod.util.time.RangeTool;
 
 @Deprecated
@@ -207,12 +205,12 @@ public class StationXML extends AbstractNetworkSource implements NetworkSource {
                 while (staIt.hasNext()) {
                     Station s = staIt.next();
                         for (Channel c : s.getChannelList()) {
-                                InstrumentationImpl inst = StationXMLToFissures.convertInstrumentation(c);
+                                Instrumentation inst = StationXMLToFissures.convertInstrumentation(c);
                                 if (RangeTool.areOverlapping(new MicroSecondTimeRange(inst.effective_time),
                                                              new MicroSecondTimeRange(chanBegin.add(ONE_SECOND), chanBegin.add(ONE_DAY)))) {
                                     return inst;
                                 }
-                                logger.debug("Skipping as wrong start time "+ChannelIdUtil.toString(chan.getId())+" "+inst.effective_time.start_time.date_time+" "+inst.effective_time.end_time.date_time);
+                                logger.debug("Skipping as wrong start time "+ChannelIdUtil.toString(chan.getId())+" "+inst.effective_time.getBeginTime()+" "+inst.effective_time.getEndTime());
                             
                         }
                     

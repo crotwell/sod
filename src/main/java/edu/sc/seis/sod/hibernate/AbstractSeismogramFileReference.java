@@ -5,11 +5,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Timestamp;
 
-import edu.sc.seis.fissuresUtil.xml.DataSet;
-import edu.sc.seis.fissuresUtil.xml.URLDataSetSeismogram;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.seismogram.RequestFilter;
-
 public abstract class AbstractSeismogramFileReference {
 
     protected int dbid;
@@ -34,21 +29,6 @@ public abstract class AbstractSeismogramFileReference {
         this.endTime = endTime;
         this.filePath = filePath;
         this.fileType = fileType;
-    }
-
-    public URLDataSetSeismogram getDataSetSeismogram(DataSet ds,
-                                                     RequestFilter rf) {
-        try {
-            MicroSecondDate b = new MicroSecondDate(getBeginTime());
-            MicroSecondDate e = new MicroSecondDate(getEndTime());
-            return new URLDataSetSeismogram(getFilePathAsURL(), 
-                                            SeismogramFileTypes.fromInt(getFileType()),
-                                            ds,
-                                            getNetworkCode()+"."+getStationCode()+"."+getSiteCode()+"."+getChannelCode(),
-                                            rf);
-        } catch(UnsupportedFileTypeException e) {
-            throw new RuntimeException("should not happen, type from database: "+getFileType());
-        }
     }
     
     public String getNetworkCode() {

@@ -7,7 +7,7 @@ package edu.sc.seis.sod.subsetter.origin;
 
 import org.w3c.dom.Element;
 
-import edu.sc.seis.sod.XMLConfigUtil;
+import edu.sc.seis.sod.SodUtilTest;
 import edu.sc.seis.sod.mock.event.MockOrigin;
 import edu.sc.seis.sod.model.event.EventAttrImpl;
 import edu.sc.seis.sod.model.event.Magnitude;
@@ -26,7 +26,7 @@ public class MagnitudeRangeTest extends TestCase {
         EventAttrImpl eventAttr = new EventAttrImpl("test",
                                                 ParseRegions.getInstance()
                                                         .getGeographicRegion(7));
-        Element element = XMLConfigUtil.parse("<magnitudeRange>"
+        Element element = SodUtilTest.parse("<magnitudeRange>"
                 + "<magType>mb</magType>" + "<min>5.7</min>" + "<lessThan>6.0</lessThan>"
                 + "</magnitudeRange>");
         MagnitudeRange range = new MagnitudeRange(element);
@@ -61,7 +61,7 @@ public class MagnitudeRangeTest extends TestCase {
         EventAttrImpl eventAttr = new EventAttrImpl("test",
                                                 ParseRegions.getInstance()
                                                         .getGeographicRegion(7));
-        Element element = XMLConfigUtil.parse("<magnitudeRange>"
+        Element element = SodUtilTest.parse("<magnitudeRange>"
                 + "<magType>mb</magType>" + "<min>5.0</min>" + "<max>6.0</max>"
                 + "</magnitudeRange>");
         MagnitudeRange range = new MagnitudeRange(element);
@@ -84,7 +84,7 @@ public class MagnitudeRangeTest extends TestCase {
         assertFalse(mag.value + " " + mag.type + "  " + range.getMinValue()
                             + "<" + range.getMaxValue() + " " + searchTypes,
                     range.accept(null, eventAttr, origin).isSuccess());
-        element = XMLConfigUtil.parse("<magnitudeRange>"
+        element = SodUtilTest.parse("<magnitudeRange>"
                 + "<contributor>FAKE</contributor>" + "<min>5.0</min>"
                 + "<max>6.0</max>" + "</magnitudeRange>");
         range = new MagnitudeRange(element);
@@ -100,7 +100,7 @@ public class MagnitudeRangeTest extends TestCase {
         assertTrue(mag.value + " " + mag.type + "  " + range.getMinValue()
                            + "<" + range.getMaxValue() + " " + contributors,
                    range.accept(null, eventAttr, origin).isSuccess());
-        element = XMLConfigUtil.parse("<magnitudeRange>" + "<largest/>"
+        element = SodUtilTest.parse("<magnitudeRange>" + "<largest/>"
                 + "<min>5.0</min>" + "<max>6.0</max>" + "</magnitudeRange>");
         range = new MagnitudeRange(element);
         Magnitude mag2 = new Magnitude("Ms", 6.1f, "FAKE");
@@ -112,7 +112,7 @@ public class MagnitudeRangeTest extends TestCase {
         assertTrue(mag.value + " " + mag.type + "  " + range.getMinValue()
                            + "<" + range.getMaxValue() + " " + contributors,
                    range.accept(null, eventAttr, origin).isSuccess());
-        element = XMLConfigUtil.parse("<magnitudeRange>" + "<smallest/>"
+        element = SodUtilTest.parse("<magnitudeRange>" + "<smallest/>"
                 + "<min>5.0</min>" + "<max>6.0</max>" + "</magnitudeRange>");
         range = new MagnitudeRange(element);
         mag.value = 4.9f;

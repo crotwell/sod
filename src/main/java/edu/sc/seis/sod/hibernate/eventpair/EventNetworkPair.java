@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.omg.CosNaming.NamingContextPackage.NotFound;
-
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.WaveformArm;
 import edu.sc.seis.sod.hibernate.NetworkDB;
+import edu.sc.seis.sod.hibernate.NotFound;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.model.event.NoPreferredOrigin;
 import edu.sc.seis.sod.model.event.StatefulEvent;

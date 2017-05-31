@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.hibernate.query.Query;
 import org.hibernate.Session;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
+import org.hibernate.query.Query;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
@@ -448,7 +447,7 @@ public class NetworkDB extends AbstractHibernateDB {
         getSession().saveOrUpdate(ib);
     }
 
-    public void internUnit(Station sta) {
+    public void internUnit(StationImpl sta) {
         internUnit(sta.getLocation());
     }
 

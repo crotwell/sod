@@ -2,9 +2,9 @@ package edu.sc.seis.sod.source.network;
 
 import java.util.List;
 
-import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
+import edu.sc.seis.sod.hibernate.NetworkNotFound;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.station.ChannelImpl;

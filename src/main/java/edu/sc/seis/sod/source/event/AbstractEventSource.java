@@ -1,6 +1,5 @@
 package edu.sc.seis.sod.source.event;
 
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.w3c.dom.Element;
 
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
@@ -8,6 +7,7 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.QueryTime;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.hibernate.NotFound;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
@@ -80,7 +80,7 @@ public abstract class AbstractEventSource extends AbstractSource implements Even
     protected MicroSecondDate getQueryStart() {
         try {
             return getQueryEdge();
-        } catch (edu.sc.seis.fissuresUtil.database.NotFound e) {
+        } catch (NotFound e) {
             logger.debug("the query times database didn't have an entry for our server/dns combo, just use the time in the config file");
             setQueryEdge(getEventTimeRange().getBeginTime());
             return getEventTimeRange().getBeginTime();
