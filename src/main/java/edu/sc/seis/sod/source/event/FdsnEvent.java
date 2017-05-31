@@ -34,11 +34,16 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventArm;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.VersionHistory;
+import edu.sc.seis.sod.model.common.Area;
+import edu.sc.seis.sod.model.common.BoxAreaImpl;
+import edu.sc.seis.sod.model.common.GlobalAreaImpl;
 import edu.sc.seis.sod.model.common.Location;
 import edu.sc.seis.sod.model.common.LocationType;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
 import edu.sc.seis.sod.model.common.ParameterRef;
+import edu.sc.seis.sod.model.common.PointDistanceAreaImpl;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
@@ -155,15 +160,15 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                         if (magRange.getMaxValue() < 99) {
                             queryParams.setMaxMagnitude((float)magRange.getMaxValue());
                         }
-                    } else if (object instanceof edu.iris.Fissures.Area) {
-                        edu.iris.Fissures.Area area = (edu.iris.Fissures.Area)object;
-                        if (area instanceof GlobalArea) {
+                    } else if (object instanceof Area) {
+                        Area area = (Area)object;
+                        if (area instanceof GlobalAreaImpl) {
                             // nothing needed
-                        } else if (area instanceof BoxArea) {
-                            BoxArea box = (BoxArea)area;
+                        } else if (area instanceof BoxAreaImpl) {
+                            BoxAreaImpl box = (BoxAreaImpl)area;
                             queryParams.area(box.min_latitude, box.max_latitude, box.min_longitude, box.max_longitude);
-                        } else if (area instanceof PointDistanceArea) {
-                            PointDistanceArea donut = (PointDistanceArea)area;
+                        } else if (area instanceof PointDistanceAreaImpl) {
+                            PointDistanceAreaImpl donut = (PointDistanceAreaImpl)area;
                             if ((float)((QuantityImpl)donut.min_distance).getValue(UnitImpl.DEGREE) > 0) {
                             queryParams.donut(donut.latitude,
                                               donut.longitude,
@@ -339,7 +344,6 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
 
     public List<CacheEvent> internalNext(MicroSecondTimeRange queryTime) throws SeisFileException, XMLStreamException {
         try {
-            MicroSecondDate now = ClockUtil.now();
             List<CacheEvent> out = new ArrayList<CacheEvent>();
             FDSNEventQuerier querier = getQuakeMLQuerier(setUpQuery(queryTime));
             Quakeml qml = querier.getQuakeML();
@@ -388,19 +392,19 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         if (e.getDescriptionList().size() > 0) {
             desc = e.getDescriptionList().get(0).getText();
         }
-        FlinnEngdahlRegion fe = new FlinnEngdahlRegionImpl(FlinnEngdahlType.GEOGRAPHIC_REGION, 0);
+        FlinnEngdahlRegion fe = new FlinnEngdahlRegion(FlinnEngdahlType.GEOGRAPHIC_REGION, 0);
         for (EventDescription eDescription : e.getDescriptionList()) {
             if (eDescription.getIrisFECode() != -1) {
-                fe = new FlinnEngdahlRegionImpl(FlinnEngdahlType.GEOGRAPHIC_REGION, eDescription.getIrisFECode());
+                fe = new FlinnEngdahlRegion(FlinnEngdahlType.GEOGRAPHIC_REGION, eDescription.getIrisFECode());
             }
         }
         List<OriginImpl> out = new ArrayList<OriginImpl>();
-        HashMap<String, List<Magnitude>> magsByOriginId = new HashMap<String, List<Magnitude>>();
-        List<Magnitude> mList = e.getMagnitudeList();
-        Magnitude prefMag = null; // event should always have a prefMag
-        for (Magnitude m : mList) {
+        HashMap<String, List<edu.sc.seis.seisFile.fdsnws.quakeml.Magnitude>> magsByOriginId = new HashMap<String, List<edu.sc.seis.seisFile.fdsnws.quakeml.Magnitude>>();
+        List<edu.sc.seis.seisFile.fdsnws.quakeml.Magnitude> mList = e.getMagnitudeList();
+        edu.sc.seis.seisFile.fdsnws.quakeml.Magnitude prefMag = null; // event should always have a prefMag
+        for (edu.sc.seis.seisFile.fdsnws.quakeml.Magnitude m : mList) {
             if (!magsByOriginId.containsKey(m.getOriginId())) {
-                magsByOriginId.put(m.getOriginId(), new ArrayList<Magnitude>());
+                magsByOriginId.put(m.getOriginId(), new ArrayList<edu.sc.seis.seisFile.fdsnws.quakeml.Magnitude>());
             }
             magsByOriginId.get(m.getOriginId()).add(m);
             if (m.getPublicId().equals(e.getPreferredMagnitudeID())) {
@@ -409,12 +413,12 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         }
         OriginImpl pref = null;
         for (Origin o : e.getOriginList()) {
-            List<Magnitude> oMags = magsByOriginId.get(o.getPublicId());
+            List<edu.sc.seis.seisFile.fdsnws.quakeml.Magnitude> oMags = magsByOriginId.get(o.getPublicId());
             if (oMags == null) {
-                oMags = new ArrayList<Magnitude>();
+                oMags = new ArrayList<edu.sc.seis.seisFile.fdsnws.quakeml.Magnitude>();
             }
-            List<edu.iris.Fissures.IfEvent.Magnitude> fisMags = new ArrayList<edu.iris.Fissures.IfEvent.Magnitude>();
-            for (Magnitude m : oMags) {
+            List<Magnitude> fisMags = new ArrayList<Magnitude>();
+            for (edu.sc.seis.seisFile.fdsnws.quakeml.Magnitude m : oMags) {
                 if (m.getMag() != null) {
                     // usgs web service has some magnitudes with only origin
                     // reference, skip these
@@ -434,7 +438,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                                                                new QuantityImpl(0, UnitImpl.METER),
                                                                depth,
                                                                LocationType.GEOGRAPHIC),
-                                                  fisMags.toArray(new edu.iris.Fissures.IfEvent.Magnitude[0]),
+                                                  fisMags.toArray(new Magnitude[0]),
                                                   new ParameterRef[0]);
                 out.add(oImpl);
                 if (o.getPublicId().equals(e.getPreferredOriginID())) {
@@ -448,14 +452,14 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         // for convenience add the preferred magnitude as the first magnitude in
         // the preferred origin
         if (prefMag != null && !e.getPreferredMagnitudeID().equals(e.getPreferredOriginID())) {
-            edu.iris.Fissures.IfEvent.Magnitude pm = toFissuresMagnitude(prefMag);
-            List<edu.iris.Fissures.IfEvent.Magnitude> newMags = new ArrayList<edu.iris.Fissures.IfEvent.Magnitude>();
+            Magnitude pm = toFissuresMagnitude(prefMag);
+            List<Magnitude> newMags = new ArrayList<Magnitude>();
             newMags.add(pm);
             newMags.addAll(pref.getMagnitudeList());
-            Iterator<edu.iris.Fissures.IfEvent.Magnitude> it = newMags.iterator();
+            Iterator<Magnitude> it = newMags.iterator();
             it.next(); // skip first as it is the preferred
             while (it.hasNext()) {
-                edu.iris.Fissures.IfEvent.Magnitude fm = it.next();
+                Magnitude fm = it.next();
                 if (fm.type.equals(pm.type) && fm.value == pm.value && fm.contributor.equals(pm.contributor)) {
                     it.remove(); // duplicate of preferred
                 }
@@ -465,14 +469,14 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                                   pref.getContributor(),
                                   pref.getOriginTime(),
                                   pref.getLocation(),
-                                  newMags.toArray(new edu.iris.Fissures.IfEvent.Magnitude[0]),
+                                  newMags.toArray(new Magnitude[0]),
                                   pref.getParmIds());
         }
         CacheEvent ce = new CacheEvent(new EventAttrImpl(desc, fe), out.toArray(new OriginImpl[0]), pref);
         return ce;
     }
 
-    static edu.iris.Fissures.IfEvent.Magnitude toFissuresMagnitude(Magnitude m) {
+    static Magnitude toFissuresMagnitude(edu.sc.seis.seisFile.fdsnws.quakeml.Magnitude m) {
         String contributor = "";
         if (m.getCreationInfo() != null && m.getCreationInfo().getAuthor() != null) {
             contributor = m.getCreationInfo().getAuthor();
@@ -481,7 +485,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         if (m.getType() != null) {
             type = m.getType();
         }
-        return new edu.iris.Fissures.IfEvent.Magnitude(type, m.getMag().getValue(), contributor);
+        return new Magnitude(type, m.getMag().getValue(), contributor);
     }
 
     FDSNEventQuerier getQuakeMLQuerier(FDSNEventQueryParams timeWindowQueryParams) throws MalformedURLException, IOException,
@@ -541,7 +545,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
             +"Check your recipe and "
             +"if you cannot figure it out contact the developers at sod@seis.sc.edu. ";
 
-    String userAgent = "SOD/" + BuildVersion.getVersion();
+    String userAgent = "SOD/" + VersionHistory.current().getVersion();
 
     public String getUserAgent() {
         return userAgent;

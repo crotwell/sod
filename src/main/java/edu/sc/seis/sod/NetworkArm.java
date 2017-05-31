@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Timer;
 
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
@@ -14,6 +13,7 @@ import org.w3c.dom.NodeList;
 
 import edu.sc.seis.sod.hibernate.NetworkDB;
 import edu.sc.seis.sod.hibernate.NetworkNotFound;
+import edu.sc.seis.sod.hibernate.NotFound;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.MicroSecondTimeRange;

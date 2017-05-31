@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -41,7 +42,6 @@ import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.common.UnitRangeImpl;
 import edu.sc.seis.sod.source.event.MicroSecondTimeRangeSupplier;
-import edu.sc.seis.sod.status.TemplateFileLoader;
 import edu.sc.seis.sod.subsetter.LatitudeRange;
 import edu.sc.seis.sod.subsetter.LongitudeRange;
 import edu.sc.seis.sod.subsetter.origin.OriginPointDistance;
@@ -453,7 +453,7 @@ public class SodUtil {
     public static void copyFile(String src, String dest) throws FileNotFoundException {
         if(src.startsWith("jar")) {
             try {
-                URL url = TemplateFileLoader.getUrl(SodUtil.class.getClassLoader(), src);
+                URL url = getUrl(SodUtil.class.getClassLoader(), src);
                 copyStream(url.openStream(), dest);
             } catch(Exception e) {
                 GlobalExceptionHandler.handle("trouble creating url for copying", e);
@@ -680,6 +680,19 @@ public class SodUtil {
         return base + '/' + stripRelativeBits(relativeLoc);
     }
 
+    public static URL getUrl(ClassLoader cl, String loc)
+            throws MalformedURLException {
+        if(loc.startsWith("jar:")) {
+            return cl.getResource(loc.substring(4));
+        } else {
+            try {
+                return new URL(loc);
+            } catch(MalformedURLException e) {
+                return new File(loc).toURL();
+            }
+        }
+    }
+    
     private static String stripDirs(String base, int numDirUp) {
         for(int i = 0; i < numDirUp; i++) {
             base = base.substring(0, base.lastIndexOf("/"));

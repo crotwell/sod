@@ -47,9 +47,7 @@ import edu.sc.seis.sod.model.common.Version;
 import edu.sc.seis.sod.model.event.StatefulEvent;
 import edu.sc.seis.sod.model.status.Standing;
 import edu.sc.seis.sod.retry.RetryStrategy;
-import edu.sc.seis.sod.status.IndexTemplate;
 import edu.sc.seis.sod.status.OutputScheduler;
-import edu.sc.seis.sod.status.TemplateFileLoader;
 import edu.sc.seis.sod.util.exceptionHandler.Extractor;
 import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.util.exceptionHandler.MailExceptionReporter;
@@ -380,7 +378,7 @@ public class Start {
         if(loc.startsWith("http:") || loc.startsWith("ftp:")) {
             in = new URL(loc).openConnection().getInputStream();
         } else if(loc.startsWith("jar:")) {
-            URL url = TemplateFileLoader.getUrl(cl, loc);
+            URL url = SodUtil.getUrl(cl, loc);
             in = url.openConnection().getInputStream();
         } else {
             in = new FileInputStream(loc);
@@ -491,17 +489,7 @@ public class Start {
             webAdmin.start();
         }
         
-        // this next line sets up the status page for exception reporting,
-        // so
-        // it should be as early as possible in the startup sequence
-        IndexTemplate indexTemplate = null;
-        if(runProps.doStatusPages()) {
-            indexTemplate = new IndexTemplate();
-        }
         startArms();
-        if(runProps.doStatusPages()) {
-            indexTemplate.performRegistration();
-        }
         if(!commandLineToolRun) {
             MailExceptionReporter.addMailExceptionReporter(props);;
             addResultMailer(props);

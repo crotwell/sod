@@ -40,7 +40,6 @@ import edu.sc.seis.sod.process.waveform.vector.WaveformVectorProcessWrapper;
 import edu.sc.seis.sod.process.waveform.vector.WaveformVectorResult;
 import edu.sc.seis.sod.source.seismogram.BatchDataRequest;
 import edu.sc.seis.sod.source.seismogram.ConstantSeismogramSourceLocator;
-import edu.sc.seis.sod.source.seismogram.DataCenterSource;
 import edu.sc.seis.sod.source.seismogram.PromiseSeismogramList;
 import edu.sc.seis.sod.source.seismogram.PromiseSeismogramSource;
 import edu.sc.seis.sod.source.seismogram.SeismogramAuthorizationException;

@@ -2,7 +2,6 @@ package edu.sc.seis.sod.process.waveform.vector;
 
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.model.common.FissuresException;
-import edu.sc.seis.sod.model.common.Time;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
