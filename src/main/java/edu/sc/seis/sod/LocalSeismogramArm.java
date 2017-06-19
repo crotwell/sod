@@ -1,5 +1,6 @@
 package edu.sc.seis.sod;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -270,7 +271,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                 
                 
                 try {
-                    localSeismograms = DataCenterSource.toSeisArray(seismogramSource.retrieveData(DataCenterSource.toList(infilters)));
+                    localSeismograms = seismogramSource.retrieveData(Arrays.asList(infilters)).toArray(new LocalSeismogramImpl[0]);
                 } catch(SeismogramSourceException e) {
                     MotionVectorArm.handle(ecp, Stage.DATA_RETRIEVAL, e, seismogramSource, requestToString(infilters, outfilters));
                     return;

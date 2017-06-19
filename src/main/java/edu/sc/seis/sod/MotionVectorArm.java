@@ -447,7 +447,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
             if (rf[i].length != 0) {
                 
                 logger.debug("before retrieve_seismograms");
-                localSeismograms[i] = DataCenterSource.toSeisArray(seismogramSource.retrieveData(DataCenterSource.toList(rf[i])));
+                localSeismograms[i] = seismogramSource.retrieveData(Arrays.asList(rf[i])).toArray(new LocalSeismogramImpl[0]);
                 logger.debug("after successful retrieve_seismograms "+localSeismograms[i].length);
                 if (localSeismograms[i].length > 0
                         && !ChannelIdUtil.areEqual(localSeismograms[i][0].channel_id, rf[i][0].channel_id)) {
