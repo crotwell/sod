@@ -394,17 +394,6 @@ public class NetworkDB extends AbstractHibernateDB {
         return null; // instBlob null, so never seen this channel before
     }
     
-    @Deprecated
-    public Instrumentation getInstrumentation(ChannelImpl chan) throws ChannelNotFound {
-        InstrumentationBlob ib = getInstrumentationBlob(chan);
-        if (ib != null) {
-            Instrumentation inst =  ib.getInstrumentation(); // might be null, meaning no inst exists, but blob in DB so we tried before
-            if (inst == null) { throw new ChannelNotFound(); }
-            return inst;
-        }
-        return null; // instBlob null, so never seen this channel before
-    }
-    
     public ChannelSensitivity getSensitivity(ChannelImpl chan) {
         Query query = getSession().createQuery("from "+ChannelSensitivity.class.getName()+" where channel = :chan");
         query.setEntity("chan", chan);

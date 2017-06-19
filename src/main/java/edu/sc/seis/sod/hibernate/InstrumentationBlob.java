@@ -46,11 +46,6 @@ public class InstrumentationBlob {
         this.response = response;
     }
 
-    public Instrumentation getInstrumentation() {
-        // TODO switch model.Response to stationxml.Response???
-        return new Instrumentation(getResponse(), chan.getEffectiveTime(), null, null, null);
-    }
-
     public static byte[] getResponseAsBlob(ChannelImpl chan, Response response) throws IOException {
         MessageBufferPacker packer = MessagePack.newDefaultBufferPacker();
         int mapSize = 0;
