@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
 import edu.sc.seis.sod.mock.station.MockNetworkAccess;
 import edu.sc.seis.sod.model.common.QuantityImpl;
@@ -15,6 +16,7 @@ import edu.sc.seis.sod.model.station.InvalidResponse;
 import edu.sc.seis.sod.model.station.NetworkAttrImpl;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.model.station.StationImpl;
+import edu.sc.seis.sod.source.SodSourceException;
 import edu.sc.seis.sod.source.network.AbstractNetworkSource;
 import edu.sc.seis.sod.source.network.NetworkQueryConstraints;
 import edu.sc.seis.sod.source.network.NetworkSource;
@@ -92,5 +94,10 @@ public class MockNetworkSource extends AbstractNetworkSource implements NetworkS
     MockNetworkAccess[] nets = new MockNetworkAccess[] { MockNetworkAccess.createNetworkAccess(),
                                                  MockNetworkAccess.createOtherNetworkAccess(),
                                                  MockNetworkAccess.createManySplendoredNetworkAccess() };
+
+    @Override
+    public Response getResponse(ChannelImpl chanId) throws ChannelNotFound, InvalidResponse, SodSourceException {
+        throw new ChannelNotFound();
+    }
     
 }
