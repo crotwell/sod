@@ -3,9 +3,8 @@ package edu.sc.seis.sod.hibernate;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.Query;
 import org.hibernate.Session;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
+import org.hibernate.query.Query;
 
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
