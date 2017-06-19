@@ -122,7 +122,7 @@ public class EventArm implements Arm {
             if ((lastTime.get(source) == null || lastTime.get(source).add(wait).before(ClockUtil.now()))
                     && source.hasNext()) {
                 CacheEvent[] next = source.next();
-                logger.info("Handling " + next.length + " events from source " + source.getDescription());
+                logger.info("Handling " + next.length + " events from source " + source.getName());
                 handle(next);
                 lastTime.put(source, ClockUtil.now());
                 if (source.hasNext()) {

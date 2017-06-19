@@ -33,6 +33,5 @@ public interface EventSource  extends Source {
      */
     public MicroSecondTimeRange getEventTimeRange();
     
-    public String getDescription();
     
 }

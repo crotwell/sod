@@ -49,12 +49,6 @@ public class DelayedEventSource extends AbstractEventSource implements EventSour
             }
         }
     }
-    public String getDescription() {
-        if (description != null) {
-            return description;
-        }
-        return "Delayed ("+wrappedSource.getDescription()+") delayed "+delay;
-    }
 
     public MicroSecondTimeRange getEventTimeRange() {
         return wrappedSource.getEventTimeRange();
