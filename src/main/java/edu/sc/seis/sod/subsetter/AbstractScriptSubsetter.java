@@ -26,12 +26,6 @@ public class AbstractScriptSubsetter implements Subsetter {
 
     protected Object preeval() throws Exception {
         try {
-            if (scriptType.equals("jython") || scriptType.equals("python")) {
-                engine.eval("import sys");
-                engine.eval("sys.path.append('" + Bag.formatForJythonSysPath(Bag.class, "edu/sc/seis/bag/jython")
-                        + "')");
-                engine.eval("from bag import *");
-            }
             engine.put("result", new Pass(this));
             engine.put("util", new ScriptUtil(this));
             Object result = engine.eval(script);
@@ -103,6 +97,11 @@ public class AbstractScriptSubsetter implements Subsetter {
         return out;
     }
 
+    public static String formatForJythonSysPath(Class c, String jarDir) {
+        String out = c.getClassLoader().getResource(jarDir).toString().substring("jar:file:".length()).replaceAll("\\!","");
+        return out;
+    }
+    
     protected String script;
 
     protected Element config;
