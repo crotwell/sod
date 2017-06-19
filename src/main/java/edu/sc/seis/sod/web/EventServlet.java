@@ -14,8 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONException;
 import org.json.JSONWriter;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 
+import edu.sc.seis.sod.hibernate.NotFound;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.StatefulEventDB;
 import edu.sc.seis.sod.hibernate.eventpair.AbstractEventChannelPair;
