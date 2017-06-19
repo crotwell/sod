@@ -10,7 +10,7 @@
                 <velocity>#eventArmPage()</velocity>
             </xsd:annotation>
             <ref name="fdsnEvent"/>
-            <ref name="backwardsEventFinder"/>
+            <ref name="backwardsEventSource"/>
             <ref name="CSVEventSource"/>
             <ref name="periodicFakeEventSource"/>
             <ref name="nowFakeEventSource"/>
@@ -159,95 +159,30 @@
             </interleave>
         </element>
     </define>
-    <define name="backwardsEventFinder">
-        <element name="backwardsEventFinder">
+    <define name="backwardsEventSource">
+        <element name="backwardsEventSource">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Retrieve events from an EventFinder in reverse time order. </summary>
-                    <description> A Fissures/DHI EventDC service is located via the name and dns tags. The EventFinder
-                        is acquired from the EventDC, and a query is sent with the given arguments. The events returned
-                        are then sent through the EventArm for processing.
-</description>
-                    <deprecated>This is deprecated in favor of the new fdsnStation source.</deprecated>
+                    <summary> Retrieve events from a wrapped EventSource in reverse time order. </summary>
+                    <description></description>
                 </xsd:documentation>
             </xsd:annotation>
+
             <interleave>
-			    <optional><ref name="name"/></optional>
-			    <optional><ref name="dns"/></optional>
-	    		<optional>
-	    			<element name="retries">
-						<xsd:annotation>
-						  <summary>Number of consecutive failures before quiting</summary>
-						  <description>In the event of server errors, SOD will retry 
-						  the query to the server for retries times before failing.
-						  The default is -1 which means to try forever.</description>
-   				         </xsd:annotation>
-						<data type="integer"/>
-					</element>
-			    </optional>
-	            <optional>
-	                <choice>
- 	                   <ref name="globalArea"/>
- 	                   <ref name="boxArea"/>
- 	                   <ref name="pointDistance"/>
- 	               </choice>
- 	           </optional>
-	            <optional>
-	                <ref name="originDepthRange"/>
-	            </optional>
- 	           <choice>
- 	               <ref name="originTimeRange"/>
- 	               <ref name="networkTimeRange"/>
- 	           </choice>
-	            <optional>
-	                <ref name="magnitudeRange"/>
-	            </optional>
-	            <zeroOrMore>
-	                <ref name="catalog"/>
-	            </zeroOrMore>
-	            <zeroOrMore>
-	                <ref name="contributor"/>
-	            </zeroOrMore>
+              <optional>
+                <element name="name">
+                    <data type="string">
+                        <xsd:annotation>
+                            <summary>A unique name for this source.</summary>
+                        </xsd:annotation>
+                    </data>
+                </element>
+              </optional>
+              <element name="delay">
+                <ref name="timeInterval"/>
+              </element>
+              <ref name="eventSource"/>
             </interleave>
-        </element>
-    </define>
-    <define name="name">
-        <element name="name">
-            <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary>Name of an event server</summary>
-                    <description>The server's name is used in combination with a dns value to find an event DC. The name
-                        "IRIS_EventDC" must be used in combination with the "edu/iris/dmc" dns value. The names
-                        "NCEDC_EventDC" and "NCSN_EventDC" must be used in conjunction with the "edu/berkley/geo/quake"
-                        dns value. The name "SCEPPEventDC" must be used in conjunction with a DNS value "edu/sc/seis".</description>
-                </xsd:documentation>
-            </xsd:annotation>
-            <choice>
-                <value>IRIS_EventDC</value>
-                <value>NCEDC_EventDC</value>
-                <value>NCSN_EventDC</value>
-                <value>SCEPPEventDC</value>
-                <data type="string"/>
-            </choice>
-        </element>
-    </define>
-    <define name="dns">
-        <element name="dns">
-            <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary>DNS location of an event server</summary>
-                    <description>The server's dns is used in combination with a name value to find an event DC. The name
-                        "IRIS_EventDC" must be used in combination with the "edu/iris/dmc" dns value. The names
-                        "NCEDC_EventDC" and "NCSN_EventDC" must be used in conjunction with the "edu/berkley/geo/quake"
-                        dns value. The name "SCEPPEventDC" must be used in conjunction with a DNS value "edu/sc/seis"</description>
-                </xsd:documentation>
-            </xsd:annotation>
-            <choice>
-                <value>edu/iris/dmc</value>
-                <value>edu/berkley/geo/quake</value>
-                <value>edu/sc/seis</value>
-                <data type="string"/>
-            </choice>
         </element>
     </define>
     <define name="CSVEventSource">

@@ -11,17 +11,16 @@ import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
 import edu.sc.seis.sod.model.event.CacheEvent;
 
-TODO rename to BackwardsEventSource???
         
-public class BackwardsEventFinder extends AbstractEventSource {
+public class BackwardsEventSource extends AbstractEventSource {
 
 
-    protected BackwardsEventFinder(EventSource source) {
+    protected BackwardsEventSource(EventSource source) {
         super("backwards "+source.getName(), source.getRetries());
         this.wrappedSource = source;
     }
 
-    public BackwardsEventFinder(Element config) throws ConfigurationException {
+    public BackwardsEventSource(Element config) throws ConfigurationException {
         super(config, "BackwardsEventSource");
         NodeList children = config.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
@@ -100,5 +99,5 @@ public class BackwardsEventFinder extends AbstractEventSource {
 
     EventSource wrappedSource;
     
-    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(BackwardsEventFinder.class);
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(BackwardsEventSource.class);
 }
