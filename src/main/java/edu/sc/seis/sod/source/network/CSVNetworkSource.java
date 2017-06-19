@@ -15,6 +15,7 @@ import org.w3c.dom.Element;
 import com.csvreader.CsvReader;
 
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.UserConfigurationException;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
@@ -294,6 +295,11 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
 
     @Override
     public Instrumentation getInstrumentation(ChannelImpl chanId) throws ChannelNotFound, InvalidResponse {
+        throw new ChannelNotFound();
+    }
+
+    @Override
+    public Response getResponse(ChannelImpl chanId) throws ChannelNotFound, InvalidResponse {
         throw new ChannelNotFound();
     }
 

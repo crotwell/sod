@@ -2,8 +2,8 @@ package edu.sc.seis.sod.subsetter.channel;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.ResponseStage;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.model.station.Stage;
 import edu.sc.seis.sod.status.StringTree;
 
 public class StageOutputUnit extends AbstractStageUnit {
@@ -12,7 +12,7 @@ public class StageOutputUnit extends AbstractStageUnit {
         super(config);
     }
 
-    protected StringTree accept(Stage stage) {
-        return accept(stage.output_units);
+    protected StringTree accept(ResponseStage stage) {
+        return accept(stage.getResponseItem().getOutputUnits());
     }
 }

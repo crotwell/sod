@@ -445,10 +445,9 @@
                     <description>The type of stage to match.</description>
                 </xsd:annotation>
                 <choice>
-                    <value>laplace</value>
-                    <value>analog</value>
-                    <value>composite</value>
-                    <value>digital</value>
+                    <value>LAPLACE (RADIANS/SECOND)</value>
+                    <value>LAPLACE (HERTZ)</value>
+                    <value>DIGITAL</value>
                 </choice>
             </element>
         </element>
@@ -501,16 +500,6 @@
                     <data type="integer"/>
                 </element>
             </optional>
-            <optional>
-                <element name="filter">
-                    <xsd:annotation>
-                        <summary>The number of the filter within the stage</summary>
-                        <description>The number, starting with 1, of the filter of interest within the given stage. This
-                            defaults to 1.</description>
-                    </xsd:annotation>
-                    <data type="integer"/>
-                </element>
-            </optional>
             <element name="type">
                 <xsd:annotation>
                     <summary>The type of filter to match.</summary>
@@ -518,6 +507,8 @@
                 </xsd:annotation>
                 <choice>
                     <value>poleZero</value>
+                    <value>fir</value>
+                    <value>polynomial</value>
                     <value>coefficient</value>
                     <value>list</value>
                 </choice>

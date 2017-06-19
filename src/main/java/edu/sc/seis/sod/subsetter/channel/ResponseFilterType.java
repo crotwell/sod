@@ -3,29 +3,43 @@ package edu.sc.seis.sod.subsetter.channel;
 import org.w3c.dom.Element;
 
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
-import edu.sc.seis.sod.model.station.Filter;
-import edu.sc.seis.sod.model.station.FilterType;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Coefficients;
+import edu.sc.seis.seisFile.fdsnws.stationxml.FIR;
+import edu.sc.seis.seisFile.fdsnws.stationxml.PolesZeros;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Polynomial;
+import edu.sc.seis.seisFile.fdsnws.stationxml.ResponseList;
+import edu.sc.seis.seisFile.fdsnws.stationxml.ResponseStage;
+import edu.sc.seis.sod.status.Fail;
+import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
-import edu.sc.seis.sod.status.StringTreeLeaf;
 
-public class ResponseFilterType extends AbstractResponseFilterSubsetter {
+public class ResponseFilterType extends AbstractStageSubsetter {
 
 	public ResponseFilterType(Element config) {
 		super(config);
-        String typeStr = DOMHelper.extractText(config, "type");
-		if ( typeStr.equalsIgnoreCase("poleZero")) {
-			type = FilterType.POLEZERO;
-		} else if (typeStr.equalsIgnoreCase("coefficient")) {
-			type = FilterType.COEFFICIENT;
-		} else if (typeStr.equalsIgnoreCase("list")) {
-			type = FilterType.LIST;
-		}
+        String type = DOMHelper.extractText(config, "type");
 	}
 
-	protected StringTree accept(Filter filter) {
-		return new StringTreeLeaf(this, type.value() == filter.discriminator()
-				.value());
-	}
+	private String type;
 
-	private FilterType type;
+
+    @Override
+    protected StringTree accept(ResponseStage stage) {
+        if ((type.equalsIgnoreCase("poleZero") || type.equalsIgnoreCase("polesZeros")) 
+                && stage.getResponseItem() instanceof PolesZeros) {
+            return new Pass(this);
+        } else if (type.equalsIgnoreCase("fir") && stage.getResponseItem() instanceof FIR) {
+            return new Pass(this);
+        } else if ((type.equalsIgnoreCase("coefficient") || type.equalsIgnoreCase("coefficients")) 
+                && stage.getResponseItem() instanceof Coefficients) {
+            return new Pass(this);
+        } else if (type.equalsIgnoreCase("polynomial") && stage.getResponseItem() instanceof Polynomial) {
+            return new Pass(this);
+        } else if ((type.equalsIgnoreCase("list") || type.equalsIgnoreCase("responselist")) 
+                && stage.getResponseItem() instanceof ResponseList) {
+            return new Pass(this);
+        } else {
+           return new Fail(this, "Stage not "+type); 
+        }
+    }
 }

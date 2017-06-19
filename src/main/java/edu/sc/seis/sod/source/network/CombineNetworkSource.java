@@ -8,6 +8,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
@@ -123,6 +124,18 @@ public class CombineNetworkSource extends AbstractNetworkSource implements Netwo
         NetworkSource source = getSourceForCode(NetworkIdUtil.toStringNoDates(chan.getId().network_id));
         if (source != null) {
             Instrumentation out = source.getInstrumentation(chan);
+            if (out != null) {
+                return out;
+            }
+        }
+        throw new ChannelNotFound();
+    }
+
+    @Override
+    public Response getResponse(ChannelImpl chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
+        NetworkSource source = getSourceForCode(NetworkIdUtil.toStringNoDates(chan.getId().network_id));
+        if (source != null) {
+            Response out = source.getResponse(chan);
             if (out != null) {
                 return out;
             }

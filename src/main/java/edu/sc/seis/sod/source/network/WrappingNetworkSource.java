@@ -2,6 +2,7 @@ package edu.sc.seis.sod.source.network;
 
 import java.util.List;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.TimeInterval;
@@ -48,6 +49,11 @@ public abstract class WrappingNetworkSource extends AbstractNetworkSource implem
     @Override
     public Instrumentation getInstrumentation(ChannelImpl chanId) throws ChannelNotFound, InvalidResponse, SodSourceException {
         return getWrapped().getInstrumentation(chanId);
+    }
+
+    @Override
+    public Response getResponse(ChannelImpl chanId) throws ChannelNotFound, InvalidResponse, SodSourceException {
+        return getWrapped().getResponse(chanId);
     }
 
     @Override

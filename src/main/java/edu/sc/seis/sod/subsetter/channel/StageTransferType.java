@@ -3,8 +3,9 @@ package edu.sc.seis.sod.subsetter.channel;
 import org.w3c.dom.Element;
 
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
-import edu.sc.seis.sod.model.station.Stage;
-import edu.sc.seis.sod.model.station.TransferType;
+import edu.sc.seis.seisFile.fdsnws.stationxml.PolesZeros;
+import edu.sc.seis.seisFile.fdsnws.stationxml.ResponseStage;
+import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
@@ -13,21 +14,19 @@ public class StageTransferType extends AbstractStageSubsetter implements
 
     public StageTransferType(Element config) {
         super(config);
-        String typeStr = DOMHelper.extractText(config, "type");
-        if(typeStr.equalsIgnoreCase("laplace")) {
-            type = TransferType.LAPLACE;
-        } else if(typeStr.equalsIgnoreCase("analog")) {
-            type = TransferType.ANALOG;
-        } else if(typeStr.equalsIgnoreCase("composite")) {
-            type = TransferType.COMPOSITE;
-        } else if(typeStr.equalsIgnoreCase("digital")) {
-            type = TransferType.DIGITAL;
+        String type = DOMHelper.extractText(config, "type");
+    }
+
+    @Override
+    protected StringTree accept(ResponseStage stage) {
+        if (stage.getResponseItem() instanceof PolesZeros) {
+            PolesZeros polesZeros = (PolesZeros)stage.getResponseItem();
+            return new StringTreeLeaf(this, type.equals(polesZeros.getPzTransferType()));
+        } else {
+            return new Fail(this, "Stage "+getStageNum()+" is not PolesZeros: "+stage.getResponseItem().getClass().getSimpleName());
         }
     }
+    
+    String type;
 
-    protected StringTree accept(Stage stage) {
-        return new StringTreeLeaf(this, type.equals(stage.type));
-    }
-
-    TransferType type;
 }

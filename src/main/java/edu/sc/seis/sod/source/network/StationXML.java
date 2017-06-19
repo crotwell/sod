@@ -30,6 +30,7 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.FDSNStationXML;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.seisFile.fdsnws.stationxml.NetworkIterator;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.seisFile.fdsnws.stationxml.StationIterator;
 import edu.sc.seis.seisFile.fdsnws.stationxml.StationXMLException;
@@ -172,6 +173,7 @@ public class StationXML extends AbstractNetworkSource implements NetworkSource {
         throw new ChannelNotFound();
     }
 
+    @Override
     public Instrumentation getInstrumentation(ChannelImpl chan) throws ChannelNotFound, InvalidResponse {
         MicroSecondDate chanBegin = new MicroSecondDate(chan.getId().begin_time);
         String newQuery = FDSNStationQueryParams.NETWORK+"="+chan.getId().network_id.network_code+
@@ -206,6 +208,52 @@ public class StationXML extends AbstractNetworkSource implements NetworkSource {
                         }
                     
                     
+                }
+            }
+            
+        } catch(URISyntaxException e) {
+            throw new InvalidResponse("StationXML URL is not valid, should not happen but it did.", e);
+        } catch(XMLStreamException e) {
+            throw new InvalidResponse("Problem getting response via stationxml.", e);
+        } catch(StationXMLException e) {
+            throw new InvalidResponse("Problem getting response via stationxml.", e);
+        } catch(IOException e) {
+            throw new InvalidResponse("Problem getting response via stationxml.", e);
+        }
+        
+        throw new ChannelNotFound();
+    }
+    
+    @Override
+    public Response getResponse(ChannelImpl chan) throws ChannelNotFound, InvalidResponse {
+        MicroSecondDate chanBegin = new MicroSecondDate(chan.getId().begin_time);
+        String newQuery = FDSNStationQueryParams.NETWORK+"="+chan.getId().network_id.network_code+
+                "&"+FDSNStationQueryParams.STATION+"="+chan.getId().station_code+
+                "&"+FDSNStationQueryParams.LOCATION+"="+chan.getId().site_code+
+                "&"+FDSNStationQueryParams.CHANNEL+"="+chan.getId().channel_code+
+                "&"+FDSNStationQueryParams.STARTTIME+"="+toDateString(chanBegin)+
+                "&"+FDSNStationQueryParams.ENDTIME+"="+toDateString(chanBegin.add(ONE_DAY));
+        try {
+            URI chanUri = new URI(parsedURL.getScheme(),
+                                  parsedURL.getUserInfo(),
+                                  parsedURL.getHost(),
+                                  parsedURL.getPort(),
+                                  parsedURL.getPath(),
+                                  newQuery,
+                                  parsedURL.getFragment());
+            FDSNStationXML sm = retrieveXML(chanUri, "resp");
+            NetworkIterator netIt = sm.getNetworks();
+            while (netIt.hasNext()) {
+                Network n = netIt.next();
+                StationIterator staIt = n.getStations();
+                while (staIt.hasNext()) {
+                    Station s = staIt.next();
+                    for (Channel c : s.getChannelList()) {
+                        if (RangeTool.areOverlapping(new MicroSecondTimeRange(new MicroSecondDate(c.getStartDate()), new MicroSecondDate(c.getEndDate())),
+                                                     new MicroSecondTimeRange(chanBegin.add(ONE_SECOND), chanBegin.add(ONE_DAY)))) {
+                            return c.getResponse();
+                        }
+                    }
                 }
             }
             

@@ -22,12 +22,12 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.DataAvailability;
 import edu.sc.seis.seisFile.fdsnws.stationxml.FDSNStationXML;
 import edu.sc.seis.seisFile.fdsnws.stationxml.NetworkIterator;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
 import edu.sc.seis.seisFile.fdsnws.stationxml.StationIterator;
 import edu.sc.seis.sod.BuildVersion;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
-import edu.sc.seis.sod.hibernate.NetworkNotFound;
 import edu.sc.seis.sod.model.common.BoxAreaImpl;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
@@ -232,23 +232,14 @@ public class FdsnStation extends AbstractNetworkSource {
                     StationImpl sImpl = StationXMLToFissures.convert(s, netAttr);
                     for (Channel c : s.getChannelList()) {
                         ChannelSensitivityBundle csb = StationXMLToFissures.convert(c, sImpl);
-                        out.add(csb.getChan());
+                        ChannelImpl outChan = csb.getChan();
+                        out.add(outChan);
                         chanSensitivityMap.put(ChannelIdUtil.toString(csb.getChan().get_id()), csb.getSensitivity());
                         DataAvailability da = c.getDataAvailability();
                         if (da != null && da.getExtent() != null) {
                             MicroSecondTimeRange range = new MicroSecondTimeRange(new MicroSecondDate(da.getExtent().getStart()),
                                                                                   new MicroSecondDate(da.getExtent().getEnd()));
-                            List<MicroSecondTimeRange> mstrList = new ArrayList<MicroSecondTimeRange>();
-                            mstrList.add(range);
-                            availableData.update(csb.getChan().get_id(), mstrList);
-                        } else if (includeAvailability) {
-                            availableData.update(csb.getChan().get_id(), new ArrayList<MicroSecondTimeRange>());
-                        } else {
-                            // didn't ask for availablility, so use channel effective times
-                            MicroSecondTimeRange range = new MicroSecondTimeRange(csb.getChan().getEffectiveTime());
-                            List<MicroSecondTimeRange> mstrList = new ArrayList<MicroSecondTimeRange>();
-                            mstrList.add(range);
-                            availableData.update(csb.getChan().get_id(), mstrList);
+                            outChan.setAvailabilityExtent(range);
                         }
                     }
                 }
@@ -345,9 +336,65 @@ public class FdsnStation extends AbstractNetworkSource {
             }
         }
     }
-    
-    public CoarseAvailableData getAvailableData() {
-        return availableData;
+
+    @Override
+    public Response getResponse(ChannelImpl chan) throws SodSourceException, ChannelNotFound, InvalidResponse  {
+        FDSNStationXML staxml = null;
+        try {
+            if (chan == null) { throw new IllegalArgumentException("Channel is null");}
+            if (chan.getId() == null) { throw new IllegalArgumentException("Channel id is null");}
+            if (chan.getId().begin_time == null) { throw new IllegalArgumentException("Channel begin time is null");}
+            FDSNStationQueryParams staQP = setupQueryParams();
+            staQP.setLevel(FDSNStationQueryParams.LEVEL_RESPONSE);
+            staQP.clearNetwork()
+                    .appendToNetwork(chan.getId().network_id.network_code)
+                    .clearStation()
+                    .appendToStation(chan.getId().station_code)
+                    .clearLocation()
+                    .appendToLocation(chan.getId().site_code)
+                    .clearChannel()
+                    .appendToChannel(chan.getId().channel_code);
+            setTimeParamsToGetSingleChan(staQP, chan.getBeginTime(), chan.getEndTime());
+            logger.debug("getResponse "+staQP.formURI());
+            staxml = internalGetStationXML(staQP);
+            NetworkIterator netIt = staxml.getNetworks();
+            while (netIt.hasNext()) {
+                edu.sc.seis.seisFile.fdsnws.stationxml.Network n = netIt.next();
+                NetworkAttrImpl netAttr = StationXMLToFissures.convert(n);
+                StationIterator staIt = n.getStations();
+                while (staIt.hasNext()) {
+                    edu.sc.seis.seisFile.fdsnws.stationxml.Station s = staIt.next();
+                    StationImpl sImpl = StationXMLToFissures.convert(s, netAttr);
+                    for (Channel c : s.getChannelList()) {
+                        ChannelSensitivityBundle csb = StationXMLToFissures.convert(c, sImpl);
+                        chanSensitivityMap.put(ChannelIdUtil.toString(csb.getChan().get_id()), csb.getSensitivity());
+                        // first one should be right 
+                        if (staxml != null) {
+                            staxml.closeReader();
+                            staxml = null;
+                        }
+                        return c.getResponse();
+                    }
+                }
+            }
+            throw new ChannelNotFound();
+        } catch(URISyntaxException e) {
+            // should not happen
+            throw new SodSourceException("Problem forming URI", e);
+        } catch(SeisFileException e) {
+            throw new SodSourceException(e);
+        } catch(XMLValidationException e) {
+            // debug to get stack trace in log file, but not in warn which goes to stderr
+            logger.warn("InvalidXML: "+ChannelIdUtil.toString(chan.get_id())+" "+ e.getMessage().replace('\n', ' '));
+            logger.warn("InvalidXML: "+ChannelIdUtil.toString(chan.get_id())+" "+ e.getMessage().replace('\n', ' '), e);
+            throw new InvalidResponse(e);
+        } catch(XMLStreamException e) {
+            throw new SodSourceException(e);
+        } finally {
+            if (staxml != null) {
+                staxml.closeReader();
+            }
+        }
     }
 
     FDSNStationQueryParams setupQueryParams() {
@@ -446,8 +493,6 @@ public class FdsnStation extends AbstractNetworkSource {
     boolean validateXML = false;
     
     public static final TimeInterval ONE_SECOND = new TimeInterval(1, UnitImpl.SECOND);
-    
-    CoarseAvailableData availableData = new CoarseAvailableData();
     
     HashMap<String, QuantityImpl> chanSensitivityMap = new HashMap<String, QuantityImpl>();
 

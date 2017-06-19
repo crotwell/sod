@@ -2,6 +2,7 @@ package edu.sc.seis.sod.source.network;
 
 import java.util.List;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.TimeInterval;
@@ -27,6 +28,7 @@ public interface NetworkSource extends Source {
     public QuantityImpl getSensitivity(ChannelImpl chanId) throws ChannelNotFound, InvalidResponse, SodSourceException;
 
     public Instrumentation getInstrumentation(ChannelImpl chanId) throws ChannelNotFound, InvalidResponse, SodSourceException;
+    public Response getResponse(ChannelImpl chanId) throws ChannelNotFound, InvalidResponse, SodSourceException;
 
     public void setConstraints(NetworkQueryConstraints constraints);
     

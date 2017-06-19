@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.station.ChannelId;
@@ -43,6 +44,12 @@ public class LoadedNetworkSource extends WrappingNetworkSource implements Networ
     public Instrumentation getInstrumentation(ChannelImpl chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
         instrumentationLoaded.add(ChannelIdUtil.toString(chan.getId()));
         return getWrapped().getInstrumentation(chan);
+    }
+
+    @Override
+    public Response getResponse(ChannelImpl chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
+        instrumentationLoaded.add(ChannelIdUtil.toString(chan.getId()));
+        return getWrapped().getResponse(chan);
     }
 
     @Override

@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.station.ChannelGroup;
 import edu.sc.seis.sod.model.station.ChannelId;
@@ -381,7 +382,19 @@ public class NetworkDB extends AbstractHibernateDB {
         }
         return null;    
     }
+
     
+    public Response getResponse(ChannelImpl chan) throws ChannelNotFound {
+        InstrumentationBlob ib = getInstrumentationBlob(chan);
+        if (ib != null) {
+            Response resp =  ib.getResponse(); // might be null, meaning no inst exists, but blob in DB so we tried before
+            if (resp == null) { throw new ChannelNotFound(); }
+            return resp;
+        }
+        return null; // instBlob null, so never seen this channel before
+    }
+    
+    @Deprecated
     public Instrumentation getInstrumentation(ChannelImpl chan) throws ChannelNotFound {
         InstrumentationBlob ib = getInstrumentationBlob(chan);
         if (ib != null) {
@@ -413,8 +426,28 @@ public class NetworkDB extends AbstractHibernateDB {
         getSession().saveOrUpdate(sensitivity);
     }
     
+    @Deprecated
     public void putInstrumentation(ChannelImpl chan, Instrumentation inst) {
         logger.debug("Put instrumentation: "+ChannelIdUtil.toStringNoDates(chan));
+        InstrumentationBlob ib = null;
+        try {
+            ib = getInstrumentationBlob(chan);
+        } catch(ChannelNotFound e) {
+            // must be new
+        }
+        if (ib == null) {
+            ib = new InstrumentationBlob(chan, inst);
+        } else {
+            int dbid = ib.getDbid();
+            getSession().evict(ib);
+            ib = new InstrumentationBlob(chan, inst);
+            ib.setDbid(dbid);
+        }
+        getSession().saveOrUpdate(ib);
+    }
+
+    public void putResponse(ChannelImpl chan, Response inst) {
+        logger.debug("Put response: "+ChannelIdUtil.toStringNoDates(chan));
         InstrumentationBlob ib = null;
         try {
             ib = getInstrumentationBlob(chan);
