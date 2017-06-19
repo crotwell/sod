@@ -1,22 +1,49 @@
 package edu.sc.seis.sod.source.event;
 
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.hibernate.NotFound;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
 import edu.sc.seis.sod.model.event.CacheEvent;
 
-
+TODO rename to BackwardsEventSource???
+        
 public class BackwardsEventFinder extends AbstractEventSource {
 
-    public BackwardsEventFinder(Element config) throws Exception {
-        super(config, "BackwardsEventSource");
-    }
-    
-    public String getDescription() {
-        return "Backwards "+super.getDescription();
+
+    protected BackwardsEventFinder(EventSource source) {
+        super("backwards "+source.getName(), source.getRetries());
+        this.wrappedSource = source;
     }
 
+    public BackwardsEventFinder(Element config) throws ConfigurationException {
+        super(config, "BackwardsEventSource");
+        NodeList children = config.getChildNodes();
+        for (int i = 0; i < children.getLength(); i++) {
+            Node node = children.item(i);
+            if(node instanceof Element) {
+                Element el = (Element)node;
+                if (el.getLocalName().equals("name")) {
+                    this.name = SodUtil.getNestedText(el);
+                } else {
+                    Object o = SodUtil.load(el, "event"); // loads something from source.event package
+                    if (o instanceof EventSource) {
+                        wrappedSource = (EventSource)o;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    public MicroSecondTimeRange getEventTimeRange() {
+        return wrappedSource.getEventTimeRange();
+    }
 
     public boolean hasNext() {
         MicroSecondTimeRange currentQuery = getQueryTime();
@@ -29,7 +56,7 @@ public class BackwardsEventFinder extends AbstractEventSource {
     }
 
     public CacheEvent[] next() {
-        CacheEvent[] results = super.next();
+        CacheEvent[] results = wrappedSource.next();
         CacheEvent[] out = new CacheEvent[results.length];
         for(int i = 0; i < out.length; i++) {
             out[i] = results[results.length-i-1];
@@ -52,7 +79,7 @@ public class BackwardsEventFinder extends AbstractEventSource {
     protected MicroSecondDate getQueryStart() {
         try {
             return getQueryEdge();
-        } catch(edu.sc.seis.fissuresUtil.database.NotFound e) {
+        } catch(NotFound e) {
             logger.debug("the query times database didn't have an entry for our server/dns combo, just use the time in the config file");
             return getEventTimeRange().getEndTime();
         }
@@ -69,6 +96,9 @@ public class BackwardsEventFinder extends AbstractEventSource {
         }
         return new MicroSecondTimeRange(queryStart, queryEnd);
     }
+    
+
+    EventSource wrappedSource;
     
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(BackwardsEventFinder.class);
 }
