@@ -27,7 +27,6 @@ public interface NetworkSource extends Source {
 
     public QuantityImpl getSensitivity(ChannelImpl chanId) throws ChannelNotFound, InvalidResponse, SodSourceException;
 
-    public Instrumentation getInstrumentation(ChannelImpl chanId) throws ChannelNotFound, InvalidResponse, SodSourceException;
     public Response getResponse(ChannelImpl chanId) throws ChannelNotFound, InvalidResponse, SodSourceException;
 
     public void setConstraints(NetworkQueryConstraints constraints);

@@ -9,7 +9,6 @@ import edu.sc.seis.sod.hibernate.NetworkDB;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
 import edu.sc.seis.sod.model.station.ChannelImpl;
-import edu.sc.seis.sod.model.station.Instrumentation;
 import edu.sc.seis.sod.model.station.InvalidResponse;
 import edu.sc.seis.sod.source.SodSourceException;
 
@@ -40,55 +39,6 @@ public class InstrumentationFromDB extends WrappingNetworkSource implements Netw
         NetworkDB.getSingleton().putSensitivity(dbSensitivity);
         return sense;
     }
-
-    @Override
-    public Instrumentation getInstrumentation(ChannelImpl chan) throws ChannelNotFound, SodSourceException {
-        String key = ChannelIdUtil.toString(chan.getId());
-        Instrumentation inst;
-        try {
-            synchronized(inProgress) {
-                while (inProgress.containsKey(key)) {
-                    try {
-                        inProgress.wait();
-                    } catch(InterruptedException e) {}
-                }
-                inProgress.put(key, "working");
-                inProgress.notifyAll();
-            }
-            inst = NetworkDB.getSingleton().getInstrumentation(chan);
-            if (inst != null && inst.the_response.stages.length == 0) {
-                logger.warn("bad instrumentation in db, stages.length==0, regetting. "
-                        + ChannelIdUtil.toStringNoDates(chan));
-                NetworkDB.getSingleton().putInstrumentation(chan, null);
-                inst = null;
-            }
-            if (inst == null) {
-                // null means we have not yet tried to get this instrumentation
-                // db throws ChannelNotFound if we tried before and got a
-                // ChannelNotFound
-                try {
-                    inst = getWrapped().getInstrumentation(chan);
-                    NetworkDB.getSingleton().putInstrumentation(chan, inst);
-                } catch(ChannelNotFound e) {
-                    logger.warn("exception", e);
-                    NetworkDB.getSingleton().putInstrumentation(chan, null);
-                } catch(InvalidResponse e) {
-                    logger.warn("exception", e);
-                    NetworkDB.getSingleton().putInstrumentation(chan, null);
-                } catch(SodSourceException e) {
-                    logger.warn("exception", e);
-                    NetworkDB.getSingleton().putInstrumentation(chan, null);
-                }
-            }
-        } finally {
-            synchronized(inProgress) {
-                inProgress.remove(key);
-                inProgress.notifyAll();
-            }
-        }
-        return inst;
-    }
-
 
     @Override
     public Response getResponse(ChannelImpl chan) throws ChannelNotFound, SodSourceException {

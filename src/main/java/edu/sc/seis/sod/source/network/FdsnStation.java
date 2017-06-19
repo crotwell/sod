@@ -277,67 +277,6 @@ public class FdsnStation extends AbstractNetworkSource {
     }
 
     @Override
-    public Instrumentation getInstrumentation(ChannelImpl chan) throws SodSourceException, ChannelNotFound, InvalidResponse  {
-        FDSNStationXML staxml = null;
-        try {
-            if (chan == null) { throw new IllegalArgumentException("Channel is null");}
-            if (chan.getId() == null) { throw new IllegalArgumentException("Channel id is null");}
-            if (chan.getId().begin_time == null) { throw new IllegalArgumentException("Channel begin time is null");}
-            FDSNStationQueryParams staQP = setupQueryParams();
-            staQP.setLevel(FDSNStationQueryParams.LEVEL_RESPONSE);
-            staQP.clearNetwork()
-                    .appendToNetwork(chan.getId().network_id.network_code)
-                    .clearStation()
-                    .appendToStation(chan.getId().station_code)
-                    .clearLocation()
-                    .appendToLocation(chan.getId().site_code)
-                    .clearChannel()
-                    .appendToChannel(chan.getId().channel_code);
-            setTimeParamsToGetSingleChan(staQP, chan.getBeginTime(), chan.getEndTime());
-            logger.debug("getInstrumentation "+staQP.formURI());
-            staxml = internalGetStationXML(staQP);
-            NetworkIterator netIt = staxml.getNetworks();
-            while (netIt.hasNext()) {
-                edu.sc.seis.seisFile.fdsnws.stationxml.Network n = netIt.next();
-                NetworkAttrImpl netAttr = StationXMLToFissures.convert(n);
-                StationIterator staIt = n.getStations();
-                while (staIt.hasNext()) {
-                    edu.sc.seis.seisFile.fdsnws.stationxml.Station s = staIt.next();
-                    StationImpl sImpl = StationXMLToFissures.convert(s, netAttr);
-                    for (Channel c : s.getChannelList()) {
-                        ChannelSensitivityBundle csb = StationXMLToFissures.convert(c, sImpl);
-                        chanSensitivityMap.put(ChannelIdUtil.toString(csb.getChan().get_id()), csb.getSensitivity());
-                        // first one should be right
-                        Instrumentation out = StationXMLToFissures.convertInstrumentation(c); 
-                        if (staxml != null) {
-                            staxml.closeReader();
-                            staxml = null;
-                        }
-                        return out;
-                    }
-                }
-            }
-            throw new ChannelNotFound();
-        } catch(URISyntaxException e) {
-            // should not happen
-            throw new SodSourceException("Problem forming URI", e);
-        } catch(SeisFileException e) {
-            throw new SodSourceException(e);
-        } catch(XMLValidationException e) {
-            // debug to get stack trace in log file, but not in warn which goes to stderr
-            logger.warn("InvalidXML: "+ChannelIdUtil.toString(chan.get_id())+" "+ e.getMessage().replace('\n', ' '));
-            logger.warn("InvalidXML: "+ChannelIdUtil.toString(chan.get_id())+" "+ e.getMessage().replace('\n', ' '), e);
-            throw new InvalidResponse(e);
-        } catch(XMLStreamException e) {
-            throw new SodSourceException(e);
-        } finally {
-            if (staxml != null) {
-                staxml.closeReader();
-            }
-        }
-    }
-
-    @Override
     public Response getResponse(ChannelImpl chan) throws SodSourceException, ChannelNotFound, InvalidResponse  {
         FDSNStationXML staxml = null;
         try {

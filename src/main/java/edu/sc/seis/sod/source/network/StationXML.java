@@ -172,57 +172,6 @@ public class StationXML extends AbstractNetworkSource implements NetworkSource {
         }
         throw new ChannelNotFound();
     }
-
-    @Override
-    public Instrumentation getInstrumentation(ChannelImpl chan) throws ChannelNotFound, InvalidResponse {
-        MicroSecondDate chanBegin = new MicroSecondDate(chan.getId().begin_time);
-        String newQuery = FDSNStationQueryParams.NETWORK+"="+chan.getId().network_id.network_code+
-                "&"+FDSNStationQueryParams.STATION+"="+chan.getId().station_code+
-                "&"+FDSNStationQueryParams.LOCATION+"="+chan.getId().site_code+
-                "&"+FDSNStationQueryParams.CHANNEL+"="+chan.getId().channel_code+
-                "&"+FDSNStationQueryParams.STARTTIME+"="+toDateString(chanBegin)+
-                "&"+FDSNStationQueryParams.ENDTIME+"="+toDateString(chanBegin.add(ONE_DAY));
-        try {
-            URI chanUri = new URI(parsedURL.getScheme(),
-                                  parsedURL.getUserInfo(),
-                                  parsedURL.getHost(),
-                                  parsedURL.getPort(),
-                                  parsedURL.getPath(),
-                                  newQuery,
-                                  parsedURL.getFragment());
-            FDSNStationXML sm = retrieveXML(chanUri, "resp");
-            NetworkIterator netIt = sm.getNetworks();
-            while (netIt.hasNext()) {
-                Network n = netIt.next();
-                StationIterator staIt = n.getStations();
-                while (staIt.hasNext()) {
-                    Station s = staIt.next();
-                        for (Channel c : s.getChannelList()) {
-                                Instrumentation inst = StationXMLToFissures.convertInstrumentation(c);
-                                if (RangeTool.areOverlapping(new MicroSecondTimeRange(inst.effective_time),
-                                                             new MicroSecondTimeRange(chanBegin.add(ONE_SECOND), chanBegin.add(ONE_DAY)))) {
-                                    return inst;
-                                }
-                                logger.debug("Skipping as wrong start time "+ChannelIdUtil.toString(chan.getId())+" "+inst.effective_time.getBeginTime()+" "+inst.effective_time.getEndTime());
-                            
-                        }
-                    
-                    
-                }
-            }
-            
-        } catch(URISyntaxException e) {
-            throw new InvalidResponse("StationXML URL is not valid, should not happen but it did.", e);
-        } catch(XMLStreamException e) {
-            throw new InvalidResponse("Problem getting response via stationxml.", e);
-        } catch(StationXMLException e) {
-            throw new InvalidResponse("Problem getting response via stationxml.", e);
-        } catch(IOException e) {
-            throw new InvalidResponse("Problem getting response via stationxml.", e);
-        }
-        
-        throw new ChannelNotFound();
-    }
     
     @Override
     public Response getResponse(ChannelImpl chan) throws ChannelNotFound, InvalidResponse {

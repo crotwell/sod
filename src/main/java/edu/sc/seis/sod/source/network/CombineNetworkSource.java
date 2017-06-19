@@ -120,18 +120,6 @@ public class CombineNetworkSource extends AbstractNetworkSource implements Netwo
     }
 
     @Override
-    public Instrumentation getInstrumentation(ChannelImpl chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
-        NetworkSource source = getSourceForCode(NetworkIdUtil.toStringNoDates(chan.getId().network_id));
-        if (source != null) {
-            Instrumentation out = source.getInstrumentation(chan);
-            if (out != null) {
-                return out;
-            }
-        }
-        throw new ChannelNotFound();
-    }
-
-    @Override
     public Response getResponse(ChannelImpl chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
         NetworkSource source = getSourceForCode(NetworkIdUtil.toStringNoDates(chan.getId().network_id));
         if (source != null) {

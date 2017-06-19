@@ -171,41 +171,7 @@ public class RetryNetworkSource extends WrappingNetworkSource implements Network
         }
         throw latest;
     }
-
-    @Override
-    public Instrumentation getInstrumentation(ChannelImpl chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
-        int count = 0;
-        SodSourceException latest;
-        try {
-            return wrapped.getInstrumentation(chan);
-        } catch(OutOfMemoryError e) {
-            throw e;
-        } catch(SodSourceException t) {
-            if (t.getCause() instanceof IOException 
-                    || (t.getCause() != null && t.getCause().getCause() instanceof IOException)) {
-                latest = t;
-            } else {
-                throw t;
-            }
-        }
-        while(wrapped.getRetryStrategy().shouldRetry(latest, this, count++)) {
-            try {
-                Instrumentation result = wrapped.getInstrumentation(chan);
-                wrapped.getRetryStrategy().serverRecovered(this);
-                return result;
-            } catch(SodSourceException t) {
-                if (t.getCause() instanceof IOException 
-                        || (t.getCause() != null && t.getCause().getCause() instanceof IOException)) {
-                    latest = t;
-                } else {
-                    throw t;
-                }
-            } catch(OutOfMemoryError e) {
-                throw e;
-            }
-        }
-        throw latest;
-    }
+    
     @Override
     public Response getResponse(ChannelImpl chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
         int count = 0;

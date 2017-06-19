@@ -41,20 +41,14 @@ public class LoadedNetworkSource extends WrappingNetworkSource implements Networ
     }
 
     @Override
-    public Instrumentation getInstrumentation(ChannelImpl chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
-        instrumentationLoaded.add(ChannelIdUtil.toString(chan.getId()));
-        return getWrapped().getInstrumentation(chan);
-    }
-
-    @Override
     public Response getResponse(ChannelImpl chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
-        instrumentationLoaded.add(ChannelIdUtil.toString(chan.getId()));
+        responseLoaded.add(ChannelIdUtil.toString(chan.getId()));
         return getWrapped().getResponse(chan);
     }
 
     @Override
     public QuantityImpl getSensitivity(ChannelImpl chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
-        instrumentationLoaded.add(ChannelIdUtil.toString(chan.getId()));
+        responseLoaded.add(ChannelIdUtil.toString(chan.getId()));
         return getWrapped().getSensitivity(chan);
     }
 
@@ -66,12 +60,12 @@ public class LoadedNetworkSource extends WrappingNetworkSource implements Networ
         return getWrapped().getStations(net);
     }
     
-    public boolean isInstrumentationLoaded(ChannelId chan) {
-        return instrumentationLoaded.contains(ChannelIdUtil.toString(chan));
+    public boolean isResponseLoaded(ChannelId chan) {
+        return responseLoaded.contains(ChannelIdUtil.toString(chan));
     }
     
     StationImpl sta;
     List<? extends StationImpl> allStations;
     List<? extends ChannelImpl> chans = null;
-    HashSet<String> instrumentationLoaded = new HashSet<String>();
+    HashSet<String> responseLoaded = new HashSet<String>();
 }

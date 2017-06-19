@@ -47,11 +47,6 @@ public abstract class WrappingNetworkSource extends AbstractNetworkSource implem
     }
 
     @Override
-    public Instrumentation getInstrumentation(ChannelImpl chanId) throws ChannelNotFound, InvalidResponse, SodSourceException {
-        return getWrapped().getInstrumentation(chanId);
-    }
-
-    @Override
     public Response getResponse(ChannelImpl chanId) throws ChannelNotFound, InvalidResponse, SodSourceException {
         return getWrapped().getResponse(chanId);
     }
