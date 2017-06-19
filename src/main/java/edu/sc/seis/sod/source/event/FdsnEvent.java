@@ -378,15 +378,6 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         return eventTimeRangeSupplier.getMSTR();
     }
 
-    @Override
-    public String getDescription() {
-        try {
-            return queryParams.formURI().toString() + " with time range appended later.";
-        } catch(URISyntaxException e) {
-            throw new RuntimeException("Unable to for URL for description.", e);
-        }
-    }
-
     static CacheEvent toCacheEvent(Event e) {
         String desc = "";
         if (e.getDescriptionList().size() > 0) {
