@@ -1,10 +1,13 @@
 package edu.sc.seis.sod.subsetter.channel;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.w3c.dom.Element;
 
-import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
@@ -13,7 +16,8 @@ import edu.sc.seis.sod.model.station.ChannelId;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
 import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.source.network.NetworkSource;
-import edu.sc.seis.sod.source.seismogram.FixedDataCenter;
+import edu.sc.seis.sod.source.seismogram.ConstantSeismogramSourceLocator;
+import edu.sc.seis.sod.source.seismogram.FdsnDataSelect;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.util.time.ClockUtil;
@@ -24,7 +28,12 @@ import edu.sc.seis.sod.util.time.ClockUtil;
 public class HadDataLastWeek implements ChannelSubsetter {
 
     public HadDataLastWeek(Element el) throws Exception {
-        fixDC = new FixedDataCenter(DOMHelper.getElement(el, "fixedDataCenter"));
+        Object sodObject = SodUtil.load(el, new String[] {"seismogram"});
+        if(sodObject instanceof ConstantSeismogramSourceLocator) {
+            dcLocator = (ConstantSeismogramSourceLocator)sodObject;
+        } else {
+            throw new ConfigurationException("Wrapped SeismogramSource must be instance of ConstantSeismogramSourceLocator");
+        }
     }
 
     public StringTree accept(ChannelImpl channel, NetworkSource network)
@@ -44,16 +53,14 @@ public class HadDataLastWeek implements ChannelSubsetter {
                 recentRequests.remove(r);
             }
         }
-        // Make 7 requests for a day as the BUD likes it that way
-        RequestFilter[] reqs = new RequestFilter[7];
-        for(int i = 0; i < reqs.length; i++) {
-            reqs[i] = new RequestFilter(channel.get_id(),
-                                        now.subtract(makeDayInterval(i + 1))
-                                                ,
-                                        now.subtract(makeDayInterval(i))
-                                                );
+        // Make 7 requests for a hour a day
+        List<RequestFilter> reqs = new ArrayList<RequestFilter>();
+        for(int i = 0; i < 7; i++) {
+            reqs.add(new RequestFilter(channel.get_id(),
+                                        now.subtract(makeDayInterval(i)).subtract(REQ_INTERVAL),
+                                        now.subtract(makeDayInterval(i)) ));
         }
-        if(fixDC.getDataCenter().available_data(reqs).length > 0) {
+        if(dcLocator.getSeismogramSource().retrieveData(reqs).size() > 0) {
             logger.debug(ChannelIdUtil.toStringNoDates(channel) + " had data");
             recentRequests.put(key, new RecentRequest(channel.get_id(), ClockUtil.now(), true));
             return new StringTreeLeaf(this, true);
@@ -72,8 +79,10 @@ public class HadDataLastWeek implements ChannelSubsetter {
 
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(HadDataLastWeek.class);
 
-    private FixedDataCenter fixDC;
+    protected ConstantSeismogramSourceLocator dcLocator = new FdsnDataSelect();
     
+    private static final TimeInterval REQ_INTERVAL = new TimeInterval(10, UnitImpl.MINUTE);
+
     private TimeInterval MAX_CACHE = new TimeInterval(1, UnitImpl.HOUR);
 }
 
