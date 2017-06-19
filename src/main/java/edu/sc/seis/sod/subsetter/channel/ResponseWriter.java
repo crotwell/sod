@@ -6,13 +6,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.bag.ResponsePrint;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
 import edu.sc.seis.sod.model.station.ChannelImpl;
-import edu.sc.seis.sod.model.station.Instrumentation;
-import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
@@ -34,8 +33,7 @@ public class ResponseWriter implements ChannelSubsetter {
     public StringTree accept(ChannelImpl chan, NetworkSource network)
             throws Exception {
         try {
-            Instrumentation inst = network.getInstrumentation(chan);
-            String response = ResponsePrint.printResponse(chan.getId(), inst);
+            String response = ResponsePrint.printResponse(chan.getId(), network.getResponse(chan), chan.getEffectiveTime());
             velocitizer.evaluate(template, response, chan);
         } catch(ChannelNotFound e) {
             return new Fail(this, "No instrumentation");
