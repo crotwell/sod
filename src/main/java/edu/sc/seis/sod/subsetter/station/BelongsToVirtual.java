@@ -1,18 +1,20 @@
 package edu.sc.seis.sod.subsetter.station;
 
-import java.util.List;
-
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.FDSNWSException;
+import edu.sc.seis.seisFile.fdsnws.IRISWSVirtualNetworkQuerier;
+import edu.sc.seis.seisFile.fdsnws.IRISWSVirtualNetworkQueryParams;
+import edu.sc.seis.seisFile.fdsnws.virtualnet.ContributorNetwork;
+import edu.sc.seis.seisFile.fdsnws.virtualnet.VirtualNetwork;
+import edu.sc.seis.seisFile.fdsnws.virtualnet.VirtualNetworkList;
+import edu.sc.seis.seisFile.fdsnws.virtualnet.VirtualStation;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.UserConfigurationException;
-import edu.sc.seis.sod.hibernate.NetworkNotFound;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.TimeInterval;
-import edu.sc.seis.sod.model.station.NetworkAttrImpl;
-import edu.sc.seis.sod.model.station.StationIdUtil;
+import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.source.SodSourceException;
 import edu.sc.seis.sod.source.network.NetworkSource;
@@ -23,62 +25,71 @@ import edu.sc.seis.sod.util.time.ClockUtil;
 
 public class BelongsToVirtual implements StationSubsetter {
 
-    private static NetworkAccess getVirtual(NetworkSource networkSource, String name)
-            throws ConfigurationException {
-        try {
-            List<? extends CacheNetworkAccess> nets = networkSource.getNetworkByName(name);
-            if(nets.size() > 1) {
-                throw new ConfigurationException("There are several nets with the name "
-                        + name);
-            }
-            return nets.get(0);
-        } catch(NetworkNotFound nnf) {
-            throw new UserConfigurationException("No network by the name of "
-                    + name + " found");
-        }
+    private VirtualNetworkList getVirtual(String host, String code) throws ConfigurationException, FDSNWSException {
+        IRISWSVirtualNetworkQueryParams qp = new IRISWSVirtualNetworkQueryParams(host);
+        qp.setCode(code);
+        IRISWSVirtualNetworkQuerier querier = new IRISWSVirtualNetworkQuerier(qp);
+        VirtualNetworkList vnet = querier.getVirtual();
+        return vnet;
     }
 
     public BelongsToVirtual(Element el) throws ConfigurationException {
         this(SodUtil.getNestedText(el), null);
     }
 
-    public BelongsToVirtual(String virtualNetName,
-                            TimeInterval refreshInterval) {
-        this.name = virtualNetName;
+    public BelongsToVirtual(String virtualNetCode, TimeInterval refreshInterval) {
+        this.code = virtualNetCode;
         this.refreshInterval = refreshInterval;
     }
 
-    public StringTree accept(StationImpl station, NetworkSource network) throws ConfigurationException, SodSourceException {
-        refreshStations(network);
-        for (StationImpl sta : stations) {
-            if(StationIdUtil.areEqual(station, sta)) {
-                return new Pass(this);
+    public StringTree accept(StationImpl station, NetworkSource network)
+            throws ConfigurationException, SodSourceException {
+        try {
+            refreshStations(network);
+            for (VirtualNetwork vnet : vnetList.getVirtualNetworks()) {
+                for (ContributorNetwork cn : vnet.getContribNetList()) {
+                    if (station.getNetworkAttr().get_code().equals(cn.getCode())
+                            && (!NetworkIdUtil.isTemporary(station.getNetworkAttr().getId())
+                                    || cn.getStartYear().equals(NetworkIdUtil.getYear(station.getNetworkAttr()
+                                            .getId())))) {
+                        for (VirtualStation vsta : cn.getStationList()) {
+                            if (station.get_code().equals(vsta.getCode())) {
+                                return new Pass(this);
+                            }
+                        }
+                    }
+                }
             }
+            return new Fail(this);
+        } catch(FDSNWSException e) {
+            throw new SodSourceException("Problem getting virtual networks", e);
         }
-        return new Fail(this);
     }
 
-    private void refreshStations(NetworkSource network) throws ConfigurationException, SodSourceException {
-        if(ClockUtil.now().subtract(getRefreshInterval()).after(lastQuery)) {
+    private void refreshStations(NetworkSource network)
+            throws ConfigurationException, SodSourceException, FDSNWSException {
+        if (ClockUtil.now().subtract(getRefreshInterval()).after(lastQuery)) {
             lastQuery = ClockUtil.now();
-            NetworkAccess virtual = getVirtual(network, name);
-            stations = network.getStations((NetworkAttrImpl)virtual.get_attributes());
+            vnetList = getVirtual(host, code);
         }
     }
-    
+
     public TimeInterval getRefreshInterval() {
         if (refreshInterval == null) {
             refreshInterval = Start.getNetworkArm().getRefreshInterval();
         }
         return refreshInterval;
     }
-    
-    private String name;
 
-    private List<? extends StationImpl> stations;
+    private String host = "http://service.iris.edu";
+
+    private String path = "irisws/virtualnetwork/1/query";
+
+    private String code;
+
+    private VirtualNetworkList vnetList;
 
     private TimeInterval refreshInterval;
 
     private MicroSecondDate lastQuery = new MicroSecondDate(0);
-
 }

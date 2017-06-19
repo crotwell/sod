@@ -302,13 +302,26 @@
         <element name="belongsToVirtual">
             <xsd:annotation>
                 <summary>Check if the station belongs to a particular virtual network</summary>
-                <description>If the station belongs to the virtual network of the code in the element, this returns true.
-                    Current virtual networks in the IRIS Network DC can be found from <a href="http://www.iris.edu/SeismiQuery/virtual_net.htm">SeismoQuery</a>.</description>
+                <description>If the station belongs to the virtual network of the code in the element, this returns true. The default is to connect to the IRIS DMC virtualnetwork web service. Connect to another, compatible, web service using the host element.
+                    Current virtual networks in the IRIS Network DC can be found from the <a href="http://service.iris.edu/irisws/virtualnetwork/1/codes">virtualnetwork</a> web service.</description>
                 <example>
-                    <belongsToVirtual>_US-TA</belongsToVirtual>
+                    <belongsToVirtual>
+                      <code>_US-TA</code>
+                    </belongsToVirtual>
                 </example>
             </xsd:annotation>
-<text/>
+            <interleave>
+                <oneOrMore>
+                    <element name="code">
+                        <text/>
+                    </element>
+                </oneOrMore>
+                <optional>
+                    <element name="host">
+                        <text/>
+                    </element>
+                </optional>
+            </interleave>
         </element>
     </define>
     <define name="printlineStationProcess">
