@@ -4,7 +4,7 @@ import edu.sc.seis.sod.hibernate.ChannelNotFound;
 import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.model.station.ClockImpl;
 import edu.sc.seis.sod.model.station.Instrumentation;
-import edu.sc.seis.sod.model.station.InvalidResponse;
+import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
 import edu.sc.seis.sod.model.station.SeismicHardwareImpl;
 import edu.sc.seis.sod.source.SodSourceException;
 import edu.sc.seis.sod.source.network.NetworkSource;

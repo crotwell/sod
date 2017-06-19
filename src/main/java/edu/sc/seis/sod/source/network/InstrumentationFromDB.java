@@ -9,7 +9,7 @@ import edu.sc.seis.sod.hibernate.NetworkDB;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
 import edu.sc.seis.sod.model.station.ChannelImpl;
-import edu.sc.seis.sod.model.station.InvalidResponse;
+import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
 import edu.sc.seis.sod.source.SodSourceException;
 
 public class InstrumentationFromDB extends WrappingNetworkSource implements NetworkSource {

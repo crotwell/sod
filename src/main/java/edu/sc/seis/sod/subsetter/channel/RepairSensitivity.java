@@ -8,7 +8,7 @@ import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
 import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.model.station.Instrumentation;
-import edu.sc.seis.sod.model.station.InvalidResponse;
+import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
 import edu.sc.seis.sod.model.station.Response;
 import edu.sc.seis.sod.model.station.Stage;
 import edu.sc.seis.sod.source.network.NetworkSource;

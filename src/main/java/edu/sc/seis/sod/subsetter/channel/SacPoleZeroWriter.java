@@ -10,13 +10,17 @@ import edu.sc.seis.sod.model.station.ChannelIdUtil;
 import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.model.station.FilterType;
 import edu.sc.seis.sod.model.station.Instrumentation;
-import edu.sc.seis.sod.model.station.InvalidResponse;
+import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
+import edu.sc.seis.seisFile.fdsnws.stationxml.PolesZeros;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
+import edu.sc.seis.seisFile.fdsnws.stationxml.ResponseStage;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.VelocityFileElementParser;
 import edu.sc.seis.sod.util.convert.sac.FissuresToSac;
+import edu.sc.seis.sod.util.convert.sac.StationXMLToSacPoleZero;
 import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.velocity.PrintlineVelocitizer;
 
@@ -35,30 +39,23 @@ public class SacPoleZeroWriter implements ChannelSubsetter {
 
     public StringTree accept(ChannelImpl chan, NetworkSource network)
             throws Exception {
-        Instrumentation inst;
+        Response response;
         try {
-            inst = network.getInstrumentation(chan);
+            response = network.getResponse(chan);
         } catch(ChannelNotFound e) {
             return new Fail(this, "No instrumentation");
         } catch(InvalidResponse e) {
             logger.warn("Invalid instrumentation: ", e);
             return new Fail(this, "Invalid instrumentation: "+e.getMessage());
         }
-        if(inst.the_response.stages[0].filters[0].discriminator().value() != FilterType._POLEZERO) {
-            String filter;
-            if (inst.the_response.stages[0].filters[0].discriminator().value() == FilterType.COEFFICIENT.value()) {
-                filter = "COEFFICIENT";
-            } else if (inst.the_response.stages[0].filters[0].discriminator().value() == FilterType.LIST.value()) {
-                filter = "LIST";
-            } else {
-                filter = "UNKNOWN: "+inst.the_response.stages[0].filters[0].discriminator().value();
-            }
-            return new Fail(this, "first (sensor) stage is not a PoleZero filter: "+filter);
+        ResponseStage first = response.getFirstStage();
+        if (first.getResponseItem() instanceof PolesZeros) {
+            return new Fail(this, "first (sensor) stage is not a PoleZero: "+first.getResponseItem().getClass().getSimpleName());
         }
-        String response = FissuresToSac.getPoleZero(inst.the_response)
+        String responseOut = StationXMLToSacPoleZero.convert(response)
                 .toString();
         try {
-            velocitizer.evaluate(template, response, chan);
+            velocitizer.evaluate(template, responseOut, chan);
         } catch(FileNotFoundException fe) {
             GlobalExceptionHandler.handle("Error while writing response file for "
                                                   + ChannelIdUtil.toString(chan.get_id()),

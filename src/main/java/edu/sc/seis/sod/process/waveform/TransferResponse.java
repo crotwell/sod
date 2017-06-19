@@ -3,6 +3,10 @@ package edu.sc.seis.sod.process.waveform;
 import org.w3c.dom.Element;
 
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
+import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
+import edu.sc.seis.seisFile.fdsnws.stationxml.PolesZeros;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
+import edu.sc.seis.seisFile.fdsnws.stationxml.StationXMLException;
 import edu.sc.seis.seisFile.sac.SacPoleZero;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.Start;
@@ -15,15 +19,12 @@ import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.station.ChannelImpl;
-import edu.sc.seis.sod.model.station.Filter;
-import edu.sc.seis.sod.model.station.FilterType;
-import edu.sc.seis.sod.model.station.Instrumentation;
-import edu.sc.seis.sod.model.station.InvalidResponse;
 import edu.sc.seis.sod.source.SodSourceException;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.StringTreeLeaf;
-import edu.sc.seis.sod.util.convert.sac.FissuresToSac;
+import edu.sc.seis.sod.util.convert.sac.StationXMLToSacPoleZero;
+import edu.sc.seis.sod.util.convert.stationxml.StationXMLToFissures;
 
 
 /**
@@ -63,31 +64,25 @@ public class TransferResponse implements WaveformProcess, Threadable {
         }
     }
     
-    public static SacPoleZero checkResponse(ChannelImpl chan, NetworkSource na) throws InvalidResponse, SodSourceException {
+    public static SacPoleZero checkResponse(ChannelImpl chan, NetworkSource na) throws InvalidResponse, SodSourceException, StationXMLException {
         try {
-            Instrumentation inst = na.getInstrumentation(chan);
-            if (inst == null) {
+            Response response = na.getResponse(chan);
+            if (response == null) {
                 throw new InvalidResponse("Response is null");
             }
-            Instrumentation.checkResponse(inst.the_response);
-            UnitImpl inUnits = ((UnitImpl)inst.the_response.stages[0].input_units);
+            Response.checkResponse(response);
+            if ( ! (response.getFirstStage().getResponseItem() instanceof PolesZeros)) {
+                throw new InvalidResponse("First Stage is not PolesZeros: "+response.getResponseStageList().get(0).getResponseItem().getClass().getSimpleName());
+            }
+            PolesZeros polesZeros = (PolesZeros)response.getFirstStage().getResponseItem();
+            UnitImpl inUnits = StationXMLToFissures.convertUnit(polesZeros.getInputUnits());
             if ( ! (inUnits.isConvertableTo(UnitImpl.METER) 
                     || inUnits.isConvertableTo(UnitImpl.METER_PER_SECOND) 
                     || inUnits.isConvertableTo(UnitImpl.METER_PER_SECOND_PER_SECOND) )) {
                 throw new InvalidResponse("Response input units are not convertible to m, m/s or m/s/s, cannot apply correction."+inUnits);
             }
-            Filter filter = inst.the_response.stages[0].filters[0];
-            if (filter.discriminator().value() != FilterType._POLEZERO) {
-                String filterType = " ("+filter.discriminator().value()+")";
-                if (filter.discriminator().value() == FilterType._COEFFICIENT) {
-                    filterType = "Coefficient Response ("+filterType+")";
-                } else if (filter.discriminator().value() == FilterType._LIST) {
-                    filterType = "List Response ("+filterType+")";
-                }
-                throw new InvalidResponse("Instrumentation is not a of pole-zero type: "+filterType);
-            }
             try {
-            return FissuresToSac.getPoleZero(inst.the_response);
+                return StationXMLToSacPoleZero.convert(response);
             } catch (IllegalArgumentException e) {
                 throw new InvalidResponse(e.getMessage(), e);
             }
