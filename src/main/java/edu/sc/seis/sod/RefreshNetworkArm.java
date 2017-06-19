@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TimerTask;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
 import edu.sc.seis.sod.hibernate.ChannelSensitivity;
 import edu.sc.seis.sod.hibernate.NetworkDB;
@@ -13,7 +14,6 @@ import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.station.ChannelGroup;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
 import edu.sc.seis.sod.model.station.ChannelImpl;
-import edu.sc.seis.sod.model.station.InvalidResponse;
 import edu.sc.seis.sod.model.station.NetworkAttrImpl;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.model.station.StationImpl;
