@@ -236,35 +236,14 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
         } else {
             logger.debug("Empty request generated for " + ChannelIdUtil.toString(ecp.getChannel().get_id()));
         }
-        boolean noImplAvailableData = false;
-        if (Start.getRunProps().isSkipAvailableData()) {
+        boolean noImplAvailableData = true;
             outfilters = infilters;
             // wrap availData as a WaveformProcess
             processList.addFirst(new WaveformAsAvailableData(availData));
-        } else {
-            try {
-            logger.debug("before available_data call retries=");
-            MicroSecondDate before = new MicroSecondDate();
-            outfilters = DataCenterSource.toArray(seismogramSource.availableData(DataCenterSource.toList(infilters)));
-            MicroSecondDate after = new MicroSecondDate();
-            logger.info("After successful available_data call, time taken=" + after.subtract(before).getValue(UnitImpl.SECOND)+" sec");
-            if(outfilters.length != 0) {
-                logger.debug("Got available_data for " + ChannelIdUtil.toString(outfilters[0].channel_id) + " from "
-                             + outfilters[0].start_time.getISOTime() + " to " + outfilters[0].end_time.getISOTime()+" "+outfilters.length);
-            } else {
-                logger.debug("No available_data for " + ChannelIdUtil.toString(ecp.getChannel().get_id()));
-            }
-            } catch(SeismogramSourceException e) {
-                MotionVectorArm.handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e, seismogramSource, requestToString(infilters, null));
-                return;
-            } catch(NotImplementedException e) {
-                logger.info("After NoImpl available_data call, calc available from actual data");
-                noImplAvailableData = true;
-                outfilters = infilters;
-                // wrap availData as a WaveformProcess
-                processList.addFirst(new WaveformAsAvailableData(availData));
-            }
-        }
+
+          //TODO eliminate available data step, create availability web service subsetter, but part of request subsetters???
+                  
+                  
         outfilters = SortTool.byBeginTimeAscending(outfilters);
         StringTree passed = new Pass(availData); // init just for noImplAvailableData case
         if (!noImplAvailableData) {

@@ -2,6 +2,7 @@ package edu.sc.seis.sod;
 
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -258,43 +259,13 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
         processList.addAll(processes);
         RequestFilter[][] outfilters = null;
 
-        boolean noImplAvailableData = false;
-        if (Start.getRunProps().isSkipAvailableData()) {
+        boolean noImplAvailableData = true;
             outfilters = infilters;
             processList.addFirst(new WaveformVectorAsAvailableData(availData));
-        } else {
-            try {
-            outfilters = new RequestFilter[ecp.getChannelGroup().getChannels().length][];
-            for (int i = 0; i < outfilters.length; i++) {
-                logger.debug("Trying available_data for " + ChannelIdUtil.toString(infilters[0][0].channel_id)
-                             + " from " + infilters[0][0].start_time.getISOTime() + " to " + infilters[0][0].end_time.getISOTime());
-                logger.debug("before available_data call");
-                try {
-                    outfilters[i] = DataCenterSource.toArray(seismogramSource.availableData(DataCenterSource.toList(infilters[i])));
-                    logger.debug("after successful available_data call");
-                } catch(SeismogramSourceException e) {
-                    handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e, seismogramSource, requestToString(infilters, null));
-                    return;
-                } catch(org.omg.CORBA.SystemException e) {
-                    handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e, seismogramSource, requestToString(infilters, null));
-                    return;
-                }
-                if (outfilters[i].length != 0) {
-                    logger.debug("Got available_data for " + ChannelIdUtil.toString(outfilters[i][0].channel_id)
-                                 + " from " + outfilters[i][0].start_time.getISOTime() + " to "
-                                 + outfilters[i][0].end_time.getISOTime());
-                } else {
-                    logger.debug("No available_data for " + ChannelIdUtil.toString(infilters[i][0].channel_id));
-                }
-            }
-            } catch (NotImplementedException e) {
-                logger.info("After NoImpl available_data call, calc available from actual data");
-                noImplAvailableData = true;
-                outfilters = infilters;
-                processList.addFirst(new WaveformVectorAsAvailableData(availData));
-            }
-        }
 
+//TODO eliminate available data step, create availability web service subsetter, but part of request subsetters???
+        
+        
         StringTree result = new Pass(availData); // init just for noImplAvailableData case
         if (!noImplAvailableData) {
         synchronized(availData) {
@@ -461,14 +432,14 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
             
             List<List<RequestFilter>> in = new ArrayList<List<RequestFilter>>();
             for (int i = 0; i < rf.length; i++) {
-                in.add(DataCenterSource.toList(rf[i]));
+                in.add(Arrays.asList(rf[i]));
             }
             List<PromiseSeismogramList> promiseList = promiseSource.promiseRetrieveDataList(in);
 
             for (int i = 0; i < localSeismograms.length; i++) {
                 PromiseSeismogramList pseisList = promiseList.get(i);
                 List<LocalSeismogramImpl> s = pseisList.getResult();
-                localSeismograms[i] = DataCenterSource.toSeisArray(s);
+                localSeismograms[i] = s.toArray(new LocalSeismogramImpl[0]);
             }
         } else {
         // old style before promises

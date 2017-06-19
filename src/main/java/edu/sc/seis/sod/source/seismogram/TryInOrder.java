@@ -68,25 +68,6 @@ class TryInOrderSource implements SeismogramSource {
     }
 
     @Override
-    public List<RequestFilter> availableData(List<RequestFilter> request) throws SeismogramSourceException  {
-        Iterator<SeismogramSource> it = sources.iterator();
-        while (it.hasNext()) {
-            try {
-                SeismogramSource seismogramSource = (SeismogramSource)it.next();
-                List<RequestFilter> out = seismogramSource.availableData(request);
-                if(out.size() > 0) {
-                    best = seismogramSource;
-                    return out;
-                }
-            } catch(org.omg.CORBA.SystemException e) {
-                // Go on to next datacenter
-            }
-        }
-        best = sources.get(sources.size()-1);
-        return new ArrayList<RequestFilter>();
-    }
-
-    @Override
     public List<LocalSeismogramImpl> retrieveData(List<RequestFilter> request) throws SeismogramSourceException {
         checkBestSet();
         return best.retrieveData(request);

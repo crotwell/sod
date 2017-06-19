@@ -96,11 +96,6 @@ public class BatchDataRequest implements SeismogramSourceLocator, Runnable {
     class BatchSeismogramSource implements PromiseSeismogramSource {
 
         @Override
-        public List<RequestFilter> availableData(List<RequestFilter> request) throws SeismogramSourceException {
-            return request;
-        }
-
-        @Override
         public List<LocalSeismogramImpl> retrieveData(List<RequestFilter> request) throws SeismogramSourceException {
             PromiseSeismogramList batch = addRequestToBatch(request);
             return batch.getResult();

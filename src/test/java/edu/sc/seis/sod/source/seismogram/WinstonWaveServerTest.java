@@ -18,25 +18,6 @@ import junit.framework.TestCase;
 public class WinstonWaveServerTest extends TestCase {
 
     @Test
-    public void testAvailable() throws Exception {
-        WinstonWaveServer wws = new WinstonWaveServer("eeyore.seis.sc.edu", 16022);
-        RequestFilter rf = new RequestFilter(new ChannelId(new NetworkId("CO", ClockUtil.wayPast()),
-                                                           "JSC",
-                                                           "00",
-                                                           "HHZ",
-                                                           ClockUtil.wayPast()),
-                                             ClockUtil.yesterday(),
-                                             ClockUtil.now());
-        List<RequestFilter> in = new ArrayList<RequestFilter>();
-        in.add(rf);
-        List<RequestFilter> out = wws.getSeismogramSource(null, null, null, null).availableData(in); // null
-                                                                                                      // doesn't
-                                                                                                      // matter
-        assertTrue("some data", out.size() > 0);
-
-    }
-
-    @Test
     public void testSeismograms() throws Exception {
         WinstonWaveServer wws = new WinstonWaveServer("eeyore.seis.sc.edu", 16022);
         //MicroSecondDate requestStart = new MicroSecondDate("2011-08-10T12:34:56Z");

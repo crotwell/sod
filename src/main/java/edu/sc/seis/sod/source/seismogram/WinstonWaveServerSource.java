@@ -5,10 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.sc.seis.seisFile.earthworm.TraceBuf2;
-import edu.sc.seis.seisFile.waveserver.MenuItem;
 import edu.sc.seis.seisFile.waveserver.WaveServer;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
 import edu.sc.seis.sod.model.common.SamplingImpl;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
@@ -38,35 +36,6 @@ public class WinstonWaveServerSource implements SeismogramSource {
     
     public static MicroSecondDate y2kSecondsToDate(double d) {
         return toDate(d + 946728000);
-    }
-    
-    @Override
-    public List<RequestFilter> availableData(List<RequestFilter> request) throws SeismogramSourceException {
-        List<RequestFilter> out = new ArrayList<RequestFilter>();
-        List<MenuItem> menu;
-        try {
-            menu = ws.getMenu();
-            for (RequestFilter rf : request) {
-                for (MenuItem item : menu) {
-                    if (item.getChannel().equals(rf.channel_id.channel_code) &&
-                            item.getStation().equals(rf.channel_id.station_code) &&
-                            item.getNetwork().equals(rf.channel_id.network_id.network_code) &&
-                            (item.getLocation().equals(rf.channel_id.site_code) || (item.getLocation().equals("--") && rf.channel_id.site_code.equals("  ")))) {
-                        MicroSecondDate start = toDate(item.getStart());
-                        MicroSecondDate end = toDate(item.getEnd());
-                        MicroSecondTimeRange menuRange = new MicroSecondTimeRange(start, end);
-                        MicroSecondTimeRange rfRange = new MicroSecondTimeRange(rf);
-                        if (menuRange.intersects(rfRange)) {
-                            MicroSecondTimeRange intersection = menuRange.intersection(rfRange);
-                            out.add(new RequestFilter(rf.channel_id, intersection.getBeginTime(), intersection.getEndTime()));
-                        }
-                    }
-                }
-            }
-            return out;
-        } catch(IOException e) {
-            throw new SeismogramSourceException("unable to get menu from WaveServer("+ws.getHost()+", "+ws.getPort()+")", e);
-        }
     }
 
     @Override

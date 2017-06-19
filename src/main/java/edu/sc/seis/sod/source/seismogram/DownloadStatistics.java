@@ -55,11 +55,6 @@ public class DownloadStatistics implements SeismogramSourceLocator {
             SeismogramSource wrappedSource = wrapped.getSeismogramSource(event, channel, infilters, cookieJar);
 
             @Override
-            public List<RequestFilter> availableData(List<RequestFilter> request) throws SeismogramSourceException {
-                return wrappedSource.availableData(request);
-            }
-
-            @Override
             public List<LocalSeismogramImpl> retrieveData(List<RequestFilter> request) throws SeismogramSourceException {
                 ElapsedTime elapsed = new ElapsedTime();
                 List<LocalSeismogramImpl> out = wrappedSource.retrieveData(request);
