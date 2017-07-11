@@ -30,6 +30,7 @@
             <ref name="stationNOT"/>
             <ref name="externalStationSubsetter"/>
             <ref name="belongsToVirtual"/>
+            <ref name="stationEquipment"/>
             <ref name="stationScript"/>
         </choice>
     </define>
@@ -346,6 +347,43 @@
                     </element>
                 </optional>
             </interleave>
+        </element>
+    </define>
+    <define name="stationEquipment">
+        <element name="stationEquipment">
+            <xsd:annotation>
+                <summary>Passes stations that have equipment that match the given regular expressions.</summary>
+            </xsd:annotation>
+            <element name="type">
+                <xsd:annotation>
+                    <summary>Matches the equipment type</summary>
+                </xsd:annotation>
+                <data type="string"/>
+            </element>
+            <element name="manufacturer">
+                <xsd:annotation>
+                    <summary>Matches the equipment manufacturer</summary>
+                </xsd:annotation>
+                <data type="string"/>
+            </element>
+            <element name="vendor">
+                <xsd:annotation>
+                    <summary>Matches the equipment vendor</summary>
+                </xsd:annotation>
+                <data type="string"/>
+            </element>
+            <element name="model">
+                <xsd:annotation>
+                    <summary>Matches the equipment model</summary>
+                </xsd:annotation>
+                <data type="string"/>
+            </element>
+            <element name="serialNumber">
+                <xsd:annotation>
+                    <summary>Matches the equipment serialNumber</summary>
+                </xsd:annotation>
+                <data type="string"/>
+            </element>
         </element>
     </define>
     <define name="stationScript">

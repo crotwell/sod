@@ -43,20 +43,10 @@
             <ref name="stageTransferType"/>
             <ref name="stageInputUnit"/>
             <ref name="stageOutputUnit"/>
-            <ref name="dasId"/>
-            <ref name="dasManufacturer"/>
-            <ref name="dasModel"/>
-            <ref name="dasSerial"/>
-            <ref name="dasStyle"/>
-            <ref name="sensorId"/>
-            <ref name="sensorManufacturer"/>
-            <ref name="sensorModel"/>
-            <ref name="sensorSerial"/>
-            <ref name="sensorNominalHighFreq"/>
-            <ref name="sensorNominalLowFreq"/>
             <ref name="hasNegativeSensitivity"/>
             <ref name="isFlipped"/>
             <ref name="isGroupable"/>
+            <ref name="channelEquipment"/>
             <ref name="channelScript"/>
         </choice>
     </define>
@@ -658,94 +648,6 @@
             <empty/>
         </element>
     </define>
-    <define name="dasId">
-        <element name="dasId">
-            <xsd:annotation>
-                <summary>Matches the DAS id of the channel's instrumentation</summary>
-            </xsd:annotation>
-            <data type="integer"/>
-        </element>
-    </define>
-    <define name="dasManufacturer">
-        <element name="dasManufacturer">
-            <xsd:annotation>
-                <summary>Matches the DAS manufacturer of the channel's instrumentation</summary>
-            </xsd:annotation>
-            <data type="string"/>
-        </element>
-    </define>
-    <define name="dasModel">
-        <element name="dasModel">
-            <xsd:annotation>
-                <summary>Matches the DAS's model of the channel's instrumentation</summary>
-            </xsd:annotation>
-            <data type="string"/>
-        </element>
-    </define>
-    <define name="dasSerial">
-        <element name="dasSerial">
-            <xsd:annotation>
-                <summary>Matches the DAS's serial number of the channel's instrumentation</summary>
-            </xsd:annotation>
-            <data type="string"/>
-        </element>
-    </define>
-    <define name="dasStyle">
-        <element name="dasStyle">
-            <xsd:annotation>
-                <summary>Matches the DAS's recording style of the channel's instrumentation</summary>
-            </xsd:annotation>
-            <data type="integer"/>
-        </element>
-    </define>
-    <define name="sensorId">
-        <element name="sensorId">
-            <xsd:annotation>
-                <summary>Matches the sensor id of the channel's instrumentation</summary>
-            </xsd:annotation>
-            <data type="integer"/>
-        </element>
-    </define>
-    <define name="sensorManufacturer">
-        <element name="sensorManufacturer">
-            <xsd:annotation>
-                <summary>Matches the sensor manufacturer of the channel's instrumentation</summary>
-            </xsd:annotation>
-            <data type="string"/>
-        </element>
-    </define>
-    <define name="sensorModel">
-        <element name="sensorModel">
-            <xsd:annotation>
-                <summary>Matches the sensor's model of the channel's instrumentation</summary>
-            </xsd:annotation>
-            <data type="string"/>
-        </element>
-    </define>
-    <define name="sensorSerial">
-        <element name="sensorSerial">
-            <xsd:annotation>
-                <summary>Matches the sensor's serial number of the channel's instrumentation</summary>
-            </xsd:annotation>
-            <data type="string"/>
-        </element>
-    </define>
-    <define name="sensorNominalHighFreq">
-        <element name="sensorNominalHighFreq">
-            <xsd:annotation>
-                <summary>Matches the sensor's nominal high frequency of the channel's instrumentation</summary>
-            </xsd:annotation>
-            <data type="float"/>
-        </element>
-    </define>
-    <define name="sensorNominalLowFreq">
-        <element name="sensorNominalLowFreq">
-            <xsd:annotation>
-                <summary>Matches the sensor's nominal low frequency of the channel's instrumentation</summary>
-            </xsd:annotation>
-            <data type="float"/>
-        </element>
-    </define>
     <define name="isFlipped">
         <element name="isFlipped">
             <xsd:annotation>
@@ -768,6 +670,43 @@
                 <summary>Passes channels that can be grouped with other channels at the site to make 3 components of motion.</summary>
             </xsd:annotation>
             <empty/>
+        </element>
+    </define>
+    <define name="channelEquipment">
+        <element name="channelEquipment">
+            <xsd:annotation>
+                <summary>Passes channels that have equipment that match the given regular expressions.</summary>
+            </xsd:annotation>
+            <element name="type">
+                <xsd:annotation>
+                    <summary>Matches the equipment type</summary>
+                </xsd:annotation>
+                <data type="string"/>
+            </element>
+            <element name="manufacturer">
+                <xsd:annotation>
+                    <summary>Matches the equipment manufacturer</summary>
+                </xsd:annotation>
+                <data type="string"/>
+            </element>
+            <element name="vendor">
+                <xsd:annotation>
+                    <summary>Matches the equipment vendor</summary>
+                </xsd:annotation>
+                <data type="string"/>
+            </element>
+            <element name="model">
+                <xsd:annotation>
+                    <summary>Matches the equipment model</summary>
+                </xsd:annotation>
+                <data type="string"/>
+            </element>
+            <element name="serialNumber">
+                <xsd:annotation>
+                    <summary>Matches the equipment serialNumber</summary>
+                </xsd:annotation>
+                <data type="string"/>
+            </element>
         </element>
     </define>
     <define name="channelScript">
