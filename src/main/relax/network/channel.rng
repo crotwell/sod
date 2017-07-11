@@ -43,11 +43,6 @@
             <ref name="stageTransferType"/>
             <ref name="stageInputUnit"/>
             <ref name="stageOutputUnit"/>
-            <ref name="clockId"/>
-            <ref name="clockManufacturer"/>
-            <ref name="clockModel"/>
-            <ref name="clockSerial"/>
-            <ref name="clockType"/>
             <ref name="dasId"/>
             <ref name="dasManufacturer"/>
             <ref name="dasModel"/>
@@ -661,46 +656,6 @@
                 <summary>Corrects sensitivity information for a channel from the response if the sensitivity is incorrect.</summary>
             </xsd:annotation>
             <empty/>
-        </element>
-    </define>
-    <define name="clockId">
-        <element name="clockId">
-            <xsd:annotation>
-                <summary>Matches the clock id of the channel's instrumentation</summary>
-            </xsd:annotation>
-            <data type="integer"/>
-        </element>
-    </define>
-    <define name="clockManufacturer">
-        <element name="clockManufacturer">
-            <xsd:annotation>
-                <summary>Matches the clock manufacturer of the channel's instrumentation</summary>
-            </xsd:annotation>
-            <data type="string"/>
-        </element>
-    </define>
-    <define name="clockModel">
-        <element name="clockModel">
-            <xsd:annotation>
-                <summary>Matches the clock model of the channel's instrumentation</summary>
-            </xsd:annotation>
-            <data type="string"/>
-        </element>
-    </define>
-    <define name="clockSerial">
-        <element name="clockSerial">
-            <xsd:annotation>
-                <summary>Matches the clock's serial number of the channel's instrumentation</summary>
-            </xsd:annotation>
-            <data type="string"/>
-        </element>
-    </define>
-    <define name="clockType">
-        <element name="clockType">
-            <xsd:annotation>
-                <summary>Matches the clock type of the channel's instrumentation</summary>
-            </xsd:annotation>
-            <data type="string"/>
         </element>
     </define>
     <define name="dasId">
