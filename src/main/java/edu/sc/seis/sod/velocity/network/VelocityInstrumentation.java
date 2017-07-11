@@ -24,18 +24,19 @@ public class VelocityInstrumentation {
         if ( ! didTryLoad) {
             didTryLoad = true;
             try {
-                inst = source.getInstrumentation(chan);
+                chan.setResponse(source.getResponse(chan));
             } catch(ChannelNotFound e) {
-            } catch(InvalidResponse e) {
             } catch(SodSourceException e) {
+            } catch(edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
         }
     }
     
     public VelocitySensitivity getSensitivity() {
-        checkLoadInstrumentation();
-        if (inst != null) {
-            return new VelocitySensitivity(inst.the_response.the_sensitivity);
+        if (this.chan.getResponse() != null && this.chan.getResponse().getInstrumentSensitivity() != null) {
+            return new VelocitySensitivity(this.chan.getResponse().getInstrumentSensitivity());
         } else {
             return null;
         }

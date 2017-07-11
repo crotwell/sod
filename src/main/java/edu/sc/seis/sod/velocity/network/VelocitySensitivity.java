@@ -1,21 +1,22 @@
 package edu.sc.seis.sod.velocity.network;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.InstrumentSensitivity;
 import edu.sc.seis.sod.model.station.Sensitivity;
 import edu.sc.seis.sod.util.display.ThreadSafeDecimalFormat;
 
 
 public class VelocitySensitivity {
     
-    public VelocitySensitivity(Sensitivity wrapped) {
+    public VelocitySensitivity(InstrumentSensitivity wrapped) {
         this.wrapped = wrapped;
     }
     
     public String getFactor() {
-        return expFormat.format(wrapped.sensitivity_factor);
+        return expFormat.format(wrapped.getSensitivityValue());
     }
     
     public String getFrequency() {
-        return freqFormat.format(wrapped.frequency);
+        return freqFormat.format(wrapped.getFrequency());
     }
     
     public String toString() {
@@ -26,5 +27,5 @@ public class VelocitySensitivity {
     
     ThreadSafeDecimalFormat freqFormat = new ThreadSafeDecimalFormat("0.000");
 
-    Sensitivity wrapped;
+    InstrumentSensitivity wrapped;
 }
