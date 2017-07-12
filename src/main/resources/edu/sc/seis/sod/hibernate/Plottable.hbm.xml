@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+	<class name="edu.sc.seis.fissuresUtil.hibernate.PlottableChunk"
+		table="plottable">
+		<id name="dbid" type="long">
+			<generator class="native" />
+		</id>
+		<property name="networkCode" index="plottable_network_code_idx"/>
+		<property name="stationCode" index="plottable_station_code_idx"/>
+		<property name="siteCode"  index="plottable_site_code_idx"/>
+		<property name="channelCode" />
+		<property name="beginTimestamp" type="timestamp" index="plottable_begintime_idx"/>
+		<property name="endTimestamp" type="timestamp"  index="plottable_endtime_idx"/>
+		<property name="pixelsPerDay" type="integer" />
+		<property name="beginPixel" type="integer" />
+		<property name="numDataPoints" type="integer" />
+		<property name="YBytes" type="binary" />
+	</class>
+
+</hibernate-mapping>

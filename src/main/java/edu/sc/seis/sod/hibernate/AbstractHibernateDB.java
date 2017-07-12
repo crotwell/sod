@@ -11,8 +11,14 @@ import java.util.TimerTask;
 
 import org.hibernate.HibernateException;
 import org.hibernate.query.Query;
+import org.hibernate.service.ServiceRegistry;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
+import org.hibernate.boot.Metadata;
+import org.hibernate.boot.MetadataBuilder;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.tool.hbm2ddl.SchemaUpdate;
 
 import edu.sc.seis.sod.model.common.Location;
@@ -27,9 +33,17 @@ import edu.sc.seis.sod.util.time.ClockUtil;
 
 public abstract class AbstractHibernateDB {
 
+    public static final String COMMON_HBM = "edu/sc/seis/fissuresUtil/hibernate/Common.hbm.xml";
+    public static final String EVENT_HBM = "edu/sc/seis/fissuresUtil/hibernate/Event.hbm.xml";
+    public static final String NETWORK_HBM = "edu/sc/seis/fissuresUtil/hibernate/Network.hbm.xml";
+    public static final String SEISFILEREF_HBM = "edu/sc/seis/fissuresUtil/hibernate/SeisFileRef.hbm.xml";
+    public static final String SOD_HBM = "edu/sc/seis/fissuresUtil/hibernate/sod.hbm.xml";
+    
     public static boolean DEBUG_SESSION_CREATION = true;
     
     public static int DEBUG_SESSION_CREATION_SECONDS = 300;
+    
+    protected static SessionFactory sessionFactory;
     
     public AbstractHibernateDB() {
         logger.debug("init "+this);
@@ -86,6 +100,24 @@ public abstract class AbstractHibernateDB {
 
 
     public static void deploySchema(boolean failOnException) throws Exception {
+        ServiceRegistry standardRegistry = new StandardServiceRegistryBuilder()
+                .configure( "edu/sc/seis/sod/hibernate/hibernate.cfg.xml")
+                .build();
+
+        MetadataSources sources = new MetadataSources( standardRegistry );
+        sources.addResource(COMMON_HBM);
+        sources.addResource(EVENT_HBM);
+        sources.addResource(NETWORK_HBM);
+        sources.addResource(SEISFILEREF_HBM);
+        sources.addResource(SOD_HBM);
+
+        MetadataBuilder metadataBuilder = sources.getMetadataBuilder();
+        
+        Metadata metadata = metadataBuilder.build();
+        sessionFactory = metadata.getSessionFactoryBuilder().build();
+        
+        // old style, hibernate3
+        /*
         SchemaUpdate update = new SchemaUpdate(HibernateUtil.getConfiguration());
         update.setHaltOnError(true);
         // to print actual schema update commands, uncomment next line
@@ -103,6 +135,14 @@ public abstract class AbstractHibernateDB {
                 throw (RuntimeException)first;
             }
         }
+        */
+    }
+    
+    protected static SessionFactory getSessionFactory() throws Exception {
+        if (sessionFactory == null) {
+            deploySchema();
+        }
+        return sessionFactory;
     }
 
     protected static Session createSession() {

@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+	<class name="edu.iris.Fissures.model.UnitImpl" table="unit"
+		mutable="false"  lazy="false">
+		<cache usage="read-only"/>
+		<id name="dbid" type="integer">
+			<generator class="native" />
+		</id>
+		<property name="baseUnitInt" type="integer">
+			<column name="base" />
+		</property>
+		<list name="subUnitsList" table="SubUnits" >
+			<key column="subunit_id" />
+			<list-index column="sortOrder" />
+			<many-to-many column="unit_id"
+				class="edu.iris.Fissures.model.UnitImpl" />
+		</list>
+		<property name="power" type="integer" access="field" />
+		<property name="name" access="field"  />
+		<property name="multi_factor" type="double" access="field" />
+		<property name="exponent" type="integer" access="field" />
+	</class>
+
+</hibernate-mapping>

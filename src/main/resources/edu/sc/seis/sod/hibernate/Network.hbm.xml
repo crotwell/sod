@@ -1,0 +1,245 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+	<class name="edu.iris.Fissures.network.NetworkAttrImpl"
+		table="network" >
+		<cache usage="read-write"/>
+		<id name="dbid" type="integer">
+			<generator class="native" />
+		</id>
+		<component name="id"
+			class="edu.iris.Fissures.IfNetwork.NetworkId"  lazy="false">
+			<property name="network_code" access="field" lazy="false"
+				unique-key="net_code_date" index="net_code_idx" />
+		</component>
+		<property name="beginTime"
+			type="edu.sc.seis.fissuresUtil.hibernate.FTimeUserType" lazy="false">
+			<column name="net_begin_time" sql-type="timestamp"
+				unique-key="net_code_date">
+			</column>
+			<column name="net_begin_nanos" sql-type="integer"></column>
+			<column name="net_begin_leaps" sql-type="integer"></column>
+		</property>
+		<property name="name" />
+		<property name="description" type="text"/>
+		<property name="owner" />
+		<property name="endTime"
+			type="edu.sc.seis.fissuresUtil.hibernate.FTimeUserType">
+			<column name="net_end_time" sql-type="timestamp"></column>
+			<column name="net_end_nanos" sql-type="integer"></column>
+			<column name="net_end_leaps" sql-type="integer"></column>
+		</property>
+		<property name="sourceServerName" />
+		<property name="sourceServerDNS" />
+	</class>
+
+	<class name="edu.iris.Fissures.network.StationImpl"
+		table="station">
+		<cache usage="read-write"/>
+		<id name="dbid" column="dbid" type="integer">
+			<generator class="native" />
+		</id>
+		<component name="id"
+			class="edu.iris.Fissures.IfNetwork.StationId">
+			<property name="station_code" access="field"
+				unique-key="sta_code_date" index="sta_code_idx" />
+		</component>
+		<property name="beginTime"
+			type="edu.sc.seis.fissuresUtil.hibernate.FTimeUserType" unique-key="sta_code_date">
+			<column name="sta_begin_time" sql-type="timestamp"
+				unique-key="sta_code_date">
+			</column>
+			<column name="sta_begin_nanos" sql-type="integer"></column>
+			<column name="sta_begin_leaps" sql-type="integer"></column>
+		</property>
+		<property name="name" />
+		<component name="location" class="edu.iris.Fissures.Location"  lazy="false">
+			<property name="latitude" type="float" access="field"  lazy="false"/>
+			<property name="longitude" type="float" access="field"  lazy="false"/>
+			<component name="depth"
+				class="edu.iris.Fissures.model.QuantityImpl" access="field" lazy="false">
+				<property name="value" column="depth_value"
+					type="double" />
+				<many-to-one name="unit"
+					class="edu.iris.Fissures.model.UnitImpl" column="depth_unit_id"
+					foreign-key="FK_STATION_DEPTH_UNIT_ID"/>
+			</component>
+			<component name="elevation"
+				class="edu.iris.Fissures.model.QuantityImpl" access="field" lazy="false">
+				<property name="value" type="double" column="elev_value"  />
+				<many-to-one name="unit"
+					class="edu.iris.Fissures.model.UnitImpl" column="elev_unit_id"
+					foreign-key="FK_STATION_ELEV_UNIT_ID" />
+			</component>
+			<property name="type" access="edu.sc.seis.fissuresUtil.hibernate.LocTypeAccess" type="integer"/>
+		</component>
+		<property name="operator"/>
+		<property name="description" type="text" />
+		<property name="comment" column="stationComment" type="text" />  <!-- comment reserved word in oracle -->
+		<property name="endTime"
+			type="edu.sc.seis.fissuresUtil.hibernate.FTimeUserType">
+			<column name="sta_end_time" sql-type="timestamp"></column>
+			<column name="sta_end_nanos" sql-type="integer"></column>
+			<column name="sta_end_leaps" sql-type="integer"></column>
+		</property>
+		<many-to-one name="networkAttr"
+			class="edu.iris.Fissures.network.NetworkAttrImpl" column="network"
+			foreign-key="FK_STATION_NETWORK" cascade="save-update"
+			unique-key="sta_code_date" />
+	</class>
+
+	<class name="edu.iris.Fissures.network.ChannelImpl"
+		table="channel">
+		<cache usage="read-write"/>
+		<id name="dbid" type="integer">
+			<generator class="native" />
+		</id>
+		<component name="id"
+			class="edu.iris.Fissures.IfNetwork.ChannelId"  lazy="false">
+			<property name="station_code" access="field"  lazy="false"/>
+			<property name="site_code" access="field" unique-key="chan_code_date"  lazy="false"/>
+			<property name="channel_code" access="field" unique-key="chan_code_date"  lazy="false"/>
+		</component>
+		<property name="beginTime"
+			type="edu.sc.seis.fissuresUtil.hibernate.FTimeUserType"  lazy="false">
+			<column name="chan_begin_time" sql-type="timestamp"
+				unique-key="chan_code_date">
+			</column>
+			<column name="chan_begin_nanos" sql-type="integer"></column>
+			<column name="chan_begin_leaps" sql-type="integer"></column>
+		</property>
+		<property name="name" />
+		<property name="endTime"
+			type="edu.sc.seis.fissuresUtil.hibernate.FTimeUserType">
+			<column name="chan_end_time" sql-type="timestamp"></column>
+			<column name="chan_end_nanos" sql-type="integer"></column>
+			<column name="chan_end_leaps" sql-type="integer"></column>
+		</property>
+		<component name="orientation"
+			class="edu.iris.Fissures.Orientation">
+			<property name="azimuth" type="float" access="field" />
+			<property name="dip" type="float" access="field" />
+		</component>
+		<component name="samplingInfo"
+			class="edu.iris.Fissures.model.SamplingImpl">
+			<component name="timeInterval"
+				class="edu.iris.Fissures.model.QuantityImpl">
+				<property name="value" column="interval_value"
+					type="double"  />
+				<many-to-one name="unit"
+					class="edu.iris.Fissures.model.UnitImpl" column="interval_unit_id"
+					foreign-key="FK_SAMPLINE_INTERVAL_UNIT_ID" lazy="false"/>
+			</component>
+			<property name="numPoints" type="integer"  />
+		</component>
+		<component name="site"
+			class="edu.iris.Fissures.network.SiteImpl" lazy="false">
+			<component name="id"
+				class="edu.iris.Fissures.IfNetwork.SiteId" >
+				<property name="station_code"
+					formula="station_code" access="field" />
+				<property name="site_code"
+					formula="site_code" access="field" />
+				<property name="begin_time"
+					type="edu.sc.seis.fissuresUtil.hibernate.FTimeUserType"
+					access="field">
+					<column name="site_begin_time"
+						sql-type="timestamp">
+					</column>
+					<column name="site_begin_nanos"
+						sql-type="integer">
+					</column>
+					<column name="site_begin_leaps"
+						sql-type="integer">
+					</column>
+				</property>
+			</component>
+			<component name="location"
+				class="edu.iris.Fissures.Location"  lazy="false">
+				<property name="latitude" type="float" access="field" />
+				<property name="longitude" type="float" access="field" />
+				<component name="depth"
+					class="edu.iris.Fissures.model.QuantityImpl" access="field">
+					<property name="value" column="depth_value"
+						type="double" />
+					<many-to-one name="unit"
+						class="edu.iris.Fissures.model.UnitImpl" column="depth_unit_id"
+						foreign-key="FK_SITE_DEPTH_UNIT_ID"  lazy="false"/>
+				</component>
+				<component name="elevation"
+					class="edu.iris.Fissures.model.QuantityImpl" access="field">
+					<property name="value" type="double"
+						column="elev_value"  />
+					<many-to-one name="unit"
+						class="edu.iris.Fissures.model.UnitImpl" column="elev_unit_id"
+						foreign-key="FK_SITE_ELEV_UNIT_ID"  lazy="false"/>
+				</component>
+				<property name="type"
+					access="edu.sc.seis.fissuresUtil.hibernate.LocTypeAccess"
+					type="integer"/>
+			</component>
+			<property name="endTime"
+				type="edu.sc.seis.fissuresUtil.hibernate.FTimeUserType">
+				<column name="site_end_time" sql-type="timestamp"></column>
+				<column name="site_end_nanos" sql-type="integer"></column>
+				<column name="site_end_leaps" sql-type="integer"></column>
+			</property>
+			<property name="comment" column="channelComment" type="text" /> <!-- comment reserved word in oracle -->
+			<many-to-one name="station"
+				class="edu.iris.Fissures.network.StationImpl"
+				foreign-key="FK_CHANNEL_STATION" cascade="save-update"  unique-key="chan_code_date" lazy="false"/>
+		</component>
+	</class>
+	
+	<class name="edu.sc.seis.fissuresUtil.hibernate.ChannelGroup"
+		table="channelGroup" lazy="false">
+		<cache usage="read-write"/>
+		<id name="dbid" type="integer">
+			<generator class="native" />
+		</id>
+		<many-to-one name="channel1"
+			class="edu.iris.Fissures.network.ChannelImpl" column="channel1"
+			foreign-key="FK_cg_channel1" unique-key="channelgroup_chan_key" index="cg_chan1_idx" />
+		<many-to-one name="channel2"
+			class="edu.iris.Fissures.network.ChannelImpl" column="channel2"
+			foreign-key="FK_cg_channel2" unique-key="channelgroup_chan_key" />
+		<many-to-one name="channel3"
+			class="edu.iris.Fissures.network.ChannelImpl" column="channel3"
+			foreign-key="FK_cg_channel3" unique-key="channelgroup_chan_key" />
+	</class>
+	
+	<class name="edu.sc.seis.fissuresUtil.hibernate.InstrumentationBlob"
+		table="instrumentation" lazy="false">
+		
+		<id name="dbid" type="integer">
+			<generator class="native" />
+		</id>
+		<many-to-one name="channel"
+			class="edu.iris.Fissures.network.ChannelImpl" column="channel"
+			foreign-key="FK_inst_channel" unique-key="inst_chan_key" index="inst_chan_idx" />
+		<property name="instrumentationAsBlob" type="binary" />
+	</class>
+	
+	
+    
+    <class name="edu.sc.seis.fissuresUtil.hibernate.ChannelSensitivity"
+        table="sensitivity" lazy="false">
+        
+        <id name="dbid" type="integer">
+            <generator class="native" />
+        </id>
+        <many-to-one name="channel"
+            class="edu.iris.Fissures.network.ChannelImpl" column="channel"
+            foreign-key="FK_sens_channel" unique-key="inst_sens_key" index="sens_chan_idx" />
+        <property name="overallGain" type="float" />
+        <many-to-one name="inputUnits"
+                        class="edu.iris.Fissures.model.UnitImpl" column="sens_unit_id"
+                        foreign-key="FK_SENS_UNIT_ID"  lazy="false"/>
+        <property name="frequency" type="float" />
+    </class>
+    
+</hibernate-mapping>

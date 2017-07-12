@@ -11,7 +11,7 @@ import org.hibernate.cfg.Configuration;
 import net.sf.ehcache.CacheManager;
 
 public class HibernateUtil {
-
+    
     private static String configFile = "edu/sc/seis/fissuresUtil/hibernate/hibernate.cfg.xml";
 
     private static SessionFactory sessionFactory;

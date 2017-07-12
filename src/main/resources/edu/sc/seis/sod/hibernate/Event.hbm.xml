@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+	<class name="edu.sc.seis.fissuresUtil.cache.CacheEvent"
+		table="event">
+		<cache usage="read-write"/>
+		<id name="dbid" type="integer">
+			<generator class="native" />
+		</id>
+		<many-to-one name="preferred"
+			class="edu.iris.Fissures.event.OriginImpl" column="preferred"
+			foreign-key="FK_preferred_origin" cascade="all" 
+			lazy="false" />
+		<!--
+			<array name="origins" table="event_origin" cascade="all">
+			<key column="event_origin_id" />
+			<list-index column="sortOrder" />
+			<many-to-many column="origin_id"
+			class="edu.iris.Fissures.event.OriginImpl" />
+			</array>
+		-->
+		<component name="attr"
+			class="edu.iris.Fissures.event.EventAttrImpl" access="field" lazy="false">
+			<property name="name" access="field" />
+			<component name="region"
+				class="edu.iris.Fissures.model.FlinnEngdahlRegionImpl"
+				access="field">
+				<property name="number" column="feregion" type="integer"
+					access="field" />
+				<property name="typeAsInt" column="fetype"
+					type="integer" />
+			</component>
+		</component>
+	</class>
+
+	<class name="edu.iris.Fissures.event.OriginImpl" table="origin">
+		<cache usage="read-write"/>
+		<id name="dbid" type="integer">
+			<generator class="native" />
+		</id>
+		<property name="_id" column="origin_id"/> <!-- oracle doesn't like column names starting with _ -->
+		<property name="originTime"
+			type="edu.sc.seis.fissuresUtil.hibernate.FTimeUserType">
+			<column name="time" sql-type="timestamp" index="origin_time_idx"/>
+			<column name="nanos" sql-type="integer"/>
+			<column name="leaps" sql-type="integer"/>
+		</property>
+		<component name="location" class="edu.iris.Fissures.Location" >
+			<property name="latitude" type="float" access="field"  lazy="false"/>
+			<property name="longitude" type="float" access="field"  lazy="false"/>
+			<component name="depth"
+				class="edu.iris.Fissures.model.QuantityImpl" access="field">
+				<property name="value" column="depth_value"
+					type="double"  />
+				<many-to-one name="unit"
+					class="edu.iris.Fissures.model.UnitImpl" column="depth_unit_id"
+					foreign-key="FK_DEPTH_UNIT_ID" lazy="false" />
+			</component>
+			<component name="elevation"
+				class="edu.iris.Fissures.model.QuantityImpl" access="field">
+				<property name="value" type="double" column="elev_value"  />
+				<many-to-one name="unit"
+					class="edu.iris.Fissures.model.UnitImpl" column="elev_unit_id"
+					foreign-key="FK_ELEV_UNIT_ID" lazy="false" />
+
+			</component>
+			<property name="type" access="edu.sc.seis.fissuresUtil.hibernate.LocTypeAccess" type="integer"></property>
+		</component>
+
+		<list name="magnitudeList" table="origin_magnitude"
+			cascade="all" lazy="false">
+			<key column="mag_id" />
+			<list-index column="sortOrder" />
+			<composite-element
+				class="edu.iris.Fissures.IfEvent.Magnitude">
+				<property name="value" type="float" not-null="true"
+					access="field" />
+				<property name="type" not-null="true" access="field" />
+				<property name="contributor" not-null="true"
+					access="field" />
+			</composite-element>
+		</list>
+
+		<property name="catalog" index="origin_catalog_idx" />
+		<property name="contributor" />
+	</class>
+
+
+</hibernate-mapping>

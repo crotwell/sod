@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+	<class name="edu.sc.seis.fissuresUtil.hibernate.SeismogramFileReference"
+		table="seisFileRef">
+		<id name="dbid" type="integer">
+			<generator class="native" />
+		</id>
+		<property name="networkCode" index="sfr_net_code_idx" />
+		<property name="stationCode" index="sfr_sta_code_idx" />
+		<property name="siteCode" />
+		<property name="channelCode"/>
+		<property name="beginTime" type="timestamp" index="sfr_begin_idx" />
+		<property name="endTime" type="timestamp" index="sfr_end_idx" />
+		<property name="filePath"/>
+		<property name="fileType" type="integer" />
+	</class>
+
+
+	<class name="edu.sc.seis.fissuresUtil.hibernate.EventSeismogramFileReference"
+		table="eventSeisFileRef">
+		<id name="dbid" type="integer">
+			<generator class="native" />
+		</id>
+		<many-to-one name="event"
+			class="edu.sc.seis.fissuresUtil.cache.CacheEvent"
+			foreign-key="FK_ESFR_EVENT" cascade="save-update"  index="sfr_event_idx"/>
+		<property name="networkCode" index="esfr_net_code_idx" />
+		<property name="stationCode" index="esfr_sta_code_idx" />
+		<property name="siteCode" />
+		<property name="channelCode"/>
+		<property name="beginTime" type="timestamp" />
+		<property name="endTime" type="timestamp" />
+		<property name="filePath"/>
+		<property name="fileType" type="integer" />
+	</class>
+	
+</hibernate-mapping>
