@@ -22,6 +22,8 @@ dependencies {
     compile 'edu.sc.seis:sod-util:4.0.0-SNAPSHOT'
     compile 'edu.sc.seis:sod-bag:4.0.0-SNAPSHOT'
     compile 'edu.sc.seis:TauP:2.4.3'
+    implementation  "com.oregondsp.signalprocessing:oregondsp:2011"
+
     
     compile "jline:jline:0.9.94"
     compile "com.martiansoftware:jsap:2.1"
