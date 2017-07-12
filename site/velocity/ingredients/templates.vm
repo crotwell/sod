@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+#set($currentPageTitle = "Generating Strings in SOD")
+#ingredientPage()
+<head>
+#sod_head()
+</head>
+<body>
+#sod_header()
+#sod_menu()
+<div id="content">
+<div class="section">
+#sod_section_title('Generating Text in SOD')
+            <p>There are two places in SOD recipes where text can be generated based on the data flowing through SOD: file names and printline processors.  
+				In both of these cases SOD uses a system based on <a href="http://jakarta.apache.org/velocity/">Velocity</a> to allow users to generate the text of their liking based on the items currently being processed.
+				Velocity allows SOD to expose the data available at a particular juncture like channel names and codes and the information about a seismogram to a template that will generate text based on their contents.
+			This document describes how to use Velocity in SOD.  
+			You can see the variables available in SOD on the <a href="templateTypes.html">variable types</a> page, 
+			and ingredients that use templates like <a href="network/channel/printline.html">printlineChannelProcess</a> or 
+			<a href="waveform/waveformProcess/sacWriter.html">sacWriter</a> will link to the variables they have available.</p>
+</div>
+<div class="section">
+#sod_section_title('How to use Velocity')
+<div class="section">
+#sod_subsection_title('Simple Substitution')
+			<p>Velocity templates consist of regular text which will be printed as is and special varibles which will have values for items SOD is currently processing substitued for their text. 
+				A variable substitution always begins with a dollar sign and is followed by the name of the variable to be substituted.
+				For example, if '$channel' appears in a Velocity template and channel is an available variable, the text value for channel will be substitued in the template.
+				If a channel weren't available, '$channel' would just show up in the output.  
+				You can tell if you've made a typo in a variable name or are trying to use a variable that isn't available in the current context if it just appears in the output unreplaced.
+</div>
+<div class="section">
+#sod_subsection_title('Accessing Subfields')
+<p>All of the variables exposed to SOD also contain subfields.
+				The output from the variable name itself summarizes the entire variable, and the indiviual fields that make that up are available by adding '.<fieldname>' to the variable.
+				So on the channel variable from earlier, its code can be inserted into the output by using its code subfield like '$channel.code'.
+				If a subfield has subfields of its own, they can be accessed with additional '.<fieldname>' accessors. 
+				So '$channel.site.code' is another valid variable access on channel.
+				All of the subfields for variables are listed in the <a href="#Types of variables available">variable types</a> section. 
+				<p>If in your output you want to use a subfield from a variable followed by another period, the subfield access and regular text need to be separated so Velocity
+				knows not to follow down into the variable indefinitely.  By encasing the field access past the dollar sign in curly braces you tell Velocity where to stop interpreting.
+				For example if we're using our channel code to generate a file name for a sac file and we want to append '.sac' to the file we could use the template '${channel.code}.sac' and 
+				Velocity would print 'BHZ.sac'.</p>
+				<p>Time subfields can be formatted in addition to being printed out in their default forms.  
+					For any time field you can just print it out with '.<fieldname>' or you can format it in a certain way using 'get<Fieldname>('format string')'.
+					So on events, you can print out the default formatting of the time as '$event.time' or you can use a particular time formatting with '$event.getTime('yyyy-MM-dd')'.
+					The time formatting is based on Java's <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/text/SimpleDateFormat.html">SimpleDateFormat</a>, so any valid time format from there can be used.  
+				</p>
+</div>
+<div class="section">
+#sod_subsection_title('Accessing Lists')
+<p>
+	If a template contains multiple instances of an item, they're contained in a list.
+	For example the printlineSeismogramProcess has a list of seismograms available to it called 'seismograms'.
+	To get the number of items in a list, use  '$&lt;fieldname>.size()' ie to get the number of seismograms in the printlineSeismogramProcess use '$seismograms.size()'.
+	To access and print information about each item in a list requires use of a foreach loop in Velocity.  
+	This looks like
+	<pre>
+	\#foreach($seismogram in $seismograms)
+	$seismogram
+	\#end
+	</pre>
+	With this construct, every item in the list is assigned to the variable and then the text inbetween the \#foreach and \#end is inserted into the result.
+	\#foreach and \#end can be on the same line if you don't want each list item's output to be on a different line.
+	To access only the first item in the list use '$&lt;listname>.get(0)', ie to print only the begin time for the first seismogram you could use '$seismograms.get(0).begin'.
+</p>
+</div>
+			</div>
+</div>
+#sod_footer()
+</body>
+</html>

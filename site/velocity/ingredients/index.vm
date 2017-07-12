@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+#set($currentPageTitle = "Ingredient Listing")
+#ingredientPage()
+<head>
+#sod_head()
+</head>
+<body>
+#sod_header()
+#sod_menu()
+<div id="content">
+<div class="section">
+#sod_section_title('SOD Recipe Structure')
+            <p>The <a href="../documentation/tutorials/index.html">tutorial</a>
+documents the overall structure of a SOD recipe. You should read through it if you are unfamiliar with how a SOD recipe is formed.
+            </p>
+</div>
+<div class="section">
+#sod_section_title('SOD Ingredient Listing')
+            <p>The ingredient listing contains a page for every ingredient that can go into SOD. If you
+                want to extend and improve your SOD runs, it's the place to find pieces of SOD that
+                do what you want.</p>
+</div>
+<div class="section">
+#sod_section_title('What is an ingredient?')
+            <p>An ingredient is a single operation in a recipe. A full SOD recipe consists of multiple
+                ingredents that tell SOD how to gather and process data.</p>
+</div>
+<div class="section">
+#sod_section_title("What's in each ingredient's page?")
+            <p> Each ingredient's page consists of four major sections: a description of the ingredient's
+                uses, an example of the ingredient, an abstract description of the ingredient's
+                structure, and a list of all of the ingredients that contain this ingredient. </p>
+<div class="section">
+#sod_subsection_title("Example")
+                <p>The example of the ingredient. You can copy the
+                    example, paste it in the correct place in a recipe, and SOD will start
+                    using it.</p>
+</div>
+<div class="section">
+#sod_subsection_title("This consists of")
+                <p>This section describes the exact structure of the ingredient. It's important
+                    enough to get its own page explaining it <a href="abstractStructure.html">here</a>.</p>
+</div>
+<div class="section">
+#sod_subsection_title("Places this can be found")
+                <p> This section lists every ingredient that contains this ingredient. In the case where
+                    this is contained in a choice, the items that can be substituted for this are
+                    listed as well. </p>
+</div>
+</div>
+</div>
+#sod_footer()
+</body>
+</html>

@@ -1,0 +1,82 @@
+#toolsPage()
+#defaultHeader("find_seismograms")
+<div class="section">
+				#sod_section_title("find_seismograms")
+				<p>find_seismograms produces the part of the recipe corresponding to SOD's <a href="${relativePathToSodDir}ingredients/waveformArm.html">waveformArm</a>.  
+					It depends on the output of both find_events and find_stations being piped into it to function correctly.  See the <a href="usage.html">usage</a> document to see how that's done.
+				</p>
+					</div>
+				<div class="section">
+				#sod_section_title("Options")
+					<table summary="The format and meaning of all options accepted by find_events" class="options">
+						<tr>
+							<th id="format">Format</th>
+							<th id="meaning">Meaning</th>
+							<th id="default">Default</th>
+						</tr>
+<tr>
+<td headers="format">-v/--version </td>
+<td headers="meaning">Print SOD's version and exit</td>
+<td headers="default"></td>
+</tr>
+<tr>
+<td headers="format">-r/--recipe </td>
+<td headers="meaning">Print the created recipe to stdout instead of running it</td>
+<td headers="default"></td>
+</tr>
+<tr>
+<td headers="format">-h/--help </td>
+<td headers="meaning">Print a brief help message and exit</td>
+<td headers="default"></td>
+</tr>
+<tr>
+<td headers="format">-p/--props &lt;props&gt;</td>
+<td headers="meaning">Add an additional props file to specify a different nameserver, database or other internal SOD options</td>
+<td headers="default"></td>
+</tr>
+<tr>
+<td headers="format">-S/--server &lt;server&gt;</td>
+<td headers="meaning">Set the seismogram server to use for this search</td>
+<td headers="default">service.iris.edu</td>
+</tr>
+<tr>
+<td headers="format">-B/--begin &lt;beginPhase&gt;</td>
+<td headers="meaning">The begin time for seismograms specified as a phase name and an offset in minutes like 12.6ttp or -3s.
+	The phase names come from <a href="http://www.seis.sc.edu/TauP/">TauP</a>, so look through its PDF documentation to see what
+names are available.</td>
+<td headers="default">-2ttp</td>
+</tr>
+<tr>
+<td headers="format">-E/--end &lt;endPhase&gt;</td>
+<td headers="meaning">The end time for seismograms specified as a phase name and an offset in minutes like .4ttp or -20.01s.
+The phase names come from <a href="http://www.seis.sc.edu/TauP/">TauP</a>, so look through its PDF documentation to see what
+names are available.</td>
+<td headers="default">+5tts</td>
+</tr>
+<tr>
+<td headers="format">-c/--channels c1,c2,...,cN</td>
+<td headers="meaning">The codes of channels to retrieve like <code>BHZ</code> or <code>LH*</code>.  If unspecified, all channels for retrieved sites will be retrieved</td>
+<td headers="default">BH*</td>
+</tr>
+<tr>
+<td headers="format">-l/--sites l1,l2,...,lN</td>
+<td headers="meaning">The codes of sites(location codes) to retrieve such as <code>00</code> or <code>01</code>.  If unspecified, all sites for retrieved stations will be retrieved.  '__' can be used to retrieve '  ' sites</td>
+<td headers="default"></td>
+</tr>
+<tr>
+<td headers="format">--mark-phases 1,2,...,N</td>
+<td headers="meaning">Phase time to record in SAC file t0-t9 headers.  An individual item is given as a phase name, a dash and a t header, 0-9 or a, as in taup_setsac.  
+	For example S-9 puts the arrival time for S into the 9th t header.  
+	See the <a href="http://www.seis.sc.edu/TauP/">TauP</a> for more information about the argument format and phase naming</td>
+<td headers="default"></td>
+</tr>
+<tr>
+<td headers="format">-o/--output &lt;output&gt;</td>
+<td headers="meaning">The format for output.  Can be none, counter or a Velocity template as described in the 
+	<a href="${relativePathToSodDir}ingredients/printlineSeismogramProcess.html">printline ingredient</a>.  
+	'counter' outputs the number of seismograms retrieved for each channel for each earthquake</td>
+<td headers="default">counter</td>
+</tr>
+</table>
+			</div>
+#defaultFooter()

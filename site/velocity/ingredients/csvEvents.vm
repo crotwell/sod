@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	#set($currentPageTitle = "CSV Events")
+	#set($pathToTutorials = "../documentation/tutorials/")
+	#ingredientPage()
+	<head>
+		#sod_head()
+	</head>
+	<body>
+		#sod_header()
+		#sod_menu()
+		<div id="content">
+			<div class="section">
+				#sod_section_title('CSV Events')
+				<p>CSV stands for &quot;Comma-Separated Values&quot; and is a plain-text file format that
+					is readable and writable by spreadsheet applications like Excel.  The first line is made
+					up of the field names separated by commas.  Subsequent lines contain the data in the same
+					order as their corresponding fields, also separated by commas.  SOD has the capability 
+					of importing events from and exporting them to .csv files.  On this page we will explain 
+					the CSV importing process.</p>
+			</div>
+			#macro(field $name $def)
+				<dt>$name</dt>
+				<dd>$def</dd>
+			#end
+			<div class="section">
+				#sod_section_title('CSVEventSource')
+				<p>The CSVEventSource acts much like the eventFinder in that it provides events for SOD to
+					process, but the events have already been found. Now it's just a case of reading them in
+					and doing whatever you want to do with them.  The most likely scenario where you would 
+					need to import a list of events from a .csv file is if you were to come in possesion of 
+					such a list that was exported from SOD using the CSVEventPrinter.  We will discuss the 
+					CSVEventPrinter later on this page.</p>
+			</div>
+			<div class="section">
+				#sod_subsection_title('Fields')
+				<p>The fields are broken up into three categories:</p>
+				<ol>
+					<li>Required</li>
+					<li>Optional</li>
+					<li>Defaultable</li>
+				</ol>
+				<p>Defaultable fields are ones that, if omitted, will default to a sensible value during the
+					import process.
+				</p>
+				<h5>Required field</h5>
+				#field('time' 'time at which the event occurred')
+				<p>Data in the time field should be formatted according to the 
+					<a href="http://www.cl.cam.ac.uk/~mgk25/iso-time.html">ISO 8601 standard
+					</a> for 
+					representation of date and time.  Here is an example:
+				</p>
+				<pre>2006-05-09T13:15:00.000Z</pre>
+				<h5>Optional fields</h5>
+				#field('latitude' 'the latitude of the event from -90 to 90')
+				#field('longitude' 'the longitude of the event from -180 to 180')
+				#field('depth' 'how far the event was below the ground')
+				#field('magnitude' 'the value of the magnitude')
+				#field('catalog' 'the catalog to which the event belongs')
+				#field('contributor' 'the organization that estimated the event')
+				#field('name' 'the name of the event.  probably the id of whatever database it came from')
+				#field('flinnEngdahlRegion' 'number value of the region in which the event occurred')
+				#field('flinnEngdahlRegionType' 'type of region in which the earthquake occurred. can be either 0 (seismic region) or 1 (geographic region)')
+				<h5>Defaultable fields</h5>
+				#field('depthUnits' 'the units of depth. default is &quot;kilometer&quot;')
+				#field('magnitudeType' 'the type of magnitude estimation.  default is &quot;M&quot;')
+			</div>
+			<div class="section">
+				#sod_subsection_title('Creating a CSV event file')
+				<p>If you are creating a file from hand, a good place to start is just creating one with the
+					only required field: time.</p>
+<pre>
+time
+2006-05-09T13:15:00.000Z
+2006-05-09T14:57:14.000Z
+2006-05-10T06:03:30.000Z
+</pre>
+				<p>Seeing as a lot of SOD's usefulness depends on knowing at least a little bit more
+					information about an event than its origin time, a csv file that includes magnitudes 
+					and locations along with the time will probably yield better results.</p>
+<pre>
+time, magnitude, latitude, longitude, depth
+2006-05-09T13:15:00.000Z, 7.0, -20.21, -173.90, 16
+2006-05-09T14:57:14.000Z, 5.5, -19.70, -172.53, 40
+2006-05-10T06:03:30.000Z, 5.2, -20.75, -173.10, 38
+</pre>
+				<p>SOD's CSVEventPrinter will output all of the fields.  If you wish to see an example, 
+					<a href="events.csv">here is one</a> created by our tutorial.xml recipe file demo.</p>
+			</div>
+			<div class="section">
+				#sod_subsection_title('Configuring the recipe file')
+				<p>If you want to use a CSVEventSource in a SOD run, it's fairly simple to configure.
+					In the eventArm of your recipe file, instead of using the eventFinder ingredient,
+					use the CSVEventSource.  If you have a file called events.csv that contains your
+					events, the eventArm in your recipe file may look something like this:</p>
+				#simpleExample("tutorial/csvEventSource.xml")
+			</div>
+			<div class="section">
+				#sod_section_title('CSVEventPrinter')
+				<p>The CSVEventPrinter outputs events found by SOD to a .csv file.  It may be useful if
+					you want to import events retrieved with SOD into a spreadsheet.</p>
+			</div>
+			<div class="section">
+				#sod_subsection_title('Configuring the recipe file')
+				<p>If you want the events retrieved by SOD to be exported to a .csv file, all you need
+					to do is add a CSVEventPrinter to the eventArm in your recipe file.</p>
+				#simpleExample('tutorial/csvEventPrinter.xml')
+			</div>
+		</div>
+</div>
+#sod_footer()
+</body>
+</html>

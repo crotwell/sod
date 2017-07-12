@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    #set($currentPageTitle = "Install")
+    #documentationPage()
+    <head>
+        #sod_head()
+    </head>
+    <body>
+        #sod_header()
+        #sod_menu()
+        <div id="content">
+            <div class="section">
+                #sod_section_title("Installing SOD")
+                <p>Download the #sodtar() or #sodzip() of SOD, and unpack it. This 
+                    will result in a directory structure like the following: 
+                    <ul>
+                        <li>
+                            <tt>#sodVersion()
+                            </tt>
+                            <ul>
+                                <li> <tt>bin</tt> - sh scripts for running SOD on *nix and bat scripts for windows </li>
+                                <li> <tt>build.gradle</tt> - script for recompiling SOD via gradle</li>
+                                <li> <tt>cwg.prop</tt> - example SOD prop file for configuring logging, database, etc.</li>
+                                <li> <tt>doc</tt> - documentation </li>
+                                <li> <tt>etc</tt> - helper files </li>
+                                <li> <tt>gradle</tt> - used for recompiling SOD via gradle</li>
+                                <li> <tt>gradlew</tt> - also for recompiling SOD via gradle</li>
+                                <li> <tt>gradlew.bat</tt> - also for recompiling SOD via gradle</li>
+                                <li> <tt>lib</tt> - SOD's libraries </li>
+                                <li> <tt>recipes</tt> - sample example recipes from the tutorial</li>
+                                <li> <tt>settings.gradle</tt> - also for recompiling SOD via gradle</li>
+                                <li> <tt>src</tt> - SOD's source code, if you are curious </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </p>
+            </div>
+            <div class="section">
+                #sod_section_title("Installing Java")
+                <p>SOD uses Java 1.7 or later.  You can find out what version of Java you have on your system by running 'java -version' 
+                    at the command line.  If your version is less than 1.7 or is gcj, go to <a href="http://java.com/">Java's website</a> for a more recent version. 
+Unfortunately, gjc, which comes with many Linux distributions, is not quite Java and prevents SOD from running. Please use Java from OpenJDK or Sun/Oracle on Linux instead.
+                </p>
+            </div>
+            <div class="section">
+                #sod_section_title("Setting PATH")
+                <p>SOD is ready to run once it's unpacked and Java is installed; just invoke bin/sod or bin\sod.bat in the unpacked directory to run it. 
+                    However, for easy invocation, people usually add SOD's bin directory to their path.  
+                    This is somewhat system dependent on Unix like operating systems, but we have directions on how to do it under Windows below. 
+                    </p>
+            <div class="section">
+                #sod_subsection_title('Windows')
+                    <p>To add SOD's <code>bin</code> directory to your system's path open <code>Control Panel -> System -> Advanced -> Environment Variables</code>.  
+                        If an entry with name <code>PATH</code> exists, append <code>;&lt;the full path to your SOD directory&gt;\bin</code> 
+                        to its value.
+                        Otherwise, create a new variable <code>PATH</code> and set it to <code>&lt;the full path to your SOD directory&gt;\bin</code>. 
+</p>
+            </div>
+</div>
+            #sod_gettingstarted_navigation("Demo" "demo.html")
+</div>
+#sod_footer()
+</body>
+</html>

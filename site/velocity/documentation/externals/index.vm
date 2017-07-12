@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	#set($currentPageTitle = "Externals")
+	#externalsPage()
+	<head>
+		#sod_head()
+	</head>
+	<body>
+		#sod_header()
+		#sod_menu()
+		<div id="content">
+			<div class="section">
+                #sod_section_title("External Processing")
+				<p>
+					If the built-in subsetters and processors in SOD don't meet your particular needs, external processors
+					may be the answer.  They allow you to write Java code that hooks into a SOD recipe at any 
+					step with the same information and ability of the built-in code.  Writing an external processor
+					requires some additional skills beyond those needed by a regular SOD user.  Your life will be much easier 
+					if you've written and compiled Java code before.  
+					</p>
+					<p>
+					The <a href="tutorial.html">externals tutorial</a>
+					covers creating a simple external origin subsetter
+					from soup to nuts.  You should start there to get an idea of how a processor is constructed.
+					
+					After going through the tutorial, check the various <a href="types.html">types of externals</a> to
+					see which one fits the bill for your needs. 
+					</p>
+					<p class="reallyshort">
+					If you run into some snags or need a starting direction for your own external processor
+                   please contact the #EnkodeEmail("sod" "SOD Mailing List") for help.  
+				</p>
+			</div>
+		</div>
+		#sod_footer()
+	</body>
+</html>

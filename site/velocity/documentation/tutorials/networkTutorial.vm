@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	#set($currentPageTitle = "Network Tutorial")
+	#tutorialPage()
+	#set($imageDir = "$!{relativePathToSodDir}images/documentation/tutorials/")
+	<head>
+		#sod_head()
+	</head>
+	<body>
+		#sod_header()
+		#sod_menu()
+		<div id="content">
+			<div class="section">
+				#sod_section_title("SOD's arm structure")
+				<img class="right" src="$!{imageDir}arm_overview.png"/>
+				<p>SOD's modus operandi is to retrieve seismograms.
+				To get a seismogram from a remote data center, SOD needs to know its time window and channel (a single 
+				recording instrument).  This leads to three major activites in SOD called arms:</p>
+				<ol>
+					<li><b>Event Arm</b> - gathers earthquakes</li>
+					<li><b>Network Arm</b> - gathers channels</li>
+					<li><b>Waveform Arm</b> - merger events and channels to produce time windows and gathers seismograms</li>
+				</ol>
+				<p class="p_one">The waveform arm depends on the network and event arms, but the event and network arms
+				can run independently.  In this tutorial, we'll run the 
+				network arm by itself.</p>
+
+</div>
+			<div class="section">
+				#sod_section_title("Network arm's structure")
+				<img class="right" src="$!{imageDir}network_arm.png"/>
+<p>The network arm works in 3 steps: <ol>
+		<li><b>Network Subsetter</b> - gets seismic networks</li>
+		<li><b>Station Subsetter</b>- gets stations from the accepted networks</li>
+		<li><b>Channel Subsetter </b>- gets channels from the accepted stations</li>
+</ol></p>
+<p>All of the arms in SOD operate like an assembly line.  A server is specified as the source of raw materials.  
+   Subsetters, like inspectors on the line, check the raw materials for certain qualities.  If the
+	material has it, it goes on to the next step down the line.  Otherwise, it's tossed out of the system into 
+	the reject bin.  Finally, if the raw material passes all the subsetters, it makes it into 
+	the accepted bin.
+	</p>
+	<p>In the case of the network arm a 
+	    <a href="${relativePathToSodDir}ingredients/networkSource.html">network source</a>, often a FDSN Station web service, is specified as the source of raw material.  
+		All of the seismic networks in the server are retrieved and inspected by network subsetters.  
+		If it or any other subsetter is left out of a recipe, it's as if that inspector fell asleep on the job
+		and all items pass 
+		through.  For the networks that pass, stations are retrieved from the server and inspected by the 
+		station subsetters.  Finally, channels are retrieved for passing stations and inspected by the channel
+		subsetters.
+	</p>
+</div>
+			<div class="section">
+				#sod_section_title("A simple SOD recipe")
+				#simpleExample("tutorial/simpleNetwork.xml")
+					<img class="river" src="$!{imageDir}river.png"/>
+					
+				<p >This is the a simple recipe for SOD: it only contains a network arm with
+					a single subsetter.  
+					</p>
+					<p>	The <code>&lt;fdsnStation></code> section of the recipe tells the networkArm to 
+					talk to IRIS DMC's FDSN Station web service to retrieve its data. The IRIS DMC is the
+					default, but you can configure this to talk to other servers.</p>
+					It's followed by the <code>&lt;printlineChannelProcessor/></code>, a special kind of subsetter called a 
+				processor.  A processor never rejects anything &#8212; it only performs some action
+				based on the information in it.  In this case, the processor prints out the information for 
+				any channel that goes through it.
+The lack of any rejecting subsetters mean all channels are retrieved from the DMC and 
+					pass successfully through the arm.
+</p>
+#set($countDir = "sod/documentation/network")
+<p>Since there are no subsetters in this recipe, it truly produces a flood of channels.  The IRIS Network server
+	contained over #include("${countDir}/all") at last count. You really do not want to run this recipe!</p>
+</div>
+			<div class="section">
+				#sod_section_title("XML and SOD recipes")
+				<p>SOD recipes are written in a form of <acronym title="eXtensible Markup Language">XML</acronym>,
+					a simple text format.
+					As a user of SOD, you'll need to edit recipes to specify
+				what you want SOD do.  There are a few things about XML you should keep in mind to help 
+				in editing recipes.  
+				<div class="section">
+					#sod_subsection_title("General XML Rules")
+					<p>You can edit XML in a regular text editor because it is a text format.  An
+						XML document should always start with a prologue line that specifies
+				the encoding and version.  For SOD recipes, just make sure </p>
+				<pre>&lt;?xml version="1.0" ?></pre>
+			    <p>is the first line.  </p>
+				</div>
+				<div class="section">
+					#sod_subsection_title("XML Elements")
+					<p>
+						After the prologue, XML documents consist of one or more elements.  An element is a
+				structure in XML that consists of a start tag like <code>&lt;sod></code>followed by text or other elements,
+				then an end tag like <code>&lt;/sod></code>.  In the recipe above, <code>sod</code>, <code>networkArm</code>,
+				<code>fdsnStation</code> and <code>printlineChannelProcessor</code> 
+				are elements.  Every XML document starts
+				with a single element called the root element, which contains all the other elements.  In this case, 
+				the root element is <code>sod</code>.</p>
+			<img class="right" src="$!{imageDir}sod_overview.png"/>
+			<p>Any element with a start tag in another element must have its end tag before the end tag of the 
+				element containing it.  This means the elements form a tree structure branching out from the root
+				element.  If an element contains no other elements or text, it can be written as an empty element like
+				<code>&lt;fdsnStation/></code>.  An element contained in another element is called its 
+			child, the containing element is called a parent, and all children of an element are siblings.		
+</p>
+
+<p>If SOD issues an error message stating that the recipe is not well formed, one
+	of these rules of XML has been violated.  Check your file to make sure that all elements are properly nested
+	and that all start tags have matching end tags.
+</p>
+<p>Don't worry about completely understanding all of these terms now. 
+	They'll be used throughout the tutorial with other examples 
+	that should clarify their meaning.</p>
+				</div>
+</div>
+			<div class="section">
+				#sod_section_title("Adding a network subsetter to the recipe")
+				#simpleExample("tutorial/subsettingNetwork.xml")
+				<img class="river" src="$!{imageDir}damriverpipe.png"/>
+				<p class="short">This adds a network subsetter to the initial recipe.  
+					The network subsetter 
+					<code>&lt;networkCode></code> tells SOD to only allow networks with code II to pass through.
+					This limits the number of channels retrieved by this run to #include("${countDir}/subset") channels  
+					from the #include("${countDir}/all") returned by the run with no subsetters. 
+				</p>
+</div>	
+<div class="section">
+				#sod_section_title("Limiting the recipe to broadband channels")
+				#simpleExample("tutorial/network.xml")
+				<img class="river" src="$!{imageDir}damriverpipefaucet.png"/>
+				<p>This adds a channel subsetter to the recipe: <code>&lt;bandCode>B&lt;/bandCode></code>. 
+					This subsetter restricts the channels to be only those with a band code of B (broadband channels).
+					With the addition of this subsetter, the amount of data has been cut back to 
+					#include("${countDir}/completeSubset") channels.
+				</p>
+					<p class="notsoshort">With the broadband restriction, the run completes in a reasonable amount of time.
+						To try it, open up a command prompt, make a new directory 
+					<code>networkTutorial</code>, cd into it, and on Unix run 
+					</p>
+					<pre>sod -f &lt;path to your sod directory&gt;/recipes/tutorial/network.xml</pre>
+					<p>
+					or on Windows run </p>
+					<pre>sod.bat -f &lt;path to your sod directory&gt;\recipes\tutorial\network.xml</pre>
+					<p>
+					After a few seconds, you should see a line of information printed for all of the 
+					broadband channels in II.</p>
+
+</div>
+
+        #sod_gettingstarted_navigation("Event Tutorial" "eventTutorial.html")
+		</div>
+		#sod_footer()
+	</body>
+</html>

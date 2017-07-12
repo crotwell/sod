@@ -1,0 +1,43 @@
+#set($relativePathToTagDocDir="../")
+#set($relativePathToSodDir="../${relativePathToTagDocDir}")
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+#set($currentPageTitle = "Boolean Datatype")
+<head>
+#sod_head()
+</head>
+<body>
+#sod_header()
+#sod_menu()
+<div id="content">
+<div class="section">
+<h3>
+<a name="Boolean">Boolean</a>
+</h3>
+            <p>True or False.</p>
+</div>
+<div class="section">
+<h3>
+<a name="Valid Values">Valid Values</a>
+</h3>
+            <ul>
+                <li>true</li>
+                <li>false</li>
+                <li>True</li>
+                <li>False</li>
+            </ul>
+</div>
+<div class="section">
+<h3>
+<a name="Invalid Values">Invalid Values</a>
+</h3>
+            <ul>
+                <li>yes - only true or false</li>
+                <li>yep - no slang</li>
+                 <li>ain't true - ain't ain't a word, mostly</li>
+            </ul>
+</div>
+</div>
+#sod_footer()
+</body>
+</html>

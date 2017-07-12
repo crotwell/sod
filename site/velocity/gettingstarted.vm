@@ -1,0 +1,46 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	#set($currentPageTitle = "Getting Started")
+	<head>
+		#sod_head()
+	</head>
+	<body>
+		#sod_header()
+		#sod_menu()
+		<div id="content">
+			<div class="section">
+                #sod_section_title("Getting started with SOD")
+				<p>
+					Following these steps will install SOD on your system and aquaint you with the
+					basics of working with SOD.  It shouldn't take more than an hour, and you can
+					feel free to stop at any point and pick up from there later.
+				</p>
+				<ol>
+					<li><a href="documentation/install.html">Download and install SOD</a></li>
+					<li><a href="documentation/demo.html">Run a demo to see that SOD is working and what SOD produces</a></li>
+					<li><a href="tools/usage.html">Look at the Sod Tools, useful in their own right and an easy way to generate SOD recipies</a></li>
+					<li><a href="documentation/tutorials/networkTutorial.html">Learn how to specify the networks, stations and channels you want</a></li>
+					<li><a href="documentation/tutorials/eventTutorial.html">Write a recipe to get the earthquakes you want</a></li>
+					<li><a href="documentation/tutorials/waveformTutorial.html">Combine earthquakes and channels to gather seismograms</a></li>
+				</ol>
+				<div class="section">
+					#sod_section_title("Where to go from here")
+					<dl>
+					    <dt><a href="ingredients/index.html">Ingredient Listing</a></dt>
+                        <dd>The ingredient listing defines the structure of a SOD recipe, so they contain explanations of all the subsetters,
+                            processors and other ingredients that can go into SOD.  Go here to find ingredients to use in your SOD runs that weren't
+                            mentioned in the tutorials.</dd>
+						<dt><a href="documentation/legacy.html">Legacy Execute</a></dt>
+						<dd>Legacy execute allows you to have SOD execute commands on your system with the data it gathers.  Go here to find
+							out how to hook SOD into your existing processing.</dd>
+						<dt><a href="documentation/realtime.html">Realtime Processing</a></dt>
+						<dd>If the end time in the event arm extends past now, SOD will continue to run and process events as they happen.
+							This page explains various configuration choices you may want to make to support a standing order like this.</dd>
+						
+					</dl>
+				</div>
+			</div>
+		</div>
+		#sod_footer()
+	</body>
+</html>

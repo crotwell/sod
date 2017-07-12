@@ -1,0 +1,41 @@
+#set($relativePathToTagDocDir="../")
+#set($relativePathToSodDir="../${relativePathToTagDocDir}")
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+#set($currentPageTitle = "Integer Datatype")
+<head>
+#sod_head()
+</head>
+<body>
+#sod_header()
+#sod_menu()
+<div id="content">
+<div class="section">
+<h3>
+<a name="Nonnegative Integer">Integer</a>
+</h3>
+            <p>All signed integers with no restriction on range.</p>
+</div>
+<div class="section">
+<h3>
+<a name="Valid Values">Valid Values</a>
+</h3>
+            <ul>
+                <li>-123423582</li>
+                <li>291218212</li>
+                <li>0</li>
+            </ul>
+</div>
+<div class="section">
+<h3>
+<a name="Invalid Values">Invalid Values</a>
+</h3>
+            <ul>
+                <li>123.4E56 - No exponentials</li>
+                <li>123.6 - No decimals</li>
+            </ul>
+</div>
+</div>
+#sod_footer()
+</body>
+</html>
