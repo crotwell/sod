@@ -47,8 +47,6 @@
     <xi:include href="base/include/quantity.rng" parse="xml" xpointer="xpointer(//define)"/>
     <xi:include href="base/include/range.rng" parse="xml" xpointer="xpointer(//define)"/>
     <xi:include href="base/include/samplingRange.rng" parse="xml" xpointer="xpointer(//define)"/>
-    <xi:include href="base/include/seismogramDisplay.rng" parse="xml" xpointer="xpointer(//define)"/>
-    <xi:include href="base/include/seismogramImage.rng" parse="xml" xpointer="xpointer(//define)"/>
     <xi:include href="base/include/source.rng" parse="xml" xpointer="xpointer(//define)"/>
     <xi:include href="base/include/taup.rng" parse="xml" xpointer="xpointer(//define)"/>
     <xi:include href="base/include/time.rng" parse="xml" xpointer="xpointer(//define)"/>
