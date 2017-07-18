@@ -15,7 +15,7 @@
 		</component>
 	</joined-subclass>
 
-	<class name="edu.sc.seis.sod.EventNetworkPair">
+	<class name="edu.sc.seis.sod.hibernate.eventpair.EventNetworkPair">
 		<cache usage="read-write"/>
 		<id name="dbid" type="long">
 			<generator class="native" />
@@ -24,7 +24,7 @@
 			class="edu.sc.seis.sod.model.event.StatefulEvent" column="event"
 			foreign-key="FK_enetp_event" unique-key="event_net_key" />
 		<many-to-one name="network"
-			class="edu.iris.Fissures.network.NetworkAttrImpl" column="networkAttr"
+			class="edu.sc.seis.sod.model.station.NetworkAttrImpl" column="networkAttr"
 			foreign-key="FK_enetp_network" unique-key="event_net_key" />
 		<component name="status">
 			<property name="stageInt" type="integer"  index="enp_stage_index"/>
@@ -34,7 +34,7 @@
 		<property name="lastQuery"  type="timestamp"/>
 	</class>
 
-	<class name="edu.sc.seis.sod.EventStationPair">
+	<class name="edu.sc.seis.sod.hibernate.eventpair.EventStationPair">
 		<cache usage="read-write"/>
 		<id name="dbid" type="long">
 			<generator class="native" />
@@ -43,7 +43,7 @@
 			class="edu.sc.seis.sod.model.event.StatefulEvent" column="event"
 			foreign-key="FK_estap_event" unique-key="event_station_key" />
 		<many-to-one name="station"
-			class="edu.iris.Fissures.network.StationImpl" column="station"
+			class="edu.sc.seis.sod.model.station.StationImpl" column="station"
 			foreign-key="FK_estap_station" unique-key="event_station_key" />
 		<component name="status">
 			<property name="stageInt" type="integer"  index="esp_stage_index" />
@@ -53,7 +53,7 @@
 		<property name="lastQuery"  type="timestamp"/>
 	</class>
 	
-	<class name="edu.sc.seis.sod.AbstractEventChannelPair" abstract="true">
+	<class name="edu.sc.seis.sod.hibernate.eventpair.AbstractEventChannelPair" abstract="true">
 		<cache usage="read-write"/>
 		<id name="dbid" type="long">
 			<generator class="sequence" >
@@ -78,39 +78,21 @@
     		<element type="serializable" column="value" not-null="true"/> 
 		</map> 
 		<many-to-one name="esp"
-			class="edu.sc.seis.sod.EventStationPair" column="esp"
+			class="edu.sc.seis.sod.hibernate.eventpair.EventStationPair" column="esp"
 			foreign-key="FK_ecp_esp" />
 
 
-		<union-subclass name="edu.sc.seis.sod.EventChannelPair">
+		<union-subclass name="edu.sc.seis.sod.hibernate.eventpair.EventChannelPair">
 			<many-to-one name="channel"
-				class="edu.iris.Fissures.network.ChannelImpl" column="channel"
+				class="edu.sc.seis.sod.model.station.ChannelImpl" column="channel"
 				foreign-key="FK_ecp_channel"  />
 		</union-subclass>
 
-		<union-subclass name="edu.sc.seis.sod.EventVectorPair">
+		<union-subclass name="edu.sc.seis.sod.hibernate.eventpair.EventVectorPair">
 			<many-to-one name="channelGroup"
-				class="edu.sc.seis.fissuresUtil.hibernate.ChannelGroup"
+				class="edu.sc.seis.sod.model.station.ChannelGroup"
 				column="channelGroup" foreign-key="FK_evp_channelGroup" />
 		</union-subclass>
-	</class>
-
-
-	<class name="edu.sc.seis.sod.model.event.RecordSectionItem">
-		<id name="dbid" type="long">
-			<generator class="native" />
-		</id>
-		<many-to-one name="event"
-			class="edu.sc.seis.sod.model.event.StatefulEvent" column="event"
-			foreign-key="FK_recsec_event" index="rec_best_eq_index" />
-		<many-to-one name="channel"
-			class="edu.iris.Fissures.network.ChannelImpl" column="channel"
-			foreign-key="FK_recsec_channel" />
-		<property name="orientationId"  index="rec_best_eq_index" />
-		<property name="recordSectionId"/>
-		<property name="inBest" type="boolean" index="rec_best_eq_index" />
-        <property name="degrees" type="float" />
-        <property name="sToN" type="float" />
 	</class>
 
 	<class name="edu.sc.seis.sod.SodConfig">

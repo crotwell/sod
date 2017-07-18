@@ -38,7 +38,7 @@
 		</component>
 		<property name="beginTime" type="timestamp" />
 		<property name="name" />
-		<component name="location" class="edu.sc.seis.sod.model.Location"  lazy="false">
+		<component name="location" class="edu.sc.seis.sod.model.common.Location"  lazy="false">
 			<property name="latitude" type="float" access="field"  lazy="false"/>
 			<property name="longitude" type="float" access="field"  lazy="false"/>
 			<component name="depth"
@@ -56,7 +56,7 @@
 					class="edu.sc.seis.sod.model.common.UnitImpl" column="elev_unit_id"
 					foreign-key="FK_STATION_ELEV_UNIT_ID" />
 			</component>
-			<property name="type" access="edu.sc.seis.fissuresUtil.hibernate.LocTypeAccess" type="integer"/>
+			<property name="type" type="integer"/>
 		</component>
 		<property name="operator"/>
 		<property name="description" type="text" />
@@ -111,7 +111,7 @@
 				<property name="begin_time" type="timestamp" />
 			</component>
 			<component name="location"
-				class="edu.sc.seis.sod.model.Location"  lazy="false">
+				class="edu.sc.seis.sod.model.common.Location"  lazy="false">
 				<property name="latitude" type="float" access="field" />
 				<property name="longitude" type="float" access="field" />
 				<component name="depth"
@@ -131,7 +131,6 @@
 						foreign-key="FK_SITE_ELEV_UNIT_ID"  lazy="false"/>
 				</component>
 				<property name="type"
-					access="edu.sc.seis.fissuresUtil.hibernate.LocTypeAccess"
 					type="integer"/>
 			</component>
 			<property name="endTime" type="timestamp" />
@@ -159,7 +158,7 @@
 			foreign-key="FK_cg_channel3" unique-key="channelgroup_chan_key" />
 	</class>
 	
-	<class name="edu.sc.seis.fissuresUtil.hibernate.InstrumentationBlob"
+	<class name="edu.sc.seis.sod.hibernate.InstrumentationBlob"
 		table="instrumentation" lazy="false">
 		
 		<id name="dbid" type="integer">
@@ -173,7 +172,7 @@
 	
 	
     
-    <class name="edu.sc.seis.fissuresUtil.hibernate.ChannelSensitivity"
+    <class name="edu.sc.seis.sod.hibernate.ChannelSensitivity"
         table="sensitivity" lazy="false">
         
         <id name="dbid" type="integer">

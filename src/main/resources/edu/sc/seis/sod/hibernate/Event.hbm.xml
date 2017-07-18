@@ -45,26 +45,26 @@
 		<property name="_id" column="origin_id"/> <!-- oracle doesn't like column names starting with _ -->
 		<property name="originTime" type="timestamp">
 		</property>
-		<component name="location" class="edu.iris.Fissures.Location" >
+		<component name="location" class="edu.sc.seis.sod.model.common.Location" >
 			<property name="latitude" type="float" access="field"  lazy="false"/>
 			<property name="longitude" type="float" access="field"  lazy="false"/>
 			<component name="depth"
-				class="edu.sc.seis.sod.model.QuantityImpl" access="field">
+				class="edu.sc.seis.sod.model.common.QuantityImpl" access="field">
 				<property name="value" column="depth_value"
 					type="double"  />
 				<many-to-one name="unit"
-					class="edu.sc.seis.sod.model.UnitImpl" column="depth_unit_id"
+					class="edu.sc.seis.sod.model.common.UnitImpl" column="depth_unit_id"
 					foreign-key="FK_DEPTH_UNIT_ID" lazy="false" />
 			</component>
 			<component name="elevation"
-				class="edu.sc.seis.sod.model.QuantityImpl" access="field">
+				class="edu.sc.seis.sod.model.common.QuantityImpl" access="field">
 				<property name="value" type="double" column="elev_value"  />
 				<many-to-one name="unit"
-					class="edu.sc.seis.sod.model.UnitImpl" column="elev_unit_id"
+					class="edu.sc.seis.sod.model.common.UnitImpl" column="elev_unit_id"
 					foreign-key="FK_ELEV_UNIT_ID" lazy="false" />
 
 			</component>
-			<property name="type" access="edu.sc.seis.fissuresUtil.hibernate.LocTypeAccess" type="integer"></property>
+			<property name="type" type="integer"></property>
 		</component>
 
 		<list name="magnitudeList" table="origin_magnitude"
