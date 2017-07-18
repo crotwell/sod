@@ -60,7 +60,8 @@ log4j.appender.WebStatusFile.layout.ConversionPattern=%d{ISO8601} %p %t %c{2} - 
 edu.sc.seis.fissuresUtil.nameServiceCorbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService
 
 # default database url
-fissuresUtil.database.url=jdbc:hsqldb:file:SodDb/SodDb
+hibernate.connection.url=jdbc:hsqldb:file:SodDb/SodDb
+
 # hibernate create cached tables by default
 hibernate.connection.hsqldb.default_table_type=cached
 

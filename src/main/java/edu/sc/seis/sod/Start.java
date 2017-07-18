@@ -298,18 +298,21 @@ public class Start {
     }
     
     protected void initDatabase() throws ConfigurationException {
-        ConnMgr.installDbProperties(props, args.getInitialArgs());
+        
         warnIfDatabaseExists();
         synchronized(HibernateUtil.class) {
             
-            HibernateUtil.setUpFromConnMgr(props, getClass().getResource("/edu/sc/seis/sod/data/ehcache.xml"));
-            SodDB.configHibernate(HibernateUtil.getConfiguration());
+            
             Iterator it = getRunProps().getHibernateConfig().iterator();
             while(it.hasNext()) {
                 String res = (String)it.next();
                 logger.debug("Adding resource to HibernateUtil:  "+res);
-                HibernateUtil.getConfiguration().addResource(res);
+                // need to add to MetadataSources, but maybe not needed???
+                throw new ToDoException("Adding hibernate configs not supported yet");
+               // HibernateUtil.getConfiguration().addResource(res);
             }
+
+            HibernateUtil.setUp(props, getClass().getResource("/edu/sc/seis/sod/data/ehcache.xml"));
         }
         try {
             AbstractHibernateDB.deploySchema();
@@ -326,7 +329,7 @@ public class Start {
     protected void warnIfDatabaseExists() {
         if ( ! args.isContinue() && getRunProps().warnIfDatabaseExists()) {
             // only matters if hsql???
-            if (ConnMgr.getURL().startsWith(HSQL_FILE_URL)) {
+            if (props.getProperty("hibernate.connection.url").startsWith(HSQL_FILE_URL)) {
                 File dbFile = new File(ConnMgr.getURL().substring(HSQL_FILE_URL.length())+".log");
                 if (dbFile.exists()) {
                     allHopeAbandon("The database for this run, "+dbFile

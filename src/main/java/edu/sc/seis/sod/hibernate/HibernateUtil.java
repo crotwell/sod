@@ -6,45 +6,82 @@ import java.net.URL;
 import java.util.Properties;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.boot.Metadata;
+import org.hibernate.boot.MetadataBuilder;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.dialect.function.SQLFunctionTemplate;
+import org.hibernate.service.ServiceRegistry;
 
 import net.sf.ehcache.CacheManager;
 
 public class HibernateUtil {
+
+/* definitions are in edu/sc/seis/sod/hibernate/*.hbm.xml
+ * loaded from hibernate.cgf.xml
+*/
     
-    private static String configFile = "edu/sc/seis/fissuresUtil/hibernate/hibernate.cfg.xml";
+    private static String configFile = "edu/sc/seis/sod/hibernate/hibernate.cfg.xml";
 
     private static SessionFactory sessionFactory;
-
-    private static Configuration configuration;
 
     public synchronized static SessionFactory getSessionFactory() {
         if(sessionFactory == null) {
             logger.debug("Sessionfactory is null, creating...");
-            sessionFactory = getConfiguration().buildSessionFactory();
+            
+
+            ServiceRegistry standardRegistry = getServiceRegistryBuilder().build();
+
+            MetadataSources sources = new MetadataSources( standardRegistry );
+            
+            
+            
+            MetadataBuilder metadataBuilder = sources.getMetadataBuilder();
+            
+            addDateFunctions(metadataBuilder);
+            
+            Metadata metadata = metadataBuilder.build();
+            sessionFactory = metadata.getSessionFactoryBuilder().build();
         }
         return sessionFactory;
     }
-
-    public synchronized static Configuration getConfiguration() {
-        if(configuration == null) {
-            logger.debug("Hibernate configuration is null, loading config from "
-                    + configFile);
-            configuration = new Configuration().configure(configFile);
+    
+    private static void addDateFunctions(MetadataBuilder metadataBuilder) {
+        String dbUrl = props.getProperty("hibernate.connection.url");
+        if(dbUrl.startsWith("jdbc:hsql")) {
+            metadataBuilder.applySqlFunction("datediff",
+                                  new SQLFunctionTemplate(org.hibernate.type.StandardBasicTypes.LONG,
+                                                          "datediff(?1, ?2, ?3)"));
+            metadataBuilder.applySqlFunction("milliseconds_between",
+                                  new SQLFunctionTemplate(org.hibernate.type.StandardBasicTypes.LONG,
+                                                          "datediff('ms', ?1, ?2)"));
+            metadataBuilder.applySqlFunction("seconds_between",
+                                  new SQLFunctionTemplate(org.hibernate.type.StandardBasicTypes.LONG,
+                                                          "datediff('ss', ?1, ?2)"));
+        } else if(dbUrl.startsWith("jdbc:postgresql")) {
+            metadataBuilder.applySqlFunction("milliseconds_between",
+                                  new SQLFunctionTemplate(org.hibernate.type.StandardBasicTypes.LONG,
+                                                          "extract(epoch from (?2 - ?1)) * 1000"));
+            metadataBuilder.applySqlFunction("seconds_between",
+                                  new SQLFunctionTemplate(org.hibernate.type.StandardBasicTypes.LONG,
+                                                          "extract(epoch from (?2 - ?1))"));
         }
-        return configuration;
     }
 
-    public synchronized static void setConfigFile(String s) {
-        logger.warn("Reseting hibernate configuration: " + s);
-        configFile = s;
-        sessionFactory = null;
-        configuration = null;
+    static StandardServiceRegistryBuilder standardServiceRegistryBuilder;
+    
+    public static StandardServiceRegistryBuilder getServiceRegistryBuilder() {
+        if (standardServiceRegistryBuilder == null) {
+            standardServiceRegistryBuilder = new StandardServiceRegistryBuilder()
+                .configure( configFile);
+        }
+        return standardServiceRegistryBuilder;
     }
 
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(HibernateUtil.class);
 
-    public static void setUpFromConnMgr(Properties props, URL ehcacheConfig) {
+    public static void setUp(Properties props, URL ehcacheConfig) {
         if ( ! props.containsKey("ehcache.disk.store.dir")) {
             String dirname = "hibernate_ehcache";
             File f;
@@ -63,7 +100,7 @@ public class HibernateUtil {
             props.put("ehcache.disk.store.dir", dirname);
         }
     	setUpEHCache(ehcacheConfig);
-        setUpFromConnMgr(props);
+        setUp(props);
     }
     
     static void setUpEHCache(URL ehcacheConfig) {
@@ -76,61 +113,17 @@ public class HibernateUtil {
         }
     }
     
-    public static void setUpFromConnMgr(Properties props) {
-        String dialect;
-        if(ConnMgr.getDB_TYPE().equals(ConnMgr.HSQL)) {
-            logger.info("using hsql dialect");
-            dialect = org.hibernate.dialect.HSQLDialect.class.getName();
-        } else if(ConnMgr.getDB_TYPE().equals(ConnMgr.POSTGRES)) {
-            logger.info("using postgres dialect");
-            dialect = org.hibernate.dialect.PostgreSQLDialect.class.getName();
-        } else if(ConnMgr.getDB_TYPE().equals(ConnMgr.EDB)) {
-            logger.info("using postgresql as edb dialect");
-            dialect = org.hibernate.dialect.PostgresPlusDialect.class.getName();
-        } else if(ConnMgr.getDB_TYPE().equals(ConnMgr.MYSQL)) {
-            logger.info("using mysql dialect");
-            dialect = org.hibernate.dialect.MySQLDialect.class.getName();
-        } else if(ConnMgr.getDB_TYPE().equals(ConnMgr.ORACLE)) {
-            logger.info("using oracle dialect");
-            dialect = org.hibernate.dialect.Oracle10gDialect.class.getName();
-        } else {
-            throw new RuntimeException("Unknown database type: '"+ConnMgr.getDB_TYPE()+"'");
-        }
-        setUp(dialect, ConnMgr.getDriver(), ConnMgr.getURL(), ConnMgr.getUser(), ConnMgr.getPass(), props);
-        getConfiguration().addProperties(ConnMgr.getDBProps());
-    }
     
-    
-    public static void setUp(String dialect, String driverClass, String dbURL, String username, String password, Properties props) {
-        logger.info("setup: "+dialect+" "+driverClass+"  "+dbURL+"  "+username+"  "+password);
+    public static void setUp(Properties inProps) {
         synchronized(HibernateUtil.class) {
-            getConfiguration().setProperty("hibernate.dialect", dialect);
-            getConfiguration().setProperty("hibernate.connection.driver_class",
-                                           driverClass)
-                    .setProperty("hibernate.connection.url", dbURL)
-                    .setProperty("hibernate.connection.username",
-                                 username)
-                    .setProperty("hibernate.connection.password",
-                                 password)
-                    .addProperties(props);
+            props = inProps;
+            getServiceRegistryBuilder()
+                    .applySettings(props);
         }
     }
     
-    public static String getDialectForURL(String url) {
-        if (url.startsWith("jdbc:hsql")) {
-            return org.hibernate.dialect.HSQLDialect.class.getName();
-        } else if (url.startsWith("jdbc:postgresql")) {
-            return org.hibernate.dialect.PostgreSQLDialect.class.getName();
-        } else if (url.startsWith("jdbc:edb")) {
-            return org.hibernate.dialect.PostgresPlusDialect.class.getName();
-        } else if (url.startsWith("jdbc:mysql")) {
-            return org.hibernate.dialect.MySQL5Dialect.class.getName();
-        } else if (url.startsWith("jdbc:oracle")) {
-            return org.hibernate.dialect.Oracle10gDialect.class.getName();
-        }
-        throw new RuntimeException("Unable to determine database dialect from URL: "+url);
-    }
+    private static Properties props;
     
-    public static final URL DEFAULT_EHCACHE_CONFIG = HibernateUtil.class.getClassLoader().getResource("edu/sc/seis/fissuresUtil/hibernate/ehcache.xml");
+    public static final URL DEFAULT_EHCACHE_CONFIG = HibernateUtil.class.getClassLoader().getResource("edu/sc/seis/sod/data/ehcache.xml");
 
 }

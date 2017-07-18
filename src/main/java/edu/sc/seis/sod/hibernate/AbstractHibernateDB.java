@@ -21,6 +21,7 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.tool.hbm2ddl.SchemaUpdate;
 
+import edu.sc.seis.sod.ToDoException;
 import edu.sc.seis.sod.model.common.Location;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.QuantityImpl;
@@ -33,11 +34,6 @@ import edu.sc.seis.sod.util.time.ClockUtil;
 
 public abstract class AbstractHibernateDB {
 
-    public static final String COMMON_HBM = "edu/sc/seis/fissuresUtil/hibernate/Common.hbm.xml";
-    public static final String EVENT_HBM = "edu/sc/seis/fissuresUtil/hibernate/Event.hbm.xml";
-    public static final String NETWORK_HBM = "edu/sc/seis/fissuresUtil/hibernate/Network.hbm.xml";
-    public static final String SEISFILEREF_HBM = "edu/sc/seis/fissuresUtil/hibernate/SeisFileRef.hbm.xml";
-    public static final String SOD_HBM = "edu/sc/seis/fissuresUtil/hibernate/sod.hbm.xml";
     
     public static boolean DEBUG_SESSION_CREATION = true;
     
@@ -100,22 +96,7 @@ public abstract class AbstractHibernateDB {
 
 
     public static void deploySchema(boolean failOnException) throws Exception {
-        ServiceRegistry standardRegistry = new StandardServiceRegistryBuilder()
-                .configure( "edu/sc/seis/sod/hibernate/hibernate.cfg.xml")
-                .build();
-
-        MetadataSources sources = new MetadataSources( standardRegistry );
-        sources.addResource(COMMON_HBM);
-        sources.addResource(EVENT_HBM);
-        sources.addResource(NETWORK_HBM);
-        sources.addResource(SEISFILEREF_HBM);
-        sources.addResource(SOD_HBM);
-
-        MetadataBuilder metadataBuilder = sources.getMetadataBuilder();
-        
-        Metadata metadata = metadataBuilder.build();
-        sessionFactory = metadata.getSessionFactoryBuilder().build();
-        
+        throw new ToDoException();
         // old style, hibernate3
         /*
         SchemaUpdate update = new SchemaUpdate(HibernateUtil.getConfiguration());

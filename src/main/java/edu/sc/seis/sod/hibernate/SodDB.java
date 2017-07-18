@@ -10,6 +10,7 @@ import java.util.Queue;
 import org.hibernate.LockMode;
 import org.hibernate.query.Query;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.dialect.function.SQLFunctionTemplate;
 
@@ -54,28 +55,6 @@ public class SodDB extends AbstractHibernateDB {
     protected SodDB() {
     } // only for singleton
     
-    public static void configHibernate(Configuration config) {
-        logger.debug("adding to HibernateUtil   " + configFile);
-        config.addResource(configFile, SodDB.class.getClassLoader());
-        if(ConnMgr.getURL().startsWith("jdbc:hsql")) {
-            config.addSqlFunction("datediff",
-                                  new SQLFunctionTemplate(org.hibernate.type.StandardBasicTypes.LONG,
-                                                          "datediff(?1, ?2, ?3)"));
-            config.addSqlFunction("milliseconds_between",
-                                  new SQLFunctionTemplate(org.hibernate.type.StandardBasicTypes.LONG,
-                                                          "datediff('ms', ?1, ?2)"));
-            config.addSqlFunction("seconds_between",
-                                  new SQLFunctionTemplate(org.hibernate.type.StandardBasicTypes.LONG,
-                                                          "datediff('ss', ?1, ?2)"));
-        } else if(ConnMgr.getURL().startsWith("jdbc:postgresql")) {
-            config.addSqlFunction("milliseconds_between",
-                                  new SQLFunctionTemplate(org.hibernate.type.StandardBasicTypes.LONG,
-                                                          "extract(epoch from (?2 - ?1)) * 1000"));
-            config.addSqlFunction("seconds_between",
-                                  new SQLFunctionTemplate(org.hibernate.type.StandardBasicTypes.LONG,
-                                                          "extract(epoch from (?2 - ?1))"));
-        }
-    }
 
     public void reopenSuspendedEventChannelPairs(String processingRule, boolean vector) {
         Stage[] stages = {Stage.EVENT_CHANNEL_POPULATION,
