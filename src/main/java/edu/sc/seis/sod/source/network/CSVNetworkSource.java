@@ -142,8 +142,7 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
             Location location = new Location(latitude,
                                              longitude,
                                              new QuantityImpl(elevation, elevationUnit),
-                                             new QuantityImpl(depth, depthUnit),
-                                             LocationType.GEOGRAPHIC);
+                                             new QuantityImpl(depth, depthUnit));
             NetworkId netId = new NetworkId(netCode, loadTime(headers, csvReader, NET_START, DEFAULT_TIME));
             MicroSecondDate staBegin = loadTime(headers, csvReader, START, DEFAULT_TIME);
             StationId staId = new StationId(netId, staCode, staBegin);
@@ -196,8 +195,7 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
                 location = new Location(latitude,
                                         longitude,
                                         new QuantityImpl(elevation, elevationUnit),
-                                        new QuantityImpl(depth, depthUnit),
-                                        LocationType.GEOGRAPHIC);
+                                        new QuantityImpl(depth, depthUnit));
             } else {
                 location = curStation.getLocation();
             }

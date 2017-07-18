@@ -427,8 +427,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                                                   new Location(o.getLatitude().getValue(),
                                                                o.getLongitude().getValue(),
                                                                new QuantityImpl(0, UnitImpl.METER),
-                                                               depth,
-                                                               LocationType.GEOGRAPHIC),
+                                                               depth),
                                                   fisMags.toArray(new Magnitude[0]),
                                                   new ParameterRef[0]);
                 out.add(oImpl);

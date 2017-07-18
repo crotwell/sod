@@ -141,8 +141,7 @@ public class CSVEventSource extends SimpleEventSource {
                                              longitude,
                                              new QuantityImpl(0.0,
                                                               UnitImpl.METER),
-                                             new QuantityImpl(depth, depthUnit),
-                                             LocationType.GEOGRAPHIC);
+                                             new QuantityImpl(depth, depthUnit));
             String defaultString = "csvEvent";
             String catalog = defaultString;
             if(headers.contains(CATALOG)) {
