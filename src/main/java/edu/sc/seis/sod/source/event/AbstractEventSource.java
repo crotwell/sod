@@ -149,7 +149,7 @@ public abstract class AbstractEventSource extends AbstractSource implements Even
      */
     protected MicroSecondDate getQueryEdge() throws NotFound {
         SodDB sdb = SodDB.getSingleton();
-        QueryTime t = sdb.getQueryTime(getName(), NO_DNS);
+        QueryTime t = sdb.getQueryTime(getName(), QueryTime.NO_DNS);
         SodDB.commit();
         if (t == null) {throw new NotFound();}
         return new MicroSecondDate(t.getTime());
@@ -161,12 +161,12 @@ public abstract class AbstractEventSource extends AbstractSource implements Even
     protected void setQueryEdge(MicroSecondDate edge) {
         lastQueryTime = ClockUtil.now();
         SodDB sdb = SodDB.getSingleton();
-        QueryTime qt = sdb.getQueryTime(getName(), NO_DNS);
+        QueryTime qt = sdb.getQueryTime(getName(), QueryTime.NO_DNS);
         if (qt != null) {
             qt.setTime( edge.getTimestamp());
             SodDB.getSession().saveOrUpdate(qt);
         } else {
-            sdb.putQueryTime(new QueryTime(getName(), NO_DNS, edge.getTimestamp()));
+            sdb.putQueryTime(new QueryTime(getName(), edge.getTimestamp()));
         }
         SodDB.commit();
     }
@@ -210,8 +210,6 @@ public abstract class AbstractEventSource extends AbstractSource implements Even
     protected boolean everCaughtUpToRealtime = false;
     
     protected MicroSecondDate lastQueryTime = null;
-
-    public static final String NO_DNS = "NO_DNS";
 
     protected MicroSecondDate sleepUntilTime = null;
     

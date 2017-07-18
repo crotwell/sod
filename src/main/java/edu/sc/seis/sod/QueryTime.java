@@ -12,6 +12,11 @@ public class QueryTime {
     
     public QueryTime() {}
 
+
+    public QueryTime(String serverName, Timestamp time) {
+        this(serverName, NO_DNS, time);
+    }
+
     public QueryTime(String serverName, String serverDNS, Timestamp time) {
         this.serverName = serverName;
         this.serverDNS = serverDNS;
@@ -22,6 +27,7 @@ public class QueryTime {
     protected String serverName;
     protected String serverDNS;
     protected Timestamp time;
+    public static final String NO_DNS = "NO_DNS";
     
     public boolean needsRefresh(TimeInterval refreshInterval) {
         MicroSecondDate lastTime = new MicroSecondDate(getTime());
