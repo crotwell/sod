@@ -8,7 +8,10 @@
     <session-factory>
 
         <!-- Database connection settings -->
+<!--
         <property name="connection.driver_class">org.hsqldb.jdbcDriver</property>
+-->
+        <property name="connection.driver_class">org.hsqldb.jdbc.JDBCDriver</property>
         <property name="connection.url">jdbc:hsqldb:hsql://localhost</property>
         <property name="connection.username">sa</property>
         <property name="connection.password"></property>
@@ -31,11 +34,15 @@
         <!-- Drop and re-create the database schema on startup 
         <property name="hbm2ddl.auto">create</property>
         -->
+        <property name="hbm2ddl.auto">validate</property>
 
-        <mapping resource="edu/sc/seis/fissuresUtil/hibernate/Common.hbm.xml"/>
-        <mapping resource="edu/sc/seis/fissuresUtil/hibernate/Network.hbm.xml"/>
-        <mapping resource="edu/sc/seis/fissuresUtil/hibernate/Event.hbm.xml"/>
+        <mapping resource="edu/sc/seis/sod/hibernate/Common.hbm.xml"/>
+        <mapping resource="edu/sc/seis/sod/hibernate/Network.hbm.xml"/>
+        <mapping resource="edu/sc/seis/sod/hibernate/Event.hbm.xml"/>
+        <mapping resource="edu/sc/seis/sod/hibernate/SeisFileRef.hbm.xml"/>
         <mapping resource="edu/sc/seis/sod/hibernate/sod.hbm.xml"/>
+
+   
 
     </session-factory>
 

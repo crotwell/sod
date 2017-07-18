@@ -5,8 +5,8 @@
 
 <hibernate-mapping>
 
-	<joined-subclass name="edu.sc.seis.sod.hibernate.StatefulEvent"
-		extends="edu.sc.seis.fissuresUtil.cache.CacheEvent"
+	<joined-subclass name="edu.sc.seis.sod.model.event.StatefulEvent"
+		extends="edu.sc.seis.sod.model.CacheEvent"
 		table="statefulEvent">
 		<key column="eventStatus_id" />
 		<component name="status">
@@ -21,7 +21,7 @@
 			<generator class="native" />
 		</id>
 		<many-to-one name="event"
-			class="edu.sc.seis.sod.hibernate.StatefulEvent" column="event"
+			class="edu.sc.seis.sod.model.event.StatefulEvent" column="event"
 			foreign-key="FK_enetp_event" unique-key="event_net_key" />
 		<many-to-one name="network"
 			class="edu.iris.Fissures.network.NetworkAttrImpl" column="networkAttr"
@@ -40,7 +40,7 @@
 			<generator class="native" />
 		</id>
 		<many-to-one name="event"
-			class="edu.sc.seis.sod.hibernate.StatefulEvent" column="event"
+			class="edu.sc.seis.sod.model.event.StatefulEvent" column="event"
 			foreign-key="FK_estap_event" unique-key="event_station_key" />
 		<many-to-one name="station"
 			class="edu.iris.Fissures.network.StationImpl" column="station"
@@ -64,7 +64,7 @@
 		     for evp, but hibernate doesn't seem to allow a unique key with superclass and subclass
 		     properties. -->
 		<many-to-one name="event"
-			class="edu.sc.seis.sod.hibernate.StatefulEvent" column="event"
+			class="edu.sc.seis.sod.model.event.StatefulEvent" column="event"
 			foreign-key="FK_ecp_event"  />
 		<component name="status">
 			<property name="stageInt" type="integer"  index="aecp_stage_index"/>
@@ -96,12 +96,12 @@
 	</class>
 
 
-	<class name="edu.sc.seis.sod.hibernate.RecordSectionItem">
+	<class name="edu.sc.seis.sod.model.event.RecordSectionItem">
 		<id name="dbid" type="long">
 			<generator class="native" />
 		</id>
 		<many-to-one name="event"
-			class="edu.sc.seis.sod.hibernate.StatefulEvent" column="event"
+			class="edu.sc.seis.sod.model.event.StatefulEvent" column="event"
 			foreign-key="FK_recsec_event" index="rec_best_eq_index" />
 		<many-to-one name="channel"
 			class="edu.iris.Fissures.network.ChannelImpl" column="channel"

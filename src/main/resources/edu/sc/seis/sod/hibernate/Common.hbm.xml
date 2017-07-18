@@ -5,7 +5,7 @@
 
 <hibernate-mapping>
 
-	<class name="edu.iris.Fissures.model.UnitImpl" table="unit"
+	<class name="edu.sc.seis.sod.model.common.UnitImpl" table="unit"
 		mutable="false"  lazy="false">
 		<cache usage="read-only"/>
 		<id name="dbid" type="integer">
@@ -18,7 +18,7 @@
 			<key column="subunit_id" />
 			<list-index column="sortOrder" />
 			<many-to-many column="unit_id"
-				class="edu.iris.Fissures.model.UnitImpl" />
+				class="edu.sc.seis.sod.model.common.UnitImpl" />
 		</list>
 		<property name="power" type="integer" access="field" />
 		<property name="name" access="field"  />

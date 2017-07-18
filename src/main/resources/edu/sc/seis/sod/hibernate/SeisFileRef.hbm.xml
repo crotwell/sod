@@ -5,7 +5,7 @@
 
 <hibernate-mapping>
 
-	<class name="edu.sc.seis.fissuresUtil.hibernate.SeismogramFileReference"
+	<class name="edu.sc.seis.sod.hibernate.SeismogramFileReference"
 		table="seisFileRef">
 		<id name="dbid" type="integer">
 			<generator class="native" />
@@ -21,13 +21,13 @@
 	</class>
 
 
-	<class name="edu.sc.seis.fissuresUtil.hibernate.EventSeismogramFileReference"
+	<class name="edu.sc.seis.sod.hibernate.EventSeismogramFileReference"
 		table="eventSeisFileRef">
 		<id name="dbid" type="integer">
 			<generator class="native" />
 		</id>
 		<many-to-one name="event"
-			class="edu.sc.seis.fissuresUtil.cache.CacheEvent"
+			class="edu.sc.seis.sod.model.CacheEvent"
 			foreign-key="FK_ESFR_EVENT" cascade="save-update"  index="sfr_event_idx"/>
 		<property name="networkCode" index="esfr_net_code_idx" />
 		<property name="stationCode" index="esfr_sta_code_idx" />
