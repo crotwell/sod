@@ -36,11 +36,14 @@
         -->
         <property name="hbm2ddl.auto">validate</property>
 
+<!--
         <mapping resource="edu/sc/seis/sod/hibernate/Common.hbm.xml"/>
         <mapping resource="edu/sc/seis/sod/hibernate/Network.hbm.xml"/>
         <mapping resource="edu/sc/seis/sod/hibernate/Event.hbm.xml"/>
         <mapping resource="edu/sc/seis/sod/hibernate/SeisFileRef.hbm.xml"/>
         <mapping resource="edu/sc/seis/sod/hibernate/sod.hbm.xml"/>
+-->
+        <mapping resource="edu/sc/seis/sod/hibernate/StationXML.hbm.xml"/>
 
    
 

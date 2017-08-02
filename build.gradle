@@ -4,9 +4,12 @@ group = 'edu.sc.seis'
 version = '4.0.0-SNAPSHOT-WEBSTATUS'
 // also remember to change in sod.Version class
 
+apply plugin: 'java'
 apply plugin:'application'
 mainClassName = "edu.sc.seis.sod.Start"
 
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 sourceSets {
     relax {
@@ -25,14 +28,15 @@ dependencies {
     implementation  "com.oregondsp.signalprocessing:oregondsp:2011"
 
     
+    implementation 'org.hsqldb:hsqldb:2.4.0'
     compile "jline:jline:0.9.94"
     compile "com.martiansoftware:jsap:2.1"
     compile "thaiopensource:jing:20091111"
     compile "rngconvUSC:rngconv:20030225"
     compile "org.eclipse.jetty:jetty-servlet:9.4.5+"
-    compile 'org.json:json:20140107'
     compile 'org.msgpack:msgpack-core:0.8.13+'
 
+    compile 'org.json:json:20170516'
 
     compile "org.hibernate:hibernate-ehcache:5.2.10.Final"
     compile "org.hibernate:hibernate-core:5.2.10.Final"
@@ -299,8 +303,8 @@ task transformGrouper(type: XSLT) {
 
 
 doc.dependsOn(copySodSite)
-assemble.dependsOn(tarDist)
-assemble.dependsOn(zipDist)
+//assemble.dependsOn(tarDist)
+//assemble.dependsOn(zipDist)
 processResources.dependsOn(buildSchema)
 processResources.dependsOn(buildGrouperSchema)
 processResources{ from(project.sourceSets.main.resources)

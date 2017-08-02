@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="edu.sc.seis.seisFile.fdsnws.stationxml.Network" >
+        <cache usage="read-write"/>
+        <id name="dbid" type="integer">
+            <generator class="native" />
+        </id>
+        <property name="code" index="net_code_idx" />
+        <property name="startDateTime" type="java.time.ZonedDateTime" />
+        <property name="endDateTime" type="java.time.ZonedDateTime" />
+        <property name="restrictedStatus" />
+        <property name="description" type="text"/>
+    </class>
+    
+    <class name="edu.sc.seis.seisFile.fdsnws.stationxml.Station" >
+        <cache usage="read-write"/>
+        <id name="dbid" type="integer">
+            <generator class="native" />
+        </id>
+        <property name="code" index="station_code_idx" />
+        <property name="networkCode" />
+        <property name="startDateTime" type="java.time.ZonedDateTime" />
+        <property name="endDateTime" type="java.time.ZonedDateTime" />
+        <property name="restrictedStatus" />
+        <property name="description" type="text"/>
+        <property name="latitude" type="float"/>
+        <property name="longitude" type="float"/>
+        <property name="elevation" type="float"/>
+        
+    </class>
+    
+    <class name="edu.sc.seis.seisFile.fdsnws.stationxml.Channel" >
+        <cache usage="read-write"/>
+        <id name="dbid" type="integer">
+            <generator class="native" />
+        </id>
+        <property name="code" index="channel_code_idx" />
+        <property name="locCode" />
+        <property name="stationCode" />
+        <property name="networkCode" />
+        <property name="startDateTime" type="java.time.ZonedDateTime" />
+        <property name="endDateTime" type="java.time.ZonedDateTime" />
+        <property name="restrictedStatus" />
+        <property name="description" type="text"/>
+        <property name="latitude" type="float"/>
+        <property name="longitude" type="float"/>
+        <property name="elevation" type="float"/>
+        <property name="depth" type="float"/>
+        <property name="azimuth" type="float"/>
+        <property name="dip" type="float"/>
+        <property name="sampleRate" type="float"/>
+    </class>
+    
+    
+</hibernate-mapping>
