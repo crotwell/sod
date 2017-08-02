@@ -16,11 +16,11 @@
 			<property name="network_code" access="field" lazy="false"
 				unique-key="net_code_date" index="net_code_idx" />
 		</component>
-		<property name="beginTime" type="timestamp" />
+		<property name="beginTime" type="microseconddate" />
 		<property name="name" />
 		<property name="description" type="text"/>
 		<property name="owner" />
-		<property name="endTime" type="timestamp"/>
+		<property name="endTime" type="microseconddate"/>
 		<property name="sourceServerName" />
 		<property name="sourceServerDNS" />
 	</class>
@@ -36,7 +36,7 @@
 			<property name="station_code" access="field"
 				unique-key="sta_code_date" index="sta_code_idx" />
 		</component>
-		<property name="beginTime" type="timestamp" />
+		<property name="beginTime" type="microseconddate" />
 		<property name="name" />
 		<component name="location" class="edu.sc.seis.sod.model.common.Location"  lazy="false">
 			<property name="latitude" type="float" access="field"  lazy="false"/>
@@ -56,12 +56,11 @@
 					class="edu.sc.seis.sod.model.common.UnitImpl" column="elev_unit_id"
 					foreign-key="FK_STATION_ELEV_UNIT_ID" />
 			</component>
-			<property name="type" type="integer"/>
 		</component>
 		<property name="operator"/>
 		<property name="description" type="text" />
 		<property name="comment" column="stationComment" type="text" />  <!-- comment reserved word in oracle -->
-		<property name="endTime" type="timestamp" />
+		<property name="endTime" type="microseconddate" />
 		<many-to-one name="networkAttr"
 			class="edu.sc.seis.sod.model.station.NetworkAttrImpl" column="network"
 			foreign-key="FK_STATION_NETWORK" cascade="save-update"
@@ -80,9 +79,9 @@
 			<property name="site_code" access="field" unique-key="chan_code_date"  lazy="false"/>
 			<property name="channel_code" access="field" unique-key="chan_code_date"  lazy="false"/>
 		</component>
-		<property name="beginTime" type="timestamp" />
+		<property name="beginTime" type="microseconddate" />
 		<property name="name" />
-		<property name="endTime" type="timestamp" />
+		<property name="endTime" type="microseconddate" />
 		<component name="orientation"
 			class="edu.sc.seis.sod.model.common.Orientation">
 			<property name="azimuth" type="float" access="field" />
@@ -108,7 +107,7 @@
 					formula="station_code" access="field" />
 				<property name="site_code"
 					formula="site_code" access="field" />
-				<property name="begin_time" type="timestamp" />
+				<property name="begin_time" type="microseconddate" />
 			</component>
 			<component name="location"
 				class="edu.sc.seis.sod.model.common.Location"  lazy="false">
@@ -130,10 +129,8 @@
 						class="edu.sc.seis.sod.model.common.UnitImpl" column="elev_unit_id"
 						foreign-key="FK_SITE_ELEV_UNIT_ID"  lazy="false"/>
 				</component>
-				<property name="type"
-					type="integer"/>
 			</component>
-			<property name="endTime" type="timestamp" />
+			<property name="endTime" type="microseconddate" />
 			<property name="comment" column="channelComment" type="text" /> <!-- comment reserved word in oracle -->
 			<many-to-one name="station"
 				class="edu.sc.seis.sod.model.station.StationImpl"

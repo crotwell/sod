@@ -43,7 +43,7 @@
 			<generator class="native" />
 		</id>
 		<property name="_id" column="origin_id"/> <!-- oracle doesn't like column names starting with _ -->
-		<property name="originTime" type="timestamp">
+		<property name="originTime" type="microseconddate">
 		</property>
 		<component name="location" class="edu.sc.seis.sod.model.common.Location" >
 			<property name="latitude" type="float" access="field"  lazy="false"/>
@@ -64,7 +64,6 @@
 					foreign-key="FK_ELEV_UNIT_ID" lazy="false" />
 
 			</component>
-			<property name="type" type="integer"></property>
 		</component>
 
 		<list name="magnitudeList" table="origin_magnitude"

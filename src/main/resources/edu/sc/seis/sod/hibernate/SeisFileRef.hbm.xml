@@ -14,8 +14,8 @@
 		<property name="stationCode" index="sfr_sta_code_idx" />
 		<property name="siteCode" />
 		<property name="channelCode"/>
-		<property name="beginTime" type="timestamp" index="sfr_begin_idx" />
-		<property name="endTime" type="timestamp" index="sfr_end_idx" />
+		<property name="beginTime" type="microseconddate" index="sfr_begin_idx" />
+		<property name="endTime" type="microseconddate" index="sfr_end_idx" />
 		<property name="filePath"/>
 		<property name="fileType" type="integer" />
 	</class>
@@ -33,8 +33,8 @@
 		<property name="stationCode" index="esfr_sta_code_idx" />
 		<property name="siteCode" />
 		<property name="channelCode"/>
-		<property name="beginTime" type="timestamp" />
-		<property name="endTime" type="timestamp" />
+		<property name="beginTime" type="microseconddate" />
+		<property name="endTime" type="microseconddate" />
 		<property name="filePath"/>
 		<property name="fileType" type="integer" />
 	</class>

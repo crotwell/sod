@@ -48,6 +48,7 @@ public class HibernateUtil {
     }
     
     private static void addDateFunctions(MetadataBuilder metadataBuilder) {
+        metadataBuilder.applyBasicType( MicroSecondDateUserType.INSTANCE, "microseconddate" );
         String dbUrl = props.getProperty("hibernate.connection.url");
         if(dbUrl.startsWith("jdbc:hsql")) {
             metadataBuilder.applySqlFunction("datediff",
