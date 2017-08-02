@@ -27,7 +27,7 @@ public class EventDbTest {
         HibernateUtil.setUp(props);
     }
 
-    @Test
+    //@Test
     public void testGetEvent() {
         fail("Not yet implemented");
     }
