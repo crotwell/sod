@@ -4,7 +4,7 @@ import java.io.File;
 
 import org.w3c.dom.Element;
 
-import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
+import edu.sc.seis.sod.DOMHelper;
 
 public class VelocityFileElementParser {
 

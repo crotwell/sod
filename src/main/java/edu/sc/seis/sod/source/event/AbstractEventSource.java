@@ -2,8 +2,8 @@ package edu.sc.seis.sod.source.event;
 
 import org.w3c.dom.Element;
 
-import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.QueryTime;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;

@@ -10,7 +10,6 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
-import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.source.event.AbstractEventSource;

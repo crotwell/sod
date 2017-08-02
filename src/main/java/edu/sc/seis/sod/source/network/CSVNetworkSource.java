@@ -14,9 +14,9 @@ import org.w3c.dom.Element;
 
 import com.csvreader.CsvReader;
 
-import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.UserConfigurationException;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
 import edu.sc.seis.sod.model.common.Location;

@@ -3,7 +3,7 @@ package edu.sc.seis.sod.subsetter.channel;
 import org.w3c.dom.Element;
 
 import edu.sc.seis.TauP.SphericalCoords;
-import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
+import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.model.common.Orientation;
 import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.source.network.NetworkSource;

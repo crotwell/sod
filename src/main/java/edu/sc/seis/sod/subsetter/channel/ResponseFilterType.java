@@ -2,13 +2,13 @@ package edu.sc.seis.sod.subsetter.channel;
 
 import org.w3c.dom.Element;
 
-import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Coefficients;
 import edu.sc.seis.seisFile.fdsnws.stationxml.FIR;
 import edu.sc.seis.seisFile.fdsnws.stationxml.PolesZeros;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Polynomial;
 import edu.sc.seis.seisFile.fdsnws.stationxml.ResponseList;
 import edu.sc.seis.seisFile.fdsnws.stationxml.ResponseStage;
+import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;

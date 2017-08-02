@@ -2,13 +2,13 @@ package edu.sc.seis.sod.process.waveform;
 
 import org.w3c.dom.Element;
 
-import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
 import edu.sc.seis.seisFile.fdsnws.stationxml.PolesZeros;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
 import edu.sc.seis.seisFile.fdsnws.stationxml.StationXMLException;
 import edu.sc.seis.seisFile.sac.SacPoleZero;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Threadable;
 import edu.sc.seis.sod.bag.Transfer;
