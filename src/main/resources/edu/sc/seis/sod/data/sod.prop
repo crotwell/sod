@@ -48,16 +48,6 @@ log4j.appender.WebStatusFile.layout=org.apache.log4j.PatternLayout
 log4j.appender.WebStatusFile.layout.ConversionPattern=%d{ISO8601} %p %t %c{2} - %m%n
 
 
-#
-# get the name serivce
-# The format for a corbaloc for a naming service is
-#    corbaloc:iiop:host.domain:port/NameService
-# You should put your own choices for host.domain and port
-#
-# for usc
-#edu.sc.seis.fissuresUtil.nameServiceCorbaLoc=corbaloc:iiop:nameservice.seis.sc.edu:6371/NameService
-# for iris
-edu.sc.seis.fissuresUtil.nameServiceCorbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService
 
 # default database url
 hibernate.connection.url=jdbc:hsqldb:file:SodDb/SodDb
@@ -69,5 +59,3 @@ hibernate.cache.use_second_level_cache=true
 hibernate.cache.provider_class=org.hibernate.cache.EhCacheProvider
 ehcache.disk.store.dir=SodDb/ehcache
 
-# dark magic, but this is set up in Start by Alohomora.insertOrbProp()
-# org.omg.PortableInterceptor.ORBInitializerClass.edu.sc.seis.fissuresUtil.Alohomora=edu.sc.seis.fissuresUtil.Alohomora
