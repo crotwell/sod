@@ -2,8 +2,8 @@ package edu.sc.seis.sod.channelGroup;
 
 import java.util.List;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.model.station.ChannelGroup;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 
 
 public abstract class SiteChannelRule {
@@ -12,5 +12,5 @@ public abstract class SiteChannelRule {
         // TODO Auto-generated constructor stub
     }
     
-    public abstract List<ChannelGroup> acceptable(List<ChannelImpl> chanList, List<ChannelImpl> failures);
+    public abstract List<ChannelGroup> acceptable(List<Channel> chanList, List<Channel> failures);
 }

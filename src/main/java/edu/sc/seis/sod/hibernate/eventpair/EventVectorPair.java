@@ -85,9 +85,9 @@ public class EventVectorPair extends AbstractEventChannelPair {
 
     public String toString() {
         String s = "ECGroup: " + getEvent() + " ";
-        s += ChannelIdUtil.toString(getChannelGroup().getChannels()[0].get_id()) + " , ";
-        s += ChannelIdUtil.toString(getChannelGroup().getChannels()[1].get_id()) + " , ";
-        s += ChannelIdUtil.toString(getChannelGroup().getChannels()[2].get_id()) + " , ";
+        s += ChannelIdUtil.toString(getChannelGroup().getChannels()[0]) + " , ";
+        s += ChannelIdUtil.toString(getChannelGroup().getChannels()[1]) + " , ";
+        s += ChannelIdUtil.toString(getChannelGroup().getChannels()[2]) + " , ";
         s += " " + getStatus();
         return s;
     }

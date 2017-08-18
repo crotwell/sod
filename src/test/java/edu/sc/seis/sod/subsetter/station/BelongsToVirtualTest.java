@@ -2,13 +2,13 @@ package edu.sc.seis.sod.subsetter.station;
 
 import java.util.List;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.mock.MockNetworkSource;
 import edu.sc.seis.sod.mock.station.MockNetworkAttr;
 import edu.sc.seis.sod.mock.station.MockStation;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
-import edu.sc.seis.sod.model.station.NetworkAttrImpl;
-import edu.sc.seis.sod.model.station.StationImpl;
 import junit.framework.TestCase;
 
 public class BelongsToVirtualTest extends TestCase {
@@ -18,7 +18,7 @@ public class BelongsToVirtualTest extends TestCase {
         public int callCount;
         
         @Override
-        public  List<? extends StationImpl> getStations(NetworkAttrImpl net) {
+        public  List<? extends Station> getStations(Network net) {
             callCount++;
             return super.getStations(net);
         }
@@ -54,8 +54,8 @@ public class BelongsToVirtualTest extends TestCase {
     public void testAcceptsAllStationsInAssignedNetwork() throws Exception {
         CountRetrieveStations na = new CountRetrieveStations();
         BelongsToVirtual btv = new BelongsToVirtual(mockNetName, FORTNIGHT);
-        List<? extends StationImpl> stations = na.getStations(MockNetworkAttr.createMultiSplendoredAttr());
-        for (StationImpl sta : stations) {
+        List<? extends Station> stations = na.getStations(MockNetworkAttr.createMultiSplendoredAttr());
+        for (Station sta : stations) {
             assertTrue(btv.accept(sta, na).isSuccess());
         }
     }

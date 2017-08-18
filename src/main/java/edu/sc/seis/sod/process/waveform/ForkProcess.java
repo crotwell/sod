@@ -14,6 +14,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.LocalSeismogramArm;
 import edu.sc.seis.sod.SodUtil;
@@ -22,7 +23,6 @@ import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.status.StringTreeLeaf;
@@ -67,7 +67,7 @@ public class ForkProcess implements WaveformProcess, Threadable {
             return new WaveformProcess() {
 
                 public WaveformResult accept(CacheEvent event,
-                                             ChannelImpl channel,
+                                             Channel channel,
                                              RequestFilter[] request,
                                              RequestFilter[] available,
                                              LocalSeismogramImpl[] seismograms,
@@ -86,7 +86,7 @@ public class ForkProcess implements WaveformProcess, Threadable {
      * both a original and a filtered version of the seismograms independently.
      */
     public WaveformResult accept(CacheEvent event,
-                                  ChannelImpl channel,
+                                  Channel channel,
                                   RequestFilter[] request,
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
@@ -101,7 +101,7 @@ public class ForkProcess implements WaveformProcess, Threadable {
     }
 
     protected WaveformResult doAND(CacheEvent event,
-                                   ChannelImpl channel,
+                                   Channel channel,
                                    RequestFilter[] request,
                                    RequestFilter[] available,
                                    LocalSeismogramImpl[] seismograms,

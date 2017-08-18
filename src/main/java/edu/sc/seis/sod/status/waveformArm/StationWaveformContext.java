@@ -13,17 +13,17 @@ import java.util.List;
 import org.apache.velocity.context.AbstractContext;
 import org.apache.velocity.context.Context;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.hibernate.SodDB;
-import edu.sc.seis.sod.model.station.StationImpl;
 
 public class StationWaveformContext  extends AbstractContext {
 
-    public StationWaveformContext(StationImpl station) throws SQLException {
+    public StationWaveformContext(Station station) throws SQLException {
         super();
         this.stationId = station;
         jdbcECS = SodDB.getSingleton();
     }
-    public StationWaveformContext(Context context, StationImpl station) throws SQLException {
+    public StationWaveformContext(Context context, Station station) throws SQLException {
         super(context);
         this.stationId = station;
         jdbcECS = SodDB.getSingleton();
@@ -71,7 +71,7 @@ public class StationWaveformContext  extends AbstractContext {
         throw new RuntimeException("Read only context, operation put not permitted: key="+key);
     }
 
-    protected StationImpl stationId;
+    protected Station stationId;
     
     SodDB jdbcECS;
 

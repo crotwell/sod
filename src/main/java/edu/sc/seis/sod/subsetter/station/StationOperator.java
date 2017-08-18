@@ -2,9 +2,9 @@ package edu.sc.seis.sod.subsetter.station;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
@@ -26,7 +26,7 @@ public class StationOperator implements StationSubsetter {
         this.config = config;
     }
 
-    public StringTree accept(StationImpl e, NetworkSource network) {
+    public StringTree accept(Station e, NetworkSource network) {
         if(e.getOperator().equals(SodUtil.getNestedText(config))) return new Pass(this);
         else return new Fail(this);
     }

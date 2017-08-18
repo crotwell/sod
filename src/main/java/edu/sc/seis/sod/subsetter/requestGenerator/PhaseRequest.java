@@ -3,6 +3,7 @@ package edu.sc.seis.sod.subsetter.requestGenerator;
 import org.w3c.dom.Element;
 
 import edu.sc.seis.TauP.TauModelException;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.SodUtil;
@@ -10,7 +11,6 @@ import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 
 public class PhaseRequest implements RequestGenerator {
 
@@ -96,7 +96,7 @@ public class PhaseRequest implements RequestGenerator {
     }
 
     public RequestFilter[] generateRequest(CacheEvent event,
-                                           ChannelImpl channel,
+                                           Channel channel,
                                            CookieJar jar) throws Exception {
         RequestFilter rf =  generateRequest(event, channel);
         if(rf == null) {
@@ -106,7 +106,7 @@ public class PhaseRequest implements RequestGenerator {
     }
 
     public RequestFilter generateRequest(CacheEvent event,
-                                           ChannelImpl channel) throws Exception {
+                                           Channel channel) throws Exception {
         return phaseReq.generateRequest(event, channel);
     }
     

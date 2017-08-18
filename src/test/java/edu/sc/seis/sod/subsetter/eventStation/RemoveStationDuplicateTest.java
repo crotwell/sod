@@ -6,6 +6,8 @@ import java.util.Properties;
 import org.junit.Test;
 import org.xml.sax.InputSource;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.Args;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.hibernate.NetworkDB;
@@ -19,8 +21,6 @@ import edu.sc.seis.sod.mock.station.MockStation;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.StatefulEvent;
-import edu.sc.seis.sod.model.station.ChannelImpl;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.model.status.Stage;
 import edu.sc.seis.sod.model.status.Standing;
 import edu.sc.seis.sod.model.status.Status;
@@ -31,9 +31,9 @@ public class RemoveStationDuplicateTest extends TestCase {
     
     Start start;
     
-    StationImpl mockOne = MockStation.createStation();
-    StationImpl mockClose = MockStation.createCloseStation(mockOne);
-    StationImpl mockFar = MockStation.createOtherStation();
+    Station mockOne = MockStation.createStation();
+    Station mockClose = MockStation.createCloseStation(mockOne);
+    Station mockFar = MockStation.createOtherStation();
     StatefulEvent event;
     
     @Override
@@ -63,7 +63,7 @@ public class RemoveStationDuplicateTest extends TestCase {
         eventdb.put(event);
         EventStationPair esp = sodDb.createEventStationPair(event, mockOne);
         esp.update(Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.SUCCESS));
-        ChannelImpl chan = MockChannel.createChannel(mockOne);
+        Channel chan = MockChannel.createChannel(mockOne);
         netdb.put(chan);
         EventChannelPair ecp = sodDb.createEventChannelPair(event, chan, esp);
         ecp.update(Status.get(Stage.PROCESSOR, Standing.SUCCESS));

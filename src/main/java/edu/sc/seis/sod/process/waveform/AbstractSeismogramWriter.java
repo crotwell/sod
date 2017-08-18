@@ -3,6 +3,7 @@ package edu.sc.seis.sod.process.waveform;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.hibernate.SeismogramFileRefDB;
 import edu.sc.seis.sod.hibernate.SeismogramFileTypes;
@@ -16,7 +17,6 @@ import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.station.ChannelId;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.velocity.PrintlineVelocitizer;
 
@@ -37,7 +37,7 @@ AbstractFileWriter implements WaveformProcess {
     }
 
     public WaveformResult accept(CacheEvent event,
-                                  ChannelImpl channel,
+                                  Channel channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
@@ -64,7 +64,7 @@ AbstractFileWriter implements WaveformProcess {
                 if (storeSeismogramsInDB) {
                     SeismogramFileRefDB.getSingleton().saveSeismogramToDatabase(event, channel, seismograms[i], loc, getFileType());
                 }
-                cookieJar.put(AbstractSeismogramWriter.getCookieName(prefix, channel.get_id(), i), loc);
+                cookieJar.put(AbstractSeismogramWriter.getCookieName(prefix, channel, i), loc);
             }
         }
         return new WaveformResult(true, seismograms, this);
@@ -74,7 +74,7 @@ AbstractFileWriter implements WaveformProcess {
     
     public abstract void write(String loc,
                                LocalSeismogramImpl seis,
-                               ChannelImpl chan,
+                               Channel chan,
                                CacheEvent ev) throws Exception;
 
     public static void addBytesWritten(long bytes) {
@@ -83,6 +83,11 @@ AbstractFileWriter implements WaveformProcess {
 
     public static long getBytesWritten() {
         return bytesWritten;
+    }
+
+    public static String getCookieName(String prefix, Channel channel, int i) {
+        return AbstractSeismogramWriter.COOKIE_PREFIX + prefix + ChannelIdUtil.toString(channel) + "_"
+                + i;
     }
 
     public static String getCookieName(String prefix, ChannelId channel, int i) {

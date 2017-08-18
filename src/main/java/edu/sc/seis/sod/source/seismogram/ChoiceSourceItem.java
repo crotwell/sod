@@ -4,13 +4,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.Subsetter;
 import edu.sc.seis.sod.subsetter.eventChannel.EventChannelLogicalSubsetter;
@@ -48,7 +48,7 @@ public class ChoiceSourceItem implements EventChannelSubsetter, SeismogramSource
     }
 
     public SeismogramSource getSeismogramSource(CacheEvent event,
-                                             ChannelImpl channel,
+                                             Channel channel,
                                              RequestFilter[] infilters,
                                              CookieJar cookieJar)
             throws Exception {
@@ -56,7 +56,7 @@ public class ChoiceSourceItem implements EventChannelSubsetter, SeismogramSource
     }
 
     public StringTree accept(CacheEvent event,
-                             ChannelImpl channel,
+                             Channel channel,
                              CookieJar cookieJar) throws Exception {
         return eventChannelSubsetter.accept(event, channel, cookieJar);
     }

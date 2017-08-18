@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
@@ -43,7 +43,7 @@ public abstract class StationLogicalSubsetter extends LogicalSubsetter {
         return createSubsetter(s);
     }
     
-    public StringTree accept(StationImpl sta, NetworkSource network) throws Exception {
+    public StringTree accept(Station sta, NetworkSource network) throws Exception {
         List reasons = new ArrayList(filterList.size());
         Iterator it = filterList.iterator();
         while(it.hasNext()) {
@@ -72,7 +72,7 @@ public abstract class StationLogicalSubsetter extends LogicalSubsetter {
         return new StationSubsetter() {
             NetworkSubsetter ns = NetworkLogicalSubsetter.createSubsetter(s);
 
-            public StringTree accept(StationImpl station, NetworkSource network) throws Exception {
+            public StringTree accept(Station station, NetworkSource network) throws Exception {
                 return ns.accept(station.getNetworkAttrImpl());
             }
             

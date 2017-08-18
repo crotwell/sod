@@ -2,6 +2,7 @@ package edu.sc.seis.sod.source;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -9,10 +10,10 @@ import org.w3c.dom.Element;
 
 import com.csvreader.CsvReader;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.BaseNodeType;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.UserConfigurationException;
 import edu.sc.seis.sod.model.common.ISOTime;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.common.UnsupportedFormat;
 
@@ -61,8 +62,8 @@ public abstract class AbstractCSVSource extends AbstractSource {
     public static final String DEPTH_UNITS = "depthUnits";
     public static final String ELEVATION_UNITS = "elevationUnits";
     public static final String UNKNOWN = "unknown";
-    public static final MicroSecondDate DEFAULT_TIME = new MicroSecondDate("1970-01-01T00:00:00Z");
-    public static final MicroSecondDate DEFAULT_END = new MicroSecondDate(ISOTime.future);
+    public static final ZonedDateTime DEFAULT_TIME = BaseNodeType.parseISOString("1970-01-01T00:00:00Z");
+    public static final ZonedDateTime DEFAULT_END = ISOTime.future;
 
     public List<String> validateHeaders(CsvReader csvReader) throws IOException, FileNotFoundException,
             ConfigurationException {
@@ -126,12 +127,12 @@ public abstract class AbstractCSVSource extends AbstractSource {
                 return defaultUnit;
             }
 
-    public static MicroSecondDate loadTime(List<String> headers, CsvReader csvReader, String headerName, MicroSecondDate defaultTime)
+    public static ZonedDateTime loadTime(List<String> headers, CsvReader csvReader, String headerName, ZonedDateTime defaultTime)
             throws UserConfigurationException, IOException {
                 if(headers.contains(headerName)) {
-                    MicroSecondDate time;
+                    ZonedDateTime time;
                     try {
-                        time = new MicroSecondDate(csvReader.get(headerName));
+                        time = BaseNodeType.parseISOString(csvReader.get(headerName));
                     } catch(UnsupportedFormat uf) {
                         throw new UserConfigurationException("The time '"
                                                              + csvReader.get(headerName) + "' in record "

@@ -9,7 +9,7 @@ import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.StringTreeLeaf;
@@ -29,7 +29,7 @@ public class ResponseGain implements WaveformProcess, Threadable {
     }
 
     public WaveformResult accept(CacheEvent event,
-                                  ChannelImpl channel,
+                                  Channel channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
@@ -68,7 +68,7 @@ public class ResponseGain implements WaveformProcess, Threadable {
                                           new StringTreeLeaf(this,
                                                              false,
                                                              "Invalid instrumentation for "
-                                                                     + ChannelIdUtil.toString(channel.get_id())+": "+e.getMessage()));
+                                                                     + ChannelIdUtil.toString(channel)+": "+e.getMessage()));
             }
         }
         return new WaveformResult(true, seismograms, this);

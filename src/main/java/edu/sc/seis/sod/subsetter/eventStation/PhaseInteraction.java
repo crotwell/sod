@@ -11,6 +11,7 @@ import edu.sc.seis.TauP.TauModelException;
 import edu.sc.seis.TauP.TauP_Path;
 import edu.sc.seis.TauP.TauP_Pierce;
 import edu.sc.seis.TauP.TimeDist;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
@@ -21,7 +22,6 @@ import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.OriginImpl;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
@@ -55,7 +55,7 @@ public class PhaseInteraction implements EventStationSubsetter {
     }
 
     public StringTree accept(CacheEvent event,
-                             StationImpl station,
+                             Station station,
                           CookieJar cookieJar) throws Exception {
         if(interactionStyle.equals("PATH")) {
             return new StringTreeLeaf(this, acceptPathInteraction(event,
@@ -66,7 +66,7 @@ public class PhaseInteraction implements EventStationSubsetter {
     }
 
     public boolean acceptPathInteraction(CacheEvent event,
-                                         StationImpl station) throws Exception {
+                                         Station station) throws Exception {
         OriginImpl origin = event.getOrigin();
         double originDepth;
         double eventStationDistance;
@@ -96,7 +96,7 @@ public class PhaseInteraction implements EventStationSubsetter {
     }
 
     public boolean acceptPierceInteraction(CacheEvent event,
-                                           StationImpl station) throws Exception {
+                                           Station station) throws Exception {
         double originDepth;
         double eventStationDistance;
         OriginImpl origin = event.getOrigin();

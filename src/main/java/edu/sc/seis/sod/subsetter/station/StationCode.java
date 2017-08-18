@@ -4,9 +4,9 @@ import java.util.regex.Pattern;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
@@ -23,10 +23,10 @@ public class StationCode implements StationSubsetter {
         pattern  = Pattern.compile(createRegexFromGlob(code));
     }
 
-    public StringTree accept(StationImpl station, NetworkSource network) {
-        if(code.equalsIgnoreCase(station.get_code())) {
+    public StringTree accept(Station station, NetworkSource network) {
+        if(code.equalsIgnoreCase(station.getStationCode())) {
             return new Pass(this);
-        } else if(pattern.matcher(station.get_code()).matches()) {
+        } else if(pattern.matcher(station.getStationCode()).matches()) {
             return new Pass(this);
         } else {
             return new Fail(this);

@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.MotionVectorArm;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.hibernate.SodDB;
@@ -14,9 +16,7 @@ import edu.sc.seis.sod.model.event.NoPreferredOrigin;
 import edu.sc.seis.sod.model.event.StatefulEvent;
 import edu.sc.seis.sod.model.station.ChannelGroup;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.model.station.StationIdUtil;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.model.status.Stage;
 import edu.sc.seis.sod.model.status.Standing;
 import edu.sc.seis.sod.model.status.Status;
@@ -31,11 +31,11 @@ public class EventStationPair extends CookieEventPair {
     /** for hibernate */
     protected EventStationPair() {}
 
-    public EventStationPair(StatefulEvent event, StationImpl station) {
+    public EventStationPair(StatefulEvent event, Station station) {
         this(event, station, Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.INIT));
     }
 
-    public EventStationPair(StatefulEvent event, StationImpl station, Status status) {
+    public EventStationPair(StatefulEvent event, Station station, Status status) {
         super(event, status);
         setStation(station);
     }
@@ -91,7 +91,7 @@ public class EventStationPair extends CookieEventPair {
                     if(overlap.overlaps(cg.getChannels()[0])) {
                         overlapList.add(cg);
                     } else {
-                        failLogger.info(ChannelIdUtil.toString(cg.getChannels()[0].get_id())
+                        failLogger.info(ChannelIdUtil.toString(cg.getChannels()[0])
                                 + "'s channel effective time does not overlap the event time");
                     }
                 }
@@ -100,30 +100,30 @@ public class EventStationPair extends CookieEventPair {
                     // processing here
                     // don't want another thread to pull the ECP from the DB
                     logger.debug("Put EventVectorPair (" + getEventDbId() + ", cg " + cg.getDbid() + " ("
-                            + ((ChannelImpl)cg.getChannel1()).getDbid() + " "
-                            + ((ChannelImpl)cg.getChannel2()).getDbid() + " "
-                            + ((ChannelImpl)cg.getChannel3()).getDbid());
+                            + ((Channel)cg.getChannel1()).getDbid() + " "
+                            + ((Channel)cg.getChannel2()).getDbid() + " "
+                            + ((Channel)cg.getChannel3()).getDbid());
                     EventVectorPair p = new EventVectorPair(getEvent(), cg, Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                                                                        Standing.IN_PROG), this);
                     chanPairs.add(p);
                     sodDb.put(p);
                 }
             } else {
-                List<ChannelImpl> channels = Start.getNetworkArm().getSuccessfulChannels(getStation());
+                List<Channel> channels = Start.getNetworkArm().getSuccessfulChannels(getStation());
                 if(channels.size() == 0) {
                     logger.info("No successful channels for " + this);
                 }
-                List<ChannelImpl> overlapList = new ArrayList<ChannelImpl>();
-                for(ChannelImpl c : channels) {
+                List<Channel> overlapList = new ArrayList<Channel>();
+                for(Channel c : channels) {
                     if(overlap.overlaps(c)) {
                         overlapList.add(c);
                     } else {
-                        failLogger.info(ChannelIdUtil.toString(c.getId())
+                        failLogger.info(ChannelIdUtil.toString(c)
                                 + "'s channel effective time does not overlap the event time");
                     }
-                    logger.info(ChannelIdUtil.toString(c.getId()) + "' passed");
+                    logger.info(ChannelIdUtil.toString(c) + "' passed");
                 }
-                for(ChannelImpl c : overlapList) {
+                for(Channel c : overlapList) {
                     // use Standing.IN_PROG as we are going to do event-channel
                     // processing here
                     // don't want another thread to pull the ECP from the DB
@@ -193,16 +193,16 @@ public class EventStationPair extends CookieEventPair {
         return station.getDbid();
     }
 
-    public StationImpl getStation() {
+    public Station getStation() {
         return station;
     }
 
     /** for use by hibernate */
-    protected void setStation(StationImpl sta) {
+    protected void setStation(Station sta) {
         this.station = sta;
     }
 
-    private StationImpl station;
+    private Station station;
 
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(EventStationPair.class);
 }

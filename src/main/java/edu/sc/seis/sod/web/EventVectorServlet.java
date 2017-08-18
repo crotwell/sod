@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.hibernate.query.Query;
 import org.json.JSONWriter;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.hibernate.AbstractHibernateDB;
 import edu.sc.seis.sod.hibernate.EventSeismogramFileReference;
 import edu.sc.seis.sod.hibernate.SeismogramFileRefDB;
@@ -26,7 +27,6 @@ import edu.sc.seis.sod.hibernate.UnsupportedFileTypeException;
 import edu.sc.seis.sod.hibernate.eventpair.AbstractEventChannelPair;
 import edu.sc.seis.sod.hibernate.eventpair.EventChannelPair;
 import edu.sc.seis.sod.hibernate.eventpair.EventVectorPair;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.web.jsonapi.EventVectorJson;
 import edu.sc.seis.sod.web.jsonapi.JsonApi;
 
@@ -40,11 +40,11 @@ public class EventVectorServlet extends HttpServlet {
         if (m.matches()) {
             // raw miniseed
             AbstractEventChannelPair ecp = getECP(m.group(1));
-            ChannelImpl[] chans;
+            Channel[] chans;
             if (ecp instanceof EventVectorPair) {
                 chans = ((EventVectorPair)ecp).getChannelGroup().getChannels();
             } else {
-                chans = new ChannelImpl[] {((EventChannelPair)ecp).getChannel()};
+                chans = new Channel[] {((EventChannelPair)ecp).getChannel()};
             }
             List<EventSeismogramFileReference> seisRefList = new ArrayList<EventSeismogramFileReference>();
             for (int j = 0; j < chans.length; j++) {

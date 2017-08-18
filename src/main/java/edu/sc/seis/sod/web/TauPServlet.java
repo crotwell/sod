@@ -18,6 +18,7 @@ import org.json.JSONWriter;
 
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.bag.TauPUtil;
 import edu.sc.seis.sod.hibernate.EventDB;
 import edu.sc.seis.sod.hibernate.NetworkDB;
@@ -27,7 +28,6 @@ import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.NoPreferredOrigin;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.web.jsonapi.JsonApi;
 import edu.sc.seis.sod.web.jsonapi.JsonApiData;
 import edu.sc.seis.sod.web.jsonapi.TauPJson;
@@ -64,13 +64,13 @@ public class TauPServlet  extends HttpServlet {
                 encodeArrivalsList(out, arrivalList);
                 
             } else if (params.containsKey(STATION) && params.containsKey(EVENT)) {
-                StationImpl sta = null;
+                Station sta = null;
                 Matcher staMatcher = netStaCodePattern.matcher(params.get(STATION)[0]);
                 if (staMatcher.matches()) {
                     String netCode = staMatcher.group(1);
                     String year = staMatcher.group(3);
                     String staCode = staMatcher.group(4);
-                    List<StationImpl> staList = NetworkDB.getSingleton().getStationByCodes(netCode, staCode);
+                    List<Station> staList = NetworkDB.getSingleton().getStationByCodes(netCode, staCode);
                     if (year == null && ! NetworkIdUtil.isTemporary(netCode)) {
                         // perm net code, should only be one
                         sta = staList.get(0);
@@ -80,7 +80,7 @@ public class TauPServlet  extends HttpServlet {
                         resp.sendError(500);
                     } else {
                         MicroSecondDate netBegin = new MicroSecondDate(year+"1231T23:59:59.000Z");
-                        for (StationImpl stationImpl : staList) {
+                        for (Station stationImpl : staList) {
                             MicroSecondTimeRange staTR = new MicroSecondTimeRange(stationImpl.getEffectiveTime());
                             if (staTR.contains(netBegin)) {
                                 sta = stationImpl;

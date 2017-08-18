@@ -44,13 +44,10 @@ import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.model.station.Instrumentation;
 import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
-import edu.sc.seis.sod.model.station.NetworkAttrImpl;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.model.station.StationIdUtil;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.util.convert.stationxml.ChannelSensitivityBundle;
 import edu.sc.seis.sod.util.convert.stationxml.StationChannelBundle;
 import edu.sc.seis.sod.util.convert.stationxml.StationXMLToFissures;
@@ -128,37 +125,37 @@ public class StationXML extends AbstractNetworkSource implements NetworkSource {
         return refreshInterval;
     }
 
-    public List<? extends NetworkAttrImpl> getNetworks() {
+    public List<? extends Network> getNetworks() {
         checkNetsLoaded();
         return Collections.unmodifiableList(networks);
     }
 
-    public List<? extends StationImpl> getStations(NetworkAttrImpl net) {
+    public List<? extends Station> getStations(Network net) {
         checkChansLoaded(NetworkIdUtil.toStringNoDates(net));
         List<StationChannelBundle> bundles = staChanMap.get(NetworkIdUtil.toStringNoDates(net));
-        List<StationImpl> out = new ArrayList<StationImpl>();
+        List<Station> out = new ArrayList<Station>();
         for (StationChannelBundle b : bundles) {
             out.add(b.getStation());
         }
         return out;
     }
 
-    public List<? extends ChannelImpl> getChannels(StationImpl station) {
+    public List<? extends Channel> getChannels(Station station) {
         checkChansLoaded(NetworkIdUtil.toStringNoDates(station.getNetworkAttr()));
         List<StationChannelBundle> bundles = staChanMap.get(NetworkIdUtil.toStringNoDates(station.getNetworkAttr()));
         for (StationChannelBundle b : bundles) {
             if (StationIdUtil.areEqual(station, b.getStation())) {
-                List<ChannelImpl> out = new ArrayList<ChannelImpl>();
+                List<Channel> out = new ArrayList<Channel>();
                 for (ChannelSensitivityBundle chanSens : b.getChanList()) {
                     out.add(chanSens.getChan());
                 }
                 return out;
             }
         }
-        return new ArrayList<ChannelImpl>();
+        return new ArrayList<Channel>();
     }
 
-    public QuantityImpl getSensitivity(ChannelImpl chan) throws ChannelNotFound, InvalidResponse {
+    public QuantityImpl getSensitivity(Channel chan) throws ChannelNotFound, InvalidResponse {
         checkChansLoaded(NetworkIdUtil.toStringNoDates(chan.getId().network_id));
         List<StationChannelBundle> bundles = staChanMap.get(NetworkIdUtil.toStringNoDates(chan.getId().network_id));
         for (StationChannelBundle b : bundles) {
@@ -174,7 +171,7 @@ public class StationXML extends AbstractNetworkSource implements NetworkSource {
     }
     
     @Override
-    public Response getResponse(ChannelImpl chan) throws ChannelNotFound, InvalidResponse {
+    public Response getResponse(Channel chan) throws ChannelNotFound, InvalidResponse {
         MicroSecondDate chanBegin = new MicroSecondDate(chan.getId().begin_time);
         String newQuery = FDSNStationQueryParams.NETWORK+"="+chan.getId().network_id.network_code+
                 "&"+FDSNStationQueryParams.STATION+"="+chan.getId().station_code+
@@ -298,7 +295,7 @@ public class StationXML extends AbstractNetworkSource implements NetworkSource {
     }
     
     synchronized void parseNets() throws XMLStreamException, StationXMLException, IOException, URISyntaxException {
-        networks = new ArrayList<NetworkAttrImpl>();
+        networks = new ArrayList<Network>();
         logger.info("Parsing networks from "+parsedURL);
         FDSNStationXML stationXML = retrieveXML(parsedURL, FDSNStationQueryParams.LEVEL_NETWORK);
         
@@ -341,7 +338,7 @@ public class StationXML extends AbstractNetworkSource implements NetworkSource {
         logger.info("found "+ numChannels+" channels in "+networks.size()+" networks after parse ");
     }
     
-    int processStation(List<NetworkAttrImpl> netList, Station s) throws StationXMLException {
+    int processStation(List<Network> netList, Station s) throws StationXMLException {
         int numChannels = 0;
         for (String ignore : ignoreNets) {
             if (s.getNetworkCode().equals(ignore)) {
@@ -371,9 +368,9 @@ public class StationXML extends AbstractNetworkSource implements NetworkSource {
     
     static String[] ignoreNets = new String[] {"AB", "AI", "BN"};
     
-    List<NetworkAttrImpl> knownNetworks = new ArrayList<NetworkAttrImpl>();;
+    List<Network> knownNetworks = new ArrayList<Network>();;
     
-    List<NetworkAttrImpl> networks;
+    List<Network> networks;
     
     Map<String, List<StationChannelBundle>> staChanMap = new HashMap<String, List<StationChannelBundle>>();
     

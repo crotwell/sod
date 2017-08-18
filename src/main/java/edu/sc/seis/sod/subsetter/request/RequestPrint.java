@@ -5,11 +5,11 @@
  */
 package edu.sc.seis.sod.subsetter.request;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
 
@@ -21,7 +21,7 @@ public class RequestPrint implements RequestSubsetter {
     }
     
     public StringTree accept(CacheEvent event,
-                             ChannelImpl channel,
+                             Channel channel,
                           RequestFilter[] request,
                           CookieJar cookieJar) throws Exception {
         printRequests(request);

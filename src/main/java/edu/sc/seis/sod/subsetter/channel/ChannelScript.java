@@ -2,7 +2,7 @@ package edu.sc.seis.sod.subsetter.channel;
 
 import org.w3c.dom.Element;
 
-import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.source.network.VelocityNetworkSource;
 import edu.sc.seis.sod.status.StringTree;
@@ -17,7 +17,7 @@ public class ChannelScript extends AbstractScriptSubsetter implements ChannelSub
     }
 
     @Override
-    public StringTree accept(ChannelImpl channel, NetworkSource network) throws Exception {
+    public StringTree accept(Channel channel, NetworkSource network) throws Exception {
         return runScript(new VelocityChannel(channel), new VelocityNetworkSource(network));
     }
 

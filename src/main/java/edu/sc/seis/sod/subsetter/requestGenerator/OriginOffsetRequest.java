@@ -2,6 +2,7 @@ package edu.sc.seis.sod.subsetter.requestGenerator;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.SodUtil;
@@ -11,7 +12,6 @@ import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.OriginImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.util.display.EventUtil;
 
 /**
@@ -30,7 +30,7 @@ public class OriginOffsetRequest implements RequestGenerator {
     }
 
     public RequestFilter[] generateRequest(CacheEvent event,
-                                           ChannelImpl channel,
+                                           Channel channel,
                                            CookieJar cookieJar)
             throws Exception {
         OriginImpl origin = EventUtil.extractOrigin(event);

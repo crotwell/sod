@@ -7,13 +7,13 @@ import java.io.FileOutputStream;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.hibernate.SeismogramFileTypes;
 import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 
 
 public class WavWriter extends AbstractSeismogramWriter {
@@ -41,7 +41,7 @@ public class WavWriter extends AbstractSeismogramWriter {
     }
 
     @Override
-    public void write(String loc, LocalSeismogramImpl seis, ChannelImpl chan, CacheEvent ev) throws Exception {
+    public void write(String loc, LocalSeismogramImpl seis, Channel chan, CacheEvent ev) throws Exception {
         File f = new File(loc);
         edu.sc.seis.sod.util.convert.wav.FissuresToWAV fisToWAV = new edu.sc.seis.sod.util.convert.wav.FissuresToWAV(seis, speedup);
         DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(f)));

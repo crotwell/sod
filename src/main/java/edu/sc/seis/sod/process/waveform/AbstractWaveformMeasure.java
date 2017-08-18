@@ -2,6 +2,7 @@ package edu.sc.seis.sod.process.waveform;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.measure.Measurement;
@@ -9,7 +10,6 @@ import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
 
@@ -24,7 +24,7 @@ public abstract class AbstractWaveformMeasure implements WaveformProcess {
     
     @Override
     public WaveformResult accept(CacheEvent event,
-                                 ChannelImpl channel,
+                                 Channel channel,
                                  RequestFilter[] original,
                                  RequestFilter[] available,
                                  LocalSeismogramImpl[] seismograms,
@@ -42,7 +42,7 @@ public abstract class AbstractWaveformMeasure implements WaveformProcess {
     }
 
     abstract Measurement calculate(CacheEvent event,
-                                   ChannelImpl channel,
+                                   Channel channel,
                                    RequestFilter[] original,
                                    RequestFilter[] available,
                                    LocalSeismogramImpl[] seismograms,

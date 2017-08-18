@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.seisFile.waveserver.MenuItem;
 import edu.sc.seis.seisFile.waveserver.WaveServer;
 import edu.sc.seis.sod.ConfigurationException;
@@ -17,10 +19,8 @@ import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.station.ChannelId;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.model.station.SiteId;
 import edu.sc.seis.sod.model.station.SiteImpl;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.util.time.ClockUtil;
 
 
@@ -36,7 +36,7 @@ public class WinstonNetworkSource extends CSVNetworkSource {
         port = SodUtil.loadInt(config, "port", 16022);
         try {
         List<MenuItem> winstonMenu = getWaveServer().getMenu();
-        channels = new ArrayList<ChannelImpl>();
+        channels = new ArrayList<Channel>();
         for (MenuItem menuItem : winstonMenu) {
             try {
             String netCode = menuItem.getNetwork();
@@ -44,13 +44,13 @@ public class WinstonNetworkSource extends CSVNetworkSource {
             String chanCode = menuItem.getChannel();
             String siteCode = menuItem.getLocation();
             try {
-                StationImpl curStation = getStationForChannel(netCode, staCode);
+                Station curStation = getStationForChannel(netCode, staCode);
             if (curStation == null) {
                 logger.warn("Can't find station for "+netCode+"."+ staCode+", skipping");
                 continue;
             }
-            float azimuth = ChannelImpl.getAzimuth(chanCode);
-            float dip = ChannelImpl.getDip(chanCode);
+            float azimuth = Channel.getAzimuth(chanCode);
+            float dip = Channel.getDip(chanCode);
             
             SamplingImpl sampling = new SamplingImpl(1, new TimeInterval(1, UnitImpl.SECOND));
             MicroSecondDate chanStart = curStation.getBeginTime();
@@ -61,7 +61,7 @@ public class WinstonNetworkSource extends CSVNetworkSource {
             }
             TimeRange chanTime = new TimeRange(chanStart,
                                                DEFAULT_END);
-            ChannelImpl channelImpl = new ChannelImpl(new ChannelId(curStation.get_id().network_id,
+            Channel channelImpl = new Channel(new ChannelId(curStation.get_id().network_id,
                                                                 staCode,
                                                                 siteCode,
                                                                 chanCode,

@@ -9,6 +9,7 @@ import org.w3c.dom.Element;
 
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.bag.IncompatibleSeismograms;
@@ -37,7 +38,6 @@ import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.station.ChannelGroup;
 import edu.sc.seis.sod.model.station.ChannelId;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.process.waveform.AbstractSeismogramWriter;
 import edu.sc.seis.sod.process.waveform.MseedWriter;
 import edu.sc.seis.sod.process.waveform.SacWriter;
@@ -104,7 +104,7 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
                           RequestFilter[][] available,
                           LocalSeismogramImpl[][] seismograms,
                           CookieJar cookieJar) throws Exception {
-            ChannelImpl chan = channelGroup.getChannels()[0];
+            Channel chan = channelGroup.getChannels()[0];
             OriginImpl origin = event.get_preferred_origin();
             ChannelId[] chanIds = new ChannelId[channelGroup.getChannels().length];
             for (int i = 0; i < chanIds.length; i++) {
@@ -154,15 +154,15 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
                                      ChannelGroup channelGroup,
                                      LocalSeismogramImpl[] localSeis) throws NoPreferredOrigin, FissuresException,
             IncompatibleSeismograms, TauModelException, ZeroPowerException {
-        ChannelImpl[] xyChan = channelGroup.getHorizontalXY();
+        Channel[] xyChan = channelGroup.getHorizontalXY();
         if (xyChan.length < 2) {
             throw new IncompatibleSeismograms("Unable to find horizontal channels: "+channelGroup.getChannel1().get_code()
                                               +" "+channelGroup.getChannel2().get_code()
                                               +" "+channelGroup.getChannel3().get_code());
         }
-        ChannelImpl xChan = xyChan[0];
-        ChannelImpl yChan = xyChan[1];
-        ChannelImpl zChan = channelGroup.getVertical();
+        Channel xChan = xyChan[0];
+        Channel yChan = xyChan[1];
+        Channel zChan = channelGroup.getVertical();
         
         if (yChan == null || xChan == null || zChan == null) {
             logger.error("problem one channel component is null ");
@@ -280,7 +280,7 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
                                                 refSeismogram.channel_id.site_code,
                                                 chanCode,
                                                 refSeismogram.channel_id.begin_time);
-        ChannelImpl recFuncChan = new ChannelImpl(recFuncChanId, name, orientation, channelGroup.getChannel1()
+        Channel recFuncChan = new Channel(recFuncChanId, name, orientation, channelGroup.getChannel1()
                 .getSamplingInfo(), channelGroup.getChannel1().getEffectiveTime(), channelGroup.getChannel1().getSite());
         LocalSeismogramImpl predSeis = new LocalSeismogramImpl("recFunc/" + chanCode + "/" + refSeismogram.get_id(),
                                                                begin,

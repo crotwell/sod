@@ -2,10 +2,10 @@ package edu.sc.seis.sod.subsetter.eventStation;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.model.event.CacheEvent;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
@@ -17,7 +17,7 @@ public final class EventStationXOR extends EventStationLogicalSubsetter
     }
 
     public StringTree accept(CacheEvent event,
-                             StationImpl station,
+                             Station station,
                           CookieJar cookieJar) throws Exception {
         EventStationSubsetter filterA = (EventStationSubsetter)filterList.get(0);
         EventStationSubsetter filterB = (EventStationSubsetter)filterList.get(1);

@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
 import edu.sc.seis.sod.source.network.NetworkSource;
@@ -17,7 +17,7 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
 
 public class RepairSensitivity implements ChannelSubsetter {
 
-    public StringTree accept(ChannelImpl channel, NetworkSource network)
+    public StringTree accept(Channel channel, NetworkSource network)
             throws Exception {
         try {
             QuantityImpl sensitivity = network.getSensitivity(channel);

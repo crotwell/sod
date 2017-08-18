@@ -9,6 +9,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.LocalSeismogramArm;
 import edu.sc.seis.sod.SodUtil;
@@ -17,7 +18,6 @@ import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.station.ChannelGroup;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.process.waveform.ForkProcess;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.process.waveform.WaveformResult;
@@ -61,7 +61,7 @@ public class ANDWaveformProcessWrapper implements WaveformProcessWrapper {
         int i;
         for(i = 0; b && i < channelGroup.getChannels().length; i++) {
             LocalSeismogramImpl[] copies = ForkProcess.copySeismograms(seismograms[i]);
-            ChannelImpl chan = channelGroup.getChannels()[i];
+            Channel chan = channelGroup.getChannels()[i];
             WaveformResult result = LocalSeismogramArm.runProcessorThreadCheck(process,event,
                                                     chan,
                                                     original[i],

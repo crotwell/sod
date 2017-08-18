@@ -7,11 +7,11 @@ import org.w3c.dom.Element;
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
 import edu.sc.seis.TauP.TauP_SetSac;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.sac.SacTimeSeries;
 import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.bag.TauPUtil;
 import edu.sc.seis.sod.model.event.CacheEvent;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.util.display.EventUtil;
 
 public class PhaseHeaderProcess implements SacProcess {
@@ -48,10 +48,10 @@ public class PhaseHeaderProcess implements SacProcess {
 
     public void process(SacTimeSeries sac,
                         CacheEvent event,
-                        ChannelImpl channel) {
+                        Channel channel) {
         try {
             List<Arrival> arrivals = TauPUtil.getTauPUtil(model)
-                    .calcTravelTimes(channel.getSite().getLocation(),
+                    .calcTravelTimes(channel,
                                      EventUtil.extractOrigin(event),
                                      new String[] {phaseName});
             if ( arrivalIndex >= 0 && arrivals.size() > arrivalIndex) {

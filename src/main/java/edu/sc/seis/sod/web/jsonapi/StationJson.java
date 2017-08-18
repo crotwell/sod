@@ -6,19 +6,19 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.UnitImpl;
-import edu.sc.seis.sod.model.station.ChannelImpl;
-import edu.sc.seis.sod.model.station.StationImpl;
 
 
 public class StationJson extends AbstractJsonApiData {
 
-    public StationJson(StationImpl sta, String baseUrl) {
+    public StationJson(Station sta, String baseUrl) {
         this(sta, null, baseUrl);
     }
      
-    public StationJson(StationImpl sta, List<ChannelImpl> chanList, String baseUrl) {
+    public StationJson(Station sta, List<Channel> chanList, String baseUrl) {
         super(baseUrl);
         this.sta = sta;
         this.chanList = chanList;
@@ -85,30 +85,30 @@ public class StationJson extends AbstractJsonApiData {
         
     }
 
-    public static List<JsonApiData> toJsonList(List<StationImpl> staList, String baseUrl) {
+    public static List<JsonApiData> toJsonList(List<Station> staList, String baseUrl) {
         List<JsonApiData> out = new ArrayList<JsonApiData>(staList.size());
-        for (StationImpl stationImpl : staList) {
+        for (Station stationImpl : staList) {
             out.add(new StationJson(stationImpl, baseUrl));
         }
         return out;
     }
     
-    public String formStationURL(StationImpl sta) {
+    public String formStationURL(Station sta) {
         NetworkJson netJson = new NetworkJson(sta.getNetworkAttr(), baseUrl);
         String out = baseUrl+"/networks/"+netJson.getId()+"/stations/"+getId();
         return out;
     }
 
-    public String formEventRelationshipURL(StationImpl sta) {
+    public String formEventRelationshipURL(Station sta) {
         String out = baseUrl+"/stations/"+getId()+"/quakes";
         return out;
     }
-    public String formChannelRelationshipURL(StationImpl sta) {
+    public String formChannelRelationshipURL(Station sta) {
         String out = baseUrl+"/stations/"+getId()+"/channels";
         return out;
     }
     
-    StationImpl sta;
+    Station sta;
     
-    List<ChannelImpl> chanList;
+    List<Channel> chanList;
 }

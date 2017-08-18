@@ -1,14 +1,14 @@
 package edu.sc.seis.sod.hibernate;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.model.common.UnitImpl;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 
 
 public class ChannelSensitivity {
     
     public ChannelSensitivity() {}
 
-    public ChannelSensitivity(ChannelImpl channel, float overallGain, float frequency, UnitImpl inputUnits) {
+    public ChannelSensitivity(Channel channel, float overallGain, float frequency, UnitImpl inputUnits) {
         super();
         this.channel = channel;
         this.overallGain = overallGain;
@@ -16,7 +16,7 @@ public class ChannelSensitivity {
         this.inputUnits = inputUnits;
     }
     
-    public ChannelImpl getChannel() {
+    public Channel getChannel() {
         return channel;
     }
 
@@ -32,7 +32,7 @@ public class ChannelSensitivity {
         return inputUnits;
     }
     
-    protected void setChannel(ChannelImpl channel) {
+    protected void setChannel(Channel channel) {
         this.channel = channel;
     }
 
@@ -67,11 +67,11 @@ public class ChannelSensitivity {
         sensitivity.getInputUnits() == null;
     }
     
-    public static ChannelSensitivity createNonChannelSensitivity(ChannelImpl chan) {
+    public static ChannelSensitivity createNonChannelSensitivity(Channel chan) {
         return new ChannelSensitivity(chan, 0, 0, null);
     }
 
-    ChannelImpl channel;
+    Channel channel;
     float overallGain, frequency;
     UnitImpl inputUnits;
     int dbid;

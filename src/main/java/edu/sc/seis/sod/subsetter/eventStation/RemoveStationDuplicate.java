@@ -5,6 +5,7 @@ import java.util.List;
 import org.w3c.dom.Element;
 
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.hibernate.SodDB;
@@ -13,7 +14,6 @@ import edu.sc.seis.sod.model.common.DistAz;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
@@ -22,9 +22,9 @@ import edu.sc.seis.sod.status.StringTree;
 public class RemoveStationDuplicate implements EventStationSubsetter {
 
     
-    public StringTree accept(CacheEvent event, StationImpl station, CookieJar cookieJar) throws Exception {
-        List<StationImpl> passStations = SodDB.getSingleton().getSuccessfulStationsForEvent(event);
-        for (StationImpl stationImpl : passStations) {
+    public StringTree accept(CacheEvent event, Station station, CookieJar cookieJar) throws Exception {
+        List<Station> passStations = SodDB.getSingleton().getSuccessfulStationsForEvent(event);
+        for (Station stationImpl : passStations) {
             if (isDistanceClose(station, stationImpl)) {
                 return new Fail(this);
             }
@@ -32,7 +32,7 @@ public class RemoveStationDuplicate implements EventStationSubsetter {
         return new Pass(this);
     }
 
-    public boolean isDistanceClose(StationImpl staA, StationImpl staB) {
+    public boolean isDistanceClose(Station staA, Station staB) {
         DistAz distAz = new DistAz(staA.getLocation(), staB.getLocation());
         if (maxDistance.getUnit().isConvertableTo(UnitImpl.DEGREE)) {
         return distAz.getDelta() < maxDistance.convertTo(UnitImpl.DEGREE).getValue();

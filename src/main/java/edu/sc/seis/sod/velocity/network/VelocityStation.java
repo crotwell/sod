@@ -11,15 +11,14 @@ import javax.xml.stream.XMLStreamWriter;
 import org.apache.velocity.VelocityContext;
 
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.model.common.DistAz;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.UnitImpl;
-import edu.sc.seis.sod.model.station.NetworkAttrImpl;
 import edu.sc.seis.sod.model.station.StationId;
 import edu.sc.seis.sod.model.station.StationIdUtil;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.util.display.ThreadSafeDecimalFormat;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
@@ -28,9 +27,9 @@ import edu.sc.seis.sod.velocity.event.VelocityEvent;
 /**
  * @author groves Created on Jan 7, 2005
  */
-public class VelocityStation extends StationImpl {
+public class VelocityStation extends Station {
 
-    public VelocityStation(StationImpl sta) {
+    public VelocityStation(Station sta) {
         if (sta == null) {
             throw new IllegalArgumentException("StationImpl cannot be null");
         }
@@ -74,7 +73,7 @@ public class VelocityStation extends StationImpl {
 
     public VelocityNetwork getNet() {
         if(velocityNet == null) {
-            velocityNet = new VelocityNetwork((NetworkAttrImpl)getNetworkAttr());
+            velocityNet = new VelocityNetwork((Network)getNetworkAttr());
         }
         return velocityNet;
     }
@@ -244,8 +243,8 @@ public class VelocityStation extends StationImpl {
                 return true;
             }
         }
-        if(o instanceof StationImpl) {
-            StationImpl oSta = (StationImpl)o;
+        if(o instanceof Station) {
+            Station oSta = (Station)o;
             return StationIdUtil.areEqual(oSta, sta);
         }
         return false;
@@ -265,7 +264,7 @@ public class VelocityStation extends StationImpl {
 
     private VelocityNetwork velocityNet = null;
 
-    private StationImpl sta;
+    private Station sta;
     
     private int[] position;
 
@@ -285,25 +284,25 @@ public class VelocityStation extends StationImpl {
         getNet().insertIntoContext(ctx);
     }
     
-    public StationImpl getWrapped() {
+    public Station getWrapped() {
         return sta;
     }
 
-    public static VelocityStation[] wrap(StationImpl[] stations) {
+    public static VelocityStation[] wrap(Station[] stations) {
         VelocityStation[] out = new VelocityStation[stations.length];
         for(int i = 0; i < out.length; i++) {
-            out[i] = new VelocityStation((StationImpl)stations[i]);
+            out[i] = new VelocityStation((Station)stations[i]);
         }
         return out;
     }
     
-    public static List<VelocityStation> wrapList(List<? extends StationImpl> stations) {
+    public static List<VelocityStation> wrapList(List<? extends Station> stations) {
         List<VelocityStation> out = new ArrayList<VelocityStation>();
-        for(StationImpl s : stations) {
+        for(Station s : stations) {
             if (s instanceof VelocityStation) {
                 out.add((VelocityStation)s);
             } else {
-                out.add(new VelocityStation((StationImpl)s));
+                out.add(new VelocityStation((Station)s));
             }
         }
         return out;

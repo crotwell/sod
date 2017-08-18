@@ -2,12 +2,12 @@ package edu.sc.seis.sod.process.waveform;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.seismogram.RequestFilterUtil;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.util.time.CoverageTool;
 
@@ -23,7 +23,7 @@ public class FullDataCoverage implements WaveformProcess {
     public FullDataCoverage(Element config) {}
 
     public WaveformResult accept(CacheEvent event,
-                                  ChannelImpl channel,
+                                  Channel channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,

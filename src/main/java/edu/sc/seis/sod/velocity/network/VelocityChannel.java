@@ -5,10 +5,10 @@ import java.util.List;
 
 import org.apache.velocity.VelocityContext;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.station.ChannelId;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.model.station.SiteImpl;
 import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
@@ -16,9 +16,10 @@ import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 /**
  * @author groves Created on Jan 7, 2005
  */
-public class VelocityChannel extends ChannelImpl {
+public class VelocityChannel extends Channel {
 
-    public VelocityChannel(ChannelImpl chan) {
+    public VelocityChannel(Channel chan) {
+        super(chan.getStation(), chan.getLocCode(), chan.getChannelCode());
         this.chan = chan;
         setSite(chan.getSite());
         setOrientation(chan.getOrientation());
@@ -131,11 +132,11 @@ public class VelocityChannel extends ChannelImpl {
         throw new UnsupportedOperationException("This channel had no dbid");
     }
 
-    public ChannelImpl getWrapped() {return chan;}
+    public Channel getWrapped() {return chan;}
     
-    private ChannelImpl chan;
+    private Channel chan;
 
-    public static VelocityChannel[] wrap(ChannelImpl[] chans) {
+    public static VelocityChannel[] wrap(Channel[] chans) {
         VelocityChannel[] velChans = new VelocityChannel[chans.length];
         for(int i = 0; i < velChans.length; i++) {
             velChans[i] = wrap(chans[i]);
@@ -143,9 +144,9 @@ public class VelocityChannel extends ChannelImpl {
         return velChans;
     }
     
-    public static List<VelocityChannel> wrap(List<? extends ChannelImpl> chans) {
+    public static List<VelocityChannel> wrap(List<? extends Channel> chans) {
         List<VelocityChannel> velChans = new ArrayList<VelocityChannel>();
-        for(ChannelImpl c : chans) {
+        for(Channel c : chans) {
             velChans.add(wrap(c));
         }
         return velChans;
@@ -157,10 +158,10 @@ public class VelocityChannel extends ChannelImpl {
         getSite().insertIntoContext(ctx);
     }
 
-    public static VelocityChannel wrap(ChannelImpl chan) {
+    public static VelocityChannel wrap(Channel chan) {
         if(chan instanceof VelocityChannel) {
             return (VelocityChannel)chan;
         }
-        return new VelocityChannel((ChannelImpl)chan);
+        return new VelocityChannel((Channel)chan);
     }
 }

@@ -12,6 +12,9 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.exception.ParseErrorException;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.UserConfigurationException;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
@@ -22,9 +25,6 @@ import edu.sc.seis.sod.mock.station.MockStation;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
-import edu.sc.seis.sod.model.station.ChannelImpl;
-import edu.sc.seis.sod.model.station.NetworkAttrImpl;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.velocity.event.VelocityEvent;
 import edu.sc.seis.sod.velocity.network.VelocityChannel;
@@ -46,11 +46,11 @@ public class PrintlineVelocitizer {
     
     static {
         VelocityEvent event = new VelocityEvent(MockEventAccessOperations.createEvent());
-        ChannelImpl chan = MockChannel.createChannel();
+        Channel chan = MockChannel.createChannel();
         mockContext.put("event", event);
                 mockContext.put("channel", new VelocityChannel(chan));
         mockContext.put("station", new VelocityStation(MockStation.createStation()));
-        mockContext.put("net", new VelocityNetwork((NetworkAttrImpl)MockChannel.createChannel().getNetworkAttr()));
+        mockContext.put("net", new VelocityNetwork((Network)MockChannel.createChannel().getNetworkAttr()));
         List<LocalSeismogramImpl> seisList = new ArrayList<LocalSeismogramImpl>();
         seisList.add(new VelocitySeismogram(MockSeismogram.createSpike(chan.getId()), chan));
         mockContext.put("seismograms", seisList);
@@ -84,20 +84,20 @@ public class PrintlineVelocitizer {
 
     public String evaluate(String fileTemplate,
                            String template,
-                           NetworkAttrImpl attr) throws IOException {
+                           Network attr) throws IOException {
         return evalulate(fileTemplate,
                          template,
                          ContextWrangler.createContext(attr));
     }
 
-    public String evaluate(String fileTemplate, String template, ChannelImpl chan)
+    public String evaluate(String fileTemplate, String template, Channel chan)
             throws IOException {
         return evalulate(fileTemplate,
                          template,
                          ContextWrangler.createContext(chan));
     }
 
-    public String evaluate(String fileTemplate, String template, StationImpl sta)
+    public String evaluate(String fileTemplate, String template, Station sta)
             throws IOException {
         return evalulate(fileTemplate,
                          template,
@@ -105,7 +105,7 @@ public class PrintlineVelocitizer {
     }
 
     public String evaluate(String fileTemplate, String template, 
-                           CacheEvent event, StationImpl sta, CookieJar cookieJar)
+                           CacheEvent event, Station sta, CookieJar cookieJar)
             throws IOException {
         VelocityContext cntxt = ContextWrangler.createContext(sta);
         ContextWrangler.insertIntoContext(event, cntxt);
@@ -118,7 +118,7 @@ public class PrintlineVelocitizer {
     public String evaluate(String filename,
                            String template,
                            CacheEvent event,
-                           ChannelImpl channel,
+                           Channel channel,
                            RequestFilter[] request,
                            CookieJar cookieJar) throws IOException {
         return evaluate(filename,
@@ -133,7 +133,7 @@ public class PrintlineVelocitizer {
     public String evaluate(String filename,
                            String template,
                            CacheEvent event,
-                           ChannelImpl channel,
+                           Channel channel,
                            RequestFilter[] original,
                            RequestFilter[] available,
                            CookieJar cookieJar) throws IOException {
@@ -150,7 +150,7 @@ public class PrintlineVelocitizer {
     public String evaluate(String fileTemplate,
                            String template,
                            CacheEvent event,
-                           ChannelImpl channel,
+                           Channel channel,
                            RequestFilter[] original,
                            RequestFilter[] available,
                            LocalSeismogramImpl[] seismograms,

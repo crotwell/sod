@@ -2,8 +2,8 @@ package edu.sc.seis.sod.subsetter.station;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.model.common.QuantityImpl;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
@@ -16,7 +16,7 @@ public class StationDepthRange extends edu.sc.seis.sod.subsetter.DepthRange
         super(config);
     }
 
-    public StringTree accept(StationImpl station, NetworkSource network) {
+    public StringTree accept(Station station, NetworkSource network) {
         QuantityImpl actualDepth = (QuantityImpl)station.getLocation().depth;
         if(actualDepth.greaterThanEqual(getMinDepth())
                 && actualDepth.lessThanEqual(getMaxDepth())) {

@@ -14,13 +14,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONWriter;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.hibernate.NetworkDB;
 import edu.sc.seis.sod.hibernate.NotFound;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.eventpair.AbstractEventChannelPair;
 import edu.sc.seis.sod.hibernate.eventpair.EventStationPair;
-import edu.sc.seis.sod.model.station.ChannelImpl;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.web.jsonapi.ChannelJson;
 import edu.sc.seis.sod.web.jsonapi.EventStationJson;
 import edu.sc.seis.sod.web.jsonapi.JsonApi;
@@ -47,9 +47,9 @@ public class StationsServlet extends HttpServlet {
             String netCode = matcher.group(1);
             String year = matcher.group(3);
             String staCode = matcher.group(4);
-            List<StationImpl> staList = netdb.getStationByCodes(netCode, staCode);
+            List<Station> staList = netdb.getStationByCodes(netCode, staCode);
             if (staList.size() > 0) {
-            StationImpl sta = staList.get(0);
+            Station sta = staList.get(0);
             JsonApi.encodeJson(out, new StationJson(sta, WebAdmin.getApiBaseUrl()));
             resp.setStatus(HttpServletResponse.SC_OK);
             writer.close();
@@ -62,10 +62,10 @@ public class StationsServlet extends HttpServlet {
             matcher = stationDbidPattern.matcher(URL);
             if (matcher.matches()) {
                 String dbid = matcher.group(1);
-                StationImpl sta = null;
+                Station sta = null;
                 try {
                     sta = netdb.getStation(Integer.parseInt(dbid));
-                    List<ChannelImpl> chans = netdb.getChannelsForStation(sta);
+                    List<Channel> chans = netdb.getChannelsForStation(sta);
                     if (sta != null) {
                         JsonApi.encodeJson(out, new StationJson(sta, chans, WebAdmin.getApiBaseUrl()));
                         
@@ -86,7 +86,7 @@ public class StationsServlet extends HttpServlet {
                     String netCode = matcher.group(1);
                     String year = matcher.group(3);
                     String staCode = matcher.group(4);
-                    StationImpl sta = netdb.getStationByCodes(netCode, staCode).get(0);
+                    Station sta = netdb.getStationByCodes(netCode, staCode).get(0);
 
                     // want only successful ESP that actually have successful ECP, otherwise even-station may pass 
                     // but no even-channels or waveforms pass
@@ -113,10 +113,10 @@ public class StationsServlet extends HttpServlet {
                         String netCode = matcher.group(1);
                         String year = matcher.group(3);
                         String staCode = matcher.group(4);
-                        StationImpl sta = netdb.getStationByCodes(netCode, staCode).get(0);
-                        List<ChannelImpl> chans = netdb.getChannelsForStation(sta);
+                        Station sta = netdb.getStationByCodes(netCode, staCode).get(0);
+                        List<Channel> chans = netdb.getChannelsForStation(sta);
                         List<JsonApiData> jsonData = new ArrayList<JsonApiData>(chans.size());
-                        for (ChannelImpl channelImpl : chans) {
+                        for (Channel channelImpl : chans) {
                             jsonData.add(new ChannelJson(channelImpl, WebAdmin.getApiBaseUrl()));
                         }
                         JsonApi.encodeJson(out, jsonData);

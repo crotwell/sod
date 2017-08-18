@@ -10,12 +10,12 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.hibernate.SodDB;
-import edu.sc.seis.sod.model.station.NetworkAttrImpl;
 import edu.sc.seis.sod.model.station.NetworkId;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
-import edu.sc.seis.sod.model.station.StationImpl;
 
 public class VelocityStationGetter {
 
@@ -23,12 +23,12 @@ public class VelocityStationGetter {
         this.net = net;
     }
 
-    public List<StationImpl> getSuccessful() throws Exception {
-        List<StationImpl> out = new LinkedList<StationImpl>();
-        List<NetworkAttrImpl> nets = Start.getNetworkArm().getSuccessfulNetworks();
-        for (NetworkAttrImpl cachenet : nets) {
+    public List<Station> getSuccessful() throws Exception {
+        List<Station> out = new LinkedList<Station>();
+        List<Network> nets = Start.getNetworkArm().getSuccessfulNetworks();
+        for (Network cachenet : nets) {
             if (NetworkIdUtil.areEqual(cachenet.get_id(), net)) {
-                StationImpl[] sta = Start.getNetworkArm().getSuccessfulStations(cachenet);
+                Station[] sta = Start.getNetworkArm().getSuccessfulStations(cachenet);
                 for (int j = 0; j < sta.length; j++) {
                     out.add(sta[j]);
                 }
@@ -43,15 +43,15 @@ public class VelocityStationGetter {
     
     static SodDB sodDb = SodDB.getSingleton();
 
-    public int getNumSuccessful(StationImpl station) throws SQLException {
+    public int getNumSuccessful(Station station) throws SQLException {
     	return sodDb.getNumSuccessful(station);
     }
 
-    public int getNumFailed(StationImpl station) throws SQLException {
+    public int getNumFailed(Station station) throws SQLException {
     	return sodDb.getNumFailed(station);
     }
 
-    public int getNumRetry(StationImpl station) throws SQLException {
+    public int getNumRetry(Station station) throws SQLException {
     	return sodDb.getNumRetry(station);
     }
 }

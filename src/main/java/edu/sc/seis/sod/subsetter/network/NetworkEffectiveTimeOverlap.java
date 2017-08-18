@@ -4,9 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
-import edu.sc.seis.sod.model.station.NetworkAttrImpl;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.EffectiveTimeOverlap;
@@ -23,7 +23,7 @@ public class NetworkEffectiveTimeOverlap extends EffectiveTimeOverlap implements
         super(tr);
     }
 
-    public StringTree accept(NetworkAttrImpl network) {
+    public StringTree accept(Network network) {
         return new StringTreeLeaf(this, overlaps(network.getEffectiveTime()));
     }
 

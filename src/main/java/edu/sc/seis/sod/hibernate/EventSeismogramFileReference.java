@@ -1,8 +1,8 @@
 package edu.sc.seis.sod.hibernate;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.SeismogramAttrImpl;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 
 
 public class EventSeismogramFileReference extends AbstractSeismogramFileReference {
@@ -11,7 +11,7 @@ public class EventSeismogramFileReference extends AbstractSeismogramFileReferenc
     protected EventSeismogramFileReference() {}
     
     public EventSeismogramFileReference(CacheEvent event,
-                                        ChannelImpl channel,
+                                        Channel channel,
                                         SeismogramAttrImpl seis,
                                         String fileLocation,
                                         SeismogramFileTypes filetype) {

@@ -5,11 +5,11 @@ import java.util.List;
 
 import org.apache.velocity.VelocityContext;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.model.common.Location;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.station.ChannelGroup;
 import edu.sc.seis.sod.model.station.ChannelId;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.util.display.EventUtil;
 
 
@@ -27,7 +27,7 @@ public class VelocityChannelGroup {
         return out;
     }
 
-    public boolean contains(ChannelImpl c) {
+    public boolean contains(Channel c) {
         return wrapped.contains(c);
     }
 

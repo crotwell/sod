@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,6 +16,7 @@ import org.w3c.dom.Element;
 import com.csvreader.CsvReader;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.UserConfigurationException;
@@ -29,17 +31,16 @@ import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.station.ChannelId;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.model.station.Instrumentation;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
-import edu.sc.seis.sod.model.station.NetworkAttrImpl;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.sod.model.station.NetworkId;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.model.station.SiteId;
 import edu.sc.seis.sod.model.station.SiteImpl;
 import edu.sc.seis.sod.model.station.StationId;
 import edu.sc.seis.sod.model.station.StationIdUtil;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.source.AbstractCSVSource;
 import edu.sc.seis.sod.subsetter.AreaSubsetter;
 
@@ -110,22 +111,22 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
         return "CSVNetworkSource: " + csvFilename;
     }
 
-    public List<NetworkAttrImpl> getNetworksFromStations(List<StationImpl> staList) {
-        Map<String, NetworkAttrImpl> nets = new HashMap<String, NetworkAttrImpl>();
-        for (StationImpl sta : staList) {
+    public List<Network> getNetworksFromStations(List<Station> staList) {
+        Map<String, Network> nets = new HashMap<String, Network>();
+        for (Station sta : staList) {
             nets.put(StationIdUtil.toStringNoDates(sta.getId()),
-                     new NetworkAttrImpl(sta.getId().network_id, "", "", ""));
+                     new Network(sta.getId().network_id, "", "", ""));
         }
-        List<NetworkAttrImpl> out = new ArrayList<NetworkAttrImpl>();
-        for (NetworkAttrImpl net : nets.values()) {
+        List<Network> out = new ArrayList<Network>();
+        for (Network net : nets.values()) {
             out.add(net);
         }
         return out;
     }
 
-    public List<StationImpl> getStationsFromReader(Reader reader) throws IOException, FileNotFoundException,
+    public List<Station> getStationsFromReader(Reader reader) throws IOException, FileNotFoundException,
             ConfigurationException {
-        List<StationImpl> stations = new ArrayList<StationImpl>();
+        List<Station> stations = new ArrayList<Station>();
         CsvReader csvReader = new CsvReader(reader);
         List<String> headers = validateHeaders(csvReader);
         while (csvReader.readRecord()) {
@@ -146,20 +147,20 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
             NetworkId netId = new NetworkId(netCode, loadTime(headers, csvReader, NET_START, DEFAULT_TIME));
             MicroSecondDate staBegin = loadTime(headers, csvReader, START, DEFAULT_TIME);
             StationId staId = new StationId(netId, staCode, staBegin);
-            StationImpl station = new StationImpl(staId,
+            Station station = new Station(staId,
                                                   loadString(headers, csvReader, NAME, ""),
                                                   location,
                                                   loadString(headers, csvReader, OPERATOR, ""),
                                                   loadString(headers, csvReader, DESCRIPTION, ""),
                                                   loadString(headers, csvReader, COMMENT, ""),
-                                                  new NetworkAttrImpl(netId, "", "", ""));
+                                                  new Network(netId, "", "", ""));
             stations.add(station);
         }
         return stations;
     }
 
-    protected StationImpl getStationForChannel(String netCode, String staCode) {
-        for (StationImpl stationImpl : stations) {
+    protected Station getStationForChannel(String netCode, String staCode) {
+        for (Station stationImpl : stations) {
             if (netCode.equals(stationImpl.getNetworkAttrImpl().get_code())
                     && staCode.equals(stationImpl.get_code())) {
                 return stationImpl;
@@ -168,9 +169,9 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
         return null;
     }
     
-    public List<ChannelImpl> getChannelsFromReader(Reader reader, List<StationImpl> stations) throws IOException,
+    public List<Channel> getChannelsFromReader(Reader reader, List<Station> stations) throws IOException,
             FileNotFoundException, ConfigurationException {
-        List<ChannelImpl> channels = new ArrayList<ChannelImpl>();
+        List<Channel> channels = new ArrayList<Channel>();
         CsvReader csvReader = new CsvReader(reader);
         List<String> headers = validateHeaders(csvReader);
         while (csvReader.readRecord()) {
@@ -178,7 +179,7 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
             String staCode = csvReader.get(STATION_CODE);
             String siteCode = edu.sc.seis.seisFile.fdsnws.stationxml.Channel.fixLocCode(csvReader.get(SITE_CODE));
             String chanCode = csvReader.get(CODE);
-            StationImpl curStation = getStationForChannel(netCode, staCode);
+            Station curStation = getStationForChannel(netCode, staCode);
             if (curStation == null) {
                 throw new UserConfigurationException("Station " + netCode + "." + staCode
                         + " is not a known station. Add it to the stations section.");
@@ -199,9 +200,9 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
             } else {
                 location = curStation.getLocation();
             }
-            MicroSecondDate chanBegin = loadTime(headers, csvReader, START, DEFAULT_TIME);
-            float azimuth = loadFloat(headers, csvReader, AZIMUTH, ChannelImpl.getAzimuth(chanCode));
-            float dip = loadFloat(headers, csvReader, DIP, ChannelImpl.getDip(chanCode));
+            ZonedDateTime chanBegin = loadTime(headers, csvReader, START, DEFAULT_TIME);
+            float azimuth = loadFloat(headers, csvReader, AZIMUTH, Channel.getAzimuth(chanCode));
+            float dip = loadFloat(headers, csvReader, DIP, Channel.getDip(chanCode));
             SamplingImpl sampling;
             if (headers.contains(SAMPLE_PERIOD)) {
                 sampling = new SamplingImpl(1, new TimeInterval(loadFloat(headers, csvReader, SAMPLE_PERIOD, 1),
@@ -213,7 +214,7 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
                 sampling = new SamplingImpl(1, new TimeInterval(1, UnitImpl.SECOND));
             }
             TimeRange chanTime = new TimeRange(chanBegin, loadTime(headers, csvReader, END, DEFAULT_END));
-            ChannelImpl channel = new ChannelImpl(new ChannelId(curStation.get_id().network_id,
+            Channel channel = new Channel(new ChannelId(curStation.get_id().network_id,
                                                                 staCode,
                                                                 siteCode,
                                                                 chanCode,
@@ -241,11 +242,11 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
         return "CSVNetworkSource using " + csvFilename;
     }
 
-    protected List<NetworkAttrImpl> networks;
+    protected List<Network> networks;
 
-    protected List<StationImpl> stations;
+    protected List<Station> stations;
 
-    protected List<ChannelImpl> channels;
+    protected List<Channel> channels;
 
     // required
     public static final String NET_CODE = "net.code";
@@ -281,9 +282,9 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
     public static final String DIP = "dip";
 
     @Override
-    public List<? extends ChannelImpl> getChannels(StationImpl station) {
-        List<ChannelImpl> out = new ArrayList<ChannelImpl>();
-        for (ChannelImpl chan : channels) {
+    public List<? extends Channel> getChannels(Station station) {
+        List<Channel> out = new ArrayList<Channel>();
+        for (Channel chan : channels) {
             if (StationIdUtil.areEqual(station.getId(), chan.getStationImpl().getId())) {
                 out.add(chan);
             }
@@ -292,24 +293,24 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
     }
 
     @Override
-    public Response getResponse(ChannelImpl chanId) throws ChannelNotFound, InvalidResponse {
+    public Response getResponse(Channel chanId) throws ChannelNotFound, InvalidResponse {
         throw new ChannelNotFound();
     }
 
     @Override
-    public List<? extends NetworkAttrImpl> getNetworks() {
+    public List<? extends Network> getNetworks() {
         return Collections.unmodifiableList(networks);
     }
 
     @Override
-    public QuantityImpl getSensitivity(ChannelImpl chanId) throws ChannelNotFound, InvalidResponse {
+    public QuantityImpl getSensitivity(Channel chanId) throws ChannelNotFound, InvalidResponse {
         throw new ChannelNotFound();
     }
 
     @Override
-    public List<? extends StationImpl> getStations(NetworkAttrImpl net) {
-        List<StationImpl> staList = new ArrayList<StationImpl>();
-        for (StationImpl sta : stations) {
+    public List<? extends Station> getStations(Network net) {
+        List<Station> staList = new ArrayList<Station>();
+        for (Station sta : stations) {
             if (NetworkIdUtil.areEqual(net.getId(), sta.getId().network_id)) {
                 staList.add(sta);
             }

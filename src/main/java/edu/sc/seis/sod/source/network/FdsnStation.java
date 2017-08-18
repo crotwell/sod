@@ -23,6 +23,7 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.DataAvailability;
 import edu.sc.seis.seisFile.fdsnws.stationxml.FDSNStationXML;
 import edu.sc.seis.seisFile.fdsnws.stationxml.NetworkIterator;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.seisFile.fdsnws.stationxml.StationIterator;
 import edu.sc.seis.sod.BuildVersion;
 import edu.sc.seis.sod.SodUtil;
@@ -35,13 +36,11 @@ import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.model.station.Instrumentation;
 import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
-import edu.sc.seis.sod.model.station.NetworkAttrImpl;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.model.station.StationIdUtil;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.source.SodSourceException;
 import edu.sc.seis.sod.source.event.FdsnEvent;
 import edu.sc.seis.sod.subsetter.station.StationPointDistance;
@@ -116,8 +115,8 @@ public class FdsnStation extends AbstractNetworkSource {
     }
     
     @Override
-    public List<? extends NetworkAttrImpl> getNetworks() throws SodSourceException {
-        List<NetworkAttrImpl> out = new ArrayList<NetworkAttrImpl>();
+    public List<? extends Network> getNetworks() throws SodSourceException {
+        List<Network> out = new ArrayList<Network>();
         FDSNStationXML staxml = null;
         try {
             FDSNStationQueryParams staQP = setupQueryParams();
@@ -153,8 +152,8 @@ public class FdsnStation extends AbstractNetworkSource {
     }
 
     @Override
-    public List<? extends StationImpl> getStations(NetworkAttrImpl net) throws SodSourceException {
-        List<StationImpl> out = new ArrayList<StationImpl>();
+    public List<? extends Station> getStations(Network net) throws SodSourceException {
+        List<Station> out = new ArrayList<Station>();
         FDSNStationXML staxml = null;
         try {
             FDSNStationQueryParams staQP = setupQueryParams();
@@ -180,7 +179,7 @@ public class FdsnStation extends AbstractNetworkSource {
             NetworkIterator netIt = staxml.getNetworks();
             while (netIt.hasNext()) {
                 edu.sc.seis.seisFile.fdsnws.stationxml.Network n = netIt.next();
-                NetworkAttrImpl netAttr = StationXMLToFissures.convert(n);
+                Network netAttr = StationXMLToFissures.convert(n);
                 StationIterator staIt = n.getStations();
                 while (staIt.hasNext()) {
                     edu.sc.seis.seisFile.fdsnws.stationxml.Station s = staIt.next();
@@ -208,8 +207,8 @@ public class FdsnStation extends AbstractNetworkSource {
     }
 
     @Override
-    public List<? extends ChannelImpl> getChannels(StationImpl station) throws SodSourceException  {
-        List<ChannelImpl> out = new ArrayList<ChannelImpl>();
+    public List<? extends Channel> getChannels(Station station) throws SodSourceException  {
+        List<Channel> out = new ArrayList<Channel>();
         FDSNStationXML staxml = null;
         try {
             FDSNStationQueryParams staQP = setupQueryParams();
@@ -225,14 +224,14 @@ public class FdsnStation extends AbstractNetworkSource {
             NetworkIterator netIt = staxml.getNetworks();
             while (netIt.hasNext()) {
                 edu.sc.seis.seisFile.fdsnws.stationxml.Network n = netIt.next();
-                NetworkAttrImpl netAttr = StationXMLToFissures.convert(n);
+                Network netAttr = StationXMLToFissures.convert(n);
                 StationIterator staIt = n.getStations();
                 while (staIt.hasNext()) {
                     edu.sc.seis.seisFile.fdsnws.stationxml.Station s = staIt.next();
-                    StationImpl sImpl = StationXMLToFissures.convert(s, netAttr);
+                    Station sImpl = StationXMLToFissures.convert(s, netAttr);
                     for (Channel c : s.getChannelList()) {
                         ChannelSensitivityBundle csb = StationXMLToFissures.convert(c, sImpl);
-                        ChannelImpl outChan = csb.getChan();
+                        Channel outChan = csb.getChan();
                         out.add(outChan);
                         chanSensitivityMap.put(ChannelIdUtil.toString(csb.getChan().get_id()), csb.getSensitivity());
                         DataAvailability da = c.getDataAvailability();
@@ -265,7 +264,7 @@ public class FdsnStation extends AbstractNetworkSource {
     }
 
     @Override
-    public QuantityImpl getSensitivity(ChannelImpl chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
+    public QuantityImpl getSensitivity(Channel chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
         String key = ChannelIdUtil.toString(chan.getId());
         if (!chanSensitivityMap.containsKey(key)) {
             getChannels(chan.getStationImpl());
@@ -277,7 +276,7 @@ public class FdsnStation extends AbstractNetworkSource {
     }
 
     @Override
-    public Response getResponse(ChannelImpl chan) throws SodSourceException, ChannelNotFound, InvalidResponse  {
+    public Response getResponse(Channel chan) throws SodSourceException, ChannelNotFound, InvalidResponse  {
         FDSNStationXML staxml = null;
         try {
             if (chan == null) { throw new IllegalArgumentException("Channel is null");}
@@ -299,11 +298,11 @@ public class FdsnStation extends AbstractNetworkSource {
             NetworkIterator netIt = staxml.getNetworks();
             while (netIt.hasNext()) {
                 edu.sc.seis.seisFile.fdsnws.stationxml.Network n = netIt.next();
-                NetworkAttrImpl netAttr = StationXMLToFissures.convert(n);
+                Network netAttr = StationXMLToFissures.convert(n);
                 StationIterator staIt = n.getStations();
                 while (staIt.hasNext()) {
                     edu.sc.seis.seisFile.fdsnws.stationxml.Station s = staIt.next();
-                    StationImpl sImpl = StationXMLToFissures.convert(s, netAttr);
+                    Station sImpl = StationXMLToFissures.convert(s, netAttr);
                     for (Channel c : s.getChannelList()) {
                         ChannelSensitivityBundle csb = StationXMLToFissures.convert(c, sImpl);
                         chanSensitivityMap.put(ChannelIdUtil.toString(csb.getChan().get_id()), csb.getSensitivity());

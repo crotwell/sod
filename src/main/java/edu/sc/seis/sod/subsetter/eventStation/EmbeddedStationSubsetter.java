@@ -4,12 +4,12 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.model.event.CacheEvent;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.subsetter.station.StationSubsetter;
@@ -30,7 +30,7 @@ public class EmbeddedStationSubsetter implements EventStationSubsetter {
     }
 
     public StringTree accept(CacheEvent eventAccess,
-                             StationImpl station,
+                             Station station,
                              CookieJar cookieJar) throws Exception {
         StringTree out = stationSubsetter.accept(station,
                                                  Start.getNetworkArm().getNetworkSource());

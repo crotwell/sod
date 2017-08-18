@@ -1,5 +1,5 @@
 package edu.sc.seis.sod.subsetter.network;
-import edu.sc.seis.sod.model.station.NetworkAttrImpl;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.Subsetter;
 
@@ -13,7 +13,7 @@ import edu.sc.seis.sod.subsetter.Subsetter;
 
 public interface NetworkSubsetter extends Subsetter {
 
-    public StringTree accept(NetworkAttrImpl network) throws Exception;
+    public StringTree accept(Network network) throws Exception;
 
 
 }// NetworkSubsetter

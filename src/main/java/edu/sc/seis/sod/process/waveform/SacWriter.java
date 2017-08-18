@@ -7,6 +7,7 @@ import java.util.List;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.sac.SacTimeSeries;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.DOMHelper;
@@ -14,7 +15,6 @@ import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.hibernate.SeismogramFileTypes;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.util.convert.sac.FissuresToSac;
 import edu.sc.seis.sod.util.display.EventUtil;
 
@@ -68,7 +68,7 @@ public class SacWriter extends AbstractSeismogramWriter {
 
     public void write(String location,
                       LocalSeismogramImpl seis,
-                      ChannelImpl chan,
+                      Channel chan,
                       CacheEvent ev) throws Exception {
         SacTimeSeries writer = FissuresToSac.getSAC(seis,
                                                     chan,
@@ -84,7 +84,7 @@ public class SacWriter extends AbstractSeismogramWriter {
 
     public void applyProcessors(SacTimeSeries writer,
                                 CacheEvent ev,
-                                ChannelImpl chan) throws Exception {
+                                Channel chan) throws Exception {
         for (SacProcess processor : processors) {
             processor.process(writer, ev, chan);
         }

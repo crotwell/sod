@@ -2,12 +2,12 @@ package edu.sc.seis.sod.velocity.network;
 
 import org.apache.velocity.VelocityContext;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.station.SiteId;
 import edu.sc.seis.sod.model.station.SiteIdUtil;
 import edu.sc.seis.sod.model.station.SiteImpl;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
@@ -42,7 +42,7 @@ public class VelocitySite extends SiteImpl {
     }
 
     public VelocityStation getStation() {
-        return new VelocityStation((StationImpl)site.getStation());
+        return new VelocityStation((Station)site.getStation());
     }
 
     public VelocityNetwork getNet() {

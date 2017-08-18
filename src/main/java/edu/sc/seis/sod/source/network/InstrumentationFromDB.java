@@ -8,7 +8,7 @@ import edu.sc.seis.sod.hibernate.ChannelSensitivity;
 import edu.sc.seis.sod.hibernate.NetworkDB;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
 import edu.sc.seis.sod.source.SodSourceException;
 
@@ -19,7 +19,7 @@ public class InstrumentationFromDB extends WrappingNetworkSource implements Netw
     }
 
     @Override
-    public QuantityImpl getSensitivity(ChannelImpl chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
+    public QuantityImpl getSensitivity(Channel chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
         ChannelSensitivity dbSensitivity = NetworkDB.getSingleton().getSensitivity(chan);
         if (dbSensitivity != null) {
             if (!ChannelSensitivity.isNonChannelSensitivity(dbSensitivity)) {
@@ -41,7 +41,7 @@ public class InstrumentationFromDB extends WrappingNetworkSource implements Netw
     }
 
     @Override
-    public Response getResponse(ChannelImpl chan) throws ChannelNotFound, SodSourceException {
+    public Response getResponse(Channel chan) throws ChannelNotFound, SodSourceException {
         String key = ChannelIdUtil.toString(chan.getId());
         Response inst;
         try {

@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.model.station.NetworkAttrImpl;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.subsetter.LogicalSubsetter;
@@ -43,7 +43,7 @@ public abstract class NetworkLogicalSubsetter extends LogicalSubsetter {
         throw new ConfigurationException("Subsetter of type "+s.getClass()+" cannot appear here");
     }
     
-    public StringTree accept(NetworkAttrImpl net) throws Exception {
+    public StringTree accept(Network net) throws Exception {
         List reasons = new ArrayList(filterList.size());
         Iterator it = filterList.iterator();
         while(it.hasNext()) {

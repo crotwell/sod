@@ -9,12 +9,12 @@ import java.util.List;
 import org.apache.log4j.BasicConfigurator;
 import org.junit.Test;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.channelGroup.SiteMatchRule;
 import edu.sc.seis.sod.mock.station.MockChannel;
 import edu.sc.seis.sod.mock.station.MockStation;
 import edu.sc.seis.sod.model.station.ChannelGroup;
-import edu.sc.seis.sod.model.station.ChannelImpl;
-import edu.sc.seis.sod.model.station.StationImpl;
 
 
 public class ChannelGroupTest {
@@ -24,9 +24,9 @@ public class ChannelGroupTest {
     @Test
     public void testGroupBandGain() throws ConfigurationException {
 
-        List<ChannelImpl> chanList = new ArrayList<ChannelImpl>();
-        List<ChannelImpl> failures = new ArrayList<ChannelImpl>();
-        StationImpl mockStation = MockStation.createStation();
+        List<Channel> chanList = new ArrayList<Channel>();
+        List<Channel> failures = new ArrayList<Channel>();
+        Station mockStation = MockStation.createStation();
         chanList.add(MockChannel.createChannel(mockStation, "00", "BHZ"));
         chanList.add(MockChannel.createChannel(mockStation, "00", "BHN"));
         chanList.add(MockChannel.createChannel(mockStation, "00", "BHE"));
@@ -35,17 +35,17 @@ public class ChannelGroupTest {
         chanList.add(MockChannel.createChannel(mockStation, "00", "HHE"));
         ChannelGrouper cger = new ChannelGrouper();
         
-        HashMap<String, List<ChannelImpl>> map = cger.groupByNetStaBandGain(chanList);
+        HashMap<String, List<Channel>> map = cger.groupByNetStaBandGain(chanList);
         for (String s : map.keySet()) {
-            List<ChannelImpl> subList = map.get(s);
+            List<Channel> subList = map.get(s);
             assertEquals(3, subList.size());
         }
     }
     @Test
     public void testBAndHGroup() throws ConfigurationException {
-        List<ChannelImpl> chanList = new ArrayList<ChannelImpl>();
-        List<ChannelImpl> failures = new ArrayList<ChannelImpl>();
-        StationImpl mockStation = MockStation.createStation();
+        List<Channel> chanList = new ArrayList<Channel>();
+        List<Channel> failures = new ArrayList<Channel>();
+        Station mockStation = MockStation.createStation();
         chanList.add(MockChannel.createChannel(mockStation, "00", "BHZ"));
         chanList.add(MockChannel.createChannel(mockStation, "00", "BHN"));
         chanList.add(MockChannel.createChannel(mockStation, "00", "BHE"));
@@ -64,9 +64,9 @@ public class ChannelGroupTest {
     }
     @Test
     public void testXK04Group() throws ConfigurationException {
-        List<ChannelImpl> chanList = new ArrayList<ChannelImpl>();
-        List<ChannelImpl> failures = new ArrayList<ChannelImpl>();
-        StationImpl mockStation = MockStation.createStation();
+        List<Channel> chanList = new ArrayList<Channel>();
+        List<Channel> failures = new ArrayList<Channel>();
+        Station mockStation = MockStation.createStation();
         chanList.add(MockChannel.createChannel(mockStation, "30", "BHZ"));
         chanList.add(MockChannel.createChannel(mockStation, "31", "BHN"));
         chanList.add(MockChannel.createChannel(mockStation, "32", "BHE"));
@@ -82,9 +82,9 @@ public class ChannelGroupTest {
     
     @Test
     public void testThreeCharRule() {
-        List<ChannelImpl> chanList = new ArrayList<ChannelImpl>();
-        List<ChannelImpl> failures = new ArrayList<ChannelImpl>();
-        StationImpl mockStation = MockStation.createStation();
+        List<Channel> chanList = new ArrayList<Channel>();
+        List<Channel> failures = new ArrayList<Channel>();
+        Station mockStation = MockStation.createStation();
         chanList.add(MockChannel.createChannel(mockStation, "00", "BHZ"));
         SiteMatchRule threeC = new SiteMatchRule("ZNE");
 

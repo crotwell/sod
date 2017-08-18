@@ -2,9 +2,9 @@ package edu.sc.seis.sod.subsetter.station;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.model.common.DistAz;
 import edu.sc.seis.sod.model.common.UnitImpl;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
@@ -18,7 +18,7 @@ public class StationPointBackAzimuth extends AbstractOriginPoint implements
         super(config);
     }
 
-    public StringTree accept(StationImpl station, NetworkSource network) {
+    public StringTree accept(Station station, NetworkSource network) {
         double oLat = station.getLocation().latitude;
         double oLon = station.getLocation().longitude;
         DistAz distaz = new DistAz(oLat, oLon, latitude, longitude);

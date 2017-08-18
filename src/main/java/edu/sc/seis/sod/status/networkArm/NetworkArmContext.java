@@ -10,9 +10,9 @@ import java.util.List;
 import org.apache.velocity.context.AbstractContext;
 import org.apache.velocity.context.Context;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.hibernate.NetworkDB;
-import edu.sc.seis.sod.model.station.NetworkAttrImpl;
 import edu.sc.seis.sod.source.SodSourceException;
 
 public class NetworkArmContext extends AbstractContext {
@@ -44,7 +44,7 @@ public class NetworkArmContext extends AbstractContext {
         } else if(key.length() == 2
                 && !(key.startsWith("X") || key.startsWith("Y") || key.startsWith("Z"))) {
             // try as a network code
-            List<NetworkAttrImpl> dbAttrs =  netDb.getNetworkByCode(key);
+            List<Network> dbAttrs =  netDb.getNetworkByCode(key);
             return dbAttrs;
         }
         // else

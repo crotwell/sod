@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.apache.velocity.VelocityContext;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.station.NetworkAttrImpl;
 import edu.sc.seis.sod.model.station.NetworkId;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.status.FissuresFormatter;
@@ -16,18 +16,18 @@ import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 /**
  * @author groves Created on Jan 7, 2005
  */
-public class VelocityNetwork extends NetworkAttrImpl {
+public class VelocityNetwork extends Network {
 
     /**
      * Creates a VelocityNetwork with no stations. Will throw
      * UnsupportedOperationException if getStations is called
      */
-    public VelocityNetwork(NetworkAttrImpl net) {
+    public VelocityNetwork(Network net) {
         this(net, null);
     }
 
     public VelocityNetwork(List<VelocityStation> stations) {
-        this((NetworkAttrImpl)getFirstStation(stations).getWrapped().getNetworkAttr(),
+        this((Network)getFirstStation(stations).getWrapped().getNetworkAttr(),
              stations);
     }
     
@@ -38,7 +38,7 @@ public class VelocityNetwork extends NetworkAttrImpl {
         return stations.get(0);
     }
 
-    public VelocityNetwork(NetworkAttrImpl net, List<VelocityStation> stations) {
+    public VelocityNetwork(Network net, List<VelocityStation> stations) {
         this.net = net;
         this.stations = stations;
         if (stations != null) {
@@ -50,7 +50,7 @@ public class VelocityNetwork extends NetworkAttrImpl {
         this.setEffectiveTime(net.getEffectiveTime());
     }
     
-    public NetworkAttrImpl getWrapped() {
+    public Network getWrapped() {
         return net;
     }
 
@@ -147,18 +147,18 @@ public class VelocityNetwork extends NetworkAttrImpl {
 
     private List<VelocityStation> stations;
 
-    private NetworkAttrImpl net;
+    private Network net;
 
     public void insertIntoContext(VelocityContext ctx) {
         ctx.put("network", this);
         ctx.put("net", this);
     }
 
-    public static VelocityNetwork wrap(NetworkAttrImpl net) {
+    public static VelocityNetwork wrap(Network net) {
         if(net instanceof VelocityNetwork) {
             return (VelocityNetwork)net;
         }
-        return new VelocityNetwork((NetworkAttrImpl)net);
+        return new VelocityNetwork((Network)net);
     }
     
     Comparator<VelocityStation> byCodeSorter = new Comparator<VelocityStation>() {

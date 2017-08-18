@@ -12,9 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONWriter;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.hibernate.NetworkDB;
 import edu.sc.seis.sod.hibernate.NotFound;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.web.jsonapi.ChannelJson;
 import edu.sc.seis.sod.web.jsonapi.JsonApi;
 
@@ -35,7 +35,7 @@ public class ChannelServlet extends HttpServlet {
         Matcher matcher = channelDbidPattern.matcher(URL);
         if (matcher.matches()) {
             String dbid = matcher.group(1);
-            ChannelImpl chan = null;
+            Channel chan = null;
             try {
                 chan = netdb.getChannel(Integer.parseInt(dbid));
                 if (chan != null) {

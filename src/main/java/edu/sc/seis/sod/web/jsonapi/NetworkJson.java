@@ -3,15 +3,15 @@ package edu.sc.seis.sod.web.jsonapi;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.sod.model.common.ISOTime;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.station.NetworkAttrImpl;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.util.time.ClockUtil;
 
 public class NetworkJson extends AbstractJsonApiData {
 
-    public NetworkJson(NetworkAttrImpl net, String baseUrl) {
+    public NetworkJson(Network net, String baseUrl) {
         super(baseUrl);
         this.net = net;
     }
@@ -73,17 +73,17 @@ public class NetworkJson extends AbstractJsonApiData {
         out.key("self").value(formNetworkURL(net));
     }
 
-    public String formStationRelationshipURL(NetworkAttrImpl net) {
+    public String formStationRelationshipURL(Network net) {
         String out = baseUrl + "/networks/" + getId() + "/relationships/stations";
         return out;
     }
 
-    public String formNetworkURL(NetworkAttrImpl net) {
+    public String formNetworkURL(Network net) {
         String out = baseUrl + "/networks/" + getId();
         return out;
     }
 
-    public String formStationListURL(NetworkAttrImpl net) {
+    public String formStationListURL(Network net) {
         String out = baseUrl + "/networks/" + getId() + "/stations";
         return out;
     }
@@ -96,5 +96,5 @@ public class NetworkJson extends AbstractJsonApiData {
         }
     }
 
-    NetworkAttrImpl net;
+    Network net;
 }

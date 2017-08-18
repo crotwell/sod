@@ -7,6 +7,7 @@ import java.util.List;
 import org.hibernate.query.Query;
 
 import edu.sc.seis.fissuresUtil.xml.URLDataSetSeismogram;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.bag.Cut;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.TimeInterval;
@@ -17,13 +18,12 @@ import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.seismogram.SeismogramAttrImpl;
 import edu.sc.seis.sod.model.station.ChannelId;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.util.time.ReduceTool;
 
 public class SeismogramFileRefDB extends AbstractHibernateDB {
 
-    public void saveSeismogramToDatabase(ChannelImpl channel,
+    public void saveSeismogramToDatabase(Channel channel,
                                          SeismogramAttrImpl seis,
                                          String fileLocation,
                                          SeismogramFileTypes filetype) {
@@ -35,7 +35,7 @@ public class SeismogramFileRefDB extends AbstractHibernateDB {
     }
 
     public void saveSeismogramToDatabase(CacheEvent event,
-                                         ChannelImpl channel,
+                                         Channel channel,
                                          SeismogramAttrImpl seis,
                                          String fileLocation,
                                          SeismogramFileTypes filetype) {
@@ -131,7 +131,7 @@ public class SeismogramFileRefDB extends AbstractHibernateDB {
         // Retrieve channel ID, begin time, and end time from the request
         // and place the times into a time table while
         // buffering the query by one second on each end.
-        ChannelImpl chanId;
+        Channel chanId;
         Cut cutter = new Cut(request);
         try {
             if (ignoreNetworkTimes) {

@@ -11,6 +11,7 @@ import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.SeismicPhase;
 import edu.sc.seis.TauP.TauModelException;
 import edu.sc.seis.TauP.TauP_Time;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.SodUtil;
@@ -20,7 +21,6 @@ import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.OriginImpl;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
@@ -52,7 +52,7 @@ public class PhaseWithoutInterference extends PhaseExists implements EventStatio
     }
     
     @Override
-    public StringTree accept(CacheEvent event, StationImpl station, CookieJar cookieJar) throws Exception {
+    public StringTree accept(CacheEvent event, Station station, CookieJar cookieJar) throws Exception {
 
         OriginImpl origin = event.get_preferred_origin();
         double depth = ((QuantityImpl)origin.getLocation().depth).getValue(UnitImpl.KILOMETER);

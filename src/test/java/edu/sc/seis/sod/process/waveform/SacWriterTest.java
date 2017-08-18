@@ -10,6 +10,7 @@ import java.util.List;
 import edu.iris.dmc.seedcodec.CodecException;
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.SeismicPhase;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.sac.SacTimeSeries;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.mock.MockLocation;
@@ -22,7 +23,6 @@ import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.util.convert.sac.FissuresToSac;
 import edu.sc.seis.sod.util.display.EventUtil;
@@ -58,7 +58,7 @@ public class SacWriterTest extends TestCase {
         ArrayList<SacProcess> processes = new ArrayList<SacProcess>();
         processes.add(new SacProcess() {
             @Override
-            public void process(SacTimeSeries sac, CacheEvent event, ChannelImpl channel) throws Exception {
+            public void process(SacTimeSeries sac, CacheEvent event, Channel channel) throws Exception {
                 sac.getHeader().setKt0("ttp");
             }
         });
@@ -125,7 +125,7 @@ public class SacWriterTest extends TestCase {
 
     CacheEvent ev = MockEventAccessOperations.createEvent();
 
-    ChannelImpl chan = MockChannel.createChannel(MockLocation.create(10.0f, 10.0f));
+    Channel chan = MockChannel.createChannel(MockLocation.create(10.0f, 10.0f));
 
     LocalSeismogramImpl seis = MockSeismogram.createSpike(chan.getId());
 

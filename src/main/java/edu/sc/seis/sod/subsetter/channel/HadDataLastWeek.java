@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
@@ -14,7 +15,6 @@ import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.station.ChannelId;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.source.seismogram.ConstantSeismogramSourceLocator;
 import edu.sc.seis.sod.source.seismogram.FdsnDataSelect;
@@ -36,7 +36,7 @@ public class HadDataLastWeek implements ChannelSubsetter {
         }
     }
 
-    public StringTree accept(ChannelImpl channel, NetworkSource network)
+    public StringTree accept(Channel channel, NetworkSource network)
             throws Exception {
         MicroSecondDate now = ClockUtil.now();
         ChannelEffectiveTimeOverlap overlap = new ChannelEffectiveTimeOverlap(now.subtract(makeDayInterval(7)), now);

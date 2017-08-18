@@ -1,7 +1,7 @@
 package edu.sc.seis.sod.velocity.network;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.model.station.Instrumentation;
 import edu.sc.seis.sod.model.station.InvalidResponse;
 import edu.sc.seis.sod.source.SodSourceException;
@@ -11,7 +11,7 @@ import edu.sc.seis.sod.source.network.NetworkSource;
 public class VelocityInstrumentation {
     
     /** lazily loaded instrumentation for velocity templates. */
-    public VelocityInstrumentation(NetworkSource source, ChannelImpl chan) {
+    public VelocityInstrumentation(NetworkSource source, Channel chan) {
         this.source = source;
         this.chan = chan;
     }
@@ -64,5 +64,5 @@ public class VelocityInstrumentation {
     boolean didTryLoad = false;
     Instrumentation inst = null;
     NetworkSource source;
-    ChannelImpl chan;
+    Channel chan;
 }

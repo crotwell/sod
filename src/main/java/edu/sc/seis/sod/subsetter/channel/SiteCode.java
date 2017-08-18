@@ -4,8 +4,8 @@ import java.util.regex.Pattern;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
@@ -27,7 +27,7 @@ public class SiteCode implements ChannelSubsetter {
         pattern = Pattern.compile(code);
     }
 
-    public StringTree accept(ChannelImpl chan, NetworkSource network) {
+    public StringTree accept(Channel chan, NetworkSource network) {
         if(pattern.matcher(chan.getSite().get_id().site_code).matches()) {
             return new Pass(this);
         } else {

@@ -7,9 +7,9 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.model.station.ChannelImpl;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
@@ -35,7 +35,7 @@ public abstract class ChannelLogicalSubsetter extends CompositeChannelSubsetter 
         packages.addAll(StationLogicalSubsetter.packages);
     }
     
-    public StringTree accept(ChannelImpl e, NetworkSource network)
+    public StringTree accept(Channel e, NetworkSource network)
             throws Exception {
         List reasons = new ArrayList(subsetters.size());
         Iterator it = subsetters.iterator();
@@ -65,8 +65,8 @@ public abstract class ChannelLogicalSubsetter extends CompositeChannelSubsetter 
         }
         return new ChannelSubsetter() {
             StationSubsetter ss = StationLogicalSubsetter.createSubsetter(s);
-            public StringTree accept(ChannelImpl channel, NetworkSource network) throws Exception {
-                return ss.accept((StationImpl)channel.getStation(), network);
+            public StringTree accept(Channel channel, NetworkSource network) throws Exception {
+                return ss.accept((Station)channel.getStation(), network);
             }
         };
     }

@@ -1,6 +1,6 @@
 package edu.sc.seis.sod.subsetter.channel;
 
-import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
@@ -17,7 +17,7 @@ import edu.sc.seis.sod.status.StringTree;
 
 public class PassChannel implements ChannelSubsetter{
 
-    public StringTree accept(ChannelImpl channel, NetworkSource network) { return new Pass(this); }
+    public StringTree accept(Channel channel, NetworkSource network) { return new Pass(this); }
 
 }// PassChannel
 

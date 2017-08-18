@@ -3,15 +3,15 @@ package edu.sc.seis.sod.hibernate;
 
 import java.sql.Timestamp;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.model.seismogram.SeismogramAttrImpl;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 
 public class SeismogramFileReference extends AbstractSeismogramFileReference {
 
     /** just for hibernate */
     protected SeismogramFileReference() {}
     
-    public SeismogramFileReference(ChannelImpl channel,
+    public SeismogramFileReference(Channel channel,
                                    SeismogramAttrImpl seis,
                                    String fileLocation,
                                    SeismogramFileTypes filetype) {

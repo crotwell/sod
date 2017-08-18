@@ -1,6 +1,6 @@
 package edu.sc.seis.sod.subsetter.channel;
 
-import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.Subsetter;
@@ -16,6 +16,6 @@ import edu.sc.seis.sod.subsetter.Subsetter;
  */
 public interface ChannelSubsetter extends Subsetter {
 
-    public StringTree accept(ChannelImpl channel, NetworkSource network)
+    public StringTree accept(Channel channel, NetworkSource network)
             throws Exception;
 }// ChannelSubsetter

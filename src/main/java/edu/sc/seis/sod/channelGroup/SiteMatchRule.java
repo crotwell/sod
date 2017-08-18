@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.model.station.ChannelGroup;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 
 public class SiteMatchRule extends SiteChannelRule {
 
@@ -18,26 +18,26 @@ public class SiteMatchRule extends SiteChannelRule {
         this(el.getAttribute("orientations"));
     }
 
-    public List<ChannelGroup> acceptable(List<ChannelImpl> chanList, List<ChannelImpl> failures) {
+    public List<ChannelGroup> acceptable(List<Channel> chanList, List<Channel> failures) {
         List<ChannelGroup> out = acceptable(null, chanList, failures);
         return out;
     }
 
-    List<ChannelGroup> acceptable(ChannelImpl first, List<ChannelImpl> chanList, List<ChannelImpl> failures) {
+    List<ChannelGroup> acceptable(Channel first, List<Channel> chanList, List<Channel> failures) {
         List<ChannelGroup> out = new ArrayList<ChannelGroup>();
         if (first != null) {
-            ChannelImpl second = null;
-            ChannelImpl third = null;
-            for (ChannelImpl chan : chanList) {
-                if (codes[1] == chan.getId().channel_code.charAt(2)) {
+            Channel second = null;
+            Channel third = null;
+            for (Channel chan : chanList) {
+                if (codes[1] == chan.getChannelCode().charAt(2)) {
                     second = chan;
                 }
-                if (codes[2] == chan.getId().channel_code.charAt(2)) {
+                if (codes[2] == chan.getChannelCode().charAt(2)) {
                     third = chan;
                 }
             }
             if (second != null && third != null) {
-                out.add(new ChannelGroup(new ChannelImpl[] {first, second, third}));
+                out.add(new ChannelGroup(new Channel[] {first, second, third}));
                 chanList.remove(second);
                 chanList.remove(third);
             } else {
@@ -45,9 +45,9 @@ public class SiteMatchRule extends SiteChannelRule {
             }
         }
         if (chanList.size() > 2) {
-            ChannelImpl nextFirst = null;
-            for (ChannelImpl c : chanList) {
-                if (codes[0] == c.get_id().channel_code.charAt(2)) {
+            Channel nextFirst = null;
+            for (Channel c : chanList) {
+                if (codes[0] == c.getChannelCode().charAt(2)) {
                     nextFirst = c;
                     chanList.remove(nextFirst);
                     break;

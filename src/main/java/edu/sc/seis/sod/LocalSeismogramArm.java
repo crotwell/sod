@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import edu.iris.dmc.seedcodec.CodecException;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.hibernate.eventpair.EventChannelPair;
@@ -22,7 +23,6 @@ import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.seismogram.RequestFilterUtil;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.model.status.Stage;
 import edu.sc.seis.sod.model.status.Standing;
 import edu.sc.seis.sod.model.status.Status;
@@ -137,7 +137,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
         ecp.update(Status.get(Stage.EVENT_CHANNEL_SUBSETTER, Standing.IN_PROG));
         StringTree passed;
         CacheEvent eventAccess = ecp.getEvent();
-        ChannelImpl channel = ecp.getChannel();
+        Channel channel = ecp.getChannel();
         synchronized(eventChannel) {
             try {
                 passed = eventChannel.accept(eventAccess, channel, new CookieJar(ecp,
@@ -235,7 +235,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
             logger.debug("Trying available_data for " + ChannelIdUtil.toString(infilters[0].channel_id) + " from "
                     + infilters[0].start_time.getISOTime() + " to " + infilters[0].end_time.getISOTime());
         } else {
-            logger.debug("Empty request generated for " + ChannelIdUtil.toString(ecp.getChannel().get_id()));
+            logger.debug("Empty request generated for " + ChannelIdUtil.toString(ecp.getChannel()));
         }
         boolean noImplAvailableData = true;
             outfilters = infilters;
@@ -298,10 +298,10 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
             for(int i = 0; i < localSeismograms.length; i++) {
                 if(localSeismograms[i] == null) {
                     ecp.update(Status.get(Stage.DATA_RETRIEVAL, Standing.REJECT));
-                    logger.error("Got null in seismogram array " + ChannelIdUtil.toString(ecp.getChannel().get_id()));
+                    logger.error("Got null in seismogram array " + ChannelIdUtil.toString(ecp.getChannel()));
                     return;
                 }
-                ChannelImpl ecpChan = ecp.getChannel();
+                Channel ecpChan = ecp.getChannel();
                 if(!ChannelIdUtil.areEqual(localSeismograms[i].channel_id, infilters[0].channel_id)) {
                     // must be server error
                     logger.warn("Channel id in returned seismogram doesn not match channelid in request. req="
@@ -353,7 +353,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                                                  result.getSeismograms(),
                                                  ecp.getCookieJar());
             } // end of while (it.hasNext())
-            logger.debug("finished with " + ChannelIdUtil.toStringNoDates(ecp.getChannel().get_id()) + " success="
+            logger.debug("finished with " + ChannelIdUtil.toStringNoDates(ecp.getChannel()) + " success="
                     + result.isSuccess());
             if (result.isSuccess()) {
                 ecp.update(Status.get(Stage.PROCESSOR, Standing.SUCCESS));
@@ -366,12 +366,12 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
             ecp.update(Status.get(Stage.PROCESSOR, Standing.SYSTEM_FAILURE));
             failLogger.info(ecp + " " + e);
         }
-        logger.debug("finished with " + ChannelIdUtil.toStringNoDates(ecp.getChannel().get_id()));
+        logger.debug("finished with " + ChannelIdUtil.toStringNoDates(ecp.getChannel()));
     }
 
     public static WaveformResult runProcessorThreadCheck(WaveformProcess processor,
                                                                CacheEvent event,
-                                                               ChannelImpl channel,
+                                                               Channel channel,
                                                                RequestFilter[] original,
                                                                RequestFilter[] available,
                                                                LocalSeismogramImpl[] seismograms,
@@ -394,7 +394,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
     
     private static WaveformResult internalRunProcessor(WaveformProcess processor,
                                                        CacheEvent event,
-                                                       ChannelImpl channel,
+                                                       Channel channel,
                                                        RequestFilter[] original,
                                                        RequestFilter[] available,
                                                        LocalSeismogramImpl[] seismograms,

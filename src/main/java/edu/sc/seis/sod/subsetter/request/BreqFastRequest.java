@@ -9,6 +9,7 @@ import java.io.Writer;
 import org.apache.velocity.VelocityContext;
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.SodUtil;
@@ -21,7 +22,6 @@ import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.OriginImpl;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
@@ -53,7 +53,7 @@ public class BreqFastRequest implements RequestSubsetter {
     }
 
     public StringTree accept(CacheEvent event,
-                          ChannelImpl channel,
+                          Channel channel,
                           RequestFilter[] request,
                           CookieJar cookieJar) {
         return new StringTreeLeaf(this, writeToBFEmail(event, channel, request));
@@ -64,7 +64,7 @@ public class BreqFastRequest implements RequestSubsetter {
     }
 
     protected synchronized boolean writeToBFEmail(CacheEvent event,
-                                                  ChannelImpl channel,
+                                                  Channel channel,
                                                   RequestFilter[] request) {
         VelocityContext ctx = new WaveformProcessContext(event,
                                                          channel,
@@ -128,7 +128,7 @@ public class BreqFastRequest implements RequestSubsetter {
         out.write("." + fieldName + " " + getConfig(configName) + nl);
     }
 
-    protected void insertRequest(ChannelImpl channel,
+    protected void insertRequest(Channel channel,
                                  RequestFilter[] request,
                                  Writer out,
                                  int i) throws IOException {

@@ -1,6 +1,6 @@
 package edu.sc.seis.sod.subsetter.network;
 
-import edu.sc.seis.sod.model.station.NetworkAttrImpl;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
 
@@ -15,7 +15,7 @@ import edu.sc.seis.sod.status.StringTree;
 
 public class  PassNetwork implements NetworkSubsetter{
 
-    public StringTree accept(NetworkAttrImpl networkAttr) {
+    public StringTree accept(Network networkAttr) {
         return new Pass(this);
     }
 

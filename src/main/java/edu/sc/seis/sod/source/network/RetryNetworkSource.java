@@ -4,14 +4,14 @@ import java.io.IOException;
 import java.util.List;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.TimeInterval;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.model.station.Instrumentation;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
-import edu.sc.seis.sod.model.station.NetworkAttrImpl;
-import edu.sc.seis.sod.model.station.StationImpl;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.sod.source.SodSourceException;
 
 
@@ -33,7 +33,7 @@ public class RetryNetworkSource extends WrappingNetworkSource implements Network
     }
 
     @Override
-    public List<? extends NetworkAttrImpl> getNetworks() throws SodSourceException {
+    public List<? extends Network> getNetworks() throws SodSourceException {
         int count = 0;
         SodSourceException latest;
         try {
@@ -50,7 +50,7 @@ public class RetryNetworkSource extends WrappingNetworkSource implements Network
         }
         while(wrapped.getRetryStrategy().shouldRetry(latest, this, count++)) {
             try {
-                List<? extends NetworkAttrImpl> result = wrapped.getNetworks();
+                List<? extends Network> result = wrapped.getNetworks();
                 wrapped.getRetryStrategy().serverRecovered(this);
                 return result;
             } catch(SodSourceException t) {
@@ -68,7 +68,7 @@ public class RetryNetworkSource extends WrappingNetworkSource implements Network
     }
 
     @Override
-    public List<? extends StationImpl> getStations(NetworkAttrImpl net) throws SodSourceException {
+    public List<? extends Station> getStations(Network net) throws SodSourceException {
         int count = 0;
         SodSourceException latest;
         try {
@@ -85,7 +85,7 @@ public class RetryNetworkSource extends WrappingNetworkSource implements Network
         }
         while(wrapped.getRetryStrategy().shouldRetry(latest, this, count++)) {
             try {
-                List<? extends StationImpl> result = wrapped.getStations(net);
+                List<? extends Station> result = wrapped.getStations(net);
                 wrapped.getRetryStrategy().serverRecovered(this);
                 return result;
             } catch(SodSourceException t) {
@@ -103,7 +103,7 @@ public class RetryNetworkSource extends WrappingNetworkSource implements Network
     }
 
     @Override
-    public List<? extends ChannelImpl> getChannels(StationImpl station)  throws SodSourceException {
+    public List<? extends Channel> getChannels(Station station)  throws SodSourceException {
         int count = 0;
         SodSourceException latest;
         try {
@@ -120,7 +120,7 @@ public class RetryNetworkSource extends WrappingNetworkSource implements Network
         }
         while(wrapped.getRetryStrategy().shouldRetry(latest, this, count++)) {
             try {
-                List<? extends ChannelImpl> result = wrapped.getChannels(station);
+                List<? extends Channel> result = wrapped.getChannels(station);
                 wrapped.getRetryStrategy().serverRecovered(this);
                 return result;
             } catch(SodSourceException t) {
@@ -138,7 +138,7 @@ public class RetryNetworkSource extends WrappingNetworkSource implements Network
     }
 
     @Override
-    public QuantityImpl getSensitivity(ChannelImpl chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
+    public QuantityImpl getSensitivity(Channel chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
         int count = 0;
         SodSourceException latest;
         try {
@@ -173,7 +173,7 @@ public class RetryNetworkSource extends WrappingNetworkSource implements Network
     }
     
     @Override
-    public Response getResponse(ChannelImpl chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
+    public Response getResponse(Channel chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
         int count = 0;
         SodSourceException latest;
         try {

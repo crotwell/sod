@@ -4,12 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
@@ -18,7 +18,7 @@ public class NoGaps implements AvailableDataSubsetter, SodElement {
     public NoGaps(Element config) {}
 
     public StringTree accept(CacheEvent event,
-                             ChannelImpl channel,
+                             Channel channel,
                           RequestFilter[] request,
                           RequestFilter[] available,
                           CookieJar cookieJar) {

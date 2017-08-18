@@ -12,11 +12,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.hibernate.NetworkDB;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.eventpair.EventStationPair;
 import edu.sc.seis.sod.model.event.StatefulEvent;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.web.jsonapi.EventStationJson;
 import edu.sc.seis.sod.web.jsonapi.JsonApi;
 
@@ -193,7 +193,7 @@ public class PerusalServlet  extends JsonToFileServlet {
             EventStationPair esp = (EventStationPair)query.uniqueResult();
             List<EventStationPair> nextESPList;
             StatefulEvent currEvent = esp.getEvent();
-            StationImpl currStation = esp.getStation();
+            Station currStation = esp.getStation();
             if (primarySort.equalsIgnoreCase(KEY_SORT_BY_QUAKE)) {
                 // same quake, look for next station
                 nextESPList = SodDB.getSingleton().getSuccessfulESPForEvent(currEvent);
@@ -227,11 +227,11 @@ public class PerusalServlet  extends JsonToFileServlet {
         return next;
     }
 
-    private EventStationPair getNextPrimaryStation(StationImpl currStation) {
-        List<StationImpl> allStationList = Arrays.asList(NetworkDB.getSingleton().getAllStations());
+    private EventStationPair getNextPrimaryStation(Station currStation) {
+        List<Station> allStationList = Arrays.asList(NetworkDB.getSingleton().getAllStations());
         // should sort here
-        Iterator<StationImpl> staIt = allStationList.iterator();
-        StationImpl currS = null;
+        Iterator<Station> staIt = allStationList.iterator();
+        Station currS = null;
         while (currStation != null && staIt.hasNext()) {
             currS = staIt.next();
             if (currS.getDbid() == currStation.getDbid()) {
@@ -240,7 +240,7 @@ public class PerusalServlet  extends JsonToFileServlet {
             }
         }
         while (staIt.hasNext()) {
-            StationImpl s = staIt.next();
+            Station s = staIt.next();
             List<EventStationPair> nextESPList = SodDB.getSingleton().getSuccessfulESPForStation(s);
             Iterator<EventStationPair> espIt = nextESPList.iterator();
             while (espIt.hasNext()) {

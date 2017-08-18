@@ -2,9 +2,9 @@ package edu.sc.seis.sod.subsetter.channel;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodElement;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
@@ -24,7 +24,7 @@ public class SiteArea extends AreaSubsetter implements ChannelSubsetter, SodElem
         super(config);
     }
 
-    public StringTree accept(ChannelImpl channel, NetworkSource network) {
+    public StringTree accept(Channel channel, NetworkSource network) {
     return new StringTreeLeaf(this, super.accept(channel.getSite().getLocation()));
     }
 }

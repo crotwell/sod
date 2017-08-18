@@ -9,6 +9,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.SodUtil;
@@ -16,7 +17,6 @@ import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 
 public class DownloadStatistics implements SeismogramSourceLocator {
 
@@ -47,7 +47,7 @@ public class DownloadStatistics implements SeismogramSourceLocator {
 
     @Override
     public SeismogramSource getSeismogramSource(final CacheEvent event,
-                                                final ChannelImpl channel,
+                                                final Channel channel,
                                                 final RequestFilter[] infilters,
                                                 final CookieJar cookieJar) throws Exception {
         return new SeismogramSource() {

@@ -6,34 +6,34 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.station.ChannelGroup;
 import edu.sc.seis.sod.model.station.ChannelId;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.model.station.Instrumentation;
-import edu.sc.seis.sod.model.station.NetworkAttrImpl;
 import edu.sc.seis.sod.model.station.NetworkId;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.model.station.StationId;
-import edu.sc.seis.sod.model.station.StationImpl;
 
 public class NetworkDB extends AbstractHibernateDB {
 
     protected NetworkDB() {}
     
-    public int put(NetworkAttrImpl net) {
+    public int put(Network net) {
         Session session = getSession();
         if(net.getDbid() != 0) {
             session.saveOrUpdate(net);
             return net.getDbid();
         }
-        Iterator<NetworkAttrImpl> fromDB = getNetworkByCode(net.get_code()).iterator();
+        Iterator<Network> fromDB = getNetworkByCode(net.get_code()).iterator();
         if(fromDB.hasNext()) {
             if(NetworkIdUtil.isTemporary(net.get_code())) {
                 while(fromDB.hasNext()) {
-                    NetworkAttrImpl indb = fromDB.next();
+                    Network indb = fromDB.next();
                     if(net.get_code().equals(indb.get_code())
                             && NetworkIdUtil.getTwoCharYear(net.get_id())
                                     .equals(NetworkIdUtil.getTwoCharYear(indb.get_id()))) {
@@ -48,7 +48,7 @@ public class NetworkDB extends AbstractHibernateDB {
                 // net below
             } else {
                 // use first and only net
-                NetworkAttrImpl indb = (NetworkAttrImpl)fromDB.next();
+                Network indb = (Network)fromDB.next();
                 net.associateInDB(indb);
                 getSession().evict(indb);
                 getSession().saveOrUpdate(net);
@@ -58,15 +58,15 @@ public class NetworkDB extends AbstractHibernateDB {
         return ((Integer)session.save(net)).intValue();
     }
 
-    public int put(StationImpl sta) {
+    public int put(Station sta) {
         Integer dbid;
-        if(((NetworkAttrImpl)sta.getNetworkAttr()).getDbid() == 0) {
+        if(((Network)sta.getNetworkAttr()).getDbid() == 0) {
             // assume network info is already put, attach net
             try {
                 sta.setNetworkAttr(getNetworkById(sta.getNetworkAttr().get_id()));
             } catch(NotFound ee) {
                 // must not have been added yet
-                put((NetworkAttrImpl)sta.getNetworkAttr());
+                put((Network)sta.getNetworkAttr());
             }
         }
         internUnit(sta);
@@ -76,7 +76,7 @@ public class NetworkDB extends AbstractHibernateDB {
         }
         try {
             // maybe station is already in db, so update
-            StationImpl indb = getStationById(sta.get_id());
+            Station indb = getStationById(sta.get_id());
             sta.associateInDB(indb);
             getSession().evict(indb);
             getSession().evict(indb.getNetworkAttr());
@@ -96,20 +96,20 @@ public class NetworkDB extends AbstractHibernateDB {
      * the old channel, while allowing future work to only access the new
      * channel.
      */
-    public int put(ChannelImpl chan) {
+    public int put(Channel chan) {
         Integer dbid;
         internUnit(chan);
-        if(((StationImpl)chan.getSite().getStation()).getDbid() == 0) {
+        if(((Station)chan.getSite().getStation()).getDbid() == 0) {
             try {
                 chan.getSite().setStation(getStationById(chan.getSite()
                         .getStation()
                         .get_id()));
             } catch(NotFound e) {
-                int staDbid = put((StationImpl)chan.getSite().getStation());
+                int staDbid = put((Station)chan.getSite().getStation());
             }
         }
         try {
-            ChannelImpl indb = getChannel(chan.get_id());
+            Channel indb = getChannel(chan.get_id());
             chan.associateInDB(indb);
             getSession().evict(indb);
             getSession().evict(indb.getSite().getStation());
@@ -119,7 +119,7 @@ public class NetworkDB extends AbstractHibernateDB {
         } catch(NotFound nf) {
             dbid = (Integer)getSession().save(chan);
         }
-        logger.debug("Put channel as "+dbid+" "+ChannelIdUtil.toStringFormatDates(chan.get_id())+"  sta dbid="+((StationImpl)chan.getSite().getStation()).getDbid());
+        logger.debug("Put channel as "+dbid+" "+ChannelIdUtil.toStringFormatDates(chan.get_id())+"  sta dbid="+((Station)chan.getSite().getStation()).getDbid());
         return dbid.intValue();
     }
 
@@ -127,7 +127,7 @@ public class NetworkDB extends AbstractHibernateDB {
         ChannelGroup indb = getChannelGroup(cg.getChannel1(), 
                                             cg.getChannel2(),
                                             cg.getChannel3());
-        ChannelImpl[] chans = cg.getChannels();
+        Channel[] chans = cg.getChannels();
         for(int i = 0; i < chans.length; i++) {
             if(chans[i].getDbid() == 0) {
                 try {
@@ -147,7 +147,7 @@ public class NetworkDB extends AbstractHibernateDB {
         return dbid;
     }
 
-    public List<ChannelGroup> getChannelGroup(ChannelImpl chan) {
+    public List<ChannelGroup> getChannelGroup(Channel chan) {
         Query query = getSession().createQuery("from "
                 + ChannelGroup.class.getName()
                 + " where channel1 = :chan or channel2 = :chan or channel3 = :chan");
@@ -155,9 +155,9 @@ public class NetworkDB extends AbstractHibernateDB {
         return query.list();
     }
 
-    public ChannelGroup getChannelGroup(ChannelImpl chanA,
-                                        ChannelImpl chanB,
-                                        ChannelImpl chanC) {
+    public ChannelGroup getChannelGroup(Channel chanA,
+                                        Channel chanB,
+                                        Channel chanC) {
         Query query = getSession().createQuery("from "
                 + ChannelGroup.class.getName()
                 + " where "
@@ -178,27 +178,27 @@ public class NetworkDB extends AbstractHibernateDB {
         return null;
     }
 
-    public List<StationImpl> getStationByCodes(String netCode, String staCode) {
+    public List<Station> getStationByCodes(String netCode, String staCode) {
         Query query = getSession().createQuery(getStationByCodes);
         query.setString("netCode", netCode);
         query.setString("staCode", staCode);
         return query.list();
     }
 
-    public List<StationImpl> getAllStationsByCode(String staCode) {
+    public List<Station> getAllStationsByCode(String staCode) {
         Query query = getSession().createQuery(getAllStationsByCode);
         query.setString("staCode", staCode);
         return query.list();
     }
 
-    public StationImpl getStationById(StationId staId) throws NotFound {
+    public Station getStationById(StationId staId) throws NotFound {
         Query query = getSession().createQuery(getStationByIdString);
         query.setString("netCode", staId.network_id.network_code);
         query.setString("staCode", staId.station_code);
         query.setTimestamp("staBegin",
                            new MicroSecondDate(staId.begin_time).getTimestamp());
         query.setMaxResults(1);
-        List<StationImpl> l = query.list();
+        List<Station> l = query.list();
         logger.debug("getStationById("+staId.network_id.network_code+"."+staId.station_code+"."+staId.begin_time.getISOString()+"  return size: "+l.size());
         if(l.size() != 0) {
             return l.get(0);
@@ -206,18 +206,18 @@ public class NetworkDB extends AbstractHibernateDB {
         throw new NotFound();
     }
 
-    public List<NetworkAttrImpl> getNetworkByCode(String netCode) {
+    public List<Network> getNetworkByCode(String netCode) {
         Query query = getSession().createQuery(getNetworkByCodeString);
         query.setString("netCode", netCode);
         return query.list();
     }
 
-    public NetworkAttrImpl getNetworkById(NetworkId netId) throws NotFound {
-        List<NetworkAttrImpl> result = getNetworkByCode(netId.network_code);
+    public Network getNetworkById(NetworkId netId) throws NotFound {
+        List<Network> result = getNetworkByCode(netId.network_code);
         if(NetworkIdUtil.isTemporary(netId)) {
-            Iterator<NetworkAttrImpl> it = result.iterator();
+            Iterator<Network> it = result.iterator();
             while(it.hasNext()) {
-                NetworkAttrImpl n = it.next();
+                Network n = it.next();
                 if(NetworkIdUtil.areEqual(netId, n.get_id())) {
                     return n;
                 }
@@ -231,8 +231,8 @@ public class NetworkDB extends AbstractHibernateDB {
         }
     }
 
-    public NetworkAttrImpl getNetwork(int dbid) throws NotFound {
-        NetworkAttrImpl out = (NetworkAttrImpl)getSession().get(NetworkAttrImpl.class,
+    public Network getNetwork(int dbid) throws NotFound {
+        Network out = (Network)getSession().get(Network.class,
                                                                 new Integer(dbid));
         if(out == null) {
             throw new NotFound();
@@ -240,13 +240,13 @@ public class NetworkDB extends AbstractHibernateDB {
         return out;
     }
 
-    public List<NetworkAttrImpl> getAllNetworks() {
+    public List<Network> getAllNetworks() {
         Query query = getSession().createQuery(getAllNetsString);
         return query.list();
     }
 
-    public StationImpl getStation(int dbid) throws NotFound {
-        StationImpl out = (StationImpl)getSession().get(StationImpl.class,
+    public Station getStation(int dbid) throws NotFound {
+        Station out = (Station)getSession().get(Station.class,
                                                         new Integer(dbid));
         if(out == null) {
             throw new NotFound();
@@ -254,19 +254,19 @@ public class NetworkDB extends AbstractHibernateDB {
         return out;
     }
 
-    public StationImpl[] getAllStations() {
+    public Station[] getAllStations() {
         Query query = getSession().createQuery(getAllStationsString);
         List result = query.list();
-        return (StationImpl[])result.toArray(new StationImpl[0]);
+        return (Station[])result.toArray(new Station[0]);
     }
 
-    public List<StationImpl> getStationForNet(NetworkAttrImpl attr) {
+    public List<Station> getStationForNet(Network attr) {
         Query query = getSession().createQuery(getStationForNetwork);
         query.setEntity("netAttr", attr);
         return query.list();
     }
 
-    public List<StationImpl> getStationForNet(NetworkAttrImpl attr,
+    public List<Station> getStationForNet(Network attr,
                                               String staCode) {
         Query query = getSession().createQuery(getStationForNetworkStation);
         query.setEntity("netAttr", attr);
@@ -274,14 +274,14 @@ public class NetworkDB extends AbstractHibernateDB {
         return query.list();
     }
 
-    public List<ChannelImpl> getChannelsForNet(NetworkAttrImpl attr) {
+    public List<Channel> getChannelsForNet(Network attr) {
         Query query = getSession().createQuery(getChannelForNetwork);
         query.setEntity("netAttr", attr);
         return query.list();
     }
 
-    public ChannelImpl getChannel(int dbid) throws NotFound {
-        ChannelImpl out = (ChannelImpl)getSession().get(ChannelImpl.class,
+    public Channel getChannel(int dbid) throws NotFound {
+        Channel out = (Channel)getSession().get(Channel.class,
                                                         new Integer(dbid));
         if(out == null) {
             throw new NotFound();
@@ -289,26 +289,26 @@ public class NetworkDB extends AbstractHibernateDB {
         return out;
     }
 
-    public List<ChannelImpl> getAllChannels() {
-        return getSession().createQuery("from " + ChannelImpl.class.getName())
+    public List<Channel> getAllChannels() {
+        return getSession().createQuery("from " + Channel.class.getName())
                 .list();
     }
 
-    public List<ChannelImpl> getChannelsForStation(StationImpl station) {
+    public List<Channel> getChannelsForStation(Station station) {
         Query query = getSession().createQuery(getChannelForStation);
         query.setEntity("station", station);
-        List<ChannelImpl> out = query.list();
+        List<Channel> out = query.list();
         logger.debug("getChannelsForStation("+station.getDbid()+" found "+out.size()+"  query="+query);
         return out;
     }
 
-    public List<ChannelGroup> getChannelGroupsForStation(StationImpl station) {
+    public List<ChannelGroup> getChannelGroupsForStation(Station station) {
         Query query = getSession().createQuery(getChannelGroupForStation);
         query.setEntity("station", station);
         return query.list();
     }
 
-    public List<ChannelImpl> getChannelsForStation(StationImpl station,
+    public List<Channel> getChannelsForStation(Station station,
                                                    MicroSecondDate when) {
         Query query = getSession().createQuery(getChannelForStationAtTime);
         query.setEntity("station", station);
@@ -316,7 +316,7 @@ public class NetworkDB extends AbstractHibernateDB {
         return query.list();
     }
 
-    public ChannelImpl getChannel(String net,
+    public Channel getChannel(String net,
                                   String sta,
                                   String site,
                                   String chan,
@@ -324,11 +324,11 @@ public class NetworkDB extends AbstractHibernateDB {
         return getChannel(net, sta, site, chan, when, getChannelByCode);
     }
 
-    public List<ChannelImpl> getChannelsByCode(NetworkId net,
+    public List<Channel> getChannelsByCode(NetworkId net,
                                                String sta,
                                                String site,
                                                String chan) {
-        String queryString = "From " + ChannelImpl.class.getName() + " WHERE "
+        String queryString = "From " + Channel.class.getName() + " WHERE "
                 + chanCodeHQL
                 + " AND site.station.networkAttr.beginTime.time = :when";
         Query query = getSession().createQuery(queryString);
@@ -341,7 +341,7 @@ public class NetworkDB extends AbstractHibernateDB {
         return query.list();
     }
 
-    public ChannelImpl getChannel(ChannelId id) throws NotFound {
+    public Channel getChannel(ChannelId id) throws NotFound {
         return getChannel(id.network_id.network_code,
                           id.station_code,
                           id.site_code,
@@ -350,7 +350,7 @@ public class NetworkDB extends AbstractHibernateDB {
                           getChannelById);
     }
 
-    protected ChannelImpl getChannel(String net,
+    protected Channel getChannel(String net,
                                      String sta,
                                      String site,
                                      String chan,
@@ -369,10 +369,10 @@ public class NetworkDB extends AbstractHibernateDB {
         if(result.size() == 0) {
             throw new NotFound();
         }
-        return (ChannelImpl)result.get(0);
+        return (Channel)result.get(0);
     }
 
-    public InstrumentationBlob getInstrumentationBlob(ChannelImpl chan) throws ChannelNotFound {
+    public InstrumentationBlob getInstrumentationBlob(Channel chan) throws ChannelNotFound {
         Query query = getSession().createQuery("from "+InstrumentationBlob.class.getName()+" where channel = :chan");
         query.setEntity("chan", chan);
         Iterator it = query.iterate();
@@ -384,7 +384,7 @@ public class NetworkDB extends AbstractHibernateDB {
     }
 
     
-    public Response getResponse(ChannelImpl chan) throws ChannelNotFound {
+    public Response getResponse(Channel chan) throws ChannelNotFound {
         InstrumentationBlob ib = getInstrumentationBlob(chan);
         if (ib != null) {
             Response resp =  ib.getResponse(); // might be null, meaning no inst exists, but blob in DB so we tried before
@@ -394,7 +394,7 @@ public class NetworkDB extends AbstractHibernateDB {
         return null; // instBlob null, so never seen this channel before
     }
     
-    public ChannelSensitivity getSensitivity(ChannelImpl chan) {
+    public ChannelSensitivity getSensitivity(Channel chan) {
         Query query = getSession().createQuery("from "+ChannelSensitivity.class.getName()+" where channel = :chan");
         query.setEntity("chan", chan);
         Iterator it = query.iterate();
@@ -416,7 +416,7 @@ public class NetworkDB extends AbstractHibernateDB {
     }
     
     @Deprecated
-    public void putInstrumentation(ChannelImpl chan, Instrumentation inst) {
+    public void putInstrumentation(Channel chan, Instrumentation inst) {
         logger.debug("Put instrumentation: "+ChannelIdUtil.toStringNoDates(chan));
         InstrumentationBlob ib = null;
         try {
@@ -435,7 +435,7 @@ public class NetworkDB extends AbstractHibernateDB {
         getSession().saveOrUpdate(ib);
     }
 
-    public void putResponse(ChannelImpl chan, Response inst) {
+    public void putResponse(Channel chan, Response inst) {
         logger.debug("Put response: "+ChannelIdUtil.toStringNoDates(chan));
         InstrumentationBlob ib = null;
         try {
@@ -454,7 +454,7 @@ public class NetworkDB extends AbstractHibernateDB {
         getSession().saveOrUpdate(ib);
     }
 
-    public void internUnit(StationImpl sta) {
+    public void internUnit(Station sta) {
         internUnit(sta.getLocation());
     }
 
@@ -462,7 +462,7 @@ public class NetworkDB extends AbstractHibernateDB {
      * assumes station has aready been interned as this needs to happen to avoid
      * dup stations.
      */
-    public void internUnit(ChannelImpl chan) {
+    public void internUnit(Channel chan) {
         internUnit(chan.getSite().getLocation());
         internUnit(chan.getSite().getStation());
         internUnit(chan.getSamplingInfo().interval);
@@ -478,26 +478,26 @@ public class NetworkDB extends AbstractHibernateDB {
     }
 
     static String getStationByCodes = "SELECT s From "
-            + StationImpl.class.getName()
+            + Station.class.getName()
             + " s WHERE s.networkAttr.id.network_code = :netCode AND s.id.station_code = :staCode";
 
     static String getAllStationsByCode = "SELECT s From "
-            + StationImpl.class.getName()
+            + Station.class.getName()
             + " s WHERE s.id.station_code = :staCode";
 
     static String getStationByIdString = getStationByCodes
             + " AND sta_begin_time = :staBegin";
 
-    static String getStationForNetwork = "From " + StationImpl.class.getName()
+    static String getStationForNetwork = "From " + Station.class.getName()
             + " s WHERE s.networkAttr = :netAttr";
 
-    static String getChannelForNetwork = "From " + ChannelImpl.class.getName()
+    static String getChannelForNetwork = "From " + Channel.class.getName()
             + " WHERE site.station.networkAttr = :netAttr";
 
     static String getStationForNetworkStation = getStationForNetwork
             + " and s.id.station_code = :staCode";
 
-    static String getChannelForStation = "From " + ChannelImpl.class.getName()
+    static String getChannelForStation = "From " + Channel.class.getName()
             + " c WHERE c.site.station = :station";
 
     static String getChannelGroupForStation = "From "
@@ -515,11 +515,11 @@ public class NetworkDB extends AbstractHibernateDB {
     // often happens that a channel has end time of 2500-01-01 until it is ended and a new channel is created
     // no way for sod to know, but when this happens, you usually want the channel that overlaps the time
     // with the latest begin time, hence the order by desc
-    static String getChannelByCode = "From " + ChannelImpl.class.getName()
+    static String getChannelByCode = "From " + Channel.class.getName()
             + " WHERE " + chanCodeHQL
             + " AND :when between chan_begin_time and chan_end_time order by chan_begin_time desc";
 
-    static String getChannelById = "From " + ChannelImpl.class.getName()
+    static String getChannelById = "From " + Channel.class.getName()
             + " WHERE " + chanCodeHQL + " AND chan_begin_time =  :when";
 
     static String getAllStationsString = "From edu.iris.Fissures.network.StationImpl s";

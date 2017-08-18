@@ -3,15 +3,15 @@ package edu.sc.seis.sod.web.jsonapi;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.SamplingImpl;
 import edu.sc.seis.sod.model.common.UnitImpl;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 
 
 public class ChannelJson extends AbstractJsonApiData {
 
-    public ChannelJson(ChannelImpl chan, String baseUrl) {
+    public ChannelJson(Channel chan, String baseUrl) {
         super(baseUrl);
         this.chan = chan;
     }
@@ -74,5 +74,5 @@ public class ChannelJson extends AbstractJsonApiData {
         
     }
     
-    ChannelImpl chan;
+    Channel chan;
 }

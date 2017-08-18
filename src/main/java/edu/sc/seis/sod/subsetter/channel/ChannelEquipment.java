@@ -2,8 +2,8 @@ package edu.sc.seis.sod.subsetter.channel;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Equipment;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
@@ -20,7 +20,7 @@ public class ChannelEquipment extends AbstractEquipmentSubsetter implements Chan
     }
 
     @Override
-    public StringTree accept(ChannelImpl channel, NetworkSource network) throws Exception {
+    public StringTree accept(Channel channel, NetworkSource network) throws Exception {
         if (channel.getSensor() != null && super.doesMatch(channel.getSensor())) {
             return new Pass(this);
         }

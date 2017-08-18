@@ -2,9 +2,9 @@ package edu.sc.seis.sod.subsetter.network;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.model.station.NetworkAttrImpl;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
@@ -25,7 +25,7 @@ public class NetworkOwner implements NetworkSubsetter {
         this.config = config;
     }
 
-    public StringTree accept(NetworkAttrImpl net) {
+    public StringTree accept(Network net) {
         return new StringTreeLeaf(this, net.getOwner().equals(SodUtil.getNestedText(config)));
     }
 

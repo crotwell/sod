@@ -5,11 +5,11 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.LogicalSubsetter;
 import edu.sc.seis.sod.subsetter.Subsetter;
@@ -49,7 +49,7 @@ public abstract class RequestLogical extends LogicalSubsetter implements Request
         } else { 
             return new RequestSubsetter() {
                 EventChannelSubsetter ecs = EventChannelLogicalSubsetter.createSubsetter(s);
-                public StringTree accept(CacheEvent event, ChannelImpl channel, RequestFilter[] request, CookieJar cookieJar)
+                public StringTree accept(CacheEvent event, Channel channel, RequestFilter[] request, CookieJar cookieJar)
                 throws Exception {
                     return ecs.accept(event, channel, cookieJar);
                 }

@@ -6,11 +6,11 @@ import java.util.TimeZone;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.util.display.ThreadSafeSimpleDateFormat;
 
 public class NetDCRequest extends BreqFastRequest {
@@ -19,7 +19,7 @@ public class NetDCRequest extends BreqFastRequest {
         super(config);
     }
 
-    protected void insertRequest(ChannelImpl channel,
+    protected void insertRequest(Channel channel,
                                  RequestFilter[] request,
                                  Writer out,
                                  int i) throws IOException {

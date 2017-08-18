@@ -1,8 +1,8 @@
 package edu.sc.seis.sod.subsetter.requestGenerator;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.subsetter.Subsetter;
 
 /**
@@ -18,6 +18,6 @@ import edu.sc.seis.sod.subsetter.Subsetter;
 public interface  RequestGenerator extends Subsetter{
 
     public RequestFilter[] generateRequest(CacheEvent event,
-                                           ChannelImpl channel, CookieJar cookieJar) throws Exception;
+                                           Channel channel, CookieJar cookieJar) throws Exception;
 
 }// RequestGenerator

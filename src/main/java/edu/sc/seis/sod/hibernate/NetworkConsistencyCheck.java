@@ -2,18 +2,18 @@ package edu.sc.seis.sod.hibernate;
 
 import java.util.List;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.ChannelImpl;
-import edu.sc.seis.sod.model.station.NetworkAttrImpl;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.model.station.StationIdUtil;
-import edu.sc.seis.sod.model.station.StationImpl;
 
 
 public class NetworkConsistencyCheck {
 
-    public static boolean isConsistent(NetworkAttrImpl net, StationImpl sta) {
+    public static boolean isConsistent(Network net, Station sta) {
         MicroSecondTimeRange staRange = new MicroSecondTimeRange(sta.getEffectiveTime());
         MicroSecondTimeRange netRange = new MicroSecondTimeRange(net.getEffectiveTime());
         if (netRange.getBeginTime().after(staRange.getBeginTime())) {
@@ -23,13 +23,13 @@ public class NetworkConsistencyCheck {
         return true;
     }
 
-    public static boolean isConsistent(List<? extends StationImpl> staList) {
+    public static boolean isConsistent(List<? extends Station> staList) {
         if (staList.size() < 2) {
             return true;
         }
-        List<? extends StationImpl> subStaList = staList.subList(1, staList.size());
-        StationImpl first = staList.get(0);
-        for (StationImpl nextSta : subStaList) {
+        List<? extends Station> subStaList = staList.subList(1, staList.size());
+        Station first = staList.get(0);
+        for (Station nextSta : subStaList) {
             if ( ! isConsistent(first, nextSta)) {
                 return false;
             }
@@ -37,7 +37,7 @@ public class NetworkConsistencyCheck {
         return isConsistent(subStaList);
     }
     
-    public static boolean isConsistent(StationImpl staA, StationImpl staB) {
+    public static boolean isConsistent(Station staA, Station staB) {
         if ( ! staA.getNetworkAttrImpl().get_code().equals(staB.getNetworkAttrImpl().get_code()) 
                 || ! staA.get_code().equals(staB.get_code())) {
             //different stations, so ok
@@ -53,7 +53,7 @@ public class NetworkConsistencyCheck {
         return true;
     }
 
-    public static boolean isConsistent(StationImpl sta, ChannelImpl chan) {
+    public static boolean isConsistent(Station sta, Channel chan) {
         MicroSecondTimeRange staRange = new MicroSecondTimeRange(sta.getEffectiveTime());
         MicroSecondTimeRange chanRange = new MicroSecondTimeRange(chan.getEffectiveTime());
         if (staRange.getBeginTime().after(chanRange.getBeginTime())) {

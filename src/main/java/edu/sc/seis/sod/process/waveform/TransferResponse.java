@@ -2,6 +2,7 @@ package edu.sc.seis.sod.process.waveform;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
 import edu.sc.seis.seisFile.fdsnws.stationxml.PolesZeros;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
@@ -18,7 +19,6 @@ import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.source.SodSourceException;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
@@ -41,7 +41,7 @@ public class TransferResponse implements WaveformProcess, Threadable {
     }
 
     public WaveformResult accept(CacheEvent event,
-                                  ChannelImpl channel,
+                                  Channel channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
@@ -64,7 +64,7 @@ public class TransferResponse implements WaveformProcess, Threadable {
         }
     }
     
-    public static SacPoleZero checkResponse(ChannelImpl chan, NetworkSource na) throws InvalidResponse, SodSourceException, StationXMLException {
+    public static SacPoleZero checkResponse(Channel chan, NetworkSource na) throws InvalidResponse, SodSourceException, StationXMLException {
         try {
             Response response = na.getResponse(chan);
             if (response == null) {

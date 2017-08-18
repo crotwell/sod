@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.AbstractScriptSubsetter;
 import edu.sc.seis.sod.velocity.event.VelocityEvent;
@@ -22,7 +22,7 @@ public class RequestScript extends AbstractScriptSubsetter implements RequestSub
     }
 
     @Override
-    public StringTree accept(CacheEvent event, ChannelImpl channel, RequestFilter[] request, CookieJar cookieJar)
+    public StringTree accept(CacheEvent event, Channel channel, RequestFilter[] request, CookieJar cookieJar)
             throws Exception {
         return runScript(new VelocityEvent(event),
                          new VelocityChannel(channel),

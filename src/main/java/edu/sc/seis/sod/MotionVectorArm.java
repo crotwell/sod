@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import edu.iris.dmc.seedcodec.CodecException;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.mseed.MissingBlockette1000;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.eventpair.AbstractEventChannelPair;
@@ -28,7 +29,6 @@ import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.seismogram.RequestFilterUtil;
 import edu.sc.seis.sod.model.station.ChannelGroup;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.model.status.Stage;
 import edu.sc.seis.sod.model.status.Standing;
 import edu.sc.seis.sod.model.status.Status;
@@ -316,11 +316,11 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                         logger.error("Got null in seismogram array for channel " + i + " for " + ecp);
                         return;
                     }
-                    ChannelImpl ecpChan = ecp.getChannelGroup().getChannels()[i];
+                    Channel ecpChan = ecp.getChannelGroup().getChannels()[i];
                     if (!ChannelIdUtil.areEqual(localSeismograms[i][j].channel_id, ecpChan.get_id())) {
                         // must be server error
                         logger.warn("MV Channel id in returned seismogram doesn not match channelid in request. req="
-                                + ChannelIdUtil.toString(ecpChan.get_id()) + " seis="
+                                + ChannelIdUtil.toString(ecpChan) + " seis="
                                 + ChannelIdUtil.toString(localSeismograms[i][j].channel_id));
                         // fix seis with original id
                         localSeismograms[i][j].channel_id = ecpChan.get_id();
@@ -367,7 +367,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                                                  result.getSeismograms(),
                                                  ecp.getCookieJar());
             } // end of while (it.hasNext())
-            logger.debug("finished with " + ChannelIdUtil.toStringNoDates(ecp.getChannelGroup().getChannels()[0].get_id()) + " success="
+            logger.debug("finished with " + ChannelIdUtil.toStringNoDates(ecp.getChannelGroup().getChannels()[0]) + " success="
                     + result.isSuccess());
             if (result.isSuccess()) {
                 ecp.update(Status.get(Stage.PROCESSOR, Standing.SUCCESS));
@@ -380,7 +380,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
             ecp.update(Status.get(Stage.PROCESSOR, Standing.SYSTEM_FAILURE));
             failLogger.info(ecp + " " + e);
         }
-        logger.debug("finished with " + ChannelIdUtil.toStringNoDates(ecp.getChannelGroup().getChannels()[0].get_id()));
+        logger.debug("finished with " + ChannelIdUtil.toStringNoDates(ecp.getChannelGroup().getChannels()[0]));
     }
 
     public static WaveformVectorResult runProcessorThreadCheck(WaveformVectorProcess processor,

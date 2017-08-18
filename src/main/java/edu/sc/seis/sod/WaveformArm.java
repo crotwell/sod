@@ -3,6 +3,7 @@ package edu.sc.seis.sod;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.sod.hibernate.NetworkDB;
 import edu.sc.seis.sod.hibernate.NotFound;
 import edu.sc.seis.sod.hibernate.SodDB;
@@ -16,7 +17,6 @@ import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.NoPreferredOrigin;
 import edu.sc.seis.sod.model.event.StatefulEvent;
-import edu.sc.seis.sod.model.station.NetworkAttrImpl;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.model.status.Stage;
 import edu.sc.seis.sod.model.status.Standing;
@@ -270,13 +270,13 @@ public class WaveformArm extends Thread implements Arm {
         } catch(NoPreferredOrigin e) {
             throw new RuntimeException("Should never happen...", e);
         }
-        List<NetworkAttrImpl> networks = Start.getNetworkArm().getSuccessfulNetworks();
+        List<Network> networks = Start.getNetworkArm().getSuccessfulNetworks();
         if (networks.size() == 0 && ! Start.isArmFailure()) {
              throw new RuntimeException("No successful networks!");
         }
         int numENP = 0;
         List<EventNetworkPair> enpList = new ArrayList<EventNetworkPair>();
-        for (NetworkAttrImpl net : networks) {
+        for (Network net : networks) {
             if(overlap.overlaps(net)) {
                 EventNetworkPair p;
                 try {

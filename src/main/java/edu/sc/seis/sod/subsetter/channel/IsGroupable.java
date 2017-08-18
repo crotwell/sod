@@ -5,11 +5,11 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ChannelGrouper;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.model.station.ChannelGroup;
-import edu.sc.seis.sod.model.station.ChannelImpl;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
@@ -20,15 +20,15 @@ public class IsGroupable implements ChannelSubsetter {
     public IsGroupable(Element config) {
     }
     
-	public StringTree accept(ChannelImpl channel, NetworkSource network)
+	public StringTree accept(Channel channel, NetworkSource network)
 			throws Exception {
-	    List<? extends ChannelImpl> allChans = network.getChannels((StationImpl)channel.getStation());
-        ArrayList<ChannelImpl> siteChans = new ArrayList<ChannelImpl>();
-        for (ChannelImpl channelImpl : allChans) {
+	    List<? extends Channel> allChans = network.getChannels((Station)channel.getStation());
+        ArrayList<Channel> siteChans = new ArrayList<Channel>();
+        for (Channel channelImpl : allChans) {
             siteChans.add(channelImpl);
 		}
 
-        List<ChannelImpl> failures = new ArrayList<ChannelImpl>();
+        List<Channel> failures = new ArrayList<Channel>();
         List<ChannelGroup> chanGroups = getChannelGrouper().group(siteChans, failures);
         for(ChannelGroup cg : chanGroups) {
         	if (cg.contains(channel)) {

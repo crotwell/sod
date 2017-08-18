@@ -11,6 +11,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.hibernate.NetworkDB;
 import edu.sc.seis.sod.hibernate.NetworkNotFound;
 import edu.sc.seis.sod.hibernate.NotFound;
@@ -21,12 +24,9 @@ import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.station.ChannelGroup;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.ChannelImpl;
-import edu.sc.seis.sod.model.station.NetworkAttrImpl;
 import edu.sc.seis.sod.model.station.NetworkId;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.model.station.StationIdUtil;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.model.status.Stage;
 import edu.sc.seis.sod.model.status.Standing;
 import edu.sc.seis.sod.model.status.Status;
@@ -99,12 +99,12 @@ public class NetworkArm implements Arm {
         return "NetworkArm";
     }
 
-    public NetworkAttrImpl getNetwork(NetworkId network_id)
+    public Network getNetwork(NetworkId network_id)
             throws NetworkNotFound {
-        List<NetworkAttrImpl> netDbs = getSuccessfulNetworks();
+        List<Network> netDbs = getSuccessfulNetworks();
         MicroSecondDate beginTime = new MicroSecondDate(network_id.begin_time);
         String netCode = network_id.network_code;
-        for (NetworkAttrImpl attr : netDbs) {
+        for (Network attr : netDbs) {
             if(netCode.equals(attr.get_code())
                     && new MicroSecondTimeRange(attr.getEffectiveTime()).contains(beginTime)) {
                 return attr;
@@ -197,10 +197,10 @@ public class NetworkArm implements Arm {
      * NetworkDbObjects.
      * 
      */
-    public List<NetworkAttrImpl> getSuccessfulNetworks() {
+    public List<Network> getSuccessfulNetworks() {
         synchronized(refresh) {
             /** null means that we have not yet gotten nets from the server, so wait. */
-            List<NetworkAttrImpl> cacheNets = loadNetworksFromDB();
+            List<Network> cacheNets = loadNetworksFromDB();
             while (cacheNets == null && lastQueryTime == null && ! Start.isArmFailure()) {
                 // still null, maybe first time through
                 logger.info("Waiting on initial network load");
@@ -215,10 +215,10 @@ public class NetworkArm implements Arm {
         }
     }
     
-    List<NetworkAttrImpl> loadNetworksFromDB() {
+    List<Network> loadNetworksFromDB() {
         synchronized(netGetSync) { // don't get nets while being reloaded
-        List<NetworkAttrImpl> fromDB = getNetworkDB().getAllNetworks();
-        for (NetworkAttrImpl net : fromDB) {
+        List<Network> fromDB = getNetworkDB().getAllNetworks();
+        for (Network net : fromDB) {
             // this is for the side effect of creating
             // networkInfoTemplate stuff
             // avoids a null ptr later
@@ -230,15 +230,15 @@ public class NetworkArm implements Arm {
         }
     }
 
-    List<NetworkAttrImpl> getSuccessfulNetworksFromServer() throws SodSourceException {
+    List<Network> getSuccessfulNetworksFromServer() throws SodSourceException {
         synchronized(netGetSync) {
             statusChanged("Getting networks");
             logger.info("Getting networks from server");
-            ArrayList<NetworkAttrImpl> successes = new ArrayList<NetworkAttrImpl>();
-            List<? extends NetworkAttrImpl> allNets = getInternalNetworkSource().getNetworks();
+            ArrayList<Network> successes = new ArrayList<Network>();
+            List<? extends Network> allNets = getInternalNetworkSource().getNetworks();
             logger.info("Found " + allNets.size() + " networks");
             int i=0;
-            for (NetworkAttrImpl attr : allNets) {
+            for (Network attr : allNets) {
                 try {
                     if(netEffectiveSubsetter.accept(attr).isSuccess()) {
                         StringTree result;
@@ -322,7 +322,7 @@ public class NetworkArm implements Arm {
         }
     }
 
-    public StationImpl[] getSuccessfulStations(NetworkAttrImpl net) {
+    public Station[] getSuccessfulStations(Network net) {
         String netCode = net.get_code();
         logger.debug("getSuccessfulStations: "+net.get_code());
         synchronized(refresh) {
@@ -333,24 +333,24 @@ public class NetworkArm implements Arm {
                 } catch(InterruptedException e) {}
             }
             if(allStationFailureNets.contains(NetworkIdUtil.toStringNoDates(net))) {
-                return new StationImpl[0];
+                return new Station[0];
             }
             // try db
-            List<StationImpl> sta = getNetworkDB().getStationForNet((NetworkAttrImpl)net);
+            List<Station> sta = getNetworkDB().getStationForNet((Network)net);
             if(sta.size() != 0) {
                 logger.debug("getSuccessfulStations " + netCode + " - from db "
                         + sta.size());
-                return sta.toArray(new StationImpl[0]);
+                return sta.toArray(new Station[0]);
             } else {
                 allStationFailureNets.add(NetworkIdUtil.toStringNoDates(net));
-                return new StationImpl[0];
+                return new Station[0];
             }
         }
     }
     
-    StationImpl[] getSuccessfulStationsFromServer(NetworkAttrImpl net) {
+    Station[] getSuccessfulStationsFromServer(Network net) {
         synchronized(this) {
-            NetworkAttrImpl netAttr;
+            Network netAttr;
             try {
                 netAttr = NetworkDB.getSingleton().getNetwork(net.getDbid());
             } catch(NotFound e1) {
@@ -359,20 +359,20 @@ public class NetworkArm implements Arm {
             }
             statusChanged("Getting stations for "
                     + net.getName());
-            ArrayList<StationImpl> arrayList = new ArrayList<StationImpl>();
+            ArrayList<Station> arrayList = new ArrayList<Station>();
             try {
-                List<? extends StationImpl> stations = getInternalNetworkSource().getStations(netAttr);
+                List<? extends Station> stations = getInternalNetworkSource().getStations(netAttr);
                 /*
                  // network consistency for TA take a really long time due to pairwise comparison.
                 if( ! NetworkConsistencyCheck.isConsistent(stations)) {
                     failLogger.warn("Inconsistent stations for network: "+NetworkIdUtil.toString(net));
                 }
                 */
-                for (StationImpl stationImpl : stations) {
+                for (Station stationImpl : stations) {
                     logger.debug("Station in NetworkArm: "
                             + StationIdUtil.toString(stationImpl));
                 }
-                for (StationImpl currStation : stations) {
+                for (Station currStation : stations) {
                     /*
                      //disable for speed reasons
                     if (! NetworkConsistencyCheck.isConsistent(net, currStation)) {
@@ -422,8 +422,8 @@ public class NetworkArm implements Arm {
                                               e);
                 NetworkDB.rollback();
             }
-            StationImpl[] rtnValues = new StationImpl[arrayList.size()];
-            rtnValues = (StationImpl[])arrayList.toArray(rtnValues);
+            Station[] rtnValues = new Station[arrayList.size()];
+            rtnValues = (Station[])arrayList.toArray(rtnValues);
             statusChanged("Waiting for a request");
             logger.debug("getSuccessfulStations " + NetworkIdUtil.toStringNoDates(net) + " - from server "
                     + rtnValues.length);
@@ -441,9 +441,9 @@ public class NetworkArm implements Arm {
      * the ChannelSubsetter and returns an array of those that pass
      * 
      */
-    public List<ChannelImpl> getSuccessfulChannels(StationImpl station) {
+    public List<Channel> getSuccessfulChannels(Station station) {
         synchronized(refresh) {
-            while(refresh.isNetworkBeingReloaded(((NetworkAttrImpl)station.getNetworkAttr()).getDbid())
+            while(refresh.isNetworkBeingReloaded(((Network)station.getNetworkAttr()).getDbid())
                     || refresh.isStationBeingReloaded(station.getDbid())) {
                 try {
                     refresh.notifyAll();
@@ -451,32 +451,32 @@ public class NetworkArm implements Arm {
                 } catch(InterruptedException e) {}
             }
             if(allChannelFailureStations.contains(StationIdUtil.toStringNoDates(station))) {
-                return new ArrayList<ChannelImpl>(0);
+                return new ArrayList<Channel>(0);
             }
             // no dice, try db
-            List<ChannelImpl> sta = getNetworkDB().getChannelsForStation(station);
+            List<Channel> sta = getNetworkDB().getChannelsForStation(station);
             if(sta.size() != 0) {
                 logger.debug("successfulChannels " + station.get_code()
                         + " - from db " + sta.size());
                 return sta;
             } else {
                 allChannelFailureStations.add(StationIdUtil.toStringNoDates(station));
-                return new ArrayList<ChannelImpl>(0);
+                return new ArrayList<Channel>(0);
             }
         }
     }
     
-    List<ChannelImpl> getSuccessfulChannelsFromServer(StationImpl station, LoadedNetworkSource loadedNetworkSource) {
+    List<Channel> getSuccessfulChannelsFromServer(Station station, LoadedNetworkSource loadedNetworkSource) {
         synchronized(this) {
             statusChanged("Getting channels for " + station);
-            List<ChannelImpl> successes = new ArrayList<ChannelImpl>();
+            List<Channel> successes = new ArrayList<Channel>();
             try {               
-                List<? extends ChannelImpl> chansAtStation = loadedNetworkSource.getChannels(station);
+                List<? extends Channel> chansAtStation = loadedNetworkSource.getChannels(station);
                 Status inProg = Status.get(Stage.NETWORK_SUBSETTER,
                                            Standing.IN_PROG);
                 boolean needCommit = false;
-                StationImpl dbSta = NetworkDB.getSingleton().getStation(station.getDbid());
-                for (ChannelImpl chan : chansAtStation) {
+                Station dbSta = NetworkDB.getSingleton().getStation(station.getDbid());
+                for (Channel chan : chansAtStation) {
                     /*
                      // consistency check takes time and only does a warning, skip
                     if (! NetworkConsistencyCheck.isConsistent(station, chan)) {
@@ -553,13 +553,13 @@ public class NetworkArm implements Arm {
         }
     }
 
-    public List<ChannelGroup> getSuccessfulChannelGroups(StationImpl station) {
-        if(! refresh.isNetworkBeingReloaded(((NetworkAttrImpl)station.getNetworkAttr()).getDbid())
+    public List<ChannelGroup> getSuccessfulChannelGroups(Station station) {
+        if(! refresh.isNetworkBeingReloaded(((Network)station.getNetworkAttr()).getDbid())
                 && allChannelGroupFailureStations.contains(StationIdUtil.toStringNoDates(station))) {
             return new ArrayList<ChannelGroup>(0);
         }
         synchronized(refresh) {
-            while(refresh.isNetworkBeingReloaded(((NetworkAttrImpl)station.getNetworkAttr()).getDbid())
+            while(refresh.isNetworkBeingReloaded(((Network)station.getNetworkAttr()).getDbid())
                     && refresh.isStationBeingReloaded(station.getDbid())) {
                 try {
                     refresh.notifyAll();
@@ -582,9 +582,9 @@ public class NetworkArm implements Arm {
         }
     }
     
-    List<ChannelGroup> getSuccessfulChannelGroupsFromServer(StationImpl station, LoadedNetworkSource net) {
+    List<ChannelGroup> getSuccessfulChannelGroupsFromServer(Station station, LoadedNetworkSource net) {
         synchronized(this) {
-            List<ChannelImpl> failures = new ArrayList<ChannelImpl>();
+            List<Channel> failures = new ArrayList<Channel>();
             List<ChannelGroup> chanGroups = channelGrouper.group(getSuccessfulChannelsFromServer(station, net),
                                                              failures);
             for(ChannelGroup cg : chanGroups) {
@@ -596,7 +596,7 @@ public class NetworkArm implements Arm {
             } else {
                 allChannelGroupFailureStations.add(StationIdUtil.toStringNoDates(station));
             }
-            for (ChannelImpl failchan : failures) {
+            for (Channel failchan : failures) {
                 failLogger.info(ChannelIdUtil.toString(failchan.get_id())
                         + "  Channel not grouped into 3 components.");
             }
@@ -620,7 +620,7 @@ public class NetworkArm implements Arm {
         }
     }
 
-    private void change(ChannelImpl chan, Status newStatus) {
+    private void change(Channel chan, Status newStatus) {
         synchronized(statusMonitors) {
             for (NetworkMonitor netMon : statusMonitors) {
                 try {
@@ -636,7 +636,7 @@ public class NetworkArm implements Arm {
         }
     }
 
-    private void change(StationImpl sta, Status newStatus) {
+    private void change(Station sta, Status newStatus) {
         synchronized(statusMonitors) {
             for (NetworkMonitor netMon : statusMonitors) {
                 try {
@@ -652,7 +652,7 @@ public class NetworkArm implements Arm {
         }
     }
 
-    private void change(NetworkAttrImpl na, Status newStatus) {
+    private void change(Network na, Status newStatus) {
         synchronized(statusMonitors) {
             for (NetworkMonitor netMon : statusMonitors) {
                 try {
@@ -705,11 +705,11 @@ public class NetworkArm implements Arm {
         return NetworkDB.getSingleton();
     }
     
-    public boolean isBeingRefreshed(NetworkAttrImpl net) {
+    public boolean isBeingRefreshed(Network net) {
         return refresh.isNetworkBeingReloaded(net.getDbid());
     }
     
-    public boolean isBeingRefreshed(StationImpl sta) {
+    public boolean isBeingRefreshed(Station sta) {
         return refresh.isStationBeingReloaded(sta.getDbid());
     }
     

@@ -2,10 +2,10 @@ package edu.sc.seis.sod.subsetter.requestGenerator;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 
 
 /**
@@ -20,7 +20,7 @@ public class NullRequestGenerator implements RequestGenerator {
     public NullRequestGenerator(Element config) {}
 
     public RequestFilter[] generateRequest(CacheEvent event,
-                                           ChannelImpl channel, CookieJar cookieJar){
+                                           Channel channel, CookieJar cookieJar){
         return new RequestFilter[0];
     }
 }// NullRequestGenerator

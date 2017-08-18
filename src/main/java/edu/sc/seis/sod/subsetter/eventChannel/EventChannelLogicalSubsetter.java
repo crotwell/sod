@@ -5,12 +5,12 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.model.event.CacheEvent;
-import edu.sc.seis.sod.model.station.ChannelImpl;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.LogicalSubsetter;
 import edu.sc.seis.sod.subsetter.Subsetter;
@@ -59,16 +59,16 @@ public class EventChannelLogicalSubsetter extends LogicalSubsetter {
             return new EventChannelSubsetter() {
                 EventStationSubsetter ecs = EventStationLogicalSubsetter.createSubsetter(s);
                 public StringTree accept(CacheEvent event,
-                                         ChannelImpl channel,
+                                         Channel channel,
                                          CookieJar cookieJar) throws Exception {
-                    return ecs.accept(event, (StationImpl)channel.getStation(), cookieJar);
+                    return ecs.accept(event, (Station)channel.getStation(), cookieJar);
                 }
             };
         } else {
             return new EventChannelSubsetter() {
                 ChannelSubsetter ecs = ChannelLogicalSubsetter.createSubsetter(s);
                 public StringTree accept(CacheEvent event,
-                                         ChannelImpl channel,
+                                         Channel channel,
                                          CookieJar cookieJar) throws Exception {
                     return ecs.accept(channel, Start.getNetworkArm().getNetworkSource());
                 }

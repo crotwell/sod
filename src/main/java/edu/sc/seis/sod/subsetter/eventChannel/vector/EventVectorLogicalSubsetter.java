@@ -5,11 +5,11 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.station.ChannelGroup;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.LogicalSubsetter;
 import edu.sc.seis.sod.subsetter.Subsetter;
@@ -55,7 +55,7 @@ public class EventVectorLogicalSubsetter extends LogicalSubsetter {
                 public StringTree accept(CacheEvent event,
                                          ChannelGroup channelGroup,
                                          CookieJar cookieJar) throws Exception {
-                    return ecs.accept(event, (StationImpl)channelGroup.getStation(), cookieJar);
+                    return ecs.accept(event, (Station)channelGroup.getStation(), cookieJar);
                 }
             };
         }

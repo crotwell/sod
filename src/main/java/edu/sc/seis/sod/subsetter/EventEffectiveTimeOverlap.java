@@ -1,15 +1,15 @@
 package edu.sc.seis.sod.subsetter;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.NoPreferredOrigin;
 import edu.sc.seis.sod.model.event.StatefulEvent;
-import edu.sc.seis.sod.model.station.ChannelImpl;
-import edu.sc.seis.sod.model.station.NetworkAttrImpl;
 import edu.sc.seis.sod.model.station.SiteImpl;
-import edu.sc.seis.sod.model.station.StationImpl;
 
 /**
  * EventEffectiveTimeOverlap.java Created: Wed Mar 19 10:49:54 2003
@@ -32,11 +32,11 @@ public class EventEffectiveTimeOverlap extends EffectiveTimeOverlap {
                              originTime.add(DEFAULT_OFFSET));
     }
 
-    public boolean overlaps(NetworkAttrImpl net) {
+    public boolean overlaps(Network net) {
         return overlaps(net.getEffectiveTime());
     }
 
-    public boolean overlaps(StationImpl station) {
+    public boolean overlaps(Station station) {
         return overlaps(station.getEffectiveTime());
     }
 
@@ -44,7 +44,7 @@ public class EventEffectiveTimeOverlap extends EffectiveTimeOverlap {
         return overlaps(site.getEffectiveTime());
     }
 
-    public boolean overlaps(ChannelImpl channel) {
+    public boolean overlaps(Channel channel) {
         return overlaps(channel.getEffectiveTime());
     }
 

@@ -5,10 +5,10 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.hibernate.NetworkDB;
-import edu.sc.seis.sod.model.station.ChannelImpl;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
@@ -24,10 +24,10 @@ public class StationHas extends CompositeChannelSubsetter {
         super(config);
     }
 
-    public StringTree accept(ChannelImpl channel, NetworkSource network)
+    public StringTree accept(Channel channel, NetworkSource network)
             throws Exception {
         Iterator<Subsetter> it = subsetters.iterator();
-        List<? extends ChannelImpl> allChans = network.getChannels((StationImpl)channel.getStation());
+        List<? extends Channel> allChans = network.getChannels((Station)channel.getStation());
         NetworkDB.flush();
         while(it.hasNext()) {
             if(!atLeastOneChannelPasses((ChannelSubsetter)it.next(),
@@ -42,10 +42,10 @@ public class StationHas extends CompositeChannelSubsetter {
     }
 
     private static boolean atLeastOneChannelPasses(ChannelSubsetter filter,
-                                                   List<? extends ChannelImpl> chans,
+                                                   List<? extends Channel> chans,
                                                    NetworkSource net)
             throws Exception {
-        for (ChannelImpl channelImpl : chans) {
+        for (Channel channelImpl : chans) {
             if(filter.accept(channelImpl, net).isSuccess()) {
                 return true;
             }

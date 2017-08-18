@@ -10,6 +10,7 @@ import org.msgpack.core.MessageUnpacker;
 import org.omg.CORBA_2_3.ORB;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.BaseFilterType;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Coefficients;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Decimation;
 import edu.sc.seis.seisFile.fdsnws.stationxml.FIR;
@@ -29,7 +30,6 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.ResponseStage;
 import edu.sc.seis.seisFile.fdsnws.stationxml.StationXMLTagNames;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Unit;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Zero;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.model.station.Instrumentation;
 
 public class InstrumentationBlob {
@@ -37,16 +37,16 @@ public class InstrumentationBlob {
     /** for hibernate. */
     protected InstrumentationBlob() {}
 
-    public InstrumentationBlob(ChannelImpl chan, Instrumentation inst) {
+    public InstrumentationBlob(Channel chan, Instrumentation inst) {
     
     }
 
-        public InstrumentationBlob(ChannelImpl chan, Response response) {
+        public InstrumentationBlob(Channel chan, Response response) {
         this.chan = chan;
         this.response = response;
     }
 
-    public static byte[] getResponseAsBlob(ChannelImpl chan, Response response) throws IOException {
+    public static byte[] getResponseAsBlob(Channel chan, Response response) throws IOException {
         MessageBufferPacker packer = MessagePack.newDefaultBufferPacker();
         int mapSize = 0;
         if (response.getResponseStageList() != null) {
@@ -853,15 +853,15 @@ public class InstrumentationBlob {
         return response;
     }
 
-    public ChannelImpl getChannel() {
+    public Channel getChannel() {
         return chan;
     }
 
-    public void setChannel(ChannelImpl chan) {
+    public void setChannel(Channel chan) {
         this.chan = chan;
     }
 
-    ChannelImpl chan;
+    Channel chan;
 
     Response response;
 

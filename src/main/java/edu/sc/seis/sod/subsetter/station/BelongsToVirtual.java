@@ -5,6 +5,7 @@ import org.w3c.dom.Element;
 import edu.sc.seis.seisFile.fdsnws.FDSNWSException;
 import edu.sc.seis.seisFile.fdsnws.IRISWSVirtualNetworkQuerier;
 import edu.sc.seis.seisFile.fdsnws.IRISWSVirtualNetworkQueryParams;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.seisFile.fdsnws.virtualnet.ContributorNetwork;
 import edu.sc.seis.seisFile.fdsnws.virtualnet.VirtualNetwork;
 import edu.sc.seis.seisFile.fdsnws.virtualnet.VirtualNetworkList;
@@ -15,7 +16,6 @@ import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.source.SodSourceException;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
@@ -42,7 +42,7 @@ public class BelongsToVirtual implements StationSubsetter {
         this.refreshInterval = refreshInterval;
     }
 
-    public StringTree accept(StationImpl station, NetworkSource network)
+    public StringTree accept(Station station, NetworkSource network)
             throws ConfigurationException, SodSourceException {
         try {
             refreshStations(network);

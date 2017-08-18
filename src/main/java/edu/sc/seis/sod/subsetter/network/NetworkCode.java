@@ -5,9 +5,9 @@ import java.util.regex.Pattern;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.model.station.NetworkAttrImpl;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
@@ -27,8 +27,8 @@ public class NetworkCode implements NetworkSubsetter {
         }
     }
 
-    public StringTree accept(NetworkAttrImpl attr) throws Exception {
-        if(attr.get_code().equals(desiredCode)
+    public StringTree accept(Network attr) throws Exception {
+        if(attr.getCode().equals(desiredCode)
                 && (year == null ||
                         (year.length() == 2 && year.equals(NetworkIdUtil.getTwoCharYear(attr.get_id()))) ||
                         (year.length() == 4 && year.equals(NetworkIdUtil.getYear(attr.get_id()))))) {

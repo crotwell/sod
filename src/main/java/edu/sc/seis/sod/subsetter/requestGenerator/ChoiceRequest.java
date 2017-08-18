@@ -9,6 +9,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.SodElement;
@@ -16,7 +17,6 @@ import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.Subsetter;
 import edu.sc.seis.sod.subsetter.channel.ChannelLogicalSubsetter;
@@ -40,7 +40,7 @@ public class ChoiceRequest implements RequestGenerator {
     }
 
     public RequestFilter[] generateRequest(CacheEvent event,
-                                           ChannelImpl channel,
+                                           Channel channel,
                                            CookieJar cookieJar)
             throws Exception {
         for(int i = 0; i < choices.size(); i++) {
@@ -82,14 +82,14 @@ public class ChoiceRequest implements RequestGenerator {
         }
 
         public RequestFilter[] generateRequest(CacheEvent event,
-                                               ChannelImpl channel,
+                                               Channel channel,
                                                CookieJar cookieJar)
                 throws Exception {
             return requestGenerator.generateRequest(event, channel, cookieJar);
         }
 
         public StringTree accept(CacheEvent event,
-                                 ChannelImpl channel,
+                                 Channel channel,
                                  CookieJar cookieJar) throws Exception {
             return eventChannelSubsetter.accept(event, channel, cookieJar);
         }

@@ -6,17 +6,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TimerTask;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
 import edu.sc.seis.sod.hibernate.ChannelSensitivity;
 import edu.sc.seis.sod.hibernate.NetworkDB;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.station.ChannelGroup;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.ChannelImpl;
-import edu.sc.seis.sod.model.station.NetworkAttrImpl;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.source.SodSourceException;
 import edu.sc.seis.sod.source.network.LoadedNetworkSource;
 import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
@@ -30,15 +30,15 @@ public class RefreshNetworkArm extends TimerTask {
     public void run() {
         logger.info("Refreshing Network Arm");
         try {
-            List<NetworkAttrImpl> nets;
-            List<NetworkAttrImpl> needReload = new LinkedList<NetworkAttrImpl>();
+            List<Network> nets;
+            List<Network> needReload = new LinkedList<Network>();
             synchronized(this) {
                 nets = netArm.getSuccessfulNetworksFromServer();
                 if (nets.size() == 0) {return;}
                 
                 // maybe previous update has not yet finished, only reload nets
                 // not already in list???
-                for (NetworkAttrImpl net : nets) {
+                for (Network net : nets) {
                     if (!isNetworkBeingReloaded(net.getDbid())) {
                         networksBeingReloaded.add(new Integer(net.getDbid()));
                         needReload.add(net);
@@ -49,16 +49,16 @@ public class RefreshNetworkArm extends TimerTask {
                 }
             }
 
-            for (NetworkAttrImpl cacheNetwork : needReload) {
+            for (Network cacheNetwork : needReload) {
                 NetworkDB.getSingleton().put(cacheNetwork);
             }
             NetworkDB.commit();
             while (needReload.size() != 0) {
                 // in case of comm failures, we move to the next network, but
                 // keep trying until all networks have been reloaded
-                Iterator<NetworkAttrImpl> it = needReload.iterator();
+                Iterator<Network> it = needReload.iterator();
                 while (it.hasNext()) {
-                    NetworkAttrImpl net = it.next();
+                    Network net = it.next();
                     if (processNetwork(net)) {
                         synchronized(this) {
                             networksBeingReloaded.remove(new Integer(net.getDbid()));
@@ -84,13 +84,13 @@ public class RefreshNetworkArm extends TimerTask {
         }
     }
 
-    boolean processNetwork(NetworkAttrImpl net) {
+    boolean processNetwork(Network net) {
 logger.debug("refresh "+NetworkIdUtil.toString(net));
 // how do we refresh instrumentation???
         
         try {
-            StationImpl[] stas = netArm.getSuccessfulStationsFromServer(net);
-            List<StationImpl> allStations = new ArrayList<StationImpl>();
+            Station[] stas = netArm.getSuccessfulStationsFromServer(net);
+            List<Station> allStations = new ArrayList<Station>();
             for (int s = 0; s < stas.length; s++) {
                 allStations.add(stas[s]);
             }
@@ -124,7 +124,7 @@ logger.debug("refresh "+NetworkIdUtil.toString(net));
         }
     }
     
-    void processStation(LoadedNetworkSource loadSource, StationImpl sta) {
+    void processStation(LoadedNetworkSource loadSource, Station sta) {
         if (Start.getWaveformRecipe() instanceof MotionVectorArm) {
             List<ChannelGroup> cg = netArm.getSuccessfulChannelGroupsFromServer(sta, loadSource);
             // need to figure out how to update sensitivity/response, but only when it is actually used
@@ -133,7 +133,7 @@ logger.debug("refresh "+NetworkIdUtil.toString(net));
             //        checkSensitivityLoaded(channelGroup, loadSource);
             //    }
         } else {
-            List<ChannelImpl> chans = netArm.getSuccessfulChannelsFromServer(sta, loadSource);
+            List<Channel> chans = netArm.getSuccessfulChannelsFromServer(sta, loadSource);
             //    for (ChannelImpl channelImpl : chans) {
             //        checkSensitivityLoaded(channelImpl, loadSource);
             //    }
@@ -146,17 +146,17 @@ logger.debug("refresh "+NetworkIdUtil.toString(net));
         checkSensitivityLoaded(cg.getChannel3(), loadSource);
     }
     
-    void checkSensitivityLoaded(ChannelImpl chan, LoadedNetworkSource loadSource) {
+    void checkSensitivityLoaded(Channel chan, LoadedNetworkSource loadSource) {
         try {
             QuantityImpl sens = loadSource.getSensitivity(chan);
         } catch(SodSourceException e) {
-            logger.warn("Error getting Instrumentation for "+ChannelIdUtil.toStringFormatDates(chan.getId()));
+            logger.warn("Error getting Instrumentation for "+ChannelIdUtil.toStringFormatDates(chan));
             NetworkDB.getSingleton().putSensitivity( ChannelSensitivity.createNonChannelSensitivity(chan));
         } catch(ChannelNotFound e) {
-            logger.warn("No Instrumentation for "+ChannelIdUtil.toStringFormatDates(chan.getId()));
+            logger.warn("No Instrumentation for "+ChannelIdUtil.toStringFormatDates(chan));
             NetworkDB.getSingleton().putSensitivity( ChannelSensitivity.createNonChannelSensitivity(chan));
         } catch(InvalidResponse e) {
-            logger.warn("Invalid Instrumentation for "+ChannelIdUtil.toStringFormatDates(chan.getId()));
+            logger.warn("Invalid Instrumentation for "+ChannelIdUtil.toStringFormatDates(chan));
             NetworkDB.getSingleton().putSensitivity( ChannelSensitivity.createNonChannelSensitivity(chan));
         }
     }

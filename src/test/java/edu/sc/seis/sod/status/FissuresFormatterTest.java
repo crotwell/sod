@@ -5,10 +5,10 @@
  */
 package edu.sc.seis.sod.status;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.mock.station.MockChannel;
 import edu.sc.seis.sod.mock.station.MockStation;
-import edu.sc.seis.sod.model.station.ChannelImpl;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.velocity.network.VelocityStation;
 import junit.framework.TestCase;
 
@@ -38,11 +38,11 @@ public class FissuresFormatterTest extends TestCase {
     }
 
     public void testOneLineAndClean() {
-        StationImpl sta = MockStation.createStation();
+        Station sta = MockStation.createStation();
         sta.setName("  Long name\nwith\r\nnewlines  ");
         VelocityStation vsta = new VelocityStation(sta);
         assertEquals("Long name with newlines", vsta.getName());
     }
     
-    private ChannelImpl chan;
+    private Channel chan;
 }

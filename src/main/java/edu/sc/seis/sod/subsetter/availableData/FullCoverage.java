@@ -3,6 +3,7 @@ package edu.sc.seis.sod.subsetter.availableData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.model.common.TimeInterval;
@@ -11,7 +12,6 @@ import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.seismogram.RequestFilterUtil;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.util.time.CoverageTool;
@@ -19,7 +19,7 @@ import edu.sc.seis.sod.util.time.CoverageTool;
 public class FullCoverage implements AvailableDataSubsetter, SodElement {
 
     public StringTree accept(CacheEvent event,
-                             ChannelImpl channel,
+                             Channel channel,
                              RequestFilter[] request,
                              RequestFilter[] available,
                              CookieJar cookieJar) {
@@ -29,7 +29,7 @@ public class FullCoverage implements AvailableDataSubsetter, SodElement {
             return new StringTreeLeaf(this, false, "No available data");
         }
         RequestFilter[] notCovered = CoverageTool.notCovered(request, available);
-        float minSps = ChannelIdUtil.minSPSForBandCode(channel.get_code());
+        float minSps = ChannelIdUtil.minSPSForBandCode(channel.getChannelCode());
         if (minSps > 0) {
             notCovered = RequestFilterUtil.removeSmallRequests(notCovered, new TimeInterval(1/minSps, UnitImpl.SECOND)); // remove time windows smaller than one sample
         }

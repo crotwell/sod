@@ -7,8 +7,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.model.station.ChannelGroup;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 
 
 public class OrientedSiteRule extends SiteChannelRule {
@@ -35,26 +35,26 @@ public class OrientedSiteRule extends SiteChannelRule {
         }
     }
     
-    public List<ChannelGroup> acceptable(List<ChannelImpl> chanList, List<ChannelImpl> failures) {
+    public List<ChannelGroup> acceptable(List<Channel> chanList, List<Channel> failures) {
         List<ChannelGroup> out = acceptable(null, chanList, failures);
         return out;
     }
 
-    List<ChannelGroup> acceptable(ChannelImpl first, List<ChannelImpl> chanList, List<ChannelImpl> failures) {
+    List<ChannelGroup> acceptable(Channel first, List<Channel> chanList, List<Channel> failures) {
         List<ChannelGroup> out = new ArrayList<ChannelGroup>();
         if (first != null) {
-            ChannelImpl second = null;
-            ChannelImpl third = null;
-            for (ChannelImpl chan : chanList) {
-                if (orientations[1] == chan.getId().channel_code.charAt(2) && siteCodes[1].equals(chan.getId().site_code)) {
+            Channel second = null;
+            Channel third = null;
+            for (Channel chan : chanList) {
+                if (orientations[1] == chan.getChannelCode().charAt(2) && siteCodes[1].equals(chan.getLocCode())) {
                     second = chan;
                 }
-                if (orientations[2] == chan.getId().channel_code.charAt(2) && siteCodes[2].equals(chan.getId().site_code)) {
+                if (orientations[2] == chan.getChannelCode().charAt(2) && siteCodes[2].equals(chan.getLocCode())) {
                     third = chan;
                 }
             }
             if (second != null && third != null) {
-                out.add(new ChannelGroup(new ChannelImpl[] {first, second, third}));
+                out.add(new ChannelGroup(new Channel[] {first, second, third}));
                 chanList.remove(second);
                 chanList.remove(third);
             } else {
@@ -62,9 +62,9 @@ public class OrientedSiteRule extends SiteChannelRule {
             }
         }
         if (chanList.size() > 2) {
-            ChannelImpl nextFirst = null;
-            for (ChannelImpl c : chanList) {
-                if (orientations[0] == c.getId().channel_code.charAt(2) && siteCodes[0].equals(c.getId().site_code)) {
+            Channel nextFirst = null;
+            for (Channel c : chanList) {
+                if (orientations[0] == c.getChannelCode().charAt(2) && siteCodes[0].equals(c.getLocCode())) {
                     nextFirst = c;
                     chanList.remove(nextFirst);
                     break;

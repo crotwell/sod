@@ -3,13 +3,13 @@ package edu.sc.seis.sod.subsetter.eventStation;
 import org.w3c.dom.Element;
 
 import edu.sc.seis.TauP.SphericalCoords;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.model.common.Location;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.OriginImpl;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.DistanceRangeSubsetter;
@@ -27,7 +27,7 @@ public class LinearDistanceMagnitudeRange extends DistanceRangeSubsetter
     }
 
     public StringTree accept(CacheEvent eventAccess,
-                             StationImpl station,
+                             Station station,
                           CookieJar cookieJar) {
         Location stationLoc = station.getLocation();
         return new StringTreeLeaf(this, accept(eventAccess, stationLoc.latitude, stationLoc.longitude));

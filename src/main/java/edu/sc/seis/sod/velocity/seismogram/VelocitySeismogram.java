@@ -3,12 +3,12 @@ package edu.sc.seis.sod.velocity.seismogram;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.SamplingImpl;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.station.ChannelGroup;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 import edu.sc.seis.sod.velocity.network.VelocityChannel;
 import edu.sc.seis.sod.velocity.network.VelocitySampling;
@@ -18,7 +18,7 @@ import edu.sc.seis.sod.velocity.network.VelocitySampling;
  */
 public class VelocitySeismogram extends LocalSeismogramImpl {
 
-    public VelocitySeismogram(LocalSeismogramImpl localSeis, ChannelImpl chan) {
+    public VelocitySeismogram(LocalSeismogramImpl localSeis, Channel chan) {
         super(localSeis, localSeis.getData());
         this.chan = VelocityChannel.wrap(chan);
         if ( ! ChannelIdUtil.areEqualExceptForBeginTime(localSeis.getChannelID(), chan.getId())) {
@@ -71,7 +71,7 @@ public class VelocitySeismogram extends LocalSeismogramImpl {
                 + getEnd();
     }
 
-    public static List<VelocitySeismogram> wrap(LocalSeismogramImpl[] seis, ChannelImpl chan) {
+    public static List<VelocitySeismogram> wrap(LocalSeismogramImpl[] seis, Channel chan) {
         List<VelocitySeismogram> results = new ArrayList<VelocitySeismogram>(seis.length);
         chan = VelocityChannel.wrap(chan);
         for(int i = 0; i < seis.length; i++) {
@@ -95,7 +95,7 @@ public class VelocitySeismogram extends LocalSeismogramImpl {
 
     private VelocityChannel chan;
 
-    public static VelocitySeismogram wrap(LocalSeismogramImpl seis, ChannelImpl chan) {
+    public static VelocitySeismogram wrap(LocalSeismogramImpl seis, Channel chan) {
         if(seis instanceof VelocitySeismogram) {
             return (VelocitySeismogram)seis;
         } else {

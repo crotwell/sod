@@ -14,13 +14,13 @@ import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.slf4j.Logger;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.model.common.ISOTime;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
 
 /**
@@ -36,7 +36,7 @@ public class SimpleVelocitizer {
         return dateFormat.format(date);
     }
 
-    public String evaluate(String template, ChannelImpl chan) {
+    public String evaluate(String template, Channel chan) {
         return evaluate(template, ContextWrangler.createContext(chan));
     }
 
@@ -46,7 +46,7 @@ public class SimpleVelocitizer {
 
     public String evaluate(String template,
                            CacheEvent event,
-                           ChannelImpl channel,
+                           Channel channel,
                            RequestFilter[] original,
                            RequestFilter[] available,
                            LocalSeismogramImpl[] seismograms,

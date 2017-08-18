@@ -2,8 +2,8 @@ package edu.sc.seis.sod.subsetter.channel;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.model.common.QuantityImpl;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
@@ -15,7 +15,7 @@ public class SiteDepthRange extends edu.sc.seis.sod.subsetter.DepthRange
         super(config);
     }
 
-    public StringTree accept(ChannelImpl channel, NetworkSource network)
+    public StringTree accept(Channel channel, NetworkSource network)
             throws Exception {
         QuantityImpl actualDepth = (QuantityImpl)channel.getSite().getLocation().depth;
         return new StringTreeLeaf(this, actualDepth.greaterThanEqual(getMinDepth())

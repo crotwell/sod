@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.WaveformArm;
 import edu.sc.seis.sod.hibernate.NetworkDB;
@@ -11,10 +13,8 @@ import edu.sc.seis.sod.hibernate.NotFound;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.model.event.NoPreferredOrigin;
 import edu.sc.seis.sod.model.event.StatefulEvent;
-import edu.sc.seis.sod.model.station.NetworkAttrImpl;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.model.station.StationIdUtil;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.model.status.Stage;
 import edu.sc.seis.sod.model.status.Standing;
 import edu.sc.seis.sod.model.status.Status;
@@ -26,12 +26,12 @@ public class EventNetworkPair extends AbstractEventPair {
     /** for hibernate */
     protected EventNetworkPair() {}
 
-    public EventNetworkPair(StatefulEvent event, NetworkAttrImpl net) {
+    public EventNetworkPair(StatefulEvent event, Network net) {
         this(event, net, Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.INIT));
     }
 
     public EventNetworkPair(StatefulEvent event,
-                            NetworkAttrImpl net,
+                            Network net,
                             Status status) {
         super(event, status);
         setNetwork(net);
@@ -44,7 +44,7 @@ public class EventNetworkPair extends AbstractEventPair {
         List<EventStationPair> staPairList = new ArrayList<EventStationPair>();
         try {
             EventEffectiveTimeOverlap overlap = new EventEffectiveTimeOverlap(getEvent());
-            StationImpl[] stations = Start.getNetworkArm()
+            Station[] stations = Start.getNetworkArm()
                     .getSuccessfulStations(getNetwork());
             logger.debug("Begin EventNetworkPair ("+getEvent().getDbid()+",s "+getNetworkDbId()+") "+this);
             logger.debug(stations.length+" successful stations for "+this);
@@ -53,7 +53,7 @@ public class EventNetworkPair extends AbstractEventPair {
             }
             for(int i = 0; i < stations.length; i++) {
                 if(!overlap.overlaps(stations[i])) {
-                    failLogger.info(StationIdUtil.toString(stations[i].get_id())
+                    failLogger.info(StationIdUtil.toString(stations[i])
                             + "'s station effective time does not overlap the event time.");
                 } else {
                     EventStationPair p;
@@ -146,16 +146,16 @@ public class EventNetworkPair extends AbstractEventPair {
         return getNetwork().getDbid();
     }
 
-    public NetworkAttrImpl getNetwork() {
+    public Network getNetwork() {
         return networkAttr;
     }
     
     /** for use by hibernate */
-    protected void setNetwork(NetworkAttrImpl attr) {
+    protected void setNetwork(Network attr) {
         this.networkAttr = attr;
     }
     
-    private NetworkAttrImpl networkAttr;
+    private Network networkAttr;
     
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(EventNetworkPair.class);
 }

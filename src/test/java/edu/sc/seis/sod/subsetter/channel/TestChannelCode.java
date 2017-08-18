@@ -1,8 +1,8 @@
 package edu.sc.seis.sod.subsetter.channel;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.UserConfigurationException;
 import edu.sc.seis.sod.mock.station.MockChannel;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import junit.framework.TestCase;
 
 public class TestChannelCode extends TestCase {
@@ -78,24 +78,24 @@ public class TestChannelCode extends TestCase {
         } catch(UserConfigurationException uce) {}
     }
 
-    private void assertAccepted(ChannelImpl chan) {
+    private void assertAccepted(Channel chan) {
         assertTrue(cc.accept(chan, null).isSuccess());
     }
 
-    private void assertRejected(ChannelImpl chan) {
+    private void assertRejected(Channel chan) {
         assertFalse(cc.accept(chan, null).isSuccess());
     }
 
-    private static final ChannelImpl BHZ = MockChannel.createChannel();
+    private static final Channel BHZ = MockChannel.createChannel();
 
-    private static final ChannelImpl BHE = MockChannel.createEastChannel();
+    private static final Channel BHE = MockChannel.createEastChannel();
 
-    private static final ChannelImpl LHZ = MockChannel.createChannel();
+    private static final Channel LHZ = MockChannel.createChannel();
     static {
         LHZ.get_id().channel_code = "LHZ";
     }
 
-    private static final ChannelImpl LLN = MockChannel.createChannel();
+    private static final Channel LLN = MockChannel.createChannel();
     static {
         LLN.get_id().channel_code = "LLN";
     }

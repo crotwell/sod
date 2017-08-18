@@ -7,9 +7,9 @@ import org.w3c.dom.Element;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.model.station.FilterType;
 import edu.sc.seis.sod.model.station.Instrumentation;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
 import edu.sc.seis.seisFile.fdsnws.stationxml.PolesZeros;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
@@ -37,7 +37,7 @@ public class SacPoleZeroWriter implements ChannelSubsetter {
         velocitizer = new PrintlineVelocitizer(new String[] {template});
     }
 
-    public StringTree accept(ChannelImpl chan, NetworkSource network)
+    public StringTree accept(Channel chan, NetworkSource network)
             throws Exception {
         Response response;
         try {
@@ -58,7 +58,7 @@ public class SacPoleZeroWriter implements ChannelSubsetter {
             velocitizer.evaluate(template, responseOut, chan);
         } catch(FileNotFoundException fe) {
             GlobalExceptionHandler.handle("Error while writing response file for "
-                                                  + ChannelIdUtil.toString(chan.get_id()),
+                                                  + ChannelIdUtil.toString(chan),
                                           fe);
             return new Fail(this, "Error while writing response file", fe);
         }

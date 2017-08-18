@@ -6,12 +6,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.bag.ResponsePrint;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
@@ -30,7 +30,7 @@ public class ResponseWriter implements ChannelSubsetter {
         velocitizer = new PrintlineVelocitizer(new String[] {template});
     }
 
-    public StringTree accept(ChannelImpl chan, NetworkSource network)
+    public StringTree accept(Channel chan, NetworkSource network)
             throws Exception {
         try {
             String response = ResponsePrint.printResponse(chan.getId(), network.getResponse(chan), chan.getEffectiveTime());
@@ -41,7 +41,7 @@ public class ResponseWriter implements ChannelSubsetter {
             return new Fail(this, "Invalid instrumentation: "+e.getMessage());
         } catch(FileNotFoundException fe) {
             GlobalExceptionHandler.handle("Error while writing response file for "
-                    + ChannelIdUtil.toString(chan.get_id()), fe);
+                    + ChannelIdUtil.toString(chan), fe);
             return new Fail(this, "Error while writing response file", fe);
         }
         return new Pass(this);

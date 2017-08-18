@@ -9,13 +9,13 @@ package edu.sc.seis.sod.hibernate.eventpair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.BuildVersion;
 import edu.sc.seis.sod.LocalSeismogramArm;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.model.event.StatefulEvent;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.model.status.Stage;
 import edu.sc.seis.sod.model.status.Standing;
 import edu.sc.seis.sod.model.status.Status;
@@ -26,11 +26,11 @@ public class EventChannelPair extends AbstractEventChannelPair {
     /** for hibernate */
     protected EventChannelPair() {}
     
-    public EventChannelPair(StatefulEvent event, ChannelImpl chan, EventStationPair esp) {
+    public EventChannelPair(StatefulEvent event, Channel chan, EventStationPair esp) {
         this(event, chan, Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.INIT), esp);
     }
 
-    public EventChannelPair(StatefulEvent event, ChannelImpl chan, Status status, EventStationPair esp) {
+    public EventChannelPair(StatefulEvent event, Channel chan, Status status, EventStationPair esp) {
         super(event, status, esp);
         setChannel(chan);
     }
@@ -73,19 +73,19 @@ public class EventChannelPair extends AbstractEventChannelPair {
 
     public String toString(){
         return "EventChannelPair: ("+getDbid()+") " + getEvent() + " " +
-            ChannelIdUtil.toStringNoDates(getChannel().getId()) + " " + getStatus();
+            ChannelIdUtil.toStringNoDates(getChannel()) + " " + getStatus();
     }
 
     public int getChannelDbId(){ return chan.getDbid(); }
 
-    public ChannelImpl getChannel() { return chan; }
+    public Channel getChannel() { return chan; }
     
     /** for use by hibernate */
-    protected void setChannel(ChannelImpl chan) {
+    protected void setChannel(Channel chan) {
         this.chan = chan;
     }
 
-    private ChannelImpl chan;
+    private Channel chan;
 
     public static final String BIG_ERROR_MSG = BuildVersion.getVersion()+" An exception occured that would've croaked a waveform worker thread!  These types of exceptions are certainly possible, but they shouldn't be allowed to percolate this far up the stack.  If you are one of those esteemed few working on SOD, it behooves you to attempt to trudge down the stack trace following this message and make certain that whatever threw this exception is no longer allowed to throw beyond its scope.  If on the other hand, you are a user of SOD it would be most appreciated if you would send an email containing the text immediately following this mesage to sod@seis.sc.edu ";
 

@@ -7,12 +7,12 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.NetworkArm;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.model.station.ChannelGroup;
-import edu.sc.seis.sod.model.station.ChannelImpl;
-import edu.sc.seis.sod.model.station.NetworkAttrImpl;
 import edu.sc.seis.sod.subsetter.channel.ChannelSubsetter;
 import edu.sc.seis.sod.subsetter.channel.PassChannel;
 import edu.sc.seis.sod.subsetter.network.NetworkSubsetter;
@@ -49,11 +49,11 @@ public class Rule {
         }
     }
 
-    public List<ChannelGroup> acceptable(List<ChannelImpl> chanList, List<ChannelImpl> failures) {
-        List<ChannelImpl> possible = new ArrayList<ChannelImpl>();
-        for (ChannelImpl chan : chanList) {
+    public List<ChannelGroup> acceptable(List<Channel> chanList, List<Channel> failures) {
+        List<Channel> possible = new ArrayList<Channel>();
+        for (Channel chan : chanList) {
             try {
-                if (attrSubsetter.accept((NetworkAttrImpl)chan.getStation().getNetworkAttr()).isSuccess()) {
+                if (attrSubsetter.accept((Network)chan.getStation().getNetworkAttr()).isSuccess()) {
                     if (stationSubsetter.accept(chan.getStationImpl(), null).isSuccess()) {
                         if (chanSubsetter.accept(chan, null).isSuccess()) {
                             possible.add(chan);
@@ -69,11 +69,11 @@ public class Rule {
             }
         }
         List<ChannelGroup> out = new ArrayList<ChannelGroup>();
-        List<ChannelImpl> stillToTest = new ArrayList<ChannelImpl>();
+        List<Channel> stillToTest = new ArrayList<Channel>();
         for (SiteChannelRule threeChar : siteChanRuleList) {
             out.addAll(threeChar.acceptable(possible, stillToTest));
             possible = stillToTest;
-            stillToTest = new ArrayList<ChannelImpl>();
+            stillToTest = new ArrayList<Channel>();
         }
         failures.addAll(possible);
         return out;

@@ -23,6 +23,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.bag.OrientationUtil;
 import edu.sc.seis.sod.channelGroup.Rule;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
@@ -32,7 +33,6 @@ import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.station.ChannelGroup;
 import edu.sc.seis.sod.model.station.ChannelId;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.validator.Validator;
 
 public class ChannelGrouper {
@@ -60,29 +60,29 @@ public class ChannelGrouper {
      * @param failures
      * @return
      */
-    public List<ChannelGroup> group(List<ChannelImpl> channels, List<ChannelImpl> failures) {
+    public List<ChannelGroup> group(List<Channel> channels, List<Channel> failures) {
         return applyRules(channels, defaultRules, additionalRules, failures);
     }
 
-    private List<ChannelGroup> applyRules(List<ChannelImpl> channels,
+    private List<ChannelGroup> applyRules(List<Channel> channels,
                                           List<Rule> defaultRules,
                                           List<Rule> additionalRules,
-                                          List<ChannelImpl> failures) {
+                                          List<Channel> failures) {
         List<ChannelGroup> groupableChannels = new LinkedList<ChannelGroup>();
-        HashMap<String, List<ChannelImpl>> bandGain = groupByNetStaBandGain(channels);
+        HashMap<String, List<Channel>> bandGain = groupByNetStaBandGain(channels);
         Iterator<String> iter = bandGain.keySet().iterator();
         while(iter.hasNext()) {
             String key = iter.next();
-            List<ChannelImpl> toTest = new ArrayList<ChannelImpl>();
+            List<Channel> toTest = new ArrayList<Channel>();
             toTest.addAll(bandGain.get(key));
             for (Rule rule : additionalRules) {
-                List<ChannelImpl> stillToTest = new ArrayList<ChannelImpl>();
+                List<Channel> stillToTest = new ArrayList<Channel>();
                 List<ChannelGroup> groups = rule.acceptable(toTest, stillToTest);
                 groupableChannels.addAll(groups);
                 toTest = stillToTest;
             }
             for (Rule rule : defaultRules) {
-                List<ChannelImpl> stillToTest = new ArrayList<ChannelImpl>();
+                List<Channel> stillToTest = new ArrayList<Channel>();
                 List<ChannelGroup> groups = rule.acceptable(toTest, stillToTest);
                 groupableChannels.addAll(groups);
                 toTest = stillToTest;
@@ -99,11 +99,11 @@ public class ChannelGrouper {
     }
 
     private static boolean areOrthogonal(ChannelGroup channelGroup) {
-        ChannelImpl[] chans = channelGroup.getChannels();
+        Channel[] chans = channelGroup.getChannels();
         for(int i = 0; i < chans.length; i++) {
             for(int j = i + 1; j < chans.length; j++) {
-                if(!OrientationUtil.areOrthogonal(chans[i].getOrientation(),
-                                                  chans[j].getOrientation())) {
+                if(!OrientationUtil.areOrthogonal(chans[i],
+                                                  chans[j])) {
                     logger.info("Fail areOrthogonal ("+i+","+j+"): "+ChannelIdUtil.toString(chans[i].get_id())+" "+OrientationUtil.toString(chans[i].getOrientation())+" "+ChannelIdUtil.toString(chans[j].get_id())+" "+OrientationUtil.toString(chans[j].getOrientation()));
                     return false;
                 }
@@ -113,7 +113,7 @@ public class ChannelGrouper {
     }
 
     private static boolean haveSameSamplingRate(ChannelGroup cg) {
-        ChannelImpl[] chans = cg.getChannels();
+        Channel[] chans = cg.getChannels();
         SamplingImpl sampl = (SamplingImpl)chans[0].getSamplingInfo();
         QuantityImpl freq = sampl.getFrequency();
         UnitImpl baseUnit = freq.getUnit();
@@ -130,17 +130,17 @@ public class ChannelGrouper {
         return true;
     }
 
-     HashMap<String, List<ChannelImpl>> groupByNetStaBandGain(List<ChannelImpl> channels) {
-        HashMap<String, List<ChannelImpl>> bandGain = new HashMap<String, List<ChannelImpl>>();
-        for(ChannelImpl c : channels) {
+     HashMap<String, List<Channel>> groupByNetStaBandGain(List<Channel> channels) {
+        HashMap<String, List<Channel>> bandGain = new HashMap<String, List<Channel>>();
+        for(Channel c : channels) {
             MicroSecondDate msd = new MicroSecondDate(c.get_id().begin_time);
             ChannelId cId = c.getId();
             String key = cId.network_id.network_code+"."+cId.station_code+"."+cId.channel_code;
             key = key.substring(0, key.length() - 1);
             key = msd + key;
-            List<ChannelImpl> chans = bandGain.get(key);
+            List<Channel> chans = bandGain.get(key);
             if(chans == null) {
-                chans = new LinkedList<ChannelImpl>();
+                chans = new LinkedList<Channel>();
                 bandGain.put(key, chans);
             }
             chans.add(c);

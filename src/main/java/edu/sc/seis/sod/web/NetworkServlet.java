@@ -15,10 +15,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.hibernate.NetworkDB;
-import edu.sc.seis.sod.model.station.NetworkAttrImpl;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.web.jsonapi.JsonApi;
 import edu.sc.seis.sod.web.jsonapi.JsonApiData;
 import edu.sc.seis.sod.web.jsonapi.NetworkJson;
@@ -46,9 +46,9 @@ public class NetworkServlet extends HttpServlet {
             Matcher matcher = allNetworkPattern.matcher(URL);
             if (matcher.matches()) {
                 // all nets
-                List<NetworkAttrImpl> netList = netdb.getAllNetworks();
+                List<Network> netList = netdb.getAllNetworks();
                 List<JsonApiData> jsonList = new ArrayList<JsonApiData>();
-                for (NetworkAttrImpl net : netList) {
+                for (Network net : netList) {
                     jsonList.add(new NetworkJson(net, baseUrl));
                 }
                 JsonApi.encodeJson(out, jsonList);
@@ -57,21 +57,21 @@ public class NetworkServlet extends HttpServlet {
                 if (matcher.matches()) {
                     String netCode = matcher.group(1);
                     String year = matcher.group(3);
-                    NetworkAttrImpl n = loadNet(netCode, year);
+                    Network n = loadNet(netCode, year);
                     JsonApi.encodeJson(out, new NetworkJson(n, baseUrl));
                 } else {
                     matcher = stationListPattern.matcher(URL);
                     if (matcher.matches()) {
                         // logger.debug("stationList");
                         String netCode = matcher.group(1);
-                        List<StationImpl> staList = netdb.getStationForNet(netdb.getNetworkByCode(netCode).get(0));
+                        List<Station> staList = netdb.getStationForNet(netdb.getNetworkByCode(netCode).get(0));
                         JsonApi.encodeJson(out, StationJson.toJsonList(staList, baseUrl));
                     } else {
                         matcher = stationRelationshipPattern.matcher(URL);
                         if (matcher.matches()) {
                          // logger.debug("stationList");
                             String netCode = matcher.group(1);
-                            List<StationImpl> staList = netdb.getStationForNet(netdb.getNetworkByCode(netCode).get(0));
+                            List<Station> staList = netdb.getStationForNet(netdb.getNetworkByCode(netCode).get(0));
                             JsonApi.encodeJson(out, StationJson.toJsonList(staList, baseUrl));
                         } else {
                             matcher = stationPattern.matcher(URL);
@@ -80,7 +80,7 @@ public class NetworkServlet extends HttpServlet {
                                 String netCode = matcher.group(1);
                                 String year = matcher.group(3);
                                 String staCode = matcher.group(7);
-                                StationImpl sta = netdb.getStationByCodes(netCode, staCode).get(0);
+                                Station sta = netdb.getStationByCodes(netCode, staCode).get(0);
                                 JsonApi.encodeJson(out, new StationJson(sta, baseUrl));
                             } else {
                                 logger.warn("Bad URL for servlet: "+URL);
@@ -102,14 +102,14 @@ public class NetworkServlet extends HttpServlet {
         }
     }
     
-    public static NetworkAttrImpl loadNet(String netCode, String year) {
-        List<NetworkAttrImpl> netList = NetworkDB.getSingleton().getNetworkByCode(netCode);
-        NetworkAttrImpl n = null;
+    public static Network loadNet(String netCode, String year) {
+        List<Network> netList = NetworkDB.getSingleton().getNetworkByCode(netCode);
+        Network n = null;
         if (NetworkIdUtil.isTemporary(netCode) || year == null) {
             // might not be right if temp net but year not given...?
          n = netList.get(0); 
         } else {
-            for (NetworkAttrImpl netImpl : netList) {
+            for (Network netImpl : netList) {
                 if (NetworkIdUtil.getYear(netImpl.get_id()).equals(year)) {
                     n = netImpl;
                     break;

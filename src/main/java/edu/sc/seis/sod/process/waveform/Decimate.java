@@ -4,6 +4,7 @@ import org.w3c.dom.Element;
 
 import com.oregondsp.signalProcessing.filter.iir.PassbandType;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Threadable;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
@@ -12,7 +13,6 @@ import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.status.StringTreeBranch;
 
 public class Decimate implements WaveformProcess, Threadable {
@@ -39,7 +39,7 @@ public class Decimate implements WaveformProcess, Threadable {
     }
 
     public WaveformResult accept(CacheEvent event,
-                                 ChannelImpl channel,
+                                 Channel channel,
                                  RequestFilter[] original,
                                  RequestFilter[] available,
                                  LocalSeismogramImpl[] seismograms,

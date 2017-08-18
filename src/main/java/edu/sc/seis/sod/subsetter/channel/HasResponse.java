@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
-import edu.sc.seis.sod.model.station.ChannelImpl;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
 import edu.sc.seis.sod.source.SodSourceException;
 import edu.sc.seis.sod.source.network.NetworkSource;
@@ -14,7 +14,7 @@ import edu.sc.seis.sod.status.StringTree;
 
 public class HasResponse implements ChannelSubsetter {
 
-    public StringTree accept(ChannelImpl channel, NetworkSource network) {
+    public StringTree accept(Channel channel, NetworkSource network) {
         try {
             if (network.getResponse(channel) == null) {
                 return new Fail(this, "No response");

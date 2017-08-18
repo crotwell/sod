@@ -5,12 +5,12 @@ import java.io.File;
 import org.w3c.dom.Element;
 
 import edu.sc.seis.fissuresUtil.xml.URLDataSetSeismogram;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.hibernate.SeismogramFileTypes;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 
 public class MseedWriter extends AbstractSeismogramWriter {
 
@@ -25,7 +25,7 @@ public class MseedWriter extends AbstractSeismogramWriter {
 
     public void write(String loc,
                       LocalSeismogramImpl seis,
-                      ChannelImpl chan,
+                      Channel chan,
                       CacheEvent ev) throws Exception {
         AbstractSeismogramWriter.addBytesWritten(URLDataSetSeismogram.writeMSeed(seis,
                                                                              new File(loc))

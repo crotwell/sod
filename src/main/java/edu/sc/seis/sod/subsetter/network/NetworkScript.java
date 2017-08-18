@@ -2,7 +2,7 @@ package edu.sc.seis.sod.subsetter.network;
 
 import org.w3c.dom.Element;
 
-import edu.sc.seis.sod.model.station.NetworkAttrImpl;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.AbstractScriptSubsetter;
 import edu.sc.seis.sod.velocity.network.VelocityNetwork;
@@ -15,7 +15,7 @@ public class NetworkScript extends AbstractScriptSubsetter implements NetworkSub
     }
 
     @Override
-    public StringTree accept(NetworkAttrImpl network) throws Exception {
+    public StringTree accept(Network network) throws Exception {
         return runScript(new VelocityNetwork(network));
     }
     

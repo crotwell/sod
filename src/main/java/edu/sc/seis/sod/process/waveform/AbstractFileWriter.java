@@ -7,11 +7,11 @@ import java.util.regex.Pattern;
 import org.apache.velocity.VelocityContext;
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.station.ChannelGroup;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
@@ -37,7 +37,7 @@ public abstract class AbstractFileWriter {
     }
 
     public String generate(CacheEvent event,
-                           ChannelImpl channel,
+                           Channel channel,
                            LocalSeismogramImpl representativeSeismogram,
                            int index,
                            int numSeismograms) {
@@ -53,8 +53,8 @@ public abstract class AbstractFileWriter {
     }
 
     public String generate(CacheEvent event,
-                           ChannelImpl channel,
-                           ChannelImpl otherChannel,
+                           Channel channel,
+                           Channel otherChannel,
                            int index,
                            Map<String, Object> extras) {
         VelocityContext ctx = ContextWrangler.createContext(event);
@@ -113,7 +113,7 @@ public abstract class AbstractFileWriter {
     }
 
     public void removeExisting(CacheEvent event,
-                               ChannelImpl channel,
+                               Channel channel,
                                LocalSeismogramImpl representativeSeismogram, int numSeismograms) {
         for(int i = 0; true; i++) {
             File cur = new File(generate(event, channel, representativeSeismogram, i, numSeismograms));
@@ -125,8 +125,8 @@ public abstract class AbstractFileWriter {
     }
     
     public void removeExisting(CacheEvent event,
-                               ChannelImpl channel,
-                               ChannelImpl otherChannel,
+                               Channel channel,
+                               Channel otherChannel,
                                Map<String, Object> extras) {
         for(int i = 0; true; i++) {
             File cur = new File(generate(event, channel, otherChannel, i, extras));

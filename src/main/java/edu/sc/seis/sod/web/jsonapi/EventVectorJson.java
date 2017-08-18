@@ -6,11 +6,11 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.hibernate.eventpair.AbstractEventChannelPair;
 import edu.sc.seis.sod.hibernate.eventpair.EventChannelPair;
 import edu.sc.seis.sod.hibernate.eventpair.EventVectorPair;
 import edu.sc.seis.sod.measure.Measurement;
-import edu.sc.seis.sod.model.station.ChannelImpl;
 import edu.sc.seis.sod.process.waveform.AbstractSeismogramWriter;
 
 public class EventVectorJson extends AbstractJsonApiData {
@@ -82,7 +82,7 @@ public class EventVectorJson extends AbstractJsonApiData {
             out.endObject();
         } else {
             EventVectorPair evp = (EventVectorPair)ecp;
-            ChannelImpl[] chans = evp.getChannelGroup().getChannels();
+            Channel[] chans = evp.getChannelGroup().getChannels();
             for (int i = 0; i < chans.length; i++) {
                 out.object();
                 ChannelJson chanJson = new ChannelJson(chans[i], getBaseUrl());

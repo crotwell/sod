@@ -2,6 +2,9 @@ package edu.sc.seis.sod.subsetter.origin;
 
 import java.util.List;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.Arm;
 import edu.sc.seis.sod.ArmListener;
 import edu.sc.seis.sod.ConfigurationException;
@@ -13,9 +16,6 @@ import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.EventAttrImpl;
 import edu.sc.seis.sod.model.event.OriginImpl;
-import edu.sc.seis.sod.model.station.ChannelImpl;
-import edu.sc.seis.sod.model.station.NetworkAttrImpl;
-import edu.sc.seis.sod.model.station.StationImpl;
 import edu.sc.seis.sod.source.event.MicroSecondTimeRangeSupplier;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
@@ -70,12 +70,12 @@ public class NetworkTimeRange implements OriginSubsetter, ArmListener,
                 }
             }
         }
-        List<NetworkAttrImpl> nets = arm.getSuccessfulNetworks();
-        for (NetworkAttrImpl net : nets) {
-            StationImpl[] stas = arm.getSuccessfulStations(net);
+        List<Network> nets = arm.getSuccessfulNetworks();
+        for (Network net : nets) {
+            Station[] stas = arm.getSuccessfulStations(net);
             for(int j = 0; j < stas.length; j++) {
-                List<ChannelImpl> chans = arm.getSuccessfulChannels(stas[j]);
-                for(ChannelImpl c : chans) {
+                List<Channel> chans = arm.getSuccessfulChannels(stas[j]);
+                for(Channel c : chans) {
                     MicroSecondTimeRange chanRange = new MicroSecondTimeRange(c.getEffectiveTime());
                     if(range == null) {
                         range = chanRange;
