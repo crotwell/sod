@@ -247,7 +247,9 @@ public class RunProperties {
 
 	private String statusDir = "status";
 
-	private int numWorkers = 1;
+	public static final int DEFAULT_NUM_WORKER_THREADS = 1;
+	
+	private int numWorkers = DEFAULT_NUM_WORKER_THREADS;
 
 	private boolean reopenEvents = false;
 

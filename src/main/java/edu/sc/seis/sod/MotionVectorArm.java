@@ -133,10 +133,12 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
             request = new ANDRequestWrapper((RequestSubsetter)sodObject);
         } else if (sodObject instanceof SeismogramSourceLocator) {
             dcLocator = (SeismogramSourceLocator)sodObject;
-            if (dcLocator instanceof ConstantSeismogramSourceLocator && Start.getRunProps().getNumWaveformWorkerThreads() == 1) {
-                logger.info("Wrapping "+dcLocator+" to batch requests for speed. Using 3 threads.");
+            if (dcLocator instanceof ConstantSeismogramSourceLocator) {
+                if (Start.getRunProps().getNumWaveformWorkerThreads() == RunProperties.DEFAULT_NUM_WORKER_THREADS) {
+                    logger.info("Wrapping "+dcLocator+" to batch requests for speed. Using 3 threads.");
+                    Start.getRunProps().setNumWaveformWorkerThreads(3);
+                }    
                 dcLocator = new BatchDataRequest(dcLocator);
-                Start.getRunProps().setNumWaveformWorkerThreads(3);
             }
         } else if (sodObject instanceof VectorAvailableDataSubsetter) {
             availData = (VectorAvailableDataSubsetter)sodObject;
