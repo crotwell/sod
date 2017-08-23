@@ -79,7 +79,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
         } else if(sodObject instanceof SeismogramSourceLocator) {
             dcLocator = (SeismogramSourceLocator)sodObject;
             if (dcLocator instanceof ConstantSeismogramSourceLocator) {
-                if (Start.getRunProps().getNumWaveformWorkerThreads() < 6) {
+                if (Start.getRunProps().getNumWaveformWorkerThreads() == RunProperties.DEFAULT_NUM_WORKER_THREADS) {
                     logger.info("Wrapping "+dcLocator+" to batch requests for speed. Using 6 threads.");
                     Start.getRunProps().setNumWaveformWorkerThreads(6);
                 }
