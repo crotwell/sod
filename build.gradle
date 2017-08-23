@@ -1,7 +1,7 @@
 
 
 group = 'edu.sc.seis'
-version = '3.2.9-SNAPSHOT'
+version = '3.2.9-SNAPSHOT2'
 // also remember to change in sod.Version class
 
 apply plugin:'application'
@@ -208,7 +208,7 @@ task buildSchemaDocs(type: JavaExec, dependsOn: ['staticSchemaDocs', 'buildSchem
     workingDir = outDir
     args  inRNGFile, project.projectDir.path, outDir
     classpath configurations.runtime
-    classpath project.file("build/classes/main")
+    classpath project.file("build/classes/java/main")
     setMain "edu.sc.seis.sod.validator.documenter.SchemaDocumenter"
     doFirst {
         if (!outDir.exists() ) {
