@@ -93,7 +93,7 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
         }
 
         // check if username and password, and if so enable restricted on the network source
-        if ( ! username.equals("") && ! password.equals("") && Start.getNetworkArm() != null) {
+        if (username != null && ! username.equals("") && password != null && Start.getNetworkArm() != null) {
             logger.info("User and password set, so including restricted in FdsnStation network source");
             fdsnStation.includeRestricted(true);
         }
