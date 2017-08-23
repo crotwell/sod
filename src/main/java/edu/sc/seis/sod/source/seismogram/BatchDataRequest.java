@@ -66,6 +66,9 @@ public class BatchDataRequest implements SeismogramSourceLocator, Runnable {
                         batchProxy.seismogramSourceException(e);
                     }
                 }
+                // allow memory to be reclaimed
+                seisList = null; 
+                reqList = null;
                 try {
                     // rate limit
                     Thread.sleep(loaderSleep);
