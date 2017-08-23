@@ -421,6 +421,7 @@ public class Start {
         return network;
     }
     
+    @Deprecated
     public static WaveformArm[] getWaveformArms() {
         return waveforms;
     }
