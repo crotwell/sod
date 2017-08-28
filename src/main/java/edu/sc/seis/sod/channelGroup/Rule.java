@@ -54,7 +54,7 @@ public class Rule {
         for (Channel chan : chanList) {
             try {
                 if (attrSubsetter.accept((Network)chan.getStation().getNetworkAttr()).isSuccess()) {
-                    if (stationSubsetter.accept(chan.getStationImpl(), null).isSuccess()) {
+                    if (stationSubsetter.accept(chan.getStation(), null).isSuccess()) {
                         if (chanSubsetter.accept(chan, null).isSuccess()) {
                             possible.add(chan);
                             continue;

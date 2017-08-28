@@ -24,7 +24,7 @@ public class FissuresFormatterTest extends TestCase {
 
     public void testFormatNetwork() {
         assertEquals("XX70",
-                     FissuresFormatter.formatNetwork(chan.get_id().network_id));
+                     FissuresFormatter.formatNetwork(chan.getNetwork()));
     }
 
     public void testFormatWithDirectories() {

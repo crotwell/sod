@@ -25,7 +25,7 @@ public class Sampling extends RangeSubsetter implements ChannelSubsetter {
 
     public StringTree accept(Channel channel, NetworkSource network)
             throws Exception {
-        return new StringTreeLeaf(this, accept((SamplingImpl)channel.getSamplingInfo()));
+        return new StringTreeLeaf(this, accept(channel.getSampleRate().getValue()));
     }
 
     public boolean accept(SamplingImpl channelSampling) {

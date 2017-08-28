@@ -9,6 +9,7 @@ import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
+import edu.sc.seis.seisFile.fdsnws.stationxml.BaseNodeType;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
 import edu.sc.seis.sod.source.network.NetworkSource;
@@ -62,7 +63,7 @@ public class ResponseGain implements WaveformProcess, Threadable {
                                           new StringTreeLeaf(this,
                                                              false,
                                                              "No instrumentation found for time "
-                                                                     + seismograms[0].begin_time.getISOTime()));
+                                                                     + BaseNodeType.toISOString(seismograms[0].begin_time)));
             } catch(InvalidResponse e) {
                 return new WaveformResult(out,
                                           new StringTreeLeaf(this,

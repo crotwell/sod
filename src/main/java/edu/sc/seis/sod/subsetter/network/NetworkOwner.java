@@ -26,6 +26,7 @@ public class NetworkOwner implements NetworkSubsetter {
     }
 
     public StringTree accept(Network net) {
+        //StationXML Network doesn't have owner/operator, so???
         return new StringTreeLeaf(this, net.getOwner().equals(SodUtil.getNestedText(config)));
     }
 

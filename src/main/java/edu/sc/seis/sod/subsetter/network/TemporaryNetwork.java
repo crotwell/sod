@@ -11,7 +11,7 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
 public class TemporaryNetwork implements NetworkSubsetter {
 
     public StringTree accept(Network attr) {
-        return new StringTreeLeaf(this, NetworkIdUtil.isTemporary(attr.get_id()));
+        return new StringTreeLeaf(this, NetworkIdUtil.isTemporary(attr));
     }
 
 }

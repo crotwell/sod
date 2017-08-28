@@ -108,7 +108,7 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
             OriginImpl origin = event.get_preferred_origin();
             ChannelId[] chanIds = new ChannelId[channelGroup.getChannels().length];
             for (int i = 0; i < chanIds.length; i++) {
-                chanIds[i] = channelGroup.getChannels()[i].get_id();
+                chanIds[i] = ChannelId.of(channelGroup.getChannels()[i]);
             }
             LocalSeismogramImpl[] singleSeismograms = new LocalSeismogramImpl[3];
             for (int i = 0; i < singleSeismograms.length; i++) {
@@ -116,7 +116,7 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
             }
             IterDeconResult[] ans = process(event, channelGroup, singleSeismograms);
             String[] phaseName = pWave ? new String[] {"ttp"} : new String[] {"tts"};
-            List<Arrival> pPhases = taup.calcTravelTimes(chan.getSite().getStation(), origin, phaseName);
+            List<Arrival> pPhases = taup.calcTravelTimes(chan.getStation(), origin, phaseName);
             MicroSecondDate firstP = new MicroSecondDate(origin.getOriginTime());
             firstP = firstP.add(new TimeInterval(pPhases.get(0).getTime(), UnitImpl.SECOND));
             TimeInterval shift = getShift();
@@ -126,12 +126,13 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
                 // ITR for radial
                 // ITT for tangential
                 String chanCode = (i == 0) ? "ITR" : "ITT";
-                double az = (i == 0) ? Rotate.getRadialAzimuth(channelGroup.getStation().getLocation(),
+                Location staLoc = Location.of(channelGroup.getStation());
+                double az = (i == 0) ? Rotate.getRadialAzimuth(staLoc,
                                                               event.getPreferred().getLocation())
-                        : Rotate.getTransverseAzimuth(channelGroup.getStation().getLocation(), event.getPreferred()
+                        : Rotate.getTransverseAzimuth(staLoc, event.getPreferred()
                                 .getLocation());
                 LocalSeismogramImpl rfSeis = saveTimeSeries(predicted,
-                               "receiver function " + singleSeismograms[0].channel_id.station_code,
+                               "receiver function " + singleSeismograms[0].channel_id.getStationCode(),
                                chanCode,
                                firstP.subtract(shift),
                                singleSeismograms[0],
@@ -157,8 +158,8 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
         Channel[] xyChan = channelGroup.getHorizontalXY();
         if (xyChan.length < 2) {
             throw new IncompatibleSeismograms("Unable to find horizontal channels: "+channelGroup.getChannel1().get_code()
-                                              +" "+channelGroup.getChannel2().get_code()
-                                              +" "+channelGroup.getChannel3().get_code());
+                                              +" "+channelGroup.getChannel2().getCode()
+                                              +" "+channelGroup.getChannel3().getCode());
         }
         Channel xChan = xyChan[0];
         Channel yChan = xyChan[1];
@@ -172,7 +173,7 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
         LocalSeismogramImpl ySeis = null, xSeis = null, zSeis = null;
         String foundChanCodes = "";
         for (int i = 0; i < localSeis.length; i++) {
-            if (ChannelIdUtil.areEqual(localSeis[i].channel_id, yChan.getId())) {
+            if (ChannelIdUtil.areEqual(localSeis[i].channel_id, ChannelId.of(yChan))) {
                 ySeis = localSeis[i];
             } else if (ChannelIdUtil.areEqual(localSeis[i].channel_id, xChan.getId())) {
                 xSeis = localSeis[i];
@@ -275,13 +276,13 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
                                RequestFilter[][] original,
                                RequestFilter[][] available,
                                CookieJar cookieJar) throws Exception {
-        ChannelId recFuncChanId = new ChannelId(refSeismogram.channel_id.network_id,
-                                                refSeismogram.channel_id.station_code,
-                                                refSeismogram.channel_id.site_code,
+        ChannelId recFuncChanId = new ChannelId(refSeismogram.channel_id.getNetworkId(),
+                                                refSeismogram.channel_id.getStationCode(),
+                                                refSeismogram.channel_id.getLocCode(),
                                                 chanCode,
-                                                refSeismogram.channel_id.begin_time);
+                                                refSeismogram.channel_id.getStartTime());
         Channel recFuncChan = new Channel(recFuncChanId, name, orientation, channelGroup.getChannel1()
-                .getSamplingInfo(), channelGroup.getChannel1().getEffectiveTime(), channelGroup.getChannel1().getSite());
+                .getSampleRate(), channelGroup.getChannel1().getEffectiveTime(), channelGroup.getChannel1().getSite());
         LocalSeismogramImpl predSeis = new LocalSeismogramImpl("recFunc/" + chanCode + "/" + refSeismogram.get_id(),
                                                                begin,
                                                                data.length,

@@ -29,8 +29,8 @@ public class DistanceRange extends DistanceRangeSubsetter implements
         OriginImpl origin =  eventAccess.getOrigin();
         double actualDistance = SphericalCoords.distance(origin.getLocation().latitude,
                                                          origin.getLocation().longitude,
-                                                         station.getLocation().latitude,
-                                                         station.getLocation().longitude);
+                                                         station.getLatitude().getValue(),
+                                                         station.getLongitude().getValue());
         QuantityImpl dist = new QuantityImpl(actualDistance, UnitImpl.DEGREE);
         if(dist.greaterThanEqual(getMin()) && dist.lessThanEqual(getMax())) {
             return new StringTreeLeaf(this, true, "DistanceRange("+getMin()+", "+getMax()+")");

@@ -7,6 +7,7 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.bag.AreaUtil;
 import edu.sc.seis.sod.model.common.BoxAreaImpl;
+import edu.sc.seis.sod.model.common.Location;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
@@ -19,7 +20,7 @@ public class StationBoxArea implements StationSubsetter {
 
     public StringTree accept(Station station, NetworkSource network) {
         return new StringTreeLeaf(this,
-                                  AreaUtil.inArea(ba, station.getLocation()));
+                                  AreaUtil.inArea(ba, Location.of(station)));
     }
 
     private BoxAreaImpl ba;

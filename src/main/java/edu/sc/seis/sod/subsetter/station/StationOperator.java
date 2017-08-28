@@ -2,6 +2,7 @@ package edu.sc.seis.sod.subsetter.station;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Operator;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
@@ -27,8 +28,13 @@ public class StationOperator implements StationSubsetter {
     }
 
     public StringTree accept(Station e, NetworkSource network) {
-        if(e.getOperator().equals(SodUtil.getNestedText(config))) return new Pass(this);
-        else return new Fail(this);
+        for(Operator o : e.getOperatorList()) {
+            // ToDo only use first agency as pull request to stationxml will eliminate multiple
+            if (o.getAgencyList().get(0).equals(SodUtil.getNestedText(config))) {
+                return new Pass(this);
+            }
+        }
+        return new Fail(this);
     }
 
     Element config;

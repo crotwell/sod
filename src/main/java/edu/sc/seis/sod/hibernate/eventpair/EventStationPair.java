@@ -45,7 +45,7 @@ public class EventStationPair extends CookieEventPair {
         logger.debug("Begin EventStationPair (e="+getEvent().getDbid()+",s="+getStationDbId()+") "+this);
         // make sure origin and station not lazy
         Location l = getEvent().getOrigin().getLocation();
-        l = getStation().getLocation();
+        l = Location.of(getStation());
         // don't bother with station if effective time does not
         // overlap event time
         try {

@@ -27,6 +27,7 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.bag.OrientationUtil;
 import edu.sc.seis.sod.channelGroup.Rule;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.Orientation;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.SamplingImpl;
 import edu.sc.seis.sod.model.common.UnitImpl;
@@ -104,7 +105,7 @@ public class ChannelGrouper {
             for(int j = i + 1; j < chans.length; j++) {
                 if(!OrientationUtil.areOrthogonal(chans[i],
                                                   chans[j])) {
-                    logger.info("Fail areOrthogonal ("+i+","+j+"): "+ChannelIdUtil.toString(chans[i].get_id())+" "+OrientationUtil.toString(chans[i].getOrientation())+" "+ChannelIdUtil.toString(chans[j].get_id())+" "+OrientationUtil.toString(chans[j].getOrientation()));
+                    logger.info("Fail areOrthogonal ("+i+","+j+"): "+ChannelIdUtil.toString(chans[i])+" "+OrientationUtil.toString(Orientation.of(chans[i]))+" "+ChannelIdUtil.toString(chans[j])+" "+OrientationUtil.toString( Orientation.of(chans[j])));
                     return false;
                 }
             }
@@ -114,16 +115,16 @@ public class ChannelGrouper {
 
     private static boolean haveSameSamplingRate(ChannelGroup cg) {
         Channel[] chans = cg.getChannels();
-        SamplingImpl sampl = (SamplingImpl)chans[0].getSamplingInfo();
+        SamplingImpl sampl = SamplingImpl.of(chans[0]);
         QuantityImpl freq = sampl.getFrequency();
         UnitImpl baseUnit = freq.getUnit();
         double samplingRate0 = (freq.getValue()) * sampl.getNumPoints();
         for(int i = 1; i < chans.length; i++) {
-            SamplingImpl sample = (SamplingImpl)chans[i].getSamplingInfo();
+            SamplingImpl sample = SamplingImpl.of(chans[i]);
             double sampleRate = (sample.getFrequency().convertTo(baseUnit).getValue())
                     * sample.getNumPoints();
             if(sampleRate != samplingRate0) {
-                logger.info("Fail haveSameSamplingRate ("+i+"): "+ChannelIdUtil.toString(chans[i].get_id())+" "+chans[i].getSamplingInfo()+" "+ChannelIdUtil.toString(chans[0].get_id())+" "+chans[0].getSamplingInfo());
+                logger.info("Fail haveSameSamplingRate ("+i+"): "+ChannelIdUtil.toString(chans[i])+" "+SamplingImpl.of(chans[i])+" "+ChannelIdUtil.toString(chans[0])+" "+SamplingImpl.of(chans[0]));
                 return false;
             }
         }
@@ -133,9 +134,8 @@ public class ChannelGrouper {
      HashMap<String, List<Channel>> groupByNetStaBandGain(List<Channel> channels) {
         HashMap<String, List<Channel>> bandGain = new HashMap<String, List<Channel>>();
         for(Channel c : channels) {
-            MicroSecondDate msd = new MicroSecondDate(c.get_id().begin_time);
-            ChannelId cId = c.getId();
-            String key = cId.network_id.network_code+"."+cId.station_code+"."+cId.channel_code;
+            MicroSecondDate msd = new MicroSecondDate(c.getStartDateTime());
+            String key = c.getNetworkId()+"."+c.getStationCode()+"."+c.getCode();
             key = key.substring(0, key.length() - 1);
             key = msd + key;
             List<Channel> chans = bandGain.get(key);

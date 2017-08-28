@@ -25,7 +25,7 @@ public class StationPointDistance extends AbstractOriginPoint implements
      * given lat and lon.
      */
     public StringTree accept(Station station, NetworkSource network) {
-        Location loc = station.getLocation();
+        Location loc = Location.of(station);
         DistAz distaz = new DistAz(latitude,
                                    longitude,
                                    loc.latitude,

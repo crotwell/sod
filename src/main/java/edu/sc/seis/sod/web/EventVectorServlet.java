@@ -49,7 +49,7 @@ public class EventVectorServlet extends HttpServlet {
             List<EventSeismogramFileReference> seisRefList = new ArrayList<EventSeismogramFileReference>();
             for (int j = 0; j < chans.length; j++) {
                 seisRefList.addAll(SeismogramFileRefDB.getSingleton()
-                        .getSeismogramsForEventForChannel(ecp.getEvent(), chans[j].getId()));
+                        .getSeismogramsForEventForChannel(ecp.getEvent(), chans[j]));
             }
             resp.setContentType("application/vnd.fdsn.mseed");
             OutputStream outBinary = resp.getOutputStream();

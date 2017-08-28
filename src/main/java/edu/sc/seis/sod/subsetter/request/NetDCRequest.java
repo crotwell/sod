@@ -25,10 +25,10 @@ public class NetDCRequest extends BreqFastRequest {
                                  int i) throws IOException {
         MicroSecondDate start = new MicroSecondDate(request[i].start_time);
         MicroSecondDate end = new MicroSecondDate(request[i].end_time);
-        out.write(".DATA * " + channel.get_id().network_id.network_code + " "
-                + channel.get_id().station_code + " "
-                + channel.get_id().site_code + " "
-                + channel.get_code() + " "
+        out.write(".DATA * " + channel.getNetworkCode() + " "
+                + channel.getStationCode() + " "
+                + channel.getLocCode() + " "
+                + channel.getCode() + " "
                 + netDCTimeFormat.format(start) + " " 
                 + netDCTimeFormat.format(end)
                 + nl);

@@ -37,7 +37,7 @@ public class StationRegularExpression implements StationSubsetter {
 
     public StringTree accept(Station station, NetworkSource network) throws Exception {
         for(int i = 0; i < patterns.length; i++) {
-            if(patterns[i].matcher(StationIdUtil.toStringNoDates(station.get_id()))
+            if(patterns[i].matcher(StationIdUtil.toStringNoDates(station))
                     .matches()) { return new Pass(this); }
         }
         return new Fail(this);

@@ -28,8 +28,7 @@ public class SomeDataCoverage implements WaveformProcess {
                                   CookieJar cookieJar) {
         MicroSecondTimeRange[] seisTimeRanges = new MicroSecondTimeRange[seismograms.length];
         for(int i = 0; i < seisTimeRanges.length; i++) {
-            seisTimeRanges[i] = new MicroSecondTimeRange(seismograms[i].getBeginTime(),
-                                                         seismograms[i].getEndTime());
+            seisTimeRanges[i] = new MicroSecondTimeRange(seismograms[i]);
         }
         MicroSecondTimeRange[] rfTimeRanges = new MicroSecondTimeRange[original.length];
         for(int i = 0; i < rfTimeRanges.length; i++) {

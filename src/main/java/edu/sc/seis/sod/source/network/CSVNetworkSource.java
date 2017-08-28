@@ -31,6 +31,7 @@ import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.station.ChannelId;
+import edu.sc.seis.sod.model.station.ChannelIdUtil;
 import edu.sc.seis.sod.model.station.Instrumentation;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
@@ -38,7 +39,6 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.sod.model.station.NetworkId;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.model.station.SiteId;
-import edu.sc.seis.sod.model.station.SiteImpl;
 import edu.sc.seis.sod.model.station.StationId;
 import edu.sc.seis.sod.model.station.StationIdUtil;
 import edu.sc.seis.sod.source.AbstractCSVSource;
@@ -114,8 +114,8 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
     public List<Network> getNetworksFromStations(List<Station> staList) {
         Map<String, Network> nets = new HashMap<String, Network>();
         for (Station sta : staList) {
-            nets.put(StationIdUtil.toStringNoDates(sta.getId()),
-                     new Network(sta.getId().network_id, "", "", ""));
+            nets.put(StationIdUtil.toStringNoDates(sta),
+                     sta.getNetwork());
         }
         List<Network> out = new ArrayList<Network>();
         for (Network net : nets.values()) {
@@ -161,8 +161,8 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
 
     protected Station getStationForChannel(String netCode, String staCode) {
         for (Station stationImpl : stations) {
-            if (netCode.equals(stationImpl.getNetworkAttrImpl().get_code())
-                    && staCode.equals(stationImpl.get_code())) {
+            if (netCode.equals(stationImpl.getNetworkCode())
+                    && staCode.equals(stationImpl.getCode())) {
                 return stationImpl;
             }
         }
@@ -198,11 +198,11 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
                                         new QuantityImpl(elevation, elevationUnit),
                                         new QuantityImpl(depth, depthUnit));
             } else {
-                location = curStation.getLocation();
+                location = Location.of(curStation);
             }
             ZonedDateTime chanBegin = loadTime(headers, csvReader, START, DEFAULT_TIME);
-            float azimuth = loadFloat(headers, csvReader, AZIMUTH, Channel.getAzimuth(chanCode));
-            float dip = loadFloat(headers, csvReader, DIP, Channel.getDip(chanCode));
+            float azimuth = loadFloat(headers, csvReader, AZIMUTH, ChannelIdUtil.getDefaultAzimuth(chanCode));
+            float dip = loadFloat(headers, csvReader, DIP, ChannelIdUtil.getDefaultDip(chanCode));
             SamplingImpl sampling;
             if (headers.contains(SAMPLE_PERIOD)) {
                 sampling = new SamplingImpl(1, new TimeInterval(loadFloat(headers, csvReader, SAMPLE_PERIOD, 1),
@@ -214,8 +214,7 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
                 sampling = new SamplingImpl(1, new TimeInterval(1, UnitImpl.SECOND));
             }
             TimeRange chanTime = new TimeRange(chanBegin, loadTime(headers, csvReader, END, DEFAULT_END));
-            Channel channel = new Channel(new ChannelId(curStation.get_id().network_id,
-                                                                staCode,
+            Channel channel = new Channel(new ChannelId(curStation,
                                                                 siteCode,
                                                                 chanCode,
                                                                 chanBegin),
@@ -285,7 +284,7 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
     public List<? extends Channel> getChannels(Station station) {
         List<Channel> out = new ArrayList<Channel>();
         for (Channel chan : channels) {
-            if (StationIdUtil.areEqual(station.getId(), chan.getStationImpl().getId())) {
+            if (StationIdUtil.areEqual(station, chan.getStation())) {
                 out.add(chan);
             }
         }
@@ -311,7 +310,7 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
     public List<? extends Station> getStations(Network net) {
         List<Station> staList = new ArrayList<Station>();
         for (Station sta : stations) {
-            if (NetworkIdUtil.areEqual(net.getId(), sta.getId().network_id)) {
+            if (NetworkIdUtil.areEqual(net, sta.getNetwork())) {
                 staList.add(sta);
             }
         }

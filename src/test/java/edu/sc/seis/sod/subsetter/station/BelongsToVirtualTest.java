@@ -28,7 +28,7 @@ public class BelongsToVirtualTest extends TestCase {
     private static final TimeInterval FORTNIGHT = new TimeInterval(1,
                                                                    UnitImpl.FORTNIGHT);
     
-    private static String mockNetName = MockNetworkAttr.createMultiSplendoredAttr().getName();
+    private static String mockNetName = MockNetworkAttr.createMultiSplendoredAttr().getNetworkId();
 
     public void testRefresh() throws Exception {
         CountRetrieveStations na = new CountRetrieveStations();

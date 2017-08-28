@@ -1,8 +1,11 @@
 package edu.sc.seis.sod.web.jsonapi;
 
+import java.time.ZonedDateTime;
+
 import org.json.JSONException;
 import org.json.JSONWriter;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.BaseNodeType;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.sod.model.common.ISOTime;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
@@ -23,11 +26,9 @@ public class NetworkJson extends AbstractJsonApiData {
 
     @Override
     public String getId() {
-        String s = net.get_code();
-        if (NetworkIdUtil.isTemporary(net.getId())) {
-            s += "_" + net.getBeginTime().getISOString().substring(0, 4); // append
-                                                                     // start
-                                                                     // year
+        String s = net.getCode();
+        if (NetworkIdUtil.isTemporary(net)) {
+            s += "_" + NetworkIdUtil.getYear(net); // append start year
         }
         return s;
     }
@@ -35,11 +36,11 @@ public class NetworkJson extends AbstractJsonApiData {
     @Override
     public void encodeAttributes(JSONWriter out) throws JSONException {
         out.key("network-code")
-                .value(net.getId().network_code)
+                .value(net.getNetworkCode())
                 .key("start-time")
-                .value(net.getId().begin_time.getISOString())
+                .value(BaseNodeType.toISOString(net.getStartDateTime()))
                 .key("end-time")
-                .value(encodeEndTime(net.getEndTime()))
+                .value(encodeEndTime(net.getEndDateTime()))
                 .key("description")
                 .value(net.getDescription());
     }
@@ -88,9 +89,9 @@ public class NetworkJson extends AbstractJsonApiData {
         return out;
     }
 
-    public static Object encodeEndTime(MicroSecondDate endDate) {
-        if (endDate.before(ClockUtil.now())) {
-            return ISOTime.getISOString(endDate);
+    public static Object encodeEndTime(ZonedDateTime endDate) {
+        if (endDate.isBefore(ClockUtil.now().toZonedDateTime())) {
+            return BaseNodeType.toISOString(endDate);
         } else {
             return null;
         }

@@ -18,8 +18,8 @@ public class OrientationRange implements ChannelSubsetter {
         offset = Float.parseFloat(DOMHelper.extractText(config, "maxOffset"));
     }
 
-    public StringTree accept(Channel e, NetworkSource network) throws Exception {
-        Orientation ori = e.getOrientation();
+    public StringTree accept(Channel c, NetworkSource network) throws Exception {
+        Orientation ori = Orientation.of(c);
         double actualDistance = SphericalCoords.distance(ori.dip,
                                                          ori.azimuth,
                                                          dip,

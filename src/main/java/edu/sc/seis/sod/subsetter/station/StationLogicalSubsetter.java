@@ -73,7 +73,7 @@ public abstract class StationLogicalSubsetter extends LogicalSubsetter {
             NetworkSubsetter ns = NetworkLogicalSubsetter.createSubsetter(s);
 
             public StringTree accept(Station station, NetworkSource network) throws Exception {
-                return ns.accept(station.getNetworkAttrImpl());
+                return ns.accept(station.getNetwork());
             }
             
         };

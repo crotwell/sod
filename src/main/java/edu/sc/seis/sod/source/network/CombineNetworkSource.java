@@ -8,6 +8,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
+import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
@@ -16,10 +19,6 @@ import edu.sc.seis.sod.hibernate.ChannelNotFound;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
-import edu.sc.seis.sod.model.station.Instrumentation;
-import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
-import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
-import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.source.SodSourceException;
 
@@ -100,7 +99,7 @@ public class CombineNetworkSource extends AbstractNetworkSource implements Netwo
 
     @Override
     public List<? extends Channel> getChannels(Station station) throws SodSourceException {
-        NetworkSource source = getSourceForCode(NetworkIdUtil.toStringNoDates(station.getId().network_id));
+        NetworkSource source = getSourceForCode(NetworkIdUtil.toStringNoDates(station.getNetwork()));
         if (source != null) {
             return source.getChannels(station);
         }
@@ -109,7 +108,7 @@ public class CombineNetworkSource extends AbstractNetworkSource implements Netwo
 
     @Override
     public QuantityImpl getSensitivity(Channel chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
-        NetworkSource source = getSourceForCode(NetworkIdUtil.toStringNoDates(chan.getId().network_id));
+        NetworkSource source = getSourceForCode(NetworkIdUtil.toStringNoDates(chan.getNetwork()));
         if (source != null) {
             QuantityImpl out = source.getSensitivity(chan);
             if (out != null) {
@@ -121,7 +120,7 @@ public class CombineNetworkSource extends AbstractNetworkSource implements Netwo
 
     @Override
     public Response getResponse(Channel chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
-        NetworkSource source = getSourceForCode(NetworkIdUtil.toStringNoDates(chan.getId().network_id));
+        NetworkSource source = getSourceForCode(NetworkIdUtil.toStringNoDates(chan.getNetwork()));
         if (source != null) {
             Response out = source.getResponse(chan);
             if (out != null) {
@@ -139,7 +138,7 @@ public class CombineNetworkSource extends AbstractNetworkSource implements Netwo
             for (NetworkSource source : wrapped) {
                 List<? extends Network> sublist = source.getNetworks();
                 for (Network net : sublist) {
-                    if (code.equals(NetworkIdUtil.toStringNoDates(net.get_id()))) {
+                    if (code.equals(NetworkIdUtil.toStringNoDates(net))) {
                         codeToSource.put(code, source);
                         return source;
                     }

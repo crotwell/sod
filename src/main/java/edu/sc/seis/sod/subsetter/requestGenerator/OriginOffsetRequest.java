@@ -37,7 +37,7 @@ public class OriginOffsetRequest implements RequestGenerator {
         MicroSecondDate originDate = new MicroSecondDate(origin.getOriginTime());
         MicroSecondDate bDate = originDate.add(beginOffset);
         MicroSecondDate eDate = originDate.add(endOffset);
-        RequestFilter[] filters = {new RequestFilter(channel.get_id(),
+        RequestFilter[] filters = {new RequestFilter(channel,
                                                      bDate,
                                                      eDate)};
         return filters;

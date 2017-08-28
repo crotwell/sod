@@ -17,7 +17,7 @@ public class OrientationAzimuthRange extends RangeSubsetter implements
         if(max > 180) max = max - 360;
     }
 
-    public StringTree accept(Channel e, NetworkSource network) throws Exception {
-        return new StringTreeLeaf(this, accept(e.getOrientation().azimuth));
+    public StringTree accept(Channel c, NetworkSource network) throws Exception {
+        return new StringTreeLeaf(this, accept(c.getAzimuth().getValue()));
     }
 }// OrientationAzimuthRange

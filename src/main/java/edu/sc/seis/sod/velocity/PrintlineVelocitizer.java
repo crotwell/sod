@@ -25,6 +25,7 @@ import edu.sc.seis.sod.mock.station.MockStation;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
+import edu.sc.seis.sod.model.station.ChannelId;
 import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.velocity.event.VelocityEvent;
 import edu.sc.seis.sod.velocity.network.VelocityChannel;
@@ -50,9 +51,9 @@ public class PrintlineVelocitizer {
         mockContext.put("event", event);
                 mockContext.put("channel", new VelocityChannel(chan));
         mockContext.put("station", new VelocityStation(MockStation.createStation()));
-        mockContext.put("net", new VelocityNetwork((Network)MockChannel.createChannel().getNetworkAttr()));
+        mockContext.put("net", new VelocityNetwork((Network)MockChannel.createChannel().getNetwork()));
         List<LocalSeismogramImpl> seisList = new ArrayList<LocalSeismogramImpl>();
-        seisList.add(new VelocitySeismogram(MockSeismogram.createSpike(chan.getId()), chan));
+        seisList.add(new VelocitySeismogram(MockSeismogram.createSpike(ChannelId.of(chan)), chan));
         mockContext.put("seismograms", seisList);
         mockContext.put("index", new Integer(1));
     }

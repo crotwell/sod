@@ -31,21 +31,21 @@ public class ChannelJson extends AbstractJsonApiData {
     @Override
     public void encodeAttributes(JSONWriter out) throws JSONException {
         out.key("site-code")
-        .value(chan.getSite().get_code())
+        .value(chan.getLocCode())
         .key("channel-code")
-        .value(chan.get_code())
+        .value(chan.getChannelCode())
         .key("station")
-        .value(chan.getStationImpl().getDbid())
+        .value(chan.getStation().getDbid())
         .key("sps")
-        .value(((SamplingImpl)chan.getSamplingInfo()).getFrequency().getValue(UnitImpl.HERTZ))
+        .value(chan.getSampleRate().getValue())
         .key("latitude")
-        .value(chan.getSite().getLocation().latitude)
+        .value(chan.getLatitude().getValue())
         .key("longitude")
-        .value(chan.getSite().getLocation().longitude)
+        .value(chan.getLongitude().getValue())
         .key("elevation")
-        .value(((QuantityImpl)chan.getSite().getLocation().elevation).getValue(UnitImpl.METER))
+        .value(chan.getElevation().getValue())
         .key("depth")
-        .value(((QuantityImpl)chan.getSite().getLocation().depth).getValue(UnitImpl.METER));
+        .value(chan.getDepth().getValue());
     }
 
     @Override
@@ -55,7 +55,7 @@ public class ChannelJson extends AbstractJsonApiData {
 
     @Override
     public void encodeRelationships(JSONWriter out) throws JSONException {
-        StationJson staJson = new StationJson(chan.getStationImpl(), getBaseUrl());
+        StationJson staJson = new StationJson(chan.getStation(), getBaseUrl());
         out.key("station").object();
         out.key("id").value(staJson.getId());
         out.key("type").value(staJson.getType());

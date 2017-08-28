@@ -146,10 +146,10 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
                     List<ChannelTimeWindow> queryRequest = new ArrayList<ChannelTimeWindow>();
                     for (RequestFilter rf : request) {
                         ChannelId c = rf.channel_id;
-                        queryRequest.add(new ChannelTimeWindow(c.network_id.network_code,
-                                                               c.station_code,
-                                                               c.site_code,
-                                                               c.channel_code,
+                        queryRequest.add(new ChannelTimeWindow(c.networkCode,
+                                                               c.stationCode,
+                                                               c.locCode,
+                                                               c.channelCode,
                                                                new MicroSecondDate(rf.start_time),
                                                                new MicroSecondDate(rf.end_time)));
                     }

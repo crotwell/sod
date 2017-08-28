@@ -14,18 +14,23 @@
 
 package edu.sc.seis.sod.hibernate;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.model.station.ChannelId;
 
-//
-// IDL:iris.edu/Fissures/IfNetwork/ChannelNotFound:1.0
-//
-/***/
 
-final public class ChannelNotFound extends org.omg.CORBA.UserException
+final public class ChannelNotFound extends Exception
 {
     public
-    ChannelNotFound()
+    ChannelNotFound(String reason, Channel chan)
     {
+        super(reason);
+        this.channel = ChannelId.of(chan);
+    }
+    
+    public
+    ChannelNotFound(Channel chan)
+    {
+        this.channel = ChannelId.of(chan);
     }
 
     public

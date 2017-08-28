@@ -30,7 +30,7 @@ public class EmbeddedNetwork implements StationSubsetter {
 
     public StringTree accept(Station station, NetworkSource network)
             throws Exception {
-        StringTree out =  netSubsetter.accept(station.getNetworkAttrImpl());
+        StringTree out =  netSubsetter.accept(station.getNetwork());
         return new StringTreeBranch(this, out.isSuccess(), out);
     }
     

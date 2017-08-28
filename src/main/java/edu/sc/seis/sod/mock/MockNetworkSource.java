@@ -15,6 +15,7 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
+import edu.sc.seis.sod.model.station.StationId;
 import edu.sc.seis.sod.source.SodSourceException;
 import edu.sc.seis.sod.source.network.AbstractNetworkSource;
 import edu.sc.seis.sod.source.network.NetworkQueryConstraints;
@@ -56,7 +57,7 @@ public class MockNetworkSource extends AbstractNetworkSource implements NetworkS
     @Override
     public List<? extends Station> getStations(Network net) {
         for (int i = 0; i < nets.length; i++) {
-            if (NetworkIdUtil.areEqual(nets[i].get_attributes().getId(), net.getId())) {
+            if (NetworkIdUtil.areEqual(nets[i].get_attributes().getNetworkId(), net.getNetworkId())) {
                 return Arrays.asList((Station[])nets[i].retrieve_stations());
             }
         }
@@ -66,8 +67,8 @@ public class MockNetworkSource extends AbstractNetworkSource implements NetworkS
     @Override
     public List<? extends Channel> getChannels(Station station) {
         for (int i = 0; i < nets.length; i++) {
-            if (NetworkIdUtil.areEqual(nets[i].get_attributes().getId(), station.getNetworkAttrImpl().getId())) {
-                return Arrays.asList((Channel[])nets[i].retrieve_for_station(station.getId()));
+            if (NetworkIdUtil.areEqual(nets[i].get_attributes().getNetworkId(), station.getNetwork().getNetworkId())) {
+                return Arrays.asList((Channel[])nets[i].retrieve_for_station(StationId.of(station)));
             }
         }
         return null;

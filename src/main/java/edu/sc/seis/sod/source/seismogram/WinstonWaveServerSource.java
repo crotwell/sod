@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.sc.seis.seisFile.ChannelTimeWindow;
 import edu.sc.seis.seisFile.earthworm.TraceBuf2;
 import edu.sc.seis.seisFile.waveserver.WaveServer;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
@@ -43,12 +44,12 @@ public class WinstonWaveServerSource implements SeismogramSource {
         List<LocalSeismogramImpl> out = new ArrayList<LocalSeismogramImpl>();
         for (RequestFilter rf : request) {
             try {
-                List<TraceBuf2> traceBufs = ws.getTraceBuf(rf.channel_id.network_id.network_code, 
+                List<TraceBuf2> traceBufs = ws.getTraceBuf(new ChannelTimeWindow(rf.channel_id.network_code, 
                                                             rf.channel_id.station_code, 
                                                            rf.channel_id.site_code,
                                                            rf.channel_id.channel_code, 
                                                            new MicroSecondDate(rf.start_time),
-                                                           new MicroSecondDate(rf.end_time));
+                                                           new MicroSecondDate(rf.end_time)));
                 if (traceBufs == null) {
                     continue;
                 }

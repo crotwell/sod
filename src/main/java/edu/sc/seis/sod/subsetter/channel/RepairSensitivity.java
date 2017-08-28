@@ -31,7 +31,7 @@ public class RepairSensitivity implements ChannelSubsetter {
             }
             if(response.getResponseStageList().size() == 0) {
                 return new StringTreeLeaf(this, false, "No stages in the response of "
-                        + ChannelIdUtil.toString(channel.get_id()));
+                        + ChannelIdUtil.toString(channel));
             }
             Response.repairResponse(response);
             return new StringTreeLeaf(this, Response.isValid(response));

@@ -20,7 +20,7 @@ public class StationEquipment extends AbstractEquipmentSubsetter implements Stat
 
     @Override
     public StringTree accept(Station station, NetworkSource network) throws Exception {
-        for (Equipment eq : station.getEquipment()) {
+        for (Equipment eq : station.getEquipmentList()) {
             if (eq != null && super.doesMatch(eq)) {
                 return new Pass(this);
             }  

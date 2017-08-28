@@ -28,6 +28,7 @@ import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.seismogram.RequestFilterUtil;
 import edu.sc.seis.sod.model.station.ChannelGroup;
+import edu.sc.seis.sod.model.station.ChannelId;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
 import edu.sc.seis.sod.model.status.Stage;
 import edu.sc.seis.sod.model.status.Standing;
@@ -319,13 +320,13 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                         return;
                     }
                     Channel ecpChan = ecp.getChannelGroup().getChannels()[i];
-                    if (!ChannelIdUtil.areEqual(localSeismograms[i][j].channel_id, ecpChan.get_id())) {
+                    if (!ChannelIdUtil.areEqual(localSeismograms[i][j].channel_id, ChannelId.of(ecpChan))) {
                         // must be server error
                         logger.warn("MV Channel id in returned seismogram doesn not match channelid in request. req="
                                 + ChannelIdUtil.toString(ecpChan) + " seis="
                                 + ChannelIdUtil.toString(localSeismograms[i][j].channel_id));
                         // fix seis with original id
-                        localSeismograms[i][j].channel_id = ecpChan.get_id();
+                        localSeismograms[i][j].channel_id = ChannelId.of(ecpChan);
                     } // end of if ()
                     tempForCast.add(localSeismograms[i][j]);
                 } // end of for (int i=0; i<localSeismograms.length; i++)

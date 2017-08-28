@@ -48,12 +48,11 @@ public class BelongsToVirtual implements StationSubsetter {
             refreshStations(network);
             for (VirtualNetwork vnet : vnetList.getVirtualNetworks()) {
                 for (ContributorNetwork cn : vnet.getContribNetList()) {
-                    if (station.getNetworkAttr().get_code().equals(cn.getCode())
-                            && (!NetworkIdUtil.isTemporary(station.getNetworkAttr().getId())
-                                    || cn.getStartYear().equals(NetworkIdUtil.getYear(station.getNetworkAttr()
-                                            .getId())))) {
+                    if (station.getNetwork().getCode().equals(cn.getCode())
+                            && (!NetworkIdUtil.isTemporary(station.getNetwork())
+                                    || cn.getStartYear().equals(NetworkIdUtil.getYear(station.getNetwork())))) {
                         for (VirtualStation vsta : cn.getStationList()) {
-                            if (station.get_code().equals(vsta.getCode())) {
+                            if (station.getStationCode().equals(vsta.getCode())) {
                                 return new Pass(this);
                             }
                         }

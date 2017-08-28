@@ -78,7 +78,12 @@ public class FissuresFormatter {
     }
 
     public static String formatNetwork(StationId id) {
-        return NetworkIdUtil.toStringNoDates(id.network_id);
+        //return NetworkIdUtil.toStringNoDates(id.getNetworkId());
+        return id.getNetworkId();
+    }
+
+    public static String formatNetwork(Network id) {
+        return NetworkIdUtil.toStringNoDates(id);
     }
 
     public static String formatNetwork(NetworkId id) {
@@ -94,11 +99,11 @@ public class FissuresFormatter {
 //    }
 
     public static String networkName(Network net) {
-        return net.getName();
+        return net.getDescription();
     }
 
     public static String stationName(Station station) {
-        return station.getName();
+        return station.getName();  getDescription() or getSite().getName()???
     }
 
     public static QuantityImpl getDepth(OriginImpl origin) {

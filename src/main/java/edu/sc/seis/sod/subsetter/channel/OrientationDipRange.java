@@ -15,7 +15,7 @@ public class OrientationDipRange extends RangeSubsetter implements
         super(config);
     }
 
-    public StringTree accept(Channel e, NetworkSource network) throws Exception {
-        return new StringTreeLeaf(this, accept(e.getOrientation().dip));
+    public StringTree accept(Channel c, NetworkSource network) throws Exception {
+        return new StringTreeLeaf(this, accept(c.getDip().getValue()));
     }
 }// OrientationDipRange

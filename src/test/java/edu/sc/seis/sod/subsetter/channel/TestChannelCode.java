@@ -3,6 +3,7 @@ package edu.sc.seis.sod.subsetter.channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.UserConfigurationException;
 import edu.sc.seis.sod.mock.station.MockChannel;
+import edu.sc.seis.sod.mock.station.MockStation;
 import junit.framework.TestCase;
 
 public class TestChannelCode extends TestCase {
@@ -90,15 +91,9 @@ public class TestChannelCode extends TestCase {
 
     private static final Channel BHE = MockChannel.createEastChannel();
 
-    private static final Channel LHZ = MockChannel.createChannel();
-    static {
-        LHZ.get_id().channel_code = "LHZ";
-    }
-
-    private static final Channel LLN = MockChannel.createChannel();
-    static {
-        LLN.get_id().channel_code = "LLN";
-    }
+    private static final Channel LHZ = MockChannel.createChannel(MockStation.createStation(), "00", "LHZ");
+    
+    private static final Channel LLN = MockChannel.createChannel(MockStation.createStation(), "00", "LLN");
 
     private ChannelCode cc;
 }

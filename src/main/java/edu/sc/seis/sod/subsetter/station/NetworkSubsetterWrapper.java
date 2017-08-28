@@ -15,7 +15,7 @@ public class NetworkSubsetterWrapper implements StationSubsetter {
     }
 
     public StringTree accept(Station station, NetworkSource network) throws Exception {
-        return ns.accept(station.getNetworkAttrImpl());
+        return ns.accept(station.getNetwork());
     }
 
     private NetworkSubsetter ns;

@@ -29,7 +29,7 @@ public class LinearDistanceMagnitudeRange extends DistanceRangeSubsetter
     public StringTree accept(CacheEvent eventAccess,
                              Station station,
                           CookieJar cookieJar) {
-        Location stationLoc = station.getLocation();
+        Location stationLoc = Location.of(station);
         return new StringTreeLeaf(this, accept(eventAccess, stationLoc.latitude, stationLoc.longitude));
     }
 

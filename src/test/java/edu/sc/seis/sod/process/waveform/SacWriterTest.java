@@ -23,6 +23,8 @@ import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
+import edu.sc.seis.sod.model.station.ChannelId;
+import edu.sc.seis.sod.model.station.ChannelIdUtil;
 import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.util.convert.sac.FissuresToSac;
 import edu.sc.seis.sod.util.display.EventUtil;
@@ -39,7 +41,7 @@ public class SacWriterTest extends TestCase {
                                                          seis.getName() + ".sac"},
                                                        {"/${event.catalog}",
                                                         "/" + EventUtil.extractOrigin(ev).getCatalog()},
-                                                       {"${channel.name}", chan.getName()}};
+                                                       {"${channel.name}", ChannelIdUtil.toStringNoDates(chan)}};
         for(int i = 0; i < templateAndResult.length; i++) {
             assertEquals(FissuresFormatter.filize(templateAndResult[i][1]),
                          new SacWriter("", templateAndResult[i][0]).generate(ev, chan, seis, 0, 1));
@@ -73,7 +75,7 @@ public class SacWriterTest extends TestCase {
     }
     
     public void testSecondArrival() throws Exception {
-        Location staLoc = chan.getStation().getLocation();
+        Location staLoc = Location.of(chan.getStation());
         Location evtLoc = ev.get_preferred_origin().getLocation();
         float evDepth = (float)((QuantityImpl)evtLoc.depth).getValue(UnitImpl.KILOMETER);
         SeismicPhase sp = new SeismicPhase("P", "prem", evDepth);
@@ -127,7 +129,7 @@ public class SacWriterTest extends TestCase {
 
     Channel chan = MockChannel.createChannel(MockLocation.create(10.0f, 10.0f));
 
-    LocalSeismogramImpl seis = MockSeismogram.createSpike(chan.getId());
+    LocalSeismogramImpl seis = MockSeismogram.createSpike(ChannelId.of(chan));
 
     SacTimeSeries sts;
 }

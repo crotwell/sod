@@ -58,8 +58,8 @@ public class ChannelGroupTest {
         assertEquals("failures", 0, failures.size());
         assertEquals("grouped", 2, cgList.size());
         for (ChannelGroup cg : cgList) {
-            assertEquals(cg.getChannel1().get_code().substring(0, 1), cg.getChannel2().get_code().substring(0, 1)); 
-            assertEquals(cg.getChannel1().get_code().substring(0, 1), cg.getChannel3().get_code().substring(0, 1));     
+            assertEquals(cg.getChannel1().getChannelCode().substring(0, 1), cg.getChannel2().getChannelCode().substring(0, 1)); 
+            assertEquals(cg.getChannel1().getChannelCode().substring(0, 1), cg.getChannel3().getChannelCode().substring(0, 1));     
         }
     }
     @Test

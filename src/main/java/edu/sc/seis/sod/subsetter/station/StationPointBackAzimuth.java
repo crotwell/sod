@@ -19,8 +19,8 @@ public class StationPointBackAzimuth extends AbstractOriginPoint implements
     }
 
     public StringTree accept(Station station, NetworkSource network) {
-        double oLat = station.getLocation().latitude;
-        double oLon = station.getLocation().longitude;
+        double oLat = station.getLatitude().getValue();
+        double oLon = station.getLongitude().getValue();
         DistAz distaz = new DistAz(oLat, oLon, latitude, longitude);
         if(getMin().convertTo(UnitImpl.DEGREE).get_value() <= distaz.getBaz()
                 && getMax().convertTo(UnitImpl.DEGREE).get_value() >= distaz.getBaz()) {

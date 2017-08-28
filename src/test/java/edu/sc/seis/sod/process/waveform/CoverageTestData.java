@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.process.waveform;
 
 import edu.sc.seis.sod.mock.seismogram.MockSeismogram;
+import edu.sc.seis.sod.mock.station.MockChannel;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
@@ -14,7 +15,7 @@ public class CoverageTestData {
 
     private CoverageTestData(LocalSeismogramImpl[] seis, MicroSecondDate begin, MicroSecondDate end) {
         this.seis = seis;
-        request = new RequestFilter[] {new RequestFilter(null, begin, end)};
+        request = new RequestFilter[] {new RequestFilter(MockChannel.createChannel(), begin, end)};
     }
 
     public static CoverageTestData makeTooLateBeginAndTooEarlyEnd() {

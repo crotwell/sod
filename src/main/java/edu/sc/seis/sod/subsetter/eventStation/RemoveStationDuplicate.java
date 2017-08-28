@@ -11,6 +11,7 @@ import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.model.common.DistAz;
+import edu.sc.seis.sod.model.common.Location;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
@@ -33,7 +34,7 @@ public class RemoveStationDuplicate implements EventStationSubsetter {
     }
 
     public boolean isDistanceClose(Station staA, Station staB) {
-        DistAz distAz = new DistAz(staA.getLocation(), staB.getLocation());
+        DistAz distAz = new DistAz(Location.of(staA), Location.of(staB));
         if (maxDistance.getUnit().isConvertableTo(UnitImpl.DEGREE)) {
         return distAz.getDelta() < maxDistance.convertTo(UnitImpl.DEGREE).getValue();
         } else {

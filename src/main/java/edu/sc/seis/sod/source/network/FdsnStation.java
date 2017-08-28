@@ -129,7 +129,7 @@ public class FdsnStation extends AbstractNetworkSource {
             NetworkIterator netIt = staxml.getNetworks();
             while (netIt.hasNext()) {
                 edu.sc.seis.seisFile.fdsnws.stationxml.Network n = netIt.next();
-                out.add(StationXMLToFissures.convert(n));
+                out.add(n);
             }
             return out;
         } catch(URISyntaxException e) {
@@ -172,18 +172,17 @@ public class FdsnStation extends AbstractNetworkSource {
             }
             staQP.setLevel(FDSNStationQueryParams.LEVEL_STATION);
             // now append the real network code
-            staQP.appendToNetwork(net.getId().network_code);
-            setTimeParams(staQP, net.getBeginTime(), net.getEndTime());
+            staQP.appendToNetwork(net.getNetworkCode());
+            setTimeParams(staQP, net.getStartDateTime(), net.getEndDateTime());
             logger.debug("getStations "+staQP.formURI());
             staxml = internalGetStationXML(staQP);
             NetworkIterator netIt = staxml.getNetworks();
             while (netIt.hasNext()) {
                 edu.sc.seis.seisFile.fdsnws.stationxml.Network n = netIt.next();
-                Network netAttr = StationXMLToFissures.convert(n);
                 StationIterator staIt = n.getStations();
                 while (staIt.hasNext()) {
                     edu.sc.seis.seisFile.fdsnws.stationxml.Station s = staIt.next();
-                    out.add(StationXMLToFissures.convert(s, netAttr));
+                    out.add(s);
                 }
             }
             return out;
@@ -194,8 +193,8 @@ public class FdsnStation extends AbstractNetworkSource {
             throw new SodSourceException(e);
         } catch(XMLValidationException e) {
             // debug to get stack trace in log file, but not in warn which goes to stderr
-            logger.warn("InvalidXML: "+NetworkIdUtil.toString(net.get_id())+" "+ e.getMessage().replace('\n', ' '));
-            logger.debug("InvalidXML: "+NetworkIdUtil.toString(net.get_id())+" "+ e.getMessage().replace('\n', ' '), e);
+            logger.warn("InvalidXML: "+NetworkIdUtil.toString(net)+" "+ e.getMessage().replace('\n', ' '));
+            logger.debug("InvalidXML: "+NetworkIdUtil.toString(net)+" "+ e.getMessage().replace('\n', ' '), e);
             return out;
         } catch(XMLStreamException e) {
             throw new SodSourceException(e);
@@ -215,10 +214,10 @@ public class FdsnStation extends AbstractNetworkSource {
             staQP.setLevel(FDSNStationQueryParams.LEVEL_CHANNEL);
             staQP.setIncludeAvailability(includeAvailability);
             staQP.clearNetwork()
-                    .appendToNetwork(station.getId().network_id.network_code)
+                    .appendToNetwork(station.getNetworkCode())
                     .clearStation()
-                    .appendToStation(station.getId().station_code);
-            setTimeParams(staQP, station.getBeginTime(), station.getEndTime());
+                    .appendToStation(station.getStationCode());
+            setTimeParams(staQP, station.getStartDateTime(), station.getEndDateTime());
             logger.info("getChannels "+staQP.formURI());
             staxml = internalGetStationXML(staQP);
             NetworkIterator netIt = staxml.getNetworks();
@@ -233,7 +232,7 @@ public class FdsnStation extends AbstractNetworkSource {
                         ChannelSensitivityBundle csb = StationXMLToFissures.convert(c, sImpl);
                         Channel outChan = csb.getChan();
                         out.add(outChan);
-                        chanSensitivityMap.put(ChannelIdUtil.toString(csb.getChan().get_id()), csb.getSensitivity());
+                        chanSensitivityMap.put(ChannelIdUtil.toString(csb.getChan()), csb.getSensitivity());
                         DataAvailability da = c.getDataAvailability();
                         if (da != null && da.getExtent() != null) {
                             MicroSecondTimeRange range = new MicroSecondTimeRange(new MicroSecondDate(da.getExtent().getStart()),
@@ -251,8 +250,8 @@ public class FdsnStation extends AbstractNetworkSource {
             throw new SodSourceException(e);
         } catch(XMLValidationException e) {
             // debug to get stack trace in log file, but not in warn which goes to stderr
-            logger.warn("InvalidXML: "+StationIdUtil.toString(station.get_id())+" "+ e.getMessage().replace('\n', ' '));
-            logger.debug("InvalidXML: "+StationIdUtil.toString(station.get_id())+" "+ e.getMessage().replace('\n', ' '), e);
+            logger.warn("InvalidXML: "+StationIdUtil.toString(station)+" "+ e.getMessage().replace('\n', ' '));
+            logger.debug("InvalidXML: "+StationIdUtil.toString(station)+" "+ e.getMessage().replace('\n', ' '), e);
             return out;
         } catch(XMLStreamException e) {
             throw new SodSourceException(e);
@@ -265,12 +264,12 @@ public class FdsnStation extends AbstractNetworkSource {
 
     @Override
     public QuantityImpl getSensitivity(Channel chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
-        String key = ChannelIdUtil.toString(chan.getId());
+        String key = ChannelIdUtil.toString(chan);
         if (!chanSensitivityMap.containsKey(key)) {
-            getChannels(chan.getStationImpl());
+            getChannels(chan.getStation());
         }
         if (!chanSensitivityMap.containsKey(key)) {
-            throw new ChannelNotFound(chan.getId());
+            throw new ChannelNotFound(chan);
         }
         return chanSensitivityMap.get(key);
     }
@@ -280,19 +279,17 @@ public class FdsnStation extends AbstractNetworkSource {
         FDSNStationXML staxml = null;
         try {
             if (chan == null) { throw new IllegalArgumentException("Channel is null");}
-            if (chan.getId() == null) { throw new IllegalArgumentException("Channel id is null");}
-            if (chan.getId().begin_time == null) { throw new IllegalArgumentException("Channel begin time is null");}
             FDSNStationQueryParams staQP = setupQueryParams();
             staQP.setLevel(FDSNStationQueryParams.LEVEL_RESPONSE);
             staQP.clearNetwork()
-                    .appendToNetwork(chan.getId().network_id.network_code)
+                    .appendToNetwork(chan.getNetworkCode())
                     .clearStation()
-                    .appendToStation(chan.getId().station_code)
+                    .appendToStation(chan.getStationCode())
                     .clearLocation()
-                    .appendToLocation(chan.getId().site_code)
+                    .appendToLocation(chan.getLocCode())
                     .clearChannel()
-                    .appendToChannel(chan.getId().channel_code);
-            setTimeParamsToGetSingleChan(staQP, chan.getBeginTime(), chan.getEndTime());
+                    .appendToChannel(chan.getChannelCode());
+            setTimeParamsToGetSingleChan(staQP, chan.getStartDateTime(), chan.getEndDateTime());
             logger.debug("getResponse "+staQP.formURI());
             staxml = internalGetStationXML(staQP);
             NetworkIterator netIt = staxml.getNetworks();
@@ -305,7 +302,7 @@ public class FdsnStation extends AbstractNetworkSource {
                     Station sImpl = StationXMLToFissures.convert(s, netAttr);
                     for (Channel c : s.getChannelList()) {
                         ChannelSensitivityBundle csb = StationXMLToFissures.convert(c, sImpl);
-                        chanSensitivityMap.put(ChannelIdUtil.toString(csb.getChan().get_id()), csb.getSensitivity());
+                        chanSensitivityMap.put(ChannelIdUtil.toString(csb.getChan()), csb.getSensitivity());
                         // first one should be right 
                         if (staxml != null) {
                             staxml.closeReader();
@@ -315,7 +312,7 @@ public class FdsnStation extends AbstractNetworkSource {
                     }
                 }
             }
-            throw new ChannelNotFound();
+            throw new ChannelNotFound(chan);
         } catch(URISyntaxException e) {
             // should not happen
             throw new SodSourceException("Problem forming URI", e);
@@ -323,8 +320,8 @@ public class FdsnStation extends AbstractNetworkSource {
             throw new SodSourceException(e);
         } catch(XMLValidationException e) {
             // debug to get stack trace in log file, but not in warn which goes to stderr
-            logger.warn("InvalidXML: "+ChannelIdUtil.toString(chan.get_id())+" "+ e.getMessage().replace('\n', ' '));
-            logger.warn("InvalidXML: "+ChannelIdUtil.toString(chan.get_id())+" "+ e.getMessage().replace('\n', ' '), e);
+            logger.warn("InvalidXML: "+ChannelIdUtil.toString(chan)+" "+ e.getMessage().replace('\n', ' '));
+            logger.debug("InvalidXML: "+ChannelIdUtil.toString(chan)+" "+ e.getMessage().replace('\n', ' '), e);
             throw new InvalidResponse(e);
         } catch(XMLStreamException e) {
             throw new SodSourceException(e);

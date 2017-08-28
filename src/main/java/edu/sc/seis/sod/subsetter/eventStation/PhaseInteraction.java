@@ -74,12 +74,12 @@ public class PhaseInteraction implements EventStationSubsetter {
         tauPPath.setSourceDepth(originDepth);
         eventStationDistance = SphericalCoords.distance(origin.getLocation().latitude,
                                                         origin.getLocation().longitude,
-                                                        station.getLocation().latitude,
-                                                        station.getLocation().longitude);
+                                                        station.getLatitude().getValue(),
+                                                        station.getLongitude().getValue());
         double azimuth = SphericalCoords.azimuth(origin.getLocation().latitude,
                                                  origin.getLocation().longitude,
-                                                 station.getLocation().latitude,
-                                                 station.getLocation().longitude);
+                                                 station.getLatitude().getValue(),
+                                                 station.getLongitude().getValue());
         tauPPath.calculate(eventStationDistance);
         List<Arrival> arrivals = tauPPath.getArrivals();
         List<Arrival> requiredArrivals = getRequiredArrival(arrivals);
@@ -104,12 +104,12 @@ public class PhaseInteraction implements EventStationSubsetter {
         tauPPierce.setSourceDepth(originDepth);
         eventStationDistance = SphericalCoords.distance(origin.getLocation().latitude,
                                                         origin.getLocation().longitude,
-                                                        station.getLocation().latitude,
-                                                        station.getLocation().longitude);
+                                                        station.getLatitude().getValue(),
+                                                        station.getLongitude().getValue());
         double azimuth = SphericalCoords.azimuth(origin.getLocation().latitude,
                                                  origin.getLocation().longitude,
-                                                 station.getLocation().latitude,
-                                                 station.getLocation().longitude);
+                                                 station.getLatitude().getValue(),
+                                                 station.getLongitude().getValue());
         tauPPierce.calculate(eventStationDistance);
         List<Arrival> arrivals = tauPPierce.getArrivals();
         List<Arrival> requiredArrivals = getRequiredArrival(arrivals);

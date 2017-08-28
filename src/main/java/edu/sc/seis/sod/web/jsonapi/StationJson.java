@@ -6,6 +6,7 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.BaseNodeType;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.model.common.QuantityImpl;
@@ -31,19 +32,19 @@ public class StationJson extends AbstractJsonApiData {
 
     @Override
     public String getId() {
-        return new NetworkJson(sta.getNetworkAttrImpl(), baseUrl).getId()+"."+sta.get_code();
+        return new NetworkJson(sta.getNetwork(), baseUrl).getId()+"."+sta.getStationCode();
     }
 
     @Override
     public void encodeAttributes(JSONWriter out) throws JSONException {
-        out.key("station-code").value(sta.get_code())
+        out.key("station-code").value(sta.getStationCode())
         .key("name").value(sta.getName())
-        .key("start-time").value(sta.getBeginTime().getISOString())
-        .key("end-time").value(NetworkJson.encodeEndTime(sta.getEndTime()))
+        .key("start-time").value(BaseNodeType.toISOString(sta.getStartDateTime()))
+        .key("end-time").value(NetworkJson.encodeEndTime(sta.getEndDateTime()))
         .key("description").value(sta.getDescription())
-              .key("latitude").value(sta.getLocation().latitude)
-              .key("longitude").value(sta.getLocation().longitude)
-              .key("elevation").value(((QuantityImpl)sta.getLocation().elevation).getValue(UnitImpl.METER));
+              .key("latitude").value(sta.getLatitude())
+              .key("longitude").value(sta.getLongitude())
+              .key("elevation").value(sta.getElevation().getValue());
     }
 
     @Override
@@ -55,7 +56,7 @@ public class StationJson extends AbstractJsonApiData {
     public void encodeRelationships(JSONWriter out) throws JSONException {
         out.key("network").object();
         out.key("data").object();
-        out.key("id").value(new NetworkJson(sta.getNetworkAttrImpl(), baseUrl).getId());
+        out.key("id").value(new NetworkJson(sta.getNetwork(), baseUrl).getId());
         out.key("type").value("network");
         out.endObject();// end data
         out.endObject();// net network

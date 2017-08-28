@@ -29,9 +29,7 @@ public class WaveformAsAvailableData implements WaveformProcess {
     public static RequestFilter[] toRequestFilter(LocalSeismogramImpl[] seismograms) {
         RequestFilter[] seisAvailable = new RequestFilter[seismograms.length];
         for (int i = 0; i < seisAvailable.length; i++) {
-            seisAvailable[i] = new RequestFilter(seismograms[i].getChannelID(),
-                                                 seismograms[i].begin_time,
-                                                 seismograms[i].getEndTime());
+            seisAvailable[i] = RequestFilter.of(seismograms[i]);
         }
         return seisAvailable;
     }

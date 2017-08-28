@@ -29,7 +29,7 @@ import edu.sc.seis.sod.subsetter.SubsetterException;
 
 public class VectorTrim implements WaveformVectorProcess, Threadable {
 
-    private static final Cut EMPTY_CUT = new Cut(ISOTime.futurePlusOne,
+    private static final Cut EMPTY_CUT = new Cut(new MicroSecondDate(ISOTime.futurePlusOne),
                                                  new MicroSecondDate(-100000000000000l));
 
     public WaveformVectorResult accept(CacheEvent event,

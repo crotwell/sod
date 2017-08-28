@@ -15,7 +15,7 @@ public class StationSubsetterWrapper implements ChannelSubsetter {
 
     public StringTree accept(Channel channel, NetworkSource network)
             throws Exception {
-        return staSub.accept((Station)channel.getSite().getStation(), network);
+        return staSub.accept((Station)channel.getStation(), network);
     }
     
     StationSubsetter staSub;

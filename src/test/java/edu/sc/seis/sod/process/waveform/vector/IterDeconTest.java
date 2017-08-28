@@ -145,11 +145,11 @@ public class IterDeconTest
         SamplingImpl sampling = new SamplingImpl(1, new TimeInterval(delta, UnitImpl.SECOND));
         LocalSeismogramImpl fakeNum = MockSeismogram.createTestData("num");
         fakeNum.setData(numData);
-        fakeNum.channel_id.channel_code = "BHR";
+        fakeNum.channel_id.setChannelCode("BHR");
         fakeNum.sampling_info = sampling;
         LocalSeismogramImpl fakeDenom = MockSeismogram.createTestData("denom");
         fakeDenom.setData(denomData);
-        fakeDenom.channel_id.channel_code = "BHZ";
+        fakeDenom.channel_id.setChannelCode("BHZ");
         fakeDenom.sampling_info = sampling;
         SacTimeSeries sac = FissuresToSac.getSAC(fakeNum);
         sac.write("withGauss.BHR.sac");
@@ -161,7 +161,7 @@ public class IterDeconTest
         pred = IterDecon.phaseShift(pred, 5, delta);
         LocalSeismogramImpl predSeis = MockSeismogram.createTestData("denom");
         predSeis.setData(pred);
-        predSeis.channel_id.channel_code = "OUT";
+        predSeis.channel_id.setChannelCode("OUT");
         sac = FissuresToSac.getSAC(predSeis);
         sac.write("withGauss.ITR.sac");
         DataInputStream in = new DataInputStream(this.getClass()

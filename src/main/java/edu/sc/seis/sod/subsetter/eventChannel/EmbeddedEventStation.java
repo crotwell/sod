@@ -39,7 +39,7 @@ public class EmbeddedEventStation  implements EventChannelSubsetter{
 
     public StringTree accept(CacheEvent o, Channel channel, CookieJar cookieJar)
         throws Exception {
-        StringTree wrapped = eventStationSubsetter.accept(o, (Station)channel.getSite().getStation(), cookieJar);
+        StringTree wrapped = eventStationSubsetter.accept(o, (Station)channel.getStation(), cookieJar);
         return new StringTreeBranch(this, wrapped.isSuccess(), wrapped);
     }
 

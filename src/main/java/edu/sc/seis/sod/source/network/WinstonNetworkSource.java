@@ -1,11 +1,14 @@
 package edu.sc.seis.sod.source.network;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.BaseNodeType;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.seisFile.waveserver.MenuItem;
@@ -19,8 +22,8 @@ import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.station.ChannelId;
+import edu.sc.seis.sod.model.station.ChannelIdUtil;
 import edu.sc.seis.sod.model.station.SiteId;
-import edu.sc.seis.sod.model.station.SiteImpl;
 import edu.sc.seis.sod.util.time.ClockUtil;
 
 
@@ -49,19 +52,19 @@ public class WinstonNetworkSource extends CSVNetworkSource {
                 logger.warn("Can't find station for "+netCode+"."+ staCode+", skipping");
                 continue;
             }
-            float azimuth = Channel.getAzimuth(chanCode);
-            float dip = Channel.getDip(chanCode);
+            float azimuth = ChannelIdUtil.getDefaultAzimuth(chanCode);
+            float dip = ChannelIdUtil.getDefaultDip(chanCode);
             
             SamplingImpl sampling = new SamplingImpl(1, new TimeInterval(1, UnitImpl.SECOND));
-            MicroSecondDate chanStart = curStation.getBeginTime();
+            ZonedDateTime chanStart = curStation.getStartDateTime();
             if (menuItem.getStartDate().before(ClockUtil.now())) {
                 // sometime non-seismic channels are messed up in winston and have really bizarre times
                 // only use if start time is before now
-                chanStart = new MicroSecondDate(Math.round(1000000 * menuItem.getStart()));
+                chanStart = ZonedDateTime.ofInstant( Instant.ofEpochSecond(Math.round(menuItem.getStart()), ((long)menuItem.getStart()) % 1000000 ), BaseNodeType.TZ_UTC);
             }
             TimeRange chanTime = new TimeRange(chanStart,
                                                DEFAULT_END);
-            Channel channelImpl = new Channel(new ChannelId(curStation.get_id().network_id,
+            Channel channelImpl = new Channel(new ChannelId(curStation.getNetworkId(),
                                                                 staCode,
                                                                 siteCode,
                                                                 chanCode,

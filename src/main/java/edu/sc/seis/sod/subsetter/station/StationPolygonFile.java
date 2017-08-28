@@ -19,7 +19,7 @@ public class StationPolygonFile implements StationSubsetter {
     }
 
     public StringTree accept(Station station, NetworkSource network) {
-        return new StringTreeLeaf(this, AreaUtil.inArea(locs, station.getLocation()));
+        return new StringTreeLeaf(this, AreaUtil.inArea(locs, Location.of(station)));
     }
 
     private Location[] locs;

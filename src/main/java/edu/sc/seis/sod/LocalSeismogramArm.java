@@ -22,6 +22,7 @@ import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.seismogram.RequestFilterUtil;
+import edu.sc.seis.sod.model.station.ChannelId;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
 import edu.sc.seis.sod.model.status.Stage;
 import edu.sc.seis.sod.model.status.Standing;
@@ -310,7 +311,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                             + ChannelIdUtil.toStringFormatDates(infilters[0].channel_id) + " seis="
                             + ChannelIdUtil.toStringFormatDates(localSeismograms[i].channel_id));
                     // fix seis with original id
-                    localSeismograms[i].channel_id = ecpChan.get_id();
+                    localSeismograms[i].channel_id = ChannelId.of(ecpChan);
                 } // end of if ()
                 tempForCast.add(localSeismograms[i]);
             } // end of for (int i=0; i<localSeismograms.length; i++)

@@ -42,7 +42,7 @@ public class EmbeddedNetwork implements WaveformProcess {
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) throws Exception {
         return new WaveformResult(seismograms,
-                                  networkSubsetter.accept(channel.getNetworkAttrImpl()));
+                                  networkSubsetter.accept(channel.getNetwork()));
     }
 
     NetworkSubsetter networkSubsetter;

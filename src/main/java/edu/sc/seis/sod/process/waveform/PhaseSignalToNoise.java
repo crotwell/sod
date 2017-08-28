@@ -29,6 +29,7 @@ import edu.sc.seis.sod.measure.Measurement;
 import edu.sc.seis.sod.measure.ScalarMeasurement;
 import edu.sc.seis.sod.measure.TimeMeasurement;
 import edu.sc.seis.sod.model.common.FissuresException;
+import edu.sc.seis.sod.model.common.Location;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.NoPreferredOrigin;
@@ -131,7 +132,7 @@ public class PhaseSignalToNoise  implements WaveformProcess, Threadable {
         // that overlaps the timewindow, and return it.
         for (int i = 0; i < seismograms.length; i++) {
            LongShortTrigger trigger =
-                phaseStoN.process(channel.getSite().getLocation(), event.get_preferred_origin(), seismograms[i]);
+                phaseStoN.process(Location.of(channel), event.get_preferred_origin(), seismograms[i]);
             if (trigger != null) { return trigger; }
         }
         return null;

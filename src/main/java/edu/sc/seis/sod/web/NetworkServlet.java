@@ -110,7 +110,7 @@ public class NetworkServlet extends HttpServlet {
          n = netList.get(0); 
         } else {
             for (Network netImpl : netList) {
-                if (NetworkIdUtil.getYear(netImpl.get_id()).equals(year)) {
+                if (NetworkIdUtil.getYear(netImpl).equals(year)) {
                     n = netImpl;
                     break;
                 }

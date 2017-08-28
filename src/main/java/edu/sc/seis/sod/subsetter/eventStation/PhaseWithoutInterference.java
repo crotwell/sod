@@ -17,6 +17,7 @@ import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.model.common.DistAz;
+import edu.sc.seis.sod.model.common.Location;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
@@ -56,7 +57,7 @@ public class PhaseWithoutInterference extends PhaseExists implements EventStatio
 
         OriginImpl origin = event.get_preferred_origin();
         double depth = ((QuantityImpl)origin.getLocation().depth).getValue(UnitImpl.KILOMETER);
-        List<List<Arrival>> arrivals = calcArrivals(depth, new DistAz(station.getLocation(),
+        List<List<Arrival>> arrivals = calcArrivals(depth, new DistAz(Location.of(station),
                                                                       origin.getLocation()).getDelta());
         List<Arrival> mainArrivals = arrivals.get(0);
         double mainTime;

@@ -21,11 +21,11 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.tool.hbm2ddl.SchemaUpdate;
 
-import edu.sc.seis.sod.ToDoException;
 import edu.sc.seis.sod.model.common.Location;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.ToDoException;
 import edu.sc.seis.sod.model.common.UnitBase;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.util.exceptionHandler.DefaultExtractor;

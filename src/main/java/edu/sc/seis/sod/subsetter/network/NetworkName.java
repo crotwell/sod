@@ -19,7 +19,7 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
  *
  * @author Philip Crotwell
  */
-
+@Deprecated
 public class NetworkName implements NetworkSubsetter {
 
     public NetworkName (Element config) throws ConfigurationException {
@@ -27,7 +27,7 @@ public class NetworkName implements NetworkSubsetter {
     }
 
     public StringTree accept(Network net) {
-        return new StringTreeLeaf(this, net.getName().equals(SodUtil.getNestedText(config)));
+        return new StringTreeLeaf(this, net.getDescription().equals(SodUtil.getNestedText(config)));
     }
 
     private Element config;

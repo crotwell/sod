@@ -79,7 +79,7 @@ public class BestChannelAtStation implements EventChannelSubsetter, EventVectorS
         if (bestChannels == null) {
             return new Fail(this, "No best channel group");
         }
-        ChannelGroup best = new ChannelGroup(Channel.implize(bestChannels));
+        ChannelGroup best = new ChannelGroup(bestChannels);
         if (best.areEqual(channelGroup)) {
             return new Pass(this);
         }

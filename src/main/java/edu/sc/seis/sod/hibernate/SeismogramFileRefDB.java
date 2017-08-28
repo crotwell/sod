@@ -53,6 +53,11 @@ public class SeismogramFileRefDB extends AbstractHibernateDB {
         return q.list();
     }
 
+
+    public List<EventSeismogramFileReference> getSeismogramsForEventForChannel(CacheEvent event, Channel chan) {
+        return getSeismogramsForEventForChannel(event, ChannelId.of(chan));
+    }
+    
     public List<EventSeismogramFileReference> getSeismogramsForEventForChannel(CacheEvent event, ChannelId chan) {
         String query = "from "
                 + EventSeismogramFileReference.class.getName()
@@ -60,10 +65,10 @@ public class SeismogramFileRefDB extends AbstractHibernateDB {
                 + " networkCode = :netCode and stationCode = :staCode and siteCode = :siteCode and channelCode = :chanCode ";
         Query q = getSession().createQuery(query);
         q.setEntity("event", event);
-        q.setString("netCode", chan.network_id.network_code);
-        q.setString("staCode", chan.station_code);
-        q.setString("siteCode", chan.site_code);
-        q.setString("chanCode", chan.channel_code);
+        q.setString("netCode", chan.getNetworkId());
+        q.setString("staCode", chan.getStationCode());
+        q.setString("siteCode", chan.getLocCode());
+        q.setString("chanCode", chan.getChannelCode());
         logger.debug("Before query for event: " + event.getDbid() + "  " + ChannelIdUtil.toStringNoDates(chan));
         List<EventSeismogramFileReference> esRefList = q.list();
         logger.debug("After query for event: " + event.getDbid() + "  " + ChannelIdUtil.toStringNoDates(chan)
@@ -135,10 +140,10 @@ public class SeismogramFileRefDB extends AbstractHibernateDB {
         Cut cutter = new Cut(request);
         try {
             if (ignoreNetworkTimes) {
-                chanId = chanTable.getChannel(request.channel_id.network_id.network_code,
-                                              request.channel_id.station_code,
-                                              request.channel_id.site_code,
-                                              request.channel_id.channel_code,
+                chanId = chanTable.getChannel(request.channel_id.getNetworkId(),
+                                              request.channel_id.getStationCode(),
+                                              request.channel_id.getLocCode(),
+                                              request.channel_id.getChannelCode(),
                                               new MicroSecondDate(request.start_time));
             } else {
                 chanId = chanTable.getChannel(request.channel_id);
@@ -156,11 +161,11 @@ public class SeismogramFileRefDB extends AbstractHibernateDB {
         // Populate databaseResults with all of the matching seismograms
         // from the database.
         Query q = getSession().createQuery(query);
-        ChannelId chanIdxxx = chanId.getId();
-        q.setString("netCode", chanIdxxx.network_id.network_code);
-        q.setString("staCode", chanIdxxx.station_code);
-        q.setString("siteCode", chanIdxxx.site_code);
-        q.setString("chanCode", chanIdxxx.channel_code);
+        ChannelId chanIdxxx = ChannelId.of(chanId);
+        q.setString("netCode", chanIdxxx.getNetworkId());
+        q.setString("staCode", chanIdxxx.getStationCode());
+        q.setString("siteCode", chanIdxxx.getLocCode());
+        q.setString("chanCode", chanIdxxx.getChannelCode());
         q.setTimestamp("end", adjustedEndTime.getTimestamp());
         q.setTimestamp("begin", adjustedBeginTime.getTimestamp());
         List<SeismogramFileReference> databaseResults = q.list();

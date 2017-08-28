@@ -46,7 +46,7 @@ public class EmbeddedEventStation  implements WaveformVectorProcess {
                                         RequestFilter[][] available,
                                         LocalSeismogramImpl[][] seismograms,
                                         CookieJar cookieJar) throws Exception {
-        StringTree wrapped = eventStation.accept(event, (Station)channelGroup.getVertical().getSite().getStation(), cookieJar);
+        StringTree wrapped = eventStation.accept(event, (Station)channelGroup.getVertical().getStation(), cookieJar);
         WaveformVectorResult result = new WaveformVectorResult(seismograms,
                                                                new StringTreeBranch(this, wrapped.isSuccess(), wrapped));
         return result;

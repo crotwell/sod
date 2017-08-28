@@ -134,11 +134,11 @@ public class BreqFastRequest implements RequestSubsetter {
                                  int i) throws IOException {
         MicroSecondDate start = new MicroSecondDate(request[i].start_time);
         MicroSecondDate end = new MicroSecondDate(request[i].end_time);
-        out.write(channel.getSite().getStation().get_code() + " "
-                + channel.getSite().getStation().getNetworkAttr().get_code() + " "
+        out.write(channel.getStation().getCode() + " "
+                + channel.getNetworkCode() + " "
                 + format.format(start) + tenths.format(start).substring(0, 1)
                 + " " + format.format(end) + tenths.format(end).substring(0, 1)
-                + " 1 " + channel.get_code() + " " + channel.getSite().get_code()
+                + " 1 " + channel.getCode() + " " + channel.getLocCode()
                 + nl);
     }
 
