@@ -52,7 +52,7 @@ public class WinstonNetworkSource extends CSVNetworkSource {
             float azimuth = ChannelIdUtil.getDefaultAzimuth(chanCode);
             float dip = ChannelIdUtil.getDefaultDip(chanCode);
             
-            SamplingImpl sampling = new SamplingImpl(1, new TimeInterval(1, UnitImpl.SECOND));
+            //SamplingImpl sampling = new SamplingImpl(1, new TimeInterval(1, UnitImpl.SECOND));
             Instant chanStart = curStation.getStartDateTime();
             if (menuItem.getStartDate().before(ClockUtil.now())) {
                 // sometime non-seismic channels are messed up in winston and have really bizarre times
@@ -61,19 +61,10 @@ public class WinstonNetworkSource extends CSVNetworkSource {
             }
             TimeRange chanTime = new TimeRange(chanStart,
                                                DEFAULT_END);
-            Channel channelImpl = new Channel(new ChannelId(curStation.getNetworkId(),
-                                                                staCode,
-                                                                siteCode,
-                                                                chanCode,
-                                                                chanTime.getBeginTime()),
-                                                  "",
-                                                  new Orientation(azimuth, dip),
-                                                  sampling,
-                                                  chanTime,
-                                                  new SiteImpl(new SiteId(curStation.get_id().network_id,
-                                                                          staCode,
-                                                                          siteCode,
-                                                                          chanTime.getBeginTime()), curStation, ""));
+            Channel channelImpl = new Channel(curStation, siteCode, chanCode, chanTime.getBeginTime().toInstant(), chanTime.getEndTime().toInstant());
+            channelImpl.setAzimuth(azimuth);
+            channelImpl.setDip(dip);
+            //channelImpl.setSampleRate((float) sampling.getFrequency().getValue(UnitImpl.HERTZ));
             channels.add(channelImpl);
             } catch (Throwable t) {
                 logger.warn("problem with channel, "+netCode+"."+staCode+"."+siteCode+"."+chanCode+" skipping", t);

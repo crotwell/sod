@@ -16,28 +16,25 @@ import org.w3c.dom.Element;
 import com.csvreader.CsvReader;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Comment;
 import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Operator;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Site;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.UserConfigurationException;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
 import edu.sc.seis.sod.model.common.Location;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.Orientation;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.SamplingImpl;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.common.UnitImpl;
-import edu.sc.seis.sod.model.station.ChannelId;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.NetworkId;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
-import edu.sc.seis.sod.model.station.SiteId;
-import edu.sc.seis.sod.model.station.StationId;
 import edu.sc.seis.sod.model.station.StationIdUtil;
 import edu.sc.seis.sod.source.AbstractCSVSource;
 import edu.sc.seis.sod.subsetter.AreaSubsetter;
@@ -142,16 +139,18 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
                                              longitude,
                                              new QuantityImpl(elevation, elevationUnit),
                                              new QuantityImpl(depth, depthUnit));
-            NetworkId netId = new NetworkId(netCode, loadTime(headers, csvReader, NET_START, DEFAULT_TIME));
-            MicroSecondDate staBegin = loadTime(headers, csvReader, START, DEFAULT_TIME);
-            StationId staId = new StationId(netId, staCode, staBegin);
-            Station station = new Station(staId,
-                                                  loadString(headers, csvReader, NAME, ""),
-                                                  location,
-                                                  loadString(headers, csvReader, OPERATOR, ""),
-                                                  loadString(headers, csvReader, DESCRIPTION, ""),
-                                                  loadString(headers, csvReader, COMMENT, ""),
-                                                  new Network(netId, "", "", ""));
+            Instant staBegin = loadTime(headers, csvReader, START, DEFAULT_TIME);
+            Network network = new Network(netCode);
+            network.setStartDateTime(loadTime(headers, csvReader, NET_START, DEFAULT_TIME));
+            Station station = new Station(network, staCode);
+            station.setLatitude(latitude);
+            station.setLongitude(longitude);
+            station.setElevation((float) elevation);
+            station.setStartDateTime(staBegin);
+            station.setName(loadString(headers, csvReader, NAME, ""));
+            station.addOperator(new Operator(loadString(headers, csvReader, OPERATOR, "")));
+            station.setSite(new Site("", loadString(headers, csvReader, DESCRIPTION, ""), "","", "", ""));
+            station.addComment(new Comment(loadString(headers, csvReader, COMMENT, "")));
             stations.add(station);
         }
         return stations;
@@ -212,18 +211,10 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
                 sampling = new SamplingImpl(1, new TimeInterval(1, UnitImpl.SECOND));
             }
             TimeRange chanTime = new TimeRange(chanBegin, loadTime(headers, csvReader, END, DEFAULT_END));
-            Channel channel = new Channel(new ChannelId(curStation,
-                                                                siteCode,
-                                                                chanCode,
-                                                                chanBegin),
-                                                  loadString(headers, csvReader, NAME, ""),
-                                                  new Orientation(azimuth, dip),
-                                                  sampling,
-                                                  chanTime,
-                                                  new SiteImpl(new SiteId(curStation.get_id().network_id,
-                                                                          staCode,
-                                                                          siteCode,
-                                                                          chanBegin), location, curStation, ""));
+            Channel channel = new Channel(curStation, siteCode, chanCode, chanTime.getBeginTime().toInstant(), chanTime.getEndTime().toInstant());
+            channel.setAzimuth(azimuth);
+            channel.setDip(dip);
+            channel.setSampleRate((float) sampling.getFrequency().getValue(UnitImpl.HERTZ));
             channels.add(channel);
         }
         return channels;
@@ -290,8 +281,8 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
     }
 
     @Override
-    public Response getResponse(Channel chanId) throws ChannelNotFound, InvalidResponse {
-        throw new ChannelNotFound();
+    public Response getResponse(Channel chan) throws ChannelNotFound, InvalidResponse {
+        throw new ChannelNotFound("Response not in CSVNetworkSource", chan);
     }
 
     @Override
@@ -300,8 +291,8 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
     }
 
     @Override
-    public QuantityImpl getSensitivity(Channel chanId) throws ChannelNotFound, InvalidResponse {
-        throw new ChannelNotFound();
+    public QuantityImpl getSensitivity(Channel chan) throws ChannelNotFound, InvalidResponse {
+        throw new ChannelNotFound("Response not in CSVNetworkSource", chan);
     }
 
     @Override
