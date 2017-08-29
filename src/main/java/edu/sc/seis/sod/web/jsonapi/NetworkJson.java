@@ -1,14 +1,12 @@
 package edu.sc.seis.sod.web.jsonapi;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 
 import org.json.JSONException;
 import org.json.JSONWriter;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.BaseNodeType;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
-import edu.sc.seis.sod.model.common.ISOTime;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.util.time.ClockUtil;
 
@@ -89,8 +87,8 @@ public class NetworkJson extends AbstractJsonApiData {
         return out;
     }
 
-    public static Object encodeEndTime(ZonedDateTime endDate) {
-        if (endDate.isBefore(ClockUtil.now().toZonedDateTime())) {
+    public static Object encodeEndTime(Instant endDate) {
+        if (endDate.isBefore(ClockUtil.now().toInstant())) {
             return BaseNodeType.toISOString(endDate);
         } else {
             return null;

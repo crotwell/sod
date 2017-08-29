@@ -11,7 +11,6 @@ import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.station.ChannelId;
-import edu.sc.seis.sod.model.station.NetworkId;
 import edu.sc.seis.sod.util.time.ClockUtil;
 import junit.framework.TestCase;
 
@@ -26,7 +25,7 @@ public class WinstonWaveServerTest extends TestCase {
                                                            "JSC",
                                                            "00",
                                                            "HHZ",
-                                                           ClockUtil.wayPast().toZonedDateTime()), 
+                                                           ClockUtil.wayPast().toInstant()), 
                                                            requestStart,
                                                            requestStart.add(new TimeInterval(10, UnitImpl.MINUTE)));
         List<RequestFilter> in = new ArrayList<RequestFilter>();

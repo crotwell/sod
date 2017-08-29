@@ -11,8 +11,8 @@
             <generator class="native" />
         </id>
         <property name="code" index="net_code_idx" />
-        <property name="startDateTime" type="java.time.ZonedDateTime" />
-        <property name="endDateTime" type="java.time.ZonedDateTime" />
+        <property name="startDateTime" type="java.time.Instant" />
+        <property name="endDateTime" type="java.time.Instant" />
         <property name="restrictedStatus" />
         <property name="description" type="text"/>
     </class>
@@ -24,8 +24,8 @@
         </id>
         <property name="code" index="station_code_idx" />
         <property name="networkCode" />
-        <property name="startDateTime" type="java.time.ZonedDateTime" />
-        <property name="endDateTime" type="java.time.ZonedDateTime" />
+        <property name="startDateTime" type="java.time.Instant" />
+        <property name="endDateTime" type="java.time.Instant" />
         <property name="restrictedStatus" />
         <property name="description" type="text"/>
         <property name="latitude" type="float"/>
@@ -43,8 +43,8 @@
         <property name="locCode" />
         <property name="stationCode" />
         <property name="networkCode" />
-        <property name="startDateTime" type="java.time.ZonedDateTime" />
-        <property name="endDateTime" type="java.time.ZonedDateTime" />
+        <property name="startDateTime" type="java.time.Instant" />
+        <property name="endDateTime" type="java.time.Instant" />
         <property name="restrictedStatus" />
         <property name="description" type="text"/>
         <property name="latitude" type="float"/>

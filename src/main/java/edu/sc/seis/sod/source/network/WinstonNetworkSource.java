@@ -2,20 +2,17 @@ package edu.sc.seis.sod.source.network;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.w3c.dom.Element;
 
-import edu.sc.seis.seisFile.fdsnws.stationxml.BaseNodeType;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.seisFile.waveserver.MenuItem;
 import edu.sc.seis.seisFile.waveserver.WaveServer;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.Orientation;
 import edu.sc.seis.sod.model.common.SamplingImpl;
 import edu.sc.seis.sod.model.common.TimeInterval;
@@ -56,11 +53,11 @@ public class WinstonNetworkSource extends CSVNetworkSource {
             float dip = ChannelIdUtil.getDefaultDip(chanCode);
             
             SamplingImpl sampling = new SamplingImpl(1, new TimeInterval(1, UnitImpl.SECOND));
-            ZonedDateTime chanStart = curStation.getStartDateTime();
+            Instant chanStart = curStation.getStartDateTime();
             if (menuItem.getStartDate().before(ClockUtil.now())) {
                 // sometime non-seismic channels are messed up in winston and have really bizarre times
                 // only use if start time is before now
-                chanStart = ZonedDateTime.ofInstant( Instant.ofEpochSecond(Math.round(menuItem.getStart()), ((long)menuItem.getStart()) % 1000000 ), BaseNodeType.TZ_UTC);
+                chanStart = Instant.ofEpochSecond(Math.round(menuItem.getStart()), ((long)menuItem.getStart()) % 1000000 );
             }
             TimeRange chanTime = new TimeRange(chanStart,
                                                DEFAULT_END);

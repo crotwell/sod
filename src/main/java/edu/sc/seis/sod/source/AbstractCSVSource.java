@@ -2,7 +2,7 @@ package edu.sc.seis.sod.source;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 
@@ -62,8 +62,8 @@ public abstract class AbstractCSVSource extends AbstractSource {
     public static final String DEPTH_UNITS = "depthUnits";
     public static final String ELEVATION_UNITS = "elevationUnits";
     public static final String UNKNOWN = "unknown";
-    public static final ZonedDateTime DEFAULT_TIME = BaseNodeType.parseISOString("1970-01-01T00:00:00Z");
-    public static final ZonedDateTime DEFAULT_END = ISOTime.future;
+    public static final Instant DEFAULT_TIME = BaseNodeType.parseISOString("1970-01-01T00:00:00Z");
+    public static final Instant DEFAULT_END = ISOTime.future;
 
     public List<String> validateHeaders(CsvReader csvReader) throws IOException, FileNotFoundException,
             ConfigurationException {
@@ -127,10 +127,10 @@ public abstract class AbstractCSVSource extends AbstractSource {
                 return defaultUnit;
             }
 
-    public static ZonedDateTime loadTime(List<String> headers, CsvReader csvReader, String headerName, ZonedDateTime defaultTime)
+    public static Instant loadTime(List<String> headers, CsvReader csvReader, String headerName, Instant defaultTime)
             throws UserConfigurationException, IOException {
                 if(headers.contains(headerName)) {
-                    ZonedDateTime time;
+                    Instant time;
                     try {
                         time = BaseNodeType.parseISOString(csvReader.get(headerName));
                     } catch(UnsupportedFormat uf) {

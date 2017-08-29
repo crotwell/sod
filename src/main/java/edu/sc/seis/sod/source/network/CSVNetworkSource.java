@@ -4,7 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,6 +15,9 @@ import org.w3c.dom.Element;
 
 import com.csvreader.CsvReader;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
+import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
@@ -22,7 +25,6 @@ import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.UserConfigurationException;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
 import edu.sc.seis.sod.model.common.Location;
-import edu.sc.seis.sod.model.common.LocationType;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.Orientation;
 import edu.sc.seis.sod.model.common.QuantityImpl;
@@ -32,10 +34,6 @@ import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.station.ChannelId;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.Instrumentation;
-import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
-import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
-import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.sod.model.station.NetworkId;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.model.station.SiteId;
@@ -200,7 +198,7 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
             } else {
                 location = Location.of(curStation);
             }
-            ZonedDateTime chanBegin = loadTime(headers, csvReader, START, DEFAULT_TIME);
+            Instant chanBegin = loadTime(headers, csvReader, START, DEFAULT_TIME);
             float azimuth = loadFloat(headers, csvReader, AZIMUTH, ChannelIdUtil.getDefaultAzimuth(chanCode));
             float dip = loadFloat(headers, csvReader, DIP, ChannelIdUtil.getDefaultDip(chanCode));
             SamplingImpl sampling;
