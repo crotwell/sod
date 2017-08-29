@@ -44,10 +44,10 @@ public class WinstonWaveServerSource implements SeismogramSource {
         List<LocalSeismogramImpl> out = new ArrayList<LocalSeismogramImpl>();
         for (RequestFilter rf : request) {
             try {
-                List<TraceBuf2> traceBufs = ws.getTraceBuf(new ChannelTimeWindow(rf.channel_id.network_code, 
-                                                            rf.channel_id.station_code, 
-                                                           rf.channel_id.site_code,
-                                                           rf.channel_id.channel_code, 
+                List<TraceBuf2> traceBufs = ws.getTraceBuf(new ChannelTimeWindow(rf.channel_id.getNetworkId(), 
+                                                            rf.channel_id.getStationCode(), 
+                                                           rf.channel_id.getLocCode(),
+                                                           rf.channel_id.getChannelCode(), 
                                                            new MicroSecondDate(rf.start_time),
                                                            new MicroSecondDate(rf.end_time)));
                 if (traceBufs == null) {

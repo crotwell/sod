@@ -103,9 +103,9 @@ public class NetworkArm implements Arm {
             throws NetworkNotFound {
         List<Network> netDbs = getSuccessfulNetworks();
         MicroSecondDate beginTime = new MicroSecondDate(network_id.begin_time);
-        String netCode = network_id.network_code;
+        String netCode = network_id.networkCode;
         for (Network attr : netDbs) {
-            if(netCode.equals(attr.get_code())
+            if(netCode.equals(attr.getCode())
                     && new MicroSecondTimeRange(attr.getEffectiveTime()).contains(beginTime)) {
                 return attr;
             }
@@ -262,15 +262,13 @@ public class NetworkArm implements Arm {
                             change(attr,
                                    Status.get(Stage.NETWORK_SUBSETTER,
                                               Standing.REJECT));
-                            failLogger.info(NetworkIdUtil.toString(attr
-                                    .get_id())
+                            failLogger.info(NetworkIdUtil.toString(attr)
                                     + " was rejected. "+result);
                         }
                     } else {
                         change(attr, Status.get(Stage.NETWORK_SUBSETTER,
                                                       Standing.REJECT));
-                        failLogger.info(NetworkIdUtil.toString(attr
-                                .get_id())
+                        failLogger.info(NetworkIdUtil.toString(attr)
                                 + " was rejected because it wasn't active during the time range of requested events");
                     }
                 } catch(Throwable th) {
@@ -323,8 +321,8 @@ public class NetworkArm implements Arm {
     }
 
     public Station[] getSuccessfulStations(Network net) {
-        String netCode = net.get_code();
-        logger.debug("getSuccessfulStations: "+net.get_code());
+        String netCode = net.getCode();
+        logger.debug("getSuccessfulStations: "+net.getCode());
         synchronized(refresh) {
             while(refresh.isNetworkBeingReloaded(net.getDbid())) {
                 try {
@@ -358,7 +356,7 @@ public class NetworkArm implements Arm {
                 throw new RuntimeException("Network not in db yet: "+NetworkIdUtil.toString(net));
             }
             statusChanged("Getting stations for "
-                    + net.getName());
+                    + net.getNetworkId());
             ArrayList<Station> arrayList = new ArrayList<Station>();
             try {
                 List<? extends Station> stations = getInternalNetworkSource().getStations(netAttr);
@@ -380,7 +378,7 @@ public class NetworkArm implements Arm {
                     }*/
                     // hibernate gets angry if the network isn't the same object
                     // as the one already in the thread's session
-                    currStation.setNetworkAttr(netAttr);
+                    currStation.setNetwork(netAttr);
                     StringTree effResult = staEffectiveSubsetter.accept(currStation,
                                                                         getNetworkSource());
                     if(effResult.isSuccess()) {
@@ -394,7 +392,7 @@ public class NetworkArm implements Arm {
                         }
                         if(staResult.isSuccess()) {
                             int dbid = getNetworkDB().put(currStation);
-                            logger.info("Store " + currStation.get_code()
+                            logger.info("Store " + currStation.getCode()
                                         + " as " + dbid + " in " + getNetworkDB());
                                 arrayList.add(currStation);
                             change(currStation,
@@ -404,13 +402,13 @@ public class NetworkArm implements Arm {
                             change(currStation,
                                    Status.get(Stage.NETWORK_SUBSETTER,
                                               Standing.REJECT));
-                            failLogger.info(StationIdUtil.toString(currStation.get_id())
+                            failLogger.info(StationIdUtil.toString(currStation)
                                     + " was rejected: " + staResult);
                         }
                     } else {
                         change(currStation, Status.get(Stage.NETWORK_SUBSETTER,
                                                        Standing.REJECT));
-                        failLogger.info(StationIdUtil.toString(currStation.get_id())
+                        failLogger.info(StationIdUtil.toString(currStation)
                                 + " was rejected because the station was not active during the time range of requested events: "
                                 + effResult);
                     }
@@ -418,7 +416,7 @@ public class NetworkArm implements Arm {
                 NetworkDB.commit();
             } catch(Exception e) {
                 GlobalExceptionHandler.handle("Problem in method getSuccessfulStations for net "
-                                                      + NetworkIdUtil.toString(net.get_id()),
+                                                      + NetworkIdUtil.toString(net),
                                               e);
                 NetworkDB.rollback();
             }
@@ -456,7 +454,7 @@ public class NetworkArm implements Arm {
             // no dice, try db
             List<Channel> sta = getNetworkDB().getChannelsForStation(station);
             if(sta.size() != 0) {
-                logger.debug("successfulChannels " + station.get_code()
+                logger.debug("successfulChannels " + station.getCode()
                         + " - from db " + sta.size());
                 return sta;
             } else {
@@ -511,7 +509,7 @@ public class NetworkArm implements Arm {
                                         resultToString = cur.getClass().getName();
                                     }
                                     failLogger.info("Rejected "
-                                            + ChannelIdUtil.toString(chan.get_id())
+                                            + ChannelIdUtil.toString(chan)
                                             + ": " + resultToString);
                                     accepted = false;
                                     break;
@@ -520,7 +518,7 @@ public class NetworkArm implements Arm {
                         }
                         if(accepted) {
                             getNetworkDB().put(chan);
-                            logger.debug("Accept "+ChannelIdUtil.toString(chan.get_id()));
+                            logger.debug("Accept "+ChannelIdUtil.toString(chan));
                             needCommit = true;
                             successes.add(chan);
                             change(chan, Status.get(Stage.NETWORK_SUBSETTER,
@@ -529,7 +527,7 @@ public class NetworkArm implements Arm {
                     } else {
                         change(chan, Status.get(Stage.NETWORK_SUBSETTER,
                                                 Standing.REJECT));
-                        failLogger.info(ChannelIdUtil.toString(chan.get_id())
+                        failLogger.info(ChannelIdUtil.toString(chan)
                                 + " was rejected because the channel was not active during the time range of requested events: "
                                 + effectiveTimeResult);
                     }
@@ -539,7 +537,7 @@ public class NetworkArm implements Arm {
                 }
             } catch(Throwable e) {
                 GlobalExceptionHandler.handle("Problem in method getSuccessfulChannels for "
-                                                      + StationIdUtil.toString(station.get_id()),
+                                                      + StationIdUtil.toString(station),
                                               e);
                 NetworkDB.rollback();
             }
@@ -572,7 +570,7 @@ public class NetworkArm implements Arm {
             // no dice, try db
             List<ChannelGroup> sta = getNetworkDB().getChannelGroupsForStation(station);
             if(sta.size() != 0) {
-                logger.debug("successfulChannelGroups " + station.get_code()
+                logger.debug("successfulChannelGroups " + station.getCode()
                         + " - from db " + sta.size());
                 return sta;
             } else {
@@ -597,7 +595,7 @@ public class NetworkArm implements Arm {
                 allChannelGroupFailureStations.add(StationIdUtil.toStringNoDates(station));
             }
             for (Channel failchan : failures) {
-                failLogger.info(ChannelIdUtil.toString(failchan.get_id())
+                failLogger.info(ChannelIdUtil.toString(failchan)
                         + "  Channel not grouped into 3 components.");
             }
             return chanGroups;

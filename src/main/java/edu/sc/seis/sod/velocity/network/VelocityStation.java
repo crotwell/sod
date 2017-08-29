@@ -43,24 +43,22 @@ public class VelocityStation extends Station {
         setNetworkAttr(sta.getNetworkAttr());
     }
 
+    @Override
     public int getDbId() {
         return sta.getDbid();
     }
 
     public StationId get_id() {
-        return sta.get_id();
+        return StationId.of(sta);
     }
     
     public StationId getId() {
-        return sta.getId();
+        return StationId.of(sta);
     }
 
-    public String get_code() {
-        return sta.get_code();
-    }
-
+    @Override
     public String getCode() {
-        return get_code();
+        return sta.getCode();
     }
 
     public String getCodes() {

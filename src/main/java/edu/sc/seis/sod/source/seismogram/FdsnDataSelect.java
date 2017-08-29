@@ -146,10 +146,10 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
                     List<ChannelTimeWindow> queryRequest = new ArrayList<ChannelTimeWindow>();
                     for (RequestFilter rf : request) {
                         ChannelId c = rf.channel_id;
-                        queryRequest.add(new ChannelTimeWindow(c.networkCode,
-                                                               c.stationCode,
-                                                               c.locCode,
-                                                               c.channelCode,
+                        queryRequest.add(new ChannelTimeWindow(c.getNetworkId(),
+                                                               c.getStationCode(),
+                                                               c.getLocCode(),
+                                                               c.getChannelCode(),
                                                                new MicroSecondDate(rf.start_time),
                                                                new MicroSecondDate(rf.end_time)));
                     }
@@ -163,7 +163,7 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
                             // begin times, so use the request
                             for (RequestFilter rf : request) {
                                 // find matching chan id
-                                if (rf.channel_id.network_id.network_code.equals(seis.channel_id.network_id.network_code)) {
+                                if (rf.channel_id.getNetworkId().equals(seis.channel_id.getNetworkId())) {
                                     seis.channel_id.network_id.begin_time = rf.channel_id.network_id.begin_time;
                                 }
                                 if (ChannelIdUtil.areEqualExceptForBeginTime(rf.channel_id, seis.channel_id)) {
