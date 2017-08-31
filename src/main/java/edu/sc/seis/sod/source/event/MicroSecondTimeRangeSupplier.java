@@ -1,8 +1,8 @@
 package edu.sc.seis.sod.source.event;
 
-import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
+import edu.sc.seis.sod.model.common.TimeRange;
 
 public interface MicroSecondTimeRangeSupplier {
 
-    public MicroSecondTimeRange getMSTR();
+    public TimeRange getMSTR();
 }

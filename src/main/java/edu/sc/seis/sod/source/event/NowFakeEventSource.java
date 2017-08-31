@@ -6,7 +6,7 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.mock.event.MockEventAttr;
 import edu.sc.seis.sod.mock.event.MockOrigin;
-import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
+import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.util.time.ClockUtil;
 
@@ -21,15 +21,15 @@ public class NowFakeEventSource extends PeriodicFakeEventSource {
         return "Events starting now, with "+numEvents+" new events at the current request time but no more frequent than "+interval;
     }
 
-    public MicroSecondTimeRange getEventTimeRange() {
-        return new MicroSecondTimeRange(startTime, ClockUtil.wayFuture());
+    public TimeRange getEventTimeRange() {
+        return new TimeRange(startTime, ClockUtil.wayFuture());
     }
 
     public CacheEvent[] next() {
-        if (nextEventTime.before(ClockUtil.now())) {
+        if (nextEventTime.isBefore(ClockUtil.now())) {
             eventCounter++;
             prevEventTime = ClockUtil.now();
-            nextEventTime = prevEventTime.add(interval);
+            nextEventTime = prevEventTime.plus(interval);
             return new CacheEvent[] {
                                      new CacheEvent(MockEventAttr.create(-1),
                                                     MockOrigin.create(prevEventTime, mags))

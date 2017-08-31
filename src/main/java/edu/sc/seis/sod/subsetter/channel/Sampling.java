@@ -1,5 +1,7 @@
 package edu.sc.seis.sod.subsetter.channel;
 
+import java.time.Duration;
+
 import org.w3c.dom.Element;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
@@ -17,7 +19,7 @@ public class Sampling extends RangeSubsetter implements ChannelSubsetter {
 
     public Sampling(Element config) throws ConfigurationException {
         super(config, 0, Integer.MAX_VALUE);
-        TimeInterval interval = SodUtil.loadTimeInterval(SodUtil.getElement(config,
+        Duration interval = SodUtil.loadTimeInterval(SodUtil.getElement(config,
                                                                             "interval"));
         min = getHertz((int)getMinValue(), interval);
         max = getHertz((int)getMaxValue(), interval);
@@ -32,7 +34,7 @@ public class Sampling extends RangeSubsetter implements ChannelSubsetter {
         return accept(getHertz(channelSampling));
     }
 
-    double getHertz(int val, TimeInterval interval) {
+    double getHertz(int val, Duration interval) {
         return getHertz(new SamplingImpl(val, interval));
     }
 

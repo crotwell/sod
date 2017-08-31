@@ -1,10 +1,10 @@
 package edu.sc.seis.sod.velocity.seismogram;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.SamplingImpl;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.station.ChannelGroup;
@@ -26,7 +26,7 @@ public class VelocitySeismogram extends LocalSeismogramImpl {
         }
     }
 
-    public MicroSecondDate getBegin() {
+    public Instant getBegin() {
         return getBeginTime();
     }
 
@@ -34,7 +34,7 @@ public class VelocitySeismogram extends LocalSeismogramImpl {
         return SimpleVelocitizer.format(getBegin(), dateFormat);
     }
 
-    public MicroSecondDate getEnd() {
+    public Instant getEnd() {
         return getEndTime();
     }
 

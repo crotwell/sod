@@ -5,12 +5,13 @@
  */
 package edu.sc.seis.sod;
 
+import java.time.Duration;
+import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.w3c.dom.Element;
 
-import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.source.event.AbstractEventSource;
 
@@ -106,27 +107,27 @@ public class RunProperties {
 		}
 	}
 
-	public TimeInterval getMaxRetryDelay() {
+	public Duration getMaxRetryDelay() {
 		return maxRetry;
 	}
 
-	public TimeInterval getServerRetryDelay() {
+	public Duration getServerRetryDelay() {
 		return serverRetryDelay;
 	}
 
-	public TimeInterval getEventQueryIncrement() {
+	public Duration getEventQueryIncrement() {
 		return eventQueryIncrement;
 	}
 
-	public TimeInterval getEventLag() {
+	public Duration getEventLag() {
 		return eventLag;
 	}
 
-	public TimeInterval getEventRefreshInterval() {
+	public Duration getEventRefreshInterval() {
 		return eventRefresh;
 	}
 
-	public TimeInterval getSeismogramLatency() {
+	public Duration getSeismogramLatency() {
 		return seismogramLatency;
 	}
 
@@ -218,30 +219,25 @@ public class RunProperties {
         statusUnsecure = b;
     }
 
-    public static final TimeInterval NO_TIME = new TimeInterval(0,
-			UnitImpl.SECOND);
+    public static final Duration NO_TIME = Duration.ofNanos(0);
 
-	public static final TimeInterval ONE_WEEK = new TimeInterval(7,
-			UnitImpl.DAY);
+	public static final Duration ONE_WEEK = Duration.ofDays(7);
 
-	public static final TimeInterval TEN_MIN = new TimeInterval(10,
-			UnitImpl.MINUTE);
+	public static final Duration TEN_MIN = Duration.ofMinutes(10);
 
-	public static final TimeInterval DAYS_180 = new TimeInterval(180,
-			UnitImpl.DAY);
+	public static final Duration DAYS_180 = Duration.ofDays(180);
 
-	private TimeInterval eventQueryIncrement = ONE_WEEK;
+	private Duration eventQueryIncrement = ONE_WEEK;
 
-	private TimeInterval eventLag = ONE_WEEK;
+	private Duration eventLag = ONE_WEEK;
 
-	private TimeInterval eventRefresh = TEN_MIN;
+	private Duration eventRefresh = TEN_MIN;
 
-	private TimeInterval maxRetry = DAYS_180;
+	private Duration maxRetry = DAYS_180;
 
-	private TimeInterval serverRetryDelay = NO_TIME;
+	private Duration serverRetryDelay = NO_TIME;
 
-	private TimeInterval seismogramLatency = (TimeInterval) ONE_WEEK
-			.multiplyBy(4);
+	private Duration seismogramLatency = ONE_WEEK.multipliedBy(4);
 
 	private String runName = "Your Sod";
 

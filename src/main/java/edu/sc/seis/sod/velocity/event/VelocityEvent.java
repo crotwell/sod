@@ -3,6 +3,7 @@ package edu.sc.seis.sod.velocity.event;
 import java.io.StringWriter;
 import java.text.DecimalFormat;
 import java.text.ParseException;
+import java.time.Instant;
 import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
@@ -183,7 +184,7 @@ public class VelocityEvent extends CacheEvent {
     }
 
     public String getTime(String format) {
-        return SimpleVelocitizer.format(new MicroSecondDate(origin.getOriginTime()),
+        return SimpleVelocitizer.format(origin.getOriginTime(),
                                         format);
     }
 
@@ -264,14 +265,14 @@ public class VelocityEvent extends CacheEvent {
 
     public static String makeDateIdentifier(VelocityEvent event) {
         synchronized(fullDateIdentifier) {
-        return fullDateIdentifier.format(new MicroSecondDate(event.getOrigin().getOriginTime()));
+        return fullDateIdentifier.format(event.getOrigin().getOriginTime());
         }
     }
 
-    public static MicroSecondDate parseDateIdentifier(String eqIdentifier)
+    public static Instant parseDateIdentifier(String eqIdentifier)
             throws ParseException {
         synchronized(fullDateIdentifier) {
-        return new MicroSecondDate(fullDateIdentifier.parse(eqIdentifier));
+        return fullDateIdentifier.parse(eqIdentifier);
         }
     }
 

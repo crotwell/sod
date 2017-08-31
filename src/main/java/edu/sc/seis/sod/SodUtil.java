@@ -13,6 +13,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -32,19 +34,17 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
+import edu.sc.seis.seisFile.fdsnws.stationxml.BaseNodeType;
 import edu.sc.seis.sod.model.common.BoxAreaImpl;
 import edu.sc.seis.sod.model.common.GlobalAreaImpl;
 import edu.sc.seis.sod.model.common.ISOTime;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.QuantityImpl;
-import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.common.UnitRangeImpl;
 import edu.sc.seis.sod.source.event.MicroSecondTimeRangeSupplier;
 import edu.sc.seis.sod.subsetter.LatitudeRange;
 import edu.sc.seis.sod.subsetter.LongitudeRange;
 import edu.sc.seis.sod.subsetter.origin.OriginPointDistance;
-import edu.sc.seis.sod.subsetter.requestGenerator.RandomTimeInterval;
 import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.util.time.ClockUtil;
 
@@ -293,7 +293,7 @@ public class SodUtil {
                     return nowSupplier();
                 } else if(tagName.equals("future")) {
                     return new MicroSecondDateSupplier() {
-                        public MicroSecondDate load() {
+                        public Instant load() {
                             return ClockUtil.wayFuture();
                         }
                     };
@@ -303,15 +303,15 @@ public class SodUtil {
             }
         }
         return new MicroSecondDateSupplier() {
-            final MicroSecondDate date = new MicroSecondDate(new MicroSecondDate(getNestedText(el).trim()));
-            public MicroSecondDate load() {  return date; }
+            final Instant date =  BaseNodeType.parseISOString(getNestedText(el).trim());
+            public Instant load() {  return date; }
         };
     }
     
     public static MicroSecondDateSupplier nowSupplier() {
         return new MicroSecondDateSupplier() {
-            private MicroSecondDate now = ClockUtil.now();
-            public MicroSecondDate load() { return now; }
+            private Instant now = ClockUtil.now();
+            public Instant load() { return now; }
         };
     }
 
@@ -329,8 +329,8 @@ public class SodUtil {
                                       DOMHelper.extractInt(element, "second", -1),
                                       ceiling);
         return new MicroSecondDateSupplier() {
-            final MicroSecondDate date =  new MicroSecondDate(cal.getTime());
-            public MicroSecondDate load() {  return date; }
+            final Instant date =  cal.getTime();
+            public Instant load() {  return date; }
         };
     }
 
@@ -373,38 +373,38 @@ public class SodUtil {
             
             return loadRelativeTime(DOMHelper.getElement(el, "timeInterval"));
         }
-        final TimeInterval duration = loadTimeInterval(el);
+        final Duration duration = loadTimeInterval(el);
         if(el.getTagName().equals("earlier")) {
             return getEarlierSupplier(duration);
         }
         return new MicroSecondDateSupplier() {
-            public MicroSecondDate load() {return ClockUtil.now().add(duration);}
+            public Instant load() {return ClockUtil.now().plus(duration);}
         };
     }
     
-    public static MicroSecondDateSupplier getEarlierSupplier(final TimeInterval duration) {
+    public static MicroSecondDateSupplier getEarlierSupplier(final Duration duration) {
         return new MicroSecondDateSupplier() {
-            public MicroSecondDate load() {return ClockUtil.now().subtract(duration);}
+            public Instant load() {return ClockUtil.now().minus(duration);}
         };
     }
     
-    public static MicroSecondDateSupplier getLaterSupplier(final TimeInterval duration) {
+    public static MicroSecondDateSupplier getLaterSupplier(final Duration duration) {
         return new MicroSecondDateSupplier() {
-        public MicroSecondDate load() {return ClockUtil.now().add(duration);}
+        public Instant load() {return ClockUtil.now().plus(duration);}
         };
     };
 
-    public static TimeInterval loadTimeInterval(Element config) throws ConfigurationException {
+    public static Duration loadTimeInterval(Element config) throws ConfigurationException {
         try {
             UnitImpl unit = loadUnit(XMLUtil.getElement(config, "unit"));
             if(DOMHelper.hasElement(config, "randomValue")) {
                 Element rvConf = DOMHelper.getElement(config, "randomValue");
                 double min = Double.parseDouble(DOMHelper.extractText(rvConf, "min"));
                 double max = Double.parseDouble(DOMHelper.extractText(rvConf, "max"));
-                return new RandomTimeInterval(min, max, unit);
+                return ClockUtil.durationFrom(Math.random() * (max - min) + min, unit);
             } else {
                 double value = Double.parseDouble(DOMHelper.extractText(config, "value"));
-                return new TimeInterval(value, unit);
+                return new QuantityImpl(value, unit).toDuration();
             }
         } catch(Exception e) {
             throw new ConfigurationException("Can't load TimeInterval from " + config.getTagName(),

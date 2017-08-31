@@ -1,5 +1,7 @@
 package edu.sc.seis.sod;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Iterator;
 import java.util.TimerTask;
 
@@ -11,9 +13,6 @@ import edu.sc.seis.sod.hibernate.eventpair.EventChannelPair;
 import edu.sc.seis.sod.hibernate.eventpair.EventNetworkPair;
 import edu.sc.seis.sod.hibernate.eventpair.EventStationPair;
 import edu.sc.seis.sod.hibernate.eventpair.EventVectorPair;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.TimeInterval;
-import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.StatefulEvent;
 import edu.sc.seis.sod.model.status.Standing;
 import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
@@ -30,8 +29,8 @@ import edu.sc.seis.sod.util.time.ClockUtil;
  */
 public class TotalLoserEventCleaner extends TimerTask {
 
-    public TotalLoserEventCleaner(TimeInterval lag) {
-        this.lagInterval = lag;
+    public TotalLoserEventCleaner(Duration duration) {
+        this.lagInterval = duration;
        // Timer t = new Timer(true);
        // t.schedule(this, 0, ONE_WEEK);
     }
@@ -39,14 +38,14 @@ public class TotalLoserEventCleaner extends TimerTask {
     public void run() {
         try {
             logger.info("Working");
-            MicroSecondDate ageAgo = ClockUtil.now().subtract(lagInterval);
+            Instant ageAgo = ClockUtil.now().minus(lagInterval);
             // stations will process slightly before channels, so give a little time
             // to avoid database forgein key violations
-            TimeInterval littleSkip = new TimeInterval(10, UnitImpl.MINUTE);
+            Duration littleSkip = Duration.ofMinutes(10);
             cleanEvents(ageAgo);
             StatefulEventDB.getSingleton().commit();
             logger.info("Cleaned events");
-            ageAgo = ageAgo.add(littleSkip);
+            ageAgo = ageAgo.plus(littleSkip);
             
             cleanECP(ageAgo);
             SodDB.getSingleton().commit();
@@ -55,12 +54,12 @@ public class TotalLoserEventCleaner extends TimerTask {
             SodDB.getSingleton().commit();
             logger.info("Cleaned event-vector pairs");
             
-            ageAgo = ageAgo.add(littleSkip);
+            ageAgo = ageAgo.plus(littleSkip);
             cleanESP(ageAgo);
             SodDB.getSingleton().commit();
             logger.info("Cleaned event-station pairs");
             
-            ageAgo = ageAgo.add(littleSkip);
+            ageAgo = ageAgo.plus(littleSkip);
             cleanENP(ageAgo);
             SodDB.getSingleton().commit();
             logger.info("Cleaned event-network pairs");
@@ -74,7 +73,7 @@ public class TotalLoserEventCleaner extends TimerTask {
         }
     }
     
-    public static void cleanEvents(MicroSecondDate ageAgo) {
+    public static void cleanEvents(Instant ageAgo) {
         Query q = StatefulEventDB.getSingleton().getSession().createQuery(" from "+StatefulEvent.class.getName()+
                                                                           " e  where e.status.standingInt = "+Standing.REJECT.getVal()+
                                                                           " and e.preferred.originTime.time < :ageAgo");
@@ -90,23 +89,23 @@ public class TotalLoserEventCleaner extends TimerTask {
         logger.debug("Done, deleted "+counter+" events.");
     }
     
-    public static void cleanESP(MicroSecondDate ageAgo) {
+    public static void cleanESP(Instant ageAgo) {
         clean(EventStationPair.class, ageAgo);
     }
     
-    public static void cleanENP(MicroSecondDate ageAgo) {
+    public static void cleanENP(Instant ageAgo) {
         clean(EventNetworkPair.class, ageAgo);
     }
     
-    public static void cleanECP(MicroSecondDate ageAgo) {
+    public static void cleanECP(Instant ageAgo) {
         clean(EventChannelPair.class, ageAgo);
     }
 
-    public static void cleanEVP(MicroSecondDate ageAgo) {
+    public static void cleanEVP(Instant ageAgo) {
         clean(EventVectorPair.class, ageAgo);
     }
     
-    public static void clean(Class eventPairClass, MicroSecondDate ageAgo) {
+    public static void clean(Class eventPairClass, Instant ageAgo) {
         Query q = SodDB.getSingleton().getSession().createQuery("delete "+eventPairClass.getName()+
                                                                 " ep where ep.status.standingInt = "+Standing.REJECT.getVal()+
                                                                 " and ep.lastQuery < :ageAgo");
@@ -116,7 +115,7 @@ public class TotalLoserEventCleaner extends TimerTask {
         logger.info("delete "+deleted+" old "+eventPairClass.getName());
     }
     
-    TimeInterval lagInterval ;
+    Duration lagInterval ;
 
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(TotalLoserEventCleaner.class);
 

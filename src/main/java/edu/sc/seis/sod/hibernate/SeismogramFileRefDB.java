@@ -1,6 +1,8 @@
 package edu.sc.seis.sod.hibernate;
 
 import java.io.File;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -144,7 +146,7 @@ public class SeismogramFileRefDB extends AbstractHibernateDB {
                                               request.channel_id.getStationCode(),
                                               request.channel_id.getLocCode(),
                                               request.channel_id.getChannelCode(),
-                                              new MicroSecondDate(request.start_time));
+                                              request.start_time);
             } else {
                 chanId = chanTable.getChannel(request.channel_id);
             }
@@ -152,8 +154,8 @@ public class SeismogramFileRefDB extends AbstractHibernateDB {
             logger.warn("Can not find channel ID in database.");
             return;
         }
-        MicroSecondDate adjustedBeginTime = new MicroSecondDate(request.start_time).subtract(ONE_SECOND);
-        MicroSecondDate adjustedEndTime = new MicroSecondDate(request.end_time).add(ONE_SECOND);
+        Instant adjustedBeginTime = request.start_time.minus(ONE_SECOND);
+        Instant adjustedEndTime = request.end_time.plus(ONE_SECOND);
         String query = "from "
                 + SeismogramFileReference.class.getName()
                 + " where networkCode = :netCode and stationCode = :staCode and siteCode = :siteCode and channelCode = :chanCode "
@@ -189,8 +191,8 @@ public class SeismogramFileRefDB extends AbstractHibernateDB {
         } else {
             for (SeismogramFileReference seisRef : databaseResults) {
                 RequestFilter req = new RequestFilter(chanIdxxx,
-                                                      new MicroSecondDate(seisRef.getBeginTime()),
-                                                      new MicroSecondDate(seisRef.getEndTime()));
+                                                      seisRef.getBeginTime(),
+                                                      seisRef.getEndTime());
                 req = cutter.apply(req);
                 if (req != null) {
                     resultCollector.add(req);
@@ -219,7 +221,7 @@ public class SeismogramFileRefDB extends AbstractHibernateDB {
 
     protected NetworkDB chanTable = NetworkDB.getSingleton();
 
-    private static final TimeInterval ONE_SECOND = new TimeInterval(1, UnitImpl.SECOND);
+    private static final Duration ONE_SECOND = Duration.ofSeconds(1);
 
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(SeismogramFileRefDB.class);
 }

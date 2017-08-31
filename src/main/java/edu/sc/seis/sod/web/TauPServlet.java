@@ -2,6 +2,7 @@ package edu.sc.seis.sod.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,13 +19,14 @@ import org.json.JSONWriter;
 
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
+import edu.sc.seis.seisFile.fdsnws.stationxml.BaseNodeType;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.bag.TauPUtil;
 import edu.sc.seis.sod.hibernate.EventDB;
 import edu.sc.seis.sod.hibernate.NetworkDB;
 import edu.sc.seis.sod.hibernate.NotFound;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
+import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.NoPreferredOrigin;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
@@ -79,9 +81,9 @@ public class TauPServlet  extends HttpServlet {
                         writer.close();
                         resp.sendError(500);
                     } else {
-                        MicroSecondDate netBegin = new MicroSecondDate(year+"1231T23:59:59.000Z");
+                        Instant netBegin = BaseNodeType.parseISOString(year+"1231T23:59:59.000Z");
                         for (Station stationImpl : staList) {
-                            MicroSecondTimeRange staTR = new MicroSecondTimeRange(stationImpl.getEffectiveTime());
+                            TimeRange staTR = new TimeRange(stationImpl.getEffectiveTime());
                             if (staTR.contains(netBegin)) {
                                 sta = stationImpl;
                             }

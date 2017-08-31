@@ -12,13 +12,14 @@ import edu.sc.seis.sod.NetworkArm;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.UserConfigurationException;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
+import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.EventAttrImpl;
 import edu.sc.seis.sod.model.event.OriginImpl;
 import edu.sc.seis.sod.source.event.MicroSecondTimeRangeSupplier;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
+import edu.sc.seis.sod.util.time.ClockUtil;
 
 public class NetworkTimeRange implements OriginSubsetter, ArmListener,
         MicroSecondTimeRangeSupplier {
@@ -54,10 +55,10 @@ public class NetworkTimeRange implements OriginSubsetter, ArmListener,
                              EventAttrImpl eventAttr,
                              OriginImpl origin) {
         return new StringTreeLeaf(this,
-                                  getMSTR().contains(new MicroSecondDate(origin.getOriginTime())));
+                                  getMSTR().contains(origin.getOriginTime()));
     }
 
-    public synchronized MicroSecondTimeRange getMSTR() {
+    public synchronized TimeRange getMSTR() {
         if(range != null) {
             return range;
         }
@@ -76,17 +77,17 @@ public class NetworkTimeRange implements OriginSubsetter, ArmListener,
             for(int j = 0; j < stas.length; j++) {
                 List<Channel> chans = arm.getSuccessfulChannels(stas[j]);
                 for(Channel c : chans) {
-                    MicroSecondTimeRange chanRange = new MicroSecondTimeRange(c.getEffectiveTime());
+                    TimeRange chanRange = new TimeRange(c.getEffectiveTime());
                     if(range == null) {
                         range = chanRange;
                     } else {
                         if(chanRange.getBeginTime()
-                                .before(range.getBeginTime())) {
-                            range = new MicroSecondTimeRange(chanRange.getBeginTime(),
+                                .isBefore(range.getBeginTime())) {
+                            range = new TimeRange(chanRange.getBeginTime(),
                                                              range.getEndTime());
                         }
-                        if(chanRange.getEndTime().after(range.getEndTime())) {
-                            range = new MicroSecondTimeRange(range.getBeginTime(),
+                        if(chanRange.getEndTime().isAfter(range.getEndTime())) {
+                            range = new TimeRange(range.getBeginTime(),
                                                              chanRange.getEndTime());
                         }
                     }
@@ -94,8 +95,8 @@ public class NetworkTimeRange implements OriginSubsetter, ArmListener,
             }
         }
         if(range == null) {
-            range = new MicroSecondTimeRange(new MicroSecondDate(),
-                                             new MicroSecondDate());
+            range = new TimeRange(ClockUtil.now(),
+                                  ClockUtil.now());
         }
         return range;
     }
@@ -106,5 +107,5 @@ public class NetworkTimeRange implements OriginSubsetter, ArmListener,
 
     private Object finishLock = new Object();
 
-    private MicroSecondTimeRange range;
+    private TimeRange range;
 }

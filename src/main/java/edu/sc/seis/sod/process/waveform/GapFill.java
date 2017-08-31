@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.process.waveform;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -13,7 +14,7 @@ import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
+import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
@@ -51,9 +52,9 @@ public class GapFill extends Merge {
         }
         Collections.sort(sortedSeismograms, new Comparator<LocalSeismogramImpl>() {
             public int compare(LocalSeismogramImpl o1, LocalSeismogramImpl o2) {
-                if (o1.getBeginTime().before(o2.getBeginTime())) {
+                if (o1.getBeginTime().isBefore(o2.getBeginTime())) {
                     return -1;
-                } else if (o1.getBeginTime().after(o2.getBeginTime())) {
+                } else if (o1.getBeginTime().isAfter(o2.getBeginTime())) {
                     return 1;
                 } else {
                     return 0;
@@ -62,13 +63,13 @@ public class GapFill extends Merge {
         });
         // assume seismograms are merged (no overlaps) and sorted, so pairwise gap filling is ok
         for (int i = 0; i < original.length; i++) {
-            MicroSecondTimeRange mstr = new MicroSecondTimeRange(original[i]);
+            TimeRange mstr = new TimeRange(original[i]);
             sortedSeismograms = reduce(sortedSeismograms, mstr);
         }
         return new WaveformResult(true, sortedSeismograms.toArray(new LocalSeismogramImpl[0]), this);
     }
         
-    public List<LocalSeismogramImpl> reduce(List<LocalSeismogramImpl> inList, MicroSecondTimeRange mstr) throws FissuresException {
+    public List<LocalSeismogramImpl> reduce(List<LocalSeismogramImpl> inList, TimeRange mstr) throws FissuresException {
         if (inList.size() == 0 || inList.size() == 1) {
             return inList;
         }
@@ -96,7 +97,7 @@ public class GapFill extends Merge {
         TimeSeriesDataSel fillData = filler.fill(first, second);
         LocalSeismogramImpl fillSeis = new LocalSeismogramImpl(first.get_id()+"_gapFill",
                                                                first.getProperties(),
-                                                               first.getEndTime().add(first.getSampling().getPeriod()),
+                                                               first.getEndTime().plus(first.getSampling().getPeriod()),
                                                                calcNumGapPoints(first, second),
                                                                first.getSampling(),
                                                                first.getUnit(), first.getChannelID(),
@@ -109,10 +110,10 @@ public class GapFill extends Merge {
     }
 
     public static int calcNumGapPoints(LocalSeismogramImpl first, LocalSeismogramImpl second) {
-        MicroSecondDate firstEnd = first.getEndTime();
-        MicroSecondDate secondBegin = second.getBeginTime();
+        Instant firstEnd = first.getEndTime();
+        Instant secondBegin = second.getBeginTime();
         
-        QuantityImpl numSamplePeriods = secondBegin.subtract((TimeInterval)first.getSampling().getPeriod().multiplyBy(0.5)).subtract(firstEnd).divideBy(first.getSampling().getPeriod());
+        QuantityImpl numSamplePeriods = secondBegin.minus(first.getSampling().getPeriod().multipliedBy(0.5)).subtract(firstEnd).divideBy(first.getSampling().getPeriod());
         return (int)Math.ceil(numSamplePeriods.getValue(UnitImpl.DIMENSIONLESS)) -1; // one less than ceiling
     }
     

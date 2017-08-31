@@ -1,5 +1,7 @@
 package edu.sc.seis.sod.source.event;
 
+import java.time.Instant;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -9,6 +11,7 @@ import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.hibernate.NotFound;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
+import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.event.CacheEvent;
 
         
@@ -40,17 +43,17 @@ public class BackwardsEventSource extends AbstractEventSource {
         }
     }
 
-    public MicroSecondTimeRange getEventTimeRange() {
+    public TimeRange getEventTimeRange() {
         return wrappedSource.getEventTimeRange();
     }
 
     public boolean hasNext() {
-        MicroSecondTimeRange currentQuery = getQueryTime();
-        MicroSecondDate queryBegin = getEventTimeRange().getBeginTime();
+        TimeRange currentQuery = getQueryTime();
+        Instant queryBegin = getEventTimeRange().getBeginTime();
         logger.debug("Checking if more queries to the event server are in order. "
                 + "The last query was  "
                 + currentQuery
-                + " and we're querying from " + currentQuery.getBeginTime().subtract(increment));
+                + " and we're querying from " + currentQuery.getBeginTime().minus(increment));
         return ! currentQuery.getEndTime().equals(queryBegin);
     }
 
@@ -68,14 +71,14 @@ public class BackwardsEventSource extends AbstractEventSource {
         return false;
     }
     
-    protected void updateQueryEdge(MicroSecondTimeRange queryTime) {
+    protected void updateQueryEdge(TimeRange queryTime) {
         setQueryEdge(queryTime.getBeginTime());
     }
     
     /**
      * @return - the next time to start asking for events
      */
-    protected MicroSecondDate getQueryStart() {
+    protected Instant getQueryStart() {
         try {
             return getQueryEdge();
         } catch(NotFound e) {
@@ -87,13 +90,13 @@ public class BackwardsEventSource extends AbstractEventSource {
     /**
      * @return - the next time range to be queried for events
      */
-    protected MicroSecondTimeRange getQueryTime() {
-        MicroSecondDate queryEnd = getQueryStart();
-        MicroSecondDate queryStart = queryEnd.subtract(increment);
-        if(getEventTimeRange().getBeginTime().after(queryStart)) {
+    protected TimeRange getQueryTime() {
+        Instant queryEnd = getQueryStart();
+        Instant queryStart = queryEnd.minus(increment);
+        if(getEventTimeRange().getBeginTime().isAfter(queryStart)) {
             queryStart = getEventTimeRange().getBeginTime();
         }
-        return new MicroSecondTimeRange(queryStart, queryEnd);
+        return new TimeRange(queryStart, queryEnd);
     }
     
 

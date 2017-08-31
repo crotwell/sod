@@ -2,13 +2,13 @@ package edu.sc.seis.sod.subsetter.request;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.time.Instant;
 import java.util.TimeZone;
 
 import org.w3c.dom.Element;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.util.display.ThreadSafeSimpleDateFormat;
@@ -23,8 +23,8 @@ public class NetDCRequest extends BreqFastRequest {
                                  RequestFilter[] request,
                                  Writer out,
                                  int i) throws IOException {
-        MicroSecondDate start = new MicroSecondDate(request[i].start_time);
-        MicroSecondDate end = new MicroSecondDate(request[i].end_time);
+        Instant start = request[i].start_time;
+        Instant end = request[i].end_time;
         out.write(".DATA * " + channel.getNetworkCode() + " "
                 + channel.getStationCode() + " "
                 + channel.getLocCode() + " "

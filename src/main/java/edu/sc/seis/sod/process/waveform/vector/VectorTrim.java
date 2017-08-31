@@ -1,5 +1,7 @@
 package edu.sc.seis.sod.process.waveform.vector;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +15,6 @@ import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.common.ISOTime;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.QuantityImpl;
-import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
@@ -29,8 +30,8 @@ import edu.sc.seis.sod.subsetter.SubsetterException;
 
 public class VectorTrim implements WaveformVectorProcess, Threadable {
 
-    private static final Cut EMPTY_CUT = new Cut(new MicroSecondDate(ISOTime.futurePlusOne),
-                                                 new MicroSecondDate(-100000000000000l));
+    private static final Cut EMPTY_CUT = new Cut(ISOTime.futurePlusOne,
+                                                Instant.ofEpochSecond(-100000000000000l));
 
     public WaveformVectorResult accept(CacheEvent event,
                                         ChannelGroup channelGroup,
@@ -98,7 +99,7 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
         shifty = SampleSyncronize.alignTimes(main, shifty);
         if (shifty.getNumPoints() == main.getNumPoints() +1) {
             // looks like we are long by one
-            if (shifty.getBeginTime().difference(main.getBeginTime()).lessThan(shifty.getBeginTime().add(shifty.getSampling().getPeriod()).difference(main.getBeginTime()))) {
+            if (shifty.getBeginTime().difference(main.getBeginTime()).lessThan(shifty.getBeginTime().plus(shifty.getSampling().getPeriod()).difference(main.getBeginTime()))) {
                 // first data point closer than second, so chop end 
                 shifty = Cut.cut(shifty, 0, shifty.getNumPoints()-2); //cut by index inclusive, so -2 to trim 1 from end
             } else {
@@ -142,15 +143,15 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
                                               vector[0][i].getEndTime(),
                                               vector);
             // add extra 1/2 sample to begin and end in case seismograms are not quite time aligned
-            TimeInterval halfSampPeriod = ((TimeInterval)vector[0][i].getSampling().getPeriod().divideBy(2));
-            cut = new Cut(cut.getBegin().subtract(halfSampPeriod), cut.getEnd().add(halfSampPeriod));
+            Duration halfSampPeriod = vector[0][i].getSampling().getPeriod().dividedBy(2);
+            cut = new Cut(cut.getBegin().minus(halfSampPeriod), cut.getEnd().plus(halfSampPeriod));
             results.add(cut);
         }
         return (Cut[])results.toArray(new Cut[0]);
     }
 
-    private Cut findSmallestCoveringCut(MicroSecondDate start,
-                                        MicroSecondDate end,
+    private Cut findSmallestCoveringCut(Instant start,
+                                        Instant end,
                                         LocalSeismogramImpl[][] vector) {
         Cut c = new Cut(start, end);
         for(int i = 1; i < vector.length; i++) {
@@ -159,10 +160,10 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
             }
             for(int j = 0; j < vector[i].length; j++) {
                 if(c.overlaps(vector[i][j])) {
-                    if(vector[i][j].getBeginTime().after(c.getBegin())) {
+                    if(vector[i][j].getBeginTime().isAfter(c.getBegin())) {
                         c = new Cut(vector[i][j].getBeginTime(), c.getEnd());
                     }
-                    if(vector[i][j].getEndTime().before(c.getEnd())) {
+                    if(vector[i][j].getEndTime().isBefore(c.getEnd())) {
                         c = new Cut(c.getBegin(), vector[i][j].getEndTime());
                     }
                     break;
@@ -184,9 +185,7 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
         ChannelId lastChan = null;
         for(int i = 0; i < impls.length; i++) {
             for(int j = 0; j < impls[i].length; j++) {
-                TimeInterval curPeriod = (TimeInterval)impls[i][j].getSampling()
-                        .getPeriod()
-                        .convertTo(UnitImpl.SECOND);
+                Duration curPeriod = impls[i][j].getSampling().getPeriod();
                 if(lastPeriod != null) {
                     if(Math.abs(1 - lastPeriod.divideBy(curPeriod).getValue()) > .01) {
                         logger.info("sampling not equal: "+i+","+j+" "

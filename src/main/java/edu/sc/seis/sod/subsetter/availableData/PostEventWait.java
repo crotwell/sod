@@ -1,13 +1,14 @@
 package edu.sc.seis.sod.subsetter.availableData;
 
+import java.time.Duration;
+import java.time.Instant;
+
 import org.w3c.dom.Element;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.status.StringTree;
@@ -26,13 +27,13 @@ public class PostEventWait implements AvailableDataSubsetter {
                           RequestFilter[] request,
                           RequestFilter[] available,
                           CookieJar cookies) {
-        MicroSecondDate originTime = new MicroSecondDate(EventUtil.extractOrigin(ev).getOriginTime());
-        MicroSecondDate waitTime = originTime.add(postOriginTime);
-        if ( ! waitTime.after(ClockUtil.now())) {
+        Instant originTime = EventUtil.extractOrigin(ev).getOriginTime();
+        Instant waitTime = originTime.plus(postOriginTime);
+        if ( ! waitTime.isAfter(ClockUtil.now())) {
         return new StringTreeLeaf(this, false, "Wait until: "+waitTime);
         }
         return new StringTreeLeaf(this, true);
     }
 
-    private TimeInterval postOriginTime;
+    private Duration postOriginTime;
 }

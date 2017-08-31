@@ -1,6 +1,8 @@
 package edu.sc.seis.sod.hibernate;
 
 import java.lang.ref.WeakReference;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -24,7 +26,6 @@ import org.hibernate.tool.hbm2ddl.SchemaUpdate;
 import edu.sc.seis.sod.model.common.Location;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.QuantityImpl;
-import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.ToDoException;
 import edu.sc.seis.sod.model.common.UnitBase;
 import edu.sc.seis.sod.model.common.UnitImpl;
@@ -263,7 +264,7 @@ public abstract class AbstractHibernateDB {
     
     private static List<WeakReference<SessionStackTrace>> knownSessions = Collections.synchronizedList(new LinkedList<WeakReference<SessionStackTrace>>());
 
-    private static TimeInterval MAX_SESSION_LIFE = new TimeInterval(300, UnitImpl.SECOND);
+    private static Duration MAX_SESSION_LIFE = Duration.ofSeconds(300);
     
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(AbstractHibernateDB.class);
 
@@ -297,8 +298,8 @@ public abstract class AbstractHibernateDB {
                             SessionStackTrace item = iterator.next().get();
                             if (item == null || ! item.session.isOpen() ) {
                                 iterator.remove();
-                            } else if(ClockUtil.now().subtract(MAX_SESSION_LIFE).after(item.createTime)) {
-                                TimeInterval aliveTime = (TimeInterval)ClockUtil.now().subtract(item.createTime).convertTo(UnitImpl.SECOND);
+                            } else if(ClockUtil.now().minus(MAX_SESSION_LIFE).isAfter(item.createTime)) {
+                                Duration aliveTime = Duration.between(item.createTime, ClockUtil.now());
                                 logger.debug("Session still open after "+aliveTime+" seconds. create time="+item.createTime);
                                 for (int i = 0; i < item.stackTrace.length; i++) {
                                     logger.debug(item.stackTrace[i].toString());
@@ -323,6 +324,6 @@ class SessionStackTrace {
     }
     Session session;
     StackTraceElement[] stackTrace;
-    MicroSecondDate createTime;
+    Instant createTime;
 }
 

@@ -2,6 +2,7 @@ package edu.sc.seis.sod.velocity.network;
 
 import edu.sc.seis.sod.model.common.SamplingImpl;
 
+@Deprecated
 public class VelocitySampling extends SamplingImpl {
 
     public VelocitySampling(SamplingImpl samp) {

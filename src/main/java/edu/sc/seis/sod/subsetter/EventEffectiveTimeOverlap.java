@@ -1,15 +1,15 @@
 package edu.sc.seis.sod.subsetter;
 
+import java.time.Duration;
+import java.time.Instant;
+
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.TimeRange;
-import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.NoPreferredOrigin;
 import edu.sc.seis.sod.model.event.StatefulEvent;
-import edu.sc.seis.sod.model.station.SiteImpl;
 
 /**
  * EventEffectiveTimeOverlap.java Created: Wed Mar 19 10:49:54 2003
@@ -26,10 +26,10 @@ public class EventEffectiveTimeOverlap extends EffectiveTimeOverlap {
 
     static TimeRange createTimeRange(StatefulEvent event)
             throws NoPreferredOrigin {
-        MicroSecondDate originTime = event.getOrigin().getOriginTime();
+        Instant originTime = event.getOrigin().getOriginTime();
         if (originTime == null) {throw new RuntimeException("origin time is null");}
         return new TimeRange(originTime,
-                             originTime.add(DEFAULT_OFFSET));
+                             originTime.plus(DEFAULT_OFFSET));
     }
 
     public boolean overlaps(Network net) {
@@ -40,13 +40,9 @@ public class EventEffectiveTimeOverlap extends EffectiveTimeOverlap {
         return overlaps(station.getEffectiveTime());
     }
 
-    public boolean overlaps(SiteImpl site) {
-        return overlaps(site.getEffectiveTime());
-    }
-
     public boolean overlaps(Channel channel) {
         return overlaps(channel.getEffectiveTime());
     }
 
-    static final TimeInterval DEFAULT_OFFSET = new TimeInterval(3, UnitImpl.DAY);
+    static final Duration DEFAULT_OFFSET = Duration.ofDays(3);
 } // EventEffectiveTimeOverlap

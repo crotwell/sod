@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.hibernate;
 
+import java.time.Instant;
 import java.util.Iterator;
 import java.util.List;
 
@@ -196,7 +197,7 @@ public class NetworkDB extends AbstractHibernateDB {
         query.setString("netCode", staId.network_id.network_code);
         query.setString("staCode", staId.station_code);
         query.setTimestamp("staBegin",
-                           new MicroSecondDate(staId.begin_time).getTimestamp());
+                           staId.begin_time.getTimestamp());
         query.setMaxResults(1);
         List<Station> l = query.list();
         logger.debug("getStationById("+staId.network_id.network_code+"."+staId.station_code+"."+staId.begin_time.getISOString()+"  return size: "+l.size());
@@ -309,7 +310,7 @@ public class NetworkDB extends AbstractHibernateDB {
     }
 
     public List<Channel> getChannelsForStation(Station station,
-                                                   MicroSecondDate when) {
+                                               Instant when) {
         Query query = getSession().createQuery(getChannelForStationAtTime);
         query.setEntity("station", station);
         query.setTimestamp("when", when.getTimestamp());
@@ -320,7 +321,7 @@ public class NetworkDB extends AbstractHibernateDB {
                                   String sta,
                                   String site,
                                   String chan,
-                                  MicroSecondDate when) throws NotFound {
+                                  Instant when) throws NotFound {
         return getChannel(net, sta, site, chan, when, getChannelByCode);
     }
 
@@ -337,7 +338,7 @@ public class NetworkDB extends AbstractHibernateDB {
         query.setString("siteCode", site);
         query.setString("channelCode", chan);
         query.setTimestamp("when",
-                           new MicroSecondDate(net.begin_time).getTimestamp());
+                           net.begin_time.getTimestamp());
         return query.list();
     }
 
@@ -346,7 +347,7 @@ public class NetworkDB extends AbstractHibernateDB {
                           id.station_code,
                           id.site_code,
                           id.channel_code,
-                          new MicroSecondDate(id.begin_time),
+                          id.begin_time,
                           getChannelById);
     }
 
@@ -354,7 +355,7 @@ public class NetworkDB extends AbstractHibernateDB {
                                      String sta,
                                      String site,
                                      String chan,
-                                     MicroSecondDate when,
+                                     Instant when,
                                      String queryString) throws NotFound {
         Query query = getSession().createQuery(queryString);
         query.setString("netCode", net);

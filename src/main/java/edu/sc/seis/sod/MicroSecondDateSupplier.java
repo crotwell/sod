@@ -3,9 +3,9 @@
  */
 package edu.sc.seis.sod;
 
-import edu.sc.seis.sod.model.common.MicroSecondDate;
+import java.time.Instant;
 
 public interface MicroSecondDateSupplier {
 
-    public MicroSecondDate load();
+    public Instant load();
 }

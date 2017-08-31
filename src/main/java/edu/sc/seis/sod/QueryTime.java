@@ -1,8 +1,9 @@
 package edu.sc.seis.sod;
 
 import java.sql.Timestamp;
+import java.time.Duration;
+import java.time.Instant;
 
-import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.util.time.ClockUtil;
@@ -13,28 +14,20 @@ public class QueryTime {
     public QueryTime() {}
 
 
-    public QueryTime(String serverName, Timestamp time) {
-        this(serverName, NO_DNS, time);
-    }
-
-    public QueryTime(String serverName, String serverDNS, Timestamp time) {
+    public QueryTime(String serverName, Instant time) {
         this.serverName = serverName;
-        this.serverDNS = serverDNS;
         this.time = time;
     }
     
     protected int dbid;
     protected String serverName;
-    protected String serverDNS;
-    protected Timestamp time;
-    public static final String NO_DNS = "NO_DNS";
+    protected Instant time;
     
-    public boolean needsRefresh(TimeInterval refreshInterval) {
-        MicroSecondDate lastTime = new MicroSecondDate(getTime());
-        MicroSecondDate currentTime = ClockUtil.now();
-        TimeInterval timeInterval = currentTime.difference(lastTime);
-        timeInterval = (TimeInterval)timeInterval.convertTo(refreshInterval.getUnit());
-        if(timeInterval.getValue() >= refreshInterval.getValue()) {
+    public boolean needsRefresh(Duration refreshInterval) {
+        Instant lastTime = getTime();
+        Instant currentTime = ClockUtil.now();
+        Duration timeInterval = Duration.between(lastTime, currentTime).abs();
+        if(timeInterval.compareTo(refreshInterval) > 0) {
             return true;
         }
         return false;
@@ -48,11 +41,7 @@ public class QueryTime {
         return serverName;
     }
     
-    public String getServerDNS() {
-        return serverDNS;
-    }
-    
-    public Timestamp getTime() {
+    public Instant getTime() {
         return time;
     }
 
@@ -67,34 +56,29 @@ public class QueryTime {
     }
 
     
-    protected void setServerDNS(String serverDNS) {
-        this.serverDNS = serverDNS;
-    }
-
-    
-    public void setTime(Timestamp time) {
+    public void setTime(Instant time) {
         this.time = time;
     }
     
     public boolean equals(Object o) {
         if (o instanceof QueryTime) {
             QueryTime q = (QueryTime)o;
-            return getDbid() == q.getDbid() && getServerDNS().equals(q.getServerDNS()) && getServerName().equals(q.getServerName()) && getTime().equals(q.getTime());
+            return getDbid() == q.getDbid() && getServerName().equals(q.getServerName()) && getTime().equals(q.getTime());
         } else {
             return false;
         }
     }
     
     public int hashCode() {
-        return 89+17*getDbid()+17*getServerDNS().hashCode()+getServerName().hashCode()+17*getTime().hashCode();   
+        return 89+17*getDbid()+getServerName().hashCode()+19*getTime().hashCode();   
     }
 
-    public long delayUntilNextRefresh(TimeInterval refreshInterval) {
-        MicroSecondDate now = ClockUtil.now();
-        MicroSecondDate nextRefresh = new MicroSecondDate(getTime()).add(refreshInterval);
-        if (nextRefresh.before(now)) {
+    public long delayMillisUntilNextRefresh(Duration refreshInterval) {
+        Instant now = ClockUtil.now();
+        Instant nextRefresh = getTime().plus(refreshInterval);
+        if (nextRefresh.isBefore(now)) {
             return 0l;
         }
-        return (long)nextRefresh.subtract(now).getValue(UnitImpl.MILLISECOND);  
+        return Duration.between(nextRefresh, now).toMillis();  
     }
 }

@@ -1,5 +1,7 @@
 package edu.sc.seis.sod.measure;
 
+import java.time.Instant;
+
 import org.json.JSONObject;
 
 import edu.sc.seis.sod.model.common.MicroSecondDate;
@@ -7,7 +9,7 @@ import edu.sc.seis.sod.model.common.MicroSecondDate;
 
 public class TimeRangeMeasurement extends Measurement {
 
-    public TimeRangeMeasurement(String name, MicroSecondDate start, MicroSecondDate end) {
+    public TimeRangeMeasurement(String name, Instant start, Instant end) {
         super(name);
         this.start = start;
         this.end = end;
@@ -26,5 +28,5 @@ public class TimeRangeMeasurement extends Measurement {
         return out;
     }
     
-    MicroSecondDate start, end;
+    Instant start, end;
 }

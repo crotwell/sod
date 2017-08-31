@@ -1,11 +1,13 @@
 package edu.sc.seis.sod.subsetter.station;
 
+import java.time.Instant;
+
 import org.w3c.dom.Element;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
+import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.source.event.MicroSecondTimeRangeSupplier;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.StringTree;
@@ -24,11 +26,11 @@ public class StationEffectiveTimeOverlap extends EffectiveTimeOverlap implements
         super(config);
     }
 
-    public StationEffectiveTimeOverlap(MicroSecondTimeRange tr) {
+    public StationEffectiveTimeOverlap(TimeRange tr) {
         super(tr);
     }
     
-    public StationEffectiveTimeOverlap(MicroSecondDate start, MicroSecondDate end) {
+    public StationEffectiveTimeOverlap(Instant start, Instant end) {
         super(start, end);
     }
 

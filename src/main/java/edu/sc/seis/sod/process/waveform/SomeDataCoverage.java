@@ -4,7 +4,7 @@ import org.w3c.dom.Element;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
-import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
+import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
@@ -26,18 +26,18 @@ public class SomeDataCoverage implements WaveformProcess {
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) {
-        MicroSecondTimeRange[] seisTimeRanges = new MicroSecondTimeRange[seismograms.length];
+        TimeRange[] seisTimeRanges = new TimeRange[seismograms.length];
         for(int i = 0; i < seisTimeRanges.length; i++) {
-            seisTimeRanges[i] = new MicroSecondTimeRange(seismograms[i]);
+            seisTimeRanges[i] = new TimeRange(seismograms[i]);
         }
-        MicroSecondTimeRange[] rfTimeRanges = new MicroSecondTimeRange[original.length];
+        TimeRange[] rfTimeRanges = new TimeRange[original.length];
         for(int i = 0; i < rfTimeRanges.length; i++) {
-            rfTimeRanges[i] = new MicroSecondTimeRange(original[i]);
+            rfTimeRanges[i] = new TimeRange(original[i]);
         }
         for(int i = 0; i < seisTimeRanges.length; i++) {
-            MicroSecondTimeRange curSeisTimeRange = seisTimeRanges[i];
+            TimeRange curSeisTimeRange = seisTimeRanges[i];
             for(int j = 0; j < rfTimeRanges.length; j++) {
-                MicroSecondTimeRange rfTimeRange = rfTimeRanges[j];
+                TimeRange rfTimeRange = rfTimeRanges[j];
                 if(RangeTool.areOverlapping(curSeisTimeRange, rfTimeRange)) {
                     StringTreeLeaf leaf = new StringTreeLeaf(this,
                                                              true,

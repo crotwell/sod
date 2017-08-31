@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.hibernate;
 
+import java.time.Instant;
 import java.util.List;
 
 import org.hibernate.query.Query;
@@ -96,8 +97,8 @@ public class EventDB extends AbstractHibernateDB {
 		try {
             query.setString("catalog", e.get_preferred_origin().getCatalog());
             query.setString("originid", e.get_preferred_origin().get_id());
-			query.setTimestamp("originTime", new MicroSecondDate(e
-					.get_preferred_origin().getOriginTime()).getTimestamp());
+			query.setTimestamp("originTime", e
+					.get_preferred_origin().getOriginTime().getTimestamp());
 			query.setDouble("depth",
 					e.get_preferred_origin().getLocation().depth.getValue());
 			query.setDouble("lat",
@@ -135,8 +136,8 @@ public class EventDB extends AbstractHibernateDB {
     }
 
     
-    public CacheEvent[] getEventsByTimeAndDepthRanges(MicroSecondDate minTime,
-                                                      MicroSecondDate maxTime,
+    public CacheEvent[] getEventsByTimeAndDepthRanges(Instant minTime,
+                                                      Instant maxTime,
                                                       double minDepth,
                                                       double maxDepth) {
         Session session = getSession();

@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.mock;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,15 +25,15 @@ import edu.sc.seis.sod.source.network.NetworkSource;
 
 public class MockNetworkSource extends AbstractNetworkSource implements NetworkSource {
 
-    TimeInterval refresh;
+    Duration refresh;
     
-    public MockNetworkSource(TimeInterval refresh) {
+    public MockNetworkSource(Duration refresh) {
         super("MockNetworkSource", 0);
         this.refresh = refresh;
     }
     
     public MockNetworkSource() {
-        this(new TimeInterval(3, UnitImpl.DAY));
+        this(Duration.ofDays(3));
     }
 
     @Override
@@ -41,7 +42,7 @@ public class MockNetworkSource extends AbstractNetworkSource implements NetworkS
     }
 
     @Override
-    public TimeInterval getRefreshInterval() {
+    public Duration getRefreshInterval() {
         return refresh;
     }
 
@@ -91,7 +92,7 @@ public class MockNetworkSource extends AbstractNetworkSource implements NetworkS
 
     @Override
     public Response getResponse(Channel chanId) throws ChannelNotFound, InvalidResponse, SodSourceException {
-        throw new ChannelNotFound();
+        throw new ChannelNotFound("Not implemented", chanId);
     }
     
 }

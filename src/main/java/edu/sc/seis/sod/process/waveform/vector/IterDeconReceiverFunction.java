@@ -1,5 +1,7 @@
 package edu.sc.seis.sod.process.waveform.vector;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +30,6 @@ import edu.sc.seis.sod.model.common.Location;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.Orientation;
 import edu.sc.seis.sod.model.common.SamplingImpl;
-import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.NoPreferredOrigin;
@@ -41,6 +42,7 @@ import edu.sc.seis.sod.model.station.ChannelIdUtil;
 import edu.sc.seis.sod.process.waveform.AbstractSeismogramWriter;
 import edu.sc.seis.sod.process.waveform.MseedWriter;
 import edu.sc.seis.sod.process.waveform.SacWriter;
+import edu.sc.seis.sod.util.time.ClockUtil;
 
 public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
 
@@ -117,9 +119,9 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
             IterDeconResult[] ans = process(event, channelGroup, singleSeismograms);
             String[] phaseName = pWave ? new String[] {"ttp"} : new String[] {"tts"};
             List<Arrival> pPhases = taup.calcTravelTimes(chan.getStation(), origin, phaseName);
-            MicroSecondDate firstP = new MicroSecondDate(origin.getOriginTime());
-            firstP = firstP.add(new TimeInterval(pPhases.get(0).getTime(), UnitImpl.SECOND));
-            TimeInterval shift = getShift();
+            Instant firstP = origin.getOriginTime();
+            firstP = firstP.plus(ClockUtil.durationFrom(pPhases.get(0).getTime(), UnitImpl.SECOND));
+            Duration shift = getShift();
             List<Measurement> measurementList = new ArrayList<Measurement>();
             for (int i = 0; i < ans.length; i++) {
                 float[] predicted = ans[i].getPredicted();
@@ -134,7 +136,7 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
                 LocalSeismogramImpl rfSeis = saveTimeSeries(predicted,
                                "receiver function " + singleSeismograms[0].channel_id.getStationCode(),
                                chanCode,
-                               firstP.subtract(shift),
+                               firstP.minus(shift),
                                singleSeismograms[0],
                                UnitImpl.DIMENSONLESS,
                                new Orientation((float)az, 0),
@@ -209,7 +211,7 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
         if (zdata.length == 0) {
             throw new IncompatibleSeismograms("data is of zero length ");
         }
-        SamplingImpl samp = SamplingImpl.createSamplingImpl(zSeis.sampling_info);
+        SamplingImpl samp = zSeis.sampling_info;
         double period = samp.getPeriod().convertTo(UnitImpl.SECOND).getValue();
         zdata = IterDecon.makePowerTwo(zdata);
         rotated[0] = IterDecon.makePowerTwo(rotated[0]);
@@ -246,19 +248,18 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
         logger.info("predicted.length = " + predicted.length);
         String[] phaseName = pWave ? new String[] {"ttp"} : new String[] {"tts"};
         List<Arrival> pPhases = taup.calcTravelTimes(staLoc, origin, phaseName);
-        MicroSecondDate firstP = new MicroSecondDate(origin.getOriginTime());
+        Instant firstP = origin.getOriginTime();
         logger.debug("origin " + firstP);
-        firstP = firstP.add(new TimeInterval(pPhases.get(0).getTime(), UnitImpl.SECOND));
+        firstP = firstP.plus(ClockUtil.durationFrom(pPhases.get(0).getTime(), UnitImpl.SECOND));
         logger.debug("firstP " + firstP);
         // TimeInterval shift = firstP.subtract(z.getBeginTime());
-        shift = (TimeInterval)shift.convertTo(UnitImpl.SECOND);
-        if (shift.getValue() != 0) {
+        if (shift.toNanos() != 0) {
             logger.debug("shifting by " + shift + "  before 0=" + predicted[0]);
             predicted = IterDecon.phaseShift(predicted, (float)shift.getValue(), period);
             logger.debug("shifting by " + shift);
         }
         logger.info("Finished with receiver function processing");
-        logger.debug("rec func begin " + firstP.subtract(shift));
+        logger.debug("rec func begin " + firstP.minus(shift));
         ans.predicted = predicted;
         ans.setAlignShift(shift);
         return ans;
@@ -267,7 +268,7 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
     public LocalSeismogramImpl saveTimeSeries(float[] data,
                                String name,
                                String chanCode,
-                               MicroSecondDate begin,
+                               Instant begin,
                                LocalSeismogramImpl refSeismogram,
                                UnitImpl unit,
                                Orientation orientation,
@@ -313,11 +314,11 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
         return pWave;
     }
 
-    public TimeInterval getShift() {
+    public Duration getShift() {
         return shift;
     }
 
-    public TimeInterval getPad() {
+    public Duration getPad() {
         return pad;
     }
 
@@ -344,15 +345,15 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
     
     protected boolean pWave = true;
 
-    protected TimeInterval shift = getDefaultShift();
+    protected Duration shift = getDefaultShift();
 
-    protected TimeInterval pad = getDefaultShift();
+    protected Duration pad = getDefaultShift();
 
     protected AbstractSeismogramWriter writer;
 
-    static public final TimeInterval DEFAULT_SHIFT = new TimeInterval(10, UnitImpl.SECOND);
+    static public final Duration DEFAULT_SHIFT = Duration.ofSeconds(10);
 
-    public static TimeInterval getDefaultShift() {
+    public static Duration getDefaultShift() {
         return DEFAULT_SHIFT;
     }
 

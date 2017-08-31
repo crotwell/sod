@@ -1,5 +1,8 @@
 package edu.sc.seis.sod.subsetter.station;
 
+import java.time.Duration;
+import java.time.Instant;
+
 import org.w3c.dom.Element;
 
 import edu.sc.seis.seisFile.fdsnws.FDSNWSException;
@@ -37,7 +40,7 @@ public class BelongsToVirtual implements StationSubsetter {
         this(SodUtil.getNestedText(el), null);
     }
 
-    public BelongsToVirtual(String virtualNetCode, TimeInterval refreshInterval) {
+    public BelongsToVirtual(String virtualNetCode, Duration refreshInterval) {
         this.code = virtualNetCode;
         this.refreshInterval = refreshInterval;
     }
@@ -67,13 +70,13 @@ public class BelongsToVirtual implements StationSubsetter {
 
     private void refreshStations(NetworkSource network)
             throws ConfigurationException, SodSourceException, FDSNWSException {
-        if (ClockUtil.now().subtract(getRefreshInterval()).after(lastQuery)) {
+        if (ClockUtil.now().minus(getRefreshInterval()).isAfter(lastQuery)) {
             lastQuery = ClockUtil.now();
             vnetList = getVirtual(host, code);
         }
     }
 
-    public TimeInterval getRefreshInterval() {
+    public Duration getRefreshInterval() {
         if (refreshInterval == null) {
             refreshInterval = Start.getNetworkArm().getRefreshInterval();
         }
@@ -88,7 +91,7 @@ public class BelongsToVirtual implements StationSubsetter {
 
     private VirtualNetworkList vnetList;
 
-    private TimeInterval refreshInterval;
+    private Duration refreshInterval;
 
-    private MicroSecondDate lastQuery = new MicroSecondDate(0);
+    private Instant lastQuery =  ClockUtil.wayPast();
 }

@@ -11,6 +11,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,6 +29,7 @@ import org.w3c.dom.Element;
 import edu.sc.seis.seisFile.fdsnws.FDSNStationQueryParams;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.FDSNStationXML;
+import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.seisFile.fdsnws.stationxml.NetworkIterator;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
@@ -39,18 +42,17 @@ import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
 import edu.sc.seis.sod.model.common.ISOTime;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.Instrumentation;
-import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.model.station.StationIdUtil;
 import edu.sc.seis.sod.util.convert.stationxml.ChannelSensitivityBundle;
 import edu.sc.seis.sod.util.convert.stationxml.StationChannelBundle;
 import edu.sc.seis.sod.util.convert.stationxml.StationXMLToFissures;
+import edu.sc.seis.sod.util.time.ClockUtil;
 import edu.sc.seis.sod.util.time.RangeTool;
 
 @Deprecated
@@ -65,7 +67,7 @@ public class StationXML extends AbstractNetworkSource implements NetworkSource {
         if(DOMHelper.hasElement(config, AbstractNetworkSource.REFRESH_ELEMENT)) {
             refreshInterval = SodUtil.loadTimeInterval(SodUtil.getElement(config, AbstractNetworkSource.REFRESH_ELEMENT));
         } else {
-            refreshInterval = new TimeInterval(1, UnitImpl.FORTNIGHT);
+            refreshInterval = ClockUtil.ONE_FORTNIGHT;
         }
         parseURL();
     }
@@ -121,7 +123,7 @@ public class StationXML extends AbstractNetworkSource implements NetworkSource {
         return this.getClass().getName();
     }
 
-    public TimeInterval getRefreshInterval() {
+    public Duration getRefreshInterval() {
         return refreshInterval;
     }
 
@@ -172,13 +174,13 @@ public class StationXML extends AbstractNetworkSource implements NetworkSource {
     
     @Override
     public Response getResponse(Channel chan) throws ChannelNotFound, InvalidResponse {
-        MicroSecondDate chanBegin = new MicroSecondDate(chan.getId().begin_time);
+        Instant chanBegin = chan.getId().begin_time;
         String newQuery = FDSNStationQueryParams.NETWORK+"="+chan.getId().network_id.network_code+
                 "&"+FDSNStationQueryParams.STATION+"="+chan.getId().station_code+
                 "&"+FDSNStationQueryParams.LOCATION+"="+chan.getId().site_code+
                 "&"+FDSNStationQueryParams.CHANNEL+"="+chan.getId().channel_code+
                 "&"+FDSNStationQueryParams.STARTTIME+"="+toDateString(chanBegin)+
-                "&"+FDSNStationQueryParams.ENDTIME+"="+toDateString(chanBegin.add(ONE_DAY));
+                "&"+FDSNStationQueryParams.ENDTIME+"="+toDateString(chanBegin.plus(ClockUtil.ONE_DAY));
         try {
             URI chanUri = new URI(parsedURL.getScheme(),
                                   parsedURL.getUserInfo(),
@@ -195,8 +197,8 @@ public class StationXML extends AbstractNetworkSource implements NetworkSource {
                 while (staIt.hasNext()) {
                     Station s = staIt.next();
                     for (Channel c : s.getChannelList()) {
-                        if (RangeTool.areOverlapping(new MicroSecondTimeRange(new MicroSecondDate(c.getStartDate()), new MicroSecondDate(c.getEndDate())),
-                                                     new MicroSecondTimeRange(chanBegin.add(ONE_SECOND), chanBegin.add(ONE_DAY)))) {
+                        if (RangeTool.areOverlapping(new TimeRange(c.getStartDate(), c.getEndDate()),
+                                                     new TimeRange(chanBegin.plus(ClockUtil.ONE_SECOND), chanBegin.plus(ONE_DAY)))) {
                             return c.getResponse();
                         }
                     }
@@ -302,7 +304,7 @@ public class StationXML extends AbstractNetworkSource implements NetworkSource {
         NetworkIterator netIt = stationXML.getNetworks();
         while (netIt.hasNext()) {
             Network net = netIt.next();
-            networks.add(StationXMLToFissures.convert(net));
+            networks.plus(StationXMLToFissures.convert(net));
             StationIterator it = net.getStations(); // should be empty, but just make sure
             while(it.hasNext()) {
                 Station s = it.next();
@@ -358,7 +360,7 @@ public class StationXML extends AbstractNetworkSource implements NetworkSource {
         return numChannels;
     }
     
-    public static String toDateString(MicroSecondDate msd) {
+    public static String toDateString(Instant msd) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         df.setTimeZone(ISOTime.UTC);
         return df.format(msd);
@@ -378,13 +380,11 @@ public class StationXML extends AbstractNetworkSource implements NetworkSource {
     
     URI parsedURL;
     
-    TimeInterval refreshInterval;
+    Duration refreshInterval;
     
     String lastLoadDate;
-
-    public static final TimeInterval ONE_SECOND = new TimeInterval(1, UnitImpl.SECOND);
     
-    public static final TimeInterval ONE_DAY = new TimeInterval(1, UnitImpl.DAY);
+    public static final Duration ONE_DAY = ClockUtil.ONE_DAY;
     
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(StationXML.class);
     

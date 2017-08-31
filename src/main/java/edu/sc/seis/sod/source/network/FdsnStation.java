@@ -2,6 +2,7 @@ package edu.sc.seis.sod.source.network;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,9 +19,12 @@ import edu.sc.seis.seisFile.fdsnws.AbstractFDSNQuerier;
 import edu.sc.seis.seisFile.fdsnws.FDSNStationQuerier;
 import edu.sc.seis.seisFile.fdsnws.FDSNStationQueryParams;
 import edu.sc.seis.seisFile.fdsnws.FDSNWSException;
+import edu.sc.seis.seisFile.fdsnws.stationxml.BaseNodeType;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.DataAvailability;
 import edu.sc.seis.seisFile.fdsnws.stationxml.FDSNStationXML;
+import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.seisFile.fdsnws.stationxml.NetworkIterator;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
@@ -31,14 +35,11 @@ import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
 import edu.sc.seis.sod.model.common.BoxAreaImpl;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.Instrumentation;
-import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
-import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.model.station.StationIdUtil;
 import edu.sc.seis.sod.source.SodSourceException;
@@ -235,8 +236,8 @@ public class FdsnStation extends AbstractNetworkSource {
                         chanSensitivityMap.put(ChannelIdUtil.toString(csb.getChan()), csb.getSensitivity());
                         DataAvailability da = c.getDataAvailability();
                         if (da != null && da.getExtent() != null) {
-                            MicroSecondTimeRange range = new MicroSecondTimeRange(new MicroSecondDate(da.getExtent().getStart()),
-                                                                                  new MicroSecondDate(da.getExtent().getEnd()));
+                            TimeRange range = new TimeRange( BaseNodeType.parseISOString(da.getExtent().getStart()),
+                                                             BaseNodeType.parseISOString(da.getExtent().getEnd()));
                             outChan.setAvailabilityExtent(range);
                         }
                     }
@@ -407,18 +408,18 @@ public class FdsnStation extends AbstractNetworkSource {
         return queryParams;
     }
 
-    static void setTimeParamsToGetSingleChan(FDSNStationQueryParams staQP, MicroSecondDate startTime, MicroSecondDate endTime) {
-        staQP.setStartBefore(new MicroSecondDate(startTime).add(ONE_SECOND));
-        MicroSecondDate end = new MicroSecondDate(endTime);
-        if (end.before(ClockUtil.now())) {
-            staQP.setEndAfter(end.subtract(ONE_SECOND));
+    static void setTimeParamsToGetSingleChan(FDSNStationQueryParams staQP, Instant startTime, Instant endTime) {
+        staQP.setStartBefore(startTime.plus(ClockUtil.ONE_SECOND));
+        Instant end = endTime;
+        if (end.isBefore(ClockUtil.now())) {
+            staQP.setEndAfter(end.minus(ONE_SECOND));
         }
     }
     
-    static void setTimeParams(FDSNStationQueryParams staQP, MicroSecondDate startTime, MicroSecondDate endTime) {
-        staQP.setStartTime(new MicroSecondDate(startTime).add(ONE_SECOND));
-        MicroSecondDate end = new MicroSecondDate(endTime).subtract(ONE_SECOND);
-        if (end.before(ClockUtil.now())) {
+    static void setTimeParams(FDSNStationQueryParams staQP, Instant startTime, Instant endTime) {
+        staQP.setStartTime(startTime.plus(ClockUtil.ONE_SECOND));
+        Instant end = endTime.minus(ClockUtil.ONE_SECOND);
+        if (end.isBefore(ClockUtil.now())) {
             staQP.setEndTime(end);
         }
     }
@@ -426,8 +427,6 @@ public class FdsnStation extends AbstractNetworkSource {
     boolean includeAvailability = true;
     
     boolean validateXML = false;
-    
-    public static final TimeInterval ONE_SECOND = new TimeInterval(1, UnitImpl.SECOND);
     
     HashMap<String, QuantityImpl> chanSensitivityMap = new HashMap<String, QuantityImpl>();
 

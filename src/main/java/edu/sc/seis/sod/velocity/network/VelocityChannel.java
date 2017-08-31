@@ -1,15 +1,15 @@
 package edu.sc.seis.sod.velocity.network;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.velocity.VelocityContext;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
+import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.station.ChannelId;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.SiteImpl;
 import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
@@ -81,12 +81,39 @@ public class VelocityChannel extends Channel {
         return getSite().getStation();
     }
 
-    public VelocitySite getSite() {
-        return new VelocitySite((SiteImpl)super.getSite());
+    public String getLatitude() {
+        return VelocityStation.df.format(site.getLocation().latitude);
     }
 
-    public MicroSecondDate getStartDate() {
-        return new MicroSecondDate(getEffectiveTime().getBeginTime());
+    public String getLongitude() {
+        return VelocityStation.df.format(site.getLocation().longitude);
+    }
+
+    public String getOrientedLatitude() {
+        if(site.getLocation().latitude < 0) {
+            return VelocityStation.df.format(-site.getLocation().latitude) + " S";
+        }
+        return VelocityStation.df.format(site.getLocation().latitude) + " N";
+    }
+
+    public String getOrientedLongitude() {
+        if(site.getLocation().longitude < 0) {
+            return VelocityStation.df.format(-site.getLocation().longitude)
+                    + " W";
+        }
+        return VelocityStation.df.format(site.getLocation().longitude) + " E";
+    }
+
+    public String getDepth() {
+        return FissuresFormatter.formatElevation(QuantityImpl.createQuantityImpl(site.getLocation().depth));
+    }
+
+    public String getElevation() {
+        return FissuresFormatter.formatElevation(QuantityImpl.createQuantityImpl(site.getLocation().elevation));
+    }
+    
+    public Instant getStartDate() {
+        return getEffectiveTime().getBeginTime();
     }
 
     public String getStart() {
@@ -97,8 +124,8 @@ public class VelocityChannel extends Channel {
         return SimpleVelocitizer.format(getStartDate(), format);
     }
 
-    public MicroSecondDate getEndDate() {
-        return new MicroSecondDate(getEffectiveTime().getEndTime());
+    public Instant getEndDate() {
+        return getEffectiveTime().getEndTime();
     }
 
     public String getEnd() {

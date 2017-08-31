@@ -2,6 +2,7 @@ package edu.sc.seis.sod.status;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,6 +21,7 @@ import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.util.time.ClockUtil;
 
 public class OutputScheduler extends Thread implements ArmListener {
 
@@ -148,11 +150,9 @@ public class OutputScheduler extends Thread implements ArmListener {
         return DEFAULT;
     }
 
-    private static final TimeInterval ACTION_INTERVAL = new TimeInterval(10,
-                                                                         UnitImpl.SECOND);
+    private static final Duration ACTION_INTERVAL = Duration.ofSeconds(10);
 
-    private static final long ACTION_INTERVAL_MILLIS = (long)ACTION_INTERVAL.convertTo(UnitImpl.MILLISECOND)
-            .get_value();
+    private static final long ACTION_INTERVAL_MILLIS = ACTION_INTERVAL.toMillis();
 
     private static OutputScheduler DEFAULT = null;
 

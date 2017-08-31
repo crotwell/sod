@@ -1,7 +1,8 @@
 package edu.sc.seis.sod.source.event;
 
-import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
-import edu.sc.seis.sod.model.common.TimeInterval;
+import java.time.Duration;
+
+import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.source.Source;
 
@@ -23,7 +24,7 @@ public interface EventSource  extends Source {
      * If the source needs to wait for more events to arrive, it should return
      * the amount of time it wants to wait with this method.
      */
-    public TimeInterval getWaitBeforeNext();
+    public Duration getWaitBeforeNext();
 
     /**
      * @return - a MicroSecondTimeRange starting at least as early as the
@@ -31,7 +32,7 @@ public interface EventSource  extends Source {
      *         No event should be returned by this source with an origin before
      *         the begin time or after the end time of this range.
      */
-    public MicroSecondTimeRange getEventTimeRange();
+    public TimeRange getEventTimeRange();
     
     
 }

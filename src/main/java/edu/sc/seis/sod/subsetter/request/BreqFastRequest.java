@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.time.Instant;
 
 import org.apache.velocity.VelocityContext;
 import org.w3c.dom.Element;
@@ -15,7 +16,6 @@ import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.model.common.ISOTime;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
@@ -132,8 +132,8 @@ public class BreqFastRequest implements RequestSubsetter {
                                  RequestFilter[] request,
                                  Writer out,
                                  int i) throws IOException {
-        MicroSecondDate start = new MicroSecondDate(request[i].start_time);
-        MicroSecondDate end = new MicroSecondDate(request[i].end_time);
+        Instant start = request[i].start_time;
+        Instant end = request[i].end_time;
         out.write(channel.getStation().getCode() + " "
                 + channel.getNetworkCode() + " "
                 + format.format(start) + tenths.format(start).substring(0, 1)
@@ -157,7 +157,7 @@ public class BreqFastRequest implements RequestSubsetter {
         OriginImpl o = EventUtil.extractOrigin(event);
         out.write(".SOURCE " + "~" + o.getCatalog() + " " + o.getContributor()
                 + "~unknown~unknown~" + nl);
-        MicroSecondDate oTime = new MicroSecondDate(o.getOriginTime());
+        Instant oTime = o.getOriginTime();
         out.write(".HYPO "
                 + "~"
                 + format.format(oTime)

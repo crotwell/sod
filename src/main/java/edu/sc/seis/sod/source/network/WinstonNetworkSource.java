@@ -54,7 +54,7 @@ public class WinstonNetworkSource extends CSVNetworkSource {
             
             //SamplingImpl sampling = new SamplingImpl(1, new TimeInterval(1, UnitImpl.SECOND));
             Instant chanStart = curStation.getStartDateTime();
-            if (menuItem.getStartDate().before(ClockUtil.now())) {
+            if (menuItem.getStartDate().isBefore(ClockUtil.now())) {
                 // sometime non-seismic channels are messed up in winston and have really bizarre times
                 // only use if start time is before now
                 chanStart = Instant.ofEpochSecond(Math.round(menuItem.getStart()), ((long)menuItem.getStart()) % 1000000 );

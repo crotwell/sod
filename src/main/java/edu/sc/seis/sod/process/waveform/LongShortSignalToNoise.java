@@ -5,6 +5,7 @@
  */
 package edu.sc.seis.sod.process.waveform;
 
+import java.time.Duration;
 import java.util.LinkedList;
 
 import org.w3c.dom.Element;
@@ -83,11 +84,11 @@ public class LongShortSignalToNoise implements WaveformProcess, Threadable {
 
     LongShortStoN sToN;
 
-    TimeInterval longTime = new TimeInterval(100, UnitImpl.SECOND);
+    Duration longTime = Duration.ofSeconds(100);
 
-    TimeInterval shortTime = new TimeInterval(5, UnitImpl.SECOND);
+    Duration shortTime = Duration.ofSeconds(5);
 
-    TimeInterval delayTime = (TimeInterval)shortTime.multiplyBy(2);
+    Duration delayTime = shortTime.multipliedBy(2);
 
     float ratio;
 }

@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.source.network;
 
+import java.time.Duration;
 import java.util.List;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
@@ -52,7 +53,7 @@ public abstract class WrappingNetworkSource extends AbstractNetworkSource implem
     }
 
     @Override
-    public TimeInterval getRefreshInterval() {
+    public Duration getRefreshInterval() {
         return getWrapped().getRefreshInterval();
     }
 

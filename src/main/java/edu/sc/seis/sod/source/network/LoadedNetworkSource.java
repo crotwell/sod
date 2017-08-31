@@ -42,13 +42,13 @@ public class LoadedNetworkSource extends WrappingNetworkSource implements Networ
 
     @Override
     public Response getResponse(Channel chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
-        responseLoaded.add(ChannelIdUtil.toString(chan.getId()));
+        responseLoaded.plus(ChannelIdUtil.toString(chan.getId()));
         return getWrapped().getResponse(chan);
     }
 
     @Override
     public QuantityImpl getSensitivity(Channel chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
-        responseLoaded.add(ChannelIdUtil.toString(chan.getId()));
+        responseLoaded.plus(ChannelIdUtil.toString(chan.getId()));
         return getWrapped().getSensitivity(chan);
     }
 

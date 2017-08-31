@@ -6,6 +6,7 @@
 package edu.sc.seis.sod.status;
 
 import java.text.NumberFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
@@ -91,7 +92,7 @@ public class FissuresFormatter {
     }
 
     public static String formatNetworkYear(NetworkId id) {
-        return id.network_code + formatYear(new MicroSecondDate(id.begin_time));
+        return id.network_code + formatYear(id.begin_time);
     }
 
 //    public static String networkName(NetworkAccess net) {
@@ -172,20 +173,20 @@ public class FissuresFormatter {
         return array.length;
     }
 
-    public static MicroSecondDate getEffectiveBegin(Station station) {
-        return new MicroSecondDate(station.getBeginTime());
+    public static Instant getEffectiveBegin(Station station) {
+        return station.getStartDateTime();
     }
 
-    public static MicroSecondDate getEffectiveEnd(Station station) {
-        return new MicroSecondDate(station.getEndTime());
+    public static Instant getEffectiveEnd(Station station) {
+        return station.getEndDateTime();
     }
 
-    public static MicroSecondDate getRangeBegin(TimeRange range) {
-        return new MicroSecondDate(range.getBeginTime());
+    public static Instant getRangeBegin(TimeRange range) {
+        return range.getBeginTime();
     }
 
-    public static MicroSecondDate getRangeEnd(TimeRange range) {
-        return new MicroSecondDate(range.getEndTime());
+    public static Instant getRangeEnd(TimeRange range) {
+        return range.getEndTime();
     }
 
     public static QuantityImpl getDistance(ArrayList list) {
@@ -247,7 +248,7 @@ public class FissuresFormatter {
     }
 
     public static String formatDateForFile(OriginImpl origin) {
-        return formatDateForFile(new MicroSecondDate(origin.getOriginTime()));
+        return formatDateForFile(origin.getOriginTime());
     }
 
     public static String fancyFormat(Date d) {
@@ -268,7 +269,7 @@ public class FissuresFormatter {
         }
     }
 
-    public static MicroSecondDate now() {
+    public static Instant now() {
         return ClockUtil.now();
     }
 

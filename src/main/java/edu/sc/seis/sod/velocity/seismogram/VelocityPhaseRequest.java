@@ -1,5 +1,7 @@
 package edu.sc.seis.sod.velocity.seismogram;
 
+import java.time.Duration;
+
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.subsetter.requestGenerator.PhaseRequest;
 
@@ -26,7 +28,7 @@ public class VelocityPhaseRequest {
         return formatTimeInterval( pr.getPhaseReq().getEndOffset());
     }
     
-    public static String formatTimeInterval(TimeInterval ti) {
+    public static String formatTimeInterval(Duration ti) {
         String sign = "+";
         if ( ti.getValue() < 0) {
             sign = "-";

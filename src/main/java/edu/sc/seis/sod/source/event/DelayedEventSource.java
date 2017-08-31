@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.source.event;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -13,15 +14,14 @@ import org.w3c.dom.NodeList;
 
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
-import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.util.time.ClockUtil;
 
 
 public class DelayedEventSource extends AbstractEventSource implements EventSource {
 
-    protected DelayedEventSource(TimeInterval delay, EventSource source) {
+    protected DelayedEventSource(Duration delay, EventSource source) {
         super("delayed "+source.getName(), source.getRetries());
         this.delay = delay;
         this.wrappedSource = source;
@@ -50,14 +50,14 @@ public class DelayedEventSource extends AbstractEventSource implements EventSour
         }
     }
 
-    public MicroSecondTimeRange getEventTimeRange() {
+    public TimeRange getEventTimeRange() {
         return wrappedSource.getEventTimeRange();
     }
 
-    public TimeInterval getWaitBeforeNext() {
-        TimeInterval waitTime = wrappedSource.getWaitBeforeNext();
+    public Duration getWaitBeforeNext() {
+        Duration waitTime = wrappedSource.getWaitBeforeNext();
         for (CacheEvent ce : delayedEvents) {
-            TimeInterval deTime = ce.getOrigin().getTime().add(delay).subtract(ClockUtil.now());
+            Duration deTime = ce.getOrigin().getTime().plus(delay).minus(ClockUtil.now());
             if (deTime.lessThan(waitTime)) {
                 waitTime = deTime;
             }
@@ -97,14 +97,14 @@ public class DelayedEventSource extends AbstractEventSource implements EventSour
     }
 
     public boolean checkEvent(CacheEvent e) {
-        return ClockUtil.now().subtract(delay).after(e.getOrigin().getTime());
+        return ClockUtil.now().minus(delay).isAfter(e.getOrigin().getTime());
     }
     
     String description = null;
     
     EventSource wrappedSource;
     
-    TimeInterval delay;
+    Duration delay;
     
     LinkedList<CacheEvent> delayedEvents = new LinkedList<CacheEvent>();
     

@@ -7,6 +7,7 @@
 package edu.sc.seis.sod;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -134,7 +135,7 @@ public class ChannelGrouper {
      HashMap<String, List<Channel>> groupByNetStaBandGain(List<Channel> channels) {
         HashMap<String, List<Channel>> bandGain = new HashMap<String, List<Channel>>();
         for(Channel c : channels) {
-            MicroSecondDate msd = new MicroSecondDate(c.getStartDateTime());
+            Instant msd = c.getStartDateTime));
             String key = c.getNetworkId()+"."+c.getStationCode()+"."+c.getCode();
             key = key.substring(0, key.length() - 1);
             key = msd + key;

@@ -1,5 +1,7 @@
 package edu.sc.seis.sod.subsetter.availableData;
 
+import java.time.Instant;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
@@ -7,7 +9,6 @@ import org.w3c.dom.Element;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.status.StringTree;
@@ -27,15 +28,15 @@ public class NoGaps implements AvailableDataSubsetter, SodElement {
                 + "  available legnth=" + available.length);
         for(int counter = 0; counter < request.length; counter++) {
             ok = false;
-            MicroSecondDate originalStartDate = new MicroSecondDate(request[counter].start_time);
-            MicroSecondDate originalEndDate = new MicroSecondDate(request[counter].end_time);
+            Instant originalStartDate = request[counter].start_time;
+            Instant originalEndDate = request[counter].end_time;
             for(int subcounter = 0; subcounter < available.length; subcounter++) {
-                MicroSecondDate availableStartDate = new MicroSecondDate(available[subcounter].start_time);
-                MicroSecondDate availableEndDate = new MicroSecondDate(available[subcounter].end_time);
+                Instant availableStartDate = available[subcounter].start_time;
+                Instant availableEndDate = available[subcounter].end_time;
                 logger.debug(originalStartDate + " " + originalEndDate + " - "
                         + availableStartDate + " " + availableEndDate);
-                if((originalStartDate.after(availableStartDate) || originalStartDate.equals(availableStartDate))
-                        && (originalEndDate.before(availableEndDate) || originalEndDate.equals(availableEndDate))) {
+                if((originalStartDate.isAfter(availableStartDate) || originalStartDate.equals(availableStartDate))
+                        && (originalEndDate.isBefore(availableEndDate) || originalEndDate.equals(availableEndDate))) {
                     ok = true;
                     break;
                 }

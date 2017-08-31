@@ -1,5 +1,7 @@
 package edu.sc.seis.sod;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,9 +14,6 @@ import edu.sc.seis.sod.hibernate.eventpair.AbstractEventChannelPair;
 import edu.sc.seis.sod.hibernate.eventpair.AbstractEventPair;
 import edu.sc.seis.sod.hibernate.eventpair.EventNetworkPair;
 import edu.sc.seis.sod.hibernate.eventpair.EventStationPair;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.TimeInterval;
-import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.NoPreferredOrigin;
 import edu.sc.seis.sod.model.event.StatefulEvent;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
@@ -247,7 +246,7 @@ public class WaveformArm extends Thread implements Arm {
         return SodDB.getSingleton().getNextRetryECPFromCache();
     }
 
-    protected static MicroSecondDate lastECP = ClockUtil.now(); 
+    protected static Instant lastECP = ClockUtil.now(); 
     
     protected static void createEventNetworkPairs(StatefulEvent ev) {
         logger.debug("Work on event: " + ev.getDbid() + " "
@@ -358,7 +357,7 @@ public class WaveformArm extends Thread implements Arm {
     
     private static double ecpPercentage = .001; // most processing uses esp from db, only use ecp if crash
 
-    private static TimeInterval ECP_WINDOW = new TimeInterval(5, UnitImpl.MINUTE);
+    private static Duration ECP_WINDOW = Duration.ofMinutes(5);
     
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(WaveformArm.class);
     

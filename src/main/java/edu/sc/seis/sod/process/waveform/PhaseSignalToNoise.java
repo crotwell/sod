@@ -7,6 +7,7 @@
 package edu.sc.seis.sod.process.waveform;
 
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -159,13 +160,13 @@ public class PhaseSignalToNoise  implements WaveformProcess, Threadable {
 
     protected String phaseName;
 
-    protected TimeInterval shortOffsetBegin, shortOffsetEnd;
+    protected Duration shortOffsetBegin, shortOffsetEnd;
     
-    protected TimeInterval longOffsetBegin, longOffsetEnd;
+    protected Duration longOffsetBegin, longOffsetEnd;
     
     protected String modelName = "prem";
 
-    protected TimeInterval triggerWindow;
+    protected Duration triggerWindow;
 
     protected TauPUtil taupUtil;
 

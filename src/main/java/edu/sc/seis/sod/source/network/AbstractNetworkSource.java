@@ -1,5 +1,7 @@
 package edu.sc.seis.sod.source.network;
 
+import java.time.Duration;
+
 import org.w3c.dom.Element;
 
 import edu.sc.seis.sod.ConfigurationException;
@@ -12,7 +14,7 @@ public abstract class AbstractNetworkSource extends AbstractSource implements Ne
 
     public AbstractNetworkSource(String name, int retries) {
         super(name, retries);
-        refreshInterval = new TimeInterval(1, UnitImpl.FORTNIGHT);
+        refreshInterval = FORTNIGHT;
     }
     
     public AbstractNetworkSource(NetworkSource wrapped) {
@@ -25,11 +27,11 @@ public abstract class AbstractNetworkSource extends AbstractSource implements Ne
         if(subElement != null) {
             refreshInterval = SodUtil.loadTimeInterval(subElement);
         } else {
-            refreshInterval = new TimeInterval(1, UnitImpl.FORTNIGHT);
+            refreshInterval = FORTNIGHT;
         }
     }
     
-    public TimeInterval getRefreshInterval() {
+    public Duration getRefreshInterval() {
         return this.refreshInterval;
     }
     
@@ -39,8 +41,10 @@ public abstract class AbstractNetworkSource extends AbstractSource implements Ne
     
     protected NetworkQueryConstraints constraints;
     
-    protected TimeInterval refreshInterval;    
+    protected Duration refreshInterval;    
     
+    Duration FORTNIGHT = Duration.ofDays(14);
+   
     public static final String REFRESH_ELEMENT = "refreshInterval";
     
 }

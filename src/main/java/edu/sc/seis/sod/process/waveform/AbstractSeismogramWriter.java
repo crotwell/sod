@@ -47,8 +47,8 @@ AbstractFileWriter implements WaveformProcess {
         List<Measurement> reqList = new ArrayList<Measurement>();
         for (int i = 0; i < original.length; i++) {
             reqList.add(new TimeRangeMeasurement("request"+i, 
-                                                 new MicroSecondDate(original[i].start_time), 
-                                                 new MicroSecondDate(original[i].end_time)));
+                                                 original[i].start_time, 
+                                                 original[i].end_time));
         }
         ListMeasurement requestList = new ListMeasurement("request", reqList);
         cookieJar.put("request", requestList);

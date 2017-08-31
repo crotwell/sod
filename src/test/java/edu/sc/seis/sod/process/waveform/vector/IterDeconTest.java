@@ -142,7 +142,7 @@ public class IterDeconTest
         numData[300] = .25f;
         float[] denomData = new float[numData.length];
         denomData[100] = .5f;
-        SamplingImpl sampling = new SamplingImpl(1, new TimeInterval(delta, UnitImpl.SECOND));
+        SamplingImpl sampling = SamplingImpl.ofSamplesSeconds(1, delta);
         LocalSeismogramImpl fakeNum = MockSeismogram.createTestData("num");
         fakeNum.setData(numData);
         fakeNum.channel_id.setChannelCode("BHR");

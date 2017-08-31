@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.subsetter.origin;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -8,7 +9,6 @@ import org.w3c.dom.Element;
 
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.EventAttrImpl;
@@ -70,8 +70,8 @@ public class SimilarEvent extends RemoveEventDuplicate {
     }
     
     private boolean isTimeOK(CacheEvent event, OriginImpl preferred_origin) {
-        MicroSecondDate eventTime = new MicroSecondDate(event.getOrigin().getOriginTime());
-        MicroSecondDate originTime = new MicroSecondDate(preferred_origin.getOriginTime());
+        Instant eventTime = event.getOrigin().getOriginTime();
+        Instant originTime = preferred_origin.getOriginTime();
         return eventTime.difference(originTime).lessThanEqual(timeVariance);
     }
     

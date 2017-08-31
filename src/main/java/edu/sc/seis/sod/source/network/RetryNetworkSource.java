@@ -1,17 +1,16 @@
 package edu.sc.seis.sod.source.network;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.List;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
+import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
 import edu.sc.seis.sod.model.common.QuantityImpl;
-import edu.sc.seis.sod.model.common.TimeInterval;
-import edu.sc.seis.sod.model.station.Instrumentation;
-import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
-import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
-import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.sod.source.SodSourceException;
 
 
@@ -28,7 +27,7 @@ public class RetryNetworkSource extends WrappingNetworkSource implements Network
     }
 
     @Override
-    public TimeInterval getRefreshInterval() {
+    public Duration getRefreshInterval() {
         return wrapped.getRefreshInterval();
     }
 

@@ -1,5 +1,7 @@
 package edu.sc.seis.sod;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -14,9 +16,6 @@ import org.w3c.dom.NodeList;
 
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.StatefulEventDB;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.TimeInterval;
-import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.EventAttrImpl;
 import edu.sc.seis.sod.model.event.OriginImpl;
@@ -117,9 +116,9 @@ public class EventArm implements Arm {
     private void getEvents() throws Exception {
         waitForProcessing();
         for (EventSource source : sources) {
-            TimeInterval wait = waitInterval.get(source);
-            if (wait == null) {wait = new TimeInterval(0, UnitImpl.SECOND);}
-            if ((lastTime.get(source) == null || lastTime.get(source).add(wait).before(ClockUtil.now()))
+            Duration wait = waitInterval.get(source);
+            if (wait == null) {wait = Duration.ofSeconds(0);}
+            if ((lastTime.get(source) == null || lastTime.get(source).plus(wait).isBefore(ClockUtil.now()))
                     && source.hasNext()) {
                 CacheEvent[] next = source.next();
                 logger.info("Handling " + next.length + " events from source " + source.getName());
@@ -142,24 +141,24 @@ public class EventArm implements Arm {
                 lastTime.put(source, ClockUtil.now());
             }
         }
-        TimeInterval minWait = null;
+        Duration minWait = null;
         for (EventSource source : sources) {
             if (source.hasNext() && lastTime.get(source) != null) {
-                TimeInterval wait = waitInterval.get(source);
+                Duration wait = waitInterval.get(source);
                 if (wait != null) {
-                    TimeInterval tmpWait = lastTime.get(source).add(wait).subtract(ClockUtil.now());
-                    if (minWait == null || tmpWait.lessThan(minWait)) {
+                    Duration tmpWait = Duration.between(lastTime.get(source).plus(wait), ClockUtil.now());
+                    if (minWait == null || ClockUtil.lessThan(tmpWait, minWait)) {
                         minWait = tmpWait;
                     }
                 }
             }
         }
         if (minWait != null) {
-            logger.debug("Wait before next getEvents: " + minWait.convertTo(UnitImpl.SECOND));
-            long waitMillis = (long)minWait.convertTo(UnitImpl.MILLISECOND).get_value();
+            logger.debug("Wait before next getEvents: " + minWait.getSeconds());
+            long waitMillis = minWait.toMillis();
             if (waitMillis > 0) {
                 try {
-                    setStatus("Waiting until " + ClockUtil.now().add(minWait) + " to check for new events");
+                    setStatus("Waiting until " + ClockUtil.now().plus(minWait) + " to check for new events");
                     synchronized(this) {
                         wait(waitMillis);
                     }
@@ -336,9 +335,9 @@ public class EventArm implements Arm {
 
     private final Object waveformArmSync = new Object();
 
-    private HashMap<EventSource, MicroSecondDate> lastTime = new HashMap<EventSource, MicroSecondDate>();
+    private HashMap<EventSource, Instant> lastTime = new HashMap<EventSource, Instant>();
     
-    private HashMap<EventSource, TimeInterval> waitInterval = new HashMap<EventSource, TimeInterval>();
+    private HashMap<EventSource, Duration> waitInterval = new HashMap<EventSource, Duration>();
 
     private List<EventSource> sources = new ArrayList<EventSource>();
 

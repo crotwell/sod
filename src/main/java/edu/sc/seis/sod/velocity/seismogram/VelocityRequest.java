@@ -1,11 +1,11 @@
 package edu.sc.seis.sod.velocity.seismogram;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
+import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.station.ChannelGroup;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
@@ -22,11 +22,11 @@ public class VelocityRequest {
     }
 
     public VelocityRequest(RequestFilter rf, VelocityChannel chan) {
-        range = new MicroSecondTimeRange(rf);
+        range = new TimeRange(rf);
         this.chan = chan;
     }
 
-    public MicroSecondDate getBegin() {
+    public Instant getBegin() {
         return range.getBeginTime();
     }
     
@@ -34,7 +34,7 @@ public class VelocityRequest {
         return SimpleVelocitizer.format(getBegin(), dateFormat);
     }
 
-    public MicroSecondDate getEnd() {
+    public Instant getEnd() {
         return range.getEndTime();
     }
     
@@ -53,7 +53,7 @@ public class VelocityRequest {
 
     private VelocityChannel chan;
 
-    private MicroSecondTimeRange range;
+    private TimeRange range;
 
     public static List<VelocityRequest> wrap(RequestFilter[] original, Channel chan) {
         List<VelocityRequest> results = new ArrayList<VelocityRequest>(original.length);

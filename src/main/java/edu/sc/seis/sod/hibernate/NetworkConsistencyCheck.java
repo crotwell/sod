@@ -6,6 +6,7 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
+import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.model.station.StationIdUtil;
@@ -14,9 +15,9 @@ import edu.sc.seis.sod.model.station.StationIdUtil;
 public class NetworkConsistencyCheck {
 
     public static boolean isConsistent(Network net, Station sta) {
-        MicroSecondTimeRange staRange = new MicroSecondTimeRange(sta.getEffectiveTime());
-        MicroSecondTimeRange netRange = new MicroSecondTimeRange(net.getEffectiveTime());
-        if (netRange.getBeginTime().after(staRange.getBeginTime())) {
+        TimeRange staRange = new TimeRange(sta.getEffectiveTime());
+        TimeRange netRange = new TimeRange(net.getEffectiveTime());
+        if (netRange.getBeginTime().isAfter(staRange.getBeginTime())) {
             logger.warn("Network begins after station: "+NetworkIdUtil.toString(net)+"  "+StationIdUtil.toString(sta));
             return false;
         }
@@ -43,8 +44,8 @@ public class NetworkConsistencyCheck {
             //different stations, so ok
             return true;
         }
-        MicroSecondTimeRange staARange = new MicroSecondTimeRange(staA.getEffectiveTime());
-        MicroSecondTimeRange staBRange = new MicroSecondTimeRange(staB.getEffectiveTime());
+        TimeRange staARange = new TimeRange(staA.getEffectiveTime());
+        TimeRange staBRange = new TimeRange(staB.getEffectiveTime());
         if (staARange.intersects(staBRange)) {
             logger.warn("Station overlaps other station: "+StationIdUtil.toString(staA)+"-"+staA.getEndTime().getISOString()
                          +"   "+StationIdUtil.toString(staB)+"-"+staB.getEndTime().getISOString());
@@ -54,9 +55,9 @@ public class NetworkConsistencyCheck {
     }
 
     public static boolean isConsistent(Station sta, Channel chan) {
-        MicroSecondTimeRange staRange = new MicroSecondTimeRange(sta.getEffectiveTime());
-        MicroSecondTimeRange chanRange = new MicroSecondTimeRange(chan.getEffectiveTime());
-        if (staRange.getBeginTime().after(chanRange.getBeginTime())) {
+        TimeRange staRange = new TimeRange(sta.getEffectiveTime());
+        TimeRange chanRange = new TimeRange(chan.getEffectiveTime());
+        if (staRange.getBeginTime().isAfter(chanRange.getBeginTime())) {
             logger.warn("Station begins after channel: "+ChannelIdUtil.toStringNoDates(chan.getId())+" "+chanRange
                          +"    "+StationIdUtil.toString(sta)+" "+staRange);
             return false;

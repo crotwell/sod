@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.hibernate;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
+import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.seismogram.PlottableChunk;
 import edu.sc.seis.sod.model.station.ChannelId;
 import edu.sc.seis.sod.util.time.RangeTool;
@@ -29,7 +30,7 @@ public class PlottableDB extends AbstractHibernateDB {
         return singleton;
     }
 
-    public List<PlottableChunk> get(MicroSecondTimeRange requestRange,
+    public List<PlottableChunk> get(TimeRange requestRange,
                                 ChannelId channel,
                                 int pixelsPerDay) {
         return get(requestRange, channel.network_id.network_code,
@@ -40,7 +41,7 @@ public class PlottableDB extends AbstractHibernateDB {
     }
 
 
-    public List<PlottableChunk> get(MicroSecondTimeRange requestRange,
+    public List<PlottableChunk> get(TimeRange requestRange,
                                 String network,
                                 String station,
                                 String site,
@@ -63,7 +64,7 @@ public class PlottableDB extends AbstractHibernateDB {
 
     public void put(List<PlottableChunk> chunks) {
         if (chunks.size() == 0) {return;}
-        MicroSecondTimeRange stuffInDB = getDroppingRange(chunks);
+        TimeRange stuffInDB = getDroppingRange(chunks);
         List<PlottableChunk> dbChunks = get(stuffInDB,
                                         chunks.get(0).getNetworkCode(),
                                         chunks.get(0).getStationCode(),
@@ -91,7 +92,7 @@ public class PlottableDB extends AbstractHibernateDB {
     }
     
 
-    public int drop(MicroSecondTimeRange requestRange,
+    public int drop(TimeRange requestRange,
                     String network,
                     String station,
                     String site,
@@ -104,7 +105,7 @@ public class PlottableDB extends AbstractHibernateDB {
         return indb.size();
     }
     
-    protected PlottableChunk[] getSmallChunks(MicroSecondTimeRange requestRange,
+    protected PlottableChunk[] getSmallChunks(TimeRange requestRange,
                                               String network,
                                               String station,
                                               String site,
@@ -122,14 +123,14 @@ public class PlottableDB extends AbstractHibernateDB {
         return results;
     }
 
-    private static MicroSecondTimeRange getDroppingRange(List<PlottableChunk> chunks) {
-        MicroSecondTimeRange stuffInDB = RangeTool.getFullTime(chunks);
-        MicroSecondDate startTime = PlottableChunk.stripToDay(stuffInDB.getBeginTime());
-        MicroSecondDate strippedEnd = PlottableChunk.stripToDay(stuffInDB.getEndTime());
+    private static TimeRange getDroppingRange(List<PlottableChunk> chunks) {
+        TimeRange stuffInDB = RangeTool.getFullTime(chunks);
+        Instant startTime = PlottableChunk.stripToDay(stuffInDB.getBeginTime());
+        Instant strippedEnd = PlottableChunk.stripToDay(stuffInDB.getEndTime());
         if(!strippedEnd.equals(stuffInDB.getEndTime())) {
-            strippedEnd = strippedEnd.add(PlottableChunk.ONE_DAY);
+            strippedEnd = strippedEnd.plus(PlottableChunk.ONE_DAY);
         }
-        return new MicroSecondTimeRange(startTime, strippedEnd);
+        return new TimeRange(startTime, strippedEnd);
     }
 
     protected static int MIN_CHUNK_SIZE = 100;

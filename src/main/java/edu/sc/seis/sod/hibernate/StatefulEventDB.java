@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.hibernate;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
+import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.StatefulEvent;
 import edu.sc.seis.sod.model.status.Stage;
@@ -56,11 +57,11 @@ public class StatefulEventDB {
         return (StatefulEvent)trans.getEvent(dbid);
     }
 
-    public List<StatefulEvent> getEventInTimeRange(MicroSecondTimeRange range) {
+    public List<StatefulEvent> getEventInTimeRange(TimeRange range) {
         return getEventInTimeRange(range, Status.getFromShort((short)2310));
     }
      
-    public List<StatefulEvent> getEventInTimeRange(MicroSecondTimeRange range, Status status) {
+    public List<StatefulEvent> getEventInTimeRange(TimeRange range, Status status) {
         String q = "from "+StatefulEvent.class.getName()+" e where ";
         if (status != null) { q += " e.status.stageInt = "+status.getStageInt()+" and e.status.standingInt = "+status.getStandingInt()+" AND ";}
         q += " e.preferred.originTime.time between :minTime AND :maxTime  ";
@@ -71,7 +72,7 @@ public class StatefulEventDB {
         return query.list();
     }
      
-    public List<StatefulEvent> getEventInTimeRangeRegardlessOfStatus(MicroSecondTimeRange range) {
+    public List<StatefulEvent> getEventInTimeRangeRegardlessOfStatus(TimeRange range) {
         return getEventInTimeRange(range, (Status)null);
     }
 
@@ -79,8 +80,8 @@ public class StatefulEventDB {
         return (StatefulEvent)trans.getLastEvent();
     }
     
-    public StatefulEvent[] getEventsByTimeAndDepthRanges(MicroSecondDate minTime,
-                                                      MicroSecondDate maxTime,
+    public StatefulEvent[] getEventsByTimeAndDepthRanges(Instant minTime,
+                                                         Instant maxTime,
                                                       double minDepth,
                                                       double maxDepth) {
         CacheEvent[] ans = trans.getEventsByTimeAndDepthRanges(minTime, maxTime, minDepth, maxDepth);

@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.subsetter.availableData;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -9,7 +10,7 @@ import org.w3c.dom.Element;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
-import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
+import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
@@ -46,26 +47,26 @@ public class PercentCoverage implements AvailableDataSubsetter {
     public double percentCovered(RequestFilter[] request,
                                  RequestFilter[] available) {
         RequestFilter[] uncovered = CoverageTool.notCovered(request, available);
-        TimeInterval totalOriginalTime = sum(toMSTR(request));
-        TimeInterval totalUncoveredTime = sum(toMSTR(uncovered));
+        Duration totalOriginalTime = sum(toMSTR(request));
+        Duration totalUncoveredTime = sum(toMSTR(uncovered));
         return (1 - totalUncoveredTime.divideBy(totalOriginalTime).getValue()) * 100;
     }
 
-    private TimeInterval sum(List microSecondTimeRanges) {
-        TimeInterval total = new TimeInterval(0, UnitImpl.SECOND);
+    private Duration sum(List microSecondTimeRanges) {
+        Duration total = Duration.ofNanos(0);
         for(Iterator iter = microSecondTimeRanges.iterator(); iter.hasNext();) {
-            MicroSecondTimeRange time = (MicroSecondTimeRange)iter.next();
-            total = total.add(time.getInterval());
+            TimeRange time = (TimeRange)iter.next();
+            total = total.plus(time.getInterval());
         }
         return total;
     }
 
-    private List<MicroSecondTimeRange> toMSTR(RequestFilter[] filters) {
+    private List<TimeRange> toMSTR(RequestFilter[] filters) {
         // Ensure that there are no overlaps in the request filters
         filters = ReduceTool.merge(filters);
-        List<MicroSecondTimeRange> mstrs = new ArrayList<MicroSecondTimeRange>(filters.length);
+        List<TimeRange> mstrs = new ArrayList<TimeRange>(filters.length);
         for(int i = 0; i < filters.length; i++) {
-            mstrs.add(new MicroSecondTimeRange(filters[i]));
+            mstrs.add(new TimeRange(filters[i]));
         }
         return mstrs;
     }

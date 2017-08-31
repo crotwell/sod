@@ -60,7 +60,7 @@ public class Decimate implements WaveformProcess, Threadable {
                                                       ZERO,
                                                       seismograms[0].getSampling()
                                                               .getFrequency()
-                                                              .divideBy(2*d.getFactor())); // nyquist is 1/2 sample rate
+                                                              .dividedBy(2*d.getFactor())); // nyquist is 1/2 sample rate
                 WaveformResult filtered = antiAliasFilter.apply(seismograms);
                 if (! filtered.isSuccess()) {
                     return new WaveformResult(seismograms, new StringTreeBranch(this, false, filtered.getReason()));

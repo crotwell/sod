@@ -7,6 +7,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -30,6 +32,7 @@ import edu.sc.seis.seisFile.fdsnws.quakeml.EventDescription;
 import edu.sc.seis.seisFile.fdsnws.quakeml.EventIterator;
 import edu.sc.seis.seisFile.fdsnws.quakeml.Origin;
 import edu.sc.seis.seisFile.fdsnws.quakeml.Quakeml;
+import edu.sc.seis.seisFile.fdsnws.stationxml.BaseNodeType;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventArm;
 import edu.sc.seis.sod.SodUtil;
@@ -46,6 +49,7 @@ import edu.sc.seis.sod.model.common.ParameterRef;
 import edu.sc.seis.sod.model.common.PointDistanceAreaImpl;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.EventAttrImpl;
@@ -70,14 +74,9 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         eventTimeRangeSupplier = new MicroSecondTimeRangeSupplier() {
 
             @Override
-            public MicroSecondTimeRange getMSTR() {
-                SimpleDateFormat sdf = AbstractQueryParams.createDateFormat();
-                try {
-                    return new MicroSecondTimeRange(new MicroSecondDate(sdf.parse(queryParams.getParam(FDSNEventQueryParams.STARTTIME))),
-                                                    new MicroSecondDate(sdf.parse(queryParams.getParam(FDSNEventQueryParams.ENDTIME))));
-                } catch(ParseException e) {
-                    throw new RuntimeException("Should not happen", e);
-                }
+            public TimeRange getMSTR() {
+                return new TimeRange(BaseNodeType.parseISOString(queryParams.getParam(FDSNEventQueryParams.STARTTIME)),
+                                     BaseNodeType.parseISOString(queryParams.getParam(FDSNEventQueryParams.ENDTIME))); 
             }
         };
         this.queryParams = queryParams;
@@ -254,9 +253,9 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
 
     @Override
     public boolean hasNext() {
-        MicroSecondDate queryEnd = getEventTimeRange().getEndTime();
-        MicroSecondDate quitDate = queryEnd.add(lag);
-        boolean out = quitDate.equals(ClockUtil.now()) || quitDate.after(ClockUtil.now())
+        Instant queryEnd = getEventTimeRange().getEndTime();
+        Instant quitDate = queryEnd.plus(lag);
+        boolean out = quitDate.equals(ClockUtil.now()) || quitDate.isAfter(ClockUtil.now())
                 || !getQueryStart().equals(queryEnd);
         logger.debug(getName() + " Checking if more queries to the event server are in order.  The quit date is "
                 + quitDate + " the last query was for " + getQueryStart() + " and we're querying to " + queryEnd
@@ -266,7 +265,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
 
     @Override
     public CacheEvent[] next() {
-        MicroSecondTimeRange queryTime = getQueryTime();
+        TimeRange queryTime = getQueryTime();
         logger.debug(getName() + ".next() called for " + queryTime);
         logger.debug("eventTimeRangeSupplier.getMSTR(): "+eventTimeRangeSupplier.getMSTR());
         int count = 0;
@@ -342,7 +341,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         throw new RuntimeException(latest);
     }
 
-    public List<CacheEvent> internalNext(MicroSecondTimeRange queryTime) throws SeisFileException, XMLStreamException {
+    public List<CacheEvent> internalNext(TimeRange queryTime) throws SeisFileException, XMLStreamException {
         try {
             List<CacheEvent> out = new ArrayList<CacheEvent>();
             FDSNEventQuerier querier = getQuakeMLQuerier(setUpQuery(queryTime));
@@ -374,7 +373,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
     }
 
     @Override
-    public MicroSecondTimeRange getEventTimeRange() {
+    public TimeRange getEventTimeRange() {
         return eventTimeRangeSupplier.getMSTR();
     }
 
@@ -423,7 +422,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                 OriginImpl oImpl = new OriginImpl(o.getPublicId(),
                                                   o.getIrisCatalog(),
                                                   o.getIrisContributor(),
-                                                  new MicroSecondDate(o.getTime().getValue()),
+                                                  BaseNodeType.parseISOString(o.getTime().getValue()),
                                                   new Location(o.getLatitude().getValue(),
                                                                o.getLongitude().getValue(),
                                                                new QuantityImpl(0, UnitImpl.METER),
@@ -485,20 +484,20 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         return querier;
     }
 
-    FDSNEventQueryParams setUpQuery(MicroSecondTimeRange queryTime) throws URISyntaxException {
+    FDSNEventQueryParams setUpQuery(TimeRange queryTime) throws URISyntaxException {
         FDSNEventQueryParams timeWindowQueryParams = queryParams.clone();
         timeWindowQueryParams.setStartTime(queryTime.getBeginTime());
         timeWindowQueryParams.setEndTime(queryTime.getEndTime());
         if (isEverCaughtUpToRealtime() && lastQueryEnd != null) {
-            timeWindowQueryParams.setUpdatedAfter(lastQueryEnd.subtract(new TimeInterval(10, UnitImpl.HOUR)));
+            timeWindowQueryParams.setUpdatedAfter(lastQueryEnd.minus(Duration.ofHours(10)));
         }
         logger.debug("Query: " + timeWindowQueryParams.formURI());
         return timeWindowQueryParams;
     }
 
     @Override
-    protected MicroSecondDate resetQueryTimeForLag() {
-        MicroSecondDate out = super.resetQueryTimeForLag();
+    protected Instant resetQueryTimeForLag() {
+        Instant out = super.resetQueryTimeForLag();
         lastQueryEnd = nextLastQueryEnd;
         nextLastQueryEnd = ClockUtil.now();
         return out;
@@ -508,9 +507,9 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
 
     MicroSecondTimeRangeSupplier eventTimeRangeSupplier;
 
-    private MicroSecondDate lastQueryEnd;
+    private Instant lastQueryEnd;
 
-    private MicroSecondDate nextLastQueryEnd;
+    private Instant nextLastQueryEnd;
 
     String url;
 

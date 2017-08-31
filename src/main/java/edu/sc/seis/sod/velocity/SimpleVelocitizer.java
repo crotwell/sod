@@ -6,6 +6,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Properties;
 
 import org.apache.velocity.VelocityContext;
@@ -17,7 +18,6 @@ import org.slf4j.Logger;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.model.common.ISOTime;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
@@ -30,7 +30,7 @@ import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
  */
 public class SimpleVelocitizer {
 
-    public static String format(MicroSecondDate date, String format) {
+    public static String format(Instant date, String format) {
         DateFormat dateFormat = new SimpleDateFormat(format);
         dateFormat.setTimeZone(ISOTime.UTC);
         return dateFormat.format(date);

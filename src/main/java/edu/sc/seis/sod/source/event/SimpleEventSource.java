@@ -1,10 +1,13 @@
 package edu.sc.seis.sod.source.event;
 
+import java.time.Duration;
+import java.time.Instant;
+
 import org.w3c.dom.Element;
 
 import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
 import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.source.AbstractSource;
@@ -40,30 +43,30 @@ public abstract class SimpleEventSource extends AbstractSource implements EventS
         return out;
     }
 
-    public TimeInterval getWaitBeforeNext() {
+    public Duration getWaitBeforeNext() {
         if (hasNextBeenCalled) {
           throw new RuntimeException("SHouldn't happen");
         }
-        return new TimeInterval(0, UnitImpl.SECOND);
+        return Duration.ofSeconds(0);
     }
 
-    public MicroSecondTimeRange getEventTimeRange() {
+    public TimeRange getEventTimeRange() {
         CacheEvent[] events = getEvents();
-        MicroSecondDate earliest = extractBeginTime(events[0]);
-        MicroSecondDate latest = earliest;
+        Instant earliest = extractBeginTime(events[0]);
+        Instant latest = earliest;
         for(int i = 0; i < events.length; i++) {
-            MicroSecondDate eventTime = extractBeginTime(events[i]);
-            if(eventTime.before(earliest)) {
+            Instant eventTime = extractBeginTime(events[i]);
+            if(eventTime.isBefore(earliest)) {
                 earliest = eventTime;
-            } else if(eventTime.after(latest)) {
+            } else if(eventTime.isAfter(latest)) {
                 latest = eventTime;
             }
         }
-        return new MicroSecondTimeRange(earliest, latest);
+        return new TimeRange(earliest, latest);
     }
 
-    public MicroSecondDate extractBeginTime(CacheEvent ev) {
-        return new MicroSecondDate(ev.getOrigin().getOriginTime());
+    public Instant extractBeginTime(CacheEvent ev) {
+        return ev.getOrigin().getOriginTime();
     }
 
     public boolean hasNextBeenCalled = false;

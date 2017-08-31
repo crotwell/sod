@@ -3,7 +3,7 @@ package edu.sc.seis.sod.source.seismogram;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
+import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
@@ -37,8 +37,8 @@ public class PromiseSeismogramList {
         for (LocalSeismogramImpl seis : seisList) {
             for (RequestFilter rf : request) {
                 if (ChannelIdUtil.areEqualExceptForBeginTime(rf.channel_id, seis.getChannelID())) {
-                    MicroSecondTimeRange rfRange = new MicroSecondTimeRange(rf);
-                    MicroSecondTimeRange seisRange = new MicroSecondTimeRange(seis);
+                    TimeRange rfRange = new TimeRange(rf);
+                    TimeRange seisRange = new TimeRange(seis);
                     if (rfRange.intersects(seisRange)) {
                         matching.add(seis);
                         break;

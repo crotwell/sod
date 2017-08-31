@@ -11,7 +11,7 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.hibernate.SeismogramFileTypes;
-import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
+import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 
@@ -45,7 +45,7 @@ public class WavWriter extends AbstractSeismogramWriter {
         File f = new File(loc);
         edu.sc.seis.sod.util.convert.wav.FissuresToWAV fisToWAV = new edu.sc.seis.sod.util.convert.wav.FissuresToWAV(seis, speedup);
         DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(f)));
-        fisToWAV.writeWAV(out, new MicroSecondTimeRange(seis));
+        fisToWAV.writeWAV(out, new TimeRange(seis));
         out.close();
     }
     

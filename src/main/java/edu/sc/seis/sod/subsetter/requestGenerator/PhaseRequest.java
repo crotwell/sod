@@ -1,5 +1,7 @@
 package edu.sc.seis.sod.subsetter.requestGenerator;
 
+import java.time.Duration;
+
 import org.w3c.dom.Element;
 
 import edu.sc.seis.TauP.TauModelException;
@@ -18,12 +20,12 @@ public class PhaseRequest implements RequestGenerator {
         String model = DOMHelper.extractText(config, "model", "prem");
         String beginPhase = DOMHelper.extractText(config, "beginPhase");
         String endPhase = DOMHelper.extractText(config, "endPhase");
-        TimeInterval beginOffset = null;
-        TimeInterval endOffset;
+        Duration beginOffset = null;
+        Duration endOffset;
         double beginOffsetRatio = 1;
         double endOffsetRatio;
-        TimeInterval beginOffsetRatioMinimum = null;
-        TimeInterval endOffsetRatioMinimum;
+        Duration beginOffsetRatioMinimum = null;
+        Duration endOffsetRatioMinimum;
         boolean negateBeginOffsetRatio = false, negateEndOffsetRatio = false;
         Element beginEl = DOMHelper.extractElement(config, "beginOffset");
         if(DOMHelper.hasElement(beginEl, "ratio")) {
@@ -88,9 +90,9 @@ public class PhaseRequest implements RequestGenerator {
     }
 
     public PhaseRequest(String beginPhase,
-                        TimeInterval beginOffset,
+                        Duration beginOffset,
                         String endPhase,
-                        TimeInterval endOffset,
+                        Duration endOffset,
                         String model) throws TauModelException {
         phaseReq = new edu.sc.seis.sod.bag.PhaseRequest(beginPhase, beginOffset, endPhase, endOffset, model);
     }

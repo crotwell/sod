@@ -1,6 +1,8 @@
 package edu.sc.seis.sod.subsetter.origin;
 
 import java.sql.SQLException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -14,10 +16,8 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.hibernate.StatefulEventDB;
 import edu.sc.seis.sod.model.common.DistAz;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
 import edu.sc.seis.sod.model.common.QuantityImpl;
-import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.EventAttrImpl;
@@ -26,13 +26,14 @@ import edu.sc.seis.sod.model.event.StatefulEvent;
 import edu.sc.seis.sod.model.status.Standing;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
+import edu.sc.seis.sod.util.time.ClockUtil;
 
 public class RemoveEventDuplicate implements OriginSubsetter {
 
     public RemoveEventDuplicate(Element config) throws ConfigurationException {
         Element el = XMLUtil.getElement(config, "timeVariance");
         if (el != null){
-            setTimeVariance(SodUtil.loadQuantity(el));
+            setTimeVariance(ClockUtil.durationFrom(SodUtil.loadQuantity(el)));
         }
         el = XMLUtil.getElement(config, "distanceVariance");
         if (el != null){
@@ -91,16 +92,16 @@ public class RemoveEventDuplicate implements OriginSubsetter {
     }
     
     public List getEventsNearTimeAndDepth(OriginImpl preferred_origin) throws SQLException {
-        MicroSecondDate originTime = new MicroSecondDate(preferred_origin.getOriginTime());
-        MicroSecondDate minTime = originTime.subtract(new TimeInterval(timeVariance));
-        MicroSecondDate maxTime = originTime.add(new TimeInterval(timeVariance));
+        Instant originTime = preferred_origin.getOriginTime();
+        Instant minTime = originTime.minus(timeVariance);
+        Instant maxTime = originTime.plus(timeVariance);
 
         QuantityImpl originDepth = QuantityImpl.createQuantityImpl(preferred_origin.getLocation().depth);
         QuantityImpl depthRangeImpl = QuantityImpl.createQuantityImpl(depthVariance);
         QuantityImpl minDepth = originDepth.subtract(depthRangeImpl);
         QuantityImpl maxDepth = originDepth.add(depthRangeImpl);
         List timeEvents = 
-            getEventStatusTable().getEventInTimeRangeRegardlessOfStatus(new MicroSecondTimeRange(minTime,
+            getEventStatusTable().getEventInTimeRangeRegardlessOfStatus(new TimeRange(minTime,
                                                                 maxTime));
         List out = new ArrayList();
         Iterator it = timeEvents.iterator();
@@ -127,7 +128,7 @@ public class RemoveEventDuplicate implements OriginSubsetter {
         if ( ! ( timeVariance.getUnit().isConvertableTo(UnitImpl.SECOND))) {
             throw new ConfigurationException("Units must be convertible to SECOND: "+timeVariance.getUnit());
         }
-        this.timeVariance = timeVariance;
+        this.timeVariance = ClockUtil.durationFrom(timeVariance);
     }
     
     protected void setDistanceVariance(QuantityImpl maxDistance) throws ConfigurationException {
@@ -144,7 +145,7 @@ public class RemoveEventDuplicate implements OriginSubsetter {
         this.depthVariance = depthVariance;
     }
 
-    protected QuantityImpl timeVariance = new QuantityImpl(10, UnitImpl.SECOND);
+    protected Duration timeVariance = Duration.ofSeconds(10);
     
     protected QuantityImpl distanceVariance = new QuantityImpl(0.5, UnitImpl.DEGREE);
     

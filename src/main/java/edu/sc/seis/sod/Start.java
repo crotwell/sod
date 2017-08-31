@@ -10,6 +10,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -282,12 +284,12 @@ public class Start {
         wakeUpAllArms();
     }
 
-    public static MicroSecondDate getStartTime() {
+    public static Instant getStartTime() {
         return startTime;
     }
 
-    public static TimeInterval getElapsedTime() {
-        return ClockUtil.now().subtract(startTime);
+    public static Duration getElapsedTime() {
+        return Duration.between(startTime, ClockUtil.now());
     }
 
     public static String getConfigFileName() {
@@ -470,7 +472,7 @@ public class Start {
 
     public void start() throws Exception {
         // startTime = ClockUtil.now();
-        startTime = new MicroSecondDate();
+        startTime = Instant.now();
         if(runProps.removeDatabase() || getArgs().isClean()) {
             cleanHSQLDatabase();
         }
@@ -885,7 +887,7 @@ public class Start {
 
     private static String commandName = "sod";
 
-    private static MicroSecondDate startTime;
+    private static Instant startTime;
     
     private static WebAdmin webAdmin;
 

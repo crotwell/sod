@@ -1,12 +1,13 @@
 package edu.sc.seis.sod.source.network;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
 import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.subsetter.Subsetter;
 import edu.sc.seis.sod.subsetter.channel.ChannelCode;
@@ -43,11 +44,11 @@ public class NetworkQueryConstraints {
     public NetworkQueryConstraints(NetworkSubsetter attrSubsetter,
                                    StationSubsetter stationSubsetter,
                                    List<ChannelSubsetter> channelSubsetterList,
-                                   MicroSecondTimeRange timeRange) {
+                                   TimeRange timeRange) {
         if (timeRange != null) {
             this.beginConstraint = timeRange.getBeginTime();
             this.endConstraint = timeRange.getEndTime();
-            if (endConstraint.after(ClockUtil.now().subtract(new TimeInterval(1, UnitImpl.HOUR)))) {
+            if (endConstraint.isAfter(ClockUtil.now().minus(ClockUtil.ONE_HOUR))) {
                 endConstraint = null;
             }
         }
@@ -197,10 +198,10 @@ public class NetworkQueryConstraints {
         return constrainingChannelCodes;
     }
 
-    public MicroSecondDate getConstrainingBeginTime() {
+    public Instant getConstrainingBeginTime() {
         return beginConstraint;
     }
-    public MicroSecondDate getConstrainingEndTime() {
+    public Instant getConstrainingEndTime() {
         return endConstraint;
     }
 
@@ -208,7 +209,7 @@ public class NetworkQueryConstraints {
     List<String> constrainingStationCodes = new ArrayList<String>();
     List<String> constrainingLocationCodes = new ArrayList<String>();
     List<String> constrainingChannelCodes = new ArrayList<String>();
-    MicroSecondDate beginConstraint;
-    MicroSecondDate endConstraint;
+    Instant beginConstraint;
+    Instant endConstraint;
 
 }

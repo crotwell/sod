@@ -1,11 +1,12 @@
 package edu.sc.seis.sod.subsetter.origin;
 
+import java.time.Duration;
+import java.time.Instant;
+
 import org.w3c.dom.Element;
 
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.EventAttrImpl;
 import edu.sc.seis.sod.model.event.OriginImpl;
@@ -25,14 +26,14 @@ public class YoungerThan implements OriginSubsetter {
     public StringTree accept(CacheEvent ev,
                           EventAttrImpl eventAttr,
                           OriginImpl preferred_origin) throws Exception {
-        MicroSecondDate originTime = new MicroSecondDate(preferred_origin.getOriginTime());
-        MicroSecondDate expirationDate = getExpirationDate(originTime);
-        return new StringTreeLeaf(this, expirationDate.after(ClockUtil.now()));
+        Instant originTime = preferred_origin.getOriginTime();
+        Instant expirationDate = getExpirationDate(originTime);
+        return new StringTreeLeaf(this, expirationDate.isAfter(ClockUtil.now()));
     }
     
-    public MicroSecondDate getExpirationDate(MicroSecondDate originTime) {
-        return originTime.add(expirationAge);
+    public Instant getExpirationDate(Instant originTime) {
+        return originTime.plus(expirationAge);
     }
 
-    private TimeInterval expirationAge;
+    private Duration expirationAge;
 }

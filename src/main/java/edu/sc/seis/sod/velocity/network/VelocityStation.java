@@ -2,6 +2,7 @@ package edu.sc.seis.sod.velocity.network;
 
 import java.io.StringWriter;
 import java.text.DecimalFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,12 +77,12 @@ public class VelocityStation extends Station {
         return velocityNet;
     }
 
-    public MicroSecondDate getStartDate() {
-        return new MicroSecondDate(getEffectiveTime().getBeginTime());
+    public Instant getStartDate() {
+        return getEffectiveTime().getBeginTime();
     }
 
-    public MicroSecondDate getEndDate() {
-        return new MicroSecondDate(getEffectiveTime().getEndTime());
+    public Instant getEndDate() {
+        return getEffectiveTime().getEndTime();
     }
 
     public String getStart() {
@@ -92,7 +93,7 @@ public class VelocityStation extends Station {
         if(dateFormat.equals("longfile")) {
             return FissuresFormatter.formatDateForFile(getEffectiveTime().getBeginTime());
         }
-        return SimpleVelocitizer.format(new MicroSecondDate(getEffectiveTime().getBeginTime()),
+        return SimpleVelocitizer.format(getEffectiveTime().getBeginTime(),
                                         dateFormat);
     }
 
@@ -104,7 +105,7 @@ public class VelocityStation extends Station {
         if(dateFormat.equals("longfile")) {
             return FissuresFormatter.formatDateForFile(getEffectiveTime().getEndTime());
         }
-        return SimpleVelocitizer.format(new MicroSecondDate(getEffectiveTime().getEndTime()),
+        return SimpleVelocitizer.format(getEffectiveTime().getEndTime(),
                                         dateFormat);
     }
 

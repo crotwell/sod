@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.source.seismogram;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.seismogram.RequestFilterUtil;
 import edu.sc.seis.sod.model.seismogram.SeismogramAttrImpl;
 import edu.sc.seis.sod.model.station.ChannelId;
+import edu.sc.seis.sod.util.time.ClockUtil;
 
 public class WinstonWaveServerSource implements SeismogramSource {
      
@@ -23,19 +25,19 @@ public class WinstonWaveServerSource implements SeismogramSource {
         this.ws = ws;
     }
     
-    public static MicroSecondDate toDate(double d) {
-        return new MicroSecondDate(Math.round(d*1000000));
+    public static Instant toDate(double d) {
+        return ClockUtil.instantFromEpochSeconds(d);
     }
     
-    public static double toEpochSeconds(MicroSecondDate d) {
+    public static double toEpochSeconds(Instant d) {
         return d.getMicroSecondTime() / 1000000.0;
     }
     
-    public static double toY2KSeconds(MicroSecondDate d) {
+    public static double toY2KSeconds(Instant d) {
         return d.getMicroSecondTime() / 1000000.0 - 946728000;
     }
     
-    public static MicroSecondDate y2kSecondsToDate(double d) {
+    public static Instant y2kSecondsToDate(double d) {
         return toDate(d + 946728000);
     }
 
@@ -48,8 +50,8 @@ public class WinstonWaveServerSource implements SeismogramSource {
                                                             rf.channel_id.getStationCode(), 
                                                            rf.channel_id.getLocCode(),
                                                            rf.channel_id.getChannelCode(), 
-                                                           new MicroSecondDate(rf.start_time),
-                                                           new MicroSecondDate(rf.end_time)));
+                                                           rf.start_time,
+                                                           rf.end_time));
                 if (traceBufs == null) {
                     continue;
                 }
@@ -65,11 +67,9 @@ public class WinstonWaveServerSource implements SeismogramSource {
     
     public static LocalSeismogramImpl toFissures(TraceBuf2 buf, ChannelId chan) {
         SeismogramAttrImpl seisAttr = new SeismogramAttrImpl("via WaveServer:"+Math.random(),
-                                                         new MicroSecondDate(toDate(buf.getStartTime())),
+                                                         toDate(buf.getStartTime()),
                                                          buf.getNumSamples(),
-                                                         new SamplingImpl(1,
-                                                                          new TimeInterval(1/buf.getSampleRate(),
-                                                                                           UnitImpl.SECOND)),
+                                                         SamplingImpl.ofSamplesSeconds(1, 1/buf.getSampleRate()),
                                                          UnitImpl.COUNT,
                                                          chan);
         if (buf.isShortData()) {

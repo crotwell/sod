@@ -1,5 +1,6 @@
 package edu.sc.seis.sod;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -20,7 +21,7 @@ import edu.sc.seis.sod.hibernate.NotFound;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
-import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.station.ChannelGroup;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
@@ -71,7 +72,7 @@ public class NetworkArm implements Arm {
             if (getRefreshInterval().getValue() > 0 && Start.getWaveformRecipe() != null) {
                 Timer timer = new Timer("Refresh NetworkArm", true);
                 long period = (long)getInternalNetworkSource().getRefreshInterval().getValue(UnitImpl.MILLISECOND);
-                long firstDelay = lastQueryTime==null ? 0 : lastQueryTime.delayUntilNextRefresh(getRefreshInterval());
+                long firstDelay = lastQueryTime==null ? 0 : lastQueryTime.delayMillisUntilNextRefresh(getRefreshInterval());
                 logger.debug("Refresh timer startup: period: "+period+"  firstDelay: "+firstDelay+"  last query: "+(lastQueryTime==null ? "null" : lastQueryTime.getTime()));
                 timer.schedule(refresh, firstDelay, period);
                 if (period == 0) {
@@ -102,11 +103,10 @@ public class NetworkArm implements Arm {
     public Network getNetwork(NetworkId network_id)
             throws NetworkNotFound {
         List<Network> netDbs = getSuccessfulNetworks();
-        MicroSecondDate beginTime = new MicroSecondDate(network_id.begin_time);
         String netCode = network_id.networkCode;
         for (Network attr : netDbs) {
             if(netCode.equals(attr.getCode())
-                    && new MicroSecondTimeRange(attr.getEffectiveTime()).contains(beginTime)) {
+                    && new TimeRange(attr.getEffectiveTime()).contains(network_id.beginTime)) {
                 return attr;
             }
         }
@@ -123,7 +123,7 @@ public class NetworkArm implements Arm {
             } // end of if (node instanceof Element)
         } // end of for (int i=0; i<children.getSize(); i++)
         
-        MicroSecondTimeRange timeRange = configureEffectiveTimeCheckers();
+        TimeRange timeRange = configureEffectiveTimeCheckers();
         NetworkQueryConstraints constraints = new NetworkQueryConstraints(attrSubsetter,
                                                                           stationSubsetter,
                                                                           chanSubsetters,
@@ -131,16 +131,16 @@ public class NetworkArm implements Arm {
         getNetworkSource().setConstraints(constraints);
     }
 
-    private MicroSecondTimeRange configureEffectiveTimeCheckers() {
+    private TimeRange configureEffectiveTimeCheckers() {
         EventArm arm = Start.getEventArm();
         if(arm != null && !Start.getRunProps().allowDeadNets()) {
             EventSource[] sources = arm.getSources();
-            MicroSecondTimeRange fullTime = sources[0].getEventTimeRange();
+            TimeRange fullTime = sources[0].getEventTimeRange();
             for(int i = 1; i < sources.length; i++) {
-                fullTime = new MicroSecondTimeRange(fullTime,
+                fullTime = new TimeRange(fullTime,
                                                     sources[i].getEventTimeRange());
             }
-            MicroSecondTimeRange eventQueryTimes = fullTime;
+            TimeRange eventQueryTimes = fullTime;
             netEffectiveSubsetter = new NetworkEffectiveTimeOverlap(eventQueryTimes);
             staEffectiveSubsetter = new StationEffectiveTimeOverlap(eventQueryTimes);
             chanEffectiveSubsetter = new ChannelEffectiveTimeOverlap(eventQueryTimes);
@@ -180,7 +180,7 @@ public class NetworkArm implements Arm {
         }
     }
 
-    public TimeInterval getRefreshInterval() {
+    public Duration getRefreshInterval() {
         return getInternalNetworkSource().getRefreshInterval();
     }
 
@@ -299,7 +299,7 @@ public class NetworkArm implements Arm {
 
     void finish() {
         armFinished = true;
-        lastQueryTime = new QueryTime(getInternalNetworkSource().getName(), ClockUtil.now().getTimestamp());
+        lastQueryTime = new QueryTime(getInternalNetworkSource().getName(), ClockUtil.now());
         SodDB.getSingleton().putQueryTime(lastQueryTime);
         SodDB.commit();
         logger.info("Network arm finished.");

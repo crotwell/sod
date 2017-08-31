@@ -3,18 +3,17 @@ package edu.sc.seis.sod.process.waveform.vector;
 import java.io.BufferedInputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.TimeZone;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.BaseNodeType;
 import edu.sc.seis.sod.bag.Cut;
 import edu.sc.seis.sod.mock.seismogram.MockSeismogram;
 import edu.sc.seis.sod.mock.station.MockChannelId;
 import edu.sc.seis.sod.model.common.FissuresException;
-import edu.sc.seis.sod.model.common.ISOTime;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
 import edu.sc.seis.sod.model.common.SamplingImpl;
-import edu.sc.seis.sod.model.common.TimeInterval;
-import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.subsetter.SubsetterException;
 import edu.sc.seis.sod.util.convert.sac.SacToFissures;
@@ -25,7 +24,7 @@ public class VectorTrimTest extends TestCase {
     public void setUp() {
         trimmer = new VectorTrim();
         //baseTime = ClockUtil.now();
-        baseTime = new ISOTime("2010-05-26T16:28:40.059Z").getDate();
+        baseTime = BaseNodeType.parseISOString("2010-05-26T16:28:40.059Z");
         baseSeis = createSpike();
     }
 
@@ -42,12 +41,12 @@ public class VectorTrimTest extends TestCase {
     }
 
     private void checkCut(LocalSeismogramImpl[][] vector,
-                          MicroSecondDate begin,
-                          MicroSecondDate end) {
+                          Instant begin,
+                          Instant end) {
         Cut[] cuts = trimmer.findSmallestCoveringCuts(vector);
         assertEquals(1, cuts.length);
-        assertEquals(begin.subtract(((TimeInterval)vector[0][0].getSampling().getPeriod().divideBy(2))), cuts[0].getBegin());
-        assertEquals(end.add(((TimeInterval)vector[0][0].getSampling().getPeriod().divideBy(2))), cuts[0].getEnd());
+        assertEquals(begin.minus((vector[0][0].getSampling().getPeriod().dividedBy(2))), cuts[0].getBegin());
+        assertEquals(end.plus((vector[0][0].getSampling().getPeriod().dividedBy(2))), cuts[0].getEnd());
     }
 
     public void testOnThreeSeismogramsWithIncreasingLength()
@@ -60,11 +59,11 @@ public class VectorTrimTest extends TestCase {
     }
 
     private void checkTrim(LocalSeismogramImpl[][] trimmed) {
-        checkTrim(trimmed, new MicroSecondTimeRange(baseSeis));
+        checkTrim(trimmed, new TimeRange(baseSeis));
     }
 
     private void checkTrim(LocalSeismogramImpl[][] trimmed,
-                           MicroSecondTimeRange cutTime) {
+                           TimeRange cutTime) {
         for(int i = 0; i < trimmed.length; i++) {
             assertEquals("length", trimmed[0].length, trimmed[i].length);
             assertEquals(1, trimmed[i].length);
@@ -102,7 +101,7 @@ public class VectorTrimTest extends TestCase {
                                                                       {createSpike(1,
                                                                                    2)}};
         checkCut(vector, vector[2][0].getBeginTime(), vector[2][0].getEndTime());
-        checkTrim(trimmer.trim(vector), new MicroSecondTimeRange(vector[2][0]));
+        checkTrim(trimmer.trim(vector), new TimeRange(vector[2][0]));
     }
 
     public void testOnTwoEqualSeismogramsAndOneMissingSeismogram()
@@ -126,8 +125,8 @@ public class VectorTrimTest extends TestCase {
         for(int i = 0; i < result.length; i++) {
             assertEquals(2, result[i].length);
             for(int j = 0; j < result[i].length; j++) {
-                assertEquals(" "+i+" "+j, new MicroSecondTimeRange(vector[i][j]),
-                             new MicroSecondTimeRange(result[i][j]));
+                assertEquals(" "+i+" "+j, new TimeRange(vector[i][j]),
+                             new TimeRange(result[i][j]));
             }
         }
     }
@@ -147,8 +146,8 @@ public class VectorTrimTest extends TestCase {
         for(int i = 0; i < result.length; i++) {
             assertEquals(1, result[i].length);
             for(int j = 0; j < result[i].length; j++) {
-                assertEquals(new MicroSecondTimeRange(commonSeis),
-                             new MicroSecondTimeRange(result[i][j]));
+                assertEquals(new TimeRange(commonSeis),
+                             new TimeRange(result[i][j]));
             }
         }
     }
@@ -200,8 +199,8 @@ public class VectorTrimTest extends TestCase {
         timeFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
         LocalSeismogramImpl[][] vector = new LocalSeismogramImpl[seisTimes.length][1];
         for(int i = 0; i < seisTimes.length; i++) {
-            MicroSecondDate start = new MicroSecondDate(timeFormat.parse(seisTimes[i][0]));
-            MicroSecondDate end = new MicroSecondDate(timeFormat.parse(seisTimes[i][1]));
+            Instant start = BaseNodeType.parseISOString(seisTimes[i][0]);
+            Instant end = BaseNodeType.parseISOString(seisTimes[i][1]);
             vector[i][0] = MockSeismogram.createRaggedSpike(start,
                                                             end.subtract(start),
                                                             20,
@@ -210,11 +209,11 @@ public class VectorTrimTest extends TestCase {
                                                             20 - i / 133.0);
         }
         trimmer.normalizeSampling(vector);
-        MicroSecondDate start = vector[1][0].getBeginTime(); // 1,0 has latest start
-        MicroSecondDate end = vector[2][0].getEndTime();     // 2,0 has earliest end
+        Instant start = vector[1][0].getBeginTime(); // 1,0 has latest start
+        Instant end = vector[2][0].getEndTime();     // 2,0 has earliest end
         checkCut(vector, start, end); 
         Cut cut = trimmer.findSmallestCoveringCuts(vector)[0];
-        checkTrim(trimmer.trim(vector), new MicroSecondTimeRange(cut.getBegin(), cut.getEnd()));
+        checkTrim(trimmer.trim(vector), new TimeRange(cut.getBegin(), cut.getEnd()));
     }
 
     public void testOnSeismogramsWithSlightlyVaryingStart()
@@ -225,9 +224,9 @@ public class VectorTrimTest extends TestCase {
         SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS");
         timeFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
         LocalSeismogramImpl[][] vector = new LocalSeismogramImpl[seisTimes.length][1];
-        TimeInterval seisWidth = new TimeInterval(10, UnitImpl.MINUTE);
+        Duration seisWidth = Duration.ofMinutes(10);
         for(int i = 0; i < seisTimes.length; i++) {
-            MicroSecondDate start = new MicroSecondDate(timeFormat.parse(seisTimes[i]));
+            Instant start = BaseNodeType.parseISOString(seisTimes[i]);
             vector[i][0] = MockSeismogram.createRaggedSpike(start,
                                                             seisWidth,
                                                             20,
@@ -236,11 +235,11 @@ public class VectorTrimTest extends TestCase {
                                                             20);
         }
         trimmer.normalizeSampling(vector);
-        MicroSecondDate start = vector[2][0].getBeginTime(); // 2,0 has latest start
-        MicroSecondDate end = vector[0][0].getEndTime();     // 0,0 has earliest end
+        Instant start = vector[2][0].getBeginTime(); // 2,0 has latest start
+        Instant end = vector[0][0].getEndTime();     // 0,0 has earliest end
         checkCut(vector, start, end); 
         Cut cut = trimmer.findSmallestCoveringCuts(vector)[0];
-        checkTrim(trimmer.trim(vector), new MicroSecondTimeRange(cut.getBegin(), cut.getEnd()));
+        checkTrim(trimmer.trim(vector), new TimeRange(cut.getBegin(), cut.getEnd()));
     }
     
     public void testAmmonData() throws Exception {
@@ -272,15 +271,13 @@ public class VectorTrimTest extends TestCase {
     }
 
     private LocalSeismogramImpl createSpike(int mins, int minsPastStart) {
-        return MockSeismogram.createSpike(baseTime.add(new TimeInterval(minsPastStart,
-                                                                        UnitImpl.MINUTE)),
-                                          new TimeInterval(mins,
-                                                           UnitImpl.MINUTE));
+        return MockSeismogram.createSpike(baseTime.plus(Duration.ofMinutes(minsPastStart)),
+                                                        Duration.ofMinutes(mins));
     }
 
     private VectorTrim trimmer;
 
     private LocalSeismogramImpl baseSeis;
 
-    private MicroSecondDate baseTime;
+    private Instant baseTime;
 }

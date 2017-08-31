@@ -150,8 +150,8 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
                                                                c.getStationCode(),
                                                                c.getLocCode(),
                                                                c.getChannelCode(),
-                                                               new MicroSecondDate(rf.start_time),
-                                                               new MicroSecondDate(rf.end_time)));
+                                                               rf.start_time,
+                                                               rf.end_time));
                     }
                     List<DataRecord> drList = retrieveData(newQueryParams, queryRequest, getRetries());
                     try {

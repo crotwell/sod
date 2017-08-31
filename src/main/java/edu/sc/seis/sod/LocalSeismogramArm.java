@@ -1,5 +1,7 @@
 package edu.sc.seis.sod;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -183,8 +185,8 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
         StringTree passed;
         // check channel overlaps request
         RequestFilter coveringRequest = ReduceTool.cover(infilters);
-        ChannelEffectiveTimeOverlap chanOverlap = new ChannelEffectiveTimeOverlap(new MicroSecondDate(coveringRequest.start_time),
-                                                                                  new MicroSecondDate(coveringRequest.end_time));
+        ChannelEffectiveTimeOverlap chanOverlap = new ChannelEffectiveTimeOverlap(coveringRequest.start_time,
+                                                                                  coveringRequest.end_time);
         passed = chanOverlap.accept(ecp.getChannel(), null); // net source not needed by chanOverlap
         if ( ! passed.isSuccess()) {
             ecp.update(Status.get(Stage.REQUEST_SUBSETTER, Standing.REJECT));
@@ -266,7 +268,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                         + infilters[i].start_time.getISOTime() + " to " + infilters[i].end_time.getISOTime());
             } // end of for (int i=0; i<outFilters.length; i++)
             // Using infilters as asking for extra should not hurt
-            MicroSecondDate before = new MicroSecondDate();
+            Instant before = ClockUtil.now();
             LocalSeismogramImpl[] localSeismograms = new LocalSeismogramImpl[0];
             if(outfilters.length != 0) {
                 
@@ -295,8 +297,9 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                 failLogger.info(ecp + " retrieve data returned no seismograms: ");
                 localSeismograms = new LocalSeismogramImpl[0];
             } // end of else
-            MicroSecondDate after = new MicroSecondDate();
-            logger.info("After getting "+localSeismograms.length+" seismograms, time taken=" + after.subtract(before).getValue(UnitImpl.SECOND)+" sec");
+            Instant after = ClockUtil.now();
+            logger.info("After getting "+localSeismograms.length+" seismograms, time taken=" + 
+                    ClockUtil.formatDuration(before, after));
             LinkedList tempForCast = new LinkedList();
             for(int i = 0; i < localSeismograms.length; i++) {
                 if(localSeismograms[i] == null) {
@@ -320,7 +323,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                                SortTool.byBeginTimeAscending(tempLocalSeismograms),
                                processList);
         } else {
-            if(ClockUtil.now().subtract(Start.getRunProps().getSeismogramLatency()).after(ecp.getEvent()
+            if(ClockUtil.now().minus(Start.getRunProps().getSeismogramLatency()).isAfter(ecp.getEvent()
                     .getOrigin()
                     .getTime())) {
                 logger.info("Retry Reject, older than acceptible latency: "+Start.getRunProps().getSeismogramLatency()+" "+ecp);

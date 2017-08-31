@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.w3c.dom.Element;
 
 import com.csvreader.CsvReader;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.BaseNodeType;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.UserConfigurationException;
@@ -105,14 +107,7 @@ public class CSVEventSource extends SimpleEventSource {
         while(csvReader.readRecord()) {
             // time to start populating field values
             // first up: the only required field...
-            MicroSecondDate time = new MicroSecondDate(csvReader.get(TIME));
-            try {
-                new ISOTime(time.getISOTime());
-            } catch(UnsupportedFormat uf) {
-                throw new UserConfigurationException("The time '"
-                        + time.getISOTime() + "' in record "
-                        + csvReader.getCurrentRecord() + " is invalid.");
-            }
+            Instant time = BaseNodeType.parseISOString(csvReader.get(TIME));
             float latitude = 0f;
             if(headers.contains(LATITUDE)) {
                 latitude = Float.parseFloat(csvReader.get(LATITUDE));

@@ -1,5 +1,8 @@
 package edu.sc.seis.sod.source.event;
 
+import java.time.Duration;
+import java.time.Instant;
+
 import org.w3c.dom.Element;
 
 import edu.sc.seis.sod.ConfigurationException;
@@ -7,8 +10,8 @@ import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.mock.event.MockEventAttr;
 import edu.sc.seis.sod.mock.event.MockOrigin;
 import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
 import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.Magnitude;
@@ -18,7 +21,7 @@ import edu.sc.seis.sod.util.time.ClockUtil;
 
 public class PeriodicFakeEventSource extends AbstractSource implements EventSource {
     
-    protected PeriodicFakeEventSource(MicroSecondDate startTime, TimeInterval interval, int numEvents) {
+    protected PeriodicFakeEventSource(Instant startTime, Duration interval, int numEvents) {
         super("PeriodicFakeEventSource");
         this.startTime = startTime;
         this.interval = interval;
@@ -38,18 +41,18 @@ public class PeriodicFakeEventSource extends AbstractSource implements EventSour
         return "Periodic Fake Events "+numEvents+" events from "+startTime+" in steps of "+interval;
     }
 
-    public MicroSecondTimeRange getEventTimeRange() {
+    public TimeRange getEventTimeRange() {
         if (numEvents != -1) {
-            return new MicroSecondTimeRange(startTime, (TimeInterval)interval.multiplyBy(numEvents-1));
+            return new TimeRange(startTime, interval.multipliedBy(numEvents-1));
         }
-        return new MicroSecondTimeRange(startTime, ClockUtil.wayFuture());
+        return new TimeRange(startTime, ClockUtil.wayFuture());
     }
 
-    public TimeInterval getWaitBeforeNext() {
-        if (nextEventTime.before(ClockUtil.now())) {
-            return new TimeInterval(0, UnitImpl.SECOND);
+    public Duration getWaitBeforeNext() {
+        if (nextEventTime.isBefore(ClockUtil.now())) {
+            return Duration.ofSeconds(0);
         }
-        return nextEventTime.subtract(ClockUtil.now());
+        return nextEventTime.minus(ClockUtil.now());
     }
 
     public boolean hasNext() {
@@ -57,10 +60,10 @@ public class PeriodicFakeEventSource extends AbstractSource implements EventSour
     }
 
     public CacheEvent[] next() {
-        if (nextEventTime.before(ClockUtil.now())) {
+        if (nextEventTime.isBefore(ClockUtil.now())) {
             eventCounter++;
             prevEventTime = nextEventTime;
-            nextEventTime = startTime.add((TimeInterval)interval.multiplyBy(eventCounter));
+            nextEventTime = startTime.plus(interval.multipliedBy(eventCounter));
             return new CacheEvent[] {
                                      new CacheEvent(MockEventAttr.create(-1),
                                                     MockOrigin.create(prevEventTime, mags))
@@ -69,13 +72,13 @@ public class PeriodicFakeEventSource extends AbstractSource implements EventSour
         return new CacheEvent[0];
     }
 
-    MicroSecondDate startTime;
+    Instant startTime;
     
-    TimeInterval interval;
+    Duration interval;
 
-    MicroSecondDate nextEventTime;
+    Instant nextEventTime;
     
-    MicroSecondDate prevEventTime = null;
+    Instant prevEventTime = null;
     
     int numEvents = -1;
     

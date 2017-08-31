@@ -82,8 +82,8 @@ public class VelocityNetwork extends Network {
         return net.get_id().begin_time.getISOTime();
     }
 
-    public MicroSecondDate getStart() {
-        return new MicroSecondDate(getEffectiveTime().getBeginTime());
+    public Instant getStart() {
+        return getEffectiveTime().getBeginTime();
     }
     
     public String getStart(String format){
@@ -93,12 +93,12 @@ public class VelocityNetwork extends Network {
     /**
      * @deprecated - use getStart instead
      */
-    public MicroSecondDate getStartDate() {
+    public Instant getStartDate() {
         return getStart();
     }
 
-    public MicroSecondDate getEnd() {
-        return new MicroSecondDate(getEffectiveTime().getEndTime());
+    public Instant getEnd() {
+        return getEffectiveTime().getEndTime();
     }
     
     public String getEnd(String format){
@@ -108,7 +108,7 @@ public class VelocityNetwork extends Network {
     /**
      * @deprecated use getEnd instead
      */
-    public MicroSecondDate getEndDate() {
+    public Instant getEndDate() {
         return getEnd();
     }
 

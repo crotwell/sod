@@ -2,10 +2,13 @@ package edu.sc.seis.sod.process.waveform.vector;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.TimeZone;
 
 import org.junit.Test;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.BaseNodeType;
 import edu.sc.seis.sod.mock.seismogram.MockSeismogram;
 import edu.sc.seis.sod.mock.station.MockChannelId;
 import edu.sc.seis.sod.model.common.FissuresException;
@@ -60,9 +63,9 @@ public class SampleSyncronizeTest extends TestCase {
         SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS");
         timeFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
         LocalSeismogramImpl[] vector = new LocalSeismogramImpl[seisTimes.length];
-        TimeInterval seisWidth = new TimeInterval(10, UnitImpl.MINUTE);
+        Duration seisWidth = Duration.ofMinutes(10);
         for(int i = 0; i < seisTimes.length; i++) {
-            MicroSecondDate start = new MicroSecondDate(timeFormat.parse(seisTimes[i]));
+            Instant start = BaseNodeType.parseISOString(seisTimes[i]);
             vector[i] = MockSeismogram.createRaggedSpike(start,
                                                             seisWidth,
                                                             20,

@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.source.network;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,8 +49,8 @@ public class CombineNetworkSource extends AbstractNetworkSource implements Netwo
     }
 
     @Override
-    public TimeInterval getRefreshInterval() {
-        TimeInterval out = new TimeInterval(-1, UnitImpl.MILLISECOND);
+    public Duration getRefreshInterval() {
+        Duration out = Duration.ofMillis(-1);
         for (NetworkSource source : wrapped) {
             if (out.getValue() < 0 || out.greaterThan(source.getRefreshInterval())) {
                 out = source.getRefreshInterval();
@@ -115,7 +116,7 @@ public class CombineNetworkSource extends AbstractNetworkSource implements Netwo
                 return out;
             }
         }
-        throw new ChannelNotFound();
+        throw new ChannelNotFound(chan);
     }
 
     @Override
@@ -127,7 +128,7 @@ public class CombineNetworkSource extends AbstractNetworkSource implements Netwo
                 return out;
             }
         }
-        throw new ChannelNotFound();
+        throw new ChannelNotFound(chan);
     }
 
     synchronized NetworkSource getSourceForCode(String code) throws SodSourceException {

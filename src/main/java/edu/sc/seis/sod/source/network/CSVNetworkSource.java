@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,6 +39,7 @@ import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.model.station.StationIdUtil;
 import edu.sc.seis.sod.source.AbstractCSVSource;
 import edu.sc.seis.sod.subsetter.AreaSubsetter;
+import edu.sc.seis.sod.util.time.ClockUtil;
 
 public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource {
 
@@ -202,13 +204,11 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
             float dip = loadFloat(headers, csvReader, DIP, ChannelIdUtil.getDefaultDip(chanCode));
             SamplingImpl sampling;
             if (headers.contains(SAMPLE_PERIOD)) {
-                sampling = new SamplingImpl(1, new TimeInterval(loadFloat(headers, csvReader, SAMPLE_PERIOD, 1),
-                                                                UnitImpl.SECOND));
-            } else if (headers.contains(SAMPLE_PERIOD)) {
-                sampling = new SamplingImpl(1, new TimeInterval(1 / loadFloat(headers, csvReader, SAMPLE_FREQUENCY, 1),
-                                                                UnitImpl.SECOND));
+                sampling = SamplingImpl.ofSamplesSeconds(1, loadFloat(headers, csvReader, SAMPLE_PERIOD, 1));
+            } else if (headers.contains(SAMPLE_FREQUENCY)) {
+                sampling = SamplingImpl.ofSamplesSeconds(1, 1 / loadFloat(headers, csvReader, SAMPLE_FREQUENCY, 1));
             } else {
-                sampling = new SamplingImpl(1, new TimeInterval(1, UnitImpl.SECOND));
+                sampling = SamplingImpl.ofSamplesSeconds(1, 1);
             }
             TimeRange chanTime = new TimeRange(chanBegin, loadTime(headers, csvReader, END, DEFAULT_END));
             Channel channel = new Channel(curStation, siteCode, chanCode, chanTime.getBeginTime().toInstant(), chanTime.getEndTime().toInstant());
@@ -338,8 +338,8 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
                                                                 DESCRIPTION};
 
     @Override
-    public TimeInterval getRefreshInterval() {
-        return new TimeInterval(0, UnitImpl.MILLISECOND);
+    public Duration getRefreshInterval() {
+        return ClockUtil.ZERO_DURATION;
     }
 
     @Override

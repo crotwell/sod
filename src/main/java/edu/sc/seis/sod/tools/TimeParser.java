@@ -2,6 +2,7 @@ package edu.sc.seis.sod.tools;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,9 +13,6 @@ import com.martiansoftware.jsap.StringParser;
 
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.model.common.ISOTime;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.TimeInterval;
-import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.util.time.ClockUtil;
 
 public class TimeParser extends StringParser {
@@ -62,19 +60,19 @@ public class TimeParser extends StringParser {
         return format(getMicroSecondDate(arg));
     }
     
-    public static String format(MicroSecondDate d) {
+    public static String format(Instant d) {
         DateFormat passcalFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         passcalFormat.setTimeZone(ISOTime.UTC);
         return passcalFormat.format(d);
     }
     
-    public static String formatForParsing(MicroSecondDate d) {
+    public static String formatForParsing(Instant d) {
         DateFormat passcalFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
         passcalFormat.setTimeZone(ISOTime.UTC);
         return passcalFormat.format(d);
     }
     
-    public MicroSecondDate getMicroSecondDate(String arg) throws ParseException {
+    public Instant getMicroSecondDate(String arg) throws ParseException {
         if (arg.equals("now")) {
             return ClockUtil.now();
         }
@@ -90,7 +88,7 @@ public class TimeParser extends StringParser {
                                               extract(m, 5),
                                               extract(m, 6),
                                               ceiling);
-        return new MicroSecondDate(cal.getTime());
+        return cal.getTime();
     }
 
     private int extract(Matcher m, int i) {
@@ -128,7 +126,7 @@ public class TimeParser extends StringParser {
     public static final String FIRST_SEISMOGRAM = "1889-04-17";
 
     private static final String PREVIOUS_DAY = new SimpleDateFormat("yyyy-MM-dd").format(ClockUtil.now()
-            .subtract(new TimeInterval(1, UnitImpl.DAY)));
+            .minus(ClockUtil.ONE_DAY));
 
     private static String PREVIOUS_DAY_BEGIN = "the previous day, "
             + PREVIOUS_DAY;

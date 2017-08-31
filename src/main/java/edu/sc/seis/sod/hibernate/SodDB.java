@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.hibernate;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -29,6 +30,7 @@ import edu.sc.seis.sod.hibernate.eventpair.EventNetworkPair;
 import edu.sc.seis.sod.hibernate.eventpair.EventStationPair;
 import edu.sc.seis.sod.hibernate.eventpair.EventVectorPair;
 import edu.sc.seis.sod.model.common.TimeInterval;
+import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.common.Version;
 import edu.sc.seis.sod.model.event.CacheEvent;
@@ -370,10 +372,10 @@ public class SodDB extends AbstractHibernateDB {
                 + " and numRetries < "+maxRetries
                 +" and (seconds_between(:now, lastQuery) > :maxDelay or seconds_between(:now, lastQuery) > power(:base, numRetries))  order by numRetries";
         Query query = getSession().createQuery(q);
-        query.setTimestamp("now", ClockUtil.now().getTimestamp());
+        query.setTimestamp("now", ClockUtil.now());
         query.setFloat("base", retryBase);
         query.setFloat("minDelay", (float)getMinRetryDelay().getValue(UnitImpl.SECOND));
-        query.setFloat("maxDelay", maxRetryDelay);
+        query.setFloat("maxDelay", (float) (Start.getRunProps().getMaxRetryDelay().toNanos()/TimeRange.NANOS_IN_SEC));
         query.setMaxResults(10000);
         logger.info("retry query: "+q);
         List<AbstractEventChannelPair> result = query.list();
@@ -451,17 +453,16 @@ public class SodDB extends AbstractHibernateDB {
      * new JDBCRetryQueue("corbaFailure"); corbaFailures.setMinRetryWait(new
      * TimeInterval(2, UnitImpl.HOUR)); corbaFailures.setMaxRetries(10);
      */
-    TimeInterval minRetryDelay = new TimeInterval(2, UnitImpl.HOUR);
+    Duration minRetryDelay = Duration.ofHours(2);
     
-    public TimeInterval getMinRetryDelay() {
+    public Duration getMinRetryDelay() {
         return minRetryDelay;
     }
 
-    float maxRetryDelay = (float)((TimeInterval)Start.getRunProps()
-            .getMaxRetryDelay()).getValue(UnitImpl.SECOND);
+    float maxRetryDelay = (float) (Start.getRunProps().getMaxRetryDelay().toNanos()/TimeRange.NANOS_IN_SEC);
 
-    float seismogramLatency = (float)((TimeInterval)Start.getRunProps()
-            .getSeismogramLatency()).getValue(UnitImpl.SECOND);
+    float seismogramLatency = (float) (Start.getRunProps()
+            .getSeismogramLatency().toNanos()/TimeRange.NANOS_IN_SEC);
 
     int maxRetries = 5;
 
@@ -729,11 +730,10 @@ public class SodDB extends AbstractHibernateDB {
         return (SodConfig)getSession().get(edu.sc.seis.sod.SodConfig.class, configid);
     }
 
-    public QueryTime getQueryTime(String serverName, String serverDNS) {
-        String q = "From edu.sc.seis.sod.QueryTime q WHERE q.serverName = :serverName AND q.serverDNS = :serverDNS";
+    public QueryTime getQueryTime(String serverName) {
+        String q = "From edu.sc.seis.sod.QueryTime q WHERE q.serverName = :serverName";
         Query query = getSession().createQuery(q);
         query.setString("serverName", serverName);
-        query.setString("serverDNS", serverDNS);
         query.setMaxResults(1);
         List<QueryTime> result = query.list();
         if(result.size() > 0) {
@@ -743,7 +743,7 @@ public class SodDB extends AbstractHibernateDB {
     }
 
     public int putQueryTime(QueryTime qtime) {
-        QueryTime indb = getQueryTime(qtime.getServerName(), qtime.getServerDNS());
+        QueryTime indb = getQueryTime(qtime.getServerName());
         if (indb != null) {
             indb.setTime(qtime.getTime());
             getSession().saveOrUpdate(indb);

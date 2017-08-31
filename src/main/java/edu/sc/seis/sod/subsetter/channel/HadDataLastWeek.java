@@ -1,5 +1,7 @@
 package edu.sc.seis.sod.subsetter.channel;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,9 +11,6 @@ import org.w3c.dom.Element;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.TimeInterval;
-import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.station.ChannelId;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
@@ -38,8 +37,8 @@ public class HadDataLastWeek implements ChannelSubsetter {
 
     public StringTree accept(Channel channel, NetworkSource network)
             throws Exception {
-        MicroSecondDate now = ClockUtil.now();
-        ChannelEffectiveTimeOverlap overlap = new ChannelEffectiveTimeOverlap(now.subtract(makeDayInterval(7)), now);
+        Instant now = ClockUtil.now();
+        ChannelEffectiveTimeOverlap overlap = new ChannelEffectiveTimeOverlap(now.minus(makeDayInterval(7)), now);
         if ( ! overlap.accept(channel, network).isSuccess()) {
             // fail expired channels quickly
             return new StringTreeLeaf(this, false, "Channel Ended");
@@ -47,7 +46,7 @@ public class HadDataLastWeek implements ChannelSubsetter {
         String key = ChannelIdUtil.toStringNoDates(channel);
         if (recentRequests.containsKey(key)) {
             RecentRequest r = recentRequests.get(key);
-            if (r.when.add(MAX_CACHE).after(ClockUtil.now())) {
+            if (r.when.plus(MAX_CACHE).isAfter(ClockUtil.now())) {
                 return new StringTreeLeaf(this, r.hadData);
             } else {
                 recentRequests.remove(r);
@@ -57,8 +56,8 @@ public class HadDataLastWeek implements ChannelSubsetter {
         List<RequestFilter> reqs = new ArrayList<RequestFilter>();
         for(int i = 0; i < 7; i++) {
             reqs.add(new RequestFilter(channel.get_id(),
-                                        now.subtract(makeDayInterval(i)).subtract(REQ_INTERVAL),
-                                        now.subtract(makeDayInterval(i)) ));
+                                        now.minus(makeDayInterval(i)).minus(REQ_INTERVAL),
+                                        now.minus(makeDayInterval(i)) ));
         }
         if(dcLocator.getSeismogramSource().retrieveData(reqs).size() > 0) {
             logger.debug(ChannelIdUtil.toStringNoDates(channel) + " had data");
@@ -71,8 +70,8 @@ public class HadDataLastWeek implements ChannelSubsetter {
         return new StringTreeLeaf(this, false);
     }
 
-    private TimeInterval makeDayInterval(int days) {
-        return new TimeInterval(days, UnitImpl.DAY);
+    private Duration makeDayInterval(int days) {
+        return Duration.ofDays(days);
     }
     
     private HashMap<String, RecentRequest> recentRequests = new HashMap<String, RecentRequest>();
@@ -81,18 +80,18 @@ public class HadDataLastWeek implements ChannelSubsetter {
 
     protected ConstantSeismogramSourceLocator dcLocator = new FdsnDataSelect();
     
-    private static final TimeInterval REQ_INTERVAL = new TimeInterval(10, UnitImpl.MINUTE);
+    private static final Duration REQ_INTERVAL = Duration.ofMinutes(10);
 
-    private TimeInterval MAX_CACHE = new TimeInterval(1, UnitImpl.HOUR);
+    private Duration MAX_CACHE = Duration.ofDays(1);
 }
 
 class RecentRequest {
     
     ChannelId chanId;
-    MicroSecondDate when;
+    Instant when;
     boolean hadData;
     
-    RecentRequest(ChannelId chanId, MicroSecondDate when, boolean hadData) {
+    RecentRequest(ChannelId chanId, Instant when, boolean hadData) {
         this.chanId = chanId;
         this.when = when;
         this.hadData = hadData;

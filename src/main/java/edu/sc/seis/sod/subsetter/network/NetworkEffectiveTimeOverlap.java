@@ -6,7 +6,7 @@ import org.w3c.dom.Element;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
+import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.EffectiveTimeOverlap;
@@ -19,7 +19,7 @@ public class NetworkEffectiveTimeOverlap extends EffectiveTimeOverlap implements
         super(config);
     }
 
-    public NetworkEffectiveTimeOverlap(MicroSecondTimeRange tr) {
+    public NetworkEffectiveTimeOverlap(TimeRange tr) {
         super(tr);
     }
 
