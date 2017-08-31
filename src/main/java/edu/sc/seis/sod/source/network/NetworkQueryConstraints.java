@@ -5,10 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.TimeRange;
-import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.subsetter.Subsetter;
 import edu.sc.seis.sod.subsetter.channel.ChannelCode;
 import edu.sc.seis.sod.subsetter.channel.ChannelOR;

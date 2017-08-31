@@ -43,8 +43,6 @@ import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.StatefulEventDB;
 import edu.sc.seis.sod.hibernate.eventpair.EventChannelPair;
 import edu.sc.seis.sod.hibernate.eventpair.EventVectorPair;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.ToDoException;
 import edu.sc.seis.sod.model.common.Version;
 import edu.sc.seis.sod.model.event.StatefulEvent;

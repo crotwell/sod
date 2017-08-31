@@ -13,8 +13,6 @@ import edu.sc.seis.sod.bag.IterDecon;
 import edu.sc.seis.sod.bag.IterDeconResult;
 import edu.sc.seis.sod.mock.seismogram.MockSeismogram;
 import edu.sc.seis.sod.model.common.SamplingImpl;
-import edu.sc.seis.sod.model.common.TimeInterval;
-import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.process.waveform.OregonDspFFT;
 import edu.sc.seis.sod.util.convert.sac.FissuresToSac;

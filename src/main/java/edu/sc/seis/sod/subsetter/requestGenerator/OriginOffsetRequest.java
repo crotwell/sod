@@ -10,7 +10,6 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.OriginImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;

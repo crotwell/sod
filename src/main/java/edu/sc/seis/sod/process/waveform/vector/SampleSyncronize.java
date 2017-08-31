@@ -4,13 +4,10 @@ import java.time.Duration;
 
 import edu.sc.seis.sod.bag.SampleSynchronize;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
-import edu.sc.seis.sod.model.common.FissuresException;
-import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.station.ChannelGroup;
-import edu.sc.seis.sod.util.time.ClockUtil;
 
 
 public class SampleSyncronize implements WaveformVectorProcess {

@@ -18,10 +18,7 @@ import edu.sc.seis.sod.PeriodicCheckpointer;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.hibernate.ConnMgr;
 import edu.sc.seis.sod.hibernate.SodDB;
-import edu.sc.seis.sod.model.common.TimeInterval;
-import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.sod.util.time.ClockUtil;
 
 public class OutputScheduler extends Thread implements ArmListener {
 

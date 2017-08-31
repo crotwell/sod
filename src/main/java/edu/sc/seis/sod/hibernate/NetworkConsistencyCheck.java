@@ -5,7 +5,6 @@ import java.util.List;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
-import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
 import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;

@@ -9,7 +9,6 @@ import org.hibernate.cfg.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.seismogram.PlottableChunk;
 import edu.sc.seis.sod.model.station.ChannelId;

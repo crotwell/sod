@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.velocity.network;
 
+import java.time.Instant;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -7,7 +8,6 @@ import java.util.List;
 import org.apache.velocity.VelocityContext;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.station.NetworkId;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.status.FissuresFormatter;

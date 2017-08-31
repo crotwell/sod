@@ -22,7 +22,6 @@ import edu.sc.seis.sod.BuildVersion;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.model.common.FissuresException;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.station.ChannelId;

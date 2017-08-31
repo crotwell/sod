@@ -12,19 +12,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.hibernate.HibernateException;
-import org.hibernate.query.Query;
-import org.hibernate.service.ServiceRegistry;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
-import org.hibernate.boot.Metadata;
-import org.hibernate.boot.MetadataBuilder;
-import org.hibernate.boot.MetadataSources;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.tool.hbm2ddl.SchemaUpdate;
+import org.hibernate.query.Query;
 
 import edu.sc.seis.sod.model.common.Location;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.ToDoException;
 import edu.sc.seis.sod.model.common.UnitBase;

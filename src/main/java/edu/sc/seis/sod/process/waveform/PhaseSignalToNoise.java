@@ -31,7 +31,6 @@ import edu.sc.seis.sod.measure.ScalarMeasurement;
 import edu.sc.seis.sod.measure.TimeMeasurement;
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.common.Location;
-import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.NoPreferredOrigin;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;

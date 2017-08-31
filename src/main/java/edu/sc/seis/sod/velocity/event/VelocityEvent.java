@@ -1,18 +1,11 @@
 package edu.sc.seis.sod.velocity.event;
 
-import java.io.StringWriter;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.time.Instant;
 import java.util.List;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-
-import edu.sc.seis.fissuresUtil.xml.XMLEvent;
-import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.model.common.ISOTime;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;

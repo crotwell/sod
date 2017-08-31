@@ -1,21 +1,15 @@
 package edu.sc.seis.sod.velocity.network;
 
-import java.io.StringWriter;
 import java.text.DecimalFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-
 import org.apache.velocity.VelocityContext;
 
-import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.model.common.DistAz;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.station.StationId;

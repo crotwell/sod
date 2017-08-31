@@ -15,7 +15,6 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.model.common.DistAz;
 import edu.sc.seis.sod.model.common.Location;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.common.UnitImpl;
@@ -26,8 +25,6 @@ import edu.sc.seis.sod.model.station.ChannelId;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
 import edu.sc.seis.sod.model.station.NetworkId;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
-import edu.sc.seis.sod.model.station.SiteId;
-import edu.sc.seis.sod.model.station.SiteIdUtil;
 import edu.sc.seis.sod.model.station.StationId;
 import edu.sc.seis.sod.model.station.StationIdUtil;
 import edu.sc.seis.sod.util.display.ChoiceDecimalFormat;
@@ -68,10 +65,6 @@ public class FissuresFormatter {
             }
         }
         return out;
-    }
-
-    public static String formatSite(SiteId id) {
-        return SiteIdUtil.toStringNoDates(id);
     }
 
     public static String formatStation(StationId id) {

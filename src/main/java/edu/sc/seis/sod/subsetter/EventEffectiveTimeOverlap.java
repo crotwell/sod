@@ -6,7 +6,6 @@ import java.time.Instant;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.event.NoPreferredOrigin;
 import edu.sc.seis.sod.model.event.StatefulEvent;

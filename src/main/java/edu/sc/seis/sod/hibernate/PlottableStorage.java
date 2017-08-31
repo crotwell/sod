@@ -2,7 +2,6 @@ package edu.sc.seis.sod.hibernate;
 
 import java.util.List;
 
-import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
 import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.seismogram.PlottableChunk;
 import edu.sc.seis.sod.model.station.ChannelId;

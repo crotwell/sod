@@ -8,8 +8,6 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.mock.MockNetworkSource;
 import edu.sc.seis.sod.mock.station.MockNetworkAttr;
 import edu.sc.seis.sod.mock.station.MockStation;
-import edu.sc.seis.sod.model.common.TimeInterval;
-import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.util.time.ClockUtil;
 import junit.framework.TestCase;
 

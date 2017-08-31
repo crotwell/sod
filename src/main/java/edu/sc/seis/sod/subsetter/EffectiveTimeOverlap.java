@@ -9,8 +9,6 @@ import org.w3c.dom.Element;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.model.common.ISOTime;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.source.event.MicroSecondTimeRangeSupplier;
 

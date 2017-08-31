@@ -19,8 +19,6 @@ import edu.sc.seis.sod.hibernate.NetworkDB;
 import edu.sc.seis.sod.hibernate.NetworkNotFound;
 import edu.sc.seis.sod.hibernate.NotFound;
 import edu.sc.seis.sod.hibernate.SodDB;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.MicroSecondTimeRange;
 import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.station.ChannelGroup;

@@ -11,7 +11,6 @@ import org.junit.Test;
 
 import edu.sc.seis.sod.mock.event.MockEventAccessOperations;
 import edu.sc.seis.sod.model.common.TimeRange;
-import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.NoPreferredOrigin;

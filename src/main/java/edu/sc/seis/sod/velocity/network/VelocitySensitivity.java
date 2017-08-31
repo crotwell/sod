@@ -1,7 +1,6 @@
 package edu.sc.seis.sod.velocity.network;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.InstrumentSensitivity;
-import edu.sc.seis.sod.model.station.Sensitivity;
 import edu.sc.seis.sod.util.display.ThreadSafeDecimalFormat;
 
 

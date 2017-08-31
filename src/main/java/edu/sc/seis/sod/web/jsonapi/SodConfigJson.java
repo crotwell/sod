@@ -4,7 +4,6 @@ import org.json.JSONException;
 import org.json.JSONWriter;
 
 import edu.sc.seis.sod.SodConfig;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
 
 public class SodConfigJson  extends AbstractJsonApiData {
 

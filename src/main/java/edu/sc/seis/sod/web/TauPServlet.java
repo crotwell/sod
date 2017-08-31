@@ -25,7 +25,6 @@ import edu.sc.seis.sod.bag.TauPUtil;
 import edu.sc.seis.sod.hibernate.EventDB;
 import edu.sc.seis.sod.hibernate.NetworkDB;
 import edu.sc.seis.sod.hibernate.NotFound;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.NoPreferredOrigin;

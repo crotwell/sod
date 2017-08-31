@@ -27,7 +27,6 @@ import edu.sc.seis.sod.measure.ScalarMeasurement;
 import edu.sc.seis.sod.measure.SeismogramMeasurement;
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.common.Location;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.Orientation;
 import edu.sc.seis.sod.model.common.SamplingImpl;
 import edu.sc.seis.sod.model.common.UnitImpl;

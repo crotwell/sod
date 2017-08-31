@@ -1,11 +1,8 @@
 package edu.sc.seis.sod;
 
-import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
 
-import edu.sc.seis.sod.model.common.TimeInterval;
-import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.util.time.ClockUtil;
 
 

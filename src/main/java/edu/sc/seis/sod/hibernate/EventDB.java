@@ -3,10 +3,9 @@ package edu.sc.seis.sod.hibernate;
 import java.time.Instant;
 import java.util.List;
 
-import org.hibernate.query.Query;
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 
-import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.NoPreferredOrigin;
 import edu.sc.seis.sod.model.event.OriginImpl;

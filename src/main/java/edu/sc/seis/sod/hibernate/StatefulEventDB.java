@@ -7,7 +7,6 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
-import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.StatefulEvent;

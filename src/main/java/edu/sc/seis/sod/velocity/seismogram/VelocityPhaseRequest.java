@@ -2,7 +2,6 @@ package edu.sc.seis.sod.velocity.seismogram;
 
 import java.time.Duration;
 
-import edu.sc.seis.sod.model.common.TimeInterval;
 import edu.sc.seis.sod.subsetter.requestGenerator.PhaseRequest;
 
 

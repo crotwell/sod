@@ -11,7 +11,6 @@ import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.measure.ListMeasurement;
 import edu.sc.seis.sod.measure.Measurement;
 import edu.sc.seis.sod.measure.TimeRangeMeasurement;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;

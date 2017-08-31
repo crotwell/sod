@@ -4,9 +4,6 @@ import java.time.Duration;
 import java.time.Instant;
 
 import edu.sc.seis.sod.mock.station.MockChannelId;
-import edu.sc.seis.sod.model.common.MicroSecondDate;
-import edu.sc.seis.sod.model.common.TimeInterval;
-import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.util.time.ClockUtil;
 import junit.framework.TestCase;

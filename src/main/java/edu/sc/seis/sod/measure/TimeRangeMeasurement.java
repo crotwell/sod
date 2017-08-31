@@ -4,8 +4,6 @@ import java.time.Instant;
 
 import org.json.JSONObject;
 
-import edu.sc.seis.sod.model.common.MicroSecondDate;
-
 
 public class TimeRangeMeasurement extends Measurement {
 
