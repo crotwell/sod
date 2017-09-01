@@ -13,7 +13,7 @@ import org.w3c.dom.Element;
 
 import com.csvreader.CsvReader;
 
-import edu.sc.seis.seisFile.fdsnws.stationxml.BaseNodeType;
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.UserConfigurationException;
@@ -103,7 +103,7 @@ public class CSVEventSource extends SimpleEventSource {
         while(csvReader.readRecord()) {
             // time to start populating field values
             // first up: the only required field...
-            Instant time = BaseNodeType.parseISOString(csvReader.get(TIME));
+            Instant time = TimeUtils.parseISOString(csvReader.get(TIME));
             float latitude = 0f;
             if(headers.contains(LATITUDE)) {
                 latitude = Float.parseFloat(csvReader.get(LATITUDE));

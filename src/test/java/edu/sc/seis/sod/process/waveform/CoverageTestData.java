@@ -3,11 +3,11 @@ package edu.sc.seis.sod.process.waveform;
 import java.time.Duration;
 import java.time.Instant;
 
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.sod.mock.seismogram.MockSeismogram;
 import edu.sc.seis.sod.mock.station.MockChannel;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
-import edu.sc.seis.sod.util.time.ClockUtil;
 
 /**
  * @author groves Created on Sep 8, 2004
@@ -100,7 +100,7 @@ public class CoverageTestData {
 
     public RequestFilter[] request;
 
-    private static final Duration ONE_SECOND = ClockUtil.ONE_SECOND;
+    private static final Duration ONE_SECOND = TimeUtils.ONE_SECOND;
 
     private static final Duration THREE_HOURS = Duration.ofHours(3);
 }

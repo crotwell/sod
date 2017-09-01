@@ -8,7 +8,7 @@ import java.util.TimeZone;
 
 import org.junit.Test;
 
-import edu.sc.seis.seisFile.fdsnws.stationxml.BaseNodeType;
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.sod.mock.seismogram.MockSeismogram;
 import edu.sc.seis.sod.mock.station.MockChannelId;
 import edu.sc.seis.sod.model.common.FissuresException;
@@ -63,7 +63,7 @@ public class SampleSyncronizeTest extends TestCase {
         LocalSeismogramImpl[] vector = new LocalSeismogramImpl[seisTimes.length];
         Duration seisWidth = Duration.ofMinutes(10);
         for(int i = 0; i < seisTimes.length; i++) {
-            Instant start = BaseNodeType.parseISOString(seisTimes[i]);
+            Instant start = TimeUtils.parseISOString(seisTimes[i]);
             vector[i] = MockSeismogram.createRaggedSpike(start,
                                                             seisWidth,
                                                             20,

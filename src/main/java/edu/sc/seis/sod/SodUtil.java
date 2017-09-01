@@ -34,7 +34,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
-import edu.sc.seis.seisFile.fdsnws.stationxml.BaseNodeType;
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.sod.model.common.BoxAreaImpl;
 import edu.sc.seis.sod.model.common.GlobalAreaImpl;
 import edu.sc.seis.sod.model.common.ISOTime;
@@ -303,7 +303,7 @@ public class SodUtil {
             }
         }
         return new MicroSecondDateSupplier() {
-            final Instant date =  BaseNodeType.parseISOString(getNestedText(el).trim());
+            final Instant date =  TimeUtils.parseISOString(getNestedText(el).trim());
             public Instant load() {  return date; }
         };
     }

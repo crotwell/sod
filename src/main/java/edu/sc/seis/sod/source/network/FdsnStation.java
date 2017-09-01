@@ -15,11 +15,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import edu.sc.seis.seisFile.SeisFileException;
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.seisFile.fdsnws.AbstractFDSNQuerier;
 import edu.sc.seis.seisFile.fdsnws.FDSNStationQuerier;
 import edu.sc.seis.seisFile.fdsnws.FDSNStationQueryParams;
 import edu.sc.seis.seisFile.fdsnws.FDSNWSException;
-import edu.sc.seis.seisFile.fdsnws.stationxml.BaseNodeType;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.DataAvailability;
 import edu.sc.seis.seisFile.fdsnws.stationxml.FDSNStationXML;
@@ -234,8 +234,8 @@ public class FdsnStation extends AbstractNetworkSource {
                         chanSensitivityMap.put(ChannelIdUtil.toString(csb.getChan()), csb.getSensitivity());
                         DataAvailability da = c.getDataAvailability();
                         if (da != null && da.getExtent() != null) {
-                            TimeRange range = new TimeRange( BaseNodeType.parseISOString(da.getExtent().getStart()),
-                                                             BaseNodeType.parseISOString(da.getExtent().getEnd()));
+                            TimeRange range = new TimeRange( TimeUtils.parseISOString(da.getExtent().getStart()),
+                                                             TimeUtils.parseISOString(da.getExtent().getEnd()));
                             outChan.setAvailabilityExtent(range);
                         }
                     }
@@ -407,7 +407,7 @@ public class FdsnStation extends AbstractNetworkSource {
     }
 
     static void setTimeParamsToGetSingleChan(FDSNStationQueryParams staQP, Instant startTime, Instant endTime) {
-        staQP.setStartBefore(startTime.plus(ClockUtil.ONE_SECOND));
+        staQP.setStartBefore(startTime.plus(TimeUtils.ONE_SECOND));
         Instant end = endTime;
         if (end.isBefore(ClockUtil.now())) {
             staQP.setEndAfter(end.minus(ONE_SECOND));
@@ -415,8 +415,8 @@ public class FdsnStation extends AbstractNetworkSource {
     }
     
     static void setTimeParams(FDSNStationQueryParams staQP, Instant startTime, Instant endTime) {
-        staQP.setStartTime(startTime.plus(ClockUtil.ONE_SECOND));
-        Instant end = endTime.minus(ClockUtil.ONE_SECOND);
+        staQP.setStartTime(startTime.plus(TimeUtils.ONE_SECOND));
+        Instant end = endTime.minus(TimeUtils.ONE_SECOND);
         if (end.isBefore(ClockUtil.now())) {
             staQP.setEndTime(end);
         }

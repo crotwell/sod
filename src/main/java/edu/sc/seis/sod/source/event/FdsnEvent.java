@@ -19,6 +19,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import edu.sc.seis.seisFile.SeisFileException;
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.seisFile.fdsnws.AbstractFDSNQuerier;
 import edu.sc.seis.seisFile.fdsnws.AbstractQueryParams;
 import edu.sc.seis.seisFile.fdsnws.FDSNEventCatalogQuerier;
@@ -30,7 +31,6 @@ import edu.sc.seis.seisFile.fdsnws.quakeml.EventDescription;
 import edu.sc.seis.seisFile.fdsnws.quakeml.EventIterator;
 import edu.sc.seis.seisFile.fdsnws.quakeml.Origin;
 import edu.sc.seis.seisFile.fdsnws.quakeml.Quakeml;
-import edu.sc.seis.seisFile.fdsnws.stationxml.BaseNodeType;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventArm;
 import edu.sc.seis.sod.SodUtil;
@@ -69,8 +69,8 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
 
             @Override
             public TimeRange getMSTR() {
-                return new TimeRange(BaseNodeType.parseISOString(queryParams.getParam(FDSNEventQueryParams.STARTTIME)),
-                                     BaseNodeType.parseISOString(queryParams.getParam(FDSNEventQueryParams.ENDTIME))); 
+                return new TimeRange(TimeUtils.parseISOString(queryParams.getParam(FDSNEventQueryParams.STARTTIME)),
+                                     TimeUtils.parseISOString(queryParams.getParam(FDSNEventQueryParams.ENDTIME))); 
             }
         };
         this.queryParams = queryParams;
@@ -416,7 +416,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                 OriginImpl oImpl = new OriginImpl(o.getPublicId(),
                                                   o.getIrisCatalog(),
                                                   o.getIrisContributor(),
-                                                  BaseNodeType.parseISOString(o.getTime().getValue()),
+                                                  TimeUtils.parseISOString(o.getTime().getValue()),
                                                   new Location(o.getLatitude().getValue(),
                                                                o.getLongitude().getValue(),
                                                                new QuantityImpl(0, UnitImpl.METER),

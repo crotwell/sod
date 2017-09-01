@@ -10,10 +10,9 @@ import org.w3c.dom.Element;
 
 import com.csvreader.CsvReader;
 
-import edu.sc.seis.seisFile.fdsnws.stationxml.BaseNodeType;
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.UserConfigurationException;
-import edu.sc.seis.sod.model.common.ISOTime;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.common.UnsupportedFormat;
 
@@ -62,8 +61,8 @@ public abstract class AbstractCSVSource extends AbstractSource {
     public static final String DEPTH_UNITS = "depthUnits";
     public static final String ELEVATION_UNITS = "elevationUnits";
     public static final String UNKNOWN = "unknown";
-    public static final Instant DEFAULT_TIME = BaseNodeType.parseISOString("1970-01-01T00:00:00Z");
-    public static final Instant DEFAULT_END = ISOTime.future;
+    public static final Instant DEFAULT_TIME = TimeUtils.parseISOString("1970-01-01T00:00:00Z");
+    public static final Instant DEFAULT_END = TimeUtils.future;
 
     public List<String> validateHeaders(CsvReader csvReader) throws IOException, FileNotFoundException,
             ConfigurationException {
@@ -132,7 +131,7 @@ public abstract class AbstractCSVSource extends AbstractSource {
                 if(headers.contains(headerName)) {
                     Instant time;
                     try {
-                        time = BaseNodeType.parseISOString(csvReader.get(headerName));
+                        time = TimeUtils.parseISOString(csvReader.get(headerName));
                     } catch(UnsupportedFormat uf) {
                         throw new UserConfigurationException("The time '"
                                                              + csvReader.get(headerName) + "' in record "

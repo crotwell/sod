@@ -19,7 +19,7 @@ import org.json.JSONWriter;
 
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
-import edu.sc.seis.seisFile.fdsnws.stationxml.BaseNodeType;
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.bag.TauPUtil;
 import edu.sc.seis.sod.hibernate.EventDB;
@@ -80,7 +80,7 @@ public class TauPServlet  extends HttpServlet {
                         writer.close();
                         resp.sendError(500);
                     } else {
-                        Instant netBegin = BaseNodeType.parseISOString(year+"1231T23:59:59.000Z");
+                        Instant netBegin = TimeUtils.parseISOString(year+"1231T23:59:59.000Z");
                         for (Station stationImpl : staList) {
                             TimeRange staTR = new TimeRange(stationImpl.getEffectiveTime());
                             if (staTR.contains(netBegin)) {

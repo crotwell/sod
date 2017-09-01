@@ -26,6 +26,7 @@ import javax.xml.stream.events.XMLEvent;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.seisFile.fdsnws.FDSNStationQueryParams;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.FDSNStationXML;
@@ -49,7 +50,6 @@ import edu.sc.seis.sod.model.station.StationIdUtil;
 import edu.sc.seis.sod.util.convert.stationxml.ChannelSensitivityBundle;
 import edu.sc.seis.sod.util.convert.stationxml.StationChannelBundle;
 import edu.sc.seis.sod.util.convert.stationxml.StationXMLToFissures;
-import edu.sc.seis.sod.util.time.ClockUtil;
 import edu.sc.seis.sod.util.time.RangeTool;
 
 @Deprecated
@@ -64,7 +64,7 @@ public class StationXML extends AbstractNetworkSource implements NetworkSource {
         if(DOMHelper.hasElement(config, AbstractNetworkSource.REFRESH_ELEMENT)) {
             refreshInterval = SodUtil.loadTimeInterval(SodUtil.getElement(config, AbstractNetworkSource.REFRESH_ELEMENT));
         } else {
-            refreshInterval = ClockUtil.ONE_FORTNIGHT;
+            refreshInterval = TimeUtils.ONE_FORTNIGHT;
         }
         parseURL();
     }
@@ -177,7 +177,7 @@ public class StationXML extends AbstractNetworkSource implements NetworkSource {
                 "&"+FDSNStationQueryParams.LOCATION+"="+chan.getId().site_code+
                 "&"+FDSNStationQueryParams.CHANNEL+"="+chan.getId().channel_code+
                 "&"+FDSNStationQueryParams.STARTTIME+"="+toDateString(chanBegin)+
-                "&"+FDSNStationQueryParams.ENDTIME+"="+toDateString(chanBegin.plus(ClockUtil.ONE_DAY));
+                "&"+FDSNStationQueryParams.ENDTIME+"="+toDateString(chanBegin.plus(TimeUtils.ONE_DAY));
         try {
             URI chanUri = new URI(parsedURL.getScheme(),
                                   parsedURL.getUserInfo(),
@@ -195,7 +195,7 @@ public class StationXML extends AbstractNetworkSource implements NetworkSource {
                     Station s = staIt.next();
                     for (Channel c : s.getChannelList()) {
                         if (RangeTool.areOverlapping(new TimeRange(c.getStartDate(), c.getEndDate()),
-                                                     new TimeRange(chanBegin.plus(ClockUtil.ONE_SECOND), chanBegin.plus(ONE_DAY)))) {
+                                                     new TimeRange(chanBegin.plus(TimeUtils.ONE_SECOND), chanBegin.plus(ONE_DAY)))) {
                             return c.getResponse();
                         }
                     }
@@ -381,7 +381,7 @@ public class StationXML extends AbstractNetworkSource implements NetworkSource {
     
     String lastLoadDate;
     
-    public static final Duration ONE_DAY = ClockUtil.ONE_DAY;
+    public static final Duration ONE_DAY = TimeUtils.ONE_DAY;
     
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(StationXML.class);
     

@@ -11,6 +11,7 @@ import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.ParseException;
 import com.martiansoftware.jsap.StringParser;
 
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.model.common.ISOTime;
 import edu.sc.seis.sod.util.time.ClockUtil;
@@ -126,7 +127,7 @@ public class TimeParser extends StringParser {
     public static final String FIRST_SEISMOGRAM = "1889-04-17";
 
     private static final String PREVIOUS_DAY = new SimpleDateFormat("yyyy-MM-dd").format(ClockUtil.now()
-            .minus(ClockUtil.ONE_DAY));
+            .minus(TimeUtils.ONE_DAY));
 
     private static String PREVIOUS_DAY_BEGIN = "the previous day, "
             + PREVIOUS_DAY;

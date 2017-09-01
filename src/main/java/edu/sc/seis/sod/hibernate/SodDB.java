@@ -10,6 +10,7 @@ import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
@@ -23,7 +24,6 @@ import edu.sc.seis.sod.hibernate.eventpair.EventChannelPair;
 import edu.sc.seis.sod.hibernate.eventpair.EventNetworkPair;
 import edu.sc.seis.sod.hibernate.eventpair.EventStationPair;
 import edu.sc.seis.sod.hibernate.eventpair.EventVectorPair;
-import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.common.Version;
 import edu.sc.seis.sod.model.event.CacheEvent;
@@ -366,7 +366,7 @@ public class SodDB extends AbstractHibernateDB {
         query.setTimestamp("now", ClockUtil.now());
         query.setFloat("base", retryBase);
         query.setFloat("minDelay", (float)getMinRetryDelay().getValue(UnitImpl.SECOND));
-        query.setFloat("maxDelay", (float) (Start.getRunProps().getMaxRetryDelay().toNanos()/TimeRange.NANOS_IN_SEC));
+        query.setFloat("maxDelay", (float) (Start.getRunProps().getMaxRetryDelay().toNanos()/TimeUtils.NANOS_IN_SEC));
         query.setMaxResults(10000);
         logger.info("retry query: "+q);
         List<AbstractEventChannelPair> result = query.list();
@@ -450,10 +450,10 @@ public class SodDB extends AbstractHibernateDB {
         return minRetryDelay;
     }
 
-    float maxRetryDelay = (float) (Start.getRunProps().getMaxRetryDelay().toNanos()/TimeRange.NANOS_IN_SEC);
+    float maxRetryDelay = (float) (Start.getRunProps().getMaxRetryDelay().toNanos()/TimeUtils.NANOS_IN_SEC);
 
     float seismogramLatency = (float) (Start.getRunProps()
-            .getSeismogramLatency().toNanos()/TimeRange.NANOS_IN_SEC);
+            .getSeismogramLatency().toNanos()/TimeUtils.NANOS_IN_SEC);
 
     int maxRetries = 5;
 

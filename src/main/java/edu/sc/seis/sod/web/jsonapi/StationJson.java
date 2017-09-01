@@ -6,7 +6,7 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
-import edu.sc.seis.seisFile.fdsnws.stationxml.BaseNodeType;
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.model.common.QuantityImpl;
@@ -39,7 +39,7 @@ public class StationJson extends AbstractJsonApiData {
     public void encodeAttributes(JSONWriter out) throws JSONException {
         out.key("station-code").value(sta.getStationCode())
         .key("name").value(sta.getName())
-        .key("start-time").value(BaseNodeType.toISOString(sta.getStartDateTime()))
+        .key("start-time").value(TimeUtils.toISOString(sta.getStartDateTime()))
         .key("end-time").value(NetworkJson.encodeEndTime(sta.getEndDateTime()))
         .key("description").value(sta.getDescription())
               .key("latitude").value(sta.getLatitude())

@@ -16,6 +16,7 @@ import org.w3c.dom.Element;
 
 import com.csvreader.CsvReader;
 
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Comment;
 import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
@@ -38,7 +39,6 @@ import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.model.station.StationIdUtil;
 import edu.sc.seis.sod.source.AbstractCSVSource;
 import edu.sc.seis.sod.subsetter.AreaSubsetter;
-import edu.sc.seis.sod.util.time.ClockUtil;
 
 public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource {
 
@@ -338,7 +338,7 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
 
     @Override
     public Duration getRefreshInterval() {
-        return ClockUtil.ZERO_DURATION;
+        return TimeUtils.ZERO_DURATION;
     }
 
     @Override

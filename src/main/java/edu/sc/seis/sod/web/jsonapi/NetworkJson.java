@@ -5,7 +5,7 @@ import java.time.Instant;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
-import edu.sc.seis.seisFile.fdsnws.stationxml.BaseNodeType;
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.util.time.ClockUtil;
@@ -36,7 +36,7 @@ public class NetworkJson extends AbstractJsonApiData {
         out.key("network-code")
                 .value(net.getNetworkCode())
                 .key("start-time")
-                .value(BaseNodeType.toISOString(net.getStartDateTime()))
+                .value(TimeUtils.toISOString(net.getStartDateTime()))
                 .key("end-time")
                 .value(encodeEndTime(net.getEndDateTime()))
                 .key("description")
@@ -89,7 +89,7 @@ public class NetworkJson extends AbstractJsonApiData {
 
     public static Object encodeEndTime(Instant endDate) {
         if (endDate.isBefore(ClockUtil.now().toInstant())) {
-            return BaseNodeType.toISOString(endDate);
+            return TimeUtils.toISOString(endDate);
         } else {
             return null;
         }

@@ -8,11 +8,11 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.sod.Threadable;
 import edu.sc.seis.sod.bag.Cut;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.model.common.FissuresException;
-import edu.sc.seis.sod.model.common.ISOTime;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
@@ -28,7 +28,7 @@ import edu.sc.seis.sod.subsetter.SubsetterException;
 
 public class VectorTrim implements WaveformVectorProcess, Threadable {
 
-    private static final Cut EMPTY_CUT = new Cut(ISOTime.futurePlusOne,
+    private static final Cut EMPTY_CUT = new Cut(TimeUtils.futurePlusOne,
                                                 Instant.ofEpochSecond(-100000000000000l));
 
     public WaveformVectorResult accept(CacheEvent event,

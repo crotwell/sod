@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.subsetter.Subsetter;
 import edu.sc.seis.sod.subsetter.channel.ChannelCode;
@@ -45,7 +46,7 @@ public class NetworkQueryConstraints {
         if (timeRange != null) {
             this.beginConstraint = timeRange.getBeginTime();
             this.endConstraint = timeRange.getEndTime();
-            if (endConstraint.isAfter(ClockUtil.now().minus(ClockUtil.ONE_HOUR))) {
+            if (endConstraint.isAfter(ClockUtil.now().minus(TimeUtils.ONE_HOUR))) {
                 endConstraint = null;
             }
         }

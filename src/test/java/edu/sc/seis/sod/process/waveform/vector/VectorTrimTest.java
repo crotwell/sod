@@ -7,7 +7,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.TimeZone;
 
-import edu.sc.seis.seisFile.fdsnws.stationxml.BaseNodeType;
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.sod.bag.Cut;
 import edu.sc.seis.sod.mock.seismogram.MockSeismogram;
 import edu.sc.seis.sod.mock.station.MockChannelId;
@@ -24,7 +24,7 @@ public class VectorTrimTest extends TestCase {
     public void setUp() {
         trimmer = new VectorTrim();
         //baseTime = ClockUtil.now();
-        baseTime = BaseNodeType.parseISOString("2010-05-26T16:28:40.059Z");
+        baseTime = TimeUtils.parseISOString("2010-05-26T16:28:40.059Z");
         baseSeis = createSpike();
     }
 
@@ -199,8 +199,8 @@ public class VectorTrimTest extends TestCase {
         timeFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
         LocalSeismogramImpl[][] vector = new LocalSeismogramImpl[seisTimes.length][1];
         for(int i = 0; i < seisTimes.length; i++) {
-            Instant start = BaseNodeType.parseISOString(seisTimes[i][0]);
-            Instant end = BaseNodeType.parseISOString(seisTimes[i][1]);
+            Instant start = TimeUtils.parseISOString(seisTimes[i][0]);
+            Instant end = TimeUtils.parseISOString(seisTimes[i][1]);
             vector[i][0] = MockSeismogram.createRaggedSpike(start,
                                                             end.subtract(start),
                                                             20,
@@ -226,7 +226,7 @@ public class VectorTrimTest extends TestCase {
         LocalSeismogramImpl[][] vector = new LocalSeismogramImpl[seisTimes.length][1];
         Duration seisWidth = Duration.ofMinutes(10);
         for(int i = 0; i < seisTimes.length; i++) {
-            Instant start = BaseNodeType.parseISOString(seisTimes[i]);
+            Instant start = TimeUtils.parseISOString(seisTimes[i]);
             vector[i][0] = MockSeismogram.createRaggedSpike(start,
                                                             seisWidth,
                                                             20,

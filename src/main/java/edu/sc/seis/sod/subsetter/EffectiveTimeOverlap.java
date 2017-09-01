@@ -6,9 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.model.common.ISOTime;
 import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.source.event.MicroSecondTimeRangeSupplier;
 
@@ -37,7 +37,7 @@ public abstract class EffectiveTimeOverlap implements Subsetter{
         Instant otherStart = otherRange.getBeginTime();
         Instant otherEnd;
         if (otherRange.getEndTime() == null) {
-            otherEnd = ISOTime.future;
+            otherEnd = TimeUtils.future;
         } else {
             otherEnd = otherRange.getEndTime();
         } // end of else

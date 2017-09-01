@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.sc.seis.seisFile.ChannelTimeWindow;
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.seisFile.earthworm.TraceBuf2;
 import edu.sc.seis.seisFile.waveserver.WaveServer;
 import edu.sc.seis.sod.model.common.SamplingImpl;
@@ -15,7 +16,6 @@ import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.seismogram.RequestFilterUtil;
 import edu.sc.seis.sod.model.seismogram.SeismogramAttrImpl;
 import edu.sc.seis.sod.model.station.ChannelId;
-import edu.sc.seis.sod.util.time.ClockUtil;
 
 public class WinstonWaveServerSource implements SeismogramSource {
      
@@ -24,7 +24,7 @@ public class WinstonWaveServerSource implements SeismogramSource {
     }
     
     public static Instant toDate(double d) {
-        return ClockUtil.instantFromEpochSeconds(d);
+        return TimeUtils.instantFromEpochSeconds(d);
     }
     
     public static double toEpochSeconds(Instant d) {
