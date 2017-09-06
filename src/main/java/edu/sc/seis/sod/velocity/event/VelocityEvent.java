@@ -5,7 +5,7 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.util.List;
 
-import edu.sc.seis.sod.model.common.ISOTime;
+import edu.sc.seis.seisFile.client.ISOTimeParser;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
@@ -254,7 +254,7 @@ public class VelocityEvent extends CacheEvent {
         return new CacheEvent(event);
     }
 
-    private static ThreadSafeSimpleDateFormat fullDateIdentifier = new ThreadSafeSimpleDateFormat("yyyy/MM/dd/HH/mm/ss", ISOTime.UTC);
+    private static ThreadSafeSimpleDateFormat fullDateIdentifier = new ThreadSafeSimpleDateFormat("yyyy/MM/dd/HH/mm/ss", ISOTimeParser.UTC);
 
     public static String makeDateIdentifier(VelocityEvent event) {
         synchronized(fullDateIdentifier) {

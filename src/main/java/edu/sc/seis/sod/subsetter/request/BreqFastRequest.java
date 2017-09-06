@@ -10,12 +10,12 @@ import java.time.Instant;
 import org.apache.velocity.VelocityContext;
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.client.ISOTimeParser;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
-import edu.sc.seis.sod.model.common.ISOTime;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
@@ -192,9 +192,9 @@ public class BreqFastRequest implements RequestSubsetter {
 
     static final String nl = "\n";
 
-    ThreadSafeSimpleDateFormat format = new ThreadSafeSimpleDateFormat("yyyy MM dd HH mm ss.", ISOTime.UTC);
+    ThreadSafeSimpleDateFormat format = new ThreadSafeSimpleDateFormat("yyyy MM dd HH mm ss.", ISOTimeParser.UTC);
 
-    ThreadSafeSimpleDateFormat tenths = new ThreadSafeSimpleDateFormat("SSS", ISOTime.UTC);
+    ThreadSafeSimpleDateFormat tenths = new ThreadSafeSimpleDateFormat("SSS", ISOTimeParser.UTC);
 
     ParseRegions regions;
 

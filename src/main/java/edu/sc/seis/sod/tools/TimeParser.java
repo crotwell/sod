@@ -3,7 +3,6 @@ package edu.sc.seis.sod.tools;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,8 +11,7 @@ import com.martiansoftware.jsap.ParseException;
 import com.martiansoftware.jsap.StringParser;
 
 import edu.sc.seis.seisFile.TimeUtils;
-import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.model.common.ISOTime;
+import edu.sc.seis.seisFile.client.ISOTimeParser;
 import edu.sc.seis.sod.util.time.ClockUtil;
 
 public class TimeParser extends StringParser {
@@ -63,13 +61,13 @@ public class TimeParser extends StringParser {
     
     public static String format(Instant d) {
         DateFormat passcalFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        passcalFormat.setTimeZone(ISOTime.UTC);
+        passcalFormat.setTimeZone(ISOTimeParser.UTC);
         return passcalFormat.format(d);
     }
     
     public static String formatForParsing(Instant d) {
-        DateFormat passcalFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-        passcalFormat.setTimeZone(ISOTime.UTC);
+        DateFormat passcalFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        passcalFormat.setTimeZone(ISOTimeParser.UTC);
         return passcalFormat.format(d);
     }
     
@@ -77,29 +75,9 @@ public class TimeParser extends StringParser {
         if (arg.equals("now")) {
             return ClockUtil.now();
         }
-        Matcher m = datePattern.matcher(arg);
-        if(!m.matches()) {
-            throw new ParseException("A time must be formatted as YYYY[[[[[-MM]-DD]-hh]-mm]-ss] like 2006-11-19, not '"
-                    + arg + "'");
-        }
-        Calendar cal = SodUtil.createCalendar(Integer.parseInt(m.group(1)),
-                                              extract(m, 2),
-                                              extract(m, 3),
-                                              extract(m, 4),
-                                              extract(m, 5),
-                                              extract(m, 6),
-                                              ceiling);
-        return cal.getTime();
+        // was YYYY[[[[[-MM]-DD]-hh]-mm]-ss], but now use YYYY[[[[[-MM]-DD]Thh]:mm]:ss]
+        return new ISOTimeParser(ceiling).getDate(arg);
     }
-
-    private int extract(Matcher m, int i) {
-        if(m.group(i) == null) {
-            return -1;
-        }
-        return Integer.parseInt(m.group(i));
-    }
-
-    private Pattern datePattern = Pattern.compile("(\\-?\\d{4})-?(\\d{2})?-?(\\d{2})?-?(\\d{2})?-?(\\d{2})?-?(\\d{2})?");
 
     private Pattern relativeTimePattern = Pattern.compile("-(\\d+)([hdmy])");
     

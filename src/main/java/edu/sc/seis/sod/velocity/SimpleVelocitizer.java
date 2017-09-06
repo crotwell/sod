@@ -15,9 +15,9 @@ import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.slf4j.Logger;
 
+import edu.sc.seis.seisFile.client.ISOTimeParser;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
-import edu.sc.seis.sod.model.common.ISOTime;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
@@ -32,7 +32,7 @@ public class SimpleVelocitizer {
 
     public static String format(Instant date, String format) {
         DateFormat dateFormat = new SimpleDateFormat(format);
-        dateFormat.setTimeZone(ISOTime.UTC);
+        dateFormat.setTimeZone(ISOTimeParser.UTC);
         return dateFormat.format(date);
     }
 

@@ -15,8 +15,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.YearMonth;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
@@ -37,7 +38,6 @@ import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.sod.model.common.BoxAreaImpl;
 import edu.sc.seis.sod.model.common.GlobalAreaImpl;
-import edu.sc.seis.sod.model.common.ISOTime;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.common.UnitRangeImpl;
@@ -321,51 +321,19 @@ public class SodUtil {
         if(year == -1) {
             throw new ConfigurationException("No year given");
         }
-        final Calendar cal = createCalendar(year,
-                                      DOMHelper.extractInt(element, "month", -1),
-                                      DOMHelper.extractInt(element, "day", -1),
-                                      DOMHelper.extractInt(element, "hour", -1),
-                                      DOMHelper.extractInt(element, "minute", -1),
-                                      DOMHelper.extractInt(element, "second", -1),
-                                      ceiling);
+        int month = DOMHelper.extractInt(element, "month", ceiling ? 12 : 1);
+        YearMonth ym = YearMonth.of(year, month); 
+        int dayOfMonth = DOMHelper.extractInt(element, "day", ceiling ? ym.lengthOfMonth() : 1);
+        int hour = DOMHelper.extractInt(element, "hour", ceiling ? 23 : 0);
+        int minute = DOMHelper.extractInt(element, "minute", ceiling ? 59 : 0);
+        int second = DOMHelper.extractInt(element, "second", ceiling ? 59 : 0);
+        int nanoOfSecond = 0;
+        ZonedDateTime zdt = ZonedDateTime.of(year, month, dayOfMonth, hour, minute, second, nanoOfSecond, TimeUtils.TZ_UTC);
+         
         return new MicroSecondDateSupplier() {
-            final Instant date =  cal.getTime();
+            final Instant date =  zdt.toInstant();
             public Instant load() {  return date; }
         };
-    }
-
-    /**
-     * Creates a calendar in the given year. Year must be specified, but all
-     * other fields can be -1 if unknown. If -1, they're either the greatest of
-     * least value of the calendar's current state depending on the value of
-     * ceiling.
-     */
-    public static Calendar createCalendar(int year,
-                                          int month,
-                                          int day,
-                                          int hour,
-                                          int minute,
-                                          int second,
-                                          boolean ceiling) {
-        Calendar cal = Calendar.getInstance(ISOTime.UTC);
-        cal.set(Calendar.YEAR, year);
-        fillInField(Calendar.MONTH, month - 1, ceiling, cal);
-        fillInField(Calendar.DAY_OF_MONTH, day, ceiling, cal);
-        fillInField(Calendar.HOUR_OF_DAY, hour, ceiling, cal);
-        fillInField(Calendar.MINUTE, minute, ceiling, cal);
-        fillInField(Calendar.SECOND, second, ceiling, cal);
-        fillInField(Calendar.MILLISECOND, -1, ceiling, cal);
-        return cal;
-    }
-
-    public static void fillInField(int field, int value, boolean ceiling, Calendar cal) {
-        if(value >= 0) {
-            cal.set(field, value);
-        } else if(ceiling) {
-            cal.set(field, cal.getActualMaximum(field));
-        } else {
-            cal.set(field, cal.getActualMinimum(field));
-        }
     }
 
     private static MicroSecondDateSupplier loadRelativeTime(Element el) throws ConfigurationException {
