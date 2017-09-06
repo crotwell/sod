@@ -41,7 +41,7 @@ public class ResponseGain implements WaveformProcess, Threadable {
             try {
                 QuantityImpl sensitivity = na.getSensitivity(channel);
                 if (sensitivity == null) {
-                    throw new ChannelNotFound();
+                    throw new ChannelNotFound(channel);
                 }
                 /*
                 Instrumentation inst = na.getInstrumentation(chanId);

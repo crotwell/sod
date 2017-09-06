@@ -32,15 +32,15 @@ public class EventEffectiveTimeOverlap extends EffectiveTimeOverlap {
     }
 
     public boolean overlaps(Network net) {
-        return overlaps(net.getEffectiveTime());
+        return overlaps(new TimeRange(net));
     }
 
     public boolean overlaps(Station station) {
-        return overlaps(station.getEffectiveTime());
+        return overlaps(new TimeRange(station));
     }
 
     public boolean overlaps(Channel channel) {
-        return overlaps(channel.getEffectiveTime());
+        return overlaps(new TimeRange(channel));
     }
 
     static final Duration DEFAULT_OFFSET = Duration.ofDays(3);

@@ -40,7 +40,7 @@ public class CSVEventPrinter implements OriginSubsetter {
                              EventAttrImpl eventAttr,
                              OriginImpl preferred_origin) throws Exception {
         StringBuffer buff = new StringBuffer();
-        buff.append(preferred_origin.getOriginTime().getISOTime() + COM);
+        buff.append(preferred_origin.getOriginTime().toString() + COM);
         Location loc = preferred_origin.getLocation();
         buff.append(loc.latitude + COM);
         buff.append(loc.longitude + COM);

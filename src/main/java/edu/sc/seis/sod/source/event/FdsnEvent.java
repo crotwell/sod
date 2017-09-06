@@ -287,7 +287,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                         // about expanding the time window
                         // but only do this if the query is for more than one day 
                         // to avoid many tiny requests
-                        if (getIncrement().greaterThan(MIN_INCREMENT)) {
+                        if (getIncrement().toNanos() > MIN_INCREMENT.toNanos()) {
                             decreaseQueryTimeWidth();
                             if (increaseThreashold > 2) {
                                 increaseThreashold /= 2;
@@ -317,7 +317,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                         // about expanding the time window
                         // but only do this if the query is for more than one day 
                         // to avoid many tiny requests
-                        if (getIncrement().greaterThan(MIN_INCREMENT)) {
+                        if (getIncrement().toNanos() > MIN_INCREMENT.toNanos()) {
                         decreaseQueryTimeWidth();
                         if (increaseThreashold > 2) {
                             increaseThreashold /= 2;

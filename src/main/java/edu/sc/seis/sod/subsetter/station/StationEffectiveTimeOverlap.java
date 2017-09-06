@@ -38,7 +38,7 @@ public class StationEffectiveTimeOverlap extends EffectiveTimeOverlap implements
     }
     
     public boolean overlaps(Station station) {
-        return overlaps(station.getEffectiveTime());
+        return overlaps(new TimeRange(station));
     }
 
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(StationEffectiveTimeOverlap.class);

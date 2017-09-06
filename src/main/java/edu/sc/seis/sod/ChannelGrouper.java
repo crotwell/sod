@@ -133,7 +133,7 @@ public class ChannelGrouper {
      HashMap<String, List<Channel>> groupByNetStaBandGain(List<Channel> channels) {
         HashMap<String, List<Channel>> bandGain = new HashMap<String, List<Channel>>();
         for(Channel c : channels) {
-            Instant msd = c.getStartDateTime));
+            Instant msd = c.getStartDateTime();
             String key = c.getNetworkId()+"."+c.getStationCode()+"."+c.getCode();
             key = key.substring(0, key.length() - 1);
             key = msd + key;

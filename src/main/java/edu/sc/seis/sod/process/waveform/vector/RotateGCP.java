@@ -51,23 +51,23 @@ public class RotateGCP implements WaveformVectorProcess, Threadable {
         // find x & y channel, y should be x+90 degrees and horizontal
         Channel[] horizontal = channelGroup.getHorizontalXY(ninetyDegreeTol);
         if(horizontal.length == 0) {
-            Orientation o1 = channelGroup.getChannel1().getOrientation();
-            Orientation o2 = channelGroup.getChannel2().getOrientation();
-            Orientation o3 = channelGroup.getChannel3().getOrientation();
+            Orientation o1 = Orientation.of(channelGroup.getChannel1());
+            Orientation o2 = Orientation.of(channelGroup.getChannel2());
+            Orientation o3 = Orientation.of(channelGroup.getChannel3());
             return new WaveformVectorResult(seismograms,
                                             new StringTreeLeaf(this,
                                                                false,
                                                                "Channels not rotatable, unable to find horizontals with 90 deg separation: "+o1.azimuth+"/"+o1.dip+" "+o2.azimuth+"/"+o2.dip+" "+o3.azimuth+"/"+o3.dip+" tol="+ninetyDegreeTol));
         }
-        if (! Rotate.areRotatable(horizontal[0].getOrientation(), horizontal[1].getOrientation(), ninetyDegreeTol)) {
+        if (! Rotate.areRotatable(Orientation.of(horizontal[0]), Orientation.of(horizontal[1]), ninetyDegreeTol)) {
             return new WaveformVectorResult(seismograms,
                                             new StringTreeLeaf(this,
                                                                false,
                                                                "horizontal channels not orthogonal with tol="+ninetyDegreeTol
                                                                +": xAzimuth="
-                                                                       + horizontal[0].getOrientation().azimuth
+                                                                       + Orientation.of(horizontal[0]).azimuth
                                                                        + " yAzimuth="
-                                                                       + horizontal[1].getOrientation().azimuth));
+                                                                       + Orientation.of(horizontal[1]).azimuth));
         }
         int xIndex = -1, yIndex = -1;
         for(int i = 0; i < seismograms.length; i++) {
@@ -111,7 +111,7 @@ public class RotateGCP implements WaveformVectorProcess, Threadable {
                                                                            + seismograms[yIndex][i].getNumPoints()));
             }
         }
-        Location staLoc = horizontal[0].getSite().getLocation();
+        Location staLoc = Location.of(horizontal[0]);
         Location eventLoc = EventUtil.extractOrigin(event).getLocation();
         LocalSeismogramImpl[][] out = new LocalSeismogramImpl[seismograms.length][];
         for(int i = 0; i < out.length; i++) {
@@ -120,9 +120,9 @@ public class RotateGCP implements WaveformVectorProcess, Threadable {
         }
         for(int i = 0; i < seismograms[xIndex].length; i++) {
             LocalSeismogramImpl[] rot = Rotate.rotateGCP(seismograms[xIndex][i],
-                                                         horizontal[0].getOrientation(),
+                                                         Orientation.of(horizontal[0]),
                                                          seismograms[yIndex][i],
-                                                         horizontal[1].getOrientation(),
+                                                         Orientation.of(horizontal[1]),
                                                          staLoc,
                                                          eventLoc,
                                                          transverseOrientationCode,

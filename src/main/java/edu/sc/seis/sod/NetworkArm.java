@@ -64,12 +64,12 @@ public class NetworkArm implements Arm {
         try {
             SodDB sodDb = SodDB.getSingleton();
             // lastQueryTime should be null if first time
-            lastQueryTime = sodDb.getQueryTime(getInternalNetworkSource().getName(), "");
+            lastQueryTime = sodDb.getQueryTime(getInternalNetworkSource().getName());
             
             // only do timer if positive interval and waveform arm exists, otherwise run in thread
-            if (getRefreshInterval().getValue() > 0 && Start.getWaveformRecipe() != null) {
+            if (getRefreshInterval().toNanos() > 0 && Start.getWaveformRecipe() != null) {
                 Timer timer = new Timer("Refresh NetworkArm", true);
-                long period = (long)getInternalNetworkSource().getRefreshInterval().getValue(UnitImpl.MILLISECOND);
+                long period = (long)getInternalNetworkSource().getRefreshInterval().toMillis();
                 long firstDelay = lastQueryTime==null ? 0 : lastQueryTime.delayMillisUntilNextRefresh(getRefreshInterval());
                 logger.debug("Refresh timer startup: period: "+period+"  firstDelay: "+firstDelay+"  last query: "+(lastQueryTime==null ? "null" : lastQueryTime.getTime()));
                 timer.schedule(refresh, firstDelay, period);
@@ -104,7 +104,7 @@ public class NetworkArm implements Arm {
         String netCode = network_id.networkCode;
         for (Network attr : netDbs) {
             if(netCode.equals(attr.getCode())
-                    && new TimeRange(attr.getEffectiveTime()).contains(network_id.beginTime)) {
+                    && new TimeRange(attr).contains(network_id.beginTime)) {
                 return attr;
             }
         }
@@ -480,7 +480,7 @@ public class NetworkArm implements Arm {
                     }
                     */
                     // make the assumption that the station in the channel is the same as the station retrieved earlier
-                    chan.getSite().setStation(dbSta);
+                    chan.setStation(dbSta);
                     change(chan, inProg);
                     StringTree effectiveTimeResult = chanEffectiveSubsetter.accept(chan,
                                                                                    loadedNetworkSource);

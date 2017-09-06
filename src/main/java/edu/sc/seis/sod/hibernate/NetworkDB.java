@@ -29,12 +29,12 @@ public class NetworkDB extends AbstractHibernateDB {
             session.saveOrUpdate(net);
             return net.getDbid();
         }
-        Iterator<Network> fromDB = getNetworkByCode(net.get_code()).iterator();
+        Iterator<Network> fromDB = getNetworkByCode(net.getCode()).iterator();
         if(fromDB.hasNext()) {
-            if(NetworkIdUtil.isTemporary(net.get_code())) {
+            if(NetworkIdUtil.isTemporary(net.getCode())) {
                 while(fromDB.hasNext()) {
                     Network indb = fromDB.next();
-                    if(net.get_code().equals(indb.get_code())
+                    if(net.getCode().equals(indb.getCode())
                             && NetworkIdUtil.getTwoCharYear(net.get_id())
                                     .equals(NetworkIdUtil.getTwoCharYear(indb.get_id()))) {
                         net.associateInDB(indb);
@@ -312,7 +312,7 @@ public class NetworkDB extends AbstractHibernateDB {
                                                Instant when) {
         Query query = getSession().createQuery(getChannelForStationAtTime);
         query.setEntity("station", station);
-        query.setTimestamp("when", when.getTimestamp());
+        query.setTimestamp("when", when);
         return query.list();
     }
 
@@ -363,7 +363,7 @@ public class NetworkDB extends AbstractHibernateDB {
         if (sc.equals("--") || sc.equals("") || sc.equals("  ")) {sc = edu.sc.seis.seisFile.fdsnws.stationxml.Channel.EMPTY_LOC_CODE;}
         query.setString("siteCode", sc);
         query.setString("channelCode", chan);
-        query.setTimestamp("when", when.getTimestamp());
+        query.setTimestamp("when", when);
         query.setMaxResults(1);
         List result = query.list();
         if(result.size() == 0) {
@@ -388,7 +388,7 @@ public class NetworkDB extends AbstractHibernateDB {
         InstrumentationBlob ib = getInstrumentationBlob(chan);
         if (ib != null) {
             Response resp =  ib.getResponse(); // might be null, meaning no inst exists, but blob in DB so we tried before
-            if (resp == null) { throw new ChannelNotFound(); }
+            if (resp == null) { throw new ChannelNotFound(chan); }
             return resp;
         }
         return null; // instBlob null, so never seen this channel before

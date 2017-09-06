@@ -4,22 +4,19 @@ import java.io.FileNotFoundException;
 
 import org.w3c.dom.Element;
 
-import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.hibernate.ChannelNotFound;
-import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.FilterType;
-import edu.sc.seis.sod.model.station.Instrumentation;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
 import edu.sc.seis.seisFile.fdsnws.stationxml.PolesZeros;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
 import edu.sc.seis.seisFile.fdsnws.stationxml.ResponseStage;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.hibernate.ChannelNotFound;
+import edu.sc.seis.sod.model.station.ChannelIdUtil;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.status.Fail;
 import edu.sc.seis.sod.status.Pass;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.VelocityFileElementParser;
-import edu.sc.seis.sod.util.convert.sac.FissuresToSac;
 import edu.sc.seis.sod.util.convert.sac.StationXMLToSacPoleZero;
 import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.velocity.PrintlineVelocitizer;

@@ -45,7 +45,7 @@ public class RemoveEventDuplicate implements OriginSubsetter {
         }
     }
     
-    public RemoveEventDuplicate(QuantityImpl timeVariance, QuantityImpl distanceVariance, QuantityImpl depthVariance)
+    public RemoveEventDuplicate(Duration timeVariance, QuantityImpl distanceVariance, QuantityImpl depthVariance)
             throws ConfigurationException {
         setTimeVariance(timeVariance);
         setDistanceVariance(distanceVariance);
@@ -124,11 +124,8 @@ public class RemoveEventDuplicate implements OriginSubsetter {
         return out;
     }
     
-    protected void setTimeVariance(QuantityImpl timeVariance) throws ConfigurationException {
-        if ( ! ( timeVariance.getUnit().isConvertableTo(UnitImpl.SECOND))) {
-            throw new ConfigurationException("Units must be convertible to SECOND: "+timeVariance.getUnit());
-        }
-        this.timeVariance = ClockUtil.durationFrom(timeVariance);
+    protected void setTimeVariance(Duration timeVariance) throws ConfigurationException {
+        this.timeVariance = timeVariance;
     }
     
     protected void setDistanceVariance(QuantityImpl maxDistance) throws ConfigurationException {

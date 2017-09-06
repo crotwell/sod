@@ -11,6 +11,7 @@ import org.w3c.dom.Element;
 
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
@@ -29,6 +30,7 @@ import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.common.Location;
 import edu.sc.seis.sod.model.common.Orientation;
 import edu.sc.seis.sod.model.common.SamplingImpl;
+import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.NoPreferredOrigin;
@@ -158,7 +160,7 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
             IncompatibleSeismograms, TauModelException, ZeroPowerException {
         Channel[] xyChan = channelGroup.getHorizontalXY();
         if (xyChan.length < 2) {
-            throw new IncompatibleSeismograms("Unable to find horizontal channels: "+channelGroup.getChannel1().get_code()
+            throw new IncompatibleSeismograms("Unable to find horizontal channels: "+channelGroup.getChannel1().getCode()
                                               +" "+channelGroup.getChannel2().getCode()
                                               +" "+channelGroup.getChannel3().getCode());
         }
@@ -181,7 +183,7 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
             } else if (ChannelIdUtil.areEqual(localSeis[i].channel_id, zChan.getId())) {
                 zSeis = localSeis[i];
             }
-            foundChanCodes += localSeis[i].channel_id.channel_code + " ";
+            foundChanCodes += localSeis[i].channel_id.getChannelCode() + " ";
         }
         if (ySeis == null || xSeis == null || zSeis == null) {
             logger.error("problem one seismogram component is null ");
@@ -193,9 +195,9 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
         OriginImpl origin = event.get_preferred_origin();
         Location evtLoc = origin.getLocation();
         LocalSeismogramImpl[] rotSeis = Rotate.rotateGCP(xSeis,
-                                                         xChan.getOrientation(),
+                                                         Orientation.of(xChan),
                                                          ySeis,
-                                                         yChan.getOrientation(),
+                                                         Orientation.of(yChan),
                                                          staLoc,
                                                          evtLoc,
                                                          "T",
@@ -211,7 +213,7 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
             throw new IncompatibleSeismograms("data is of zero length ");
         }
         SamplingImpl samp = zSeis.sampling_info;
-        double period = samp.getPeriod().convertTo(UnitImpl.SECOND).getValue();
+        double period = TimeUtils.durationToDoubleSeconds(samp.getPeriod());
         zdata = IterDecon.makePowerTwo(zdata);
         rotated[0] = IterDecon.makePowerTwo(rotated[0]);
         rotated[1] = IterDecon.makePowerTwo(rotated[1]);
@@ -254,7 +256,7 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
         // TimeInterval shift = firstP.subtract(z.getBeginTime());
         if (shift.toNanos() != 0) {
             logger.debug("shifting by " + shift + "  before 0=" + predicted[0]);
-            predicted = IterDecon.phaseShift(predicted, (float)shift.getValue(), period);
+            predicted = IterDecon.phaseShift(predicted, (float)TimeUtils.durationToDoubleSeconds(shift), period);
             logger.debug("shifting by " + shift);
         }
         logger.info("Finished with receiver function processing");
@@ -282,7 +284,7 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
                                                 chanCode,
                                                 refSeismogram.channel_id.getStartTime());
         Channel recFuncChan = new Channel(recFuncChanId, name, orientation, channelGroup.getChannel1()
-                .getSampleRate(), channelGroup.getChannel1().getEffectiveTime(), channelGroup.getChannel1().getSite());
+                .getSampleRate(), new TimeRange(channelGroup.getChannel1()), channelGroup.getChannel1().getSite());
         LocalSeismogramImpl predSeis = new LocalSeismogramImpl("recFunc/" + chanCode + "/" + refSeismogram.get_id(),
                                                                begin,
                                                                data.length,

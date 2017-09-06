@@ -3,7 +3,6 @@ package edu.sc.seis.sod.web.jsonapi;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
-import edu.sc.seis.sod.model.common.ISOTime;
 import edu.sc.seis.sod.model.common.Location;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.UnitImpl;

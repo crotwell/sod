@@ -55,7 +55,7 @@ public class WinstonNetworkSource extends CSVNetworkSource {
             }
             TimeRange chanTime = new TimeRange(chanStart,
                                                DEFAULT_END);
-            Channel channelImpl = new Channel(curStation, siteCode, chanCode, chanTime.getBeginTime().toInstant(), chanTime.getEndTime().toInstant());
+            Channel channelImpl = new Channel(curStation, siteCode, chanCode, chanTime.getBeginTime(), chanTime.getEndTime());
             channelImpl.setAzimuth(azimuth);
             channelImpl.setDip(dip);
             //channelImpl.setSampleRate((float) sampling.getFrequency().getValue(UnitImpl.HERTZ));

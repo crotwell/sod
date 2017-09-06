@@ -11,6 +11,7 @@ import com.oregondsp.signalProcessing.filter.iir.IIRFilter;
 import com.oregondsp.signalProcessing.filter.iir.PassbandType;
 
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
@@ -118,7 +119,7 @@ public class OregonDSPFilter implements WaveformProcess {
         LocalSeismogramImpl[] out = new LocalSeismogramImpl[seismograms.length];
         for (int i = 0; i < seismograms.length; i++) {
             if (filter == null) {
-                filter = createFilter(seismograms[0].getSampling().getPeriod().getValue(UnitImpl.SECOND));
+                filter = createFilter(TimeUtils.durationToDoubleSeconds(seismograms[0].getSampling().getPeriod()));
             }
             float[] data = seismograms[i].get_as_floats();
             filter.filter(data);

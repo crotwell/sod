@@ -49,7 +49,7 @@ public class PeriodicFakeEventSource extends AbstractSource implements EventSour
         if (nextEventTime.isBefore(ClockUtil.now())) {
             return Duration.ofSeconds(0);
         }
-        return nextEventTime.minus(ClockUtil.now());
+        return Duration.between(ClockUtil.now(), nextEventTime);
     }
 
     public boolean hasNext() {

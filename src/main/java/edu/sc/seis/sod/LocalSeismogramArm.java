@@ -234,7 +234,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
         RequestFilter[] outfilters = null;
         if(infilters.length > 0) {
             logger.debug("Trying available_data for " + ChannelIdUtil.toString(infilters[0].channel_id) + " from "
-                    + infilters[0].start_time.getISOTime() + " to " + infilters[0].end_time.getISOTime());
+                    + infilters[0].start_time.toString() + " to " + infilters[0].end_time.toString());
         } else {
             logger.debug("Empty request generated for " + ChannelIdUtil.toString(ecp.getChannel()));
         }
@@ -261,7 +261,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
         if(noImplAvailableData || passed.isSuccess()) {
             for(int i = 0; i < infilters.length; i++) {
                 logger.debug("Getting seismograms " + ChannelIdUtil.toString(infilters[i].channel_id) + " from "
-                        + infilters[i].start_time.getISOTime() + " to " + infilters[i].end_time.getISOTime());
+                        + infilters[i].start_time.toString() + " to " + infilters[i].end_time.toString());
             } // end of for (int i=0; i<outFilters.length; i++)
             // Using infilters as asking for extra should not hurt
             Instant before = ClockUtil.now();

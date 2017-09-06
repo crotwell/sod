@@ -77,7 +77,7 @@ public class TotalLoserEventCleaner extends TimerTask {
         Query q = StatefulEventDB.getSingleton().getSession().createQuery(" from "+StatefulEvent.class.getName()+
                                                                           " e  where e.status.standingInt = "+Standing.REJECT.getVal()+
                                                                           " and e.preferred.originTime.time < :ageAgo");
-        q.setTimestamp("ageAgo", ageAgo.getTimestamp());
+        q.setTimestamp("ageAgo", ageAgo);
         Iterator<StatefulEvent> it = q.iterate();
         int counter=0;
         while(it.hasNext()) {
@@ -109,7 +109,7 @@ public class TotalLoserEventCleaner extends TimerTask {
         Query q = SodDB.getSingleton().getSession().createQuery("delete "+eventPairClass.getName()+
                                                                 " ep where ep.status.standingInt = "+Standing.REJECT.getVal()+
                                                                 " and ep.lastQuery < :ageAgo");
-        q.setTimestamp("ageAgo", ageAgo.getTimestamp());
+        q.setTimestamp("ageAgo", ageAgo);
         int deleted = q.executeUpdate();
         SodDB.getSingleton().commit();
         logger.info("delete "+deleted+" old "+eventPairClass.getName());

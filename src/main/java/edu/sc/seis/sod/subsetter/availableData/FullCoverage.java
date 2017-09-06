@@ -39,7 +39,7 @@ public class FullCoverage implements AvailableDataSubsetter, SodElement {
 
         String reason = "Data does not cover "+notCovered.length+" sections of the request. ";
         for (int i = 0; i < notCovered.length; i++) {
-            reason += notCovered[i].start_time.getISOTime() + " to " + notCovered[i].end_time.getISOTime()+",  ";
+            reason += notCovered[i].start_time.toString() + " to " + notCovered[i].end_time.toString()+",  ";
         }
         
         return new StringTreeLeaf(this,

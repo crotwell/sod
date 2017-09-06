@@ -2,7 +2,7 @@ package edu.sc.seis.sod;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.sql.Timestamp;
+import java.time.Instant;
 
 import edu.sc.seis.sod.util.time.ClockUtil;
 
@@ -12,14 +12,14 @@ public class SodConfig {
 
     protected String config;
 
-    protected Timestamp time;
+    protected Instant time;
 
     /** for hibernate */
     protected SodConfig() {}
     
     public SodConfig(String conf) {
         this.config = conf;
-        this.time = ClockUtil.now().getTimestamp();
+        this.time = ClockUtil.now();
     }
     
     public SodConfig(BufferedReader r1)
@@ -43,11 +43,11 @@ public class SodConfig {
         this.config = config;
     }
 
-    public Timestamp getTime() {
+    public Instant getTime() {
         return time;
     }
 
-    protected void setTime(Timestamp time) {
+    protected void setTime(Instant time) {
         this.time = time;
     }
 

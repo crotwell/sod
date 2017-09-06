@@ -19,7 +19,7 @@ public abstract class PeriodicAction{
 
     public void actIfPeriodElapsed(){
         synchronized(schedulingLock) {
-            if(ClockUtil.now().minus(lastAct).greaterThan(ACTION_INTERVAL)){
+            if(Duration.between(lastAct, ClockUtil.now()).toNanos() > ACTION_INTERVAL.toNanos()){
                 actNow();
             }else if(!scheduled){
                 t.schedule(new ScheduledActor(), ACTION_INTERVAL_MILLIS);

@@ -12,7 +12,6 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
-import edu.sc.seis.sod.model.station.ChannelId;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.source.seismogram.ConstantSeismogramSourceLocator;
@@ -55,18 +54,18 @@ public class HadDataLastWeek implements ChannelSubsetter {
         // Make 7 requests for a hour a day
         List<RequestFilter> reqs = new ArrayList<RequestFilter>();
         for(int i = 0; i < 7; i++) {
-            reqs.add(new RequestFilter(channel.get_id(),
+            reqs.add(new RequestFilter(channel,
                                         now.minus(makeDayInterval(i)).minus(REQ_INTERVAL),
                                         now.minus(makeDayInterval(i)) ));
         }
         if(dcLocator.getSeismogramSource().retrieveData(reqs).size() > 0) {
             logger.debug(ChannelIdUtil.toStringNoDates(channel) + " had data");
-            recentRequests.put(key, new RecentRequest(channel.get_id(), ClockUtil.now(), true));
+            recentRequests.put(key, new RecentRequest(channel, ClockUtil.now(), true));
             return new StringTreeLeaf(this, true);
         }
         logger.debug(ChannelIdUtil.toStringNoDates(channel)
                 + " didn't have data");
-        recentRequests.put(key, new RecentRequest(channel.get_id(), ClockUtil.now(), false));
+        recentRequests.put(key, new RecentRequest(channel, ClockUtil.now(), false));
         return new StringTreeLeaf(this, false);
     }
 
@@ -87,12 +86,12 @@ public class HadDataLastWeek implements ChannelSubsetter {
 
 class RecentRequest {
     
-    ChannelId chanId;
+    Channel chan;
     Instant when;
     boolean hadData;
     
-    RecentRequest(ChannelId chanId, Instant when, boolean hadData) {
-        this.chanId = chanId;
+    RecentRequest(Channel chan, Instant when, boolean hadData) {
+        this.chan = chan;
         this.when = when;
         this.hadData = hadData;
     }

@@ -15,14 +15,14 @@ public class TimeRangeMeasurement extends Measurement {
 
     @Override
     public String toXMLFragment() {
-        return "<timeRange name=\"" + getName() + "\"><start>" + start.getISOString()+ "</start><end>" + end.getISOString() + "</end></timeRange>";
+        return "<timeRange name=\"" + getName() + "\"><start>" + start.toString()+ "</start><end>" + end.toString() + "</end></timeRange>";
     }
 
     @Override
     public Object valueAsJSON() {
         JSONObject out = new JSONObject();
-        out.append("start", start.getISOString());
-        out.append("end", end.getISOString());
+        out.append("start", start.toString());
+        out.append("end", end.toString());
         return out;
     }
     

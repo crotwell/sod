@@ -1,6 +1,6 @@
 package edu.sc.seis.sod.hibernate.eventpair;
 
-import java.sql.Timestamp;
+import java.time.Instant;
 
 import edu.sc.seis.sod.util.time.ClockUtil;
 
@@ -10,19 +10,19 @@ public abstract class WaveformWorkUnit implements Runnable {
     
     protected WaveformWorkUnit() {
         numRetries=0;
-        lastQuery = ClockUtil.now().getTimestamp();
+        lastQuery = ClockUtil.now();
     }
     
     protected long dbid;
     protected int numRetries;
-    protected Timestamp lastQuery;
+    protected Instant lastQuery;
     
     public static final org.slf4j.Logger failLogger = org.slf4j.LoggerFactory.getLogger("Fail.WaveformArm");
 
     public void updateRetries() {
         // use setters for hibernate auto-dirty checking
     	setNumRetries(getNumRetries()+1);
-        setLastQuery(ClockUtil.now().getTimestamp());
+        setLastQuery(ClockUtil.now());
     }
     
     public long getDbid() {
@@ -45,12 +45,12 @@ public abstract class WaveformWorkUnit implements Runnable {
     }
 
     
-    public Timestamp getLastQuery() {
+    public Instant getLastQuery() {
         return lastQuery;
     }
 
     
-    protected void setLastQuery(Timestamp lastQuery) {
+    protected void setLastQuery(Instant lastQuery) {
         this.lastQuery = lastQuery;
     }
     

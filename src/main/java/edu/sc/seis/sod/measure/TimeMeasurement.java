@@ -11,12 +11,12 @@ public class TimeMeasurement extends Measurement {
 
     @Override
     public String toXMLFragment() {
-        return value.getISOString();
+        return value.toString();
     }
 
     @Override
     public Object valueAsJSON() {
-        return value.getISOString();
+        return value.toString();
     }
     
     Instant value;

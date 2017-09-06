@@ -210,7 +210,7 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
                 sampling = SamplingImpl.ofSamplesSeconds(1, 1);
             }
             TimeRange chanTime = new TimeRange(chanBegin, loadTime(headers, csvReader, END, DEFAULT_END));
-            Channel channel = new Channel(curStation, siteCode, chanCode, chanTime.getBeginTime().toInstant(), chanTime.getEndTime().toInstant());
+            Channel channel = new Channel(curStation, siteCode, chanCode, chanTime.getBeginTime(), chanTime.getEndTime());
             channel.setAzimuth(azimuth);
             channel.setDip(dip);
             channel.setSampleRate((float) sampling.getFrequency().getValue(UnitImpl.HERTZ));

@@ -76,7 +76,7 @@ public class NetworkTimeRange implements OriginSubsetter, ArmListener,
             for(int j = 0; j < stas.length; j++) {
                 List<Channel> chans = arm.getSuccessfulChannels(stas[j]);
                 for(Channel c : chans) {
-                    TimeRange chanRange = new TimeRange(c.getEffectiveTime());
+                    TimeRange chanRange = new TimeRange(c);
                     if(range == null) {
                         range = chanRange;
                     } else {

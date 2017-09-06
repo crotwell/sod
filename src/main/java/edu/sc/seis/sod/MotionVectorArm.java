@@ -1,6 +1,7 @@
 package edu.sc.seis.sod;
 
 import java.net.SocketTimeoutException;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import edu.iris.dmc.seedcodec.CodecException;
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.mseed.MissingBlockette1000;
 import edu.sc.seis.sod.hibernate.SodDB;
@@ -21,7 +23,6 @@ import edu.sc.seis.sod.hibernate.eventpair.AbstractEventChannelPair;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.hibernate.eventpair.EventVectorPair;
 import edu.sc.seis.sod.model.common.FissuresException;
-import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
@@ -287,7 +288,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
             for (int i = 0; i < infilters.length; i++) {
                 for (int j = 0; j < infilters[i].length; j++) {
                     logger.debug("Getting seismograms " + ChannelIdUtil.toString(infilters[i][j].channel_id) + " from "
-                            + infilters[i][j].start_time.getISOTime() + " to " + infilters[i][j].end_time.getISOTime());
+                            + infilters[i][j].start_time.toString() + " to " + infilters[i][j].end_time.toString());
                 } // end of for (int i=0; i<outFilters.length; i++)
             }
             Instant before = ClockUtil.now();
@@ -299,7 +300,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                 localSeismograms = getData(ecp, infilters, seismogramSource);
                 Instant after = ClockUtil.now();
                 logger.info("After getting seismograms, time taken="
-                        + after.subtract(before).convertTo(UnitImpl.SECOND)+"  "+localSeismograms[0].length+", "+localSeismograms[1].length+", "+localSeismograms[2].length);
+                        + TimeUtils.durationToDoubleSeconds(Duration.between(before, after))+" sec  "+localSeismograms[0].length+", "+localSeismograms[1].length+", "+localSeismograms[2].length);
                 if (localSeismograms == null) {
                     return;
                 }

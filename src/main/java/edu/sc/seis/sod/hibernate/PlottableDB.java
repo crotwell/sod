@@ -33,9 +33,9 @@ public class PlottableDB extends AbstractHibernateDB {
                                 ChannelId channel,
                                 int pixelsPerDay) {
         return get(requestRange, channel.network_id.network_code,
-                   channel.station_code,
-                   channel.site_code,
-                   channel.channel_code,
+                   channel.getStationCode(),
+                   channel.getLocCode(),
+                   channel.getChannelCode(),
                    pixelsPerDay);
     }
 
@@ -55,8 +55,8 @@ public class PlottableDB extends AbstractHibernateDB {
         q.setString("site", site);
         q.setString("chan", channel);
         q.setInteger("pixelsPerDay", pixelsPerDay);
-        q.setTimestamp("end", requestRange.getEndTime().getTimestamp());
-        q.setTimestamp("begin", requestRange.getBeginTime().getTimestamp());
+        q.setTimestamp("end", requestRange.getEndTime());
+        q.setTimestamp("begin", requestRange.getBeginTime());
         List<PlottableChunk> chunks = q.list();
         return chunks;
     }

@@ -365,7 +365,7 @@ public class SodDB extends AbstractHibernateDB {
         Query query = getSession().createQuery(q);
         query.setTimestamp("now", ClockUtil.now());
         query.setFloat("base", retryBase);
-        query.setFloat("minDelay", (float)getMinRetryDelay().getValue(UnitImpl.SECOND));
+        query.setFloat("minDelay", (float)TimeUtils.durationToDoubleSeconds(getMinRetryDelay()));
         query.setFloat("maxDelay", (float) (Start.getRunProps().getMaxRetryDelay().toNanos()/TimeUtils.NANOS_IN_SEC));
         query.setMaxResults(10000);
         logger.info("retry query: "+q);

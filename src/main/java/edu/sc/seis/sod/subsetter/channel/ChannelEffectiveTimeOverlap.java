@@ -29,7 +29,7 @@ public class ChannelEffectiveTimeOverlap extends EffectiveTimeOverlap implements
     }
 
     public StringTree accept(Channel channel, NetworkSource network) {
-        return new StringTreeLeaf(this, overlaps(channel.getEffectiveTime()));
+        return new StringTreeLeaf(this, overlaps(new TimeRange(channel)));
     }
 
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(ChannelEffectiveTimeOverlap.class);

@@ -97,7 +97,7 @@ public class EventDB extends AbstractHibernateDB {
             query.setString("catalog", e.get_preferred_origin().getCatalog());
             query.setString("originid", e.get_preferred_origin().get_id());
 			query.setTimestamp("originTime", e
-					.get_preferred_origin().getOriginTime().getTimestamp());
+					.get_preferred_origin().getOriginTime());
 			query.setDouble("depth",
 					e.get_preferred_origin().getLocation().depth.getValue());
 			query.setDouble("lat",
@@ -141,8 +141,8 @@ public class EventDB extends AbstractHibernateDB {
                                                       double maxDepth) {
         Session session = getSession();
         Query query = session.createQuery(eventByTimeAndDepth);
-        query.setTimestamp("minTime", minTime.getTimestamp());
-        query.setTimestamp("maxTime", maxTime.getTimestamp());
+        query.setTimestamp("minTime", minTime);
+        query.setTimestamp("maxTime", maxTime);
         query.setDouble("minDepth", minDepth);
         query.setDouble("maxDepth", maxDepth);
         List result = query.list();

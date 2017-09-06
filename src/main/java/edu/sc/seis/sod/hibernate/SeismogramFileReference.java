@@ -16,11 +16,11 @@ public class SeismogramFileReference extends AbstractSeismogramFileReference {
                                    String fileLocation,
                                    SeismogramFileTypes filetype) {
         super(channel.getId().network_id.network_code, 
-              channel.getId().station_code,
-              channel.getId().site_code,
-              channel.getId().channel_code,
-              seis.getBeginTime().getTimestamp(),
-              seis.getEndTime().getTimestamp(),
+              channel.getStationCode(),
+              channel.getLocCode(),
+              channel.getChannelCode(),
+              seis.getBeginTime(),
+              seis.getEndTime(),
               fileLocation,
               filetype.getIntValue());
     }

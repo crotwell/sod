@@ -5,6 +5,7 @@ import java.time.Instant;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.QueryTime;
@@ -13,7 +14,6 @@ import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.hibernate.NotFound;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.model.common.TimeRange;
-import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.source.AbstractSource;
 import edu.sc.seis.sod.source.network.AbstractNetworkSource;
 import edu.sc.seis.sod.util.time.ClockUtil;
@@ -61,7 +61,9 @@ public abstract class AbstractEventSource extends AbstractSource implements Even
         if (sleepTime.toNanos() < 0) {
             caughtUpToRealtime = false;
         }
-        logger.debug("getWaitBeforeNext() lq="+lastQueryTime+" sleep="+sleepTime.getValue(UnitImpl.SECOND)+"  now="+now+"  refesh="+refreshInterval.getValue(UnitImpl.SECOND));
+        logger.debug("getWaitBeforeNext() lq="+lastQueryTime
+                     +" sleep="+TimeUtils.durationToDoubleSeconds(sleepTime)
+                     +"  now="+now+"  refesh="+TimeUtils.durationToDoubleSeconds(refreshInterval));
         return sleepTime;
     }
     
@@ -115,7 +117,7 @@ public abstract class AbstractEventSource extends AbstractSource implements Even
         if (queryStart.isAfter(ClockUtil.wayFuture())) {
             throw new RuntimeException("start way in future: qs="+queryStart+" lag="+getLag()+" end="+queryEnd);
         }
-        if (queryEnd.subtract(queryStart).lessThan(ClockUtil.durationFrom(1, UnitImpl.MINUTE))) {
+        if (Duration.between(queryStart, queryEnd).toNanos() < TimeUtils.ONE_MINUTE.toNanos()) {
             logger.warn("Query for very short time window: start:"+queryStart+" end:"+queryEnd+" inc:"+increment+" now:"+now+"  cuwrt:"+caughtUpToRealtime+" ecuwrt:"+everCaughtUpToRealtime+"  tot end:"+getEventTimeRange().getEndTime());
         }
         return new TimeRange(queryStart, queryEnd);
@@ -128,7 +130,7 @@ public abstract class AbstractEventSource extends AbstractSource implements Even
     /** decrease the time increment for queries, but only if it is larger than the minimum = 1Day 
      * to avoid many tiny queries to the server. */
     public void decreaseQueryTimeWidth() {
-        if (getIncrement().greaterThan(MIN_INCREMENT)) {
+        if (getIncrement().toNanos() > MIN_INCREMENT.toNanos()) {
             increment = Duration.ofNanos(Math.round(.75*increment.toNanos()));
         }
     }
@@ -164,10 +166,10 @@ public abstract class AbstractEventSource extends AbstractSource implements Even
         SodDB sdb = SodDB.getSingleton();
         QueryTime qt = sdb.getQueryTime(getName());
         if (qt != null) {
-            qt.setTime( edge.getTimestamp());
+            qt.setTime( edge);
             SodDB.getSession().saveOrUpdate(qt);
         } else {
-            sdb.putQueryTime(new QueryTime(getName(), edge.getTimestamp()));
+            sdb.putQueryTime(new QueryTime(getName(), edge));
         }
         SodDB.commit();
     }

@@ -113,7 +113,7 @@ public class FissuresFormatter {
     }
 
     public static float getLatitude(Station station) {
-        return getLatitude(station.getLocation());
+        return station.getLatitude().getValue();
     }
 
     public static float getLatitude(OriginImpl origin) {
@@ -133,7 +133,7 @@ public class FissuresFormatter {
     }
 
     public static float getLongitude(Station station) {
-        return getLongitude(station.getLocation());
+        return station.getLongitude().getValue();
     }
 
     public static float getLongitude(OriginImpl origin) {
@@ -196,7 +196,7 @@ public class FissuresFormatter {
         if(origin.getLocation() == null) {
             throw new NullPointerException("origin.my_location is null");
         }
-        return getDistance(station.getLocation(), origin.getLocation());
+        return getDistance(Location.of(station), origin.getLocation());
     }
 
     public static QuantityImpl getDistance(Location from, Location to) {
@@ -211,7 +211,7 @@ public class FissuresFormatter {
     }
 
     public static QuantityImpl getAzimuth(Station station, OriginImpl origin) {
-        return getAzimuth(station.getLocation(), origin.getLocation());
+        return getAzimuth(Location.of(station), origin.getLocation());
     }
 
     public static QuantityImpl getAzimuth(Location from, Location to) {
@@ -220,7 +220,7 @@ public class FissuresFormatter {
     }
 
     public static QuantityImpl getBackAzimuth(Station station, OriginImpl origin) {
-        return getBackAzimuth(station.getLocation(), origin.getLocation());
+        return getBackAzimuth(Location.of(station), origin.getLocation());
     }
 
     public static QuantityImpl getBackAzimuth(Location from, Location to) {

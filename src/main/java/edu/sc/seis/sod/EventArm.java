@@ -253,7 +253,7 @@ public class EventArm implements Arm {
         String s = "";
         try {
             OriginImpl o = event.get_preferred_origin();
-            s = " otime=" + o.getOriginTime().getISOString();
+            s = " otime=" + o.getOriginTime().toString();
             s += " loc=" + o.getLocation().latitude + ", " + o.getLocation().longitude;
         } catch(Throwable e) {
             s += e;

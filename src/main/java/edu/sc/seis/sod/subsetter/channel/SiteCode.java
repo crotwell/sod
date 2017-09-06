@@ -28,7 +28,7 @@ public class SiteCode implements ChannelSubsetter {
     }
 
     public StringTree accept(Channel chan, NetworkSource network) {
-        if(pattern.matcher(chan.getSite().get_id().site_code).matches()) {
+        if(pattern.matcher(chan.getLocCode()).matches()) {
             return new Pass(this);
         } else {
             return new Fail(this);

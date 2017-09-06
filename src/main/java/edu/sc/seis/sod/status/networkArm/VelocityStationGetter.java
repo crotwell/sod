@@ -27,7 +27,7 @@ public class VelocityStationGetter {
         List<Station> out = new LinkedList<Station>();
         List<Network> nets = Start.getNetworkArm().getSuccessfulNetworks();
         for (Network cachenet : nets) {
-            if (NetworkIdUtil.areEqual(cachenet.get_id(), net)) {
+            if (NetworkIdUtil.areEqual(cachenet, net)) {
                 Station[] sta = Start.getNetworkArm().getSuccessfulStations(cachenet);
                 for (int j = 0; j < sta.length; j++) {
                     out.add(sta[j]);

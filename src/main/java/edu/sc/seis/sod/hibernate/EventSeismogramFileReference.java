@@ -19,8 +19,8 @@ public class EventSeismogramFileReference extends AbstractSeismogramFileReferenc
               channel.getStationCode(),
               channel.getLocCode(),
               channel.getChannelCode(),
-              seis.getBeginTime().getTimestamp(),
-              seis.getEndTime().getTimestamp(),
+              seis.getBeginTime(),
+              seis.getEndTime(),
               fileLocation,
               filetype.getIntValue());
         this.event = event;

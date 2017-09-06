@@ -82,7 +82,7 @@ public class TauPServlet  extends HttpServlet {
                     } else {
                         Instant netBegin = TimeUtils.parseISOString(year+"1231T23:59:59.000Z");
                         for (Station stationImpl : staList) {
-                            TimeRange staTR = new TimeRange(stationImpl.getEffectiveTime());
+                            TimeRange staTR = new TimeRange(stationImpl);
                             if (staTR.contains(netBegin)) {
                                 sta = stationImpl;
                             }

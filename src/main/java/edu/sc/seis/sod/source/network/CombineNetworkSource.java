@@ -50,7 +50,7 @@ public class CombineNetworkSource extends AbstractNetworkSource implements Netwo
     public Duration getRefreshInterval() {
         Duration out = Duration.ofMillis(-1);
         for (NetworkSource source : wrapped) {
-            if (out.getValue() < 0 || out.greaterThan(source.getRefreshInterval())) {
+            if (out.toNanos() < 0 || out.toNanos() > source.getRefreshInterval().toNanos()) {
                 out = source.getRefreshInterval();
             }
         }

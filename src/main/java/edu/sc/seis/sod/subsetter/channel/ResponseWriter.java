@@ -11,6 +11,7 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.bag.ResponsePrint;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
+import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.station.ChannelId;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
 import edu.sc.seis.sod.source.network.NetworkSource;
@@ -34,7 +35,7 @@ public class ResponseWriter implements ChannelSubsetter {
     public StringTree accept(Channel chan, NetworkSource network)
             throws Exception {
         try {
-            String response = ResponsePrint.printResponse(ChannelId.of(chan), network.getResponse(chan), chan.getEffectiveTime());
+            String response = ResponsePrint.printResponse(ChannelId.of(chan), network.getResponse(chan), new TimeRange(chan));
             velocitizer.evaluate(template, response, chan);
         } catch(ChannelNotFound e) {
             return new Fail(this, "No instrumentation");

@@ -57,8 +57,8 @@ public class DelayedEventSource extends AbstractEventSource implements EventSour
     public Duration getWaitBeforeNext() {
         Duration waitTime = wrappedSource.getWaitBeforeNext();
         for (CacheEvent ce : delayedEvents) {
-            Duration deTime = ce.getOrigin().getTime().plus(delay).minus(ClockUtil.now());
-            if (deTime.lessThan(waitTime)) {
+            Duration deTime = Duration.between(ClockUtil.now(), ce.getOrigin().getTime().plus(delay));
+            if (deTime.toNanos() < waitTime.toNanos()) {
                 waitTime = deTime;
             }
         }

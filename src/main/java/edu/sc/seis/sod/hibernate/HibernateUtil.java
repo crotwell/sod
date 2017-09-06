@@ -10,7 +10,6 @@ import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataBuilder;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
 import org.hibernate.dialect.function.SQLFunctionTemplate;
 import org.hibernate.service.ServiceRegistry;
 
@@ -48,7 +47,6 @@ public class HibernateUtil {
     }
     
     private static void addDateFunctions(MetadataBuilder metadataBuilder) {
-        metadataBuilder.applyBasicType( MicroSecondDateUserType.INSTANCE, "microseconddate" );
         String dbUrl = props.getProperty("hibernate.connection.url");
         if(dbUrl.startsWith("jdbc:hsql")) {
             metadataBuilder.applySqlFunction("datediff",

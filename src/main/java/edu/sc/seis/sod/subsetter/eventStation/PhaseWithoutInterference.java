@@ -11,6 +11,7 @@ import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.SeismicPhase;
 import edu.sc.seis.TauP.TauModelException;
 import edu.sc.seis.TauP.TauP_Time;
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.DOMHelper;
@@ -35,8 +36,8 @@ public class PhaseWithoutInterference extends PhaseExists implements EventStatio
         mainPhase = new SeismicPhase(phaseName,
                                      modelName,
                                      0.0);
-        beginOffset = SodUtil.loadTimeInterval(DOMHelper.extractElement(config, "beginOffset")).getValue(UnitImpl.SECOND);
-        endOffset = SodUtil.loadTimeInterval(DOMHelper.extractElement(config, "endOffset")).getValue(UnitImpl.SECOND);
+        beginOffset = TimeUtils.durationToDoubleSeconds(SodUtil.loadTimeInterval(DOMHelper.extractElement(config, "beginOffset")));
+        endOffset = TimeUtils.durationToDoubleSeconds(SodUtil.loadTimeInterval(DOMHelper.extractElement(config, "endOffset")));
         for (Element element : phElements) {
             List<String> newPhases = TauP_Time.getPhaseNames(SodUtil.getNestedText(element));
             for (String s : newPhases) {

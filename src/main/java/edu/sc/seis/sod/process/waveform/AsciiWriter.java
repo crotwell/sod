@@ -8,12 +8,12 @@ import java.text.DecimalFormat;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.hibernate.SeismogramFileTypes;
-import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
@@ -48,7 +48,7 @@ public class AsciiWriter extends AbstractSeismogramWriter {
         PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(f)));
         writer.println("# "+ChannelIdUtil.toStringNoDates(chan)+" "+seis.getNumPoints()+" "+seis.getSampling().getPeriod()+" "+seis.getBeginTime()+" "+seis.getUnit()+winEOL);
         if (SHAKEheader) {
-            writer.println(seis.getNumPoints()+"      "+seis.getSampling().getPeriod().getValue(UnitImpl.SECOND));
+            writer.println(seis.getNumPoints()+"      "+TimeUtils.durationToDoubleSeconds(seis.getSampling().getPeriod()));
         }
         if(seis.can_convert_to_long()) {
             int[] asInts = seis.get_as_longs();
