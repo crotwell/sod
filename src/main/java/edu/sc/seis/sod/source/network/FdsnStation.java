@@ -222,11 +222,9 @@ public class FdsnStation extends AbstractNetworkSource {
             NetworkIterator netIt = staxml.getNetworks();
             while (netIt.hasNext()) {
                 edu.sc.seis.seisFile.fdsnws.stationxml.Network n = netIt.next();
-                Network netAttr = StationXMLToFissures.convert(n);
                 StationIterator staIt = n.getStations();
                 while (staIt.hasNext()) {
                     edu.sc.seis.seisFile.fdsnws.stationxml.Station s = staIt.next();
-                    Station sImpl = StationXMLToFissures.convert(s, netAttr);
                     for (Channel c : s.getChannelList()) {
                         ChannelSensitivityBundle csb = StationXMLToFissures.convert(c, sImpl);
                         Channel outChan = csb.getChan();
@@ -294,11 +292,9 @@ public class FdsnStation extends AbstractNetworkSource {
             NetworkIterator netIt = staxml.getNetworks();
             while (netIt.hasNext()) {
                 edu.sc.seis.seisFile.fdsnws.stationxml.Network n = netIt.next();
-                Network netAttr = StationXMLToFissures.convert(n);
                 StationIterator staIt = n.getStations();
                 while (staIt.hasNext()) {
                     edu.sc.seis.seisFile.fdsnws.stationxml.Station s = staIt.next();
-                    Station sImpl = StationXMLToFissures.convert(s, netAttr);
                     for (Channel c : s.getChannelList()) {
                         ChannelSensitivityBundle csb = StationXMLToFissures.convert(c, sImpl);
                         chanSensitivityMap.put(ChannelIdUtil.toString(csb.getChan()), csb.getSensitivity());
@@ -410,7 +406,7 @@ public class FdsnStation extends AbstractNetworkSource {
         staQP.setStartBefore(startTime.plus(TimeUtils.ONE_SECOND));
         Instant end = endTime;
         if (end.isBefore(ClockUtil.now())) {
-            staQP.setEndAfter(end.minus(ONE_SECOND));
+            staQP.setEndAfter(end.minus(TimeUtils.ONE_SECOND));
         }
     }
     

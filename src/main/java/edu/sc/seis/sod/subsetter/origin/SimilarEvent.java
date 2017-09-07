@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.subsetter.origin;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -72,7 +73,7 @@ public class SimilarEvent extends RemoveEventDuplicate {
     private boolean isTimeOK(CacheEvent event, OriginImpl preferred_origin) {
         Instant eventTime = event.getOrigin().getOriginTime();
         Instant originTime = preferred_origin.getOriginTime();
-        return eventTime.difference(originTime).lessThanEqual(timeVariance);
+        return Duration.between(originTime, eventTime).abs().toNanos() < timeVariance.toNanos();
     }
     
     private boolean isDepthOK(CacheEvent event, OriginImpl preferred_origin) {

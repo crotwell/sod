@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.process.waveform;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,13 +10,12 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.model.common.FissuresException;
-import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.TimeRange;
-import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
@@ -111,8 +111,8 @@ public class GapFill extends Merge {
         Instant firstEnd = first.getEndTime();
         Instant secondBegin = second.getBeginTime();
         
-        QuantityImpl numSamplePeriods = secondBegin.minus(first.getSampling().getPeriod().multipliedBy(0.5)).subtract(firstEnd).divideBy(first.getSampling().getPeriod());
-        return (int)Math.ceil(numSamplePeriods.getValue(UnitImpl.DIMENSIONLESS)) -1; // one less than ceiling
+        double numSamplePeriods = TimeUtils.durationToDoubleSeconds(Duration.between(firstEnd, secondBegin.minus(first.getSampling().getPeriod().dividedBy(2)))) / TimeUtils.durationToDoubleSeconds(first.getSampling().getPeriod());
+        return (int)Math.ceil(numSamplePeriods) -1; // one less than ceiling
     }
     
     FillStyle filler;

@@ -191,7 +191,7 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
                     + (ySeis != null) + " " + (xSeis != null) + " " + (zSeis != null));
         }
         
-        Location staLoc = zChan.getSite().getStation().getLocation();
+        Location staLoc = Location.of(zChan.getStation());
         OriginImpl origin = event.get_preferred_origin();
         Location evtLoc = origin.getLocation();
         LocalSeismogramImpl[] rotSeis = Rotate.rotateGCP(xSeis,

@@ -202,7 +202,7 @@ public class VectorTrimTest extends TestCase {
             Instant start = TimeUtils.parseISOString(seisTimes[i][0]);
             Instant end = TimeUtils.parseISOString(seisTimes[i][1]);
             vector[i][0] = MockSeismogram.createRaggedSpike(start,
-                                                            end.subtract(start),
+                                                            Duration.between(start, end),
                                                             20,
                                                             0,
                                                             MockChannelId.createVerticalChanId(),

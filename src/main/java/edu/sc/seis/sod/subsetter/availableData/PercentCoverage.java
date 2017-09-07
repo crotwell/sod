@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
@@ -47,7 +48,7 @@ public class PercentCoverage implements AvailableDataSubsetter {
         RequestFilter[] uncovered = CoverageTool.notCovered(request, available);
         Duration totalOriginalTime = sum(toMSTR(request));
         Duration totalUncoveredTime = sum(toMSTR(uncovered));
-        return (1 - totalUncoveredTime.divideBy(totalOriginalTime).getValue()) * 100;
+        return (1 - TimeUtils.durationToDoubleSeconds(totalUncoveredTime) / TimeUtils.durationToDoubleSeconds(totalOriginalTime)) * 100;
     }
 
     private Duration sum(List microSecondTimeRanges) {

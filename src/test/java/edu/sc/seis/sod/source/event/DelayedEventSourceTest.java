@@ -27,14 +27,14 @@ public class DelayedEventSourceTest {
     @Test
     public void testNext() throws InterruptedException, NoPreferredOrigin {
         final List<CacheEvent> events = new ArrayList<CacheEvent>();
-        events.plus(MockEventAccessOperations.createEvent(ClockUtil.now().minus(LONG_AGO), 0f, 0));
-        events.plus(MockEventAccessOperations.createEvent(ClockUtil.now().minus(LONG_AGO), 1f, 0));
-        events.plus(MockEventAccessOperations.createEvent(ClockUtil.now().minus(SHORT_AGO), 2f, 0));
+        events.add(MockEventAccessOperations.createEvent(ClockUtil.now().minus(LONG_AGO), 0f, 0));
+        events.add(MockEventAccessOperations.createEvent(ClockUtil.now().minus(LONG_AGO), 1f, 0));
+        events.add(MockEventAccessOperations.createEvent(ClockUtil.now().minus(SHORT_AGO), 2f, 0));
         EventSource es = new TestSimpleEventSource(events);
         DelayedEventSource delayedES = new DelayedEventSource(MED_SHORT_AGO, es);
         CacheEvent[] firstEvents = delayedES.next();
         assertEquals("first get", 2, firstEvents.length);
-        Thread.sleep((long)MED_SHORT_AGO.getValue(UnitImpl.MILLISECOND));
+        Thread.sleep(MED_SHORT_AGO.toMillis());
         CacheEvent[] secondEvents = delayedES.next();
         assertEquals("second get", 1, secondEvents.length);
         assertEquals("lat", 2, secondEvents[0].get_preferred_origin().getLocation().latitude, 0.000001);
@@ -43,14 +43,14 @@ public class DelayedEventSourceTest {
     @Test
     public void testGetWaitForNext() {
         final List<CacheEvent> events = new ArrayList<CacheEvent>();
-        events.plus(MockEventAccessOperations.createEvent(ClockUtil.now().minus(LONG_AGO), 0f, 0));
-        events.plus(MockEventAccessOperations.createEvent(ClockUtil.now().minus(LONG_AGO), 1f, 0));
-        events.plus(MockEventAccessOperations.createEvent(ClockUtil.now().minus(SHORT_AGO), 2f, 0));
+        events.add(MockEventAccessOperations.createEvent(ClockUtil.now().minus(LONG_AGO), 0f, 0));
+        events.add(MockEventAccessOperations.createEvent(ClockUtil.now().minus(LONG_AGO), 1f, 0));
+        events.add(MockEventAccessOperations.createEvent(ClockUtil.now().minus(SHORT_AGO), 2f, 0));
         EventSource es = new TestSimpleEventSource(events);
         DelayedEventSource delayedES = new DelayedEventSource(MED_SHORT_AGO, es);
         CacheEvent[] firstEvents = delayedES.next();
         Duration wait = delayedES.getWaitBeforeNext();
-        assertTrue("wait less than MED "+wait, wait.lessThan(MED_SHORT_AGO));
+        assertTrue("wait less than MED "+wait, wait.toNanos() < MED_SHORT_AGO.toNanos());
     }
 }
 

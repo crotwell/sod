@@ -11,9 +11,9 @@ import org.slf4j.LoggerFactory;
 import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.sod.Threadable;
 import edu.sc.seis.sod.bag.Cut;
+import edu.sc.seis.sod.bag.SampleSynchronize;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.model.common.FissuresException;
-import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
@@ -94,10 +94,10 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
     }
     
     public static LocalSeismogramImpl alignTimes(LocalSeismogramImpl main, LocalSeismogramImpl shifty) throws SubsetterException, FissuresException {
-        shifty = SampleSyncronize.alignTimes(main, shifty);
+        shifty = SampleSynchronize.alignTimes(main, shifty, maxSampleRateRatio);
         if (shifty.getNumPoints() == main.getNumPoints() +1) {
             // looks like we are long by one
-            if (shifty.getBeginTime().difference(main.getBeginTime()).lessThan(shifty.getBeginTime().plus(shifty.getSampling().getPeriod()).difference(main.getBeginTime()))) {
+            if (Duration.between(main.getBeginTime(), shifty.getBeginTime()).abs().toNanos() < Duration.between(main.getBeginTime(), shifty.getBeginTime().plus(shifty.getSampling().getPeriod())).abs().toNanos()) {
                 // first data point closer than second, so chop end 
                 shifty = Cut.cut(shifty, 0, shifty.getNumPoints()-2); //cut by index inclusive, so -2 to trim 1 from end
             } else {
@@ -179,13 +179,13 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
      * each has its sampling set to the sampling of the first sampling
      */
     public boolean normalizeSampling(LocalSeismogramImpl[][] impls) {
-        QuantityImpl lastPeriod = null;
+        Duration lastPeriod = null;
         ChannelId lastChan = null;
         for(int i = 0; i < impls.length; i++) {
             for(int j = 0; j < impls[i].length; j++) {
                 Duration curPeriod = impls[i][j].getSampling().getPeriod();
                 if(lastPeriod != null) {
-                    if(Math.abs(1 - lastPeriod.divideBy(curPeriod).getValue()) > .01) {
+                    if(Math.abs(1 - TimeUtils.durationToDoubleSeconds(lastPeriod) / TimeUtils.durationToDoubleSeconds(curPeriod)) > .01) {
                         logger.info("sampling not equal: "+i+","+j+" "
                     +ChannelIdUtil.toStringNoDates(lastChan)+" "+lastPeriod+"  "
                     +ChannelIdUtil.toStringNoDates(impls[i][j].channel_id)+" "+curPeriod);
@@ -207,6 +207,8 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
     public boolean isThreadSafe() {
         return true;
     }
+    
+    static float maxSampleRateRatio = 0.01f;
     
     private ANDWaveformProcessWrapper merger = new ANDWaveformProcessWrapper(new Merge());
     private ANDWaveformProcessWrapper collapser = new ANDWaveformProcessWrapper(new CollapseOverlaps());
