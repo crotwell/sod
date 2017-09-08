@@ -16,15 +16,11 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.hibernate.NetworkDB;
-import edu.sc.seis.sod.hibernate.NetworkNotFound;
 import edu.sc.seis.sod.hibernate.NotFound;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.model.common.TimeRange;
-import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.station.ChannelGroup;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.NetworkId;
-import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.model.station.StationIdUtil;
 import edu.sc.seis.sod.model.status.Stage;
 import edu.sc.seis.sod.model.status.Standing;
@@ -96,20 +92,6 @@ public class NetworkArm implements Arm {
 
     public String getName() {
         return "NetworkArm";
-    }
-
-    public Network getNetwork(NetworkId network_id)
-            throws NetworkNotFound {
-        List<Network> netDbs = getSuccessfulNetworks();
-        String netCode = network_id.networkCode;
-        for (Network attr : netDbs) {
-            if(netCode.equals(attr.getCode())
-                    && new TimeRange(attr).contains(network_id.beginTime)) {
-                return attr;
-            }
-        }
-        throw new NetworkNotFound("No network for id: "
-                + NetworkIdUtil.toString(network_id));
     }
 
     private void processConfig(Element config) throws ConfigurationException {
@@ -250,7 +232,7 @@ public class NetworkArm implements Arm {
                             NetworkDB ndb = getNetworkDB();
                             int dbid = ndb.put(attr);
                             NetworkDB.commit();
-                            logger.info("store network: " + NetworkIdUtil.toStringNoDates(attr)+" " + attr.getDbid()
+                            logger.info("store network: " + attr.toString()+" " + attr.getDbid()
                                     + " " + dbid);
                             successes.add(attr);
                             change(attr,
@@ -260,20 +242,20 @@ public class NetworkArm implements Arm {
                             change(attr,
                                    Status.get(Stage.NETWORK_SUBSETTER,
                                               Standing.REJECT));
-                            failLogger.info(NetworkIdUtil.toString(attr)
+                            failLogger.info(attr.toString()
                                     + " was rejected. "+result);
                         }
                     } else {
                         change(attr, Status.get(Stage.NETWORK_SUBSETTER,
                                                       Standing.REJECT));
-                        failLogger.info(NetworkIdUtil.toString(attr)
+                        failLogger.info(attr.toString()
                                 + " was rejected because it wasn't active during the time range of requested events");
                     }
                 } catch(Throwable th) {
                     GlobalExceptionHandler.handle("Got an exception while trying getSuccessfulNetworks for the "
                                                           + i
                                                           + "th networkAccess ("
-                                                          +(attr==null?"null":NetworkIdUtil.toStringNoDates(attr)),
+                                                          +(attr==null?"null":attr.toString()),
                                                   th);
                 }
                 i++;
@@ -328,7 +310,7 @@ public class NetworkArm implements Arm {
                     refresh.wait();
                 } catch(InterruptedException e) {}
             }
-            if(allStationFailureNets.contains(NetworkIdUtil.toStringNoDates(net))) {
+            if(allStationFailureNets.contains(net.toString())) {
                 return new Station[0];
             }
             // try db
@@ -338,7 +320,7 @@ public class NetworkArm implements Arm {
                         + sta.size());
                 return sta.toArray(new Station[0]);
             } else {
-                allStationFailureNets.add(NetworkIdUtil.toStringNoDates(net));
+                allStationFailureNets.add(net.toString());
                 return new Station[0];
             }
         }
@@ -351,7 +333,7 @@ public class NetworkArm implements Arm {
                 netAttr = NetworkDB.getSingleton().getNetwork(net.getDbid());
             } catch(NotFound e1) {
                 // must not be in db yet???
-                throw new RuntimeException("Network not in db yet: "+NetworkIdUtil.toString(net));
+                throw new RuntimeException("Network not in db yet: "+net.toString());
             }
             statusChanged("Getting stations for "
                     + net.getNetworkId());
@@ -414,19 +396,19 @@ public class NetworkArm implements Arm {
                 NetworkDB.commit();
             } catch(Exception e) {
                 GlobalExceptionHandler.handle("Problem in method getSuccessfulStations for net "
-                                                      + NetworkIdUtil.toString(net),
+                                                      + net.toString(),
                                               e);
                 NetworkDB.rollback();
             }
             Station[] rtnValues = new Station[arrayList.size()];
             rtnValues = (Station[])arrayList.toArray(rtnValues);
             statusChanged("Waiting for a request");
-            logger.debug("getSuccessfulStations " + NetworkIdUtil.toStringNoDates(net) + " - from server "
+            logger.debug("getSuccessfulStations " + net.toString() + " - from server "
                     + rtnValues.length);
             if(rtnValues.length == 0) {
-                allStationFailureNets.add(NetworkIdUtil.toStringNoDates(net));
+                allStationFailureNets.add(net.toString());
             } else {
-                allStationFailureNets.remove(NetworkIdUtil.toStringNoDates(net));
+                allStationFailureNets.remove(net.toString());
             }
             return rtnValues;
         }

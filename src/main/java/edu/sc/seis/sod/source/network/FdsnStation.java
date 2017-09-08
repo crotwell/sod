@@ -192,8 +192,8 @@ public class FdsnStation extends AbstractNetworkSource {
             throw new SodSourceException(e);
         } catch(XMLValidationException e) {
             // debug to get stack trace in log file, but not in warn which goes to stderr
-            logger.warn("InvalidXML: "+NetworkIdUtil.toString(net)+" "+ e.getMessage().replace('\n', ' '));
-            logger.debug("InvalidXML: "+NetworkIdUtil.toString(net)+" "+ e.getMessage().replace('\n', ' '), e);
+            logger.warn("InvalidXML: "+net.toString()+" "+ e.getMessage().replace('\n', ' '));
+            logger.debug("InvalidXML: "+net.toString()+" "+ e.getMessage().replace('\n', ' '), e);
             return out;
         } catch(XMLStreamException e) {
             throw new SodSourceException(e);

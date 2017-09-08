@@ -7,7 +7,6 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.model.station.StationIdUtil;
 
 
@@ -17,7 +16,7 @@ public class NetworkConsistencyCheck {
         TimeRange staRange = new TimeRange(sta);
         TimeRange netRange = new TimeRange(net);
         if (netRange.getBeginTime().isAfter(staRange.getBeginTime())) {
-            logger.warn("Network begins after station: "+NetworkIdUtil.toString(net)+"  "+StationIdUtil.toString(sta));
+            logger.warn("Network begins after station: "+net.toString()+"  "+StationIdUtil.toString(sta));
             return false;
         }
         return true;
@@ -38,16 +37,16 @@ public class NetworkConsistencyCheck {
     }
     
     public static boolean isConsistent(Station staA, Station staB) {
-        if ( ! staA.getNetworkAttrImpl().get_code().equals(staB.getNetworkAttrImpl().get_code()) 
-                || ! staA.get_code().equals(staB.get_code())) {
+        if ( ! staA.getNetwork().getCode().equals(staB.getNetwork().getCode()) 
+                || ! staA.getCode().equals(staB.getCode())) {
             //different stations, so ok
             return true;
         }
         TimeRange staARange = new TimeRange(staA);
         TimeRange staBRange = new TimeRange(staB);
         if (staARange.intersects(staBRange)) {
-            logger.warn("Station overlaps other station: "+StationIdUtil.toString(staA)+"-"+staA.getEndTime().toString()
-                         +"   "+StationIdUtil.toString(staB)+"-"+staB.getEndTime().toString());
+            logger.warn("Station overlaps other station: "+StationIdUtil.toString(staA)+"-"+staA.getEndDate()
+                         +"   "+StationIdUtil.toString(staB)+"-"+staB.getEndDate().toString());
             return false;
         }
         return true;
@@ -57,7 +56,7 @@ public class NetworkConsistencyCheck {
         TimeRange staRange = new TimeRange(sta);
         TimeRange chanRange = new TimeRange(chan);
         if (staRange.getBeginTime().isAfter(chanRange.getBeginTime())) {
-            logger.warn("Station begins after channel: "+ChannelIdUtil.toStringNoDates(chan.getId())+" "+chanRange
+            logger.warn("Station begins after channel: "+ChannelIdUtil.toStringNoDates(chan)+" "+chanRange
                          +"    "+StationIdUtil.toString(sta)+" "+staRange);
             return false;
         }

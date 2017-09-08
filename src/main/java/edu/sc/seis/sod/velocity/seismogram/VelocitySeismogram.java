@@ -22,7 +22,7 @@ public class VelocitySeismogram extends LocalSeismogramImpl {
         super(localSeis, localSeis.getData());
         this.chan = VelocityChannel.wrap(chan);
         if ( ! ChannelIdUtil.areEqualExceptForBeginTime(localSeis.getChannelID(), chan.getId())) {
-            throw new IllegalArgumentException("Channel ids do not match: "+ChannelIdUtil.toString(localSeis.getChannelID())+"  "+ChannelIdUtil.toString(chan.getId()));
+            throw new IllegalArgumentException("Channel ids do not match: "+ChannelIdUtil.toString(localSeis.getChannelID())+"  "+ChannelIdUtil.toString(chan));
         }
     }
 

@@ -51,7 +51,7 @@ public class BelongsToVirtual implements StationSubsetter {
                 for (ContributorNetwork cn : vnet.getContribNetList()) {
                     if (station.getNetwork().getCode().equals(cn.getCode())
                             && (!NetworkIdUtil.isTemporary(station.getNetwork())
-                                    || cn.getStartYear().equals(NetworkIdUtil.getYear(station.getNetwork())))) {
+                                    || cn.getStartYear().equals(station.getNetwork().getStartYearString()))) {
                         for (VirtualStation vsta : cn.getStationList()) {
                             if (station.getStationCode().equals(vsta.getCode())) {
                                 return new Pass(this);

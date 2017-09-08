@@ -76,12 +76,12 @@ public class FissuresFormatter {
         return id.getNetworkId();
     }
 
-    public static String formatNetwork(Network id) {
-        return NetworkIdUtil.toStringNoDates(id);
+    public static String formatNetwork(Network net) {
+        return net.toString();
     }
 
     public static String formatNetwork(NetworkId id) {
-        return NetworkIdUtil.toStringNoDates(id);
+        return id.toString();
     }
 
     public static String formatNetworkYear(NetworkId id) {

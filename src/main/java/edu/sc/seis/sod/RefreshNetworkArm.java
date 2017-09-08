@@ -42,9 +42,9 @@ public class RefreshNetworkArm extends TimerTask {
                     if (!isNetworkBeingReloaded(net.getDbid())) {
                         networksBeingReloaded.add(new Integer(net.getDbid()));
                         needReload.add(net);
-                        logger.debug("Will Reload "+NetworkIdUtil.toString(net));
+                        logger.debug("Will Reload "+net.toString());
                     } else {
-                        logger.info("net already in processing list, skipping..."+NetworkIdUtil.toString(net));
+                        logger.info("net already in processing list, skipping..."+net.toString());
                     }
                 }
             }
@@ -63,7 +63,7 @@ public class RefreshNetworkArm extends TimerTask {
                         synchronized(this) {
                             networksBeingReloaded.remove(new Integer(net.getDbid()));
                             it.remove();
-                            logger.debug("Successful reload of "+NetworkIdUtil.toStringNoDates(net));
+                            logger.debug("Successful reload of "+net.toString());
                             // in case networkArm methods are waiting on this network to be refreshed 
                             notifyAll();
                             if (Start.getWaveformRecipe() != null) {
@@ -72,7 +72,7 @@ public class RefreshNetworkArm extends TimerTask {
                             }
                         }
                     } else {
-                        logger.debug("reload not successful, will do again "+NetworkIdUtil.toStringNoDates(net));
+                        logger.debug("reload not successful, will do again "+net.toString());
                     }
                 }
                 Thread.sleep(1000); // don't retry over and over as fast as possible
@@ -85,7 +85,7 @@ public class RefreshNetworkArm extends TimerTask {
     }
 
     boolean processNetwork(Network net) {
-logger.debug("refresh "+NetworkIdUtil.toString(net));
+logger.debug("refresh "+net.toString());
 // how do we refresh instrumentation???
         
         try {
@@ -99,7 +99,7 @@ logger.debug("refresh "+NetworkIdUtil.toString(net));
                     stationsBeingReloaded.add(stas[s].getDbid());
                 }
             }
-            logger.info("found "+stas.length+" stations in "+NetworkIdUtil.toString(net));
+            logger.info("found "+stas.length+" stations in "+net.toString());
             if (Start.getWaveformRecipe() != null || netArm.getChannelSubsetters().size() != 0) {
                 for (int s = 0; s < stas.length; s++) {
                     LoadedNetworkSource loadSource = new LoadedNetworkSource(netArm.getInternalNetworkSource(), allStations, stas[s]);
@@ -117,7 +117,7 @@ logger.debug("refresh "+NetworkIdUtil.toString(net));
             NetworkDB.rollback(); // oops
             String netstr = "unknown";
             try {
-                netstr = NetworkIdUtil.toString(net);
+                netstr = net.toString();
             } catch(Throwable tt) {}
             GlobalExceptionHandler.handle("Problem with network: " + netstr, t);
             return false;

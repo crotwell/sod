@@ -67,7 +67,7 @@ public class VelocityNetwork extends Network {
     }
 
     public String getCodeWithYear() {
-        return NetworkIdUtil.toStringNoDates(net.get_id());
+        return net.toString();
     }
     
     public String getName() {

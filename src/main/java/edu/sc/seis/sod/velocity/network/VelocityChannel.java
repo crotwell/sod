@@ -145,7 +145,7 @@ public class VelocityChannel extends Channel {
     }
 
     public String toString() {
-        return ChannelIdUtil.toStringNoDates(chan.get_id());
+        return ChannelIdUtil.toStringNoDates(chan);
     }
 
     public boolean hasDbId() {

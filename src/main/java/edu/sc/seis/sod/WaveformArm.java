@@ -288,7 +288,7 @@ public class WaveformArm extends Thread implements Arm {
                 logger.debug("Put EventNetworkPair: "+p);
             } else {
                 failLogger.info("Network "
-                        + NetworkIdUtil.toStringNoDates(net)
+                        + net.toString()
                         + " does not overlap event " + ev);
             }
         }

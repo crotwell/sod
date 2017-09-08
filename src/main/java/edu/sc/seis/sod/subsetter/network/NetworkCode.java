@@ -18,7 +18,7 @@ public class NetworkCode implements NetworkSubsetter {
     public NetworkCode(Element config) throws ConfigurationException {
         this.desiredCode = SodUtil.getText(config);
         if(!ANY_NET.matcher(desiredCode).matches()) {
-            throw new ConfigurationException("Code '"+desiredCode+"' does not look like a network code, valid examples are G, IU and YJ07");
+            throw new ConfigurationException("Code '"+desiredCode+"' does not look like a network code, valid examples are G, IU and YJ2007");
         }
         Matcher m = TEMP_NET.matcher(desiredCode);
         if(m.matches()) {
@@ -30,8 +30,7 @@ public class NetworkCode implements NetworkSubsetter {
     public StringTree accept(Network attr) throws Exception {
         if(attr.getCode().equals(desiredCode)
                 && (year == null ||
-                        (year.length() == 2 && year.equals(NetworkIdUtil.getTwoCharYear(attr))) ||
-                        (year.length() == 4 && year.equals(NetworkIdUtil.getYear(attr))))) {
+                (year.length() == 4 && year.equals(attr.getStartYearString())))) {
             return new Pass(this);
         }
         return new Fail(this);
@@ -45,6 +44,6 @@ public class NetworkCode implements NetworkSubsetter {
 
     private String year;
 
-    private static final Pattern TEMP_NET = Pattern.compile("([1-9XYZ][0-9A-Z])(\\d{2})");
-    private static final Pattern ANY_NET = Pattern.compile("([0-9A-Z][0-9A-Z]?)(\\d{2})?");
+    private static final Pattern TEMP_NET = Pattern.compile("([1-9XYZ][0-9A-Z])(\\d{4})");
+    private static final Pattern ANY_NET = Pattern.compile("([0-9A-Z][0-9A-Z]?)(\\d{4})?");
 }

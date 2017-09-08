@@ -35,8 +35,8 @@ public class NetworkDB extends AbstractHibernateDB {
                 while(fromDB.hasNext()) {
                     Network indb = fromDB.next();
                     if(net.getCode().equals(indb.getCode())
-                            && NetworkIdUtil.getTwoCharYear(net.get_id())
-                                    .equals(NetworkIdUtil.getTwoCharYear(indb.get_id()))) {
+                            && net.getStartYearString()
+                                    .equals(indb.getStartYearString())) {
                         net.associateInDB(indb);
                         getSession().evict(indb);
                         getSession().saveOrUpdate(net);
@@ -61,13 +61,7 @@ public class NetworkDB extends AbstractHibernateDB {
     public int put(Station sta) {
         Integer dbid;
         if(((Network)sta.getNetworkAttr()).getDbid() == 0) {
-            // assume network info is already put, attach net
-            try {
-                sta.setNetworkAttr(getNetworkById(sta.getNetworkAttr().get_id()));
-            } catch(NotFound ee) {
-                // must not have been added yet
-                put((Network)sta.getNetworkAttr());
-            }
+            throw new IllegalArgumentException("Must put Network before put Station"+sta.toString()); 
         }
         internUnit(sta);
         if(sta.getDbid() != 0) {
@@ -119,7 +113,7 @@ public class NetworkDB extends AbstractHibernateDB {
         } catch(NotFound nf) {
             dbid = (Integer)getSession().save(chan);
         }
-        logger.debug("Put channel as "+dbid+" "+ChannelIdUtil.toStringFormatDates(chan.get_id())+"  sta dbid="+((Station)chan.getSite().getStation()).getDbid());
+        logger.debug("Put channel as "+dbid+" "+ChannelIdUtil.toStringFormatDates(chan)+"  sta dbid="+((Station)chan.getSite().getStation()).getDbid());
         return dbid.intValue();
     }
 
@@ -210,25 +204,6 @@ public class NetworkDB extends AbstractHibernateDB {
         Query query = getSession().createQuery(getNetworkByCodeString);
         query.setString("netCode", netCode);
         return query.list();
-    }
-
-    public Network getNetworkById(NetworkId netId) throws NotFound {
-        List<Network> result = getNetworkByCode(netId.network_code);
-        if(NetworkIdUtil.isTemporary(netId)) {
-            Iterator<Network> it = result.iterator();
-            while(it.hasNext()) {
-                Network n = it.next();
-                if(NetworkIdUtil.areEqual(netId, n.get_id())) {
-                    return n;
-                }
-            }
-            throw new NotFound();
-        } else {
-            if(result.size() > 0) {
-                return result.get(0);
-            }
-            throw new NotFound();
-        }
     }
 
     public Network getNetwork(int dbid) throws NotFound {

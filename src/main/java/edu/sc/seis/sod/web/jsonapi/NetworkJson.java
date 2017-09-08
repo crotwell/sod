@@ -26,7 +26,7 @@ public class NetworkJson extends AbstractJsonApiData {
     public String getId() {
         String s = net.getCode();
         if (NetworkIdUtil.isTemporary(net)) {
-            s += "_" + NetworkIdUtil.getYear(net); // append start year
+            s += net.getStartYearString(); // append start year
         }
         return s;
     }

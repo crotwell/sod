@@ -59,12 +59,12 @@ public class CombineNetworkSource extends AbstractNetworkSource implements Netwo
 
     
     public NetworkSource getNetworkSource(Network attr) {
-        String code = NetworkIdUtil.toStringNoDates(attr);
+        String code = attr.toString();
         NetworkSource source;
         try {
             source = getSourceForCode(code);
         } catch(SodSourceException e) {
-            throw new RuntimeException("Network not found: "+NetworkIdUtil.toString(attr));
+            throw new RuntimeException("Network not found: "+attr.toString());
         }
         return source;
     }
@@ -76,7 +76,7 @@ public class CombineNetworkSource extends AbstractNetworkSource implements Netwo
             List<? extends Network> subOut = source.getNetworks();
             if (subOut != null) {
                 for (Network n : subOut) {
-                    String code = NetworkIdUtil.toStringNoDates(n);
+                    String code = n.toString();
                     if (! codeToSource.containsKey(code)) {
                         codeToSource.put(code, source);
                         out.add(n);
@@ -89,7 +89,7 @@ public class CombineNetworkSource extends AbstractNetworkSource implements Netwo
 
     @Override
     public List<? extends Station> getStations(Network net) throws SodSourceException {
-        NetworkSource source = getSourceForCode(NetworkIdUtil.toStringNoDates(net));
+        NetworkSource source = getSourceForCode(net.toString());
         if (source != null) {
             return source.getStations(net);
         }
@@ -98,7 +98,7 @@ public class CombineNetworkSource extends AbstractNetworkSource implements Netwo
 
     @Override
     public List<? extends Channel> getChannels(Station station) throws SodSourceException {
-        NetworkSource source = getSourceForCode(NetworkIdUtil.toStringNoDates(station.getNetwork()));
+        NetworkSource source = getSourceForCode(station.getNetwork().toString());
         if (source != null) {
             return source.getChannels(station);
         }
@@ -107,7 +107,7 @@ public class CombineNetworkSource extends AbstractNetworkSource implements Netwo
 
     @Override
     public QuantityImpl getSensitivity(Channel chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
-        NetworkSource source = getSourceForCode(NetworkIdUtil.toStringNoDates(chan.getNetwork()));
+        NetworkSource source = getSourceForCode(chan.getNetwork().toString());
         if (source != null) {
             QuantityImpl out = source.getSensitivity(chan);
             if (out != null) {
@@ -119,7 +119,7 @@ public class CombineNetworkSource extends AbstractNetworkSource implements Netwo
 
     @Override
     public Response getResponse(Channel chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
-        NetworkSource source = getSourceForCode(NetworkIdUtil.toStringNoDates(chan.getNetwork()));
+        NetworkSource source = getSourceForCode(chan.getNetwork().toString());
         if (source != null) {
             Response out = source.getResponse(chan);
             if (out != null) {
@@ -137,7 +137,7 @@ public class CombineNetworkSource extends AbstractNetworkSource implements Netwo
             for (NetworkSource source : wrapped) {
                 List<? extends Network> sublist = source.getNetworks();
                 for (Network net : sublist) {
-                    if (code.equals(NetworkIdUtil.toStringNoDates(net))) {
+                    if (code.equals(net.toString())) {
                         codeToSource.put(code, source);
                         return source;
                     }

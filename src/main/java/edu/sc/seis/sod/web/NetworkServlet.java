@@ -110,7 +110,7 @@ public class NetworkServlet extends HttpServlet {
          n = netList.get(0); 
         } else {
             for (Network netImpl : netList) {
-                if (NetworkIdUtil.getYear(netImpl).equals(year)) {
+                if (netImpl.getStartYearString().equals(year)) {
                     n = netImpl;
                     break;
                 }
@@ -123,7 +123,7 @@ public class NetworkServlet extends HttpServlet {
 
     Pattern allNetworkPattern = Pattern.compile(".*/networks");
 
-    public static String networkIdStr = "([A-Z0-9]+)(_([0-9]+))?";
+    public static String networkIdStr = "([A-Z0-9]+)([0-9]{4})?";
     public static String networkIdPatternStr = "/networks/"+networkIdStr;
     public static String stationIdPatternStr = "/stations/"+networkIdStr+"\\.([A-Z0-9]+)";
     public String networkPatternStr = ".*"+networkIdPatternStr;
