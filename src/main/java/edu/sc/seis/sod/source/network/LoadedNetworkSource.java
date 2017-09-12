@@ -10,7 +10,6 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
-import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.station.ChannelId;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
@@ -47,7 +46,7 @@ public class LoadedNetworkSource extends WrappingNetworkSource implements Networ
 
     @Override
     public List<? extends Station> getStations(Network net) throws SodSourceException {
-        if (NetworkIdUtil.areEqual(net.getId(), sta.getNetwork().getId())) {
+        if (NetworkIdUtil.areEqual(net, sta.getNetwork())) {
             return allStations;
         }
         return getWrapped().getStations(net);

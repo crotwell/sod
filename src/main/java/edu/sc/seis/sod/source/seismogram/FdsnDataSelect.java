@@ -31,6 +31,7 @@ import edu.sc.seis.sod.source.network.FdsnStation;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.source.network.WrappingNetworkSource;
 import edu.sc.seis.sod.util.convert.mseed.FissuresConvert;
+import edu.sc.seis.sod.util.time.RangeTool;
 import edu.sc.seis.sod.util.time.ReduceTool;
 
 public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements SeismogramSourceLocator {
@@ -162,11 +163,8 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
                             // begin times, so use the request
                             for (RequestFilter rf : request) {
                                 // find matching chan id
-                                if (rf.channelId.getNetworkId().equals(seis.channel_id.getNetworkId())) {
-                                    seis.channel_id.network_id.begin_time = rf.channelId.network_id.begin_time;
-                                }
-                                if (ChannelIdUtil.areEqualExceptForBeginTime(rf.channelId, seis.channel_id)) {
-                                    seis.channel_id.begin_time = rf.channelId.begin_time;
+                                if (RangeTool.seisPartOfRequest(rf, seis)) {
+                                    seis.channel_id = rf.getChannelId();
                                     break;
                                 }
                             }

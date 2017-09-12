@@ -73,11 +73,11 @@ public class RotateGCP implements WaveformVectorProcess, Threadable {
         for(int i = 0; i < seismograms.length; i++) {
             if(seismograms[i].length != 0) {
                 if(ChannelIdUtil.areEqual(seismograms[i][0].channel_id,
-                                          horizontal[0].get_id())) {
+                                          horizontal[0])) {
                     xIndex = i;
                 }
                 if(ChannelIdUtil.areEqual(seismograms[i][0].channel_id,
-                                          horizontal[1].get_id())) {
+                                          horizontal[1])) {
                     yIndex = i;
                 }
             }

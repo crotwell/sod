@@ -30,7 +30,6 @@ import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.common.Location;
 import edu.sc.seis.sod.model.common.Orientation;
 import edu.sc.seis.sod.model.common.SamplingImpl;
-import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.NoPreferredOrigin;
@@ -178,9 +177,9 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
         for (int i = 0; i < localSeis.length; i++) {
             if (ChannelIdUtil.areEqual(localSeis[i].channel_id, ChannelId.of(yChan))) {
                 ySeis = localSeis[i];
-            } else if (ChannelIdUtil.areEqual(localSeis[i].channel_id, xChan.getId())) {
+            } else if (ChannelIdUtil.areEqual(localSeis[i].channel_id, xChan)) {
                 xSeis = localSeis[i];
-            } else if (ChannelIdUtil.areEqual(localSeis[i].channel_id, zChan.getId())) {
+            } else if (ChannelIdUtil.areEqual(localSeis[i].channel_id, zChan)) {
                 zSeis = localSeis[i];
             }
             foundChanCodes += localSeis[i].channel_id.getChannelCode() + " ";
@@ -283,8 +282,19 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
                                                 refSeismogram.channel_id.getLocCode(),
                                                 chanCode,
                                                 refSeismogram.channel_id.getStartTime());
-        Channel recFuncChan = new Channel(recFuncChanId, name, orientation, channelGroup.getChannel1()
-                .getSampleRate(), new TimeRange(channelGroup.getChannel1()), channelGroup.getChannel1().getSite());
+        Channel recFuncChan = new Channel(channelGroup.getChannel1().getStation(), refSeismogram.channel_id.getLocCode(),
+                                          chanCode);
+        recFuncChan.setAzimuth(orientation.getAzimuth());
+        recFuncChan.setDip(orientation.getDip());
+        recFuncChan.setStartDateTime(channelGroup.getChannel1().getStartDateTime());
+        recFuncChan.setEndDateTime(channelGroup.getChannel1().getEndDateTime());
+        recFuncChan.setSampleRate(channelGroup.getChannel1().getSampleRate());
+        recFuncChan.setLatitude(channelGroup.getChannel1().getLatitude());
+        recFuncChan.setLongitude(channelGroup.getChannel1().getLongitude());
+        recFuncChan.setElevation(channelGroup.getChannel1().getElevation());
+        recFuncChan.setDepth(channelGroup.getChannel1().getDepth());
+        recFuncChan.setDescription(name);
+                
         LocalSeismogramImpl predSeis = new LocalSeismogramImpl("recFunc/" + chanCode + "/" + refSeismogram.get_id(),
                                                                begin,
                                                                data.length,

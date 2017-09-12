@@ -24,7 +24,6 @@ import edu.sc.seis.sod.model.event.OriginImpl;
 import edu.sc.seis.sod.model.station.ChannelId;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
 import edu.sc.seis.sod.model.station.NetworkId;
-import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.model.station.StationId;
 import edu.sc.seis.sod.model.station.StationIdUtil;
 import edu.sc.seis.sod.util.display.ChoiceDecimalFormat;
@@ -85,7 +84,7 @@ public class FissuresFormatter {
     }
 
     public static String formatNetworkYear(NetworkId id) {
-        return id.network_code + formatYear(id.begin_time);
+        return ""+id.getStartYear();
     }
 
 //    public static String networkName(NetworkAccess net) {
@@ -234,7 +233,7 @@ public class FissuresFormatter {
         }
     }
 
-    public static String formatDateForFile(Date d) {
+    public static String formatDateForFile(Instant d) {
         synchronized(longFileFormat) {
             return longFileFormat.format(d);
         }
