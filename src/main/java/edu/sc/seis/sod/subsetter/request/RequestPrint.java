@@ -31,9 +31,9 @@ public class RequestPrint implements RequestSubsetter {
     public static void printRequests(RequestFilter[] request) {
         for(int i = 0; i < request.length; i++) {
             System.out.println("Request "
-                    + ChannelIdUtil.toStringNoDates(request[i].channel_id) + " from "
-                    + request[i].start_time.toString() + " to "
-                    + request[i].end_time.toString());
+                    + ChannelIdUtil.toStringNoDates(request[i].channelId) + " from "
+                    + request[i].startTime.toString() + " to "
+                    + request[i].endTime.toString());
         }
     }
     

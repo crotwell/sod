@@ -181,8 +181,8 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
         StringTree passed;
         // check channel overlaps request
         RequestFilter coveringRequest = ReduceTool.cover(infilters);
-        ChannelEffectiveTimeOverlap chanOverlap = new ChannelEffectiveTimeOverlap(coveringRequest.start_time,
-                                                                                  coveringRequest.end_time);
+        ChannelEffectiveTimeOverlap chanOverlap = new ChannelEffectiveTimeOverlap(coveringRequest.startTime,
+                                                                                  coveringRequest.endTime);
         passed = chanOverlap.accept(ecp.getChannel(), null); // net source not needed by chanOverlap
         if ( ! passed.isSuccess()) {
             ecp.update(Status.get(Stage.REQUEST_SUBSETTER, Standing.REJECT));
@@ -233,8 +233,8 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
         processList.addAll(processes);
         RequestFilter[] outfilters = null;
         if(infilters.length > 0) {
-            logger.debug("Trying available_data for " + ChannelIdUtil.toString(infilters[0].channel_id) + " from "
-                    + infilters[0].start_time.toString() + " to " + infilters[0].end_time.toString());
+            logger.debug("Trying available_data for " + ChannelIdUtil.toString(infilters[0].channelId) + " from "
+                    + infilters[0].startTime.toString() + " to " + infilters[0].endTime.toString());
         } else {
             logger.debug("Empty request generated for " + ChannelIdUtil.toString(ecp.getChannel()));
         }
@@ -260,8 +260,8 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
         }
         if(noImplAvailableData || passed.isSuccess()) {
             for(int i = 0; i < infilters.length; i++) {
-                logger.debug("Getting seismograms " + ChannelIdUtil.toString(infilters[i].channel_id) + " from "
-                        + infilters[i].start_time.toString() + " to " + infilters[i].end_time.toString());
+                logger.debug("Getting seismograms " + ChannelIdUtil.toString(infilters[i].channelId) + " from "
+                        + infilters[i].startTime.toString() + " to " + infilters[i].endTime.toString());
             } // end of for (int i=0; i<outFilters.length; i++)
             // Using infilters as asking for extra should not hurt
             Instant before = ClockUtil.now();
@@ -282,10 +282,10 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                 }
                 logger.debug("after successful retrieve_seismograms");
                 if(localSeismograms.length > 0
-                        && !ChannelIdUtil.areEqual(localSeismograms[0].channel_id, infilters[0].channel_id)) {
+                        && !ChannelIdUtil.areEqual(localSeismograms[0].channel_id, infilters[0].channelId)) {
                     // must be server error
                     logger.warn("X Channel id in returned seismogram doesn not match channelid in request. req="
-                            + ChannelIdUtil.toString(infilters[0].channel_id)
+                            + ChannelIdUtil.toString(infilters[0].channelId)
                             + " seis="
                             + ChannelIdUtil.toString(localSeismograms[0].channel_id));
                 }
@@ -304,10 +304,10 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                     return;
                 }
                 Channel ecpChan = ecp.getChannel();
-                if(!ChannelIdUtil.areEqual(localSeismograms[i].channel_id, infilters[0].channel_id)) {
+                if(!ChannelIdUtil.areEqual(localSeismograms[i].channel_id, infilters[0].channelId)) {
                     // must be server error
                     logger.warn("Channel id in returned seismogram doesn not match channelid in request. req="
-                            + ChannelIdUtil.toStringFormatDates(infilters[0].channel_id) + " seis="
+                            + ChannelIdUtil.toStringFormatDates(infilters[0].channelId) + " seis="
                             + ChannelIdUtil.toStringFormatDates(localSeismograms[i].channel_id));
                     // fix seis with original id
                     localSeismograms[i].channel_id = ChannelId.of(ecpChan);
@@ -321,7 +321,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
         } else {
             if(ClockUtil.now().minus(Start.getRunProps().getSeismogramLatency()).isAfter(ecp.getEvent()
                     .getOrigin()
-                    .getTime())) {
+                    .getOriginTime())) {
                 logger.info("Retry Reject, older than acceptible latency: "+Start.getRunProps().getSeismogramLatency()+" "+ecp);
                 ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.REJECT));
             } else if (ecp.getNumRetries() >= SodDB.getSingleton().getMaxRetries()){

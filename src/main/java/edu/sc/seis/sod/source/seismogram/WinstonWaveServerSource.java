@@ -44,17 +44,17 @@ public class WinstonWaveServerSource implements SeismogramSource {
         List<LocalSeismogramImpl> out = new ArrayList<LocalSeismogramImpl>();
         for (RequestFilter rf : request) {
             try {
-                List<TraceBuf2> traceBufs = ws.getTraceBuf(new ChannelTimeWindow(rf.channel_id.getNetworkId(), 
-                                                            rf.channel_id.getStationCode(), 
-                                                           rf.channel_id.getLocCode(),
-                                                           rf.channel_id.getChannelCode(), 
-                                                           rf.start_time,
-                                                           rf.end_time));
+                List<TraceBuf2> traceBufs = ws.getTraceBuf(new ChannelTimeWindow(rf.channelId.getNetworkId(), 
+                                                            rf.channelId.getStationCode(), 
+                                                           rf.channelId.getLocCode(),
+                                                           rf.channelId.getChannelCode(), 
+                                                           rf.startTime,
+                                                           rf.endTime));
                 if (traceBufs == null) {
                     continue;
                 }
                 for (TraceBuf2 buf : traceBufs) {
-                    out.add(toFissures(buf, rf.channel_id));
+                    out.add(toFissures(buf, rf.channelId));
                 }
             } catch(IOException e) {
                 throw new SeismogramSourceException("unable to get TraceBuf from WaveServer("+ws.getHost()+", "+ws.getPort()+") for "+RequestFilterUtil.toString(rf), e);

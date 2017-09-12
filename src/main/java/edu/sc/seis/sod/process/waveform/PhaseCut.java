@@ -58,8 +58,8 @@ public class PhaseCut implements WaveformProcess {
             throws FissuresException {
         List cutSeis = new LinkedList();
         for(int i = 0; i < cuts.length; i++) {
-            Cut cut = new Cut(cuts[i].start_time,
-                              cuts[i].end_time);
+            Cut cut = new Cut(cuts[i].startTime,
+                              cuts[i].endTime);
            for(int j = 0; j < seismograms.length; j++) {
                 // cut returns null if the time interval doesn't overlap
                 LocalSeismogramImpl tempSeis = cut.apply(seismograms[j]);

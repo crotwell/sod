@@ -28,11 +28,11 @@ public class NoGaps implements AvailableDataSubsetter, SodElement {
                 + "  available legnth=" + available.length);
         for(int counter = 0; counter < request.length; counter++) {
             ok = false;
-            Instant originalStartDate = request[counter].start_time;
-            Instant originalEndDate = request[counter].end_time;
+            Instant originalStartDate = request[counter].startTime;
+            Instant originalEndDate = request[counter].endTime;
             for(int subcounter = 0; subcounter < available.length; subcounter++) {
-                Instant availableStartDate = available[subcounter].start_time;
-                Instant availableEndDate = available[subcounter].end_time;
+                Instant availableStartDate = available[subcounter].startTime;
+                Instant availableEndDate = available[subcounter].endTime;
                 logger.debug(originalStartDate + " " + originalEndDate + " - "
                         + availableStartDate + " " + availableEndDate);
                 if((originalStartDate.isAfter(availableStartDate) || originalStartDate.equals(availableStartDate))

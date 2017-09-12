@@ -46,7 +46,7 @@ public class BestChannelAtStation implements EventChannelSubsetter, EventVectorS
     
     public StringTree accept(CacheEvent event, Channel channel, CookieJar cookieJar) throws Exception {
         List<Channel> staChans = Start.getNetworkArm().getSuccessfulChannels(((Station)channel.getStation()));
-        List<Channel> allChannels = BestChannelUtil.pruneChannels(staChans, event.getOrigin().getTime());
+        List<Channel> allChannels = BestChannelUtil.pruneChannels(staChans, event.getOrigin().getOriginTime());
         Channel[] bestChannels = bestChanUtil.getBestMotionVector(allChannels);
         if (bestChannels == null) {
             Channel bestChan = bestChanUtil.getBestChannel(allChannels);
@@ -74,7 +74,7 @@ public class BestChannelAtStation implements EventChannelSubsetter, EventVectorS
             allChannels.add(cgChans[1]);
             allChannels.add(cgChans[2]);
         }
-        allChannels = BestChannelUtil.pruneChannels(allChannels, event.getOrigin().getTime());
+        allChannels = BestChannelUtil.pruneChannels(allChannels, event.getOrigin().getOriginTime());
         Channel[] bestChannels = bestChanUtil.getBestMotionVector(allChannels);
         if (bestChannels == null) {
             return new Fail(this, "No best channel group");

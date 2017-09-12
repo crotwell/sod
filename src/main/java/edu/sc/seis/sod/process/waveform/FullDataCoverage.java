@@ -42,7 +42,7 @@ public class FullDataCoverage implements WaveformProcess {
 
         String reason = "Data does not cover "+notCovered.length+" sections of the request. ";
         for (int i = 0; i < notCovered.length; i++) {
-            reason += notCovered[i].start_time.toString() + " to " + notCovered[i].end_time.toString()+",  ";
+            reason += notCovered[i].startTime.toString() + " to " + notCovered[i].endTime.toString()+",  ";
         }
         return new WaveformResult(seismograms,
                                   new StringTreeLeaf(this, false, reason));

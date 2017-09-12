@@ -23,8 +23,8 @@ public class NetDCRequest extends BreqFastRequest {
                                  RequestFilter[] request,
                                  Writer out,
                                  int i) throws IOException {
-        Instant start = request[i].start_time;
-        Instant end = request[i].end_time;
+        Instant start = request[i].startTime;
+        Instant end = request[i].endTime;
         out.write(".DATA * " + channel.getNetworkCode() + " "
                 + channel.getStationCode() + " "
                 + channel.getLocCode() + " "

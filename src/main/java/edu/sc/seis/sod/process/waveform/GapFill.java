@@ -100,8 +100,6 @@ public class GapFill extends Merge {
                                                                first.getSampling(),
                                                                first.getUnit(), first.getChannelID(),
                                                                first.getParameterRefs(), 
-                                                               first.time_corrections, 
-                                                               first.sample_rate_history, 
                                                                fillData);
         LocalSeismogramImpl[] merged = ReduceTool.merge(new LocalSeismogramImpl[] {first, fillSeis, second});
         return merged;

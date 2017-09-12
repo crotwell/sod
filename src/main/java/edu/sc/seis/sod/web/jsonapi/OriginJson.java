@@ -29,7 +29,7 @@ public class OriginJson extends AbstractJsonApiData {
     @Override
     public void encodeAttributes(JSONWriter out) throws JSONException {
         Location loc = origin.getLocation();
-        out.key("time").value(origin.getTime().toString())
+        out.key("time").value(origin.getOriginTime().toString())
         .key("latitude").value(loc.latitude)
         .key("longitude").value(loc.longitude)
         .key("elevation").value(((QuantityImpl)loc.elevation).getValue(UnitImpl.METER))

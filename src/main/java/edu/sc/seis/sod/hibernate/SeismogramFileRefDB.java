@@ -139,20 +139,20 @@ public class SeismogramFileRefDB extends AbstractHibernateDB {
         Cut cutter = new Cut(request);
         try {
             if (ignoreNetworkTimes) {
-                chanId = chanTable.getChannel(request.channel_id.getNetworkId(),
-                                              request.channel_id.getStationCode(),
-                                              request.channel_id.getLocCode(),
-                                              request.channel_id.getChannelCode(),
-                                              request.start_time);
+                chanId = chanTable.getChannel(request.channelId.getNetworkId(),
+                                              request.channelId.getStationCode(),
+                                              request.channelId.getLocCode(),
+                                              request.channelId.getChannelCode(),
+                                              request.startTime);
             } else {
-                chanId = chanTable.getChannel(request.channel_id);
+                chanId = chanTable.getChannel(request.channelId);
             }
         } catch(NotFound e) {
             logger.warn("Can not find channel ID in database.");
             return;
         }
-        Instant adjustedBeginTime = request.start_time.minus(ONE_SECOND);
-        Instant adjustedEndTime = request.end_time.plus(ONE_SECOND);
+        Instant adjustedBeginTime = request.startTime.minus(ONE_SECOND);
+        Instant adjustedEndTime = request.endTime.plus(ONE_SECOND);
         String query = "from "
                 + SeismogramFileReference.class.getName()
                 + " where networkCode = :netCode and stationCode = :staCode and siteCode = :siteCode and channelCode = :chanCode "

@@ -36,7 +36,7 @@ public class PromiseSeismogramList {
         matching = new ArrayList<LocalSeismogramImpl>();
         for (LocalSeismogramImpl seis : seisList) {
             for (RequestFilter rf : request) {
-                if (ChannelIdUtil.areEqualExceptForBeginTime(rf.channel_id, seis.getChannelID())) {
+                if (ChannelIdUtil.areEqualExceptForBeginTime(rf.channelId, seis.getChannelID())) {
                     TimeRange rfRange = new TimeRange(rf);
                     TimeRange seisRange = new TimeRange(seis);
                     if (rfRange.intersects(seisRange)) {

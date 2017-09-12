@@ -132,8 +132,8 @@ public class BreqFastRequest implements RequestSubsetter {
                                  RequestFilter[] request,
                                  Writer out,
                                  int i) throws IOException {
-        Instant start = request[i].start_time;
-        Instant end = request[i].end_time;
+        Instant start = request[i].startTime;
+        Instant end = request[i].endTime;
         out.write(channel.getStation().getCode() + " "
                 + channel.getNetworkCode() + " "
                 + format.format(start) + tenths.format(start).substring(0, 1)

@@ -60,7 +60,7 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
                 return new WaveformVectorResult(seismograms,
                                                 new StringTreeLeaf(this,
                                                                    false,
-                                                                   "At least one vector has no seismograms: "+ChannelIdUtil.toString(original[i][0].channel_id)));
+                                                                   "At least one vector has no seismograms: "+ChannelIdUtil.toString(original[i][0].channelId)));
             }
         }
         try {

@@ -207,8 +207,8 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
         for (int i = 0; i < infilters.length; i++) {
             // check channel overlaps request
             RequestFilter coveringRequest = ReduceTool.cover(infilters[i]);
-            ChannelEffectiveTimeOverlap chanOverlap = new ChannelEffectiveTimeOverlap(coveringRequest.start_time,
-                                                                                      coveringRequest.end_time);
+            ChannelEffectiveTimeOverlap chanOverlap = new ChannelEffectiveTimeOverlap(coveringRequest.startTime,
+                                                                                      coveringRequest.endTime);
             passed = chanOverlap.accept(ecp.getChannelGroup().getChannels()[i], null); // net source not needed by chanOverlap
             if ( ! passed.isSuccess()) {
                 ecp.update(Status.get(Stage.REQUEST_SUBSETTER, Standing.REJECT));
@@ -287,8 +287,8 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
         if (result.isSuccess()) {
             for (int i = 0; i < infilters.length; i++) {
                 for (int j = 0; j < infilters[i].length; j++) {
-                    logger.debug("Getting seismograms " + ChannelIdUtil.toString(infilters[i][j].channel_id) + " from "
-                            + infilters[i][j].start_time.toString() + " to " + infilters[i][j].end_time.toString());
+                    logger.debug("Getting seismograms " + ChannelIdUtil.toString(infilters[i][j].channelId) + " from "
+                            + infilters[i][j].startTime.toString() + " to " + infilters[i][j].endTime.toString());
                 } // end of for (int i=0; i<outFilters.length; i++)
             }
             Instant before = ClockUtil.now();
@@ -336,7 +336,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
         } else {
             if(ClockUtil.now().minus(Start.getRunProps().getSeismogramLatency()).isAfter(ecp.getEvent()
                                                                                           .getOrigin()
-                                                                                          .getTime())) {
+                                                                                          .getOriginTime())) {
                 logger.info("Retry Reject, older than acceptible latency: "+Start.getRunProps().getSeismogramLatency()+" "+ecp);
                 ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.REJECT));
             } else if (ecp.getNumRetries() >= SodDB.getSingleton().getMaxRetries()){
@@ -453,10 +453,10 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                 localSeismograms[i] = seismogramSource.retrieveData(Arrays.asList(rf[i])).toArray(new LocalSeismogramImpl[0]);
                 logger.debug("after successful retrieve_seismograms "+localSeismograms[i].length);
                 if (localSeismograms[i].length > 0
-                        && !ChannelIdUtil.areEqual(localSeismograms[i][0].channel_id, rf[i][0].channel_id)) {
+                        && !ChannelIdUtil.areEqual(localSeismograms[i][0].channel_id, rf[i][0].channelId)) {
                     // must be server error
                     logger.warn("MV X Channel id in returned seismogram doesn not match channelid in request. req="
-                            + ChannelIdUtil.toString(rf[i][0].channel_id) + " seis="
+                            + ChannelIdUtil.toString(rf[i][0].channelId) + " seis="
                             + ChannelIdUtil.toString(localSeismograms[i][0].channel_id));
                 }
             } else {

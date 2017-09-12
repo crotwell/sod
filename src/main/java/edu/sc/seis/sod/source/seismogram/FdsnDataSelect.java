@@ -144,13 +144,13 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
                     FDSNDataSelectQueryParams newQueryParams = queryParams.clone();
                     List<ChannelTimeWindow> queryRequest = new ArrayList<ChannelTimeWindow>();
                     for (RequestFilter rf : request) {
-                        ChannelId c = rf.channel_id;
+                        ChannelId c = rf.channelId;
                         queryRequest.add(new ChannelTimeWindow(c.getNetworkId(),
                                                                c.getStationCode(),
                                                                c.getLocCode(),
                                                                c.getChannelCode(),
-                                                               rf.start_time,
-                                                               rf.end_time));
+                                                               rf.startTime,
+                                                               rf.endTime));
                     }
                     List<DataRecord> drList = retrieveData(newQueryParams, queryRequest, getRetries());
                     try {
@@ -162,11 +162,11 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
                             // begin times, so use the request
                             for (RequestFilter rf : request) {
                                 // find matching chan id
-                                if (rf.channel_id.getNetworkId().equals(seis.channel_id.getNetworkId())) {
-                                    seis.channel_id.network_id.begin_time = rf.channel_id.network_id.begin_time;
+                                if (rf.channelId.getNetworkId().equals(seis.channel_id.getNetworkId())) {
+                                    seis.channel_id.network_id.begin_time = rf.channelId.network_id.begin_time;
                                 }
-                                if (ChannelIdUtil.areEqualExceptForBeginTime(rf.channel_id, seis.channel_id)) {
-                                    seis.channel_id.begin_time = rf.channel_id.begin_time;
+                                if (ChannelIdUtil.areEqualExceptForBeginTime(rf.channelId, seis.channel_id)) {
+                                    seis.channel_id.begin_time = rf.channelId.begin_time;
                                     break;
                                 }
                             }
