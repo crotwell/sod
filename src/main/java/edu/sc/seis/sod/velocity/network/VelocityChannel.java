@@ -1,6 +1,5 @@
 package edu.sc.seis.sod.velocity.network;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,23 +20,10 @@ public class VelocityChannel extends Channel {
     public VelocityChannel(Channel chan) {
         super(chan.getStation(), chan.getLocCode(), chan.getChannelCode());
         this.chan = chan;
-        setSite(chan.getSite());
-        setOrientation(chan.getOrientation());
-        setSamplingInfo(chan.getSamplingInfo());
-        setEffectiveTime(chan.getEffectiveTime());
-        setName(chan.getName());
-    }
-
-    public ChannelId get_id() {
-        return chan.get_id();
     }
 
     public ChannelId getId() {
         return chan.getId();
-    }
-
-    public String get_code() {
-        return chan.get_code();
     }
 
     public float getAzimuth() {
@@ -112,7 +98,7 @@ public class VelocityChannel extends Channel {
         return FissuresFormatter.formatElevation(QuantityImpl.createQuantityImpl(site.getLocation().elevation));
     }
     
-    public Instant getStartDate() {
+    public String getStartDate() {
         return getEffectiveTime().getBeginTime();
     }
 
@@ -124,7 +110,7 @@ public class VelocityChannel extends Channel {
         return SimpleVelocitizer.format(getStartDate(), format);
     }
 
-    public Instant getEndDate() {
+    public String getEndDate() {
         return getEffectiveTime().getEndTime();
     }
 
@@ -138,6 +124,14 @@ public class VelocityChannel extends Channel {
 
     public VelocitySampling getSampling() {
         return new VelocitySampling(getSamplingInfo());
+    }
+    
+    public VelocitySensitivity getSensitivity() {
+        if (this.chan.getResponse() != null && this.chan.getResponse().getInstrumentSensitivity() != null) {
+            return new VelocitySensitivity(this.chan.getResponse().getInstrumentSensitivity());
+        } else {
+            return null;
+        }
     }
 
     public String compactToString() {
