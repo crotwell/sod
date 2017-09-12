@@ -41,11 +41,6 @@ public abstract class WrappingNetworkSource extends AbstractNetworkSource implem
     }
 
     @Override
-    public QuantityImpl getSensitivity(Channel chanId) throws ChannelNotFound, InvalidResponse, SodSourceException {
-        return getWrapped().getSensitivity(chanId);
-    }
-
-    @Override
     public Response getResponse(Channel chanId) throws ChannelNotFound, InvalidResponse, SodSourceException {
         return getWrapped().getResponse(chanId);
     }

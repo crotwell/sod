@@ -290,11 +290,6 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
     }
 
     @Override
-    public QuantityImpl getSensitivity(Channel chan) throws ChannelNotFound, InvalidResponse {
-        throw new ChannelNotFound("Response not in CSVNetworkSource", chan);
-    }
-
-    @Override
     public List<? extends Station> getStations(Network net) {
         List<Station> staList = new ArrayList<Station>();
         for (Station sta : stations) {

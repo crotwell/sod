@@ -7,6 +7,7 @@ import edu.sc.seis.sod.hibernate.ChannelNotFound;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
+import edu.sc.seis.seisFile.fdsnws.stationxml.InstrumentSensitivity;
 import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
 import edu.sc.seis.sod.source.network.NetworkSource;
@@ -20,8 +21,8 @@ public class RepairSensitivity implements ChannelSubsetter {
     public StringTree accept(Channel channel, NetworkSource network)
             throws Exception {
         try {
-            QuantityImpl sensitivity = network.getSensitivity(channel);
-            if(sensitivity != null && sensitivity.getValue() != -1) {
+            InstrumentSensitivity sensitivity = channel.getResponse().getInstrumentSensitivity();
+            if(sensitivity != null && sensitivity.getSensitivityValue() != -1) {
                 return new Pass(this);
             }
             // try via instrumentation

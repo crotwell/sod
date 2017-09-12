@@ -72,12 +72,6 @@ public class MockNetworkSource extends AbstractNetworkSource implements NetworkS
         }
         return null;
     }
-
-    @Override
-    public QuantityImpl getSensitivity(Channel chanId) throws ChannelNotFound, InvalidResponse {
-        // TODO Auto-generated method stub
-        return null;
-    }
     
     @Override
     public void setConstraints(NetworkQueryConstraints constraints) {

@@ -226,16 +226,7 @@ public class FdsnStation extends AbstractNetworkSource {
                 while (staIt.hasNext()) {
                     edu.sc.seis.seisFile.fdsnws.stationxml.Station s = staIt.next();
                     for (Channel c : s.getChannelList()) {
-                        ChannelSensitivityBundle csb = StationXMLToFissures.convert(c, sImpl);
-                        Channel outChan = csb.getChan();
-                        out.add(outChan);
-                        chanSensitivityMap.put(ChannelIdUtil.toString(csb.getChan()), csb.getSensitivity());
-                        DataAvailability da = c.getDataAvailability();
-                        if (da != null && da.getExtent() != null) {
-                            TimeRange range = new TimeRange( TimeUtils.parseISOString(da.getExtent().getStart()),
-                                                             TimeUtils.parseISOString(da.getExtent().getEnd()));
-                            outChan.setAvailabilityExtent(range);
-                        }
+                        out.add(c);
                     }
                 }
             }
@@ -257,18 +248,6 @@ public class FdsnStation extends AbstractNetworkSource {
                 staxml.closeReader();
             }
         }
-    }
-
-    @Override
-    public QuantityImpl getSensitivity(Channel chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
-        String key = ChannelIdUtil.toString(chan);
-        if (!chanSensitivityMap.containsKey(key)) {
-            getChannels(chan.getStation());
-        }
-        if (!chanSensitivityMap.containsKey(key)) {
-            throw new ChannelNotFound(chan);
-        }
-        return chanSensitivityMap.get(key);
     }
 
     @Override
@@ -296,8 +275,6 @@ public class FdsnStation extends AbstractNetworkSource {
                 while (staIt.hasNext()) {
                     edu.sc.seis.seisFile.fdsnws.stationxml.Station s = staIt.next();
                     for (Channel c : s.getChannelList()) {
-                        ChannelSensitivityBundle csb = StationXMLToFissures.convert(c, sImpl);
-                        chanSensitivityMap.put(ChannelIdUtil.toString(csb.getChan()), csb.getSensitivity());
                         // first one should be right 
                         if (staxml != null) {
                             staxml.closeReader();
@@ -421,8 +398,6 @@ public class FdsnStation extends AbstractNetworkSource {
     boolean includeAvailability = true;
     
     boolean validateXML = false;
-    
-    HashMap<String, QuantityImpl> chanSensitivityMap = new HashMap<String, QuantityImpl>();
 
     FDSNStationQueryParams queryParams = new FDSNStationQueryParams();
     

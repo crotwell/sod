@@ -11,6 +11,6 @@ public class HasNegativeSensitivity implements ChannelSubsetter {
     public StringTree accept(Channel channel, NetworkSource network)
             throws Exception {
         return new StringTreeLeaf(this,
-                                  NegativeSensitivity.check(network.getSensitivity(channel)));
+                                  NegativeSensitivity.check(channel.getResponse().getInstrumentSensitivity()));
     }
 }

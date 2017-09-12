@@ -139,27 +139,6 @@ logger.debug("refresh "+net.toString());
             //    }
         }
     }
-    
-    void checkSensitivityLoaded(ChannelGroup cg, LoadedNetworkSource loadSource) {
-        checkSensitivityLoaded(cg.getChannel1(), loadSource);
-        checkSensitivityLoaded(cg.getChannel2(), loadSource);
-        checkSensitivityLoaded(cg.getChannel3(), loadSource);
-    }
-    
-    void checkSensitivityLoaded(Channel chan, LoadedNetworkSource loadSource) {
-        try {
-            QuantityImpl sens = loadSource.getSensitivity(chan);
-        } catch(SodSourceException e) {
-            logger.warn("Error getting Instrumentation for "+ChannelIdUtil.toStringFormatDates(chan));
-            NetworkDB.getSingleton().putSensitivity( ChannelSensitivity.createNonChannelSensitivity(chan));
-        } catch(ChannelNotFound e) {
-            logger.warn("No Instrumentation for "+ChannelIdUtil.toStringFormatDates(chan));
-            NetworkDB.getSingleton().putSensitivity( ChannelSensitivity.createNonChannelSensitivity(chan));
-        } catch(InvalidResponse e) {
-            logger.warn("Invalid Instrumentation for "+ChannelIdUtil.toStringFormatDates(chan));
-            NetworkDB.getSingleton().putSensitivity( ChannelSensitivity.createNonChannelSensitivity(chan));
-        }
-    }
 
     public synchronized boolean isNetworkBeingReloaded(int dbid) {
         if (dbid == 0) {

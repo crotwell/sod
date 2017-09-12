@@ -19,28 +19,6 @@ public class InstrumentationFromDB extends WrappingNetworkSource implements Netw
     }
 
     @Override
-    public QuantityImpl getSensitivity(Channel chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
-        ChannelSensitivity dbSensitivity = NetworkDB.getSingleton().getSensitivity(chan);
-        if (dbSensitivity != null) {
-            if (!ChannelSensitivity.isNonChannelSensitivity(dbSensitivity)) {
-                QuantityImpl out = new QuantityImpl(dbSensitivity.getOverallGain(), dbSensitivity.getInputUnits());
-                return out;
-            } else {
-                // is in database, but marked as not existing, so
-                throw new ChannelNotFound(chan);
-            }
-        }
-        // go to server?
-        QuantityImpl sense = getWrapped().getSensitivity(chan);
-        if (sense == null) {
-            throw new ChannelNotFound(chan);
-        }
-        dbSensitivity = new ChannelSensitivity(chan, (float)sense.getValue(), 0, sense.getUnit());
-        NetworkDB.getSingleton().putSensitivity(dbSensitivity);
-        return sense;
-    }
-
-    @Override
     public Response getResponse(Channel chan) throws ChannelNotFound, SodSourceException {
         String key = ChannelIdUtil.toString(chan);
         Response inst;

@@ -45,6 +45,7 @@
 	#lfield('site' "the channel's site.  The channel's location is in here")
 	#field('start' "time at which the channel began recording.  can be formatted using getStart('date format')")
 	#lfield('station' "the channel's station")
+        #field('sensitivity' "overall sensitivity, gain and frequency")
 </dl>
 </div>
 <div class="section">
@@ -106,15 +107,6 @@
     #field('name' "the full name of the network")
     #field('owner' "the full of the group that owns the network")
     #field('start' "time at which the station began recording.  can be formatted using getStart('date format')")
-</div>
-<div class="section">
-#sod_subsection_title("instrumentation")
-<p><b>Default value:</b> "${instrumentation.sensitivity} ${instrumentation.sensorModel}"</p>
-<dl>
-    <h5>Available subfields</h5>
-    #field('sensorModel' "the sensor model, may be empty")
-    #field('dataLoggerModel' 'the data logger model, may be empty')
-    #field('sensitivity' "overall sensitivity, gain and frequency")
 </div>
 </div>
 <div class="section">

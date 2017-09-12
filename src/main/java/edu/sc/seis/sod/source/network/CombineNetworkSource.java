@@ -17,8 +17,6 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
-import edu.sc.seis.sod.model.common.QuantityImpl;
-import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.source.SodSourceException;
 
 
@@ -103,18 +101,6 @@ public class CombineNetworkSource extends AbstractNetworkSource implements Netwo
             return source.getChannels(station);
         }
         return new ArrayList<Channel>();
-    }
-
-    @Override
-    public QuantityImpl getSensitivity(Channel chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
-        NetworkSource source = getSourceForCode(chan.getNetwork().toString());
-        if (source != null) {
-            QuantityImpl out = source.getSensitivity(chan);
-            if (out != null) {
-                return out;
-            }
-        }
-        throw new ChannelNotFound(chan);
     }
 
     @Override

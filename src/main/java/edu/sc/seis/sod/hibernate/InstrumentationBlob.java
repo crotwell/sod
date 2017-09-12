@@ -7,7 +7,6 @@ import java.util.List;
 import org.msgpack.core.MessageBufferPacker;
 import org.msgpack.core.MessagePack;
 import org.msgpack.core.MessageUnpacker;
-import org.omg.CORBA_2_3.ORB;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.BaseFilterType;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
@@ -30,18 +29,14 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.ResponseStage;
 import edu.sc.seis.seisFile.fdsnws.stationxml.StationXMLTagNames;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Unit;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Zero;
-import edu.sc.seis.sod.model.station.Instrumentation;
 
 public class InstrumentationBlob {
 
     /** for hibernate. */
     protected InstrumentationBlob() {}
 
-    public InstrumentationBlob(Channel chan, Instrumentation inst) {
-    
-    }
 
-        public InstrumentationBlob(Channel chan, Response response) {
+    public InstrumentationBlob(Channel chan, Response response) {
         this.chan = chan;
         this.response = response;
     }
@@ -874,6 +869,4 @@ public class InstrumentationBlob {
     public void setDbid(int dbid) {
         this.dbid = dbid;
     }
-
-    static ORB orb = null;
 }

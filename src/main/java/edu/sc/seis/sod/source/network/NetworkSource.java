@@ -9,7 +9,6 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
-import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.retry.RetryStrategy;
 import edu.sc.seis.sod.source.SodSourceException;
 import edu.sc.seis.sod.source.Source;
@@ -23,8 +22,6 @@ public interface NetworkSource extends Source {
     public List<? extends Station> getStations(Network net) throws SodSourceException;
 
     public List<? extends Channel> getChannels(Station station) throws SodSourceException;
-
-    public QuantityImpl getSensitivity(Channel chanId) throws ChannelNotFound, InvalidResponse, SodSourceException;
 
     public Response getResponse(Channel chanId) throws ChannelNotFound, InvalidResponse, SodSourceException;
 

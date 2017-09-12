@@ -389,26 +389,6 @@ public class NetworkDB extends AbstractHibernateDB {
         sensitivity.setInputUnits(intern(sensitivity.getInputUnits()));
         getSession().saveOrUpdate(sensitivity);
     }
-    
-    @Deprecated
-    public void putInstrumentation(Channel chan, Instrumentation inst) {
-        logger.debug("Put instrumentation: "+ChannelIdUtil.toStringNoDates(chan));
-        InstrumentationBlob ib = null;
-        try {
-            ib = getInstrumentationBlob(chan);
-        } catch(ChannelNotFound e) {
-            // must be new
-        }
-        if (ib == null) {
-            ib = new InstrumentationBlob(chan, inst);
-        } else {
-            int dbid = ib.getDbid();
-            getSession().evict(ib);
-            ib = new InstrumentationBlob(chan, inst);
-            ib.setDbid(dbid);
-        }
-        getSession().saveOrUpdate(ib);
-    }
 
     public void putResponse(Channel chan, Response inst) {
         logger.debug("Put response: "+ChannelIdUtil.toStringNoDates(chan));

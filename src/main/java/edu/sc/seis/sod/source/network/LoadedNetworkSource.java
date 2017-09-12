@@ -4,16 +4,15 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
+import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.station.ChannelId;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.Instrumentation;
-import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
-import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
-import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.model.station.StationIdUtil;
 import edu.sc.seis.sod.source.SodSourceException;
@@ -47,14 +46,8 @@ public class LoadedNetworkSource extends WrappingNetworkSource implements Networ
     }
 
     @Override
-    public QuantityImpl getSensitivity(Channel chan) throws ChannelNotFound, InvalidResponse, SodSourceException {
-        responseLoaded.add(ChannelIdUtil.toString(chan));
-        return getWrapped().getSensitivity(chan);
-    }
-
-    @Override
     public List<? extends Station> getStations(Network net) throws SodSourceException {
-        if (NetworkIdUtil.areEqual(net.getId(), sta.getNetworkAttr().getId())) {
+        if (NetworkIdUtil.areEqual(net.getId(), sta.getNetwork().getId())) {
             return allStations;
         }
         return getWrapped().getStations(net);
