@@ -96,7 +96,7 @@ public class FissuresFormatter {
     }
 
     public static String stationName(Station station) {
-        return station.getName();  getDescription() or getSite().getName()???
+        return station.getDescription(); // or getSite().getName()???
     }
 
     public static QuantityImpl getDepth(OriginImpl origin) {
