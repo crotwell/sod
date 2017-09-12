@@ -6,7 +6,6 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
 import edu.sc.seis.seisFile.fdsnws.stationxml.PolesZeros;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Response;
-import edu.sc.seis.seisFile.fdsnws.stationxml.StationXMLException;
 import edu.sc.seis.seisFile.sac.SacPoleZero;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.DOMHelper;
@@ -16,6 +15,7 @@ import edu.sc.seis.sod.bag.Transfer;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.common.UnknownUnit;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
@@ -64,7 +64,7 @@ public class TransferResponse implements WaveformProcess, Threadable {
         }
     }
     
-    public static SacPoleZero checkResponse(Channel chan, NetworkSource na) throws InvalidResponse, SodSourceException, StationXMLException {
+    public static SacPoleZero checkResponse(Channel chan, NetworkSource na) throws InvalidResponse, SodSourceException, UnknownUnit {
         try {
             Response response = na.getResponse(chan);
             if (response == null) {
