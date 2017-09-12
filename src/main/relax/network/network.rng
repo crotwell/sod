@@ -14,7 +14,6 @@
             </xsd:annotation>
             <ref name="code"/>
             <ref name="networkName"/>
-            <ref name="owner"/>
             <ref name="networkEffectiveTimeOverlap"/>
             <ref name="networkAND"/>
             <ref name="networkOR"/>
@@ -65,22 +64,6 @@
             <data type="string">
                 <xsd:annotation>
                     <example>Global Seismograph Network (GSN - IRIS/USGS)</example>
-                </xsd:annotation>
-            </data>
-        </element>
-    </define>
-    <define name="owner">
-        <element name="networkOwner">
-            <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary>Matches the owner of a network</summary>
-                    <description>Matches the owner of a network. This is a simple string comparison,
-                        and so care must be taken for it to be useful. </description>
-                </xsd:documentation>
-            </xsd:annotation>
-            <data type="string">
-                <xsd:annotation>
-                    <example>Scripps Institution of Oceanography</example>
                 </xsd:annotation>
             </data>
         </element>
