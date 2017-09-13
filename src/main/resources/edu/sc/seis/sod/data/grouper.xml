@@ -9,7 +9,7 @@
                 <siteMatchRule orientations="UVW" />
         </rule>
         <rule>
-            <networkCode>XK04</networkCode>
+            <networkCode>XK2004</networkCode>
             <channelAND>
                 <bandCode>B</bandCode>
                 <gainCode>H</gainCode>
@@ -21,7 +21,7 @@
             </orientedSiteRule>
         </rule>
         <rule>
-            <networkCode>XK04</networkCode>
+            <networkCode>XK2004</networkCode>
             <channelAND>
                 <bandCode>L</bandCode>
                 <gainCode>H</gainCode>
