@@ -12,9 +12,11 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.model.common.DistAz;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.UnitImpl;
+import edu.sc.seis.sod.model.common.UnknownUnit;
 import edu.sc.seis.sod.model.station.StationId;
 import edu.sc.seis.sod.model.station.StationIdUtil;
 import edu.sc.seis.sod.status.FissuresFormatter;
+import edu.sc.seis.sod.util.convert.stationxml.StationXMLToFissures;
 import edu.sc.seis.sod.util.display.ThreadSafeDecimalFormat;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 import edu.sc.seis.sod.velocity.event.VelocityEvent;
@@ -29,13 +31,6 @@ public class VelocityStation extends Station {
             throw new IllegalArgumentException("StationImpl cannot be null");
         }
         this.sta = sta;
-        name = sta.getName();
-        setLocation(sta.getLocation());
-        setEffectiveTime(sta.getEffectiveTime());
-        operator = sta.getOperator();
-        description = sta.getDescription();
-        comment = sta.getComment();
-        setNetworkAttr(sta.getNetworkAttr());
     }
 
     @Override
@@ -61,7 +56,7 @@ public class VelocityStation extends Station {
     }
 
     public String getNetCode() {
-        return getNet().get_code();
+        return getNet().getCode();
     }
 
     public VelocityNetwork getNet() {
@@ -71,35 +66,35 @@ public class VelocityStation extends Station {
         return velocityNet;
     }
 
-    public Instant getStartDate() {
-        return getEffectiveTime().getBeginTime();
+    public Instant getStartDateTime() {
+        return sta.getStartDateTime();
     }
 
-    public Instant getEndDate() {
-        return getEffectiveTime().getEndTime();
+    public Instant getEndDateTime() {
+        return sta.getEndDateTime();
     }
 
     public String getStart() {
-        return FissuresFormatter.formatDate(getEffectiveTime().getBeginTime());
+        return FissuresFormatter.formatDate(getStartDateTime());
     }
 
     public String getStart(String dateFormat) {
         if(dateFormat.equals("longfile")) {
-            return FissuresFormatter.formatDateForFile(getEffectiveTime().getBeginTime());
+            return FissuresFormatter.formatDateForFile(getStartDateTime());
         }
-        return SimpleVelocitizer.format(getEffectiveTime().getBeginTime(),
+        return SimpleVelocitizer.format(getStartDateTime(),
                                         dateFormat);
     }
 
     public String getEnd() {
-        return FissuresFormatter.formatDate(getEffectiveTime().getEndTime());
+        return FissuresFormatter.formatDate(getEndDateTime());
     }
 
     public String getEnd(String dateFormat) {
         if(dateFormat.equals("longfile")) {
-            return FissuresFormatter.formatDateForFile(getEffectiveTime().getEndTime());
+            return FissuresFormatter.formatDateForFile(getEndDateTime());
         }
-        return SimpleVelocitizer.format(getEffectiveTime().getEndTime(),
+        return SimpleVelocitizer.format(getEndDateTime(),
                                         dateFormat);
     }
 
@@ -112,36 +107,36 @@ public class VelocityStation extends Station {
     }
 
     public String getDescription() {
-        return description;
+        return sta.getDescription();
     }
 
     public String getOperator() {
-        return operator;
+        return sta.getOperatorList().get(0).getAgencyList().get(0);
     }
 
     public String getComment() {
-        return comment;
+        return sta.getCommentList().get(0).getValue();
     }
 
     public String getLatitude() {
-        return df.format(sta.getLocation().latitude);
+        return df.format(sta.getLatitude());
     }
 
     public String getLatitude(String format) {
-        return new DecimalFormat(format).format(sta.getLocation().latitude);
+        return new DecimalFormat(format).format(sta.getLatitude());
     }
 
     public String getLongitude() {
-        return df.format(sta.getLocation().longitude);
+        return df.format(sta.getLongitude());
     }
 
     public String getLongitude(String format) {
-        return new DecimalFormat(format).format(sta.getLocation().longitude);
+        return new DecimalFormat(format).format(sta.getLongitude());
     }
 
 
     public String getOrientedLatitude() {
-        return getOrientedLatitude(sta.getLocation().latitude);
+        return getOrientedLatitude(sta.getLatitude().getValue());
     }
     
     public static String getOrientedLatitude(float latitude) {
@@ -152,7 +147,7 @@ public class VelocityStation extends Station {
     }
 
     public String getOrientedLongitude() {
-        return getOrientedLongitude(sta.getLocation().longitude);
+        return getOrientedLongitude(sta.getLongitude().getValue());
     }
 
     public static String getOrientedLongitude(float longitude) {
@@ -163,30 +158,19 @@ public class VelocityStation extends Station {
     }
 
     public Float getFloatLatitude() {
-        return new Float(getLocation().latitude);
+        return new Float(sta.getLatitude().getValue());
     }
 
     public Float getFloatLongitude() {
-        return new Float(getLocation().longitude);
-    }
-    
-    public String getDepth() {
-        // format as elevation as formatDepth uses KM and stations usually want depth in Meter
-        return FissuresFormatter.formatElevation(QuantityImpl.createQuantityImpl(sta.getLocation().depth));
-    }
-
-    public String getDepth(String format) {
-        double depthInM = QuantityImpl.createQuantityImpl(sta.getLocation().depth)
-                .convertTo(UnitImpl.METER).getValue();
-        return new DecimalFormat(format).format(depthInM);
+        return new Float(sta.getLongitude().getValue());
     }
 
     public String getElevation() {
-        return FissuresFormatter.formatElevation(QuantityImpl.createQuantityImpl(sta.getLocation().elevation));
+        return FissuresFormatter.formatElevation(StationXMLToFissures.convertFloatType(sta.getElevation()));
     }
 
-    public String getElevation(String format) {
-        double elevInMeters = QuantityImpl.createQuantityImpl(sta.getLocation().elevation)
+    public String getElevation(String format) throws UnknownUnit {
+        double elevInMeters = StationXMLToFissures.convertFloatType(sta.getElevation())
                 .convertTo(UnitImpl.METER).getValue();
         return new DecimalFormat(format).format(elevInMeters);
     }

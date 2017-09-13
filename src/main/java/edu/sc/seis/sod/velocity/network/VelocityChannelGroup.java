@@ -117,7 +117,7 @@ public class VelocityChannelGroup {
     
     public void insertIntoContext(VelocityContext ctx) {
         ctx.put("channelGroup", this);
-        getChannel1().getSite().insertIntoContext(ctx);
+        getChannel1().getStation().insertIntoContext(ctx);
     }
     
     public ChannelGroup getChannelGroup() {

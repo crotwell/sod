@@ -2,6 +2,7 @@ package edu.sc.seis.sod.velocity.seismogram;
 
 import java.time.Duration;
 
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.sod.subsetter.requestGenerator.PhaseRequest;
 
 
@@ -29,10 +30,10 @@ public class VelocityPhaseRequest {
     
     public static String formatTimeInterval(Duration ti) {
         String sign = "+";
-        if ( ti.getValue() < 0) {
+        if ( ti.toNanos() < 0) {
             sign = "-";
         }
-        return sign+ti.getValue()+" "+ti.getUnit();
+        return sign+TimeUtils.durationToDoubleSeconds(ti)+" sec";
     }
     
     public String toString() {

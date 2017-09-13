@@ -9,7 +9,6 @@ import org.apache.velocity.VelocityContext;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.sod.model.station.NetworkId;
-import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
@@ -44,26 +43,18 @@ public class VelocityNetwork extends Network {
         if (stations != null) {
             Collections.sort(this.stations, byCodeSorter);
         }
-        this.setName(net.getName());
-        this.setDescription(net.getDescription());
-        this.setOwner(net.getOwner());
-        this.setEffectiveTime(net.getEffectiveTime());
     }
     
     public Network getWrapped() {
         return net;
     }
 
-    public NetworkId get_id() {
-        return net.get_id();
-    }
-
-    public String get_code() {
-        return net.get_code();
+    public NetworkId getId() {
+        return net.getId();
     }
 
     public String getCode() {
-        return get_code();
+        return net.getCode();
     }
 
     public String getCodeWithYear() {
@@ -71,45 +62,39 @@ public class VelocityNetwork extends Network {
     }
     
     public String getName() {
-        return FissuresFormatter.oneLineAndClean(super.getName());
+        return getDescription();
     }
     
-    public String getRawName() {
-        return super.getName();
+    public String getDescription() {
+        return FissuresFormatter.oneLineAndClean(super.getDescription());
     }
     
-    public String getRawBeginDate() {
-        return net.get_id().begin_time.getISOTime();
+    public String getRawDescription() {
+        return super.getDescription();
     }
 
-    public Instant getStart() {
-        return getEffectiveTime().getBeginTime();
+    public String getStart() {
+        return net.getStartDate();
     }
     
     public String getStart(String format){
-        return SimpleVelocitizer.format(getStart(), format);
+        return SimpleVelocitizer.format(net.getStartDateTime(), format);
+    }
+    
+    public Instant getStartDateTime() {
+        return net.getStartDateTime();
     }
 
-    /**
-     * @deprecated - use getStart instead
-     */
-    public Instant getStartDate() {
-        return getStart();
-    }
-
-    public Instant getEnd() {
-        return getEffectiveTime().getEndTime();
+    public String getEnd() {
+        return net.getEndDate();
     }
     
     public String getEnd(String format){
-        return SimpleVelocitizer.format(getEnd(), format);
+        return SimpleVelocitizer.format(net.getEndDateTime(), format);
     }
 
-    /**
-     * @deprecated use getEnd instead
-     */
-    public Instant getEndDate() {
-        return getEnd();
+    public Instant getEndDateTime() {
+        return net.getEndDateTime();
     }
 
     /**
@@ -164,7 +149,7 @@ public class VelocityNetwork extends Network {
     Comparator<VelocityStation> byCodeSorter = new Comparator<VelocityStation>() {
         @Override
         public int compare(VelocityStation sta0, VelocityStation sta1) {
-            return sta0.get_code().compareTo(sta1.get_code());
+            return sta0.getCode().compareTo(sta1.getCode());
         }
     };
 }

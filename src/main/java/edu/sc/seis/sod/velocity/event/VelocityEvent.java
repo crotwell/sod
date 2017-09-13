@@ -265,7 +265,7 @@ public class VelocityEvent extends CacheEvent {
     public static Instant parseDateIdentifier(String eqIdentifier)
             throws ParseException {
         synchronized(fullDateIdentifier) {
-        return fullDateIdentifier.parse(eqIdentifier);
+        return Instant.ofEpochMilli(fullDateIdentifier.parse(eqIdentifier).getTime());
         }
     }
 

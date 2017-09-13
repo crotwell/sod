@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.velocity.network;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,9 +8,11 @@ import org.apache.velocity.VelocityContext;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.model.common.QuantityImpl;
+import edu.sc.seis.sod.model.common.SamplingImpl;
 import edu.sc.seis.sod.model.station.ChannelId;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
 import edu.sc.seis.sod.status.FissuresFormatter;
+import edu.sc.seis.sod.util.convert.stationxml.StationXMLToFissures;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
 /**
@@ -23,36 +26,40 @@ public class VelocityChannel extends Channel {
     }
 
     public ChannelId getId() {
-        return chan.getId();
+        return ChannelId.of(chan);
     }
 
     public float getAzimuth() {
-        return getOrientation().azimuth;
+        return chan.getAzimuth().getValue();
     }
 
     public float getDip() {
-        return getOrientation().dip;
+        return chan.getDip().getValue();
     }
 
     public String getCode() {
-        return get_code();
+        return chan.getCode();
+    }
+
+    public String getLocCode() {
+        return chan.getLocCode();
     }
 
     public String getBandCode() {
-        return get_code().substring(0,1);
+        return getCode().substring(0,1);
     }
 
     public String getGainCode() {
-        return get_code().substring(1,2);
+        return getCode().substring(1,2);
     }
 
     public String getOrientationCode() {
-        return get_code().substring(2,3);
+        return getCode().substring(2,3);
     }
 
     public String getCodes() {
         return getNet().getCode() + "." + getStation().getCode() + "."
-                + getSite().getCode() + "." + getCode();
+                + getLocCode() + "." + getCode();
     }
 
     public VelocityNetwork getNet() {
@@ -64,66 +71,76 @@ public class VelocityChannel extends Channel {
     }
 
     public VelocityStation getStation() {
-        return getSite().getStation();
+        if (velStation == null) {
+            velStation = new VelocityStation(chan.getStation());
+        }
+        return velStation;
     }
 
     public String getLatitude() {
-        return VelocityStation.df.format(site.getLocation().latitude);
+        return VelocityStation.df.format(chan.getLatitude().getValue());
     }
 
     public String getLongitude() {
-        return VelocityStation.df.format(site.getLocation().longitude);
+        return VelocityStation.df.format(chan.getLongitude().getValue());
     }
 
     public String getOrientedLatitude() {
-        if(site.getLocation().latitude < 0) {
-            return VelocityStation.df.format(-site.getLocation().latitude) + " S";
+        
+        String suffix = " N";
+        float lat = chan.getLatitude().getValue();
+        if(lat < 0) {
+            lat = -1 * lat;
+            suffix = " S";
         }
-        return VelocityStation.df.format(site.getLocation().latitude) + " N";
+        return VelocityStation.df.format(lat) + suffix;
     }
 
+
     public String getOrientedLongitude() {
-        if(site.getLocation().longitude < 0) {
-            return VelocityStation.df.format(-site.getLocation().longitude)
-                    + " W";
+        String suffix = " E";
+        float lon = chan.getLongitude().getValue();
+        if(lon < 0) {
+            lon = -1 * lon;
+            suffix = " W";
         }
-        return VelocityStation.df.format(site.getLocation().longitude) + " E";
+        return VelocityStation.df.format(lon) + suffix;
     }
 
     public String getDepth() {
-        return FissuresFormatter.formatElevation(QuantityImpl.createQuantityImpl(site.getLocation().depth));
+        return FissuresFormatter.formatElevation(StationXMLToFissures.convertFloatType(chan.getDepth()));
     }
 
     public String getElevation() {
-        return FissuresFormatter.formatElevation(QuantityImpl.createQuantityImpl(site.getLocation().elevation));
+        return FissuresFormatter.formatElevation(StationXMLToFissures.convertFloatType(chan.getElevation()));
     }
     
-    public String getStartDate() {
-        return getEffectiveTime().getBeginTime();
+    public Instant getStartDateTime() {
+        return chan.getStartDateTime();
     }
 
     public String getStart() {
-        return FissuresFormatter.formatDate(getEffectiveTime().getBeginTime());
+        return FissuresFormatter.formatDate(chan.getStartDateTime());
     }
 
     public String getStart(String format) {
-        return SimpleVelocitizer.format(getStartDate(), format);
+        return SimpleVelocitizer.format(getStartDateTime(), format);
     }
 
-    public String getEndDate() {
-        return getEffectiveTime().getEndTime();
+    public Instant getEndDateTime() {
+        return chan.getEndDateTime();
     }
 
     public String getEnd() {
-        return FissuresFormatter.formatDate(getEffectiveTime().getEndTime());
+        return FissuresFormatter.formatDate(chan.getEndDateTime());
     }
 
     public String getEnd(String format) {
-        return SimpleVelocitizer.format(getEndDate(), format);
+        return SimpleVelocitizer.format(getEndDateTime(), format);
     }
 
     public VelocitySampling getSampling() {
-        return new VelocitySampling(getSamplingInfo());
+        return new VelocitySampling(SamplingImpl.of(chan));
     }
     
     public VelocitySensitivity getSensitivity() {
@@ -156,6 +173,8 @@ public class VelocityChannel extends Channel {
     public Channel getWrapped() {return chan;}
     
     private Channel chan;
+    
+    private VelocityStation velStation;
 
     public static VelocityChannel[] wrap(Channel[] chans) {
         VelocityChannel[] velChans = new VelocityChannel[chans.length];
@@ -176,7 +195,7 @@ public class VelocityChannel extends Channel {
     public void insertIntoContext(VelocityContext ctx) {
         ctx.put("channel", this);
         ctx.put("chan", this);
-        getSite().insertIntoContext(ctx);
+        getStation().insertIntoContext(ctx);
     }
 
     public static VelocityChannel wrap(Channel chan) {

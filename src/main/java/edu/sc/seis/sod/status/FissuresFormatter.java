@@ -8,7 +8,6 @@ package edu.sc.seis.sod.status;
 import java.text.NumberFormat;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.TimeZone;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
@@ -227,7 +226,7 @@ public class FissuresFormatter {
         return new QuantityImpl(d.getBaz(), UnitImpl.DEGREE);
     }
 
-    public static String formatDate(Date d) {
+    public static String formatDate(Instant d) {
         synchronized(longFormat) {
             return longFormat.format(d);
         }
@@ -243,19 +242,19 @@ public class FissuresFormatter {
         return formatDateForFile(origin.getOriginTime());
     }
 
-    public static String fancyFormat(Date d) {
+    public static String fancyFormat(Instant d) {
         synchronized(fancyFormat) {
             return fancyFormat.format(d);
         }
     }
 
-    public static String formatYear(Date d) {
+    public static String formatYear(Instant d) {
         synchronized(yearDateFormat) {
             return yearDateFormat.format(d);
         }
     }
 
-    public static String formatYMD(Date d) {
+    public static String formatYMD(Instant d) {
         synchronized(ymdDateFormat) {
             return ymdDateFormat.format(d);
         }
