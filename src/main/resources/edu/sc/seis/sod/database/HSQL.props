@@ -1,0 +1,4 @@
+driver=org.hsqldb.jdbcDriver
+URL=jdbc:hsqldb:.
+user=sa
+password=

@@ -118,6 +118,7 @@ public class ConnMgr {
     }
 
     public static void setURL(String url) {
+        System.err.println("ConnMgr.setURL() DB url: "+url);
         if (url == null || url.length() == 0) {
             throw new RuntimeException("URL is empty.");
         }
@@ -372,7 +373,7 @@ public class ConnMgr {
         checkDatabaseConn();
     }
 
-    private static final String DEFAULT_LOC = "edu/sc/seis/fissuresUtil/database/props/";
+    private static final String DEFAULT_LOC = "edu/sc/seis/sod/database/";
 
     public static final String DEFAULT = "default";
 

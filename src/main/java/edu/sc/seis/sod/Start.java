@@ -218,6 +218,8 @@ public class Start {
             logger.info("Database: memory");
         } else {
             logger.info("Database: "+Start.props.get("fissuresUtil.database.url"));
+        }
+            ConnMgr.setURL(Start.props.getProperty("fissuresUtil.database.url"));
             if (ConnMgr.getURL().startsWith(HSQL_FILE_URL)) {
                 File dbFile = new File(ConnMgr.getURL().substring(HSQL_FILE_URL.length())+".log");
                 if (dbFile.exists()) {
@@ -226,7 +228,7 @@ public class Start {
                     logger.info("Database file does not exist, clean start.");
                 }
             }
-        }
+        
         parseArms(config.getChildNodes());
     }
 

@@ -1,0 +1,4 @@
+driver=com.mckoi.JDBCDriver
+URL=jdbc:mckoi:local://c:/cygwin/home/groves/mckoi1.0.2/db.conf?create_or_boot=true
+user=admin_user
+password=

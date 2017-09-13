@@ -1,0 +1,4 @@
+driver=com.mysql.jdbc.Driver
+URL=jdbc:postgresql:fistest
+user=xxxxxxxx
+password=

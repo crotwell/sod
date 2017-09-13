@@ -1,0 +1,4 @@
+fissuresUtil.database.driver.HSQL=org.hsqldb.jdbcDriver
+fissuresUtil.database.driver.MCKOI=com.mckoi.JDBCDriver
+fissuresUtil.database.driver.POSTGRES=org.postgresql.Driver
+fissuresUtil.database.driver.MYSQL=com.mysql.jdbc.Driver
