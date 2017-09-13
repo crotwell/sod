@@ -24,7 +24,6 @@ import edu.sc.seis.sod.hibernate.eventpair.EventChannelPair;
 import edu.sc.seis.sod.hibernate.eventpair.EventNetworkPair;
 import edu.sc.seis.sod.hibernate.eventpair.EventStationPair;
 import edu.sc.seis.sod.hibernate.eventpair.EventVectorPair;
-import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.common.Version;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.StatefulEvent;
@@ -363,7 +362,7 @@ public class SodDB extends AbstractHibernateDB {
                 + " and numRetries < "+maxRetries
                 +" and (seconds_between(:now, lastQuery) > :maxDelay or seconds_between(:now, lastQuery) > power(:base, numRetries))  order by numRetries";
         Query query = getSession().createQuery(q);
-        query.setTimestamp("now", ClockUtil.now());
+        query.setParameter("now", ClockUtil.now());
         query.setFloat("base", retryBase);
         query.setFloat("minDelay", (float)TimeUtils.durationToDoubleSeconds(getMinRetryDelay()));
         query.setFloat("maxDelay", (float) (Start.getRunProps().getMaxRetryDelay().toNanos()/TimeUtils.NANOS_IN_SEC));

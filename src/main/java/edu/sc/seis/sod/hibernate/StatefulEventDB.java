@@ -66,8 +66,8 @@ public class StatefulEventDB {
         q += " e.preferred.originTime.time between :minTime AND :maxTime  ";
         Query query = trans.getSession().createQuery(q);
 
-        query.setTimestamp("minTime", range.getBeginTime());
-        query.setTimestamp("maxTime", range.getEndTime());
+        query.setParameter("minTime", range.getBeginTime());
+        query.setParameter("maxTime", range.getEndTime());
         return query.list();
     }
      

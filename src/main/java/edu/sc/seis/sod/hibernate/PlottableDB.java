@@ -32,7 +32,7 @@ public class PlottableDB extends AbstractHibernateDB {
     public List<PlottableChunk> get(TimeRange requestRange,
                                 ChannelId channel,
                                 int pixelsPerDay) {
-        return get(requestRange, channel.network_id.network_code,
+        return get(requestRange, channel.getNetworkId(),
                    channel.getStationCode(),
                    channel.getLocCode(),
                    channel.getChannelCode(),
@@ -55,8 +55,8 @@ public class PlottableDB extends AbstractHibernateDB {
         q.setString("site", site);
         q.setString("chan", channel);
         q.setInteger("pixelsPerDay", pixelsPerDay);
-        q.setTimestamp("end", requestRange.getEndTime());
-        q.setTimestamp("begin", requestRange.getBeginTime());
+        q.setParameter("end", requestRange.getEndTime());
+        q.setParameter("begin", requestRange.getBeginTime());
         List<PlottableChunk> chunks = q.list();
         return chunks;
     }
@@ -110,7 +110,6 @@ public class PlottableDB extends AbstractHibernateDB {
                                               String site,
                                               String channel,
                                 int pixelsPerDay) {
-        // TODO Auto-generated method stub
         throw new RuntimeException("Not yet implemented");
     }
 

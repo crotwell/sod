@@ -3,7 +3,7 @@ package edu.sc.seis.sod.hibernate;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.Timestamp;
+import java.time.Instant;
 
 public abstract class AbstractSeismogramFileReference {
 
@@ -16,8 +16,8 @@ public abstract class AbstractSeismogramFileReference {
                                            String staCode,
                                            String siteCode,
                                            String chanCode,
-                                           Timestamp beginTime,
-                                           Timestamp endTime,
+                                           Instant beginTime,
+                                           Instant endTime,
                                            String filePath,
                                            int fileType) {
         super();
@@ -47,11 +47,11 @@ public abstract class AbstractSeismogramFileReference {
         return chanCode;
     }
 
-    public Timestamp getBeginTime() {
+    public Instant getBeginTime() {
         return beginTime;
     }
 
-    public Timestamp getEndTime() {
+    public Instant getEndTime() {
         return endTime;
     }
 
@@ -87,11 +87,11 @@ public abstract class AbstractSeismogramFileReference {
         this.chanCode = chanCode;
     }
 
-    protected void setBeginTime(Timestamp beginTime) {
+    protected void setBeginTime(Instant beginTime) {
         this.beginTime = beginTime;
     }
 
-    protected void setEndTime(Timestamp endTime) {
+    protected void setEndTime(Instant endTime) {
         this.endTime = endTime;
     }
 
@@ -115,8 +115,8 @@ public abstract class AbstractSeismogramFileReference {
     protected String staCode;
     protected String siteCode;
     protected String chanCode;
-    protected Timestamp beginTime;
-    protected Timestamp endTime;
+    protected Instant beginTime;
+    protected Instant endTime;
     protected String filePath;
     protected int fileType;
 }

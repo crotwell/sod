@@ -14,7 +14,6 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.model.station.ChannelGroup;
 import edu.sc.seis.sod.model.station.ChannelId;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.Instrumentation;
 import edu.sc.seis.sod.model.station.NetworkId;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.model.station.StationId;
@@ -37,7 +36,7 @@ public class NetworkDB extends AbstractHibernateDB {
                     if(net.getCode().equals(indb.getCode())
                             && net.getStartYearString()
                                     .equals(indb.getStartYearString())) {
-                        net.associateInDB(indb);
+                        net.associateInDb(indb);
                         getSession().evict(indb);
                         getSession().saveOrUpdate(net);
                         return net.getDbid();
@@ -49,7 +48,7 @@ public class NetworkDB extends AbstractHibernateDB {
             } else {
                 // use first and only net
                 Network indb = (Network)fromDB.next();
-                net.associateInDB(indb);
+                net.associateInDb(indb);
                 getSession().evict(indb);
                 getSession().saveOrUpdate(net);
                 return net.getDbid();
@@ -70,8 +69,8 @@ public class NetworkDB extends AbstractHibernateDB {
         }
         try {
             // maybe station is already in db, so update
-            Station indb = getStationById(sta.get_id());
-            sta.associateInDB(indb);
+            Station indb = getStationById(sta);
+            sta.associateInDb(indb);
             getSession().evict(indb);
             getSession().evict(indb.getNetworkAttr());
             getSession().saveOrUpdate(sta);
@@ -93,27 +92,25 @@ public class NetworkDB extends AbstractHibernateDB {
     public int put(Channel chan) {
         Integer dbid;
         internUnit(chan);
-        if(((Station)chan.getSite().getStation()).getDbid() == 0) {
+        if(((Station)chan.getStation()).getDbid() == 0) {
             try {
-                chan.getSite().setStation(getStationById(chan.getSite()
-                        .getStation()
-                        .get_id()));
+                chan.setStation(getStationById(chan.getStation()));
             } catch(NotFound e) {
-                int staDbid = put((Station)chan.getSite().getStation());
+                int staDbid = put((Station)chan.getStation());
             }
         }
         try {
-            Channel indb = getChannel(chan.get_id());
-            chan.associateInDB(indb);
+            Channel indb = getChannelById(chan);
+            chan.associateInDb(indb);
             getSession().evict(indb);
-            getSession().evict(indb.getSite().getStation());
-            getSession().evict(indb.getSite().getStation().getNetworkAttr());
+            getSession().evict(indb.getStation());
+            getSession().evict(indb.getStation().getNetwork());
             getSession().saveOrUpdate(chan);
             dbid = chan.getDbid();
         } catch(NotFound nf) {
             dbid = (Integer)getSession().save(chan);
         }
-        logger.debug("Put channel as "+dbid+" "+ChannelIdUtil.toStringFormatDates(chan)+"  sta dbid="+((Station)chan.getSite().getStation()).getDbid());
+        logger.debug("Put channel as "+dbid+" "+ChannelIdUtil.toStringFormatDates(chan)+"  sta dbid="+((Station)chan.getStation()).getDbid());
         return dbid.intValue();
     }
 
@@ -125,7 +122,7 @@ public class NetworkDB extends AbstractHibernateDB {
         for(int i = 0; i < chans.length; i++) {
             if(chans[i].getDbid() == 0) {
                 try {
-                    chans[i] = getChannel(chans[i].get_id());
+                    chans[i] = getChannelById(chans[i]);
                 } catch(NotFound e) {
                     put(chans[i]);
                 }
@@ -185,15 +182,19 @@ public class NetworkDB extends AbstractHibernateDB {
         return query.list();
     }
 
+    public Station getStationById(Station sta) throws NotFound {
+        return getStationById(StationId.of(sta));
+    }
+    
     public Station getStationById(StationId staId) throws NotFound {
         Query query = getSession().createQuery(getStationByIdString);
-        query.setString("netCode", staId.network_id.network_code);
-        query.setString("staCode", staId.station_code);
-        query.setTimestamp("staBegin",
-                           staId.begin_time.getTimestamp());
+        query.setString("netCode", staId.getNetworkId());
+        query.setString("staCode", staId.getStationCode());
+        query.setParameter("staBegin",
+                           staId.getStartTime());
         query.setMaxResults(1);
         List<Station> l = query.list();
-        logger.debug("getStationById("+staId.network_id.network_code+"."+staId.station_code+"."+staId.begin_time.getISOString()+"  return size: "+l.size());
+        logger.debug("getStationById("+staId.getNetworkId()+"."+staId.getStationCode()+"."+staId.getStartTime()+"  return size: "+l.size());
         if(l.size() != 0) {
             return l.get(0);
         }
@@ -287,7 +288,7 @@ public class NetworkDB extends AbstractHibernateDB {
                                                Instant when) {
         Query query = getSession().createQuery(getChannelForStationAtTime);
         query.setEntity("station", station);
-        query.setTimestamp("when", when);
+        query.setParameter("when", when);
         return query.list();
     }
 
@@ -307,21 +308,25 @@ public class NetworkDB extends AbstractHibernateDB {
                 + chanCodeHQL
                 + " AND site.station.networkAttr.beginTime.time = :when";
         Query query = getSession().createQuery(queryString);
-        query.setString("netCode", net.network_code);
+        query.setString("netCode", net.getNetworkCode());
         query.setString("stationCode", sta);
         query.setString("siteCode", site);
         query.setString("channelCode", chan);
-        query.setTimestamp("when",
-                           net.begin_time.getTimestamp());
+        query.setParameter("when",
+                           net.getStartYear());
         return query.list();
     }
 
+    public Channel getChannelById(Channel chan) throws NotFound {
+        return getChannel(ChannelId.of(chan));
+    }
+
     public Channel getChannel(ChannelId id) throws NotFound {
-        return getChannel(id.network_id.network_code,
-                          id.station_code,
-                          id.site_code,
-                          id.channel_code,
-                          id.begin_time,
+        return getChannel(id.getNetworkId(),
+                          id.getStationCode(),
+                          id.getLocCode(),
+                          id.getChannelCode(),
+                          id.getStartTime(),
                           getChannelById);
     }
 
@@ -338,7 +343,7 @@ public class NetworkDB extends AbstractHibernateDB {
         if (sc.equals("--") || sc.equals("") || sc.equals("  ")) {sc = edu.sc.seis.seisFile.fdsnws.stationxml.Channel.EMPTY_LOC_CODE;}
         query.setString("siteCode", sc);
         query.setString("channelCode", chan);
-        query.setTimestamp("when", when);
+        query.setParameter("when", when);
         query.setMaxResults(1);
         List result = query.list();
         if(result.size() == 0) {
@@ -410,17 +415,19 @@ public class NetworkDB extends AbstractHibernateDB {
     }
 
     public void internUnit(Station sta) {
-        internUnit(sta.getLocation());
+        throw new RuntimeException("intern units!!!");
+//        internUnit(sta.getLocation());
     }
 
     /**
-     * assumes station has aready been interned as this needs to happen to avoid
+     * assumes station has already been interned as this needs to happen to avoid
      * dup stations.
      */
     public void internUnit(Channel chan) {
-        internUnit(chan.getSite().getLocation());
-        internUnit(chan.getSite().getStation());
-        internUnit(chan.getSamplingInfo().interval);
+        throw new RuntimeException("intern units!!!");
+//        internUnit(chan.getSite().getLocation());
+//        internUnit(chan.getSite().getStation());
+//        internUnit(chan.getSamplingInfo().interval);
     }
 
     private static NetworkDB singleton;

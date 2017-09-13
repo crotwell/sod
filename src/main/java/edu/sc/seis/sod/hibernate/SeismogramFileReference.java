@@ -1,7 +1,7 @@
 package edu.sc.seis.sod.hibernate;
 
 
-import java.sql.Timestamp;
+import java.time.Instant;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.model.seismogram.SeismogramAttrImpl;
@@ -15,7 +15,7 @@ public class SeismogramFileReference extends AbstractSeismogramFileReference {
                                    SeismogramAttrImpl seis,
                                    String fileLocation,
                                    SeismogramFileTypes filetype) {
-        super(channel.getId().network_id.network_code, 
+        super(channel.getNetwork().getNetworkCode(), 
               channel.getStationCode(),
               channel.getLocCode(),
               channel.getChannelCode(),
@@ -29,8 +29,8 @@ public class SeismogramFileReference extends AbstractSeismogramFileReference {
                                    String staCode,
                                    String siteCode,
                                    String chanCode,
-                                   Timestamp beginTime,
-                                   Timestamp endTime,
+                                   Instant beginTime,
+                                   Instant endTime,
                                    String filePath,
                                    int fileType) {
         super(netCode, staCode, siteCode, chanCode, beginTime, endTime, filePath, fileType);

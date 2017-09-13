@@ -165,8 +165,8 @@ public class SeismogramFileRefDB extends AbstractHibernateDB {
         q.setString("staCode", chanIdxxx.getStationCode());
         q.setString("siteCode", chanIdxxx.getLocCode());
         q.setString("chanCode", chanIdxxx.getChannelCode());
-        q.setTimestamp("end", adjustedEndTime);
-        q.setTimestamp("begin", adjustedBeginTime);
+        q.setParameter("end", adjustedEndTime);
+        q.setParameter("begin", adjustedBeginTime);
         List<SeismogramFileReference> databaseResults = q.list();
         if (returnSeismograms) {
             for (SeismogramFileReference seisRef : databaseResults) {
