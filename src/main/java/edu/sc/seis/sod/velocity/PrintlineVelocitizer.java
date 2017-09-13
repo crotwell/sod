@@ -48,12 +48,13 @@ public class PrintlineVelocitizer {
     static {
         VelocityEvent event = new VelocityEvent(MockEventAccessOperations.createEvent());
         Channel chan = MockChannel.createChannel();
+        VelocityChannel vchan = new VelocityChannel(chan);
         mockContext.put("event", event);
                 mockContext.put("channel", new VelocityChannel(chan));
         mockContext.put("station", new VelocityStation(MockStation.createStation()));
         mockContext.put("net", new VelocityNetwork((Network)MockChannel.createChannel().getNetwork()));
         List<LocalSeismogramImpl> seisList = new ArrayList<LocalSeismogramImpl>();
-        seisList.add(new VelocitySeismogram(MockSeismogram.createSpike(ChannelId.of(chan)), chan));
+        seisList.add(new VelocitySeismogram(MockSeismogram.createSpike(ChannelId.of(chan)), vchan));
         mockContext.put("seismograms", seisList);
         mockContext.put("index", new Integer(1));
     }

@@ -18,11 +18,11 @@ import edu.sc.seis.sod.velocity.network.VelocitySampling;
  */
 public class VelocitySeismogram extends LocalSeismogramImpl {
 
-    public VelocitySeismogram(LocalSeismogramImpl localSeis, Channel chan) {
+    public VelocitySeismogram(LocalSeismogramImpl localSeis, VelocityChannel chan) {
         super(localSeis, localSeis.getData());
-        this.chan = VelocityChannel.wrap(chan);
-        if ( ! ChannelIdUtil.areEqualExceptForBeginTime(localSeis.getChannelID(), chan)) {
-            throw new IllegalArgumentException("Channel ids do not match: "+ChannelIdUtil.toString(localSeis.getChannelID())+"  "+ChannelIdUtil.toString(chan));
+        this.chan = chan;
+        if ( ! ChannelIdUtil.areEqualExceptForBeginTime(localSeis.getChannelID(), chan.getId())) {
+            throw new IllegalArgumentException("Channel ids do not match: "+ChannelIdUtil.toString(localSeis.getChannelID())+"  "+ChannelIdUtil.toString(chan.getWrapped()));
         }
     }
 
@@ -73,9 +73,9 @@ public class VelocitySeismogram extends LocalSeismogramImpl {
 
     public static List<VelocitySeismogram> wrap(LocalSeismogramImpl[] seis, Channel chan) {
         List<VelocitySeismogram> results = new ArrayList<VelocitySeismogram>(seis.length);
-        chan = VelocityChannel.wrap(chan);
+        VelocityChannel vchan = VelocityChannel.wrap(chan);
         for(int i = 0; i < seis.length; i++) {
-            results.add(VelocitySeismogram.wrap(seis[i], chan));
+            results.add(VelocitySeismogram.wrap(seis[i], vchan));
         }
         return results;
     }
@@ -95,7 +95,7 @@ public class VelocitySeismogram extends LocalSeismogramImpl {
 
     private VelocityChannel chan;
 
-    public static VelocitySeismogram wrap(LocalSeismogramImpl seis, Channel chan) {
+    public static VelocitySeismogram wrap(LocalSeismogramImpl seis, VelocityChannel chan) {
         if(seis instanceof VelocitySeismogram) {
             return (VelocitySeismogram)seis;
         } else {

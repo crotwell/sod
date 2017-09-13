@@ -15,7 +15,7 @@ import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 /**
  * @author groves Created on Jan 7, 2005
  */
-public class VelocityNetwork extends Network {
+public class VelocityNetwork  {
 
     /**
      * Creates a VelocityNetwork with no stations. Will throw
@@ -50,7 +50,7 @@ public class VelocityNetwork extends Network {
     }
 
     public NetworkId getId() {
-        return net.getId();
+        return new NetworkId(net);
     }
 
     public String getCode() {
@@ -66,11 +66,11 @@ public class VelocityNetwork extends Network {
     }
     
     public String getDescription() {
-        return FissuresFormatter.oneLineAndClean(super.getDescription());
+        return FissuresFormatter.oneLineAndClean(net.getDescription());
     }
     
     public String getRawDescription() {
-        return super.getDescription();
+        return net.getDescription();
     }
 
     public String getStart() {
@@ -118,7 +118,7 @@ public class VelocityNetwork extends Network {
         return stations;
     }
     
-    public int getDbid() {
+    public Integer getDbid() {
         return getWrapped().getDbid();
     }
     
@@ -140,9 +140,6 @@ public class VelocityNetwork extends Network {
     }
 
     public static VelocityNetwork wrap(Network net) {
-        if(net instanceof VelocityNetwork) {
-            return (VelocityNetwork)net;
-        }
         return new VelocityNetwork((Network)net);
     }
     

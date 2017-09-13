@@ -7,8 +7,8 @@ import java.util.List;
 import org.apache.velocity.VelocityContext;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
-import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.SamplingImpl;
+import edu.sc.seis.sod.model.common.UnknownUnit;
 import edu.sc.seis.sod.model.station.ChannelId;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
 import edu.sc.seis.sod.status.FissuresFormatter;
@@ -18,10 +18,9 @@ import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 /**
  * @author groves Created on Jan 7, 2005
  */
-public class VelocityChannel extends Channel {
+public class VelocityChannel  {
 
     public VelocityChannel(Channel chan) {
-        super(chan.getStation(), chan.getLocCode(), chan.getChannelCode());
         this.chan = chan;
     }
 
@@ -107,11 +106,11 @@ public class VelocityChannel extends Channel {
         return VelocityStation.df.format(lon) + suffix;
     }
 
-    public String getDepth() {
+    public String getDepth() throws UnknownUnit {
         return FissuresFormatter.formatElevation(StationXMLToFissures.convertFloatType(chan.getDepth()));
     }
 
-    public String getElevation() {
+    public String getElevation() throws UnknownUnit {
         return FissuresFormatter.formatElevation(StationXMLToFissures.convertFloatType(chan.getElevation()));
     }
     
@@ -152,7 +151,7 @@ public class VelocityChannel extends Channel {
     }
 
     public String compactToString() {
-        return ChannelIdUtil.toStringNoDates(this);
+        return ChannelIdUtil.toStringNoDates(chan);
     }
 
     public String toString() {
@@ -199,9 +198,6 @@ public class VelocityChannel extends Channel {
     }
 
     public static VelocityChannel wrap(Channel chan) {
-        if(chan instanceof VelocityChannel) {
-            return (VelocityChannel)chan;
-        }
         return new VelocityChannel((Channel)chan);
     }
 }

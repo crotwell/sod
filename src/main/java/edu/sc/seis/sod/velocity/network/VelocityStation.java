@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.apache.velocity.VelocityContext;
 
-import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.model.common.DistAz;
 import edu.sc.seis.sod.model.common.QuantityImpl;
@@ -24,7 +23,7 @@ import edu.sc.seis.sod.velocity.event.VelocityEvent;
 /**
  * @author groves Created on Jan 7, 2005
  */
-public class VelocityStation extends Station {
+public class VelocityStation  {
 
     public VelocityStation(Station sta) {
         if (sta == null) {
@@ -33,8 +32,7 @@ public class VelocityStation extends Station {
         this.sta = sta;
     }
 
-    @Override
-    public int getDbId() {
+    public Integer getDbId() {
         return sta.getDbid();
     }
 
@@ -46,7 +44,6 @@ public class VelocityStation extends Station {
         return StationId.of(sta);
     }
 
-    @Override
     public String getCode() {
         return sta.getCode();
     }
@@ -61,7 +58,7 @@ public class VelocityStation extends Station {
 
     public VelocityNetwork getNet() {
         if(velocityNet == null) {
-            velocityNet = new VelocityNetwork((Network)getNetworkAttr());
+            velocityNet = new VelocityNetwork(sta.getNetwork());
         }
         return velocityNet;
     }
@@ -99,7 +96,7 @@ public class VelocityStation extends Station {
     }
 
     public String getName() {
-        return FissuresFormatter.oneLineAndClean(super.getName());
+        return FissuresFormatter.oneLineAndClean(sta.getName());
     }
 
     public String getCSVName() {
@@ -165,7 +162,7 @@ public class VelocityStation extends Station {
         return new Float(sta.getLongitude().getValue());
     }
 
-    public String getElevation() {
+    public String getElevation() throws UnknownUnit {
         return FissuresFormatter.formatElevation(StationXMLToFissures.convertFloatType(sta.getElevation()));
     }
 
@@ -176,7 +173,7 @@ public class VelocityStation extends Station {
     }
 
     public String getDistance(VelocityEvent event) {
-        double km = DistAz.degreesToKilometers(new DistAz(this, event).getDelta());
+        double km = DistAz.degreesToKilometers(new DistAz(sta, event).getDelta());
         return FissuresFormatter.formatDistance(new QuantityImpl(km,
                                                                  UnitImpl.KILOMETER));
     }
@@ -186,18 +183,18 @@ public class VelocityStation extends Station {
     }
 
     public String getAz(VelocityEvent event) {
-        double az = new DistAz(this, event).getAz();
+        double az = new DistAz(sta, event).getAz();
         return FissuresFormatter.formatQuantity(new QuantityImpl(az,
                                                                  UnitImpl.DEGREE));
     }
 
     public QuantityImpl getDist(VelocityEvent event) {
-        double deg = new DistAz(this, event).getDelta();
+        double deg = new DistAz(sta, event).getDelta();
         return new QuantityImpl(deg, UnitImpl.DEGREE);
     }
 
     public String getBaz(VelocityEvent event) {
-        double baz = new DistAz(this, event).getBaz();
+        double baz = new DistAz(sta, event).getBaz();
         return FissuresFormatter.formatQuantity(new QuantityImpl(baz,
                                                                  UnitImpl.DEGREE));
     }
@@ -276,11 +273,7 @@ public class VelocityStation extends Station {
     public static List<VelocityStation> wrapList(List<? extends Station> stations) {
         List<VelocityStation> out = new ArrayList<VelocityStation>();
         for(Station s : stations) {
-            if (s instanceof VelocityStation) {
-                out.add((VelocityStation)s);
-            } else {
-                out.add(new VelocityStation((Station)s));
-            }
+            out.add(new VelocityStation((Station)s));
         }
         return out;
     }
