@@ -23,7 +23,6 @@
               are treaded as if they are in a ANDWaveformProcessWrapper -->
             <ref name="seismogramProcess"/>
             <ref name="externalVectorProcess"/>
-            <ref name="particleMotionPlot"/>
             <ref name="sampleSyncronize"/>
             <ref name="rotateGCP"/>
             <ref name="vectorTrim"/>
@@ -218,29 +217,6 @@
                 </example>
             </xsd:annotation>
             <ref name="externalClass"/>
-        </element>
-    </define>
-    <define name="particleMotionPlot">
-        <element name="particleMotionPlot">
-            <interleave>
-                <optional>
-                    <attribute name="id"/>
-                </optional>
-                <optional>
-                    <ref name="workingDir"/>
-                </optional>
-                <optional>
-                    <ref name="seisFileLocation"/>
-                </optional>
-                <optional>
-                    <ref name="titleBorder"/>
-                </optional>
-                <optional>
-                    <element name="phaseWindow">
-                        <ref name="phaseWindow"/>
-                    </element>
-                </optional>
-            </interleave>
         </element>
     </define>
     <define name="rotateGCP">
