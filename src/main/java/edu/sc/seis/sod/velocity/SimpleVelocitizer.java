@@ -7,6 +7,9 @@ import java.io.Writer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Properties;
 
 import org.apache.velocity.VelocityContext;
@@ -15,6 +18,7 @@ import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.slf4j.Logger;
 
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.seisFile.client.ISOTimeParser;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
@@ -31,9 +35,8 @@ import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
 public class SimpleVelocitizer {
 
     public static String format(Instant date, String format) {
-        DateFormat dateFormat = new SimpleDateFormat(format);
-        dateFormat.setTimeZone(ISOTimeParser.UTC);
-        return dateFormat.format(date);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format).withZone(ZoneOffset.UTC);
+        return ZonedDateTime.ofInstant(date, TimeUtils.TZ_UTC).format(formatter);
     }
 
     public String evaluate(String template, Channel chan) {
