@@ -101,7 +101,9 @@ public class WebAdmin implements ArmListener{
                 getJsonDataDir()+"/realm.properties");
         
         // test realm.properties, if not exist create with default password
-        File realmProps = new File(getJsonDataDir()+"/realm.properties");
+        File jsonDataDir = new File(getJsonDataDir());
+        if ( ! jsonDataDir.exists()) { jsonDataDir.mkdirs(); }
+        File realmProps = new File(jsonDataDir, "realm.properties");
         if ( ! realmProps.exists()) {
             PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(realmProps)));
             out.println("# This file defines the password for the SOD status pages.");
