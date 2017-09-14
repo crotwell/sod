@@ -314,11 +314,10 @@ public class Start {
                 throw new ToDoException("Adding hibernate configs not supported yet");
                // HibernateUtil.getConfiguration().addResource(res);
             }
-
             HibernateUtil.setUp(props, getClass().getResource("/edu/sc/seis/sod/data/ehcache.xml"));
         }
         try {
-            AbstractHibernateDB.deploySchema();
+            HibernateUtil.deploySchema(true);
         } catch (Exception e) {
             throw new ConfigurationException("Unable to set up database", e);
         }

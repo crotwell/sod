@@ -19,7 +19,6 @@ import org.hibernate.query.Query;
 
 import edu.sc.seis.sod.model.common.Location;
 import edu.sc.seis.sod.model.common.QuantityImpl;
-import edu.sc.seis.sod.model.common.ToDoException;
 import edu.sc.seis.sod.model.common.UnitBase;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.util.exceptionHandler.DefaultExtractor;
@@ -83,41 +82,10 @@ public abstract class AbstractHibernateDB {
         List<UnitImpl> result = q.list();
         getUnitCache().addAll(result);
     }
-
-    public static void deploySchema() throws Exception {
-        deploySchema(false);
-    }
-
-
-    public static void deploySchema(boolean failOnException) throws Exception {
-        throw new ToDoException();
-        // old style, hibernate3
-        /*
-        SchemaUpdate update = new SchemaUpdate(HibernateUtil.getConfiguration());
-        update.setHaltOnError(true);
-        // to print actual schema update commands, uncomment next line
-        //update.setOutputFile("hibernate.schema.update.commands");
-        update.execute(false, true);
-        List<Throwable> exceptions = update.getExceptions();
-        for (Throwable t : exceptions) {
-            logger.error("problem in deploySchema: ", t);
-        }
-        if (failOnException && exceptions.size() >0) {
-            Throwable first = exceptions.get(0);
-            if (first instanceof Exception) {
-                throw (Exception)first;
-            } else {
-                throw (RuntimeException)first;
-            }
-        }
-        */
-    }
     
+    @Deprecated
     protected static SessionFactory getSessionFactory() throws Exception {
-        if (sessionFactory == null) {
-            deploySchema();
-        }
-        return sessionFactory;
+        return HibernateUtil.getSessionFactory();
     }
 
     protected static Session createSession() {

@@ -3,45 +3,35 @@ package edu.sc.seis.sod.hibernate;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.EnumSet;
+import java.util.List;
 import java.util.Properties;
+
+import javax.xml.stream.XMLEventReader;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataBuilder;
 import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.SessionFactoryBuilder;
+import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.boot.registry.selector.spi.StrategySelector;
+import org.hibernate.boot.spi.MetadataImplementor;
+import org.hibernate.cfg.Configuration;
 import org.hibernate.dialect.function.SQLFunctionTemplate;
 import org.hibernate.service.ServiceRegistry;
+import org.hibernate.tool.hbm2ddl.SchemaUpdate;
+import org.hibernate.tool.hbm2ddl.TargetTypeHelper;
+import org.hibernate.tool.schema.TargetType;
 
 import net.sf.ehcache.CacheManager;
 
 public class HibernateUtil {
-
-/* definitions are in edu/sc/seis/sod/hibernate/*.hbm.xml
- * loaded from hibernate.cgf.xml
-*/
     
-    private static String configFile = "edu/sc/seis/sod/hibernate/hibernate.cfg.xml";
-
-    private static SessionFactory sessionFactory;
-
     public synchronized static SessionFactory getSessionFactory() {
         if(sessionFactory == null) {
-            logger.debug("Sessionfactory is null, creating...");
-            
-
-            ServiceRegistry standardRegistry = getServiceRegistryBuilder().build();
-
-            MetadataSources sources = new MetadataSources( standardRegistry );
-            
-            
-            
-            MetadataBuilder metadataBuilder = sources.getMetadataBuilder();
-            
-            addDateFunctions(metadataBuilder);
-            
-            Metadata metadata = metadataBuilder.build();
-            sessionFactory = metadata.getSessionFactoryBuilder().build();
+            throw new RuntimeException("Sessionfactory is null, HibernateUtil.setUp must be called first.");
         }
         return sessionFactory;
     }
@@ -68,16 +58,6 @@ public class HibernateUtil {
         }
     }
 
-    static StandardServiceRegistryBuilder standardServiceRegistryBuilder;
-    
-    public static StandardServiceRegistryBuilder getServiceRegistryBuilder() {
-        if (standardServiceRegistryBuilder == null) {
-            standardServiceRegistryBuilder = new StandardServiceRegistryBuilder()
-                .configure( configFile);
-        }
-        return standardServiceRegistryBuilder;
-    }
-
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(HibernateUtil.class);
 
     public static void setUp(Properties props, URL ehcacheConfig) {
@@ -98,7 +78,8 @@ public class HibernateUtil {
             }
             props.put("ehcache.disk.store.dir", dirname);
         }
-    	setUpEHCache(ehcacheConfig);
+        System.err.println("ToDo: set up ehcache or another...");
+//    	setUpEHCache(ehcacheConfig);
         setUp(props);
     }
     
@@ -116,10 +97,55 @@ public class HibernateUtil {
     public static void setUp(Properties inProps) {
         synchronized(HibernateUtil.class) {
             props = inProps;
-            getServiceRegistryBuilder()
-                    .applySettings(props);
+            StandardServiceRegistry standardRegistry = new StandardServiceRegistryBuilder()
+                    .applySettings(props)
+                    .build();
+
+            MetadataBuilder metadataBuilder = new MetadataSources( standardRegistry )
+                    .addResource( "edu/sc/seis/sod/hibernate/StationXML.hbm.xml" )
+                    .addResource( "edu/sc/seis/sod/hibernate/Common.hbm.xml" )
+                    .addResource( "edu/sc/seis/sod/hibernate/Event.hbm.xml" )
+                    .addResource( "edu/sc/seis/sod/hibernate/sod.hbm.xml" )
+                    .getMetadataBuilder();
+            addDateFunctions(metadataBuilder);
+            metadata = metadataBuilder.build();
+
+            SessionFactoryBuilder sessionFactoryBuilder = metadata.getSessionFactoryBuilder();
+
+//          Add a custom observer
+            sessionFactoryBuilder.addSessionFactoryObservers( new CustomSessionFactoryObserver() );
+
+            sessionFactory = sessionFactoryBuilder.build();
         }
     }
+    
+    public static void deploySchema(boolean haltOnError) {
+
+        EnumSet<TargetType> targetTypes = TargetTypeHelper.parseCommandLineOptions( "script,database" );
+        
+        SchemaUpdate update = new SchemaUpdate()
+        .setOutputFile( "sod_hibernate.out" )
+        .setHaltOnError(haltOnError)
+        .setDelimiter( null );
+        update.execute( targetTypes, metadata );
+        List<Throwable> exceptions = update.getExceptions();
+        for (Throwable t : exceptions) {
+            logger.warn("problem update schema", t);
+        }
+
+        if (haltOnError && exceptions.size() >0) {
+            Throwable first = exceptions.get(0);
+            if (first instanceof Exception) {
+                throw new RuntimeException("Problem updating schema", first);
+            } else {
+                throw (RuntimeException)first;
+            }
+        }
+    }
+    
+    private static Metadata metadata;
+    
+    private static SessionFactory sessionFactory;
     
     private static Properties props;
     
