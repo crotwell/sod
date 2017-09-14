@@ -10,11 +10,11 @@ import com.oregondsp.signalProcessing.filter.iir.ChebyshevII;
 import com.oregondsp.signalProcessing.filter.iir.IIRFilter;
 import com.oregondsp.signalProcessing.filter.iir.PassbandType;
 
-import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.XMLUtil;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.common.QuantityImpl;

@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.hibernate.query.Query;
 
-import edu.sc.seis.fissuresUtil.xml.URLDataSetSeismogram;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.bag.Cut;
 import edu.sc.seis.sod.model.event.CacheEvent;
@@ -17,6 +16,7 @@ import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.seismogram.SeismogramAttrImpl;
 import edu.sc.seis.sod.model.station.ChannelId;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
+import edu.sc.seis.sod.process.waveform.URLDataSetSeismogram;
 import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.util.time.ReduceTool;
 

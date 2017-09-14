@@ -20,9 +20,9 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.XMLUtil;
 import edu.sc.seis.sod.validator.ModelWalker;
 import edu.sc.seis.sod.validator.model.datatype.AnyText;
 import edu.sc.seis.sod.validator.model.datatype.BooleanDatatype;

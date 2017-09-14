@@ -34,7 +34,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
-import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.sod.model.common.BoxAreaImpl;
 import edu.sc.seis.sod.model.common.GlobalAreaImpl;
