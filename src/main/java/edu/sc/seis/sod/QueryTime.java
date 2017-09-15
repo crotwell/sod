@@ -76,6 +76,6 @@ public class QueryTime {
         if (nextRefresh.isBefore(now)) {
             return 0l;
         }
-        return Duration.between(nextRefresh, now).toMillis();  
+        return Duration.between(now, nextRefresh).toMillis();  
     }
 }
