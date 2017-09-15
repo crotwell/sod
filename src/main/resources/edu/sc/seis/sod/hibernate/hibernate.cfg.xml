@@ -12,7 +12,7 @@
         <property name="connection.driver_class">org.hsqldb.jdbcDriver</property>
 -->
         <property name="connection.driver_class">org.hsqldb.jdbc.JDBCDriver</property>
-        <property name="connection.url">jdbc:hsqldb:hsql://localhost</property>
+        <property name="connection.url">jdbc:hsqldb:mem:SodDB</property>
         <property name="connection.username">sa</property>
         <property name="connection.password"></property>
 
@@ -27,7 +27,10 @@
 
         <!-- Disable the second-level cache  -->
         <property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+        <property name="hibernate.cache.use_second_level_cache">false</property>
+        <property name="hibernate.cache.region.factory_class" value="org.hibernate.cache.jcache.JCacheRegionFactory"/>
 
+        
         <!-- Echo all executed SQL to stdout -->
         <property name="show_sql">false</property>
 

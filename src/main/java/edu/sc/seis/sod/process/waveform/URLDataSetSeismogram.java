@@ -31,6 +31,7 @@ import edu.sc.seis.sod.util.convert.mseed.FissuresConvert;
 import edu.sc.seis.sod.util.convert.sac.FissuresToSac;
 import edu.sc.seis.sod.util.convert.sac.SacToFissures;
 
+@Deprecated
 public class URLDataSetSeismogram {
     
     public static LocalSeismogramImpl getSeismogram(File file, SeismogramFileTypes fileType) throws UnsupportedFileTypeException, FissuresException, IOException, SeedFormatException {

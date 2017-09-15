@@ -53,7 +53,7 @@ public abstract class AbstractHibernateDB {
     private static synchronized void saveCommonUnits() {
         Session s = HibernateUtil.getSessionFactory().openSession();
         s.beginTransaction();
-        Query q = s.createQuery("From edu.iris.Fissures.model.UnitImpl");
+        Query q = s.createQuery("From "+UnitImpl.class.getName());
         List<UnitImpl> result = q.list();
         if (result.size() == 0) {
             // only save if no units in database
@@ -78,7 +78,7 @@ public abstract class AbstractHibernateDB {
     }
     
     private static void loadUnits(Session s) {
-        Query q = s.createQuery("From edu.iris.Fissures.model.UnitImpl");
+        Query q = s.createQuery("From edu.sc.seis.sod.model.common.UnitImpl");
         List<UnitImpl> result = q.list();
         getUnitCache().addAll(result);
     }

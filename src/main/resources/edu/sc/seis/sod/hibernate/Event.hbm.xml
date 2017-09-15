@@ -5,7 +5,7 @@
 
 <hibernate-mapping>
 
-	<class name="edu.sc.seis.sod.model.CacheEvent"
+	<class name="edu.sc.seis.sod.model.event.CacheEvent"
 		table="event">
 		<cache usage="read-write"/>
 		<id name="dbid" type="integer">
@@ -20,14 +20,14 @@
 			<key column="event_origin_id" />
 			<list-index column="sortOrder" />
 			<many-to-many column="origin_id"
-			class="edu.iris.Fissures.event.OriginImpl" />
+			class="edu.sc.seis.sod.model.event.OriginImpl" />
 			</array>
 		-->
 		<component name="attr"
 			class="edu.sc.seis.sod.model.event.EventAttrImpl" access="field" lazy="false">
 			<property name="name" access="field" />
 			<component name="region"
-				class="edu.sc.seis.sod.model.FlinnEngdahlRegion"
+				class="edu.sc.seis.sod.model.event.FlinnEngdahlRegion"
 				access="field">
 				<property name="number" column="feregion" type="integer"
 					access="field" />
@@ -43,7 +43,7 @@
 			<generator class="native" />
 		</id>
 		<property name="_id" column="origin_id"/> <!-- oracle doesn't like column names starting with _ -->
-		<property name="originTime" type="microseconddate">
+		<property name="originTime" type="Instant">
 		</property>
 		<component name="location" class="edu.sc.seis.sod.model.common.Location" >
 			<property name="latitude" type="float" access="field"  lazy="false"/>

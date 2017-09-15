@@ -116,12 +116,13 @@ public class HibernateUtil {
             sessionFactoryBuilder.addSessionFactoryObservers( new CustomSessionFactoryObserver() );
 
             sessionFactory = sessionFactoryBuilder.build();
+            deploySchema(true);
         }
     }
     
     public static void deploySchema(boolean haltOnError) {
 
-        EnumSet<TargetType> targetTypes = TargetTypeHelper.parseCommandLineOptions( "script,database" );
+        EnumSet<TargetType> targetTypes = TargetTypeHelper.parseCommandLineOptions( "script,database" ); // "stdout,script,database"
         
         SchemaUpdate update = new SchemaUpdate()
         .setOutputFile( "sod_hibernate.out" )

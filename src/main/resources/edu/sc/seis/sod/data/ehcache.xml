@@ -13,43 +13,43 @@
         memoryStoreEvictionPolicy="LRU"
         />
         
-    <cache name="edu.iris.Fissures.model.UnitImpl"
+    <cache name="edu.sc.seis.sod.model.common.UnitImpl"
         maxElementsInMemory="10"
         eternal="true"
         overflowToDisk="false"
         />
         
-    <cache name="edu.iris.Fissures.network.NetworkAttrImpl"
+    <cache name="edu.sc.seis.seisFile.fdsnws.stationxml.Network"
         maxElementsInMemory="300"
         eternal="true"
         overflowToDisk="false"
         />
         
-    <cache name="edu.iris.Fissures.network.StationImpl"
+    <cache name="edu.sc.seis.seisFile.fdsnws.stationxml.Station"
         maxElementsInMemory="3000"
         eternal="true"
         overflowToDisk="false"
         />
         
-    <cache name="edu.iris.Fissures.network.ChannelImpl"
+    <cache name="edu.sc.seis.seisFile.fdsnws.stationxml.Channel"
         maxElementsInMemory="12000"
         eternal="true"
         overflowToDisk="false"
         />
         
-    <cache name="edu.sc.seis.fissuresUtil.hibernate.ChannelGroup"
+    <cache name="edu.sc.seis.sod.model.station.ChannelGroup"
         maxElementsInMemory="4000"
         eternal="true"
         overflowToDisk="false"
         />
         
-    <cache name="edu.sc.seis.fissuresUtil.cache.CacheEvent"
+    <cache name="edu.sc.seis.sod.model.event.CacheEvent"
         maxElementsInMemory="100"
         eternal="true"
         overflowToDisk="false"
         />
         
-    <cache name="edu.iris.Fissures.event.OriginImpl"
+    <cache name="edu.sc.seis.sod.model.event.OriginImpl"
         maxElementsInMemory="100"
         eternal="true"
         overflowToDisk="false"

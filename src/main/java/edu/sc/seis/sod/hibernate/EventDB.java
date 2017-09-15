@@ -24,21 +24,21 @@ public class EventDB extends AbstractHibernateDB {
 				+ " e inner join e.preferred.magnitudeList m "
 				+ "WHERE e.preferred.location.latitude between :minLat AND :maxLat "
 				+ "AND m.value between :minMag AND :maxMag  "
-				+ "AND e.preferred.originTime.time between :minTime AND :maxTime  "
+				+ "AND e.preferred.originTime between :minTime AND :maxTime  "
 				+ "AND e.preferred.location.depth.value between :minDepth and :maxDepth  ";
 		finderQueryAvoidDateline = finderQueryBase
 				+ "AND e.preferred.location.longitude between :minLon and :maxLon ";
 		finderQueryAroundDateline = finderQueryBase
 				+ " AND ((:minLon <= e.preferred.location.longitude) OR (e.preferred.location.longitude <= :maxLon))";
 		getIdenticalEventString = "From " + getEventClass().getName()
-				+ " e WHERE " + "e.preferred.originTime.time = :originTime "
+				+ " e WHERE " + "e.preferred.originTime = :originTime "
 				+ "AND e.preferred.location.latitude = :lat "
 				+ "AND e.preferred.location.longitude = :lon "
                 + "AND e.preferred.location.depth.value = :depth "
                 + "AND e.preferred.catalog = :catalog "
                 + "AND e.preferred._id = :originid ";
 		eventByTimeAndDepth = "From " + getEventClass().getName()
-        + " e WHERE " + "e.preferred.originTime.time between :minTime and :maxTime "
+        + " e WHERE " + "e.preferred.originTime between :minTime and :maxTime "
         + "AND e.preferred.location.depth.value between :minDepth and :maxDepth";
 		eventByName = "From " + getEventClass().getName()
         + " e WHERE " + "e.attr.name = :name";

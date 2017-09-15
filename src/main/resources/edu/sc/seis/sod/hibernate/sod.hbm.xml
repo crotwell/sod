@@ -6,7 +6,7 @@
 <hibernate-mapping>
 
 	<joined-subclass name="edu.sc.seis.sod.model.event.StatefulEvent"
-		extends="edu.sc.seis.sod.model.CacheEvent"
+		extends="edu.sc.seis.sod.model.event.CacheEvent"
 		table="statefulEvent">
 		<key column="eventStatus_id" />
 		<component name="status">
@@ -24,14 +24,14 @@
 			class="edu.sc.seis.sod.model.event.StatefulEvent" column="event"
 			foreign-key="FK_enetp_event" unique-key="event_net_key" />
 		<many-to-one name="network"
-			class="edu.sc.seis.sod.model.station.NetworkAttrImpl" column="networkAttr"
+			class="edu.sc.seis.seisFile.fdsnws.stationxml.Network" column="network"
 			foreign-key="FK_enetp_network" unique-key="event_net_key" />
 		<component name="status">
 			<property name="stageInt" type="integer"  index="enp_stage_index"/>
 			<property name="standingInt" type="integer"  index="enp_standing_index" />
 		</component>
 		<property name="numRetries"  type="integer"/>
-		<property name="lastQuery"  type="timestamp"/>
+		<property name="lastQuery"  type="Instant"/>
 	</class>
 
 	<class name="edu.sc.seis.sod.hibernate.eventpair.EventStationPair">
@@ -43,14 +43,14 @@
 			class="edu.sc.seis.sod.model.event.StatefulEvent" column="event"
 			foreign-key="FK_estap_event" unique-key="event_station_key" />
 		<many-to-one name="station"
-			class="edu.sc.seis.sod.model.station.StationImpl" column="station"
+			class="edu.sc.seis.seisFile.fdsnws.stationxml.Station" column="station"
 			foreign-key="FK_estap_station" unique-key="event_station_key" />
 		<component name="status">
 			<property name="stageInt" type="integer"  index="esp_stage_index" />
 			<property name="standingInt" type="integer" index="esp_standing_index" />
 		</component>
 		<property name="numRetries"  type="integer"/>
-		<property name="lastQuery"  type="timestamp"/>
+		<property name="lastQuery"  type="Instant"/>
 	</class>
 	
 	<class name="edu.sc.seis.sod.hibernate.eventpair.AbstractEventChannelPair" abstract="true">
@@ -71,7 +71,7 @@
 			<property name="standingInt" type="integer"  index="aecp_standing_index" />
 		</component>
 		<property name="numRetries"  type="integer"/>
-		<property name="lastQuery"  type="timestamp"/>
+		<property name="lastQuery"  type="Instant"/>
 		<map name="cookies" table="cookieJar"> 
     		<key column="dbid"/> 
     		<map-key column="cookieName" type="string"/> 
@@ -84,7 +84,7 @@
 
 		<union-subclass name="edu.sc.seis.sod.hibernate.eventpair.EventChannelPair">
 			<many-to-one name="channel"
-				class="edu.sc.seis.sod.model.station.ChannelImpl" column="channel"
+				class="edu.sc.seis.seisFile.fdsnws.stationxml.Channel" column="channel"
 				foreign-key="FK_ecp_channel"  />
 		</union-subclass>
 
@@ -94,13 +94,30 @@
 				column="channelGroup" foreign-key="FK_evp_channelGroup" />
 		</union-subclass>
 	</class>
+	
+	<class name="edu.sc.seis.sod.model.station.ChannelGroup"
+		table="channelGroup" lazy="false">
+		<cache usage="read-write"/>
+		<id name="dbid" type="integer">
+			<generator class="native" />
+		</id>
+		<many-to-one name="channel1"
+			class="edu.sc.seis.seisFile.fdsnws.stationxml.Channel" column="channel1"
+			foreign-key="FK_cg_channel1" unique-key="channelgroup_chan_key" index="cg_chan1_idx" />
+		<many-to-one name="channel2"
+			class="edu.sc.seis.seisFile.fdsnws.stationxml.Channel" column="channel2"
+			foreign-key="FK_cg_channel2" unique-key="channelgroup_chan_key" />
+		<many-to-one name="channel3"
+			class="edu.sc.seis.seisFile.fdsnws.stationxml.Channel" column="channel3"
+			foreign-key="FK_cg_channel3" unique-key="channelgroup_chan_key" />
+	</class>
 
 	<class name="edu.sc.seis.sod.SodConfig">
 		<id name="dbid" type="integer">
 			<generator class="native" />
 		</id>
 		<property name="config" type="text" />
-		<property name="time" type="timestamp" />
+		<property name="time" type="Instant" />
 	</class>
 
 	<class name="edu.sc.seis.sod.QueryTime">
@@ -109,11 +126,10 @@
 			<generator class="native" />
 		</id>
 		<property name="serverName" type="string" />
-		<property name="serverDNS" type="string" />
-		<property name="time" type="timestamp" />
+		<property name="time" type="Instant" />
 	</class>
 
-	<class name="edu.sc.seis.sod.Version">
+	<class name="edu.sc.seis.sod.model.common.Version">
 		<id name="dbid" type="integer">
 			<generator class="native" />
 		</id>

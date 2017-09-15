@@ -10,9 +10,9 @@
         <id name="dbid" type="integer">
             <generator class="native" />
         </id>
-        <property name="code" index="net_code_idx" />
-        <property name="startDateTime" type="java.time.Instant" />
-        <property name="endDateTime" type="java.time.Instant" />
+        <property name="networkCode" index="net_code_idx" />
+        <property name="startDateTime" type="Instant" />
+        <property name="endDateTime" type="Instant" />
         <property name="restrictedStatus" />
         <property name="description" type="text"/>
     </class>
@@ -22,16 +22,29 @@
         <id name="dbid" type="integer">
             <generator class="native" />
         </id>
-        <property name="code" index="station_code_idx" />
+        <property name="stationCode" index="station_code_idx" />
+        <many-to-one name="network" class="edu.sc.seis.seisFile.fdsnws.stationxml.Network"/>
         <property name="networkCode" />
-        <property name="startDateTime" type="java.time.Instant" />
-        <property name="endDateTime" type="java.time.Instant" />
+        <property name="startDateTime" type="Instant" />
+        <property name="endDateTime" type="Instant" />
         <property name="restrictedStatus" />
         <property name="description" type="text"/>
-        <property name="latitude" type="float"/>
-        <property name="longitude" type="float"/>
-        <property name="elevation" type="float"/>
         
+        <!-- 
+        <property name="latitudeFloat" type="float"/>
+        <property name="longitudeFloat" type="float"/>
+        <property name="elevationFloat" type="float"/>
+        -->
+        
+		<component name="latitude" class="edu.sc.seis.seisFile.fdsnws.stationxml.DegreeFloatType">
+				<property name="value" column="latitude_value" type="float"  />
+		</component>
+		<component name="longitude" class="edu.sc.seis.seisFile.fdsnws.stationxml.DegreeFloatType">
+				<property name="value" column="longitude_value" type="float"  />
+		</component>
+		<component name="elevation" class="edu.sc.seis.seisFile.fdsnws.stationxml.MeterFloatType">
+				<property name="value" column="elevation_value" type="float"  />
+		</component>
     </class>
     
     <class name="edu.sc.seis.seisFile.fdsnws.stationxml.Channel" >
@@ -39,21 +52,45 @@
         <id name="dbid" type="integer">
             <generator class="native" />
         </id>
-        <property name="code" index="channel_code_idx" />
+        <property name="channelCode" index="channel_code_idx" />
         <property name="locCode" />
+        <many-to-one name="station" class="edu.sc.seis.seisFile.fdsnws.stationxml.Station"/>
         <property name="stationCode" />
         <property name="networkCode" />
-        <property name="startDateTime" type="java.time.Instant" />
-        <property name="endDateTime" type="java.time.Instant" />
+        <property name="startDateTime" type="Instant" />
+        <property name="endDateTime" type="Instant" />
         <property name="restrictedStatus" />
         <property name="description" type="text"/>
-        <property name="latitude" type="float"/>
-        <property name="longitude" type="float"/>
-        <property name="elevation" type="float"/>
-        <property name="depth" type="float"/>
+        <!-- 
+        <property name="latitudeFloat" type="float"/>
+        <property name="longitudeFloat" type="float"/>
+        <property name="elevationFloat" type="float"/>
+        <property name="depthFloat" type="float"/>
         <property name="azimuth" type="float"/>
         <property name="dip" type="float"/>
-        <property name="sampleRate" type="float"/>
+        -->
+        
+		<component name="latitude" class="edu.sc.seis.seisFile.fdsnws.stationxml.DegreeFloatType">
+				<property name="value" column="latitude_value" type="float"  />
+		</component>
+		<component name="longitude" class="edu.sc.seis.seisFile.fdsnws.stationxml.DegreeFloatType">
+				<property name="value" column="longitude_value" type="float"  />
+		</component>
+		<component name="elevation" class="edu.sc.seis.seisFile.fdsnws.stationxml.MeterFloatType">
+				<property name="value" column="elevation_value" type="float"  />
+		</component>
+		<component name="depth" class="edu.sc.seis.seisFile.fdsnws.stationxml.MeterFloatType">
+				<property name="value" column="depth_value" type="float"  />
+		</component>
+		<component name="azimuth" class="edu.sc.seis.seisFile.fdsnws.stationxml.DegreeFloatType">
+				<property name="value" column="azimuth_value" type="float"  />
+		</component>
+		<component name="dip" class="edu.sc.seis.seisFile.fdsnws.stationxml.DegreeFloatType">
+				<property name="value" column="dip_value" type="float"  />
+		</component> 
+		<component name="sampleRate" class="edu.sc.seis.seisFile.fdsnws.stationxml.HertzFloatType">
+				<property name="value" column="sampleRate_value" type="float"  />
+		</component> 
     </class>
     
     

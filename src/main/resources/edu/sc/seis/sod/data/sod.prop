@@ -57,6 +57,7 @@ hibernate.connection.url=jdbc:hsqldb:file:SodDb/SodDb
 hibernate.connection.hsqldb.default_table_type=cached
 
 hibernate.cache.use_second_level_cache=true
+hibernate.cache.region.factory_class=org.hibernate.cache.ehcache.EhCacheRegionFactory
 hibernate.cache.provider_class=org.hibernate.cache.EhCacheProvider
 ehcache.disk.store.dir=SodDb/ehcache
 

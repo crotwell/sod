@@ -1,30 +1,23 @@
 package edu.sc.seis.sod.hibernate;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-import java.util.Properties;
+import java.util.List;
 
-import org.apache.log4j.BasicConfigurator;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.mock.event.MockEventAccessOperations;
 import edu.sc.seis.sod.model.event.CacheEvent;
 
 
 public class EventDbTest {
 
-    @Before
-    public void setUp() throws Exception {
-        BasicConfigurator.configure();
-        Properties props = new Properties();
-        props.put("hibernate.connection.url", "jdbc:hsqldb:mem:.");
-        assertNotNull("Start class", Start.class);
-        assertNotNull("Start default value", "/"+Start.DEFAULT_PROPS);
-        assertNotNull("props as stream: "+Start.DEFAULT_PROPS, Start.class.getResourceAsStream("/"+Start.DEFAULT_PROPS));
-        props.load(Start.class.getResourceAsStream("/"+Start.DEFAULT_PROPS));
-        HibernateUtil.setUp(props);
+
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+        StationDbTest.setUpDB();
     }
 
     //@Test
@@ -35,6 +28,10 @@ public class EventDbTest {
     @Test
     public void testPut() {
         CacheEvent event = MockEventAccessOperations.createEvent();
-        EventDB.getSingleton().put(event);
-    }
+        EventDB edb = EventDB.getSingleton();
+        edb.put(event);
+        edb.commit();
+        List<CacheEvent> elist = edb.getAll();
+        assertTrue("events size", elist.size() > 0);
+;    }
 }
