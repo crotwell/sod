@@ -189,14 +189,12 @@ public class VectorTrimTest extends TestCase {
 
     public void testOnSeismogramsWithVaryingSamplingALaPond()
             throws FissuresException, ParseException, SubsetterException {
-        String[][] seisTimes = new String[][] { {"2003.01.06 23:50:07.483",
-                                                 "2003.01.07 00:08:08.334"},
-                                               {"2003.01.06 23:51:59.483",
-                                                "2003.01.07 00:06:18.234"},
-                                               {"2003.01.06 23:49:21.983",
-                                                "2003.01.07 00:06:16.734"}};
-        SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS");
-        timeFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        String[][] seisTimes = new String[][] { {"2003-01-06T23:50:07.483",
+                                                 "2003-01-07T00:08:08.334"},
+                                               {"2003-01-06T23:51:59.483",
+                                                "2003-01-07T00:06:18.234"},
+                                               {"2003-01-06T23:49:21.983",
+                                                "2003-01-07T00:06:16.734"}};
         LocalSeismogramImpl[][] vector = new LocalSeismogramImpl[seisTimes.length][1];
         for(int i = 0; i < seisTimes.length; i++) {
             Instant start = TimeUtils.parseISOString(seisTimes[i][0]);
@@ -218,9 +216,9 @@ public class VectorTrimTest extends TestCase {
 
     public void testOnSeismogramsWithSlightlyVaryingStart()
             throws FissuresException, ParseException, SubsetterException {
-        String[] seisTimes = new String[] { "2003.01.06 23:50:07.481",
-                                            "2003.01.06 23:50:07.482",
-                                            "2003.01.06 23:50:07.483"};
+        String[] seisTimes = new String[] { "2003-01-06T23:50:07.481",
+                                            "2003-01-06T23:50:07.482",
+                                            "2003-01-06T23:50:07.483"};
         SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS");
         timeFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
         LocalSeismogramImpl[][] vector = new LocalSeismogramImpl[seisTimes.length][1];

@@ -3,9 +3,11 @@ package edu.sc.seis.sod.velocity.event;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import edu.sc.seis.seisFile.client.ISOTimeParser;
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
@@ -16,7 +18,6 @@ import edu.sc.seis.sod.model.event.OriginImpl;
 import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.util.display.ParseRegions;
 import edu.sc.seis.sod.util.display.ThreadSafeDecimalFormat;
-import edu.sc.seis.sod.util.display.ThreadSafeSimpleDateFormat;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 import edu.sc.seis.sod.velocity.network.VelocityStation;
 
@@ -254,19 +255,15 @@ public class VelocityEvent extends CacheEvent {
         return new CacheEvent(event);
     }
 
-    private static ThreadSafeSimpleDateFormat fullDateIdentifier = new ThreadSafeSimpleDateFormat("yyyy/MM/dd/HH/mm/ss", ISOTimeParser.UTC);
+    private static DateTimeFormatter fullDateIdentifier = TimeUtils.createFormatter("yyyy/MM/dd/HH/mm/ss");
 
     public static String makeDateIdentifier(VelocityEvent event) {
-        synchronized(fullDateIdentifier) {
         return fullDateIdentifier.format(event.getOrigin().getOriginTime());
-        }
     }
 
     public static Instant parseDateIdentifier(String eqIdentifier)
             throws ParseException {
-        synchronized(fullDateIdentifier) {
-        return Instant.ofEpochMilli(fullDateIdentifier.parse(eqIdentifier).getTime());
-        }
+        return ZonedDateTime.parse(eqIdentifier, fullDateIdentifier).toInstant();
     }
 
     private OriginImpl origin;

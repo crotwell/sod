@@ -1,10 +1,8 @@
 package edu.sc.seis.sod.process.waveform.vector;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.TimeZone;
 
 import org.junit.Test;
 
@@ -26,9 +24,9 @@ public class SampleSyncronizeTest extends TestCase {
     @Test
     public void testOnSeismogramsWithSlightlyVaryingStart()
             throws FissuresException, ParseException {
-        String[] seisTimes = new String[] { "2003.01.06 23:50:07.481",
-                                            "2003.01.06 23:50:07.482",
-                                            "2003.01.06 23:50:07.483"};
+        String[] seisTimes = new String[] { "2003-01-06T23:50:07.481",
+                                            "2003-01-06T23:50:07.482",
+                                            "2003-01-06T23:50:07.483"};
         LocalSeismogramImpl[][] vector = makeSeis(seisTimes);
         SampleSyncronize sampleSyncronize = new SampleSyncronize();
         WaveformVectorResult result =  sampleSyncronize.accept(vector);
@@ -42,9 +40,9 @@ public class SampleSyncronizeTest extends TestCase {
     @Test
     public void testOnSeismogramsWithWidelyVaryingStart()
             throws FissuresException, ParseException {
-        String[] seisTimes = new String[] { "2003.01.06 23:50:07.481",
-                                            "2003.01.06 23:50:17.482",
-                                            "2003.01.06 23:50:27.487"};
+        String[] seisTimes = new String[] { "2003-01-06T23:50:07.481",
+                                            "2003-01-06T23:50:17.482",
+                                            "2003-01-06T23:50:27.487"};
         LocalSeismogramImpl[][] vector = makeSeis(seisTimes);
         SampleSyncronize sampleSyncronize = new SampleSyncronize();
         WaveformVectorResult result =  sampleSyncronize.accept(vector);
@@ -57,8 +55,6 @@ public class SampleSyncronizeTest extends TestCase {
     }
     
     LocalSeismogramImpl[][] makeSeis(String[] seisTimes) throws ParseException {
-        SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS");
-        timeFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
         LocalSeismogramImpl[][] vector = new LocalSeismogramImpl[seisTimes.length][1];
         Duration seisWidth = Duration.ofMinutes(10);
         for(int i = 0; i < seisTimes.length; i++) {

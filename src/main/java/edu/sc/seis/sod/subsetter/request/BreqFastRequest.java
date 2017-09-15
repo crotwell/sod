@@ -6,11 +6,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 
 import org.apache.velocity.VelocityContext;
 import org.w3c.dom.Element;
 
-import edu.sc.seis.seisFile.client.ISOTimeParser;
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.DOMHelper;
@@ -28,7 +29,6 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.VelocityFileElementParser;
 import edu.sc.seis.sod.util.display.EventUtil;
 import edu.sc.seis.sod.util.display.ParseRegions;
-import edu.sc.seis.sod.util.display.ThreadSafeSimpleDateFormat;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 import edu.sc.seis.sod.velocity.WaveformProcessContext;
 
@@ -192,9 +192,9 @@ public class BreqFastRequest implements RequestSubsetter {
 
     static final String nl = "\n";
 
-    ThreadSafeSimpleDateFormat format = new ThreadSafeSimpleDateFormat("yyyy MM dd HH mm ss.", ISOTimeParser.UTC);
+    DateTimeFormatter format = TimeUtils.createFormatter("yyyy MM dd HH mm ss.");
 
-    ThreadSafeSimpleDateFormat tenths = new ThreadSafeSimpleDateFormat("SSS", ISOTimeParser.UTC);
+    DateTimeFormatter tenths = TimeUtils.createFormatter("SSS");
 
     ParseRegions regions;
 

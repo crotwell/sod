@@ -1,8 +1,7 @@
 package edu.sc.seis.sod.tools;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -60,14 +59,12 @@ public class TimeParser extends StringParser {
     }
     
     public static String format(Instant d) {
-        DateFormat passcalFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        passcalFormat.setTimeZone(ISOTimeParser.UTC);
+        DateTimeFormatter passcalFormat = TimeUtils.createFormatter("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         return passcalFormat.format(d);
     }
     
     public static String formatForParsing(Instant d) {
-        DateFormat passcalFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        passcalFormat.setTimeZone(ISOTimeParser.UTC);
+        DateTimeFormatter passcalFormat = TimeUtils.createFormatter("yyyy-MM-dd'T'HH:mm:ss");
         return passcalFormat.format(d);
     }
     
@@ -104,7 +101,7 @@ public class TimeParser extends StringParser {
 
     public static final String FIRST_SEISMOGRAM = "1889-04-17";
 
-    private static final String PREVIOUS_DAY = new SimpleDateFormat("yyyy-MM-dd").format(ClockUtil.now()
+    private static final String PREVIOUS_DAY = TimeUtils.createFormatter("yyyy-MM-dd").format(ClockUtil.now()
             .minus(TimeUtils.ONE_DAY));
 
     private static String PREVIOUS_DAY_BEGIN = "the previous day, "

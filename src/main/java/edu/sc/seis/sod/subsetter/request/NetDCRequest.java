@@ -3,15 +3,15 @@ package edu.sc.seis.sod.subsetter.request;
 import java.io.IOException;
 import java.io.Writer;
 import java.time.Instant;
-import java.util.TimeZone;
+import java.time.format.DateTimeFormatter;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
-import edu.sc.seis.sod.util.display.ThreadSafeSimpleDateFormat;
 
 public class NetDCRequest extends BreqFastRequest {
 
@@ -62,5 +62,5 @@ public class NetDCRequest extends BreqFastRequest {
         return "${event.getTime('yyyy.DDD.HH.mm.ss.SSSS')}.netdc";
     }
     
-    private ThreadSafeSimpleDateFormat netDCTimeFormat = new ThreadSafeSimpleDateFormat("'\"'yyyy MM dd HH mm ss.SSSS'\"'", TimeZone.getTimeZone("GMT"));
+    private DateTimeFormatter netDCTimeFormat = TimeUtils.createFormatter("'\"'yyyy MM dd HH mm ss.SSSS'\"'");
 }

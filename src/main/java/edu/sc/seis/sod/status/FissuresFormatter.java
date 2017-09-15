@@ -7,9 +7,11 @@ package edu.sc.seis.sod.status;
 
 import java.text.NumberFormat;
 import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.TimeZone;
 
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.model.common.DistAz;
@@ -27,7 +29,6 @@ import edu.sc.seis.sod.model.station.StationId;
 import edu.sc.seis.sod.model.station.StationIdUtil;
 import edu.sc.seis.sod.util.display.ChoiceDecimalFormat;
 import edu.sc.seis.sod.util.display.ParseRegions;
-import edu.sc.seis.sod.util.display.ThreadSafeSimpleDateFormat;
 import edu.sc.seis.sod.util.display.UnitDisplayUtil;
 import edu.sc.seis.sod.util.time.ClockUtil;
 
@@ -285,17 +286,17 @@ public class FissuresFormatter {
 
     private static TimeZone GMT = TimeZone.getTimeZone("GMT");
     
-    public static ThreadSafeSimpleDateFormat ymdDateFormat = new ThreadSafeSimpleDateFormat("yyyy-MM-dd", GMT);
+    public static DateTimeFormatter ymdDateFormat = TimeUtils.createFormatter("yyyy-MM-dd");
 
-    public static ThreadSafeSimpleDateFormat yearDateFormat = new ThreadSafeSimpleDateFormat("yyyy", GMT);
+    public static DateTimeFormatter yearDateFormat = TimeUtils.createFormatter("yyyy");
 
-    public static ThreadSafeSimpleDateFormat longFileFormat = new ThreadSafeSimpleDateFormat("yyyy-MM-dd_HH-mm-ss-SSS", GMT);
+    public static DateTimeFormatter longFileFormat = TimeUtils.createFormatter("yyyy-MM-dd_HH-mm-ss-SSS");
 
-    public static ThreadSafeSimpleDateFormat longFormat = new ThreadSafeSimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS Z", GMT);
+    public static DateTimeFormatter longFormat = TimeUtils.createFormatter("yyyy-MM-dd HH:mm:ss.SSS Z");
 
-    public static ThreadSafeSimpleDateFormat mediumFormat = new ThreadSafeSimpleDateFormat("yyyy-MM-dd HH:mm:ss Z", GMT);
+    public static DateTimeFormatter mediumFormat = TimeUtils.createFormatter("yyyy-MM-dd HH:mm:ss Z");
 
-    private static ThreadSafeSimpleDateFormat fancyFormat = new ThreadSafeSimpleDateFormat("EEEE, d MMMM yyyy", GMT);
+    private static DateTimeFormatter fancyFormat = TimeUtils.createFormatter("EEEE, d MMMM yyyy");
 
     public static ParseRegions pr = ParseRegions.getInstance();
 
