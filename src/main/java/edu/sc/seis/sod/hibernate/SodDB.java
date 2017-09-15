@@ -255,7 +255,7 @@ public class SodDB extends AbstractHibernateDB {
                 + " e "
                 + " left join fetch e.event "
                 + " left join fetch e.station "
-                + " left join fetch e.station.networkAttr "
+                + " left join fetch e.station.network "
                 + " where e.status.stageInt = "+Stage.EVENT_CHANNEL_POPULATION.getVal()
                 + " and e.status.standingInt = :standing ";
         Query query = getSession().createQuery(q);
@@ -278,20 +278,16 @@ public class SodDB extends AbstractHibernateDB {
                 + " left join fetch e.event ";
         if (getEcpClass().equals(EventChannelPair.class)) {
         q +=  " left join fetch e.channel "
-                + " left join fetch e.channel.site "
-                + " left join fetch e.channel.site.station "
-                + " left join fetch e.channel.site.station.networkAttr ";
+                + " left join fetch e.channel.station "
+                + " left join fetch e.channel.station.network ";
         } else {
             q +=  " left join fetch e.channelGroup "
-                    + " left join fetch e.channelGroup.channel1.site "
-                    + " left join fetch e.channelGroup.channel1.site.station "
-                    + " left join fetch e.channelGroup.channel1.site.station.networkAttr "
-                    + " left join fetch e.channelGroup.channel2.site "
-                    + " left join fetch e.channelGroup.channel2.site.station "
-                    + " left join fetch e.channelGroup.channel2.site.station.networkAttr "
-                    + " left join fetch e.channelGroup.channel3.site "
-                    + " left join fetch e.channelGroup.channel3.site.station "
-                    + " left join fetch e.channelGroup.channel3.site.station.networkAttr ";
+                    + " left join fetch e.channelGroup.channel1.station "
+                    + " left join fetch e.channelGroup.channel1.station.network "
+                    + " left join fetch e.channelGroup.channel2.station "
+                    + " left join fetch e.channelGroup.channel2.station.network "
+                    + " left join fetch e.channelGroup.channel3.station "
+                    + " left join fetch e.channelGroup.channel3.station.network ";
         }
         q+=  " where e.status.stageInt = "+Stage.EVENT_CHANNEL_POPULATION.getVal()
                 + " and e.status.standingInt = :standing ";
@@ -696,8 +692,8 @@ public class SodDB extends AbstractHibernateDB {
         return query.list();
     }
 
-    private static final String MATCH_CHANNEL_CODES = " channel.id.channel_code = :chanCode and channel.id.site_code = :siteCode and "
-            + "channel.id.station_code = :staCode and channel.site.station.networkAttr.id.network_code = :netCode";
+    private static final String MATCH_CHANNEL_CODES = " channel.id.channel_code = :chanCode and channel.locCode = :locCode and "
+            + "channel.id.station_code = :staCode and channel.station.network.id.network_code = :netCode";
 
 
     public int putConfig(SodConfig sodConfig) {
@@ -745,7 +741,8 @@ public class SodDB extends AbstractHibernateDB {
     }
 
     public Version getDBVersion() {
-        String q = "From edu.sc.seis.sod.Version ORDER BY dbid desc";
+       // String q = "From  edu.sc.seis.sod.model.common.Version ORDER BY dbid desc";
+        String q = "From "+Version.class.getName()+" ORDER BY dbid desc";
         Session session = getSession();
         Query query = getSession().createQuery(q);
         query.setMaxResults(1);
@@ -806,7 +803,7 @@ public class SodDB extends AbstractHibernateDB {
         retryPerEventStation = staEventBase + retryReq;
         totalSuccess = baseStatement + " "+PROCESS_SUCCESS;
         espFromNet = "FROM "+EventStationPair.class.getName()+" esp WHERE "
-            +" esp.event = :event and esp.station.networkAttr = :net";
+            +" esp.event = :event and esp.station.network = :net";
     }
     
     private String espFromNet;

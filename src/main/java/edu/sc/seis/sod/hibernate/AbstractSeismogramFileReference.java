@@ -23,7 +23,7 @@ public abstract class AbstractSeismogramFileReference {
         super();
         this.netCode = netCode;
         this.staCode = staCode;
-        this.siteCode = siteCode;
+        this.locCode = siteCode;
         this.chanCode = chanCode;
         this.beginTime = beginTime;
         this.endTime = endTime;
@@ -39,8 +39,8 @@ public abstract class AbstractSeismogramFileReference {
         return staCode;
     }
 
-    public String getSiteCode() {
-        return siteCode;
+    public String getLocCode() {
+        return locCode;
     }
 
     public String getChannelCode() {
@@ -79,8 +79,8 @@ public abstract class AbstractSeismogramFileReference {
         this.staCode = staCode;
     }
 
-    protected void setSiteCode(String siteCode) {
-        this.siteCode = siteCode;
+    protected void setLocCode(String locCode) {
+        this.locCode = locCode;
     }
 
     protected void setChannelCode(String chanCode) {
@@ -113,7 +113,7 @@ public abstract class AbstractSeismogramFileReference {
 
     protected String netCode;
     protected String staCode;
-    protected String siteCode;
+    protected String locCode;
     protected String chanCode;
     protected Instant beginTime;
     protected Instant endTime;

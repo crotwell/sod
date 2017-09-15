@@ -27,13 +27,13 @@ public class SeismogramFileReference extends AbstractSeismogramFileReference {
 
     public SeismogramFileReference(String netCode,
                                    String staCode,
-                                   String siteCode,
+                                   String locCode,
                                    String chanCode,
                                    Instant beginTime,
                                    Instant endTime,
                                    String filePath,
                                    int fileType) {
-        super(netCode, staCode, siteCode, chanCode, beginTime, endTime, filePath, fileType);
+        super(netCode, staCode, locCode, chanCode, beginTime, endTime, filePath, fileType);
     }
     
 }

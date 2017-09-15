@@ -59,7 +59,7 @@ public class NetworkDB extends AbstractHibernateDB {
 
     public int put(Station sta) {
         Integer dbid;
-        if(((Network)sta.getNetworkAttr()).getDbid() == 0) {
+        if(((Network)sta.getNetwork()).getDbid() == 0) {
             throw new IllegalArgumentException("Must put Network before put Station"+sta.toString()); 
         }
         internUnit(sta);
@@ -72,7 +72,7 @@ public class NetworkDB extends AbstractHibernateDB {
             Station indb = getStationById(sta);
             sta.associateInDb(indb);
             getSession().evict(indb);
-            getSession().evict(indb.getNetworkAttr());
+            getSession().evict(indb.getNetwork());
             getSession().saveOrUpdate(sta);
             return sta.getDbid();
         } catch(NotFound e) {
@@ -190,7 +190,7 @@ public class NetworkDB extends AbstractHibernateDB {
         Query query = getSession().createQuery(getStationByIdString);
         query.setString("netCode", staId.getNetworkId());
         query.setString("staCode", staId.getStationCode());
-        query.setParameter("staBegin",
+        query.setParameter("staStart",
                            staId.getStartTime());
         query.setMaxResults(1);
         List<Station> l = query.list();
@@ -294,23 +294,23 @@ public class NetworkDB extends AbstractHibernateDB {
 
     public Channel getChannel(String net,
                                   String sta,
-                                  String site,
+                                  String loc,
                                   String chan,
                                   Instant when) throws NotFound {
-        return getChannel(net, sta, site, chan, when, getChannelByCode);
+        return getChannel(net, sta, loc, chan, when, getChannelByCode);
     }
 
     public List<Channel> getChannelsByCode(NetworkId net,
                                                String sta,
-                                               String site,
+                                               String loc,
                                                String chan) {
         String queryString = "From " + Channel.class.getName() + " WHERE "
                 + chanCodeHQL
-                + " AND site.station.networkAttr.beginTime.time = :when";
+                + " AND station.network.startDateTime = :when";
         Query query = getSession().createQuery(queryString);
         query.setString("netCode", net.getNetworkCode());
         query.setString("stationCode", sta);
-        query.setString("siteCode", site);
+        query.setString("locCode", loc);
         query.setString("channelCode", chan);
         query.setParameter("when",
                            net.getStartYear());
@@ -332,16 +332,16 @@ public class NetworkDB extends AbstractHibernateDB {
 
     protected Channel getChannel(String net,
                                      String sta,
-                                     String site,
+                                     String loc,
                                      String chan,
                                      Instant when,
                                      String queryString) throws NotFound {
         Query query = getSession().createQuery(queryString);
         query.setString("netCode", net);
         query.setString("stationCode", sta);
-        String sc = site.trim();
+        String sc = loc.trim();
         if (sc.equals("--") || sc.equals("") || sc.equals("  ")) {sc = edu.sc.seis.seisFile.fdsnws.stationxml.Channel.EMPTY_LOC_CODE;}
-        query.setString("siteCode", sc);
+        query.setString("locCode", sc);
         query.setString("channelCode", chan);
         query.setParameter("when", when);
         query.setMaxResults(1);
@@ -414,8 +414,10 @@ public class NetworkDB extends AbstractHibernateDB {
         getSession().saveOrUpdate(ib);
     }
 
+    @Deprecated
     public void internUnit(Station sta) {
-        throw new RuntimeException("intern units!!!");
+        System.err.println("Intern Units Station???");
+       // throw new RuntimeException("intern units!!!");
 //        internUnit(sta.getLocation());
     }
 
@@ -423,8 +425,10 @@ public class NetworkDB extends AbstractHibernateDB {
      * assumes station has already been interned as this needs to happen to avoid
      * dup stations.
      */
+    @Deprecated
     public void internUnit(Channel chan) {
-        throw new RuntimeException("intern units!!!");
+        System.err.println("Intern Units Channel???");
+      //  throw new RuntimeException("intern units!!!");
 //        internUnit(chan.getSite().getLocation());
 //        internUnit(chan.getSite().getStation());
 //        internUnit(chan.getSamplingInfo().interval);
@@ -441,55 +445,55 @@ public class NetworkDB extends AbstractHibernateDB {
 
     static String getStationByCodes = "SELECT s From "
             + Station.class.getName()
-            + " s WHERE s.networkAttr.id.network_code = :netCode AND s.id.station_code = :staCode";
+            + " s WHERE s.network.networkCode = :netCode AND s.stationCode = :staCode";
 
     static String getAllStationsByCode = "SELECT s From "
             + Station.class.getName()
-            + " s WHERE s.id.station_code = :staCode";
+            + " s WHERE s.stationCode = :staCode";
 
     static String getStationByIdString = getStationByCodes
-            + " AND sta_begin_time = :staBegin";
+            + " AND s.startDateTime = :staStart";
 
     static String getStationForNetwork = "From " + Station.class.getName()
-            + " s WHERE s.networkAttr = :netAttr";
+            + " s WHERE s.network = :netAttr";
 
     static String getChannelForNetwork = "From " + Channel.class.getName()
-            + " WHERE site.station.networkAttr = :netAttr";
+            + " WHERE station.network = :netAttr";
 
     static String getStationForNetworkStation = getStationForNetwork
-            + " and s.id.station_code = :staCode";
+            + " and s.stationCode = :staCode";
 
     static String getChannelForStation = "From " + Channel.class.getName()
-            + " c WHERE c.site.station = :station";
+            + " c WHERE c.station = :station";
 
     static String getChannelGroupForStation = "From "
             + ChannelGroup.class.getName()
-            + " c WHERE c.channel1.site.station = :station";
+            + " c WHERE c.channel1.station = :station";
 
     // often happens that a channel has end time of 2500-01-01 until it is ended and a new channel is created
     // no way for sod to know, but when this happens, you usually want the channel that overlaps the time
-    // with the latest begin time, hence the order by desc
+    // with the latest start time, hence the order by desc
     static String getChannelForStationAtTime = getChannelForStation
-            + " and :when between chan_begin_time and chan_end_time  order by chan_begin_time desc";
+            + " and :when between c.startDateTime and c.endDateTime  order by c.startDateTime desc";
 
-    static String chanCodeHQL = " id.channel_code = :channelCode AND id.site_code = :siteCode AND id.station_code = :stationCode AND site.station.networkAttr.id.network_code = :netCode ";
+    static String chanCodeHQL = " channelCode = :channelCode AND locCode = :locCode AND station.stationCode = :stationCode AND station.network.networkCode = :netCode ";
 
     // often happens that a channel has end time of 2500-01-01 until it is ended and a new channel is created
     // no way for sod to know, but when this happens, you usually want the channel that overlaps the time
-    // with the latest begin time, hence the order by desc
+    // with the latest start time, hence the order by desc
     static String getChannelByCode = "From " + Channel.class.getName()
             + " WHERE " + chanCodeHQL
-            + " AND :when between chan_begin_time and chan_end_time order by chan_begin_time desc";
+            + " AND :when between startDateTime and endDateTime order by startDateTime desc";
 
     static String getChannelById = "From " + Channel.class.getName()
-            + " WHERE " + chanCodeHQL + " AND chan_begin_time =  :when";
+            + " WHERE " + chanCodeHQL + " AND startDateTime =  :when";
 
-    static String getAllStationsString = "From edu.iris.Fissures.network.StationImpl s";
+    static String getAllStationsString = "From edu.sc.seis.seisFile.fdsnws.stationxml.Station s";
 
-    static String getAllNetsString = "From edu.iris.Fissures.network.NetworkAttrImpl n";
+    static String getAllNetsString = "From edu.sc.seis.seisFile.fdsnws.stationxml.Network n";
 
     static String getNetworkByCodeString = getAllNetsString
-            + " WHERE network_code = :netCode";
+            + " WHERE networkCode = :netCode";
 
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(NetworkDB.class);
 }
