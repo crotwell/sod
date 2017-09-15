@@ -15,10 +15,10 @@ import junit.framework.TestCase;
 
 
 
-public class SampleSyncronizeTest extends TestCase {
+public class SampleSynchronizeTest extends TestCase {
 
     public void setUp() {
-        syncer = new SampleSyncronize();
+        syncer = new SampleSynchronize();
     }
     
     @Test
@@ -28,7 +28,7 @@ public class SampleSyncronizeTest extends TestCase {
                                             "2003-01-06T23:50:07.482",
                                             "2003-01-06T23:50:07.483"};
         LocalSeismogramImpl[][] vector = makeSeis(seisTimes);
-        SampleSyncronize sampleSyncronize = new SampleSyncronize();
+        SampleSynchronize sampleSyncronize = new SampleSynchronize();
         WaveformVectorResult result =  sampleSyncronize.accept(vector);
         LocalSeismogramImpl[][] afterShift = result.getSeismograms();
         for (int j = 0; j < afterShift.length; j++) {
@@ -44,7 +44,7 @@ public class SampleSyncronizeTest extends TestCase {
                                             "2003-01-06T23:50:17.482",
                                             "2003-01-06T23:50:27.487"};
         LocalSeismogramImpl[][] vector = makeSeis(seisTimes);
-        SampleSyncronize sampleSyncronize = new SampleSyncronize();
+        SampleSynchronize sampleSyncronize = new SampleSynchronize();
         WaveformVectorResult result =  sampleSyncronize.accept(vector);
         LocalSeismogramImpl[][] afterShift = result.getSeismograms();
         for (int j = 0; j < afterShift.length; j++) {
@@ -69,5 +69,5 @@ public class SampleSyncronizeTest extends TestCase {
         return vector;
     }
     
-    SampleSyncronize syncer;
+    SampleSynchronize syncer;
 }

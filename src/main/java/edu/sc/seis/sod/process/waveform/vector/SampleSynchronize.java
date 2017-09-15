@@ -3,7 +3,6 @@ package edu.sc.seis.sod.process.waveform.vector;
 import java.time.Duration;
 
 import edu.sc.seis.seisFile.TimeUtils;
-import edu.sc.seis.sod.bag.SampleSynchronize;
 import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.event.CacheEvent;
@@ -12,7 +11,7 @@ import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.station.ChannelGroup;
 
 
-public class SampleSyncronize implements WaveformVectorProcess {
+public class SampleSynchronize implements WaveformVectorProcess {
     
     public WaveformVectorResult accept(CacheEvent event,
                                         ChannelGroup channelGroup,
@@ -40,7 +39,7 @@ public class SampleSyncronize implements WaveformVectorProcess {
                     if (TimeUtils.durationToDoubleSeconds(sampPeriod.minus(firstSampPeriod).abs()) / firstSampPeriodSeconds > maxSamplingDiffPercentage) {
                         return new WaveformVectorResult(false, seismograms, "sample periods are not compatible: 0,0="+firstSampPeriod+"  "+i+","+j+"="+sampPeriod);
                     }
-                    out[i][j] = SampleSynchronize.alignTimes(seismograms[0][0], seismograms[i][j], maxSamplingDiffPercentage);
+                    out[i][j] = edu.sc.seis.sod.bag.SampleSynchronize.alignTimes(seismograms[0][0], seismograms[i][j], maxSamplingDiffPercentage);
                 }
             }
         }
