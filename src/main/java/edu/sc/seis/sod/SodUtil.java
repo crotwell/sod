@@ -326,7 +326,7 @@ public class SodUtil {
         int hour = DOMHelper.extractInt(element, "hour", ceiling ? 23 : 0);
         int minute = DOMHelper.extractInt(element, "minute", ceiling ? 59 : 0);
         int second = DOMHelper.extractInt(element, "second", ceiling ? 59 : 0);
-        int nanoOfSecond = 0;
+        int nanoOfSecond = ceiling ? 999000000 : 0;
         ZonedDateTime zdt = ZonedDateTime.of(year, month, dayOfMonth, hour, minute, second, nanoOfSecond, TimeUtils.TZ_UTC);
          
         return new MicroSecondDateSupplier() {
