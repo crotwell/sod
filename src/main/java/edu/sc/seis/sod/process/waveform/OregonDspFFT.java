@@ -30,23 +30,23 @@ public class OregonDspFFT extends AbstractWaveformMeasure {
     }
 
     public static float[] forward(float[] realData) {
-        return OregonDspFFT.forward(realData);
+        return edu.sc.seis.sod.bag.OregonDspFFT.forward(realData);
     }
     
     /**
      * Performs the inverse fft operation of the realFFT call. 
      */
     public static float[] inverse(float[] realData) {
-        return OregonDspFFT.inverse(realData);
+        return edu.sc.seis.sod.bag.OregonDspFFT.inverse(realData);
     }
 
 
     public static float[] correlate(float[] x, float[] y) {
-        return OregonDspFFT.correlate(x, y);
+        return edu.sc.seis.sod.bag.OregonDspFFT.correlate(x, y);
     }
 
     public static float[] convolve(float[] x, float[] y, float delta) {
-        return OregonDspFFT.convolve(x, y, delta);
+        return edu.sc.seis.sod.bag.OregonDspFFT.convolve(x, y, delta);
     }
 
 
