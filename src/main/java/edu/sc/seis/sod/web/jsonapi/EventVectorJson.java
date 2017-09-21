@@ -3,12 +3,14 @@ package edu.sc.seis.sod.web.jsonapi;
 import java.util.Map;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.json.JSONWriter;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.hibernate.eventpair.AbstractEventChannelPair;
 import edu.sc.seis.sod.hibernate.eventpair.EventChannelPair;
 import edu.sc.seis.sod.hibernate.eventpair.EventVectorPair;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.measure.Measurement;
 import edu.sc.seis.sod.process.waveform.AbstractSeismogramWriter;
 
@@ -35,18 +37,15 @@ public class EventVectorJson extends AbstractJsonApiData {
     @Override
     public void encodeAttributes(JSONWriter out) throws JSONException {
         out.key("sod-status").value(ecp.getStatus());
-        out.key("cookie-jar").object();
-        Map<String, Measurement> cookieMap = ecp.getCookies();
-        for (String cookieKey : cookieMap.keySet()) {
-            if (cookieKey.startsWith(AbstractSeismogramWriter.COOKIE_PREFIX)) {
+        JSONObject measurements = new JSONObject();
+        for (String key : ecp.getCookieJar().getAll().keySet()) {
+            if (key.startsWith(AbstractSeismogramWriter.COOKIE_PREFIX)) {
                 // skip local storage files as we don't want to leak these outside of the application
                 continue;
             }
-            Measurement cookieValue = cookieMap.get(cookieKey);
-            String jsonFriendlyKey = cookieKey.replaceAll("\\W", "-");
-            out.key(jsonFriendlyKey).value(cookieValue.valueAsJSON());
+            String jsonFriendlyKey = key.replaceAll("\\W", "-");
+            measurements.put(jsonFriendlyKey, ecp.getCookieJar().getRaw(key));
         }
-        out.endObject();
         super.encodeAttributes(out);
     }
 

@@ -40,7 +40,7 @@ public class LegacyVectorExecute extends LegacyExecute implements WaveformVector
         for (int j = 0; j < channelGroup.getChannels().length; j++) {
             Channel channel = channelGroup.getChannels()[j];
             for (int i=0; i<seismograms[j].length; i++) {
-                args += " "+(String)cookieJar.get(AbstractSeismogramWriter.getCookieName(prefix, channel, i));
+                args += " "+cookieJar.getAsString(AbstractSeismogramWriter.getCookieName(prefix, channel, i));
             } // end of for (int i=0; i<seismograms.length; i++)
         }
         int exitValue = process(args);

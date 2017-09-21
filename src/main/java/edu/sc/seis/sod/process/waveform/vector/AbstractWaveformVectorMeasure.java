@@ -32,7 +32,7 @@ public abstract class AbstractWaveformVectorMeasure implements WaveformVectorPro
             throws Exception {
         if (seismograms.length != 0) {
             Measurement m = calculate(event, channelGroup, original, available, seismograms, cookieJar);
-            cookieJar.put(m.getName(), m);
+            cookieJar.addMeasurement(m.getName(), m.getValueJSON());
             return new WaveformVectorResult(seismograms, new Pass(this));
         }
         return new WaveformVectorResult(seismograms, new Fail(this));

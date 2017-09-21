@@ -39,7 +39,7 @@ public class VectorRetryAndContinue extends VectorResultWrapper implements Threa
                                                          seismograms,
                                                          cookieJar);
         if(!result.isSuccess()) {
-            cookieJar.getPair().update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
+            cookieJar.getECP().update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
                                                   Standing.RETRY));
             return wrap(result);
         }

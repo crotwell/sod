@@ -40,7 +40,7 @@ public class RetryAndContinue extends ResultWrapper {
                                                    seismograms,
                                                    cookieJar);
         if(!result.isSuccess()) {
-            cookieJar.getPair().update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
+            cookieJar.getECP().update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
                                                   Standing.RETRY));
             return wrapResult(result);
         }

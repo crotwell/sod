@@ -1,11 +1,7 @@
 package edu.sc.seis.sod.hibernate.eventpair;
 
-import java.util.Map;
-
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import edu.sc.seis.sod.measure.Measurement;
 import edu.sc.seis.sod.model.event.StatefulEvent;
 import edu.sc.seis.sod.model.status.Status;
 
@@ -26,14 +22,6 @@ public abstract class CookieEventPair extends AbstractEventPair {
     protected void setStatus(Status status) {
         super.setStatus(status);
     }
-    // hibernate
-    protected void setCookies(Map<String, String> cookies) {
-        this.cookies = cookies;
-    }
-
-    public Map<String, String> getCookies() {
-        return cookies;
-    }
     
     public MeasurementStorage getMeasurements() {
         return measurements;
@@ -46,7 +34,12 @@ public abstract class CookieEventPair extends AbstractEventPair {
         return measurements.toString();
     }
     protected void setMeasurementsStr(String val) {
-        this.measurements = new MeasurementStorage(new JSONObject(val));
+        if (this instanceof AbstractEventChannelPair) {
+            this.measurements = new MeasurementStorage((AbstractEventChannelPair)this, new JSONObject(val));
+        } else if (this instanceof EventStationPair) {
+            this.measurements = new MeasurementStorage((EventStationPair)this, new JSONObject(val));
+        }
+        throw new RuntimeException("SHould be esp or ecp, but was: "+this.getClass());
     }
     
     

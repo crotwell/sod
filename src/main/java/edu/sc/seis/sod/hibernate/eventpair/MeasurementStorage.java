@@ -16,12 +16,21 @@ public class MeasurementStorage  {
     
     JSONObject measurements = null;
     
+    AbstractEventChannelPair ecp;
+    EventStationPair esp;
+    
     /** sometime you need an empty cookie jar...*/
     public MeasurementStorage() {
         measurements = new JSONObject();
     }
 
-    public MeasurementStorage(JSONObject measurements) {
+    public MeasurementStorage(EventStationPair esp, JSONObject measurements) {
+        this.esp = esp;
+        this.measurements = measurements;
+    }
+
+    public MeasurementStorage(AbstractEventChannelPair ecp, JSONObject measurements) {
+        this.ecp = ecp;
         this.measurements = measurements;
     }
 
@@ -72,10 +81,36 @@ public class MeasurementStorage  {
         measurements.put(key, val);
     }
     
+    public String getAsString(String key) {
+        return measurements.getString(key);
+    }
     
+    public JSONObject getAsJSONObject(String key) {
+        return measurements.getJSONObject(key);
+    }
     
+    public double getAsDouble(String key) {
+        return measurements.getDouble(key);
+    }
     
+    public int getAsInt(String key) {
+        return measurements.getInt(key);
+    }
     
+    public Object getRaw(String key) {
+        return measurements.get(key);
+    }
     
+    public JSONObject getAll() {
+        return measurements;
+    }
+    
+    public AbstractEventChannelPair getECP() {
+        return ecp;
+    }
+    
+    public EventStationPair getESP() {
+        return esp;
+    }
     
 }// CookieJar
