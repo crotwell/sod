@@ -5,7 +5,7 @@
  */
 package edu.sc.seis.sod.subsetter.availableData.vector;
 
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.station.ChannelGroup;
@@ -18,7 +18,7 @@ public class PassVectorAvailableData implements VectorAvailableDataSubsetter {
                              ChannelGroup channelGroup,
                              RequestFilter[][] request,
                              RequestFilter[][] available,
-                             CookieJar cookieJar) throws Exception {
+                             MeasurementStorage cookieJar) throws Exception {
         return new StringTreeLeaf(this, true);
     }
 }

@@ -3,7 +3,7 @@ package edu.sc.seis.sod.source.seismogram;
 import org.w3c.dom.Element;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.source.AbstractSource;
@@ -31,7 +31,7 @@ public abstract class ConstantSeismogramSourceLocator extends AbstractSource imp
     public final SeismogramSource getSeismogramSource(CacheEvent event,
                                                 Channel channel,
                                                 RequestFilter[] infilters,
-                                                CookieJar cookieJar) throws Exception {
+                                                MeasurementStorage cookieJar) throws Exception {
         return getSeismogramSource();
     }
     

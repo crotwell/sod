@@ -13,7 +13,7 @@ import org.w3c.dom.Element;
 import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.DOMHelper;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.event.CacheEvent;
@@ -37,7 +37,7 @@ public class GapFill extends Merge {
                                   RequestFilter[] original,
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
-                                  CookieJar cookieJar) throws Exception {
+                                  MeasurementStorage cookieJar) throws Exception {
         WaveformResult merged = super.accept(event, 
                                               channel, 
                                               original, 

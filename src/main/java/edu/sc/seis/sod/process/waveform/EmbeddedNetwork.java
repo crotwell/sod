@@ -7,7 +7,7 @@ import org.w3c.dom.NodeList;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
@@ -40,7 +40,7 @@ public class EmbeddedNetwork implements WaveformProcess {
                                   RequestFilter[] original,
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
-                                  CookieJar cookieJar) throws Exception {
+                                  MeasurementStorage cookieJar) throws Exception {
         return new WaveformResult(seismograms,
                                   networkSubsetter.accept(channel.getNetwork()));
     }

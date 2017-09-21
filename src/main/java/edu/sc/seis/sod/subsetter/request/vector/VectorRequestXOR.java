@@ -8,7 +8,7 @@ package edu.sc.seis.sod.subsetter.request.vector;
 import org.w3c.dom.Element;
 
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.station.ChannelGroup;
@@ -25,7 +25,7 @@ public class VectorRequestXOR extends VectorRequestLogical implements
     public StringTree accept(CacheEvent event,
                           ChannelGroup channel,
                           RequestFilter[][] request,
-                          CookieJar cookieJar) throws Exception {
+                          MeasurementStorage cookieJar) throws Exception {
         VectorRequestSubsetter filterA = (VectorRequestSubsetter)filterList.get(0);
         VectorRequestSubsetter filterB = (VectorRequestSubsetter)filterList.get(1);
         StringTree[] result = new StringTree[2];

@@ -12,7 +12,7 @@ import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.sod.Threadable;
 import edu.sc.seis.sod.bag.Cut;
 import edu.sc.seis.sod.bag.SampleSynchronize;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
@@ -36,7 +36,7 @@ public class VectorTrim implements WaveformVectorProcess, Threadable {
                                         RequestFilter[][] original,
                                         RequestFilter[][] available,
                                         LocalSeismogramImpl[][] seismograms,
-                                        CookieJar cookieJar) throws Exception {
+                                        MeasurementStorage cookieJar) throws Exception {
         WaveformVectorResult collapseResult = collapser.accept(event, channelGroup, original, available, seismograms, cookieJar);
         if ( ! collapseResult.isSuccess()) {
             return new WaveformVectorResult(false, collapseResult.getSeismograms(), new StringTreeBranch(this, false, collapseResult.getReason()));

@@ -6,7 +6,7 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.MotionVectorArm;
 import edu.sc.seis.sod.Threadable;
 import edu.sc.seis.sod.hibernate.SodDB;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
@@ -27,7 +27,7 @@ public class VectorRetryAndContinue extends VectorResultWrapper implements Threa
                                         RequestFilter[][] original,
                                         RequestFilter[][] available,
                                         LocalSeismogramImpl[][] seismograms,
-                                        CookieJar cookieJar) throws Exception {
+                                        MeasurementStorage cookieJar) throws Exception {
         if(sodDb == null) {
             sodDb = SodDB.getSingleton();
         }

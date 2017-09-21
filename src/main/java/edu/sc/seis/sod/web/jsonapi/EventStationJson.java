@@ -1,6 +1,5 @@
 package edu.sc.seis.sod.web.jsonapi;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +8,7 @@ import org.json.JSONWriter;
 
 import edu.sc.seis.sod.hibernate.eventpair.AbstractEventChannelPair;
 import edu.sc.seis.sod.hibernate.eventpair.EventStationPair;
+import edu.sc.seis.sod.measure.Measurement;
 import edu.sc.seis.sod.model.common.DistAz;
 
 public class EventStationJson extends AbstractJsonApiData {
@@ -87,7 +87,7 @@ public class EventStationJson extends AbstractJsonApiData {
             out.endObject();// links
             out.endObject();// ecps
         }
-        Map<String, Serializable> cookies = esp.getCookies();
+        Map<String, Measurement> cookies = esp.getCookies();
 
         out.key("measurements");
         out.object();

@@ -11,7 +11,7 @@ import org.w3c.dom.NodeList;
 
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.station.ChannelGroup;
@@ -44,7 +44,7 @@ public class ANDAvailableDataWrapper implements VectorAvailableDataSubsetter {
                              ChannelGroup channelGroup,
                              RequestFilter[][] request,
                              RequestFilter[][] available,
-                             CookieJar cookieJar) throws Exception {
+                             MeasurementStorage cookieJar) throws Exception {
         StringTree[] result = new StringTree[channelGroup.getChannels().length];
         for(int i = 0; i < channelGroup.getChannels().length; i++) {
             result[i] = subsetter.accept(event,

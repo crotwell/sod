@@ -4,7 +4,7 @@ import org.w3c.dom.Element;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.status.StringTree;
@@ -27,7 +27,7 @@ public final class RequestXOR extends RequestLogical implements RequestSubsetter
     public StringTree accept(CacheEvent event,
                              Channel channel,
                           RequestFilter[] original,
-                          CookieJar cookieJar) throws Exception {
+                          MeasurementStorage cookieJar) throws Exception {
         RequestSubsetter filterA = (RequestSubsetter)filterList.get(0);
         RequestSubsetter filterB = (RequestSubsetter)filterList.get(1);
         StringTree[] result = new StringTree[2];

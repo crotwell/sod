@@ -13,7 +13,7 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.MotionVectorArm;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Threadable;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
@@ -81,7 +81,7 @@ public class WaveformVectorFork implements WaveformVectorProcess, Threadable {
                                                    RequestFilter[][] request,
                                                    RequestFilter[][] available,
                                                    LocalSeismogramImpl[][] seismograms,
-                                                   CookieJar cookieJar) throws Exception {
+                                                   MeasurementStorage cookieJar) throws Exception {
                     return new WaveformVectorResult(seismograms,
                                                     ecs.accept(event, channelGroup, request, available, cookieJar));
                 }
@@ -93,7 +93,7 @@ public class WaveformVectorFork implements WaveformVectorProcess, Threadable {
                                         RequestFilter[][] request,
                                         RequestFilter[][] available,
                                         LocalSeismogramImpl[][] seismograms,
-                                        CookieJar cookieJar) throws Exception {
+                                        MeasurementStorage cookieJar) throws Exception {
         return new WaveformVectorResult(copySeismograms(seismograms),
                                   doAND(event,
                                         channelGroup,
@@ -110,7 +110,7 @@ public class WaveformVectorFork implements WaveformVectorProcess, Threadable {
                                         RequestFilter[][] request,
                                         RequestFilter[][] available,
                                         LocalSeismogramImpl[][] seismograms,
-                                        CookieJar cookieJar) throws Exception { 
+                                        MeasurementStorage cookieJar) throws Exception { 
         LinkedList<StringTree> reasons = new LinkedList<StringTree>();
         Iterator it = processes.iterator();
         WaveformVectorResult result = new WaveformVectorResult(seismograms,

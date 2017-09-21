@@ -5,7 +5,7 @@ import org.apache.velocity.VelocityContext;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
@@ -89,7 +89,7 @@ public class ContextWrangler {
                                                 RequestFilter[] original,
                                                 RequestFilter[] available,
                                                 LocalSeismogramImpl[] seismograms,
-                                                CookieJar cookieJar) {
+                                                MeasurementStorage cookieJar) {
         VelocityContext ctx = new WaveformProcessContext(event,
                                                          channel,
                                                          original,

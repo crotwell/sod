@@ -16,7 +16,7 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.common.DistAz;
 import edu.sc.seis.sod.model.common.Location;
 import edu.sc.seis.sod.model.common.QuantityImpl;
@@ -54,7 +54,7 @@ public class PhaseWithoutInterference extends PhaseExists implements EventStatio
     }
     
     @Override
-    public StringTree accept(CacheEvent event, Station station, CookieJar cookieJar) throws Exception {
+    public StringTree accept(CacheEvent event, Station station, MeasurementStorage cookieJar) throws Exception {
 
         OriginImpl origin = event.get_preferred_origin();
         double depth = ((QuantityImpl)origin.getLocation().depth).getValue(UnitImpl.KILOMETER);

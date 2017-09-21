@@ -1,7 +1,7 @@
 package edu.sc.seis.sod.subsetter.request;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.status.StringTree;
@@ -18,5 +18,5 @@ public interface RequestSubsetter extends Subsetter {
     public StringTree accept(CacheEvent event,
                              Channel channel,
                              RequestFilter[] request,
-                             CookieJar cookieJar) throws Exception;
+                             MeasurementStorage cookieJar) throws Exception;
 }// RequestSubsetter

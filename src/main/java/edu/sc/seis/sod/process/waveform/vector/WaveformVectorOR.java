@@ -13,7 +13,7 @@ import org.w3c.dom.Element;
 
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.MotionVectorArm;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
@@ -33,7 +33,7 @@ public class WaveformVectorOR extends WaveformVectorFork {
                                                      RequestFilter[][] original,
                                                      RequestFilter[][] available,
                                                      LocalSeismogramImpl[][] seismograms,
-                                                     CookieJar cookieJar) throws Exception {
+                                                     MeasurementStorage cookieJar) throws Exception {
 
         // pass originals to the contained processors
         WaveformVectorProcess processor;

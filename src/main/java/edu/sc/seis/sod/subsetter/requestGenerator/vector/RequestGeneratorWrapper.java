@@ -10,7 +10,7 @@ import org.w3c.dom.NodeList;
 
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.station.ChannelGroup;
@@ -37,7 +37,7 @@ public class RequestGeneratorWrapper implements VectorRequestGenerator {
 
     public RequestFilter[][] generateRequest(CacheEvent event,
                                              ChannelGroup channelGroup,
-                                             CookieJar cookieJar)
+                                             MeasurementStorage cookieJar)
             throws Exception {
         RequestFilter[][] out = new RequestFilter[channelGroup.getChannels().length][];
         for(int i = 0; i < channelGroup.getChannels().length; i++) {

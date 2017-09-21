@@ -11,6 +11,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONObject;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -24,7 +25,7 @@ import edu.sc.seis.sod.bag.LongShortTrigger;
 import edu.sc.seis.sod.bag.PhaseNonExistent;
 import edu.sc.seis.sod.bag.SimplePhaseStoN;
 import edu.sc.seis.sod.bag.TauPUtil;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.measure.ListMeasurement;
 import edu.sc.seis.sod.measure.Measurement;
 import edu.sc.seis.sod.measure.ScalarMeasurement;
@@ -90,7 +91,7 @@ public class PhaseSignalToNoise  implements WaveformProcess, Threadable {
                                          RequestFilter[] original,
                                          RequestFilter[] available,
                                          LocalSeismogramImpl[] seismograms,
-                                         CookieJar cookieJar) throws Exception {
+                                         MeasurementStorage cookieJar) throws Exception {
         if (seismograms.length == 0 ) {
             return new WaveformResult(seismograms, new StringTreeLeaf(this, false, "no seismograms"));
         }
@@ -98,13 +99,12 @@ public class PhaseSignalToNoise  implements WaveformProcess, Threadable {
         LongShortTrigger trigger = calcTrigger(event, channel, seismograms);
         if (trigger != null) {
             if (trigger.getValue() > ratio) {
-                List<Measurement> trigList = new ArrayList<Measurement>();
-                trigList.add(new TimeMeasurement("when", trigger.getWhen()));
-                trigList.add(new ScalarMeasurement("value", trigger.getValue()));
-                trigList.add(new ScalarMeasurement("sta", trigger.getSTA()));
-                trigList.add(new ScalarMeasurement("lta", trigger.getLTA()));
-                ListMeasurement triggerMeasurment = new ListMeasurement(getCookieName(), trigList);
-                cookieJar.put(getCookieName(), triggerMeasurment);
+                JSONObject trig = new JSONObject();
+                trig.put("when", trigger.getWhen().toString());
+                trig.put("value", trigger.getValue());
+                trig.put("sta", trigger.getSTA());
+                trig.put("lta", trigger.getLTA());
+                cookieJar.addMeasurement(getCookieName(), trig);
                 return new WaveformResult(seismograms,
                                                  new StringTreeLeaf(this, true));
             }

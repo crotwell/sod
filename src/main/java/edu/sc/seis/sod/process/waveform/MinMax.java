@@ -7,7 +7,7 @@ import org.w3c.dom.Element;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.bag.Statistics;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.measure.ListMeasurement;
 import edu.sc.seis.sod.measure.Measurement;
 import edu.sc.seis.sod.measure.QuantityMeasurement;
@@ -28,7 +28,7 @@ public class MinMax extends AbstractWaveformMeasure {
                           RequestFilter[] original,
                           RequestFilter[] available,
                           LocalSeismogramImpl[] seismograms,
-                          CookieJar cookieJar) throws Exception {
+                          MeasurementStorage cookieJar) throws Exception {
         Statistics stat = new Statistics(toFloatArrayAsIfContinuous(seismograms));
         List<Measurement> out = new ArrayList<Measurement>();
         out.add(new QuantityMeasurement("min", new QuantityImpl(stat.min(), seismograms[0].getUnit())));

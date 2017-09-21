@@ -5,7 +5,7 @@ import org.w3c.dom.NodeList;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.DOMHelper;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.EncodedData;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
@@ -26,7 +26,7 @@ public class CompressionType implements WaveformProcess {
                                   RequestFilter[] original,
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
-                                  CookieJar cookieJar) throws Exception {
+                                  MeasurementStorage cookieJar) throws Exception {
         for(int s = 0; s < seismograms.length; s++) {
             if(seismograms[s].is_encoded()) {
                 EncodedData[] edata = seismograms[s].get_as_encoded();

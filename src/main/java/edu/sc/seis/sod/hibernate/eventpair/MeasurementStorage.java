@@ -1,12 +1,7 @@
 package edu.sc.seis.sod.hibernate.eventpair;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.velocity.context.Context;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * CookieJar exists as a way for various subsetters and processors in the
@@ -17,85 +12,70 @@ import org.apache.velocity.context.Context;
  * 
  * @author Philip Crotwell
  */
-public class CookieJar implements Context {
-
-    Map<String, Serializable> stationCookies;
-
-    Map<String, Serializable> channelCookies = null;
+public class MeasurementStorage  {
+    
+    JSONObject measurements = null;
     
     /** sometime you need an empty cookie jar...*/
-    public CookieJar() {
-        stationCookies = new HashMap<String, Serializable>();
-        pair = null; // likely bad, but don't think we want to recreate the pair here
+    public MeasurementStorage() {
+        measurements = new JSONObject();
     }
 
-    public CookieJar(CookieEventPair pair,
-                     Map<String, Serializable> stationCookies) {
-        this.stationCookies = stationCookies;
-        this.pair = pair;
+    public MeasurementStorage(JSONObject measurements) {
+        this.measurements = measurements;
     }
 
-    public CookieJar(CookieEventPair pair,
-                     Map<String, Serializable> stationCookies,
-                     Map<String, Serializable> channelCookies) {
-        this(pair, stationCookies);
-        this.channelCookies = channelCookies;
-    }
 
-    public Object get(String key) {
-        if(channelCookies != null && channelCookies.containsKey(key)) {
-            return channelCookies.get(key);
-        }
-        return stationCookies.get(key);
-    }
-
-    public void put(String key, Serializable value) {
-        if(channelCookies != null) {
-            channelCookies.put(key, value);
-        } else {
-            stationCookies.put(key, value);
-        }
-    }
-
-    public CookieEventPair getPair() {
-        return pair;
-    }
-
-    protected CookieEventPair pair;
-
-    public Context getContext() {
-        return this;
+    public JSONObject getMeasurements() {
+        return measurements;
     }
     
-    public boolean containsKey(Object key) {
-        if(stationCookies.containsKey(key)) {
-            return true;
+    public void addMeasurement(String key, String val) {
+        if (getMeasurements() == null) {
+            measurements = new JSONObject();
         }
-        if(channelCookies != null && channelCookies.containsKey(key)) {
-            return true;
+        measurements.put(key, val);
+    }
+    
+    public void addMeasurement(String key, int val) {
+        if (getMeasurements() == null) {
+            measurements = new JSONObject();
         }
-        return false;
+        measurements.put(key, val);
     }
-
-    public Object[] getKeys() {
-        List out = new ArrayList(stationCookies.keySet());
-        if(channelCookies != null) {
-            out.addAll(channelCookies.keySet());
+    
+    public void addMeasurement(String key, float val) {
+        if (getMeasurements() == null) {
+            measurements = new JSONObject();
         }
-        return out.toArray();
+        measurements.put(key, val);
     }
-
-    public Object put(String key, Object value) {
-        if(value instanceof Serializable) {
-            put(key, (Serializable)value);
-            return value;
-        } else {
-            throw new IllegalArgumentException("value must be Serializable: "
-                    + value.getClass());
+    
+    public void addMeasurement(String key, double val) {
+        if (getMeasurements() == null) {
+            measurements = new JSONObject();
         }
+        measurements.put(key, val);
     }
-
-    public Object remove(Object key) {
-        throw new RuntimeException("Context is Read Only");
+    
+    public void addMeasurement(String key, JSONObject val) {
+        if (getMeasurements() == null) {
+            measurements = new JSONObject();
+        }
+        measurements.put(key, val);
     }
+    
+    public void addMeasurement(String key, JSONArray val) {
+        if (getMeasurements() == null) {
+            measurements = new JSONObject();
+        }
+        measurements.put(key, val);
+    }
+    
+    
+    
+    
+    
+    
+    
 }// CookieJar

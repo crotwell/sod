@@ -1,7 +1,7 @@
 package edu.sc.seis.sod.process.waveform;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
@@ -18,7 +18,7 @@ public class NoDataGaps implements WaveformProcess {
                                   RequestFilter[] original,
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
-                                  CookieJar cookieJar) {
+                                  MeasurementStorage cookieJar) {
         for(int i = 1; i < seismograms.length; i++) {
             LocalSeismogramImpl cur = seismograms[i];
             LocalSeismogramImpl prev = seismograms[i - 1];

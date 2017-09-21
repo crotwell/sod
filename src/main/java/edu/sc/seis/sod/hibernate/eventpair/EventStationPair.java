@@ -1,6 +1,5 @@
 package edu.sc.seis.sod.hibernate.eventpair;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +10,7 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.MotionVectorArm;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.hibernate.SodDB;
+import edu.sc.seis.sod.measure.Measurement;
 import edu.sc.seis.sod.model.common.Location;
 import edu.sc.seis.sod.model.event.NoPreferredOrigin;
 import edu.sc.seis.sod.model.event.StatefulEvent;
@@ -50,12 +50,12 @@ public class EventStationPair extends CookieEventPair {
         // overlap event time
         try {
             EventEffectiveTimeOverlap overlap = new EventEffectiveTimeOverlap(getEvent());
-            Map<String, Serializable> cookies = new HashMap<String, Serializable>();
+            Map<String, Measurement> cookies = new HashMap<String, Measurement>();
             StringTree accepted = new StringTreeLeaf(this, false);
             try {
                 EventStationSubsetter esSub = Start.getWaveformRecipe().getEventStationSubsetter();
                 synchronized(esSub) {
-                    accepted = esSub.accept(getEvent(), getStation(), new CookieJar(this, cookies));
+                    accepted = esSub.accept(getEvent(), getStation(), getMeasurements());
                 }
             } catch(Throwable e) {
                 if(e instanceof org.omg.CORBA.SystemException) {

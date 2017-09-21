@@ -4,7 +4,7 @@ import org.w3c.dom.Element;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.bag.Statistics;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.measure.Measurement;
 import edu.sc.seis.sod.measure.ScalarMeasurement;
 import edu.sc.seis.sod.model.event.CacheEvent;
@@ -24,7 +24,7 @@ public class Stddev extends AbstractWaveformMeasure {
                           RequestFilter[] original,
                           RequestFilter[] available,
                           LocalSeismogramImpl[] seismograms,
-                          CookieJar cookieJar) throws Exception {
+                          MeasurementStorage cookieJar) throws Exception {
         Statistics stat = new Statistics(toFloatArrayAsIfContinuous(seismograms));
         return new ScalarMeasurement(name, stat.stddev());
     }

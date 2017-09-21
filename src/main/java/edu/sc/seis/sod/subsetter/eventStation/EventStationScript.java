@@ -3,7 +3,7 @@ package edu.sc.seis.sod.subsetter.eventStation;
 import org.w3c.dom.Element;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.AbstractScriptSubsetter;
@@ -18,12 +18,12 @@ public class EventStationScript extends AbstractScriptSubsetter implements Event
     }
 
     @Override
-    public StringTree accept(CacheEvent event, Station station, CookieJar cookieJar) throws Exception {
+    public StringTree accept(CacheEvent event, Station station, MeasurementStorage cookieJar) throws Exception {
         return runScript(new VelocityEvent(event), new VelocityStation(station), cookieJar);
     }
 
     /** Run the script with the arguments as predefined variables. */
-    public StringTree runScript(VelocityEvent event,  VelocityStation station, CookieJar cookieJar) throws Exception {
+    public StringTree runScript(VelocityEvent event,  VelocityStation station, MeasurementStorage cookieJar) throws Exception {
         engine.put("station", station);
         engine.put("event", event);
         engine.put("cookieJar", cookieJar);

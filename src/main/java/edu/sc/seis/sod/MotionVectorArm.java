@@ -20,7 +20,7 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.mseed.MissingBlockette1000;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.eventpair.AbstractEventChannelPair;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.hibernate.eventpair.EventVectorPair;
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.event.CacheEvent;
@@ -392,7 +392,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                                                                RequestFilter[][] original,
                                                                RequestFilter[][] available,
                                                                LocalSeismogramImpl[][] seismograms,
-                                                               CookieJar cookieJar) throws Exception {
+                                                               MeasurementStorage cookieJar) throws Exception {
         if (processor instanceof Threadable && ((Threadable)processor).isThreadSafe()) {
             return internalRunProcessor(processor, event, channel, original, available, seismograms, cookieJar);
         } else {
@@ -410,7 +410,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                                                        RequestFilter[][] original,
                                                        RequestFilter[][] available,
                                                        LocalSeismogramImpl[][] seismograms,
-                                                       CookieJar cookieJar) throws Exception {
+                                                       MeasurementStorage cookieJar) throws Exception {
         WaveformVectorResult result;
         try {
             result = processor.accept(event, channel, original, available, seismograms, cookieJar);

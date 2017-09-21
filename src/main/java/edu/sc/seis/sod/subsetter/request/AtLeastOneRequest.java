@@ -3,7 +3,7 @@ package edu.sc.seis.sod.subsetter.request;
 import org.w3c.dom.Element;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.station.ChannelGroup;
@@ -21,7 +21,7 @@ public class AtLeastOneRequest implements RequestSubsetter, VectorRequestSubsett
     public StringTree accept(CacheEvent event,
                           Channel channel,
                           RequestFilter[] request,
-                          CookieJar cookieJar) throws Exception {
+                          MeasurementStorage cookieJar) throws Exception {
         if (request.length > 0) {
             return new Pass(this);
         } else {
@@ -32,7 +32,7 @@ public class AtLeastOneRequest implements RequestSubsetter, VectorRequestSubsett
     public StringTree accept(CacheEvent event,
                           ChannelGroup channel,
                           RequestFilter[][] request,
-                          CookieJar cookieJar) throws Exception {
+                          MeasurementStorage cookieJar) throws Exception {
         int total = 0;
         for (int i = 0; i < request.length; i++) {
             total += request[i].length;

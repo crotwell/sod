@@ -14,7 +14,7 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.status.StringTree;
@@ -41,7 +41,7 @@ public class ChoiceRequest implements RequestGenerator {
 
     public RequestFilter[] generateRequest(CacheEvent event,
                                            Channel channel,
-                                           CookieJar cookieJar)
+                                           MeasurementStorage cookieJar)
             throws Exception {
         for(int i = 0; i < choices.size(); i++) {
             Choice c = (Choice)choices.get(i);
@@ -83,14 +83,14 @@ public class ChoiceRequest implements RequestGenerator {
 
         public RequestFilter[] generateRequest(CacheEvent event,
                                                Channel channel,
-                                               CookieJar cookieJar)
+                                               MeasurementStorage cookieJar)
                 throws Exception {
             return requestGenerator.generateRequest(event, channel, cookieJar);
         }
 
         public StringTree accept(CacheEvent event,
                                  Channel channel,
-                                 CookieJar cookieJar) throws Exception {
+                                 MeasurementStorage cookieJar) throws Exception {
             return eventChannelSubsetter.accept(event, channel, cookieJar);
         }
 

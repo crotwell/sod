@@ -25,5 +25,8 @@ public abstract class Measurement implements Serializable {
         return name;
     }
 
+    public String getValueJSON() {
+        return new JSONObject().put(getName(), getValueJSON()).toString();
+    }
     String name;
 }

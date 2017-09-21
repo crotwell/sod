@@ -1,6 +1,5 @@
 package edu.sc.seis.sod.web.jsonapi;
 
-import java.io.Serializable;
 import java.util.Map;
 
 import org.json.JSONException;
@@ -37,19 +36,15 @@ public class EventVectorJson extends AbstractJsonApiData {
     public void encodeAttributes(JSONWriter out) throws JSONException {
         out.key("sod-status").value(ecp.getStatus());
         out.key("cookie-jar").object();
-        Map<String, Serializable> cookieMap = ecp.getCookies();
+        Map<String, Measurement> cookieMap = ecp.getCookies();
         for (String cookieKey : cookieMap.keySet()) {
             if (cookieKey.startsWith(AbstractSeismogramWriter.COOKIE_PREFIX)) {
                 // skip local storage files as we don't want to leak these outside of the application
                 continue;
             }
-            Serializable cookieValue = cookieMap.get(cookieKey);
+            Measurement cookieValue = cookieMap.get(cookieKey);
             String jsonFriendlyKey = cookieKey.replaceAll("\\W", "-");
-            if (cookieValue instanceof String) {
-                out.key(jsonFriendlyKey).value((String)cookieValue);
-            } else if (cookieValue instanceof Measurement) {
-                out.key(jsonFriendlyKey).value(((Measurement)cookieValue).valueAsJSON());
-            }
+            out.key(jsonFriendlyKey).value(cookieValue.valueAsJSON());
         }
         out.endObject();
         super.encodeAttributes(out);

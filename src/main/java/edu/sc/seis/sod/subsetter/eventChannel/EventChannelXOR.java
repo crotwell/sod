@@ -4,7 +4,7 @@ import org.w3c.dom.Element;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
@@ -18,7 +18,7 @@ public final class EventChannelXOR extends EventChannelLogicalSubsetter
 
     public StringTree accept(CacheEvent event,
                              Channel channel,
-                          CookieJar cookieJar) throws Exception {
+                          MeasurementStorage cookieJar) throws Exception {
         EventChannelSubsetter filterA = (EventChannelSubsetter)filterList.get(0);
         EventChannelSubsetter filterB = (EventChannelSubsetter)filterList.get(1);
         StringTree resultA = filterA.accept(event, channel, cookieJar);

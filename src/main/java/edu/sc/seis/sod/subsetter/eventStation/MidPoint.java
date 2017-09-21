@@ -10,7 +10,7 @@ import org.w3c.dom.Element;
 import edu.sc.seis.TauP.SphericalCoords;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.common.Area;
 import edu.sc.seis.sod.model.common.Location;
 import edu.sc.seis.sod.model.common.QuantityImpl;
@@ -29,7 +29,7 @@ public class MidPoint extends AreaSubsetter  implements EventStationSubsetter {
 
     public StringTree accept(CacheEvent eventAccess,
                              Station station,
-                          CookieJar cookieJar) throws Exception {
+                          MeasurementStorage cookieJar) throws Exception {
         OriginImpl origin = eventAccess.get_preferred_origin();
         Location originLoc = origin.getLocation();
         Location loc = Location.of(station);

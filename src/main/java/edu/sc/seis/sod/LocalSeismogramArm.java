@@ -13,7 +13,7 @@ import org.w3c.dom.Element;
 import edu.iris.dmc.seedcodec.CodecException;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.hibernate.SodDB;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.hibernate.eventpair.EventChannelPair;
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.event.CacheEvent;
@@ -141,9 +141,9 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
         Channel channel = ecp.getChannel();
         synchronized(eventChannel) {
             try {
-                passed = eventChannel.accept(eventAccess, channel, new CookieJar(ecp,
-                                                                                 ecp.getEsp().getCookies(),
-                                                                                 ecp.getCookies()));
+                passed = eventChannel.accept(eventAccess,
+                                             channel,
+                                             ecp.getMeasurements());
             } catch(Throwable e) {
                 MotionVectorArm.handle(ecp, Stage.EVENT_CHANNEL_SUBSETTER, e, null, "");
                 return;
@@ -377,7 +377,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                                                                RequestFilter[] original,
                                                                RequestFilter[] available,
                                                                LocalSeismogramImpl[] seismograms,
-                                                               CookieJar cookieJar) throws Exception {
+                                                               MeasurementStorage cookieJar) throws Exception {
         WaveformResult out;
         if (processor instanceof Threadable && ((Threadable)processor).isThreadSafe()) {
             out = internalRunProcessor(processor, event, channel, original, available, seismograms, cookieJar);
@@ -400,7 +400,7 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                                                        RequestFilter[] original,
                                                        RequestFilter[] available,
                                                        LocalSeismogramImpl[] seismograms,
-                                                       CookieJar cookieJar) throws Exception {
+                                                       MeasurementStorage cookieJar) throws Exception {
         WaveformResult result;
         try {
             result = processor.accept(event, channel, original, available, seismograms, cookieJar);

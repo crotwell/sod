@@ -10,7 +10,7 @@ import java.util.Iterator;
 import org.w3c.dom.Element;
 
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.station.ChannelGroup;
@@ -27,7 +27,7 @@ public class VectorRequestOR extends VectorRequestLogical implements
     public StringTree accept(CacheEvent event,
                           ChannelGroup channel,
                           RequestFilter[][] request,
-                          CookieJar cookieJar) throws Exception {
+                          MeasurementStorage cookieJar) throws Exception {
         Iterator it = filterList.iterator();
         StringTree[] result = new  StringTree[filterList.size()];
         int i=0;

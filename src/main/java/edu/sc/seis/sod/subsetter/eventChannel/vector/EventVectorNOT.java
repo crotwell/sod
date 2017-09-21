@@ -10,7 +10,7 @@ import java.util.Iterator;
 import org.w3c.dom.Element;
 
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.station.ChannelGroup;
 import edu.sc.seis.sod.status.StringTree;
@@ -26,7 +26,7 @@ public class EventVectorNOT extends EventVectorLogicalSubsetter implements
 
     public StringTree accept(CacheEvent event,
                           ChannelGroup channelGroup,
-                          CookieJar cookieJar) throws Exception {
+                          MeasurementStorage cookieJar) throws Exception {
         Iterator it = filterList.iterator();
         if(it.hasNext()) {
             EventVectorSubsetter filter = (EventVectorSubsetter)it.next();

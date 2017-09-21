@@ -10,7 +10,7 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.bag.TauPUtil;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.OriginImpl;
 import edu.sc.seis.sod.status.StringTree;
@@ -49,7 +49,7 @@ public class PhaseExists implements EventStationSubsetter {
 
     public StringTree accept(CacheEvent event,
                              Station station,
-                          CookieJar cookieJar) throws Exception {
+                          MeasurementStorage cookieJar) throws Exception {
         OriginImpl origin = event.get_preferred_origin();
         List<Arrival> arrivals = tauPTime.calcTravelTimes(station,
                                                       origin,

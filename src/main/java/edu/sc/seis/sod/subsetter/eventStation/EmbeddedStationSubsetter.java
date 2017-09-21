@@ -8,7 +8,7 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
@@ -31,7 +31,7 @@ public class EmbeddedStationSubsetter implements EventStationSubsetter {
 
     public StringTree accept(CacheEvent eventAccess,
                              Station station,
-                             CookieJar cookieJar) throws Exception {
+                             MeasurementStorage cookieJar) throws Exception {
         StringTree out = stationSubsetter.accept(station,
                                                  Start.getNetworkArm().getNetworkSource());
         return new StringTreeBranch(this, out.isSuccess(), out);

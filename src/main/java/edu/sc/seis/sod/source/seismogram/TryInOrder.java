@@ -12,7 +12,7 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
@@ -38,7 +38,7 @@ public class TryInOrder implements SeismogramSourceLocator {
     public SeismogramSource getSeismogramSource(CacheEvent event,
                                              Channel channel,
                                              RequestFilter[] infilters,
-                                             CookieJar cookieJar)
+                                             MeasurementStorage cookieJar)
             throws Exception {
         List<SeismogramSource> out = new ArrayList<SeismogramSource>();
         Iterator<SeismogramSourceLocator> it = choices.iterator();

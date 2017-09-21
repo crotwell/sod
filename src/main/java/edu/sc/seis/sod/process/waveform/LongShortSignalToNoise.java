@@ -18,7 +18,7 @@ import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Threadable;
 import edu.sc.seis.sod.bag.LongShortStoN;
 import edu.sc.seis.sod.bag.LongShortTrigger;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
@@ -57,7 +57,7 @@ public class LongShortSignalToNoise implements WaveformProcess, Threadable {
                                   RequestFilter[] original,
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
-                                  CookieJar cookieJar) throws Exception {
+                                  MeasurementStorage cookieJar) throws Exception {
         LongShortTrigger[] triggers = calcTriggers(seismograms);
         boolean hasTriggers = triggers.length != 0;
         return new WaveformResult(seismograms, new StringTreeLeaf(this,

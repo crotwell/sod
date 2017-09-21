@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.station.ChannelGroup;
@@ -20,13 +20,13 @@ public class VectorRequestGeneratorScript extends AbstractScriptSubsetter implem
     }
     
     @Override
-    public RequestFilter[][] generateRequest(CacheEvent event, ChannelGroup channelGroup, CookieJar cookieJar)
+    public RequestFilter[][] generateRequest(CacheEvent event, ChannelGroup channelGroup, MeasurementStorage cookieJar)
             throws Exception {
         return runScript(new VelocityEvent(event), new VelocityChannelGroup(channelGroup), cookieJar);
     }
 
     /** Run the script with the arguments as predefined variables. */
-    public RequestFilter[][] runScript(VelocityEvent event,  VelocityChannelGroup channelGroup, CookieJar cookieJar) throws Exception {
+    public RequestFilter[][] runScript(VelocityEvent event,  VelocityChannelGroup channelGroup, MeasurementStorage cookieJar) throws Exception {
         engine.put("event", event);
         engine.put("channelGroup", channelGroup);
         engine.put("cookieJar", cookieJar);

@@ -6,7 +6,7 @@
 
 package edu.sc.seis.sod.subsetter.requestGenerator.vector;
 
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.station.ChannelGroup;
@@ -19,6 +19,6 @@ public interface VectorRequestGenerator extends Subsetter {
      * in the channel group. */
     public RequestFilter[][] generateRequest(CacheEvent event,
                                              ChannelGroup channelGroup,
-                                             CookieJar cookieJar) throws Exception;
+                                             MeasurementStorage cookieJar) throws Exception;
 }
 

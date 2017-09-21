@@ -6,7 +6,7 @@
 
 package edu.sc.seis.sod.process.waveform;
 
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
@@ -22,7 +22,7 @@ public class ThreeComponentData implements WaveformVectorProcess {
                                         RequestFilter[][] original,
                                         RequestFilter[][] available,
                                         LocalSeismogramImpl[][] seismograms,
-                                        CookieJar cookieJar) {
+                                        MeasurementStorage cookieJar) {
         for (int i = 0; i < seismograms.length; i++) {
             if (seismograms[i].length == 0) {
                 return new WaveformVectorResult(seismograms,

@@ -9,7 +9,7 @@ import org.w3c.dom.NodeList;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 
@@ -26,7 +26,7 @@ public class CombineRequest implements RequestGenerator {
         }
     }
     
-    public RequestFilter[] generateRequest(CacheEvent event, Channel channel, CookieJar cookieJar) throws Exception {
+    public RequestFilter[] generateRequest(CacheEvent event, Channel channel, MeasurementStorage cookieJar) throws Exception {
         List<RequestFilter> out = new ArrayList<RequestFilter>();
         for (RequestGenerator gen : generators) {
             RequestFilter[] subout = gen.generateRequest(event, channel, cookieJar);

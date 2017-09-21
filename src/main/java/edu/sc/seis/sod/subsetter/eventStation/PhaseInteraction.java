@@ -14,7 +14,7 @@ import edu.sc.seis.TauP.TimeDist;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.common.Area;
 import edu.sc.seis.sod.model.common.BoxAreaImpl;
 import edu.sc.seis.sod.model.common.GlobalAreaImpl;
@@ -56,7 +56,7 @@ public class PhaseInteraction implements EventStationSubsetter {
 
     public StringTree accept(CacheEvent event,
                              Station station,
-                          CookieJar cookieJar) throws Exception {
+                          MeasurementStorage cookieJar) throws Exception {
         if(interactionStyle.equals("PATH")) {
             return new StringTreeLeaf(this, acceptPathInteraction(event,
                                                                          station));

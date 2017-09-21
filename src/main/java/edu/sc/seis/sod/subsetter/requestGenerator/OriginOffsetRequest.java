@@ -9,7 +9,7 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.OriginImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
@@ -32,7 +32,7 @@ public class OriginOffsetRequest implements RequestGenerator {
 
     public RequestFilter[] generateRequest(CacheEvent event,
                                            Channel channel,
-                                           CookieJar cookieJar)
+                                           MeasurementStorage cookieJar)
             throws Exception {
         OriginImpl origin = EventUtil.extractOrigin(event);
         Instant originDate = origin.getOriginTime();

@@ -11,7 +11,7 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 
@@ -37,7 +37,7 @@ public class ChoiceSource implements SeismogramSourceLocator {
     public SeismogramSource getSeismogramSource(CacheEvent event,
                                              Channel channel,
                                              RequestFilter[] infilters,
-                                             CookieJar cookieJar)
+                                             MeasurementStorage cookieJar)
             throws Exception {
         Iterator<ChoiceSourceItem> it = choices.iterator();
         while(it.hasNext()) {

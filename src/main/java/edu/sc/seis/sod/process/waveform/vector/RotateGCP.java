@@ -7,7 +7,7 @@ import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Threadable;
 import edu.sc.seis.sod.bag.Rotate;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.common.Location;
 import edu.sc.seis.sod.model.common.Orientation;
 import edu.sc.seis.sod.model.event.CacheEvent;
@@ -42,7 +42,7 @@ public class RotateGCP implements WaveformVectorProcess, Threadable {
                                         RequestFilter[][] original,
                                         RequestFilter[][] available,
                                         LocalSeismogramImpl[][] seismograms,
-                                        CookieJar cookieJar) throws Exception {
+                                        MeasurementStorage cookieJar) throws Exception {
         WaveformVectorResult trimResult = trimmer.accept(event, channelGroup, original, available, seismograms, cookieJar);
         if ( ! trimResult.isSuccess()) {
             return new WaveformVectorResult(false, trimResult.getSeismograms(), new StringTreeBranch(this, false, trimResult.getReason()));

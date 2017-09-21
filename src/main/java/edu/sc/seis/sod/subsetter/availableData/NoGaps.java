@@ -8,7 +8,7 @@ import org.w3c.dom.Element;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.SodElement;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.status.StringTree;
@@ -22,7 +22,7 @@ public class NoGaps implements AvailableDataSubsetter, SodElement {
                              Channel channel,
                           RequestFilter[] request,
                           RequestFilter[] available,
-                          CookieJar cookieJar) {
+                          MeasurementStorage cookieJar) {
         boolean ok = true;
         logger.debug("original length=" + request.length
                 + "  available legnth=" + available.length);

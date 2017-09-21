@@ -3,7 +3,7 @@ package edu.sc.seis.sod.process.waveform;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Threadable;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
@@ -34,7 +34,7 @@ public class ResponseGain implements WaveformProcess, Threadable {
                                   RequestFilter[] original,
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
-                                  CookieJar cookieJar) throws Exception {
+                                  MeasurementStorage cookieJar) throws Exception {
         LocalSeismogramImpl[] out = new LocalSeismogramImpl[seismograms.length];
         if(seismograms.length > 0) {
             NetworkSource na = Start.getNetworkArm().getNetworkSource();

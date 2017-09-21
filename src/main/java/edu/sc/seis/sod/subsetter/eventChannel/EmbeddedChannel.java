@@ -8,7 +8,7 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
@@ -38,7 +38,7 @@ public class EmbeddedChannel implements EventChannelSubsetter {
 
     public StringTree accept(CacheEvent o,
                              Channel channel,
-                             CookieJar cookieJar) throws Exception {
+                             MeasurementStorage cookieJar) throws Exception {
         StringTree result = channelSubsetter.accept(channel, Start.getNetworkArm().getNetworkSource());
         return new StringTreeBranch(this, result.isSuccess(), result);
     }

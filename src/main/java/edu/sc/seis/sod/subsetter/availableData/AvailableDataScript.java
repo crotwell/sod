@@ -5,7 +5,7 @@ import java.util.List;
 import org.w3c.dom.Element;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.status.StringTree;
@@ -26,7 +26,7 @@ public class AvailableDataScript extends AbstractScriptSubsetter implements Avai
                              Channel channel,
                              RequestFilter[] request,
                              RequestFilter[] available,
-                             CookieJar cookieJar) throws Exception {
+                             MeasurementStorage cookieJar) throws Exception {
         return runScript(new VelocityEvent(event),
                          new VelocityChannel(channel),
                          VelocityRequest.wrap(request, channel),
@@ -39,7 +39,7 @@ public class AvailableDataScript extends AbstractScriptSubsetter implements Avai
                                 VelocityChannel channel,
                                 List<VelocityRequest> request,
                                 List<VelocityRequest> available,
-                                CookieJar cookieJar) throws Exception {
+                                MeasurementStorage cookieJar) throws Exception {
         engine.put("event", event);
         engine.put("channel", channel);
         engine.put("request", request);

@@ -5,7 +5,7 @@ import java.util.List;
 import org.w3c.dom.Element;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.subsetter.AbstractScriptSubsetter;
@@ -19,7 +19,7 @@ public class RequestGeneratorScript extends AbstractScriptSubsetter implements R
         super(config);
     }
 
-    public RequestFilter[] generateRequest(CacheEvent event, Channel channel, CookieJar cookieJar) throws Exception {
+    public RequestFilter[] generateRequest(CacheEvent event, Channel channel, MeasurementStorage cookieJar) throws Exception {
         return runScript(new VelocityEvent(event),
                          new VelocityChannel(channel),
                          cookieJar);
@@ -28,7 +28,7 @@ public class RequestGeneratorScript extends AbstractScriptSubsetter implements R
     /** Run the script with the arguments as predefined variables. */
     public RequestFilter[] runScript(VelocityEvent event,
                                 VelocityChannel channel,
-                                CookieJar cookieJar) throws Exception {
+                                MeasurementStorage cookieJar) throws Exception {
         engine.put("event", event);
         engine.put("channel", channel);
         engine.put("cookieJar", cookieJar);

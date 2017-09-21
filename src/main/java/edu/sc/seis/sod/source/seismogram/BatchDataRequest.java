@@ -12,7 +12,7 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
@@ -74,7 +74,7 @@ public class BatchDataRequest implements SeismogramSourceLocator, Runnable {
     public SeismogramSource getSeismogramSource(CacheEvent event,
                                                 Channel channel,
                                                 RequestFilter[] infilters,
-                                                CookieJar cookieJar) throws Exception {
+                                                MeasurementStorage cookieJar) throws Exception {
         return new BatchSeismogramSource();
     }
 

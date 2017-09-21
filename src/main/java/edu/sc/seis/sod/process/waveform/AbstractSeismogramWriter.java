@@ -3,11 +3,14 @@ package edu.sc.seis.sod.process.waveform;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.hibernate.SeismogramFileRefDB;
 import edu.sc.seis.sod.hibernate.SeismogramFileTypes;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.measure.ListMeasurement;
 import edu.sc.seis.sod.measure.Measurement;
 import edu.sc.seis.sod.measure.TimeRangeMeasurement;
@@ -40,17 +43,17 @@ AbstractFileWriter implements WaveformProcess {
                                   RequestFilter[] original,
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
-                                  CookieJar cookieJar) throws Exception {
+                                  MeasurementStorage cookieJar) throws Exception {
         if (cookieJar == null) {throw new NullPointerException("CookieJar cannot be null");}
         if (channel == null) {throw new NullPointerException("Channel cannot be null");}
-        List<Measurement> reqList = new ArrayList<Measurement>();
+        JSONArray reqList = new JSONArray();
         for (int i = 0; i < original.length; i++) {
-            reqList.add(new TimeRangeMeasurement("request"+i, 
-                                                 original[i].startTime, 
-                                                 original[i].endTime));
+            JSONObject reqJSON = new JSONObject();
+            reqJSON.put("start", original[i].startTime.toString());
+            reqJSON.put("end", original[i].endTime.toString());
+            reqList.put(reqJSON);
         }
-        ListMeasurement requestList = new ListMeasurement("request", reqList);
-        cookieJar.put("request", requestList);
+        cookieJar.addMeasurement("request", reqList);
         if(seismograms.length > 0) {
             removeExisting(event, channel, seismograms[0], seismograms.length);
             for(int i = 0; i < seismograms.length; i++) {
@@ -63,7 +66,7 @@ AbstractFileWriter implements WaveformProcess {
                 if (storeSeismogramsInDB) {
                     SeismogramFileRefDB.getSingleton().saveSeismogramToDatabase(event, channel, seismograms[i], loc, getFileType());
                 }
-                cookieJar.put(AbstractSeismogramWriter.getCookieName(prefix, channel, i), loc);
+                cookieJar.addMeasurement(AbstractSeismogramWriter.getCookieName(prefix, channel, i), loc);
             }
         }
         return new WaveformResult(true, seismograms, this);

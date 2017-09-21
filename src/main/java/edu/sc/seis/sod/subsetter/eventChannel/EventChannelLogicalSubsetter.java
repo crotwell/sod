@@ -9,7 +9,7 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.LogicalSubsetter;
@@ -60,7 +60,7 @@ public class EventChannelLogicalSubsetter extends LogicalSubsetter {
                 EventStationSubsetter ecs = EventStationLogicalSubsetter.createSubsetter(s);
                 public StringTree accept(CacheEvent event,
                                          Channel channel,
-                                         CookieJar cookieJar) throws Exception {
+                                         MeasurementStorage cookieJar) throws Exception {
                     return ecs.accept(event, (Station)channel.getStation(), cookieJar);
                 }
             };
@@ -69,7 +69,7 @@ public class EventChannelLogicalSubsetter extends LogicalSubsetter {
                 ChannelSubsetter ecs = ChannelLogicalSubsetter.createSubsetter(s);
                 public StringTree accept(CacheEvent event,
                                          Channel channel,
-                                         CookieJar cookieJar) throws Exception {
+                                         MeasurementStorage cookieJar) throws Exception {
                     return ecs.accept(channel, Start.getNetworkArm().getNetworkSource());
                 }
             };

@@ -3,7 +3,7 @@ package edu.sc.seis.sod.process.waveform.vector;
 import org.w3c.dom.Element;
 
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.measure.Measurement;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
@@ -28,7 +28,7 @@ public abstract class AbstractWaveformVectorMeasure implements WaveformVectorPro
                                                      RequestFilter[][] original,
                                                      RequestFilter[][] available,
                                                      LocalSeismogramImpl[][] seismograms,
-                                                     CookieJar cookieJar)
+                                                     MeasurementStorage cookieJar)
             throws Exception {
         if (seismograms.length != 0) {
             Measurement m = calculate(event, channelGroup, original, available, seismograms, cookieJar);
@@ -47,5 +47,5 @@ public abstract class AbstractWaveformVectorMeasure implements WaveformVectorPro
                                    RequestFilter[][] original,
                                    RequestFilter[][] available,
                                    LocalSeismogramImpl[][] seismograms,
-                                   CookieJar cookieJar) throws Exception;
+                                   MeasurementStorage cookieJar) throws Exception;
 }

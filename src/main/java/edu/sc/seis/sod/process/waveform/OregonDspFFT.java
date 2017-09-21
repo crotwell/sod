@@ -3,7 +3,7 @@ package edu.sc.seis.sod.process.waveform;
 import org.w3c.dom.Element;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.measure.ArrayMeasurement;
 import edu.sc.seis.sod.measure.Measurement;
 import edu.sc.seis.sod.model.event.CacheEvent;
@@ -22,7 +22,7 @@ public class OregonDspFFT extends AbstractWaveformMeasure {
                           RequestFilter[] original,
                           RequestFilter[] available,
                           LocalSeismogramImpl[] seismograms,
-                          CookieJar cookieJar) throws Exception {
+                          MeasurementStorage cookieJar) throws Exception {
         if (seismograms.length != 1) {
             throw new Exception("Require continuous data, but num seismograms="+seismograms.length);
         }

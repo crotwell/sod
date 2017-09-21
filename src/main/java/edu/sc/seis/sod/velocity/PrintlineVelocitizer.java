@@ -17,7 +17,7 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.UserConfigurationException;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.mock.event.MockEventAccessOperations;
 import edu.sc.seis.sod.mock.seismogram.MockSeismogram;
 import edu.sc.seis.sod.mock.station.MockChannel;
@@ -107,7 +107,7 @@ public class PrintlineVelocitizer {
     }
 
     public String evaluate(String fileTemplate, String template, 
-                           CacheEvent event, Station sta, CookieJar cookieJar)
+                           CacheEvent event, Station sta, MeasurementStorage cookieJar)
             throws IOException {
         VelocityContext cntxt = ContextWrangler.createContext(sta);
         ContextWrangler.insertIntoContext(event, cntxt);
@@ -122,7 +122,7 @@ public class PrintlineVelocitizer {
                            CacheEvent event,
                            Channel channel,
                            RequestFilter[] request,
-                           CookieJar cookieJar) throws IOException {
+                           MeasurementStorage cookieJar) throws IOException {
         return evaluate(filename,
                         template,
                         event,
@@ -138,7 +138,7 @@ public class PrintlineVelocitizer {
                            Channel channel,
                            RequestFilter[] original,
                            RequestFilter[] available,
-                           CookieJar cookieJar) throws IOException {
+                           MeasurementStorage cookieJar) throws IOException {
         return evaluate(filename,
                         template,
                         event,
@@ -156,7 +156,7 @@ public class PrintlineVelocitizer {
                            RequestFilter[] original,
                            RequestFilter[] available,
                            LocalSeismogramImpl[] seismograms,
-                           CookieJar cookieJar) throws IOException {
+                           MeasurementStorage cookieJar) throws IOException {
         return evalulate(fileTemplate,
                          template,
                          ContextWrangler.createContext(event,

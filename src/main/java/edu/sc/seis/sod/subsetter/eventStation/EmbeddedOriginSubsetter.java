@@ -7,7 +7,7 @@ import org.w3c.dom.NodeList;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.EventAttrImpl;
 import edu.sc.seis.sod.model.event.OriginImpl;
@@ -33,7 +33,7 @@ public class EmbeddedOriginSubsetter implements EventStationSubsetter {
 
     public StringTree accept(CacheEvent eventAccess,
                              Station station,
-                          CookieJar cookieJar) throws Exception {
+                          MeasurementStorage cookieJar) throws Exception {
         StringTree result = originSubsetter.accept(eventAccess,
                                                    (EventAttrImpl)eventAccess.get_attributes(),
                                                    (OriginImpl)eventAccess.get_preferred_origin());

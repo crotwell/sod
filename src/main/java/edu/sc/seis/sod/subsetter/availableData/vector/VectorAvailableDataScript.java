@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.station.ChannelGroup;
@@ -26,7 +26,7 @@ public class VectorAvailableDataScript extends AbstractScriptSubsetter implement
                              ChannelGroup channelGroup,
                              RequestFilter[][] request,
                              RequestFilter[][] available,
-                             CookieJar cookieJar) throws Exception {
+                             MeasurementStorage cookieJar) throws Exception {
         return runScript(new VelocityEvent(event),
                          new VelocityChannelGroup(channelGroup),
                          VelocityRequest.wrap(request, channelGroup),
@@ -39,7 +39,7 @@ public class VectorAvailableDataScript extends AbstractScriptSubsetter implement
                                 VelocityChannelGroup channelGroup,
                                 List<List<VelocityRequest>> request,
                                 List<List<VelocityRequest>> available,
-                                CookieJar cookieJar) throws Exception {
+                                MeasurementStorage cookieJar) throws Exception {
         engine.put("event", event);
         engine.put("channel", channelGroup);
         engine.put("request", request);

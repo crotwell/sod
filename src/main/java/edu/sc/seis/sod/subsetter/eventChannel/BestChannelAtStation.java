@@ -11,7 +11,7 @@ import edu.sc.seis.sod.DOMHelper;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.bag.BestChannelUtil;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.station.ChannelGroup;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
@@ -44,7 +44,7 @@ public class BestChannelAtStation implements EventChannelSubsetter, EventVectorS
         
     }
     
-    public StringTree accept(CacheEvent event, Channel channel, CookieJar cookieJar) throws Exception {
+    public StringTree accept(CacheEvent event, Channel channel, MeasurementStorage cookieJar) throws Exception {
         List<Channel> staChans = Start.getNetworkArm().getSuccessfulChannels(((Station)channel.getStation()));
         List<Channel> allChannels = BestChannelUtil.pruneChannels(staChans, event.getOrigin().getOriginTime());
         Channel[] bestChannels = bestChanUtil.getBestMotionVector(allChannels);
@@ -65,7 +65,7 @@ public class BestChannelAtStation implements EventChannelSubsetter, EventVectorS
         return new Fail(this);
     }
 
-    public StringTree accept(CacheEvent event, ChannelGroup channelGroup, CookieJar cookieJar) throws Exception {
+    public StringTree accept(CacheEvent event, ChannelGroup channelGroup, MeasurementStorage cookieJar) throws Exception {
         List<ChannelGroup> staChans = Start.getNetworkArm().getSuccessfulChannelGroups(((Station)channelGroup.getStation()));
         List<Channel> allChannels = new ArrayList<Channel>(staChans.size()*3);
         for (ChannelGroup cg : staChans) {

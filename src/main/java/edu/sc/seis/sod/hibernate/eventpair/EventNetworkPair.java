@@ -67,8 +67,8 @@ public class EventNetworkPair extends AbstractEventPair {
                     staPairList.add(p);
                 }
             }
+            update(Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.SUCCESS));
             synchronized(WaveformArm.class) {
-                update(Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.SUCCESS));
                 Iterator<EventStationPair> it = staPairList.iterator();
                 while(it.hasNext()) {
                     EventStationPair p = it.next();

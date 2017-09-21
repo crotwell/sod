@@ -3,7 +3,7 @@ package edu.sc.seis.sod.subsetter.eventChannel;
 import org.w3c.dom.Element;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.station.ChannelGroup;
 import edu.sc.seis.sod.status.StringTree;
@@ -19,13 +19,13 @@ public class PassEventChannel implements EventChannelSubsetter,
 
     public StringTree accept(CacheEvent o,
                              Channel channel,
-                          CookieJar cookieJar) {
+                          MeasurementStorage cookieJar) {
         return new StringTreeLeaf(this, true);
     }
 
     public StringTree accept(CacheEvent event,
                           ChannelGroup channelGroup,
-                          CookieJar cookieJar) throws Exception {
+                          MeasurementStorage cookieJar) throws Exception {
         return new StringTreeLeaf(this, true);
     }
 }

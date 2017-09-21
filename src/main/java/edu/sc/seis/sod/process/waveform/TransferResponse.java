@@ -13,7 +13,7 @@ import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Threadable;
 import edu.sc.seis.sod.bag.Transfer;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.common.UnknownUnit;
 import edu.sc.seis.sod.model.event.CacheEvent;
@@ -45,7 +45,7 @@ public class TransferResponse implements WaveformProcess, Threadable {
                                   RequestFilter[] original,
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
-                                  CookieJar cookieJar) throws Exception {
+                                  MeasurementStorage cookieJar) throws Exception {
         try {
         LocalSeismogramImpl[] out = new LocalSeismogramImpl[seismograms.length];
         NetworkSource na = Start.getNetworkArm().getNetworkSource();

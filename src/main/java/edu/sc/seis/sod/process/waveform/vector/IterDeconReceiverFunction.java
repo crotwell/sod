@@ -21,7 +21,7 @@ import edu.sc.seis.sod.bag.IterDeconResult;
 import edu.sc.seis.sod.bag.Rotate;
 import edu.sc.seis.sod.bag.TauPUtil;
 import edu.sc.seis.sod.bag.ZeroPowerException;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.measure.ListMeasurement;
 import edu.sc.seis.sod.measure.Measurement;
 import edu.sc.seis.sod.measure.ScalarMeasurement;
@@ -105,7 +105,7 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
                           RequestFilter[][] original,
                           RequestFilter[][] available,
                           LocalSeismogramImpl[][] seismograms,
-                          CookieJar cookieJar) throws Exception {
+                          MeasurementStorage cookieJar) throws Exception {
             Channel chan = channelGroup.getChannels()[0];
             OriginImpl origin = event.get_preferred_origin();
             ChannelId[] chanIds = new ChannelId[channelGroup.getChannels().length];
@@ -276,7 +276,7 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
                                ChannelGroup channelGroup,
                                RequestFilter[][] original,
                                RequestFilter[][] available,
-                               CookieJar cookieJar) throws Exception {
+                               MeasurementStorage cookieJar) throws Exception {
         ChannelId recFuncChanId = new ChannelId(refSeismogram.channel_id.getNetworkId(),
                                                 refSeismogram.channel_id.getStationCode(),
                                                 refSeismogram.channel_id.getLocCode(),

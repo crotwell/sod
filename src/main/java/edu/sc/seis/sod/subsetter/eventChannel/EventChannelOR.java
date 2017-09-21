@@ -4,7 +4,7 @@ import org.w3c.dom.Element;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.status.ShortCircuit;
 import edu.sc.seis.sod.status.StringTree;
@@ -19,7 +19,7 @@ public final class EventChannelOR extends EventChannelLogicalSubsetter
 
     public StringTree accept(CacheEvent o,
                              Channel channel,
-                             CookieJar cookieJar) throws Exception {
+                             MeasurementStorage cookieJar) throws Exception {
         StringTree[] result = new StringTree[filterList.size()];
         for(int i = 0; i < filterList.size(); i++) {
             EventChannelSubsetter f = (EventChannelSubsetter)filterList.get(i);

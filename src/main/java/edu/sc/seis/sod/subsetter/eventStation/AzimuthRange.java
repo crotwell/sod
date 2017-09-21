@@ -3,7 +3,7 @@ package edu.sc.seis.sod.subsetter.eventStation;
 import org.w3c.dom.Element;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.common.DistAz;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.status.StringTree;
@@ -20,7 +20,7 @@ public class AzimuthRange extends RangeSubsetter implements
 
     public StringTree accept(CacheEvent ev,
                              Station sta,
-                             CookieJar cookieJar) {
+                             MeasurementStorage cookieJar) {
         return new StringTreeLeaf(this,
                                   AzimuthUtils.isAzimuthBetween(new DistAz(sta,
                                                                            ev),

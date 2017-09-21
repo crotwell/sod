@@ -4,7 +4,7 @@ import org.w3c.dom.Element;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.measure.Measurement;
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.event.CacheEvent;
@@ -28,10 +28,10 @@ public abstract class AbstractWaveformMeasure implements WaveformProcess {
                                  RequestFilter[] original,
                                  RequestFilter[] available,
                                  LocalSeismogramImpl[] seismograms,
-                                 CookieJar cookieJar) throws Exception {
+                                 MeasurementStorage cookieJar) throws Exception {
         if (seismograms.length != 0) {
             Measurement m = calculate(event, channel, original, available, seismograms, cookieJar);
-            cookieJar.put(m.getName(), m);
+            cookieJar.addMeasurement(m.getName(), m.getValueJSON());
             return new WaveformResult(seismograms, new Pass(this));
         }
         return new WaveformResult(seismograms, new Fail(this));
@@ -46,7 +46,7 @@ public abstract class AbstractWaveformMeasure implements WaveformProcess {
                                    RequestFilter[] original,
                                    RequestFilter[] available,
                                    LocalSeismogramImpl[] seismograms,
-                                   CookieJar cookieJar) throws Exception;
+                                   MeasurementStorage cookieJar) throws Exception;
 
     protected static float[] toFloatArrayAsIfContinuous(LocalSeismogramImpl[] seis) throws FissuresException {
         int npts = 0;

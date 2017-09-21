@@ -6,7 +6,7 @@ import com.oregondsp.signalProcessing.filter.iir.PassbandType;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.event.CacheEvent;
@@ -44,7 +44,7 @@ public class Upsample implements WaveformProcess {
                                  RequestFilter[] original,
                                  RequestFilter[] available,
                                  LocalSeismogramImpl[] seismograms,
-                                 CookieJar cookieJar) throws Exception {
+                                 MeasurementStorage cookieJar) throws Exception {
         LocalSeismogramImpl[] out = new LocalSeismogramImpl[seismograms.length];
         LocalSeismogramImpl[] filteredSeis = seismograms;
         if (seismograms.length != 0) {

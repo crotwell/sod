@@ -7,7 +7,7 @@ import org.w3c.dom.NodeList;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
@@ -45,7 +45,7 @@ public class EmbeddedEventStation  implements WaveformVectorProcess {
                                         RequestFilter[][] original,
                                         RequestFilter[][] available,
                                         LocalSeismogramImpl[][] seismograms,
-                                        CookieJar cookieJar) throws Exception {
+                                        MeasurementStorage cookieJar) throws Exception {
         StringTree wrapped = eventStation.accept(event, (Station)channelGroup.getVertical().getStation(), cookieJar);
         WaveformVectorResult result = new WaveformVectorResult(seismograms,
                                                                new StringTreeBranch(this, wrapped.isSuccess(), wrapped));

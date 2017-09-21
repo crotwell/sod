@@ -1,9 +1,11 @@
 package edu.sc.seis.sod.hibernate.eventpair;
 
-import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import edu.sc.seis.sod.measure.Measurement;
 import edu.sc.seis.sod.model.event.StatefulEvent;
 import edu.sc.seis.sod.model.status.Status;
 
@@ -25,13 +27,28 @@ public abstract class CookieEventPair extends AbstractEventPair {
         super.setStatus(status);
     }
     // hibernate
-    protected void setCookies(Map<String, Serializable> cookies) {
+    protected void setCookies(Map<String, String> cookies) {
         this.cookies = cookies;
     }
 
-    public Map<String, Serializable> getCookies() {
+    public Map<String, String> getCookies() {
         return cookies;
     }
-
-    private Map<String, Serializable> cookies = new HashMap<String, Serializable>();
+    
+    public MeasurementStorage getMeasurements() {
+        return measurements;
+    }
+    
+    protected String getMeasurementsStr() {
+        if (measurements == null) {
+            return null;
+        }
+        return measurements.toString();
+    }
+    protected void setMeasurementsStr(String val) {
+        this.measurements = new MeasurementStorage(new JSONObject(val));
+    }
+    
+    
+    private MeasurementStorage measurements;
 }

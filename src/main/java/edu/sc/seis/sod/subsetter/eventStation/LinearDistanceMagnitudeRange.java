@@ -6,7 +6,7 @@ import edu.sc.seis.TauP.SphericalCoords;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.common.Location;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.OriginImpl;
@@ -28,7 +28,7 @@ public class LinearDistanceMagnitudeRange extends DistanceRangeSubsetter
 
     public StringTree accept(CacheEvent eventAccess,
                              Station station,
-                          CookieJar cookieJar) {
+                          MeasurementStorage cookieJar) {
         Location stationLoc = Location.of(station);
         return new StringTreeLeaf(this, accept(eventAccess, stationLoc.latitude, stationLoc.longitude));
     }

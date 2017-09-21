@@ -45,11 +45,11 @@ public abstract class AbstractEventChannelPair extends CookieEventPair {
     }
     protected EventStationPair esp;
 
-    public CookieJar getCookieJar() {
+    public MeasurementStorage getCookieJar() {
         if (cookieJar == null) {
-            cookieJar = new CookieJar(this, getEsp().getCookies(), getCookies());
+            cookieJar = new MeasurementStorage();
         }
         return cookieJar;
     }
-    private CookieJar cookieJar;
+    private MeasurementStorage cookieJar;
 }

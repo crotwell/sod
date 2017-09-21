@@ -13,7 +13,7 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
@@ -49,7 +49,7 @@ public class DownloadStatistics implements SeismogramSourceLocator {
     public SeismogramSource getSeismogramSource(final CacheEvent event,
                                                 final Channel channel,
                                                 final RequestFilter[] infilters,
-                                                final CookieJar cookieJar) throws Exception {
+                                                final MeasurementStorage cookieJar) throws Exception {
         return new SeismogramSource() {
 
             SeismogramSource wrappedSource = wrapped.getSeismogramSource(event, channel, infilters, cookieJar);

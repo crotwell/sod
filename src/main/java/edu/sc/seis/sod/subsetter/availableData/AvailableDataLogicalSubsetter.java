@@ -7,7 +7,7 @@ import org.w3c.dom.Element;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.status.StringTree;
@@ -54,7 +54,7 @@ public class AvailableDataLogicalSubsetter extends LogicalSubsetter {
                                          Channel channel,
                                          RequestFilter[] request,
                                          RequestFilter[] available,
-                                         CookieJar cookieJar) throws Exception {
+                                         MeasurementStorage cookieJar) throws Exception {
                     return subsetter.accept(event, channel, request, cookieJar);
                 }
             };

@@ -3,7 +3,7 @@ package edu.sc.seis.sod.subsetter.request;
 import org.w3c.dom.Element;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.station.ChannelGroup;
@@ -20,14 +20,14 @@ public class PassRequest implements RequestSubsetter, VectorRequestSubsetter {
     public StringTree accept(CacheEvent event,
                           Channel channel,
                           RequestFilter[] request,
-                          CookieJar cookieJar) throws Exception {
+                          MeasurementStorage cookieJar) throws Exception {
         return new Pass(this);
     }
 
     public StringTree accept(CacheEvent event,
                           ChannelGroup channel,
                           RequestFilter[][] request,
-                          CookieJar cookieJar) throws Exception {
+                          MeasurementStorage cookieJar) throws Exception {
         return new Pass(this);
     }
 }

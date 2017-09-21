@@ -8,7 +8,7 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.status.StringTree;
@@ -50,14 +50,14 @@ public class ChoiceSourceItem implements EventChannelSubsetter, SeismogramSource
     public SeismogramSource getSeismogramSource(CacheEvent event,
                                              Channel channel,
                                              RequestFilter[] infilters,
-                                             CookieJar cookieJar)
+                                             MeasurementStorage cookieJar)
             throws Exception {
         return locator.getSeismogramSource(event, channel, infilters, cookieJar);
     }
 
     public StringTree accept(CacheEvent event,
                              Channel channel,
-                             CookieJar cookieJar) throws Exception {
+                             MeasurementStorage cookieJar) throws Exception {
         return eventChannelSubsetter.accept(event, channel, cookieJar);
     }
 

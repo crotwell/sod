@@ -9,7 +9,7 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.XMLUtil;
 import edu.sc.seis.sod.hibernate.SodDB;
-import edu.sc.seis.sod.hibernate.eventpair.CookieJar;
+import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.common.DistAz;
 import edu.sc.seis.sod.model.common.Location;
 import edu.sc.seis.sod.model.common.QuantityImpl;
@@ -23,7 +23,7 @@ import edu.sc.seis.sod.status.StringTree;
 public class RemoveStationDuplicate implements EventStationSubsetter {
 
     
-    public StringTree accept(CacheEvent event, Station station, CookieJar cookieJar) throws Exception {
+    public StringTree accept(CacheEvent event, Station station, MeasurementStorage cookieJar) throws Exception {
         List<Station> passStations = SodDB.getSingleton().getSuccessfulStationsForEvent(event);
         for (Station stationImpl : passStations) {
             if (isDistanceClose(station, stationImpl)) {
