@@ -37,11 +37,10 @@ public class UserReportRetryStrategy extends ClassicRetryStrategy {
                         + addlInfo);
             } else {
                 if (Start.getArgs().isQuitOnError()) {
-
                     print("The "
                           + serverId
                           + " server just produced an error ("+exc.getClass().getName()
-                          +").  SOD will quit due to the --"+Start.getArgs().QUIT_ON_ERROR_SWITCH+" switch.  "
+                          +").  SOD will quit due to the --"+Args.QUIT_ON_ERROR_SWITCH+" switch.  "
                           + addlInfo);
                     System.exit(1);
                 } else {
@@ -81,7 +80,7 @@ public class UserReportRetryStrategy extends ClassicRetryStrategy {
 
     private Object addlInfo;
 
-    private Set bustedServers = new HashSet();
+    private Set<String> bustedServers = new HashSet<String>();
 
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(UserReportRetryStrategy.class);
 }

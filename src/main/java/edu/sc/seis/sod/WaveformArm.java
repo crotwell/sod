@@ -119,6 +119,9 @@ public class WaveformArm extends Thread implements Arm {
                     } catch(Throwable t) {
                         SodDB.rollback();
                         next.update(t, Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.SYSTEM_FAILURE));
+                        if (Start.getArgs().isQuitOnError()) {
+                            Start.armFailure(this, t);
+                        }
                     }
                     SodDB.commit();
                     processorFinishWork();

@@ -53,6 +53,7 @@ import edu.sc.seis.sod.util.exceptionHandler.Extractor;
 import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.util.exceptionHandler.MailExceptionReporter;
 import edu.sc.seis.sod.util.exceptionHandler.MissingPropertyException;
+import edu.sc.seis.sod.util.exceptionHandler.QuitOnExceptionPostProcess;
 import edu.sc.seis.sod.util.exceptionHandler.ResultMailer;
 import edu.sc.seis.sod.util.exceptionHandler.SystemOutReporter;
 import edu.sc.seis.sod.util.exceptionHandler.WindowConnectionInterceptor;
@@ -201,6 +202,10 @@ public class Start {
         logger.info("SOD version "+VersionHistory.current().getVersion());
         logger.info("Args: "+args.toString());
         logger.info("Recipe: "+configFileName);
+        if(args.isQuitOnError()) {
+            // really die on first exception
+            GlobalExceptionHandler.add(new QuitOnExceptionPostProcess(Throwable.class));
+        }
         if(!commandLineToolRun) {
             validate(sourceMaker);
         }
