@@ -67,7 +67,9 @@
         </phaseRequest>
         <fdsnDataSelect/>
         <someCoverage/>
+        <mseedWriter>
+        	    <storeSeismogramsInDB/>
+        </mseedWriter>
         <printlineSeismogramProcess/>
-        <sacWriter/>
     </waveformArm>
 </sod>

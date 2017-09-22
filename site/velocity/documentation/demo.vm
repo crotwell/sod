@@ -46,7 +46,7 @@
 	</p>
 	<p>
 		In addition to the database files mentioned earlier, this SOD recipe will
-		store all the seismograms it retrieves as sac files.  These are put in the <code>seismograms</code> directory
+		store all the seismograms it retrieves as miniseed files.  These are put in the <code>seismograms</code> directory
 		where SOD was started.  If the run has been going for a while or is finished,
 		you'll see directories in <code>seismograms</code> for every earthquake SOD has processed and inside of each of these is a data directory containing
 		sac files for every channel retrieved for the earthquake.
