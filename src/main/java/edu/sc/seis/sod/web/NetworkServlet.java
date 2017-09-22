@@ -56,7 +56,7 @@ public class NetworkServlet extends HttpServlet {
                 matcher = networkPattern.matcher(URL);
                 if (matcher.matches()) {
                     String netCode = matcher.group(1);
-                    String year = matcher.group(3);
+                    String year = matcher.group(2);
                     Network n = loadNet(netCode, year);
                     JsonApi.encodeJson(out, new NetworkJson(n, baseUrl));
                 } else {
@@ -78,8 +78,8 @@ public class NetworkServlet extends HttpServlet {
                             if (matcher.matches()) {
                                 // logger.debug("station");
                                 String netCode = matcher.group(1);
-                                String year = matcher.group(3);
-                                String staCode = matcher.group(7);
+                                String year = matcher.group(2);
+                                String staCode = matcher.group(3);
                                 Station sta = netdb.getStationByCodes(netCode, staCode).get(0);
                                 JsonApi.encodeJson(out, new StationJson(sta, baseUrl));
                             } else {

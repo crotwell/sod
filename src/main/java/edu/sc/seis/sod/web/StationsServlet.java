@@ -45,8 +45,8 @@ public class StationsServlet extends HttpServlet {
         if (matcher.matches()) {
             // logger.debug("station");
             String netCode = matcher.group(1);
-            String year = matcher.group(3);
-            String staCode = matcher.group(4);
+            String year = matcher.group(2);
+            String staCode = matcher.group(3);
             List<Station> staList = netdb.getStationByCodes(netCode, staCode);
             if (staList.size() > 0) {
             Station sta = staList.get(0);
@@ -84,8 +84,8 @@ public class StationsServlet extends HttpServlet {
                 if (matcher.matches()) {
                     // logger.debug("station");
                     String netCode = matcher.group(1);
-                    String year = matcher.group(3);
-                    String staCode = matcher.group(4);
+                    String year = matcher.group(2);
+                    String staCode = matcher.group(3);
                     Station sta = netdb.getStationByCodes(netCode, staCode).get(0);
 
                     // want only successful ESP that actually have successful ECP, otherwise even-station may pass 
@@ -111,8 +111,8 @@ public class StationsServlet extends HttpServlet {
                     if (matcher.matches()) {
                         // logger.debug("station");
                         String netCode = matcher.group(1);
-                        String year = matcher.group(3);
-                        String staCode = matcher.group(4);
+                        String year = matcher.group(2);
+                        String staCode = matcher.group(3);
                         Station sta = netdb.getStationByCodes(netCode, staCode).get(0);
                         List<Channel> chans = netdb.getChannelsForStation(sta);
                         List<JsonApiData> jsonData = new ArrayList<JsonApiData>(chans.size());
