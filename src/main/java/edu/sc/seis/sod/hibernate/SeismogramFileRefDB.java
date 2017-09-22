@@ -61,12 +61,12 @@ public class SeismogramFileRefDB extends AbstractHibernateDB {
         String query = "from "
                 + EventSeismogramFileReference.class.getName()
                 + " where event = :event and "
-                + " networkCode = :netCode and stationCode = :staCode and siteCode = :siteCode and channelCode = :chanCode ";
+                + " networkCode = :netCode and stationCode = :staCode and locCode = :locCode and channelCode = :chanCode ";
         Query q = getSession().createQuery(query);
         q.setEntity("event", event);
         q.setString("netCode", chan.getNetworkId());
         q.setString("staCode", chan.getStationCode());
-        q.setString("siteCode", chan.getLocCode());
+        q.setString("locCode", chan.getLocCode());
         q.setString("chanCode", chan.getChannelCode());
         logger.debug("Before query for event: " + event.getDbid() + "  " + ChannelIdUtil.toStringNoDates(chan));
         List<EventSeismogramFileReference> esRefList = q.list();
@@ -155,7 +155,7 @@ public class SeismogramFileRefDB extends AbstractHibernateDB {
         Instant adjustedEndTime = request.endTime.plus(ONE_SECOND);
         String query = "from "
                 + SeismogramFileReference.class.getName()
-                + " where networkCode = :netCode and stationCode = :staCode and siteCode = :siteCode and channelCode = :chanCode "
+                + " where networkCode = :netCode and stationCode = :staCode and locCode = :locCode and channelCode = :chanCode "
                 + " and beginTime < :end and endTime >= :begin";
         // Populate databaseResults with all of the matching seismograms
         // from the database.
@@ -163,7 +163,7 @@ public class SeismogramFileRefDB extends AbstractHibernateDB {
         ChannelId chanIdxxx = ChannelId.of(chanId);
         q.setString("netCode", chanIdxxx.getNetworkId());
         q.setString("staCode", chanIdxxx.getStationCode());
-        q.setString("siteCode", chanIdxxx.getLocCode());
+        q.setString("locCode", chanIdxxx.getLocCode());
         q.setString("chanCode", chanIdxxx.getChannelCode());
         q.setParameter("end", adjustedEndTime);
         q.setParameter("begin", adjustedBeginTime);

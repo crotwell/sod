@@ -106,6 +106,7 @@ public class HibernateUtil {
                     .addResource( "edu/sc/seis/sod/hibernate/Common.hbm.xml" )
                     .addResource( "edu/sc/seis/sod/hibernate/Event.hbm.xml" )
                     .addResource( "edu/sc/seis/sod/hibernate/sod.hbm.xml" )
+                    .addResource( "edu/sc/seis/sod/hibernate/SeisFileRef.hbm.xml" )
                     .getMetadataBuilder();
             addDateFunctions(metadataBuilder);
             metadata = metadataBuilder.build();
