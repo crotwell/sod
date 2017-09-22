@@ -69,8 +69,8 @@ public class TauPServlet  extends HttpServlet {
                 Matcher staMatcher = netStaCodePattern.matcher(params.get(STATION)[0]);
                 if (staMatcher.matches()) {
                     String netCode = staMatcher.group(1);
-                    String year = staMatcher.group(3);
-                    String staCode = staMatcher.group(4);
+                    String year = staMatcher.group(2);
+                    String staCode = staMatcher.group(3);
                     List<Station> staList = NetworkDB.getSingleton().getStationByCodes(netCode, staCode);
                     if (year == null && ! NetworkIdUtil.isTemporary(netCode)) {
                         // perm net code, should only be one
