@@ -116,19 +116,19 @@ public class VelocityStation  {
     }
 
     public String getLatitude() {
-        return df.format(sta.getLatitude());
+        return df.format(sta.getLatitude().getValue());
     }
 
     public String getLatitude(String format) {
-        return new DecimalFormat(format).format(sta.getLatitude());
+        return new DecimalFormat(format).format(sta.getLatitude().getValue());
     }
 
     public String getLongitude() {
-        return df.format(sta.getLongitude());
+        return df.format(sta.getLongitude().getValue());
     }
 
     public String getLongitude(String format) {
-        return new DecimalFormat(format).format(sta.getLongitude());
+        return new DecimalFormat(format).format(sta.getLongitude().getValue());
     }
 
 
