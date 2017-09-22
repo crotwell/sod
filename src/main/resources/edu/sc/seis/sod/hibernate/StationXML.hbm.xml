@@ -23,7 +23,8 @@
             <generator class="native" />
         </id>
         <property name="stationCode" index="station_code_idx" />
-        <many-to-one name="network" class="edu.sc.seis.seisFile.fdsnws.stationxml.Network"/>
+        <many-to-one name="network" class="edu.sc.seis.seisFile.fdsnws.stationxml.Network"
+        foreign-key="FK_STATION_NETWORK" cascade="save-update"  lazy="false" />
         <property name="networkCode" />
         <property name="startDateTime" type="Instant" />
         <property name="endDateTime" type="Instant" />
@@ -54,7 +55,8 @@
         </id>
         <property name="channelCode" index="channel_code_idx" />
         <property name="locCode" />
-        <many-to-one name="station" class="edu.sc.seis.seisFile.fdsnws.stationxml.Station"/>
+        <many-to-one name="station" class="edu.sc.seis.seisFile.fdsnws.stationxml.Station"
+        foreign-key="FK_CHANNEL_STATION" cascade="save-update" lazy="false" />
         <property name="stationCode" />
         <property name="networkCode" />
         <property name="startDateTime" type="Instant" />
