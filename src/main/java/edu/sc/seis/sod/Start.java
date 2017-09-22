@@ -219,12 +219,12 @@ public class Start {
             System.exit(0);
         }
         if (args.isQuickAndDirty()) {
-            Start.props.put("fissuresUtil.database.url", "jdbc:hsqldb:mem:SodDB");
+            Start.props.put(DBURL_KEY, "jdbc:hsqldb:mem:SodDB");
             logger.info("Database: memory");
         } else {
-            logger.info("Database: "+Start.props.get("fissuresUtil.database.url"));
+            logger.info("Database: "+Start.props.get(DBURL_KEY));
         }
-            ConnMgr.setURL(Start.props.getProperty("fissuresUtil.database.url"));
+            ConnMgr.setURL(Start.props.getProperty(DBURL_KEY));
             if (ConnMgr.getURL().startsWith(HSQL_FILE_URL)) {
                 File dbFile = new File(ConnMgr.getURL().substring(HSQL_FILE_URL.length())+".log");
                 if (dbFile.exists()) {
@@ -897,7 +897,7 @@ public class Start {
 
     private static String DATABASE_DIR = "SodDb";
 
-    public static final String DBURL_KEY = "fissuresUtil.database.url";
+    public static final String DBURL_KEY = ConnMgr.DBURL_KEY;
 
     public static boolean RUN_ARMS = true;
 

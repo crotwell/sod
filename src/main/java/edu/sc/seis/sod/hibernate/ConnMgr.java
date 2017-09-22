@@ -405,9 +405,9 @@ public class ConnMgr {
 
     public static final String DB_SERVER_PORT = "server.port";
 
-    public static final String DBURL_KEY = "fissuresUtil.database.url";
-    public static final String DBUSER_KEY = "fissuresUtil.database.user";
-    public static final String DBPASSWORD_KEY = "fissuresUtil.database.password";
+    public static final String DBURL_KEY = "hibernate.connection.url";
+    public static final String DBUSER_KEY = "hibernate.connection.user";
+    public static final String DBPASSWORD_KEY = "hibernate.connection.password";
 
     private static String DB_NAME = HSQL;
 
