@@ -21,7 +21,7 @@ public class RepairSensitivity implements ChannelSubsetter {
     public StringTree accept(Channel channel, NetworkSource network)
             throws Exception {
         try {
-            InstrumentSensitivity sensitivity = channel.getResponse().getInstrumentSensitivity();
+            InstrumentSensitivity sensitivity = channel.getResponse() == null ? null : channel.getResponse().getInstrumentSensitivity();
             if(sensitivity != null && sensitivity.getSensitivityValue() != -1) {
                 return new Pass(this);
             }

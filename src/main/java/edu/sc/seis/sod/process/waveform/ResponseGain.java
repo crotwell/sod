@@ -38,7 +38,7 @@ public class ResponseGain implements WaveformProcess, Threadable {
         LocalSeismogramImpl[] out = new LocalSeismogramImpl[seismograms.length];
         if(seismograms.length > 0) {
             NetworkSource na = Start.getNetworkArm().getNetworkSource();
-            InstrumentSensitivity sensitivity = channel.getResponse().getInstrumentSensitivity();
+            InstrumentSensitivity sensitivity = channel.getResponse() == null ? null : channel.getResponse().getInstrumentSensitivity();
             if (sensitivity == null) {
                 return new WaveformResult(out,
                                           new StringTreeLeaf(this,
