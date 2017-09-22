@@ -175,7 +175,7 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
         while (csvReader.readRecord()) {
             String netCode = csvReader.get(NET_CODE);
             String staCode = csvReader.get(STATION_CODE);
-            String siteCode = edu.sc.seis.seisFile.fdsnws.stationxml.Channel.fixLocCode(csvReader.get(SITE_CODE));
+            String locCode = edu.sc.seis.seisFile.fdsnws.stationxml.Channel.fixLocCode(csvReader.get(LOC_CODE));
             String chanCode = csvReader.get(CODE);
             Station curStation = getStationForChannel(netCode, staCode);
             if (curStation == null) {
@@ -210,7 +210,7 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
                 sampling = SamplingImpl.ofSamplesSeconds(1, 1);
             }
             TimeRange chanTime = new TimeRange(chanBegin, loadTime(headers, csvReader, END, DEFAULT_END));
-            Channel channel = new Channel(curStation, siteCode, chanCode, chanTime.getBeginTime(), chanTime.getEndTime());
+            Channel channel = new Channel(curStation, locCode, chanCode, chanTime.getBeginTime(), chanTime.getEndTime());
             channel.setAzimuth(azimuth);
             channel.setDip(dip);
             channel.setSampleRate((float) sampling.getFrequency().getValue(UnitImpl.HERTZ));
@@ -240,7 +240,7 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
 
     public static final String STATION_CODE = "station.code";
 
-    public static final String SITE_CODE = "site.code";
+    public static final String LOC_CODE = "loc.code";
 
     public static final String CODE = "code";
 
@@ -306,7 +306,7 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
 
     private static final String[] networkFields = new String[] {NET_CODE,
                                                                 STATION_CODE,
-                                                                SITE_CODE,
+                                                                LOC_CODE,
                                                                 CODE,
                                                                 LONGITUDE,
                                                                 LATITUDE,

@@ -30,7 +30,7 @@ public class find_channels extends find_stations {
         addDefaultParams();
         String lonPrinter = "$station.getLongitude(' ##0.0000;-##0.0000')";
         String latPrinter = "$station.getLatitude(' ##0.0000;-##0.0000')";
-        String theRest = "$station.getElevation('###0.') ${network.code}.${station.code}.${site.code}.$channel.code $channel.azimuth $channel.dip $channel.getStart('yyyy-MM-dd') $channel.getEnd('yyyy-MM-dd')";
+        String theRest = "$station.getElevation('###0.') ${network.code}.${station.code}.${channel.locCode}.$channel.code $channel.azimuth $channel.dip $channel.getStart('yyyy-MM-dd') $channel.getEnd('yyyy-MM-dd')";
         outputFormatFlag = OutputFormatParser.createParam(lonPrinter + " "
                 + latPrinter + " " + theRest, latPrinter + " " + lonPrinter
                 + " " + theRest);
@@ -40,10 +40,10 @@ public class find_channels extends find_stations {
     protected void addDefaultParams() throws JSAPException {
         super.addDefaultParams();
 
-        add(createListOption("sites",
+        add(createListOption("locs",
                              'l',
-                             "sites",
-                             "The codes of sites(location codes) to retrieve",
+                             "locs",
+                             "The codes of locs(location codes) to retrieve",
                              null,
                              new SiteCodeParser()));
         add(createListOption("channels",

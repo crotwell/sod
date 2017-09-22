@@ -30,7 +30,7 @@ public class ChannelJson extends AbstractJsonApiData {
 
     @Override
     public void encodeAttributes(JSONWriter out) throws JSONException {
-        out.key("site-code")
+        out.key("loc-code")
         .value(chan.getLocCode())
         .key("channel-code")
         .value(chan.getChannelCode())
