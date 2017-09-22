@@ -34,12 +34,16 @@ public abstract class CookieEventPair extends AbstractEventPair {
         return measurements.toString();
     }
     protected void setMeasurementsStr(String val) {
-        if (this instanceof AbstractEventChannelPair) {
-            this.measurements = new MeasurementStorage((AbstractEventChannelPair)this, new JSONObject(val));
-        } else if (this instanceof EventStationPair) {
-            this.measurements = new MeasurementStorage((EventStationPair)this, new JSONObject(val));
+        if (val == null) {
+            this.measurements = null;
+        } else {
+            if (this instanceof AbstractEventChannelPair) {
+                this.measurements = new MeasurementStorage((AbstractEventChannelPair)this, new JSONObject(val));
+            } else if (this instanceof EventStationPair) {
+                this.measurements = new MeasurementStorage((EventStationPair)this, new JSONObject(val));
+            }
+            throw new RuntimeException("SHould be esp or ecp, but was: "+this.getClass());
         }
-        throw new RuntimeException("SHould be esp or ecp, but was: "+this.getClass());
     }
     
     
