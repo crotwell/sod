@@ -63,7 +63,7 @@ public class StatefulEventDB {
     public List<StatefulEvent> getEventInTimeRange(TimeRange range, Status status) {
         String q = "from "+StatefulEvent.class.getName()+" e where ";
         if (status != null) { q += " e.status.stageInt = "+status.getStageInt()+" and e.status.standingInt = "+status.getStandingInt()+" AND ";}
-        q += " e.preferred.originTime.time between :minTime AND :maxTime  ";
+        q += " e.preferred.originTime between :minTime AND :maxTime  ";
         Query query = trans.getSession().createQuery(q);
 
         query.setParameter("minTime", range.getBeginTime());
@@ -166,7 +166,7 @@ public class StatefulEventDB {
         logger.info("Reopen " + updates + " events");
     }
     
-    public static final String TIME_ORDER = "preferred.originTime.time";
+    public static final String TIME_ORDER = "preferred.originTime";
     
     private static StatefulEventDB singleton;
     
