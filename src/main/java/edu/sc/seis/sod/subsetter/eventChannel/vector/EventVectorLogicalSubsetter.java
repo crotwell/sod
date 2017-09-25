@@ -13,6 +13,8 @@ import edu.sc.seis.sod.model.station.ChannelGroup;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.LogicalSubsetter;
 import edu.sc.seis.sod.subsetter.Subsetter;
+import edu.sc.seis.sod.subsetter.channel.ChannelSubsetter;
+import edu.sc.seis.sod.subsetter.eventChannel.EventChannelLogicalSubsetter;
 import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
 import edu.sc.seis.sod.subsetter.eventStation.EventStationLogicalSubsetter;
 import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
@@ -47,8 +49,8 @@ public class EventVectorLogicalSubsetter extends LogicalSubsetter {
     public static EventVectorSubsetter createSubsetter(final Subsetter s) throws ConfigurationException {
         if (s instanceof EventVectorSubsetter) {
             return (EventVectorSubsetter)s;
-        } else if (s instanceof EventChannelSubsetter) {
-            return new ANDEventChannelWrapper((EventChannelSubsetter)s);
+        } else if (s instanceof EventChannelSubsetter || s instanceof ChannelSubsetter) {
+            return new ANDEventChannelWrapper(EventChannelLogicalSubsetter.createSubsetter(s));
         } else {
             return new EventVectorSubsetter() {
                 EventStationSubsetter ecs = EventStationLogicalSubsetter.createSubsetter(s);
