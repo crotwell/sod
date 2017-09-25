@@ -325,6 +325,10 @@ public class WaveformArm extends Thread implements Arm {
         return processorNum;
     }
     
+    public AbstractWaveformRecipe getRecipe() {
+        return recipe;
+    }
+    
     AbstractWaveformRecipe recipe;
 
     private int processorNum;
