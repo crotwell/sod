@@ -93,6 +93,16 @@
 		<component name="sampleRate" class="edu.sc.seis.seisFile.fdsnws.stationxml.HertzFloatType">
 				<property name="value" column="sampleRate_value" type="float"  />
 		</component> 
+		<component name="instrumentSensitivity" class="edu.sc.seis.seisFile.fdsnws.stationxml.InstrumentSensitivity">
+				<property name="sensitivityValue" column="sensitivity_value" type="float"  />
+				<property name="frequency" column="frequency_value" type="float"  />
+				<component name="inputUnits" class="edu.sc.seis.seisFile.fdsnws.stationxml.Unit">
+					<property name="name" column="inputUnits"/>
+				</component>
+				<component name="outputUnits" class="edu.sc.seis.seisFile.fdsnws.stationxml.Unit">
+					<property name="name" column="outputUnits"/>
+				</component>
+		</component> 
     </class>
     
     
