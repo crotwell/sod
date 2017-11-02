@@ -183,7 +183,8 @@ def getDExtras() {
                 'jacorb.log.default.verbosity':'2' ]
 }
 
-task makeScript(dependsOn: copyToLib) << { task ->
+task makeScript(dependsOn: copyToLib) {
+  doLast { task ->
     group = 'build'
     def dExtras = getDExtras()
     def doBat = true
@@ -195,10 +196,13 @@ task makeScript(dependsOn: copyToLib) << { task ->
     ScriptBuilder.create('find_channels', 'edu.sc.seis.sod.tools.find_channels', task.project, dExtras:dExtras, bat:doBat)
     ScriptBuilder.create('find_seismograms', 'edu.sc.seis.sod.tools.find_seismograms', task.project, dExtras:dExtras, bat:doBat)
     ScriptBuilder.create('find_responses', 'edu.sc.seis.sod.tools.find_responses', task.project, dExtras:dExtras, bat:doBat)
+  }
 }
 
-task printRT << { task ->
+task printRT {
+  doLast { task ->
     configurations.default.each { File f -> println f.path }
+  }
 }
        
 
