@@ -172,7 +172,7 @@ public class FdsnStation extends AbstractNetworkSource {
             staQP.setLevel(FDSNStationQueryParams.LEVEL_STATION);
             // now append the real network code
             staQP.appendToNetwork(net.getNetworkCode());
-            setTimeParams(staQP, net.getStartDateTime(), net.getEndDateTime());
+            setTimeParams(staQP, net.getStartDateTime(), net.getEndDateTime(), constraints);
             logger.debug("getStations "+staQP.formURI());
             staxml = internalGetStationXML(staQP);
             NetworkIterator netIt = staxml.getNetworks();
@@ -216,7 +216,7 @@ public class FdsnStation extends AbstractNetworkSource {
                     .appendToNetwork(station.getNetworkCode())
                     .clearStation()
                     .appendToStation(station.getStationCode());
-            setTimeParams(staQP, station.getStartDateTime(), station.getEndDateTime());
+            setTimeParams(staQP, station.getStartDateTime(), station.getEndDateTime(), constraints);
             logger.info("getChannels "+staQP.formURI());
             staxml = internalGetStationXML(staQP);
             NetworkIterator netIt = staxml.getNetworks();
@@ -387,11 +387,31 @@ public class FdsnStation extends AbstractNetworkSource {
         }
     }
     
-    static void setTimeParams(FDSNStationQueryParams staQP, Instant startTime, Instant endTime) {
-        staQP.setStartTime(startTime.plus(TimeUtils.ONE_SECOND));
-        Instant end = endTime.minus(TimeUtils.ONE_SECOND);
-        if (end.isBefore(ClockUtil.now())) {
-            staQP.setEndTime(end);
+    static void setTimeParams(FDSNStationQueryParams staQP, Instant startTime, Instant endTime, NetworkQueryConstraints constraints) {
+        Instant earliest = startTime.plus(TimeUtils.ONE_SECOND);
+        Instant latest = null;
+        if (endTime != null) {
+            latest = endTime.minus(TimeUtils.ONE_SECOND);
+        }
+        if (constraints != null) {
+            if (earliest == null || (
+                    constraints.getConstrainingBeginTime() != null 
+                    && constraints.getConstrainingBeginTime().isAfter(earliest))) {
+                earliest = constraints.getConstrainingBeginTime();
+            }
+            if (latest == null || (
+                    constraints.getConstrainingEndTime() != null 
+                    && constraints.getConstrainingEndTime().isBefore(latest))) {
+                latest = constraints.getConstrainingEndTime();
+            }
+        }
+        if (earliest == null) {
+            staQP.setStartTime(earliest);
+            staQP.clearEndAfter().clearStartBefore(); // geofon doesn't like starttime and startsbefore in same query
+        }
+        if (latest != null && latest.isBefore(ClockUtil.now())) {
+            staQP.setEndTime(latest);
+            staQP.clearEndAfter().clearStartBefore(); // geofon doesn't like starttime and startsbefore in same query
         }
     }
     
