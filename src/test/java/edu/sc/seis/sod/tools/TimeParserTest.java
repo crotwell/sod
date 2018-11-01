@@ -18,9 +18,9 @@ public class TimeParserTest extends TestCase {
 
     public void testFullTime() throws ParseException {
         assertEquals("2002-07-02T12:30:15.000Z",
-                     floor.parse("2002-07-02-12-30-15"));
+                     floor.parse("2002-07-02T12:30:15"));
         assertEquals("2002-07-02T12:30:15.999Z",
-                     ceiling.parse("2002-07-02-12-30-15"));
+                     ceiling.parse("2002-07-02T12:30:15"));
     }
 
     public void testCompactTime() throws ParseException {
