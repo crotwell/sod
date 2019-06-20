@@ -1,12 +1,59 @@
 
+plugins {
+  id "edu.sc.seis.version-class" version "1.1.1"
+  id "java-library"
+  id 'maven-publish'
+}
+apply plugin: 'eclipse'
+apply plugin: 'project-report'
 
 group = 'edu.sc.seis'
-version = '3.2.9-SNAPSHOT3'
+version = '3.2.9-SNAPSHOT4'
 // also remember to change in sod.Version class
 
 apply plugin:'application'
 mainClassName = "edu.sc.seis.sod.Start"
 
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+task sourcesJar(type: Jar) {
+    archiveClassifier = 'sources'
+    from sourceSets.main.allJava
+}
+
+task javadocJar(type: Jar) {
+    archiveClassifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+publishing {
+    publications {
+        myLibrary(MavenPublication) {
+            from components.java
+
+            artifact sourcesJar
+            artifact javadocJar
+        }
+    }
+
+    repositories {
+        maven {
+            name = 'myRepo'
+            url = "file://${buildDir}/repo"
+        }
+    }
+}
+
+repositories {
+    mavenLocal()
+    maven { url "http://www.seis.sc.edu/software/maven2" }
+    mavenCentral()
+    maven { url "http://spring-rich-c.sourceforge.net/maven2repository" }
+    maven { url "http://oss.sonatype.org/content/groups/public" }
+    maven { url "https://repository.jboss.org/nexus/content/repositories/public" }
+}
 
 sourceSets {
     relax {
@@ -19,7 +66,7 @@ sourceSets {
 dependencies {
     compile 'edu.sc.seis:bag:0.1alpha'
 //    compile project(':cormorant')
-    
+
     compile "jline:jline:0.9.94"
     compile "thaiopensource:jing:20091111"
     compile "rngconvUSC:rngconv:20030225"
@@ -40,22 +87,26 @@ dependencies {
 //    runtime "org.jruby:jruby:1.7.3"
 }
 
-configurations.all {
-    resolutionStrategy.dependencySubstitution {
-        substitute module("edu.sc.seis:bag") with project(":bag")
-    }
-}
+//configurations.all {
+//    resolutionStrategy.dependencySubstitution {
+//        substitute module("edu.sc.seis:bag") with project(":bag")
+//    }
+//}
 
 def dirName = project.name+'-'+version
 
 def binDistFiles = copySpec {
 
-    from('build/output') {
+    from(configurations.default) {
+        into('lib')
+    }
+    from(configurations.default.allArtifacts.files) {
+        into('lib')
+    }
+    from('build/scripts') {
         fileMode=0755
         include('bin/**')
-    }
-    from('build/output') {
-        include('lib/**')
+        include('bat/**')
     }
     from('scripts') {
         include('cwg.prop')
@@ -146,36 +197,34 @@ task explodeDist(type: Sync, dependsOn: ['explodeBin', 'wrapper', 'doc']) {
 }
 
 def getDExtras() {
-    return [ 'seis.name':'sod'+getVersion(), 
-                'org.omg.CORBA.ORBSingletonClass':'org.jacorb.orb.ORBSingleton', 
-                'python.path':'${LIB}', 
-                'java.awt.headless':'true', 
-                'org.omg.CORBA.ORBClass':'org.jacorb.orb.ORB', 
-                'swing.volatileImageBufferEnabled':'false', 
+    return [ 'seis.name':'sod'+getVersion(),
+                'org.omg.CORBA.ORBSingletonClass':'org.jacorb.orb.ORBSingleton',
+                'python.path':'${LIB}',
+                'java.awt.headless':'true',
+                'org.omg.CORBA.ORBClass':'org.jacorb.orb.ORB',
+                'swing.volatileImageBufferEnabled':'false',
                 'jacorb.connection.client.pending_reply_timeout':'20000',
                 'jacorb.connection.client.idle_timeout':'90000',
                 'jacorb.home':'${SOD_HOME}' ,
                 'jacorb.log.default.verbosity':'2' ]
 }
 
-task makeScript(dependsOn: copyToLib) << { task ->
+task makeScript() {
+  doLast {
     group = 'build'
     def dExtras = getDExtras()
     def doBat = true
-    ScriptBuilder.create('psod', 'edu.sc.seis.sod.Start', task.project, dExtras:dExtras, yourkit:true)
-    ScriptBuilder.create('sod', 'edu.sc.seis.sod.Start', task.project, dExtras:dExtras, bat:true)
-    ScriptBuilder.create('bgsod', 'edu.sc.seis.sod.Start', task.project, dExtras:dExtras, bat:doBat, background:true)
-    ScriptBuilder.create('find_events', 'edu.sc.seis.sod.tools.find_events', task.project, dExtras:dExtras, bat:doBat)
-    ScriptBuilder.create('find_stations', 'edu.sc.seis.sod.tools.find_stations', task.project, dExtras:dExtras, bat:doBat)
-    ScriptBuilder.create('find_channels', 'edu.sc.seis.sod.tools.find_channels', task.project, dExtras:dExtras, bat:doBat)
-    ScriptBuilder.create('find_seismograms', 'edu.sc.seis.sod.tools.find_seismograms', task.project, dExtras:dExtras, bat:doBat)
-    ScriptBuilder.create('find_responses', 'edu.sc.seis.sod.tools.find_responses', task.project, dExtras:dExtras, bat:doBat)
+    ScriptBuilder.create('psod', 'edu.sc.seis.sod.Start', project, dExtras:dExtras, yourkit:true)
+    ScriptBuilder.create('sod', 'edu.sc.seis.sod.Start', project, dExtras:dExtras, bat:true)
+    ScriptBuilder.create('bgsod', 'edu.sc.seis.sod.Start', project, dExtras:dExtras, bat:doBat, background:true)
+    ScriptBuilder.create('find_events', 'edu.sc.seis.sod.tools.find_events', project, dExtras:dExtras, bat:doBat)
+    ScriptBuilder.create('find_stations', 'edu.sc.seis.sod.tools.find_stations', project, dExtras:dExtras, bat:doBat)
+    ScriptBuilder.create('find_channels', 'edu.sc.seis.sod.tools.find_channels', project, dExtras:dExtras, bat:doBat)
+    ScriptBuilder.create('find_seismograms', 'edu.sc.seis.sod.tools.find_seismograms', project, dExtras:dExtras, bat:doBat)
+    ScriptBuilder.create('find_responses', 'edu.sc.seis.sod.tools.find_responses', project, dExtras:dExtras, bat:doBat)
+  }
 }
 
-task printRT << { task ->
-    configurations.default.each { File f -> println f.path }
-}
-       
 
 
 task copySodSite(dependsOn: ['buildSchemaDocs', ':seiswww:makeSodSite'], type: Sync) {
@@ -194,7 +243,7 @@ task staticSchemaDocs(type: Copy) {
     }
 }
 
-task buildSchemaDocs(type: JavaExec, dependsOn: ['staticSchemaDocs', 'buildSchema', 'compileJava'])  { 
+task buildSchemaDocs(type: JavaExec, dependsOn: ['staticSchemaDocs', 'buildSchema', 'compileJava'])  {
     def inRNGFile = new File(project.buildDir.path, 'generated-src/relaxInclude/sod.rng')
 //    inRNGFile = new File(project.buildDir, 'generated-src/relax/resources/edu/sc/seis/sod/data/sod.rng')
 //    jvmArgs = ['-agentlib:yjpagent', '-XX:+HeapDumpOnOutOfMemoryError', '-Xmx512m']
@@ -227,13 +276,13 @@ task buildSchema(dependsOn: ['transform', 'compileJava'])  {
     doLast{
     outFile.getParentFile().mkdirs()
     def relaxArgs = '-s '+inFile
-    ant.java(dir:outFile.getParentFile(), 
-             classname:'com.thaiopensource.relaxng.util.Driver', 
+    ant.java(dir:outFile.getParentFile(),
+             classname:'com.thaiopensource.relaxng.util.Driver',
              args:relaxArgs,
              maxmemory:'1512m',
              fork:true,
              classpath:configurations.runtime.asPath,
-             output:outFile) 
+             output:outFile)
     }
 }
 
@@ -257,7 +306,7 @@ task buildGrouperSchema(dependsOn: ['transformGrouper', 'compileJava'])  {
     }
 }
 
-task transform(type: XSLT) { 
+task transform(type: XSLT) {
     destDir=new File(project.buildDir, 'generated-src/relaxInclude')
     stylesheetFile = new File(project.projectDir, 'src/main/xslt/simpleXInclude.xslt')
     def rngFile = new File(project.projectDir, 'src/main/relax/sod.rng')
@@ -266,7 +315,7 @@ task transform(type: XSLT) {
     outputs.dir destDir
 }
 
-task transformGrouper(type: XSLT) { 
+task transformGrouper(type: XSLT) {
     destDir=new File(project.buildDir, 'generated-src/relaxInclude')
     stylesheetFile = new File(project.projectDir, 'src/main/xslt/simpleXInclude.xslt')
     def rngFile = new File(project.projectDir, 'src/main/relax/grouper.rng')
@@ -276,6 +325,7 @@ task transformGrouper(type: XSLT) {
 }
 
 
+task doc(dependsOn: 'javadoc') {}
 
 doc.dependsOn(copySodSite)
 assemble.dependsOn(tarDist)
