@@ -1,0 +1,34 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+#set($currentPageTitle = "Tutorials")
+#tutorialPage()
+<head>
+#sod_head()
+</head>
+<body>
+#sod_header()
+#sod_menu()
+<div id="content">
+<div class="section">
+#sod_section_title("SOD's tutorials")
+<p>The tutorials take you through each of the major aspects of a SOD run to explain what data SOD gets for
+a given recipe.  After reading them, you'll have some idea of SOD's capabilities and how to write recipes
+to take advantage of them.  You should probably read them in the order listed here.</p>
+</div>
+<div class="section">
+#sod_section_title("Network Tutorial")
+<p>The <a href="networkTutorial.html">network tutorial</a> explains how SOD gets stations and channels.</p>
+</div>
+<div class="section">
+#sod_section_title("Event Tutorial")
+<p>The <a href="eventTutorial.html">event tutorial</a> walks through SOD's earthquake retrieval system.</p>
+</div>
+<div class="section">
+#sod_section_title("Waveform Tutorial")
+<p class="short">The <a href="waveformTutorial.html">waveform tutorial</a> shows the way SOD takes the earthquakes 
+	and channels to get seismograms.</p>
+</div>
+</div>
+#sod_footer()
+</body>
+</html>

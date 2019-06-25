@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	#set($currentPageTitle = "Demo")
+	#documentationPage()
+	<head>
+		#sod_head()
+	</head>
+	<body>
+		#sod_header()
+		#sod_menu()
+		<div id="content">
+			<div class="section">
+				#sod_section_title("The SOD demo")
+				<p>Files that configure SOD's operation are called recipes.
+					The <code>--demo</code> flag tells SOD to run the 
+					$demoHtmlizer.transform('demo.xml')
+	<a href="tutorials/$demoHtmlizer.getDestName('demo.xml')">demo recipe</a>
+	included in SOD.  This recipe gathers seismograms for channels in the
+					II network for earthquakes with a magnitude of 6 or greater in January of 2003. 
+	In order to see the recipe that SOD uses for the demo, invoke the command <code>sod --demo -r</code> on Unix systems and <code>sod.bat --demo -r</code> on Windows. The <code>-r</code> tells SOD to print the recipe instead of running it.
+</p>
+</div>
+<div class="section">
+	#sod_section_title("Creating directories for SOD runs")
+	<p>SOD uses a database to keep track of its actions.  Every time it runs, a directory SodDb is created to store it.
+		This database needs to be isolated between runs of SOD.
+		If a recipe is run in a directory where it ran previously, SOD will exit immediately, thinking all work is done.
+		Therefore, we run SOD in a new directory for each invocation of each recipe.  Start the command prompt, create a directory "demo",
+		and cd into it.
+				</p>
+			</div>
+<div class="section">
+	#sod_section_title("Running the demo")
+	<p>From the demo directory, invoke the command <code>sod --demo</code> on Unix systems and <code>sod.bat --demo</code> on Windows.
+		If the <a href="install.html">Install</a> went well, you should see some output like the following: 
+	</p>
+				#set($demoExampleDir = "sod/documentation/demo")
+					    <pre>#include("${demoExampleDir}/head")</pre>
+	<p>The first messages like <pre>#include("${demoExampleDir}/events")</pre>
+		are printed every time SOD retrieves an event that matches demo recipe's criteria.  
+		The ones that follow like <pre>#include("${demoExampleDir}/channels")</pre> 
+		are printed for every matching channel.
+		Finally, messages like <pre>#include("${demoExampleDir}/seismograms")</pre> 
+		are printed every time SOD gets a seismogram. 
+		You can watch for these to get a rough feel for what SOD is doing.
+	</p>
+	<p>
+		In addition to the database files mentioned earlier, this SOD recipe will
+		store all the seismograms it retrieves as sac files.  These are put in the <code>seismograms</code> directory
+		where SOD was started.  If the run has been going for a while or is finished,
+		you'll see directories in <code>seismograms</code> for every earthquake SOD has processed and inside of each of these is a data directory containing
+		sac files for every channel retrieved for the earthquake.
+    </p>
+    <p>
+        SOD is very configurable, so all of this printing and saving is how the demo is configured. 
+        How your own SOD runs work depends on what you tell SOD to do in the recipe. In general, printing
+        a line per event, channel and seismogram is very helpful for small recipes where you are watching
+        the output, or when you are creating a new recipe and are not sure you have things quite right
+        yet. 
+    </p>
+    <p>
+        There are three command line flags that can be very helpful when creating a new recipe or debugging 
+        an existing recipe.  
+	</p>
+	<ul>
+	<li><code>-q</code> Quick mode, SOD uses an entirely in memory database, so the SodDb directory is not created
+	and the run goes a tiny bit faster. Mostly useful because you can try a recipe over and over without
+	having to remember to delete the SodDb directory.</li>
+	<li><code>-n</code> Network only mode. SOD will only run the network arm, ignoring the event and waveform 
+	arms. Very helpful when you are trying to get the network arm just right and don't need to waste time
+	on the events or seismograms.</li>
+	<li><code>-e</code> Event only mode. Like the <code>-n</code> except only runs the event arm. Useful for
+	debugging just the event arm.</li>
+	</ul>
+			</div>
+	#sod_gettingstarted_navigation("Network Tutorial" "tutorials/networkTutorial.html")
+		</div>
+		#sod_footer()
+	</body>
+</html>

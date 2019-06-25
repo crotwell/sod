@@ -1,0 +1,20 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+#set($currentPageTitle = "SODCam")
+<head>
+#sod_head()
+</head>
+<body>
+#sod_header()
+#sod_menu()
+<div id="content">
+<div class="section">
+#sod_section_title('Live at 5, the SODCam')
+<p class="short"> If you are curious to see what the output of a SOD run looks like without running it locally,
+	have a look at <a href="http://www.seis.sc.edu/SODCam/">SODCam</a>.  It shows the results of
+                a SOD run at USC that collected seismograms for large events from several large seismic networks.</p>
+</div>
+</div>
+#sod_footer()
+</body>
+</html>

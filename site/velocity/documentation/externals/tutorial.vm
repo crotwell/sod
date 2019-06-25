@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	#set($currentPageTitle = "Externals Tutorial")
+	#set($pathToTutorials = "../tutorials/")
+	#externalsPage()
+	<head>
+		#sod_head()
+	</head>
+	<body>
+		#sod_header()
+		#sod_menu()
+		<div id="content">
+			<div class="section">
+                #sod_section_title("Writing an External Processor")
+				<p>
+					In this tutorial we build an external processor that only allows events through that are in the 
+					southern hemisphere.  Then we refine it so that the user can specify the latitude below which 
+					events are acceptable.  All of the code is in the <code>externalExample</code> directory in the SOD distribution
+					 and the recipe files are in <code>recipes</code>.
+				</p>
+				<div class="section">
+					#sod_subsection_title("Writing the processor class")
+				<p>
+					The first step is to create a class that SOD will invoke to check for the proper latitude. 
+					Each subsetting or processing step in SOD has a corresponding Java interface that defines its operation.
+					Check the <a href="types.html">external types</a> document to see which step is appropriate for the operation you wish to perform.
+					Since we want to check on the properties of an earthquake(origin in DHI terms) our class should implement the interface 
+					<a href="http://www.seis.sc.edu/fisheye/browse/~raw,r=HEAD/seis/trunk/sod/src/edu/sc/seis/sod/subsetter/origin/OriginSubsetter.java">OriginSubsetter</a>.
+					The only requirement for an Origin subsetter is that it implement one method:
+<pre>public StringTree accept(EventAccessOperations eventAccess, 
+                         EventAttr eventAttr, 
+                         Origin preferred_origin) throws Exception;</pre>
+					<p>An implementation that checks for origins in the southern hemisphere is given below.</p>
+				<pre>
+#include("SouthOMatic.java")
+				</pre>
+					If this SouthOMatic is listed in your recipe, SOD instantiates an instance of it and calls accept on it for every origin that passes through
+					with the arguments eventAccess, eventAttr and preferred_origin describing the origin.
+					Depending on the returned StringTree, SOD does further processing of the origin or stops at this point. 
+					StringTree is an abstract class that encapsulates a SOD processing result.  For a simple processing steps like ours, 
+					we can use the two simplest subclasses of StringTree, Pass and Fail.  Pass and Fail are both created with the subsetter as the first 
+					argument so SOD can log what subsetter performed the action.  If an optional String reason is given this is also logged. As you can 
+					see we check if the event's preferredOrigin has a latitude greater than 0.  If so, we return an instance of Fail and SOD will 
+					stop processing the origin.  Otherwise we return Pass and things continue from this point.
+				</p>
+				
+				</div>
+				<div class="section">
+					#sod_subsection_title("Adding your external processor to a recipe")
+				<p>
+					To get SOD to instantiate and use your new external processor you must add it to a recipe file.  
+					This is done with an externalOriginSubsetter ingredient for our reciple like so:
+				</p>
+				<pre>$snippetizer.getElementResult("southOMatic.xml", "externalOriginSubsetter")</pre>
+				#linkToExample("southOMatic.xml")
+				<p>
+					The name for any external processor ingredient is always external followed by the name of the interface you've implemented.  Then the first element inside the 
+					external element is a classname element with the fully qualified classname of the processor you've written.  SOD
+					uses reflection to find your class and instantiate it.  
+				</p>
+				</div>
+				<div class="section">
+					#sod_subsection_title("Compiling your processor")
+				<p>
+					The final step to get the external processor to run is to compile the processor and add it to SOD's runtime
+					classpath.  To simplify this, we've included a 
+					 <a href="http://maven.apache.org/maven-1.x/">Maven 1</a> project that handles getting all of the dependencies together and compiling 
+					 any external processors located in <code>externalExample/src</code>.  So the first step is to 
+					 <a href="http://maven.apache.org/maven-1.x/start/download.html">download</a> and 
+					 <a href="http://maven.apache.org/maven-1.x/start/install.html">install</a> Maven 1.  Once you've got it setup, you can test the installation
+					 by going into <code>externalExample</code> and running <code>maven jar</code>.  This should produce lots of messages about downloading
+					 jars and compiling classes and will eventually make a jar file and place it at <code>externalExample/target/sodExternals-#sodVersionNumber().jar</code>
+					 .  This jar is already included in the classpath of the SOD scripts so you should be able to run <code>sod -f externalExample/recipes/southOMatic.xml</code>
+					 and see the origins south of the equator scroll by.  
+				</p>
+				</div>
+				<div class="section">
+					#sod_section_title("Customizing the processor from the recipe")
+				<p>
+					In addition to the accept method, you may also add a constructor that takes a DOM Element in any external processor. 
+					If SOD sees this on an external, it'll pass in an <code>org.w3c.dom.Element</code> representing the external element from the recipe.
+					This allows you to extract any extra
+					configuration information out of the recipe that you need. With this we can make the maximum latitude
+					configurable instead of always 0. Here is a variation of the SouthOMatic, LatOMatic, that does this. SOD
+					includes a helper class, DOMHelper, that makes it easy to pull values out of the XML Element. Here we us the extractFloat method. Notice that we
+					give a default value in case the recipe file does not contain a maxLat element. The default value is optional, but if it is not given and the 
+					recipe does not have that value then an exception will be thrown.
+				</p>
+				<pre>
+#include("LatOMatic.java")
+				</pre>
+				<pre>$snippetizer.getElementResult("latOMatic.xml", "externalOriginSubsetter")</pre>
+				#linkToExample("latOMatic.xml")
+				<p>
+					The only changes needed from <code>southOMatic.xml</code> are the new classanme and the addition of the maxLat element.  
+					If you run <code>sod -f externalExamples/recipes/latOMatic.xml</code> you can see that the events printed out are 
+					now at latitude 45 or below.
+				</p>
+			</div>
+			</div>
+			
+		</div>
+		#sod_footer()
+	</body>
+</html>

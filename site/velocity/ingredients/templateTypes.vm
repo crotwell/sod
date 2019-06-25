@@ -1,0 +1,205 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+#set($currentPageTitle = "Template Variables in SOD")
+#ingredientPage()
+<head>
+#sod_head()
+</head>
+<body>
+#sod_header()
+#sod_menu()
+<div id="content">
+<div class="section">
+#sod_section_title("Types of variables available")
+            <p>The names and subtypes of variables availble from various Velocity templates used by SOD ingredients are listed here.
+				The ingredients that expose them link here to show what's available from their variables.
+				You can see how to use templates in SOD at the <a href="templates.html">template instructions</a> page.
+			</p>
+#macro(field $name $def)
+	<dt>$name</dt>
+	<dd>$def</dd>
+#end
+#macro(lfield $name $def)
+	<dt><a href="#$name">$name</a></dt>
+	<dd>$def</dd>
+#end
+</div>
+<div class="section">
+#sod_section_title("Network Types")
+<div class="section">
+#sod_subsection_title("channel")
+<p><b>Default value:</b> "${net}.${channel.station.code}.${channel.site.code}.${channel.code}.${channel.start}"</p>
+<dl>
+	<h4>Available subfields</h4>
+	#field('azimuth' 'the angle of the channel with respect to North')
+	#field('code' "the channel's band, gain and orientation codes i.e. BHZ")
+	#field('bandCode' "the channel's band code i.e. B")
+	#field('gainCode' "the channel's gain code i.e. H")
+	#field('orientationCode' "the channel's orientation codes i.e. Z")
+	#field('codes' '${channel.net.code}.${channel.station.code}.${channel.site.code}.${channel.code}')
+	#field('dip' 'the angle of the channel with respect to horizontal')
+	#field('end' "time at which the channel stopped recording. can be formatted using getEnd('date format')")
+	#field('name' "the full name of the channel. may be empty")
+	#lfield('net' "the channel's network")
+	#lfield('sampling' "the default sampling rate of the channel")
+	#lfield('site' "the channel's site.  The channel's location is in here")
+	#field('start' "time at which the channel began recording.  can be formatted using getStart('date format')")
+	#lfield('station' "the channel's station")
+</dl>
+</div>
+<div class="section">
+#sod_subsection_title("site")
+<p><b>Default value:</b> "${net}:${site.station.code}:${site.code}:${site.start}"</p>
+<dl>
+	<h5>Available subfields</h5>
+	#field('code' "the location code ie 00")
+	#field('codes' '${site.net.code}.${site.station.code}.${site.code}')
+	#field('comment' 'a comment about the site.  may be empty')
+	#field('end' "time at which the site stopped recording. can be formatted using getEnd('date format')")
+	#field('latitude' "the latitude of the site from -90 to 90")
+	#field('longitude' "the longitude of the site from -180 to 180")
+	#lfield('net' "the site's network")
+	#field('orientedLatitude' "the latitude of the site with a cardinal direction ie 90 S to 90 N")
+	#field('orientedLongitude' "the longitude of the site with a cardinal direction ie 180 W to 180 E")
+	#field('start' "time at which the site began recording.  can be formatted using getStart('date format')")
+	#lfield('station' "the site's station")
+</dl>
+</div>
+<div class="section">
+#sod_subsection_title("station")
+<p><b>Default value:</b> "${net}:${station.code}:${station.start}"</p>
+<p>The subfields with $event are only available in the waveformArm and waveformVectorArm</p>
+<dl>
+	<h5>Available subfields</h5>
+	#field('code' "the station code ie ANMO")
+	#field('codes' '${station.net.code}.${station.code}')
+	#field('comment' 'a comment about the station.  may be empty')
+	#field('depth' 'how far the station is below the ground')
+	#field('getDepth(format)' 'how far the station is below the ground in meters, formatted by a <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/text/DecimalFormat.html">DecimalFormat string</a>, such as "#.0"')
+    #field('description' 'a description of the station.  may be empty')
+	#field('getAz($event)' 'the azimuth to event')
+	#field('getBaz($event)' 'the back azimuth to event')
+	#field('getDistance($event)' 'the distance in kilometers to event')
+	#field('getDistanceDeg($event)' 'the distance in degrees to event')
+	#field('elevation' "the height of the station's location relative to sea level")
+	#field('end' "time at which the station stopped recording. can be formatted using getEnd('date format')")
+	#field('latitude' "the latitude of the station from -90 to 90")
+	#field('getLatitude(format)' 'the latitude of the station from -90 to 90, formatted by a <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/text/DecimalFormat.html">DecimalFormat string</a>, such as "#.0"')
+    #field('longitude' "the longitude of the station from -180 to 180")
+	#field('getLongitude(format)' 'the longitude of the station from -180 to 180, formatted by a <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/text/DecimalFormat.html">DecimalFormat string</a>, such as "#.0"')
+    #field('name' "the full name of the station")
+	#field('net' "the station's network")
+	#field('operator' "the full of the group operating the station")
+	#field('orientedLatitude' "the latitude of the station with a cardinal direction ie 90 S to 90 N")
+	#field('orientedLongitude' "the longitude of the station with a cardinal direction ie 180 W to 180 E")
+	#field('start' "time at which the station began recording.  can be formatted using getStart('date format')")
+</dl>
+</div>
+<div class="section">
+#sod_subsection_title("net")
+<p><b>Default value:</b> "${net.code}.${net.start}"</p>
+<dl>
+    <h5>Available subfields</h5>
+    #field('code' "the network code ie IU")
+    #field('description' 'a description of the network.  may be empty')
+    #field('end' "time at which the network stopped recording. can be formatted using getEnd('date format')")
+    #field('name' "the full name of the network")
+    #field('owner' "the full of the group that owns the network")
+    #field('start' "time at which the station began recording.  can be formatted using getStart('date format')")
+</div>
+<div class="section">
+#sod_subsection_title("instrumentation")
+<p><b>Default value:</b> "${instrumentation.sensitivity} ${instrumentation.sensorModel}"</p>
+<dl>
+    <h5>Available subfields</h5>
+    #field('sensorModel' "the sensor model, may be empty")
+    #field('dataLoggerModel' 'the data logger model, may be empty')
+    #field('sensitivity' "overall sensitivity, gain and frequency")
+</div>
+</div>
+<div class="section">
+#sod_section_title("Event types")
+<div class="section">
+#sod_subsection_title("event")
+<p><b>Default value:</b> "Event: $event.region | $event.time | Mag: $event.magnitudeValue  | Depth $event.depth  | ($event.latitude, $event.longitude)"</p>
+<p>The subfields with $station are only available in the waveformArm and waveformVectorArm</p>
+<dl>
+	<h5>Available subfields</h5>
+    #field('allMagnitudes' "comma separated list of all magnitudes")
+	#field('catalog' 'the catalog to which the event belongs')
+	#field('contributor' 'the organization that estimated the event')
+	#field('depth' 'how far the event was below the ground, with units')
+	#field('getDepth(format)' 'how far the event was below the ground in kilometers, formatted by a <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/text/DecimalFormat.html">DecimalFormat string</a>, such as "#.0"')
+	#field('depthValue' 'how far the event was below the ground, without units')
+	#field('getAz($station)' 'the azimuth to $station')
+	#field('getBaz($station)' 'the back azimuth to $station')
+	#field('getDistance($station)' 'the distance in kilometers to $station')
+    #field('getDistanceDeg($station)' 'the distance in degrees to $station')
+    #field('id' "the id of the event as generated by the server")
+	#field('latitude' "the latitude of the event from -90 to 90")
+	#field('getLatitude(format)' 'the latitude of the event from -90 to 90, formatted by a <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/text/DecimalFormat.html">DecimalFormat string</a>, such as "#.0"')
+    #field('longitude' "the longitude of the event from -180 to 180")
+	#field('getLongitude(format)' 'the longitude of the event from -180 to 180, formatted by a <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/text/DecimalFormat.html">DecimalFormat string</a>, such as "#.0"')
+    #field('magnitude' "both the value and type of the magnitude")
+	#field('magnitudeType' "the type of the magnitude")
+    #field('magnitudeValue' "the value of the magnitude")
+    #field('magnitudeContributor' "the contributor of the magnitude")
+	#field('orientedLatitude' "the latitude of the event with a cardinal direction ie 90 S to 90 N")
+	#field('orientedLongitude' "the longitude of the event with a cardinal direction ie 180 W to 180 E")
+    #field('region' "the Flinn Engdahl region for the event")
+    #field('regionNumber' "the Flinn Engdahl region number for the event")
+	#field('time' "time at which the event occurred, to whole seconds")
+    #field('timePrecise' "time at which the event occurred, to milliseconds")
+	#field('getTime(format)' 'time at which the event occurred, formatted by a <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/text/SimpleDateFormat.html">SimpleDateFormat string</a>, such as "yyyy/MM/dd HH:mm:ss.SSS Z"')
+</dl>
+</div>
+</div>
+<div class="section">
+#sod_section_title("Seismogram Types")
+<div class="section">
+#sod_subsection_title("sampling")
+<p><b>Default value:</b> "$sampling.numPoints in $sampling.timeInterval"</p>
+<dl>
+	<h5>Available subfields</h5>
+	#field('frequency' "number of samples per time interval")
+	#field('intervalUnitName' "the name of the time interval unit")
+	#field('intervalValue' "the size of the time interval in intervalUnitName")
+	#field('period' 'time between samples')
+	#field('numPoints' "the number of points per timeInterval")
+	#field('timeInterval' "the amount of time over which numPoints are recorded")
+</dl>
+</div>
+<div class="section">
+#sod_subsection_title("seismogram")
+<p><b>Default value:</b> "Seismogram on $seismogram.channel from $seismogram.begin to $seismogram.end"</p>
+<dl>
+	<h5>Available subfields</h5>
+	#field('begin' "the start time of the data in the seismogram.  can be formatted with getBegin('time format')")
+	#lfield('channel' "the channel that recorded the seismogram")
+	#field('end' "the time of the last recorded point in the seismogram. can be formatted with getEnd('time format')")
+	#field('maxValue' "largest value in the seismogram")
+	#field('meanValue' "mean value of all the points in the seismogram")
+	#field('minValue' "smallest value in the seismogram")
+	#field('numPoints' "number of points in the seismogram")
+	#field('name' "name of the seismogram.  generated automatically by SOD")
+	#lfield('sampling' 'sampling rate at which the seismogram was recorded')
+	#field('timeInterval' "the amount of time over which numPoints are recorded")
+	#field('unit' "the unit the values of the seismogram are in")
+</dl>
+</div>
+<div class="section">
+#sod_subsection_title("request")
+<p><b>Default value:</b> "Request for $request.channel from $request.begin to $request.end"</p>
+<dl>
+	<h5>Available subfields</h5>
+	#field('begin' "the start time of the request.  can be formatted with getBegin('time format')")
+	#lfield('channel' "the requested channel")
+	#field('end' "the time of the last recorded point in the seismogram. can be formatted with getEnd('time format')")
+</dl>
+</div>
+</div>
+</div>
+</div>
+#sod_footer()
+</body>
+</html>

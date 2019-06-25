@@ -1,0 +1,46 @@
+#set($relativePathToTagDocDir="../")
+#set($relativePathToSodDir="../${relativePathToTagDocDir}")
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+#set($currentPageTitle = "Text Datatype")
+<head>
+#sod_head()
+</head>
+<body>
+#sod_header()
+#sod_menu()
+<div id="content">
+<div class="section">
+<h3>
+<a name="Any Text">Any Text</a>
+</h3>
+            <p>Any amount of text can go here. You must escape the characters XML uses like &lt;
+                with &amp;lt; so that it SOD doesn't think you're adding more tags, but other
+                than that, anything goes. </p>
+            <table>
+                <tr>
+                    <td>Escaped Character</td>
+                    <td>Escape Sequence</td>
+                </tr>
+                <tr>
+                    <td>&quot;</td>
+                    <td>&amp;quot;</td>
+                </tr>
+                <tr>
+                    <td>&apos;</td>
+                    <td>&amp;apos;</td>
+                </tr>
+                <tr>
+                    <td>&lt;</td>
+                    <td>&amp;lt;</td>
+                </tr>
+                <tr>
+                    <td>&gt;</td>
+                    <td>&amp;gt;</td>
+                </tr>
+            </table>
+</div>
+</div>
+#sod_footer()
+</body>
+</html>

@@ -1,0 +1,108 @@
+#toolsPage()
+#defaultHeader("find_events")
+			<div class="section">
+				#sod_section_title("find_events")
+				<p>find_events gathers events matching the criteria given in the following options.</p>
+					</div>
+				<div class="section">
+				#sod_section_title("Options")
+					<table summary="The format and meaning of all options accepted by find_events" class="options">
+						<tr>
+							<th id="format">Format</th>
+							<th id="meaning">Meaning</th>
+							<th id="default">Default</th>
+						</tr>
+<tr>
+<td headers="format">-v/--version </td>
+<td headers="meaning">Print SOD's version and exit</td>
+<td headers="default"></td>
+</tr>
+<tr>
+<td headers="format">-r/--recipe </td>
+<td headers="meaning">Print the created recipe to stdout instead of running it</td>
+<td headers="default"></td>
+</tr>
+<tr>
+<td headers="format">-h/--help </td>
+<td headers="meaning">Print a brief help message and exit</td>
+<td headers="default"></td>
+</tr>
+<tr>
+<td headers="format">-p/--props &lt;props&gt;</td>
+<td headers="meaning">Add an additional props file to specify a different nameserver, database or other internal SOD options</td>
+<td headers="default"></td>
+</tr>
+<tr>
+<td headers="format">--allow-duplicates</td>
+<td headers="meaning">By default, find_events filters out very similar events.  Adding this flag allows all events through</td>
+<td headers="default"></td>
+</tr>
+<tr>
+<td headers="format">-S/--server &lt;server&gt;</td>
+<td headers="meaning">Set the  event server for this search</td>
+<td headers="default">earthquake.usgs.gov</td>
+</tr>
+<tr>
+<td headers="format">-R/--box-area &lt;box&gt;</td>
+<td headers="meaning">Limit the events to those in a box region. 
+	It's specified as west/east/south/north where west and east are longitudes from -180 to 180 and north and south are latitudes from -90 to 90</td>
+<td headers="default"></td>
+</tr>
+<tr>
+<td headers="format">-d/--donut &lt;donut&gt;</td>
+<td headers="meaning">Limits the events to those in a donut region.  
+	It's specified as centerLat/centerLon/minRadiusDegrees/maxRadiusDegrees.  
+	As with --box-area, latitude goes from -90 to 90 and longitude goes from -180 to 180</td>
+<td headers="default"></td>
+</tr>
+<tr>
+<td headers="format">-b/--begin &lt;begin&gt;</td>
+<td headers="meaning">The earliest time for an accepted event. Relative times can be given like -1d for one day ago, similar for (hour), (m)onth and (y)year. Actual time must be in 'YYYY[[[[[-MM]-DD]-hh]-mm]-ss]' format or 'network' to specify the earliest start time for a channel found by the network arm.  Each unspecified field in 'YYYY[[[[[-MM]-DD]-hh]-mm]-ss]' format is assumed to be the earliest possible value for that field.</td>
+<td headers="default">the previous day</td>
+</tr>
+<tr>
+<td headers="format">-e/--end &lt;end&gt;</td>
+<td headers="meaning">The latest time for an accepted event.  Must be in 'YYYY[[[[[-MM]-DD]-hh]-mm]-ss]' format, 'now' for the current time or 'network' for the latest end time for a channel found by the network arm.  Each unspecified field in 'YYYY[[[[[-MM]-DD]-hh]-mm]-ss]' format  is assumed to be the latest possible value for that field.</td>
+<td headers="default">now</td>
+</tr>
+<tr>
+<td headers="format">-m/--magnitude &lt;magnitude&gt;</td>
+<td headers="meaning">The range of acceptable magnitudes in the form min[-max].  If max is unspecified, a max of 10 is assumed.</td>
+<td headers="default">0-10</td>
+</tr>
+<tr>
+<td headers="format">-t/--types t1,t2,...,tN</td>
+<td headers="meaning">The types of magnitudes to retrieve.  If unspecified, all magnitude types will be retrieved.  
+	These can be any type supported by the event server such as Mb or Mw </td>
+<td headers="default"></td>
+</tr>
+<tr>
+<td headers="format">-D/--depth &lt;depth&gt;</td>
+<td headers="meaning">The range of acceptable depths in kilometers</td>
+<td headers="default">0-10000</td>
+</tr>
+<tr>
+<td headers="format">-o/--output &lt;output&gt;</td>
+<td headers="meaning">The format for output.  Can be none, xy, yx or a Velocity template as described in the <a href="${relativePathToSodDir}ingredients/printlineEventProcess.html">printlineEventProcess ingredient</a></td>
+<td headers="default">xy</td>
+</tr>
+<tr>
+<td headers="format">-c/--catalogs c1,c2,...,cN</td>
+<td headers="meaning">A comma separated list of catalogs to search.  If unspecified, <code>PREF</code> will be searched</td>
+<td headers="default"></td>
+</tr>
+<tr>
+<td headers="format">--seis-regions s1,s2,...,sN</td>
+<td headers="meaning">A comma separated list of numeric <a href="https://en.wikipedia.org/wiki/Flinn%E2%80%93Engdahl_regions">seismic Flinn-Engdahl regions</a>. 
+	An event must be in one of these regions to pass.  If unspecified, all regions will be acceptable</td>
+<td headers="default"></td>
+</tr>
+<tr>
+<td headers="format">--geo-regions g1,g2,...,gN</td>
+<td headers="meaning">A comma separated list of numeric <a href="https://en.wikipedia.org/wiki/Flinn%E2%80%93Engdahl_regions">geographic Flinn-Engdahl regions</a>.  
+	An event must be in one of these regions to pass.  If unspecified, all regions will be acceptable</td>
+<td headers="default"></td>
+</tr>
+</table>
+			</div>
+#defaultFooter()

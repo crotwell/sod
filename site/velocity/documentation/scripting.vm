@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+#set($currentPageTitle = "Inline Script Subsetters")
+#set($pathToTutorials = "tutorials/")
+#documentationPage()
+<head>
+#sod_head()
+</head>
+<body>
+#sod_header()
+#sod_menu()<div id="content">
+<div class="section">
+#sod_section_title("SOD Inline Scripting")
+<p>This tutorial takes you through inlining scripts in SOD. Each ingredient type has a corresponding
+script subsetter that allows customization of SOD's procssing via user written scripts. This can often
+be a very efficient way to customize your processing recipe beyond the features that come with SOD.</p>
+<div class="section">
+<h4>
+        <a name="Inline Script Scructure">Inline Script Scructure</a>
+</h4>
+<p>
+Inline Scripts in SOD have a simple, yet flexible, structure and are based on the <a href="http://docs.oracle.com/javase/6/docs/technotes/guides/scripting/programmer_guide/index.html">JSR 223 Java Scripting API</a>. Because of this, the particular scripting language is choosen by the user as long as the bindings for that language exist in a way that SOD can find them.</p>
+<p>
+<p>We will start with a simple example of a station subsetting script. This example can be found in the recipies directory of the SOD distribution. For this example, we will create a custom script that accepts stations at high elevation, greater than 1500 meters above sea level. While this is a relatively simple example, it will illustrate a couple of important ideas.</p>
+</div>
+<div class="section">
+<h4>
+        <a name="Language Choice">Language Choice</a>
+</h4>
+<p>The structure of the <stationScript> subsetter has two parts. The first is an attribute named <em>type</em> that specifies the scripting language to be used. Within the default SOD distribution, there are 2 languages available, <a href="http://www.mozilla.org/rhino/">javaScript</a> and <a href="http://jython.org">python</a>. <a href="http://www.mozilla.org/rhino/">Rhino</a> is a java implementation of javaScript, the well known scripting language usually used in interactive web pages. With Rhino, javaScript can also be used for general purpose scripting. The second, and perhaps more powerful, language is <a href="http://jython.org">Jython</a>, which is a java implementation of the <a href="http://python.org">Python</a> language that runs within the JVM. We will just Jython in this example.
+</p>
+<p>Two other languages that might be of interest to use for scripting subsetters are <a href="http://groovy.codehaus.org/">Groovy</a> and <a href="http://www.jruby.org/">JRuby</a>. While jython, groovy and jruby are probably the three most common, any other language that supports JSR223 can be used.</p>
+</div>
+<div class="section">
+<h4>
+        <a name="Script Source">Script Source</a>
+</h4>
+<p>The second part of the scripting subsetters is the body of the tag, which contains the actual script source code. As far as SOD is concerned, this is just text, but this will be passed to the script engine for your language of choice, and so should be valid code for that language. For our example of checking the elevation of the station using Jython, the scripting element would look like this:</p>
+<pre>
+&lt;stationScript type="jython">
+    if station.getWrapped().getLocation().elevation.value > 1500:
+        print "%s  %s\n"%(station.getWrapped().getLocation().elevation, station)
+        result = True
+    else:
+        result = False
+&lt;/stationScript>
+</pre>
+<p>While this code is simple Python code, there are a few SOD specifics that you need to know in order to write a subsetters. The first is that for each subsetter type, several variables are initialized in order to pass the objects relavant to the subsetting. In this example, these variables are "station" and "networkSource". The same class, VelocityStation, is used here as is used in the templates for the printline processes. This has the advantage that there are several useful methods defined on this object, in particular for printing purposes. However, in many cases the raw StationImpl object is more useful when calculations are needed. This is accessed via the getWrapped() method. Reviewing the API documents for the velocity and Impl classes can be very useful in writting scripts. In this example, we simply check the elevation and print out a line if the elevation is above 1500.</p>
+
+<p>The javadocs for each type of script subsetter are below. The variables passed into each script are the same as the arguments to the runScript method. So, for the Station script, two variables are presset in the script, station of type VelocityStation and networkSource of type VelocityNetworkSource.</p>
+
+<ul>
+<li>Network - <a href="javadoc/edu/sc/seis/sod/subsetter/network/NetworkScript.html">&lt;networkScript></a></li>
+<li>Station - <a href="javadoc/edu/sc/seis/sod/subsetter/station/StationScript.html">&lt;stationScript></a></li>
+<li>Channel - <a href="javadoc/edu/sc/seis/sod/subsetter/channel/ChannelScript.html">&lt;channelScript></a></li>
+<li>Origin - <a href="javadoc/edu/sc/seis/sod/subsetter/origin/OriginScript.html">&lt;originScript></a></li>
+<li>Event Station - <a href="javadoc/edu/sc/seis/sod/subsetter/eventStation/EventStationScript.html">&lt;eventStationScript></a></li>
+<li>Event Channel - <a href="javadoc/edu/sc/seis/sod/subsetter/eventChannel/EventChannelScript.html">&lt;eventChannelScript></a></li>
+<li>Event Vector - <a href="javadoc/edu/sc/seis/sod/subsetter/eventChannel/vector/EventVectorScript.html">&lt;eventVectorScript></a></li>
+<li>Request Generator - <a href="javadoc/edu/sc/seis/sod/subsetter/requestGenerator/RequestGeneratorScript.html">&lt;requestGeneratorScript></a></li>
+<li>Vector RequestGenerator - <a href="javadoc/edu/sc/seis/sod/subsetter/requestGenerator/vector/VectorRequestGeneratorScript.html">&lt;vectorRequestGeneratorScript></a></li>
+<li>Request - <a href="javadoc/edu/sc/seis/sod/subsetter/request/RequestScript.html">&lt;requestScript></a></li>
+<li>Vector Request - <a href="javadoc/edu/sc/seis/sod/subsetter/request/vector/VectorRequestScript.html">&lt;vectorRequestScript></a></li>
+<li>Available Data - <a href="javadoc/edu/sc/seis/sod/subsetter/availableData/AvailableDataScript.html">&lt;availableDataScript></a></li>
+<li>Vector Available Data - <a href="javadoc/edu/sc/seis/sod/subsetter/availableData/vector/VectorAvailableDataScript.html">&lt;availableDataScript></a></li>
+<li>Seismogram - <a href="javadoc/edu/sc/seis/sod/process/waveform/SeismogramScript.html">&lt;seismogramScript></a></li>
+<li>Waveform Vector - <a href="javadoc/edu/sc/seis/sod/process/waveform/vector/VectorScript.html">&lt;vectorScript></a></li>
+</ul>
+
+</div>
+<div class="section">
+<h4>
+        <a name="Return Value">Return Value</a>
+</h4>
+<p>The other direction for data transfer is how the script returns the result to SOD. Unfortunately there are some differences in scripting languages. As a result, SOD checks the return value of the script but if that is not set then SOD pulls the variable named "result" from the script engine after execution. We use this technique in the example. The return value here is a simple boolean, true or false. The other choice is to return a StringTreeLeaf object, which contains both the boolean result and also an optional reason. This is mostly used in cases where you wish to explain failures. The reason will be put into the Fail logger which usually ends up in the file Fail.log. 
+</p>
+<p>
+One small problem can crop up due to the script being inlined in the xml recipe, the text of the script must conform to allowed xml. So for example if we wanted stations close to sea level instead, it would be tempting to do this:</p>
+<pre>
+    if station.getWrapped().getLocation().elevation.value < 10:
+</pre>
+<p>However, this would not work as the XML processor would think that the less than sign indicated a new XML element. The workaround for this type of issue is to "ampersand encode" the less than sign. The XML processor will expand the &amp;lt; before the script sees it, and it will also be valid XML.</p>
+<pre>
+    if station.getWrapped().getLocation().elevation.value &amp;lt; 10:
+</pre>
+</div>
+</div>
+</div>
+#sod_footer()
+</body>
+</html>

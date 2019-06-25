@@ -1,0 +1,28 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+#set($currentPageTitle = "Download")
+<head>
+#sod_head()
+</head>
+<body>
+#sod_header()
+#sod_menu()
+<div id="content">
+<div class="section">
+<h3>
+<a name="Download SOD">Download SOD</a>
+</h3>
+<p> SOD is distributed in the tar.gz format.
+<p>
+                
+<b>Current Release:</b> Sod #sodVersionNumber() #sodtar() #sodzip()
+</p>
+<p><a href="documentation/install.html">Install</a> SOD on your system. </p>
+<p>Released #sodReleaseDate()</p>
+
+<p><a href="previousReleases.html">Previous Releases</a></p>
+</div>
+</div>
+#sod_footer()
+</body>
+</html>

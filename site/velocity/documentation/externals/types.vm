@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+#macro(makeEx $ext)
+<div class="section">
+				#sod_subsection_title($ext.interfaceName)
+				<dl>
+					<dt>Usage</dt>
+					<dd>$ext.usage</dd>
+					<dt>Interface</dt>
+					<dd><a href="$ext.interfaceURL">${ext.interfaceName}.java</a></dd>		
+					<dt>Example</dt>
+					<dd><a href="$ext.exampleURL">${ext.interfaceName}Example.java</a></dd>			
+					<dt>Ingredient</dt>
+					<dd><a href="../../ingredients/$ext.ingredientURL">$ext.name</a></dd>
+				</dl>
+</div>
+#end
+#set($currentPageTitle = "Types of Externals")
+	#externalsPage()
+	<head>
+		#sod_head()
+	</head>
+	<body>
+		#sod_header()
+		#sod_menu()
+		<div id="content">
+            <div class="section">
+				#sod_section_title("Types of external processors")
+				<p>
+					This document lists all of the external types available in SOD.  Each external type has a corresponding Java interface that must 
+					be implemented as part of its use.  You can also see a simple implementation of each interface linked from each type.  The 
+					simple implementations don't actually do any work, but they show the general structure an external of that type will need to take.
+					Finally, each type has a link to its entry in the ingredient listing.  This shows where you need to insert the external into 
+					your recipe.
+				</p>
+				<p>
+					To decide which external is right for your goals, go through the types listed here from the top.  They're
+					grouped by arm and then in their order inside of the arm.  This means that they're also listed in the order that SOD applies them,
+					so using one earlier in the list will allow SOD to do less work to get to it which means if it's rejecting things it'll save work
+					overall and if not, at least it'll get to its job earlier.
+				</p>
+				<p>
+					Each type has a short description of the data available at that point in SOD's processing structure.  If it includes the
+					data you need to do you work, then implement that external.
+				</p>
+			</div>
+            <div class="section">
+				#sod_section_title("Event Arm")
+			    #foreach($ex in $originExternals)
+					#makeEx($ex)
+				#end
+			</div>
+            <div class="section">
+				#sod_section_title("Network Arm")
+				<p>
+					Each successive item here has the information from the previous step.  A station knows about its network and a channel about its station and so forth.
+				</p>
+			    #foreach($ex in $networkExternals)
+					#makeEx($ex)
+				#end
+			</div>
+            <div class="section">
+				#sod_section_title("Waveform Arm")
+				<p>
+					The waveform arm operates on the combination of the items coming out of the event and network arms.  Therefore
+					each item here has an event and a piece of network information.  As with the network arm each succesive
+					item has all of the information from its previous steps.  
+				</p>
+			    #foreach($ex in $waveformExternals)
+					#makeEx($ex)
+					#end
+			</div>
+            <div class="section">
+				#sod_section_title("Waveform Vector Arm")
+				<p>
+					The waveform vector arm takes the place of the waveform arm and still operates on the combination of the items coming out of the event and network arms. 
+					However instead of operating on a single channel at a time, it operates on a vector of channels.  
+					Therefore if you want to check on some property between the channels in the vector, this would be the place to look.
+				</p>
+			    #foreach($ex in $vectorExternals)
+					#makeEx($ex)
+					#end
+			</div>
+			</div>
+		</div>
+		#sod_footer()
+	</body>
+</html>

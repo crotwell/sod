@@ -97,7 +97,7 @@ dependencies {
 
 
 def sodVelocity = copySpec {
-    from project.file('velocity/sod')
+    from project.file('site/velocity')
     from new File(project.buildDir, 'generated-src/velocity/sod')
 }
 

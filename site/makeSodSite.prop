@@ -6,6 +6,6 @@ file.resource.loader.modificationCheckInterval=0
 velocimacro.library=VM_library.vm
 velocityDir=build/velocity/sod/
 outputDir=build/sod/
-staticContentDir=contents/sod/
+staticContentDir=site/contents/
 sodDir=../sod/
 site=sod

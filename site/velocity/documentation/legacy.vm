@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+#set($currentPageTitle = "Legacy Code Considerations")
+#documentationPage()
+<head>
+#sod_head()
+</head>
+<body>
+#sod_header()
+#sod_menu()<div id="content">
+<div class="section">
+<h3>
+<a name="Executing Commands">Executing Commands</a>
+</h3>
+<p>The legacyExecute processor is capable of running existing
+                        command line programs. It does this by passing the filenames
+                        of the seismograms, saved by an earlier sacWriter or mseedWriter
+                        processor, to an external program.
+                        </p>
+</div>
+<div class="section">
+<h3>
+<a name="Example">Example</a>
+</h3>
+<p>This snippet of XML shows the use of the legacyExecute
+                     processor. Instead of doing something useful, we simply
+                     use the echo program.
+                     </p>
+
+<p>
+
+<pre>
+&lt;sacWriter&gt;
+    &lt;workingDir&gt;POND_II&lt;/workingDir&gt;
+&lt;/sacWriter&gt;
+&lt;legacyExecute&gt;
+    &lt;command&gt;echo&lt;/command&gt;
+&lt;/legacyExecute&gt;
+</pre>
+                     
+</p>
+<p>One important thing is that the legacyExecute works in cooperation
+                     with a sacWriter or mseedWriter processor, which handles the saving
+                     of the actual seismograms. LegacyExecute just uses the filenames
+                     from the writing processor to pass to the command. Therefore, you must
+                     have a sacWriter or mseedWriter somewhere before the legacyExecute.
+                     Both sacWriter and mseedWriter also has an optional prefix tag, which
+                     allows more than one to be in the same SOD run without interfering.
+                     If the prefix is used in the writer, then the
+                     same prefix should also be used in the legacyExecute.
+                     </p>
+<p>There is a similar processor for use in the motion vector
+                     arm called legacyVectorExecute. It takes the same parameters
+                     and the only difference is that the file names for all three
+                     components are put on the command line.
+                     </p>
+</div>
+<div class="section">
+<h3>
+<a name="Complications">Complications</a>
+</h3>
+<p>Unfortunately, there can be significant complications
+                        with executing external applications from within SOD. That
+                        is not to say that it is difficult, but that there are many
+                        other potential sources of trouble such as the environment,
+                        locating the executable, and numerous subtle cross
+                        platform differences. However, given the large body of
+                        existing processing systems, many specifically written by researchers
+                        for their particular needs, it would be a shame if SOD
+                        were not able to make use of these existing native codes.
+                        </p>
+
+<p>Perhaps the most important thing to understand is that
+                        SOD cannot directly process commands as you would when
+                        typing into a shell from the keyboard. It executes a single
+                        program with arguments, meaning no redirecting of output, no
+                        multiple commands separated by semicolons, and no piping of
+                        input with HERE documents. Therefore, we highly encourage you
+                        to let SOD call a separate shell script that in turn calls
+                        your code. Shell scripts  can provide a buffer between SOD and
+						your normal operating environment.
+                        </p>
+<p>Input and output also causes difficulties. The legacyExecute
+                        processor maps the output and error streams from the process
+                        to SOD's System.out and System.err, so you can see any output.
+                        However, SOD makes no attempt to process this output. It
+                        is best if the script you run sends any important information
+                        to a separate log file. Expect, freely available from http://expect.nist.gov, may
+                        be a better alternative to traditional shell script as it allows
+                        more interactivity with the applications being called. Since
+                        Expect has very effectively solved this problem and can be
+                        called by SOD just as it would call any other script, we
+                        hesitate to add any similar functionality directly to SOD.
+                        </p>
+<p>Lastly, the success or failure of an external process
+                        is difficult for SOD to determine. It simply looks at the
+                        returned exit code and calls it an error if it is non-zero.
+                        While non-zero error codes are traditional for Unix applications,
+                        they provide little to no debugging information to try
+                        and determine the actual cause. Hence, you may need to generate
+                        and save logging information internal to your script to
+                        help determine when something has gone wrong and why. Also,
+                        if you do use a shell script, then you need to ensure that the
+                        exit code of the shell script represents the success or failure
+                        of the processing as opposed to just the script running.
+                        </p>
+<p>A useful reference, although from a Java programming perspective,
+                        is <a href="http://www.javaworld.com/javaworld/jw-12-2000/jw-1229-traps.html"><b>When Runtime.exec() won't</b></a>.
+                        </p>
+</div>
+</div>
+#sod_footer()
+</body>
+</html>

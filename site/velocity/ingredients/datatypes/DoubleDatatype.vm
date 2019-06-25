@@ -1,0 +1,42 @@
+#set($relativePathToTagDocDir="../")
+#set($relativePathToSodDir="../${relativePathToTagDocDir}")
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+#set($currentPageTitle = "Double Datatype")
+<head>
+#sod_head()
+</head>
+<body>
+#sod_header()
+#sod_menu()
+<div id="content">
+<div class="section">
+<h3>
+<a name="Double">Double</a>
+</h3>
+            <p>A number that can have a decimal portion that is stored in 64 bits.  It also accepts exponential notation.</p>
+</div>
+<div class="section">
+<h3>
+<a name="Valid Values">Valid Values</a>
+</h3>
+            <ul>
+                <li>123.456</li>
+                <li>+1234.456</li>
+                <li>-1.2344e56</li>
+                <li>-.45E-6</li>
+            </ul>
+</div>
+<div class="section">
+<h3>
+<a name="Invalid Values">Invalid Values</a>
+</h3>
+            <ul>
+                <li>123.4E 56 - No spaces in the value</li>
+                <li>123.6E+2.5 - Power of 10 must be an integer</li>
+            </ul>
+</div>
+</div>
+#sod_footer()
+</body>
+</html>
