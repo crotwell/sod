@@ -61,6 +61,13 @@ sourceSets {
             srcDir new File(project.buildDir, 'generated-src/relax/resources')
         }
     }
+    makedocs {
+        compileClasspath += sourceSets.main.output
+    }
+}
+
+configurations {
+  makedocsImplementation.extendsFrom implementation
 }
 
 dependencies {
@@ -84,7 +91,39 @@ dependencies {
     compile "edu.sc.seis.mapData:dcwpo_browse:1.0"
     compile "net.sourceforge.javacsv:javacsv:2.0"
     runtime "org.codehaus.groovy:groovy-all:2.2.2"
-//    runtime "org.jruby:jruby:1.7.3"
+//    runtime "org.jruby:jruby:1.7.3
+    makedocsImplementation "org.apache.velocity:velocity:1.6.4"
+}
+
+
+def sodVelocity = copySpec {
+    from project.file('velocity/sod')
+    from new File(project.buildDir, 'generated-src/velocity/sod')
+}
+
+task copySodVelocity(type: Sync, dependsOn: 'buildSchemaDocs') {
+    group = 'dist'
+    with sodVelocity
+    def outDir = project.file('build/velocity/sod/')
+    into outDir
+    doFirst {
+        println outDir.mkdirs()
+    }
+}
+
+task makeSodSite(type: JavaExec, dependsOn: [ copySodVelocity, classes, compileMakedocsJava ] ) {
+    jvmArgs  ['-Xmx512m']
+    group = 'dist'
+    args '--run-once', '-p', 'sod.prop'
+    classpath = sourceSets.makedocs.runtimeClasspath
+    setMain "edu.sc.seis.seiswww.MakeSite"
+
+//    ant.java(dir:project.projectDir.path,
+//             classname:'edu.sc.seis.seiswww.MakeSite',
+//             args:'--run-once -p sod.prop',
+//             fork:true,
+//             classpath: sourceSets.main.runtimeClasspath.asPath,
+//             output:project.projectDir.path+'/build/makeSodSite.out')
 }
 
 //configurations.all {
