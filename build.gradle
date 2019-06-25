@@ -229,7 +229,7 @@ task explodeBin(type: Sync, dependsOn: ['makeScript', 'buildSchema', 'buildGroup
 }
 explodeBin.doLast { ant.chmod(dir: "$buildDir/explode/bin", perm: "755", includes: "*") }
 
-task explodeDist(type: Sync, dependsOn: ['explodeBin', 'wrapper', 'doc']) {
+task explodeDist(type: Sync, dependsOn: ['explodeBin', 'doc']) {
     group = 'dist'
     with distFiles
     into file("$buildDir/explode")
