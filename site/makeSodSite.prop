@@ -1,0 +1,11 @@
+resource.loader=file
+velocimacro.library.autoreload = true
+file.resource.loader.path=.,build/velocity/sod,includes,externalExample/src/edu/sc/seis/sod/example/
+file.resource.loader.cache=false
+file.resource.loader.modificationCheckInterval=0
+velocimacro.library=VM_library.vm
+velocityDir=build/velocity/sod/
+outputDir=build/sod/
+staticContentDir=contents/sod/
+sodDir=../sod/
+site=sod

@@ -114,7 +114,7 @@ task copySodVelocity(type: Sync, dependsOn: 'buildSchemaDocs') {
 task makeSodSite(type: JavaExec, dependsOn: [ copySodVelocity, classes, compileMakedocsJava ] ) {
     jvmArgs  ['-Xmx512m']
     group = 'dist'
-    args '--run-once', '-p', 'sod.prop'
+    args '--run-once', '-p', 'site/makeSodSite.prop'
     classpath = sourceSets.makedocs.runtimeClasspath
     setMain "edu.sc.seis.seiswww.MakeSite"
 
