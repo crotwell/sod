@@ -24,8 +24,8 @@
 <a href="http://www.seis.sc.edu/downloads/sod/#sodVersionNumber()/#sodVersion().zip">zip</a>
 #end
 
-#macro(sodVersionNumber)3.2.8#end
-#macro(sodReleaseDate)30 November 2016#end
+#macro(sodVersionNumber)3.2.9#end
+#macro(sodReleaseDate)26 June 2019#end
 
 #macro(sodVersion)sod-#sodVersionNumber()#end
 #macro(sod_header)
@@ -101,7 +101,7 @@
 <img class="right" src="$!{relativePathToSodDir}images/dhi_logo.png"/>
 <p>SOD is made possible by the <a href="http://www.geol.sc.edu"> Department of Geological Sciences</a> at the <a href="http://www.sc.edu"><br />University of South Carolina</a> and the <a href="http://www.iris.edu">IRIS Consortium</a>.
                    </p>
-				   
+
 </div>
 
 #end
@@ -151,7 +151,7 @@
 	</a>
 #end
 
-#macro(eventArm_menu) 
+#macro(eventArm_menu)
 #toggle_menu_item("$!{relativePathToIngredientDir}eventArm.html" "eventArm" $inEventArm)
 	   #if($inEventArm == "true")
             <ul>
@@ -162,7 +162,7 @@
 #end
 
 
-#macro(networkArm_menu) 
+#macro(networkArm_menu)
 #toggle_menu_item("$!{relativePathToIngredientDir}networkArm.html" "networkArm" $inNetworkArm)
 	   #if($inNetworkArm == "true")
             <ul>
@@ -175,7 +175,7 @@
 #end
 
 
-#macro(waveformArm_menu) 
+#macro(waveformArm_menu)
 #toggle_menu_item("$!{relativePathToIngredientDir}waveformArm.html" "waveformArm" $inWaveformArm)
 	   #if($inWaveformArm == "true")
             <ul> #sod_menu_item("$!{relativePathToIngredientDir}eventStation.html" "eventStation")
@@ -190,7 +190,7 @@
 #end
 
 
-#macro(waveformVectorArm_menu) 
+#macro(waveformVectorArm_menu)
 #toggle_menu_item("$!{relativePathToIngredientDir}waveformVectorArm.html" "waveform VectorArm" $inWaveformVectorArm)
 	   #if($inWaveformVectorArm == "true")
             <ul>
@@ -300,7 +300,7 @@
 </div>
 <!-- Google CSE Search Box Ends -->
 </li>
-      
+
 	</ul>
 </div>
 #end
@@ -308,7 +308,7 @@
 #macro(decodeJS $server $name)javascript:this.href=decode('$server', '*rem*${name}')#end
 
 #macro(EnkodeAttributes $server $username)
-	href="http://www.seis.sc.edu/mail.html" 
+	href="http://www.seis.sc.edu/mail.html"
    onmouseover="#decodeJS($server $username )"
    onfocus="#decodeJS($server $username)"
 #end
