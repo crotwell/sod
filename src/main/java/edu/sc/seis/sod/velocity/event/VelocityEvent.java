@@ -40,7 +40,7 @@ public class VelocityEvent extends ProxyEventAccessOperations {
         this.event = event;
         this.origin = getOrigin();
     }
-    
+
     public String getName() {
         if (get_attributes().name != null & get_attributes().name.length() > 0) {
             return get_attributes().name;
@@ -50,7 +50,7 @@ public class VelocityEvent extends ProxyEventAccessOperations {
             return getTime();
         }
     }
-    
+
     public boolean hasRegion() {
         return get_attributes().region != null && get_attributes().region.number > 0;
     }
@@ -58,7 +58,7 @@ public class VelocityEvent extends ProxyEventAccessOperations {
     public String getRegion() {
         return pr.getRegionName(get_attributes().region);
     }
-    
+
     public String getRegionNumber(){
         FlinnEngdahlRegion region = get_attributes().region;
         String type = region.type == FlinnEngdahlType.GEOGRAPHIC_REGION ? "Geographic" : "Seismic";
@@ -153,7 +153,7 @@ public class VelocityEvent extends ProxyEventAccessOperations {
     public String getDepth() {
         return FissuresFormatter.formatDepth(FissuresFormatter.getDepth(origin));
     }
-    
+
     public String getDepthValue() {
         return getDepth("0.0");
     }
@@ -211,11 +211,11 @@ public class VelocityEvent extends ProxyEventAccessOperations {
     public int getDbid() {
         return ((CacheEvent)event).getDbid();
     }
-    
+
     public OriginImpl getPreferred() throws NoPreferredOrigin {
         return getCacheEvent().getPreferred();
     }
-    
+
     public Origin[] getOrigins() {
         return getCacheEvent().getOrigins();
     }
@@ -318,5 +318,13 @@ public class VelocityEvent extends ProxyEventAccessOperations {
         } else {
             return new VelocityEvent(new CacheEvent(event));
         }
+    }
+
+// needed to compile under java11? 
+    public org.omg.CORBA.InterfaceDef _get_interface() {
+      throw new RuntimeException("should never be called");
+    }
+    public org.omg.CORBA.Object _get_component() {
+      throw new RuntimeException("should never be called");
     }
 }
