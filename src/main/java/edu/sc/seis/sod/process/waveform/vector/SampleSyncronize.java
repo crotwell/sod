@@ -27,7 +27,7 @@ public class SampleSyncronize implements WaveformVectorProcess {
             for (int j = 0; j < out[i].length; j++) {
                 if (i==0 && j==0) {
                     out[i][j] = seismograms[0][0];
-                } else { 
+                } else {
                     TimeInterval sampPeriod = seismograms[i][j].getSampling().getPeriod();
                     if (sampPeriod.subtract(firstSampPeriod).abs().divideBy(firstSampPeriod).getValue() > maxSamplingDiffPercentage) {
                         return new WaveformVectorResult(false, seismograms, "sample periods are not compatible: 0,0="+firstSampPeriod+"  "+i+","+j+"="+sampPeriod);
@@ -38,16 +38,17 @@ public class SampleSyncronize implements WaveformVectorProcess {
         }
         return new WaveformVectorResult(true, out, this);
     }
-    
+
     public static LocalSeismogramImpl alignTimes(LocalSeismogramImpl main, LocalSeismogramImpl shifty) throws FissuresException {
         TimeInterval misalign = shifty.getBeginTime().subtract(main.getBeginTime());
-        TimeInterval moduleSamplePeriod = new TimeInterval(Math.IEEEremainder(misalign.getValue(shifty.getSampling().getPeriod().getUnit()), 
+        TimeInterval moduleSamplePeriod = new TimeInterval(Math.IEEEremainder(misalign.getValue(shifty.getSampling().getPeriod().getUnit()),
                                                                               shifty.getSampling().getPeriod().getValue()),
                                                            shifty.getSampling().getPeriod().getUnit());
         LocalSeismogramImpl out = new LocalSeismogramImpl(shifty, shifty.getData());
+        out.sampling_info = main.getSampling();
         out.begin_time = shifty.getBeginTime().subtract(moduleSamplePeriod).getFissuresTime();
         return out;
     }
-    
+
     protected double maxSamplingDiffPercentage = .01;
 }
