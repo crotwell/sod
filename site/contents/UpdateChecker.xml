@@ -1,4 +1,11 @@
 <UpdateChecker>
+    <Update Version="3.2.9" Date="26-06-2016">
+        <Features/>
+        <Reason>Fix issue with restricted data.</Reason>
+        <UpdateAction Description="Remote Installer">
+        <UpdateLocation>http://www.seis.sc.edu/SOD</UpdateLocation>
+        </UpdateAction>
+    </Update>
     <Update Version="3.2.8" Date="11-30-2016">
         <Features/>
         <Reason>Fix issue with instrument response download when channel is active.</Reason>
@@ -135,7 +142,7 @@ adds a new processor and a new subsetter in additional to the usual bug fixes
   </Update>
   <Update Version="2.0beta2" Date="5-24-2004">
     <Features>This is the beta of the big jump to version 2.0</Features>
-    <Reason>    
+    <Reason>
     * HTML version of the config file is created by the status system
     * HTML view of waveforms sorted by stations
     * All columns in the tables can be sorted
