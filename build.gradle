@@ -71,7 +71,7 @@ configurations {
 }
 
 dependencies {
-    compile 'edu.sc.seis:bag:0.2'
+    compile 'edu.sc.seis:bag:0.3'
 //    compile project(':cormorant')
 
     compile "jline:jline:0.9.94"
