@@ -4,7 +4,7 @@ import java.text.ParseException;
 import java.time.Duration;
 import java.time.Instant;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.sod.mock.seismogram.MockSeismogram;

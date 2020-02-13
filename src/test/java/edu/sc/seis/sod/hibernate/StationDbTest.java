@@ -1,7 +1,8 @@
 package edu.sc.seis.sod.hibernate;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.Properties;
@@ -9,8 +10,8 @@ import java.util.Properties;
 import org.apache.log4j.BasicConfigurator;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
@@ -29,16 +30,16 @@ public class StationDbTest {
         props.put("hibernate.connection.url", "jdbc:hsqldb:mem:.");
         props.put("hibernate.cache.use_second_level_cache", "false");
         props.put("hibernate.hbm2ddl.auto", "create");
-        assertNotNull("Start class", Start.class);
-        assertNotNull("Start default value", "/"+Start.DEFAULT_PROPS);
-        assertNotNull("props as stream: "+Start.DEFAULT_PROPS, Start.class.getResourceAsStream("/"+Start.DEFAULT_PROPS));
+        assertNotNull( Start.class, "Start class");
+        assertNotNull( "/"+Start.DEFAULT_PROPS, "Start default value");
+        assertNotNull( Start.class.getResourceAsStream("/"+Start.DEFAULT_PROPS), "props as stream: "+Start.DEFAULT_PROPS);
         //props.load(Start.class.getResourceAsStream("/"+Start.DEFAULT_PROPS));
         HibernateUtil.setUp(props);
     }
 
 
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() throws Exception {
         StationDbTest.setUpDB();
     }
@@ -53,7 +54,7 @@ public class StationDbTest {
         Transaction t = session.beginTransaction();
         session.persist(net);
         session.close();
-        assertTrue("dbid > 0", net.getDbid() > 0);
+        assertTrue( net.getDbid() > 0);
     }
     
     public void testPutNet() {
@@ -61,7 +62,7 @@ public class StationDbTest {
         ndb.put(MockNetworkAttr.createNetworkAttr());
         ndb.commit();
         List<Network> netList = ndb.getAllNetworks();
-        assertTrue("net size", netList.size() > 0);
+        assertTrue( netList.size() > 0);
     }
     
     public void testPutStation() {
@@ -71,9 +72,9 @@ public class StationDbTest {
         ndb.put(s);
         ndb.commit();
         List<Network> netList = ndb.getAllNetworks();
-        assertTrue("net size", netList.size() > 0);
+        assertTrue( netList.size() > 0);
         List<Station> staList = ndb.getStationForNet(s.getNetwork());
-        assertTrue("sta size", staList.size() > 0);
+        assertTrue( staList.size() > 0);
     }
     
     public void testPutChannel() throws NotFound {
@@ -84,6 +85,6 @@ public class StationDbTest {
         ndb.put(c);
         ndb.commit();
         Channel dbChan = ndb.getChannel(c.getNetworkCode(), c.getStationCode(), c.getLocCode(), c.getChannelCode(), c.getStartDateTime());
-        assertNotNull("channel", dbChan);
+        assertNotNull( dbChan);
     }
 }

@@ -276,9 +276,6 @@ public class LocalSeismogramArm extends AbstractWaveformRecipe implements Subset
                 } catch(SeismogramSourceException e) {
                     MotionVectorArm.handle(ecp, Stage.DATA_RETRIEVAL, e, seismogramSource, requestToString(infilters, outfilters));
                     return;
-                } catch(org.omg.CORBA.SystemException e) {
-                    MotionVectorArm.handle(ecp, Stage.DATA_RETRIEVAL, e, seismogramSource, requestToString(infilters, outfilters));
-                    return;
                 }
                 logger.debug("after successful retrieve_seismograms");
                 if(localSeismograms.length > 0

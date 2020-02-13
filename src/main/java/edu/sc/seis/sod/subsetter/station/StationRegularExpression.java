@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import javax.xml.xpath.XPathException;
+
 import org.w3c.dom.Element;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
@@ -26,7 +28,7 @@ import edu.sc.seis.sod.status.StringTree;
  */
 public class StationRegularExpression implements StationSubsetter {
 
-    public StationRegularExpression(Element el) throws IOException {
+    public StationRegularExpression(Element el) throws IOException, XPathException {
         if (DOMHelper.hasElement(el, "url")) {
             String url = DOMHelper.extractText(el, "url");
             patterns = readPattern(url);

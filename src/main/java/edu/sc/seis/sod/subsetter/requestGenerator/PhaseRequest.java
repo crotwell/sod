@@ -2,6 +2,8 @@ package edu.sc.seis.sod.subsetter.requestGenerator;
 
 import java.time.Duration;
 
+import javax.xml.xpath.XPathException;
+
 import org.w3c.dom.Element;
 
 import edu.sc.seis.TauP.TauModelException;
@@ -26,18 +28,18 @@ public class PhaseRequest implements RequestGenerator {
         Duration beginOffsetRatioMinimum = null;
         Duration endOffsetRatioMinimum;
         boolean negateBeginOffsetRatio = false, negateEndOffsetRatio = false;
-        Element beginEl = DOMHelper.extractElement(config, "beginOffset");
-        if(DOMHelper.hasElement(beginEl, "ratio")) {
-            beginOffsetRatio = DOMHelper.extractDouble(beginEl, "ratio", 1.0);
-            beginOffsetRatioMinimum = SodUtil.loadTimeInterval(DOMHelper.getElement(beginEl,
-                                                                                    "minimum"));
-            if(DOMHelper.hasElement(beginEl, "negative")) {
-                negateBeginOffsetRatio = true;
-            }
-        } else {
-            beginOffset = SodUtil.loadTimeInterval(beginEl);
-        }
         try {
+        	Element beginEl = DOMHelper.extractElement(config, "beginOffset");
+        	if(DOMHelper.hasElement(beginEl, "ratio")) {
+        		beginOffsetRatio = DOMHelper.extractDouble(beginEl, "ratio", 1.0);
+        		beginOffsetRatioMinimum = SodUtil.loadTimeInterval(DOMHelper.getElement(beginEl,
+        				"minimum"));
+        		if(DOMHelper.hasElement(beginEl, "negative")) {
+        			negateBeginOffsetRatio = true;
+        		}
+        	} else {
+        		beginOffset = SodUtil.loadTimeInterval(beginEl);
+        	}
             Element endEl = DOMHelper.extractElement(config, "endOffset");
             if(DOMHelper.hasElement(endEl, "ratio")) {
                 endOffsetRatio = DOMHelper.extractDouble(endEl, "ratio", 1.0);
@@ -85,7 +87,9 @@ public class PhaseRequest implements RequestGenerator {
             }
         } catch(TauModelException e) {
             throw new ConfigurationException("Problem with TauPUtil.", e);
-        }
+        } catch (XPathException e) {
+        	throw new ConfigurationException("problem with xpath", e);
+		}
     }
 
     public PhaseRequest(String beginPhase,

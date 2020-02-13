@@ -1,12 +1,13 @@
 package edu.sc.seis.sod.hibernate;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.time.Instant;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import edu.sc.seis.sod.QueryTime;
 import edu.sc.seis.sod.VersionHistory;
@@ -17,7 +18,7 @@ import edu.sc.seis.sod.model.common.Version;
 
 public class SodDBTest {
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() throws Exception {
         StationDbTest.setUpDB();
     }
@@ -26,21 +27,21 @@ public class SodDBTest {
     public void testGetNextENP() {
         SodDB soddb = SodDB.getSingleton();
         EventNetworkPair enp = soddb.getNextENP();
-        assertNull("enp", enp);
+        assertNull( enp);
     }
 
     @Test
     public void testGetNextESP() {
         SodDB soddb = SodDB.getSingleton();
         EventStationPair esp = soddb.getNextESP();
-        assertNull("esp", esp);
+        assertNull( esp);
     }
 
     @Test
     public void testGetNextECP() {
         SodDB soddb = SodDB.getSingleton();
         AbstractEventChannelPair ecp = soddb.getNextECP();
-        assertNull("ecp", ecp);
+        assertNull( ecp);
     }
 
     @Test
@@ -52,8 +53,8 @@ public class SodDBTest {
         soddb.putQueryTime(qtime);
         soddb.commit();
         QueryTime dbQTime = soddb.getQueryTime(serverName);
-        assertEquals("name", serverName, dbQTime.getServerName());
-        assertEquals("time",  now, dbQTime.getTime());
+        assertEquals( serverName, dbQTime.getServerName());
+        assertEquals(  now, dbQTime.getTime());
     }
 
     @Test

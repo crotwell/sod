@@ -1,5 +1,7 @@
 package edu.sc.seis.sod.subsetter.availableData;
 
+import javax.xml.xpath.XPathException;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -16,13 +18,17 @@ import edu.sc.seis.sod.subsetter.requestGenerator.RequestGenerator;
 public class SubrequestCoverage implements AvailableDataSubsetter {
 
     public SubrequestCoverage(Element el) throws ConfigurationException {
-        NodeList els = DOMHelper.getElements(el, "*");
-        subrequest = (RequestGenerator)SodUtil.load((Element)els.item(0),
-                                                    "requestGenerator");
-        if(els.getLength() > 1) {
-            coverageChecker = (AvailableDataSubsetter)SodUtil.load((Element)els.item(1),
-                                                                   "availableData");
-        }
+        try {
+			NodeList els = DOMHelper.getElements(el, "*");
+			subrequest = (RequestGenerator)SodUtil.load((Element)els.item(0),
+			                                            "requestGenerator");
+			if(els.getLength() > 1) {
+			    coverageChecker = (AvailableDataSubsetter)SodUtil.load((Element)els.item(1),
+			                                                           "availableData");
+			}
+		} catch (XPathException e) {
+			throw new ConfigurationException("problem with xpath", e);
+		}
     }
 
     public StringTree accept(CacheEvent ev,

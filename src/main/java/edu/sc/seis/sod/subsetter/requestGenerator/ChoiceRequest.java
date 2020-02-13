@@ -3,6 +3,8 @@ package edu.sc.seis.sod.subsetter.requestGenerator;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.xml.xpath.XPathException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
@@ -27,16 +29,21 @@ import edu.sc.seis.sod.subsetter.origin.EventLogicalSubsetter;
 public class ChoiceRequest implements RequestGenerator {
 
     public ChoiceRequest(Element config) throws ConfigurationException {
-        NodeList choiceNodes = DOMHelper.extractNodes(config, "choice");
-        for(int i = 0; i < choiceNodes.getLength(); i++) {
-            choices.add(new Choice((Element)choiceNodes.item(i)));
-        }
-        if(DOMHelper.hasElement(config, "otherwise")) {
-            Element otherwiseEl = DOMHelper.extractElement(config,
-                                                           "otherwise/*");
-            otherwise = (RequestGenerator)SodUtil.load(otherwiseEl,
-                                                       "requestGenerator");
-        }
+        NodeList choiceNodes;
+		try {
+			choiceNodes = DOMHelper.extractNodes(config, "choice");
+			for(int i = 0; i < choiceNodes.getLength(); i++) {
+				choices.add(new Choice((Element)choiceNodes.item(i)));
+			}
+			if(DOMHelper.hasElement(config, "otherwise")) {
+				Element otherwiseEl = DOMHelper.extractElement(config,
+						"otherwise/*");
+				otherwise = (RequestGenerator)SodUtil.load(otherwiseEl,
+						"requestGenerator");
+			}
+		} catch (XPathException e) {
+			throw new ConfigurationException("problem with choice", e);
+		}
     }
 
     public RequestFilter[] generateRequest(CacheEvent event,

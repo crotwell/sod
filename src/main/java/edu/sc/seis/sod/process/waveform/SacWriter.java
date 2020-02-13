@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.xpath.XPathException;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -31,17 +33,21 @@ public class SacWriter extends AbstractSeismogramWriter {
              DOMHelper.hasElement(el, "littleEndian"));
     }
 
-    private static List<SacProcess> extractProcessors(Element el) {
-        NodeList nl = DOMHelper.getElements(el, "phaseTimeHeader");
-        ArrayList<SacProcess> out = new ArrayList<SacProcess>();
-        for(int i = 0; i < nl.getLength(); i++) {
-            out.add( new PhaseHeaderProcess((Element)nl.item(i)));
-        }
-        Element sacScript = SodUtil.getElement(el, "sacHeaderScript");
-        if (sacScript != null) {
-            out.add( new SacHeaderScript(sacScript));
-        }
-        return out;
+    private static List<SacProcess> extractProcessors(Element el) throws ConfigurationException {
+        try {
+			NodeList nl = DOMHelper.getElements(el, "phaseTimeHeader");
+			ArrayList<SacProcess> out = new ArrayList<SacProcess>();
+			for(int i = 0; i < nl.getLength(); i++) {
+			    out.add( new PhaseHeaderProcess((Element)nl.item(i)));
+			}
+			Element sacScript = SodUtil.getElement(el, "sacHeaderScript");
+			if (sacScript != null) {
+			    out.add( new SacHeaderScript(sacScript));
+			}
+			return out;
+		} catch (XPathException e) {
+			throw new ConfigurationException("problem with xpath", e);
+		}
     }
 
     public SacWriter() throws ConfigurationException {

@@ -5,8 +5,10 @@ import java.io.InputStream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathException;
+import javax.xml.xpath.XPathExpressionException;
 
-import org.apache.xpath.XPathAPI;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -19,18 +21,20 @@ import org.w3c.dom.Text;
  */
 public class DOMHelper {
 
-    public static Element getElement(Element el, String name) {
+    public static Element getElement(Element el, String name) throws XPathException {
         return (Element)getElements(el, name).item(0);
     }
 
-    public static NodeList getElements(Element el, String name) {
+    @Deprecated
+    public static NodeList getElements(Element el, String name) throws XPathException {
         return extractNodes(el, name);
     }
 
     public static boolean hasElement(Element el, String name) {
         try {
-            return XPathAPI.selectNodeList(el, name).getLength() > 0;
-        } catch(TransformerException e) {
+        	
+            return extractNodes(el, name).getLength() > 0;
+        } catch(XPathException e) {
             handle(e, name);
         }
         throw new RuntimeException("Should be unreachable");
@@ -51,11 +55,12 @@ public class DOMHelper {
                                      String defaultValue,
                                      boolean emptyElementMeansEmptyString) {
         try {
-            Node n = XPathAPI.selectSingleNode(el, xpath + "/text()");
-            if(n == null) {
+        	String[] result = XMLUtil.getAllAsStrings(el, xpath+ "/text()");
+            if(result == null || result.length == 0) {
                 // See if the element is there with no text content
+            	NodeList nl = XMLUtil.evalNodeList(el, xpath);
                 if(emptyElementMeansEmptyString
-                        && XPathAPI.selectSingleNode(el, xpath) != null) {
+                        && nl != null) {
                     return "";
                 } else if(defaultValue == null) {
                     throw new RuntimeException("No nodes found matching XPath "
@@ -63,32 +68,41 @@ public class DOMHelper {
                 }
                 return defaultValue;
             }
-            return n.getNodeValue();
+            return result[0];
         } catch(DOMException e) {
             handle(e);
-        } catch(TransformerException e) {
+        } catch (XPathException e) {
             handle(e, xpath + "/text()");
-        }
+		}
         throw new RuntimeException("Should be unreachable");
     }
 
-    public static NodeList extractNodes(Element el, String xpath) {
-        try {
-            return XPathAPI.selectNodeList(el, xpath);
-        } catch(DOMException e) {
-            handle(e);
-        } catch(TransformerException e) {
-            handle(e, xpath);
-        }
-        throw new RuntimeException("Should be unreachable");
+
+    
+    public static NodeList extractNodes(Element el, String path) throws XPathException {
+    	// 1. Instantiate an XPathFactory.
+    	javax.xml.xpath.XPathFactory factory = 
+    			javax.xml.xpath.XPathFactory.newInstance();
+
+    	// 2. Use the XPathFactory to create a new XPath object
+    	javax.xml.xpath.XPath xpath = factory.newXPath();
+
+    	// 3. Compile an XPath string into an XPathExpression
+    	javax.xml.xpath.XPathExpression expression = xpath.compile(path);
+
+    	// 4. Evaluate the XPath expression on an input document
+    	Object result = expression.evaluate(el, XPathConstants.NODESET);
+
+    	if(result != null && result instanceof NodeList) {
+    		return (NodeList)result;
+    	}
+    	return null;
     }
 
     public static Element extractElement(Element el, String xpath) {
         try {
-            return (Element)XPathAPI.selectSingleNode(el, xpath);
-        } catch(DOMException e) {
-            handle(e);
-        } catch(TransformerException e) {
+            return (Element)extractNodes(el, xpath).item(0);
+        } catch(XPathException e) {
             handle(e, xpath);
         }
         throw new RuntimeException("Should be unreachable");
@@ -101,6 +115,12 @@ public class DOMHelper {
 
     public static void handle(TransformerException e, String xpath) {
         throw new RuntimeException("Caught a transformation exception!  This probably means the XPath "
+                                           + xpath + " is screwed up.",
+                                   e);
+    }
+
+    public static void handle(XPathException e, String xpath) {
+        throw new RuntimeException("Caught a XPathException exception!  This probably means the XPath "
                                            + xpath + " is screwed up.",
                                    e);
     }

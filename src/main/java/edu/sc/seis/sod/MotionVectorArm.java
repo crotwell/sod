@@ -304,9 +304,6 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                 if (localSeismograms == null) {
                     return;
                 }
-            } catch(org.omg.CORBA.SystemException e) {
-                handle(ecp, Stage.DATA_RETRIEVAL, e, seismogramSource, requestToString(infilters, outfilters));
-                return;
             } catch(SeismogramSourceException e) {
                 handle(ecp, Stage.DATA_RETRIEVAL, e, seismogramSource, requestToString(infilters, outfilters));
                 return;
@@ -486,9 +483,6 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                // code might trigger further OutofMem
                t.printStackTrace(System.err);
                logger.error("", t);
-           } else if (t instanceof org.omg.CORBA.SystemException) {
-               // don't log exception here, let RetryStragtegy do it
-               ecp.update(Status.get(stage, Standing.CORBA_FAILURE));
            } else if (t instanceof SeismogramSourceException) {
                if (t.getCause() != null && t.getCause() instanceof MissingBlockette1000) {
                    
@@ -506,9 +500,6 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                if (t instanceof FissuresException) {
                    FissuresException f = (FissuresException)t;
                    message += f.the_error.error_code + " " + f.the_error.error_description ;
-               } else if (t instanceof org.omg.CORBA.SystemException) {
-                   message = "Network or server problem, SOD will continue to retry this item periodically: ("
-                           + t.getClass().getName() + ") " + message;
                }
                try {
                    message += " " + ecp+"\n";
@@ -517,11 +508,8 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                }
                message += "Source="+seismogramSource+"\n";
                message += "Request="+requestString+"\n";
-               if (t instanceof org.omg.CORBA.SystemException) {
-                   logger.warn(message, t);
-               } else {
-                   failLogger.warn(message, t);
-               }
+               failLogger.warn(message, t);
+               
            }
        } catch(Throwable tt) {
            GlobalExceptionHandler.handle("Caught " + tt + " while handling " + t, t);

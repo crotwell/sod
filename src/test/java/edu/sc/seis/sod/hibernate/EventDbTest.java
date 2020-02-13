@@ -1,12 +1,12 @@
 package edu.sc.seis.sod.hibernate;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import edu.sc.seis.sod.mock.event.MockEventAccessOperations;
 import edu.sc.seis.sod.model.event.CacheEvent;
@@ -15,15 +15,11 @@ import edu.sc.seis.sod.model.event.CacheEvent;
 public class EventDbTest {
 
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() throws Exception {
         StationDbTest.setUpDB();
     }
 
-    //@Test
-    public void testGetEvent() {
-        fail("Not yet implemented");
-    }
 
     @Test
     public void testPut() {
@@ -32,6 +28,6 @@ public class EventDbTest {
         edb.put(event);
         edb.commit();
         List<CacheEvent> elist = edb.getAll();
-        assertTrue("events size", elist.size() > 0);
+        assertTrue( elist.size() > 0);
 ;    }
 }

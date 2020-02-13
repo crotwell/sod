@@ -18,9 +18,9 @@ import junit.framework.TestCase;
 public class MagnitudeRangeTest extends TestCase {
 
     public void testLessThan() throws Exception {
-        Magnitude mag = new Magnitude();
-        mag.type = "mb";
-        mag.value = 6.0f;
+        String type = "mb";
+        float value = 6.0f;
+        Magnitude mag = new Magnitude(type, value, "noContrib");
         OriginImpl origin = MockOrigin.create();
         origin.setMagnitudes(new Magnitude[] {mag});
         EventAttrImpl eventAttr = new EventAttrImpl("test",
@@ -53,9 +53,9 @@ public class MagnitudeRangeTest extends TestCase {
     }
     
     public void testMag() throws Exception {
-        Magnitude mag = new Magnitude();
-        mag.type = "mb";
-        mag.value = 5.0f;
+        String type = "mb";
+        float value = 5.0f;
+        Magnitude mag = new Magnitude(type, value, "noContrib");
         OriginImpl origin = MockOrigin.create();
         origin.setMagnitudes(new Magnitude[] {mag});
         EventAttrImpl eventAttr = new EventAttrImpl("test",

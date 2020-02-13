@@ -58,16 +58,9 @@ public class EventStationPair extends CookieEventPair {
                     accepted = esSub.accept(getEvent(), getStation(), getMeasurements());
                 }
             } catch(Throwable e) {
-                if(e instanceof org.omg.CORBA.SystemException) {
-                    update(e, Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.CORBA_FAILURE));
-                    updateRetries();
-                    failLogger.info("Network or server problem, SOD will continue to retry this item periodically: ("
-                            + e.getClass().getName() + ") " + this);
-                    logger.debug(this.toString(), e);
-                } else {
-                    update(e, Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.SYSTEM_FAILURE));
-                    failLogger.warn(this.toString(), e);
-                }
+                
+            	update(e, Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.SYSTEM_FAILURE));
+            	failLogger.warn(this.toString(), e);
                 SodDB.commit();
                 logger.debug("Finish (fail) EStaP: " + this);
                 return;

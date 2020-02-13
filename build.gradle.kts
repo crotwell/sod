@@ -1,10 +1,11 @@
 //import edu.sc.seis.tasks.XSLT
 
 plugins {
+  "project-report"
   kotlin("jvm") version "1.3.61"
   id("edu.sc.seis.version-class") version "1.1.1"
   "java"
-  "eclipse"
+  eclipse
   "project-report"
   "maven-publish"
   application
@@ -21,8 +22,8 @@ version = "4.0.0-SNAPSHOT-WEBSTATUS"
 
 
 java {
-//    sourceCompatibility = JavaVersion.VERSION_1_11
-//    targetCompatibility = JavaVersion.VERSION_1_11
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
     withJavadocJar()
     withSourcesJar()
 }
@@ -36,6 +37,16 @@ sourceSets {
 }
 
 dependencies {
+    implementation("edu.sc.seis:seedCodec:1.0.11")
+    implementation("edu.sc.seis:seisFile:1.8.0") {
+      // we need seisFile for sac output, but not all the other functionality
+      exclude("com.martiansoftware:jsap")
+      exclude("org.rxtx:rxtx")
+      exclude("org.codehaus.woodstox:woodstox-core-lgpl")
+      exclude("net.java.dev.msv:msv-core")
+      exclude("org.apache.httpcomponents:httpclient")
+      exclude("mysql:mysql-connector-java")
+    }
     implementation("edu.sc.seis:sod-mock:4.0.0-SNAPSHOT")
     implementation("edu.sc.seis:sod-model:4.0.0-SNAPSHOT")
     implementation("edu.sc.seis:sod-util:4.0.0-SNAPSHOT")
@@ -49,31 +60,39 @@ dependencies {
     implementation("com.martiansoftware:jsap:2.1")
     implementation("thaiopensource:jing:20091111")
     implementation("rngconvUSC:rngconv:20030225")
+    implementation( "com.fasterxml.woodstox:woodstox-core:6.0.3")
     implementation("org.eclipse.jetty:jetty-servlet:9.4.5+")
     implementation("org.msgpack:msgpack-core:0.8.13+")
+    //implementation("javax.xml:jaxp-api:1.4.2")
 
     implementation("org.json:json:20170516")
 
-    implementation("org.hibernate:hibernate-ehcache:5.2.10.Final")
-    implementation("org.hibernate:hibernate-core:5.2.10.Final")
-    runtimeOnly("org.hibernate:hibernate-c3p0:5.2.10.Final")
+    implementation("org.hibernate:hibernate-ehcache:5.4.11.Final")
+    implementation( "org.hibernate:hibernate-core:5.4.11.Final")
+    implementation( "org.hibernate:hibernate-c3p0:5.4.11.Final")
 
     implementation("org.apache.velocity:velocity-tools:2.0") {
-        exclude(group = "xml-apis",  module = "xml-apis")
-        exclude(group = "org.apache.struts",  module = "struts-taglib")
-        exclude(group = "org.apache.struts",  module = "struts-tiles")
-        exclude(group = "org.apache.struts",  module = "struts-core")
-        exclude(group = "javax.servlet",  module = "servlet-api")
+        exclude("xml-apis:xml-apis")
+        exclude("org.apache.struts:struts-taglib")
+        exclude("org.apache.struts:struts-tiles")
+        exclude("org.apache.struts:struts-core")
+        exclude("javax.servlet:servlet-api")
     }
 
 
     //compile "xerces:xercesImpl:2.11.0"
-    implementation("xalan:xalan:2.7.1")
+    //implementation("xalan:xalan:2.7.1")
 
     implementation("edu.sc.seis.mapData:dcwpo_browse:1.0")
     implementation("net.sourceforge.javacsv:javacsv:2.0")
 //    runtime "org.codehaus.groovy:groovy-all:2.2.2"
 //    runtime "org.jruby:jruby:1.7.3"
+//
+    // Use JUnit Jupiter API for testing.
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.5.1")
+
+    // Use JUnit Jupiter Engine for testing.
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.5.1")
 }
 
 configurations.all {
@@ -83,6 +102,7 @@ configurations.all {
         substitute(module("edu.sc.seis:sod-bag")).with(project(":sod-bag"))
         substitute(module("edu.sc.seis:sod-util")).with(project(":sod-util"))
         substitute(module("edu.sc.seis:seisFile")).with(project(":seisFile"))
+        substitute(module("edu.sc.seis:seedCodec")).with(project(":seedCodec"))
         substitute(module("edu.sc.seis:TauP")).with(project(":TauP"))
     }
 }

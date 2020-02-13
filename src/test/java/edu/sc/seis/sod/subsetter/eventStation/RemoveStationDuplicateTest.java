@@ -3,7 +3,7 @@ package edu.sc.seis.sod.subsetter.eventStation;
 import java.io.StringReader;
 import java.util.Properties;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.InputSource;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;

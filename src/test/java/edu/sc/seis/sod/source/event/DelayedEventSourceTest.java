@@ -1,13 +1,13 @@
 package edu.sc.seis.sod.source.event;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import edu.sc.seis.sod.mock.event.MockEventAccessOperations;
 import edu.sc.seis.sod.model.common.TimeRange;
@@ -33,11 +33,11 @@ public class DelayedEventSourceTest {
         EventSource es = new TestSimpleEventSource(events);
         DelayedEventSource delayedES = new DelayedEventSource(MED_SHORT_AGO, es);
         CacheEvent[] firstEvents = delayedES.next();
-        assertEquals("first get", 2, firstEvents.length);
+        assertEquals(2, firstEvents.length, "first get");
         Thread.sleep(MED_SHORT_AGO.toMillis());
         CacheEvent[] secondEvents = delayedES.next();
-        assertEquals("second get", 1, secondEvents.length);
-        assertEquals("lat", 2, secondEvents[0].get_preferred_origin().getLocation().latitude, 0.000001);
+        assertEquals(1, secondEvents.length, "second get");
+        assertEquals( 2, secondEvents[0].get_preferred_origin().getLocation().latitude, 0.000001);
     }
 
     @Test
@@ -50,7 +50,7 @@ public class DelayedEventSourceTest {
         DelayedEventSource delayedES = new DelayedEventSource(MED_SHORT_AGO, es);
         CacheEvent[] firstEvents = delayedES.next();
         Duration wait = delayedES.getWaitBeforeNext();
-        assertTrue("wait less than MED "+wait, wait.toNanos() < MED_SHORT_AGO.toNanos());
+        assertTrue( wait.toNanos() < MED_SHORT_AGO.toNanos(), "wait less than MED "+wait);
     }
 }
 

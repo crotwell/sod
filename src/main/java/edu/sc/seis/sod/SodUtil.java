@@ -25,8 +25,8 @@ import java.util.StringTokenizer;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathException;
 
-import org.apache.xpath.XPathAPI;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -338,7 +338,11 @@ public class SodUtil {
     private static MicroSecondDateSupplier loadRelativeTime(Element el) throws ConfigurationException {
         if (DOMHelper.hasElement(el, "timeInterval")) {
             
-            return loadRelativeTime(DOMHelper.getElement(el, "timeInterval"));
+            try {
+				return loadRelativeTime(DOMHelper.getElement(el, "timeInterval"));
+			} catch (XPathException e) {
+				throw new ConfigurationException("problem with xpath 'timeInterval'", e);
+			}
         }
         final Duration duration = loadTimeInterval(el);
         if(el.getTagName().equals("earlier")) {
@@ -502,8 +506,8 @@ public class SodUtil {
     }
 
     public static String nodeValueOfXPath(Element el, String xpath) throws DOMException,
-            TransformerException {
-        return XPathAPI.selectSingleNode(el, xpath).getNodeValue();
+            TransformerException, XPathException {
+        return DOMHelper.extractNodes(el, xpath).item(0).getNodeValue();
     }
 
     public static BoxAreaImpl loadBoxArea(Element config) throws ConfigurationException {

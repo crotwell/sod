@@ -2,6 +2,8 @@ package edu.sc.seis.sod.subsetter.origin;
 
 import java.time.Instant;
 
+import javax.xml.xpath.XPathException;
+
 import org.w3c.dom.Element;
 
 import edu.sc.seis.sod.ConfigurationException;
@@ -26,7 +28,12 @@ public class OriginTimeRange implements OriginSubsetter, MicroSecondTimeRangeSup
 
     private MicroSecondDateSupplier makeLoader(Element config, String time)
             throws ConfigurationException {
-        Element timeEl = DOMHelper.getElement(config, time);
+        Element timeEl;
+		try {
+			timeEl = DOMHelper.getElement(config, time);
+		} catch (XPathException e) {
+			throw new ConfigurationException("problem with '"+time+"'", e);
+		}
         if (timeEl == null && time.indexOf("end") != -1) {
             // if no endtime, use <future/>
             return new MicroSecondDateSupplier() {

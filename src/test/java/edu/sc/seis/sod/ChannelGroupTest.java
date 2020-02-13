@@ -1,13 +1,14 @@
 package edu.sc.seis.sod;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import org.apache.log4j.BasicConfigurator;
-import org.junit.Test;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
@@ -55,8 +56,8 @@ public class ChannelGroupTest {
         ChannelGrouper cger = new ChannelGrouper();
         
         List<ChannelGroup> cgList = cger.group(chanList, failures);
-        assertEquals("failures", 0, failures.size());
-        assertEquals("grouped", 2, cgList.size());
+        assertEquals( 0, failures.size());
+        assertEquals( 2, cgList.size());
         for (ChannelGroup cg : cgList) {
             assertEquals(cg.getChannel1().getChannelCode().substring(0, 1), cg.getChannel2().getChannelCode().substring(0, 1)); 
             assertEquals(cg.getChannel1().getChannelCode().substring(0, 1), cg.getChannel3().getChannelCode().substring(0, 1));     
@@ -76,8 +77,8 @@ public class ChannelGroupTest {
         ChannelGrouper cger = new ChannelGrouper();
         
         List<ChannelGroup> cgList = cger.group(chanList, failures);
-        assertEquals("failures", 0, failures.size());
-        assertEquals("grouped", 2, cgList.size());
+        assertEquals( 0, failures.size());
+        assertEquals( 2, cgList.size());
     }
     
     @Test
@@ -88,11 +89,11 @@ public class ChannelGroupTest {
         chanList.add(MockChannel.createChannel(mockStation, "00", "BHZ"));
         SiteMatchRule threeC = new SiteMatchRule("ZNE");
 
-        assertEquals("initial", 1, chanList.size());
+        assertEquals( 1, chanList.size());
         
         List<ChannelGroup> groupList = threeC.acceptable(chanList, failures);
 
-        assertEquals("grouped", 0, groupList.size());
-        assertEquals("failure", 1, failures.size());
+        assertEquals( 0, groupList.size());
+        assertEquals( 1, failures.size());
     }
 }

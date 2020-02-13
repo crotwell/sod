@@ -18,8 +18,12 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
-import org.apache.xpath.CachedXPathAPI;
-import org.apache.xpath.objects.XObject;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathException;
+import javax.xml.xpath.XPathExpressionException;
+
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -315,17 +319,26 @@ public class XMLUtil {
      * @param path
      *            a <code>String</code> value
      * @return a <code>NodeList</code> value
+     * @throws XPathExpressionException 
      */
-    public static NodeList evalNodeList(Node context, String path) {
-        try {
+    public static NodeList evalNodeList(Node context, String path) throws XPathExpressionException {
             // xpath = new CachedXPathAPI();
-            XObject xobj = xpath.eval(context, path);
-            if(xobj != null && xobj.getType() == XObject.CLASS_NODESET) {
-                return xobj.nodelist();
+        	// 1. Instantiate an XPathFactory.
+        	  javax.xml.xpath.XPathFactory factory = 
+        	                    javax.xml.xpath.XPathFactory.newInstance();
+        	  
+        	  // 2. Use the XPathFactory to create a new XPath object
+        	  javax.xml.xpath.XPath xpath = factory.newXPath();
+        	  
+        	  // 3. Compile an XPath string into an XPathExpression
+        	  javax.xml.xpath.XPathExpression expression = xpath.compile(path);
+        	  
+        	  // 4. Evaluate the XPath expression on an input document
+        	 Object result = expression.evaluate(context, XPathConstants.NODESET);
+        	  
+            if(result != null && result instanceof NodeList) {
+                return (NodeList)result;
             }
-        } catch(javax.xml.transform.TransformerException e) {
-            // System.out.println("Couldn't get NodeList"+e);
-        } // end of try-catch
         return null;
     }
 
@@ -340,10 +353,14 @@ public class XMLUtil {
      */
     public static String evalString(Node context, String path) {
         try {
-            return xpath.eval(context, path).str();
-        } catch(javax.xml.transform.TransformerException e) {
-            // System.out.println("Couldn't get String"+ e);
-        } // end of try-catch
+			return evalNodeList(context, path).item(0).getNodeValue();
+		} catch (DOMException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (XPathExpressionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         return null;
     }
 
@@ -406,8 +423,9 @@ public class XMLUtil {
      * @param path
      *            a <code>String</code> value
      * @return a <code>String[]</code> value
+     * @throws XPathException 
      */
-    public static String[] getAllAsStrings(Element config, String path) {
+    public static String[] getAllAsStrings(Element config, String path) throws XPathException {
         // logger.debug("The path that is passed to GetALLASStrings is "+path);
         NodeList nodes = evalNodeList(config, path);
         if(nodes == null) {
@@ -449,8 +467,9 @@ public class XMLUtil {
      * @param path
      *            a <code>String</code> value
      * @return an <code>Element</code> value
+     * @throws XPathException 
      */
-    public static Element evalElement(Node context, String path) {
+    public static Element evalElement(Node context, String path) throws XPathException {
         NodeList nList = evalNodeList(context, path);
         if(nList != null && nList.getLength() != 0) {
             return (Element)nList.item(0);
@@ -458,5 +477,4 @@ public class XMLUtil {
         return null;
     }
 
-    private static CachedXPathAPI xpath = new CachedXPathAPI();
 }// XMLUtil

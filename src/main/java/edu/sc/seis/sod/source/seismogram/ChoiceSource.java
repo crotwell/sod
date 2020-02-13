@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.xpath.XPathException;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -26,12 +28,16 @@ public class ChoiceSource implements SeismogramSourceLocator {
     }
     
     public ChoiceSource(Element config) throws ConfigurationException {
+    	try {
         NodeList choiceNodes = DOMHelper.extractNodes(config, "choice");
         for(int i = 0; i < choiceNodes.getLength(); i++) {
             choices.add(new ChoiceSourceItem((Element)choiceNodes.item(i)));
         }
         Element otherwiseEl = DOMHelper.extractElement(config, "otherwise/*");
         otherwise = (SeismogramSourceLocator)SodUtil.load(otherwiseEl, "seismogram");
+    	} catch (XPathException e) {
+    		throw new ConfigurationException("problem with xpath", e);
+    	}
     }
 
     public SeismogramSource getSeismogramSource(CacheEvent event,

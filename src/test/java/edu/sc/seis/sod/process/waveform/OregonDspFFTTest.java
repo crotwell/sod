@@ -6,10 +6,11 @@
 
 package edu.sc.seis.sod.process.waveform;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
 
 import edu.sc.seis.sod.bag.Cmplx;
 
@@ -55,13 +56,13 @@ public class OregonDspFFTTest  {
         }
 
         // check 0, and F_n/2 is in imaginary of F_0
-        assertEquals("real F0", nativeData[0], cData[0].real(), 0.00001f);
-        assertEquals("real F_n/2", nativeData[cData.length/2], cData[cData.length/2].real(), 0.00001f);
+        assertEquals(nativeData[0], cData[0].real(), 0.00001f, "real F0" );
+        assertEquals(nativeData[cData.length/2], cData[cData.length/2].real(), 0.00001f, "real F_n/2");
         for (int i = 1; i < data.length/2; i++) {
             System.out.println(i+"  "+nativeData[i]+"  "+cData[i].real());
-            assertEquals("real i="+i, (float)cData[i].real(), nativeData[i], 0.001f);
+            assertEquals( (float)cData[i].real(), nativeData[i], 0.001f, "real i="+i);
             // oregonDSP uses opposite sign convention on imag part, so mul -1
-            assertEquals("imag i="+i, (float)cData[i].imag(), -1*nativeData[nativeData.length-i], 0.001f);
+            assertEquals( (float)cData[i].imag(), -1*nativeData[nativeData.length-i], 0.001f, "imag i="+i);
         }
     }
 
@@ -106,7 +107,7 @@ public class OregonDspFFTTest  {
 
         nativeData = OregonDspFFT.forward(data);
         nativeData = OregonDspFFT.inverse(nativeData);
-        assertArrayEquals("round trip", data, nativeData, 0.001f);
+        assertArrayEquals( data, nativeData, 0.001f, "round trip");
     }
 
     @Test
@@ -114,10 +115,10 @@ public class OregonDspFFTTest  {
         float[] fData = { 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         float[] gData = { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         float[] corr = OregonDspFFT.correlate(fData, gData);
-        assertEquals("lag 0", 0f, corr[0], 0.00001f);
-        assertEquals("lag 1", 2f, corr[1], 0.00001f);
-        assertEquals("lag 2", 0f, corr[2], 0.00001f);
-        assertEquals("lag 3", 0f, corr[3], 0.00001f);
+        assertEquals( 0f, corr[0], 0.00001f);
+        assertEquals( 2f, corr[1], 0.00001f);
+        assertEquals( 0f, corr[2], 0.00001f);
+        assertEquals( 0f, corr[3], 0.00001f);
     }
 
     @Test
@@ -125,14 +126,14 @@ public class OregonDspFFTTest  {
         float[] fData = { 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         float[] gData = { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         float[] corr = OregonDspFFT.convolve(fData, gData, 1);
-        assertEquals("lag 0", 0f, corr[0], 0.00001f);
-        assertEquals("lag 1", 0f, corr[1], 0.00001f);
-        assertEquals("lag 2", 0f, corr[2], 0.00001f);
-        assertEquals("lag 3", 2f, corr[3], 0.00001f);
-        assertEquals("lag 4", 0f, corr[4], 0.00001f);
-        assertEquals("lag 5", 0f, corr[5], 0.00001f);
-        assertEquals("lag 6", 0f, corr[6], 0.00001f);
-        assertEquals("lag 7", 0f, corr[7], 0.00001f);
+        assertEquals( 0f, corr[0], 0.00001f);
+        assertEquals( 0f, corr[1], 0.00001f);
+        assertEquals( 0f, corr[2], 0.00001f);
+        assertEquals( 2f, corr[3], 0.00001f);
+        assertEquals( 0f, corr[4], 0.00001f);
+        assertEquals( 0f, corr[5], 0.00001f);
+        assertEquals( 0f, corr[6], 0.00001f);
+        assertEquals( 0f, corr[7], 0.00001f);
     }
 
 }
