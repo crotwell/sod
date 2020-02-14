@@ -21,8 +21,8 @@ public class ConnMgr {
     /**
      * Use this method to add loacations for sql property files to be stored
      * When setDB is loaded, if there is a default.props file at that location,
-     * it will be added to the existing properties, and if one of the <TYPE OF
-     * DB>.props exists, it will also be loaded.
+     * it will be added to the existing properties, and if one of the 'TYPE OF
+     * DB'.props exists, it will also be loaded.
      */
     public static void addPropsLocation(String loc) {
         synchronized(propLocs) {
@@ -107,12 +107,12 @@ public class ConnMgr {
         return SQL;
     }
 
-    /** @returns the classname of the jdbc driver. */
+    /** @return the classname of the jdbc driver. */
     public static String getDriver() {
         return getProps().getProperty("driver");
     }
     
-    /** @returns the database product, ie hsql, postgres, etc. */
+    /** @return the database product, ie hsql, postgres, etc. */
     public static String getDB_TYPE() {
         return DB_NAME;
     }

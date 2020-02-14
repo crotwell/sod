@@ -37,8 +37,7 @@ import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
 /**
  * XMLUtil.java Created: Wed Jun 12 10:03:01 2002
  * 
- * @author <a href="mailto:">Philip Crotwell </a>
- * @version
+ * @author Philip Crotwell
  */
 @Deprecated
 public class XMLUtil {
