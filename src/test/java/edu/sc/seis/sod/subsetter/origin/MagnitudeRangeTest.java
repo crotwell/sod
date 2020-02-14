@@ -5,6 +5,10 @@
  */
 package edu.sc.seis.sod.subsetter.origin;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
 import org.w3c.dom.Element;
 
 import edu.sc.seis.sod.SodUtilTest;
@@ -13,10 +17,10 @@ import edu.sc.seis.sod.model.event.EventAttrImpl;
 import edu.sc.seis.sod.model.event.Magnitude;
 import edu.sc.seis.sod.model.event.OriginImpl;
 import edu.sc.seis.sod.util.display.ParseRegions;
-import junit.framework.TestCase;
 
-public class MagnitudeRangeTest extends TestCase {
+public class MagnitudeRangeTest  {
 
+	@Test
     public void testLessThan() throws Exception {
         String type = "mb";
         float value = 6.0f;
@@ -32,26 +36,31 @@ public class MagnitudeRangeTest extends TestCase {
         MagnitudeRange range = new MagnitudeRange(element);
         
         mag.value=6.0f;
-        assertFalse(mag.value + " " + mag.type + "  (" + range.getMinValue()+ " - " + range.getMaxValue()
-                   + ") lessThan ",
-           range.accept(null, eventAttr, origin).isSuccess());
+        assertFalse(
+           range.accept(null, eventAttr, origin).isSuccess(),
+           mag.value + " " + mag.type + "  (" + range.getMinValue()+ " - " + range.getMaxValue()
+           + ") lessThan ");
         
         mag.value = 5.9f;
-        assertTrue(mag.value + " " + mag.type + "  (" + range.getMinValue()+ " - " + range.getMaxValue()
-                    + ") lessThan ",
-            range.accept(null, eventAttr, origin).isSuccess());
+        assertTrue(
+            range.accept(null, eventAttr, origin).isSuccess(),
+            mag.value + " " + mag.type + "  (" + range.getMinValue()+ " - " + range.getMaxValue()
+            + ") lessThan ");
         
         mag.value = 5.7f;
-        assertTrue(mag.value + " " + mag.type + "  (" + range.getMinValue()+ " - " + range.getMaxValue()
-                    + ") min ",
-            range.accept(null, eventAttr, origin).isSuccess());
+        assertTrue(
+            range.accept(null, eventAttr, origin).isSuccess(),
+            mag.value + " " + mag.type + "  (" + range.getMinValue()+ " - " + range.getMaxValue()
+            + ") min ");
         
         mag.value = 5.6f;
-        assertFalse(mag.value + " " + mag.type + "  (" + range.getMinValue()+ " - " + range.getMaxValue()
-                    + ") min ",
-            range.accept(null, eventAttr, origin).isSuccess());
+        assertFalse(
+            range.accept(null, eventAttr, origin).isSuccess(),
+            mag.value + " " + mag.type + "  (" + range.getMinValue()+ " - " + range.getMaxValue()
+            + ") min ");
     }
     
+	@Test
     public void testMag() throws Exception {
         String type = "mb";
         float value = 5.0f;
@@ -69,21 +78,25 @@ public class MagnitudeRangeTest extends TestCase {
         for(int i = 0; i < range.getSearchTypes().length; i++) {
             searchTypes += ", " + range.getSearchTypes()[i];
         }
-        assertTrue(mag.value + " " + mag.type + "  " + range.getMinValue()
-                           + "<" + range.getMaxValue() + " " + searchTypes,
-                   range.accept(null, eventAttr, origin).isSuccess());
+        assertTrue(
+                   range.accept(null, eventAttr, origin).isSuccess(),
+                   mag.value + " " + mag.type + "  " + range.getMinValue()
+                   + "<" + range.getMaxValue() + " " + searchTypes);
         mag.type = "Ms";
-        assertFalse(mag.value + " " + mag.type + "  " + range.getMinValue()
-                            + "<" + range.getMaxValue() + " " + searchTypes,
-                    range.accept(null, eventAttr, origin).isSuccess());
+        assertFalse(
+                    range.accept(null, eventAttr, origin).isSuccess(),
+                    mag.value + " " + mag.type + "  " + range.getMinValue()
+                    + "<" + range.getMaxValue() + " " + searchTypes);
         mag.value = 4.9f;
-        assertFalse(mag.value + " " + mag.type + "  " + range.getMinValue()
-                            + "<" + range.getMaxValue() + " " + searchTypes,
-                    range.accept(null, eventAttr, origin).isSuccess());
+        assertFalse(
+                    range.accept(null, eventAttr, origin).isSuccess(),
+                    mag.value + " " + mag.type + "  " + range.getMinValue()
+                    + "<" + range.getMaxValue() + " " + searchTypes);
         mag.value = 6.1f;
-        assertFalse(mag.value + " " + mag.type + "  " + range.getMinValue()
-                            + "<" + range.getMaxValue() + " " + searchTypes,
-                    range.accept(null, eventAttr, origin).isSuccess());
+        assertFalse(
+                    range.accept(null, eventAttr, origin).isSuccess(),
+                    mag.value + " " + mag.type + "  " + range.getMinValue()
+                    + "<" + range.getMaxValue() + " " + searchTypes);
         element = SodUtilTest.parse("<magnitudeRange>"
                 + "<contributor>FAKE</contributor>" + "<min>5.0</min>"
                 + "<max>6.0</max>" + "</magnitudeRange>");
@@ -93,35 +106,41 @@ public class MagnitudeRangeTest extends TestCase {
             contributors += ", " + range.getContributors()[i];
         }
         mag.value = 5.0f;
-        assertFalse(mag.value + " " + mag.type + "  " + range.getMinValue()
-                            + "<" + range.getMaxValue() + " " + contributors,
-                    range.accept(null, eventAttr, origin).isSuccess());
+        assertFalse(
+                    range.accept(null, eventAttr, origin).isSuccess(),
+                    mag.value + " " + mag.type + "  " + range.getMinValue()
+                    + "<" + range.getMaxValue() + " " + contributors);
         mag.contributor = "FAKE";
-        assertTrue(mag.value + " " + mag.type + "  " + range.getMinValue()
-                           + "<" + range.getMaxValue() + " " + contributors,
-                   range.accept(null, eventAttr, origin).isSuccess());
+        assertTrue(
+                   range.accept(null, eventAttr, origin).isSuccess(),
+                   mag.value + " " + mag.type + "  " + range.getMinValue()
+                   + "<" + range.getMaxValue() + " " + contributors);
         element = SodUtilTest.parse("<magnitudeRange>" + "<largest/>"
                 + "<min>5.0</min>" + "<max>6.0</max>" + "</magnitudeRange>");
         range = new MagnitudeRange(element);
         Magnitude mag2 = new Magnitude("Ms", 6.1f, "FAKE");
         origin.setMagnitudes(new Magnitude[] {mag, mag2});
-        assertFalse(mag.value + " " + mag.type + "  " + range.getMinValue()
-                            + "<" + range.getMaxValue() + " " + contributors,
-                    range.accept(null, eventAttr, origin).isSuccess());
+        assertFalse(
+                    range.accept(null, eventAttr, origin).isSuccess(),
+                    mag.value + " " + mag.type + "  " + range.getMinValue()
+                    + "<" + range.getMaxValue() + " " + contributors);
         mag2.value = 6.0f;
-        assertTrue(mag.value + " " + mag.type + "  " + range.getMinValue()
-                           + "<" + range.getMaxValue() + " " + contributors,
-                   range.accept(null, eventAttr, origin).isSuccess());
+        assertTrue(
+                   range.accept(null, eventAttr, origin).isSuccess(),
+                   mag.value + " " + mag.type + "  " + range.getMinValue()
+                   + "<" + range.getMaxValue() + " " + contributors);
         element = SodUtilTest.parse("<magnitudeRange>" + "<smallest/>"
                 + "<min>5.0</min>" + "<max>6.0</max>" + "</magnitudeRange>");
         range = new MagnitudeRange(element);
         mag.value = 4.9f;
-        assertFalse(mag.value + " " + mag.type + "  " + range.getMinValue()
-                            + "<" + range.getMaxValue() + " " + contributors,
-                    range.accept(null, eventAttr, origin).isSuccess());
+        assertFalse(
+                    range.accept(null, eventAttr, origin).isSuccess(),
+                    mag.value + " " + mag.type + "  " + range.getMinValue()
+                    + "<" + range.getMaxValue() + " " + contributors);
         mag.value = 5.0f;
-        assertTrue(mag.value + " " + mag.type + "  " + range.getMinValue()
-                           + "<" + range.getMaxValue() + " " + contributors,
-                   range.accept(null, eventAttr, origin).isSuccess());
+        assertTrue(
+                   range.accept(null, eventAttr, origin).isSuccess(),
+                   mag.value + " " + mag.type + "  " + range.getMinValue()
+                   + "<" + range.getMaxValue() + " " + contributors);
     }
 }

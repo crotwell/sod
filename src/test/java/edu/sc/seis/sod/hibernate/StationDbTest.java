@@ -57,6 +57,7 @@ public class StationDbTest {
         assertTrue( net.getDbid() > 0);
     }
     
+    @Test
     public void testPutNet() {
         NetworkDB ndb = NetworkDB.getSingleton();
         ndb.put(MockNetworkAttr.createNetworkAttr());
@@ -64,7 +65,8 @@ public class StationDbTest {
         List<Network> netList = ndb.getAllNetworks();
         assertTrue( netList.size() > 0);
     }
-    
+
+    @Test
     public void testPutStation() {
         Station s = MockStation.createStation();
         NetworkDB ndb = NetworkDB.getSingleton();
@@ -76,7 +78,8 @@ public class StationDbTest {
         List<Station> staList = ndb.getStationForNet(s.getNetwork());
         assertTrue( staList.size() > 0);
     }
-    
+
+    @Test
     public void testPutChannel() throws NotFound {
         NetworkDB ndb = NetworkDB.getSingleton();
         Channel c = MockChannel.createChannel();

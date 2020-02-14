@@ -1,9 +1,12 @@
 package edu.sc.seis.sod.subsetter.origin;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class PassOriginTest extends TestCase {
+import org.junit.jupiter.api.Test;
 
+public class PassOriginTest  {
+
+	@Test
     public void testAccept() throws Exception {
         assertTrue(new PassOrigin().accept(null, null, null).isSuccess());
     }

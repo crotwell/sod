@@ -1,10 +1,14 @@
 package edu.sc.seis.sod.validator;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.IOException;
 
 import javax.xml.stream.XMLStreamException;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import edu.sc.seis.sod.validator.model.Choice;
 import edu.sc.seis.sod.validator.model.Form;
 import edu.sc.seis.sod.validator.model.NamedElement;
@@ -13,26 +17,29 @@ import edu.sc.seis.sod.validator.model.StAXModelBuilder;
 /**
  * @author oliverpa Created on Sep 2, 2004
  */
-public class ModelWalkerTest extends TestCase {
+public class ModelWalkerTest  {
 
     private StAXModelBuilder modBuild;
 
-    public ModelWalkerTest(String name) throws XMLStreamException, IOException {
-        super(name);
+    @BeforeEach
+    public void setup() throws XMLStreamException, IOException {
         modBuild = new StAXModelBuilder("jar:edu/sc/seis/sod/data/validator/selfRefChoice.rng");
     }
 
+    @Test
     public void testZeroDistance(){
         NamedElement base = (NamedElement)modBuild.getRoot();
         assertEquals(0, ModelWalker.getDistance(base, base));
     }
 
+    @Test
     public void testOneDistance() {
         NamedElement base = (NamedElement)modBuild.getRoot();
         NamedElement sub = getChildFromNamedElementWithChoice(base, "sub");
         assertEquals(1, ModelWalker.getDistance(base, sub));
     }
 
+    @Test
     public void testSelfReferentialStructure() {
         NamedElement base = (NamedElement)modBuild.getRoot();
         Choice baseChoice = (Choice)base.getChild();
@@ -44,6 +51,7 @@ public class ModelWalkerTest extends TestCase {
         assertEquals(2, subBaseChoice.getChildren().length);
     }
 
+    @Test
     public void testTwoDistance() {
         NamedElement base = (NamedElement)modBuild.getRoot();
         NamedElement sub = getChildFromNamedElementWithChoice(base, "sub");

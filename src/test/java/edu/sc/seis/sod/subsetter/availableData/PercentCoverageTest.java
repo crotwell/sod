@@ -1,15 +1,21 @@
 package edu.sc.seis.sod.subsetter.availableData;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.time.Duration;
 import java.time.Instant;
+
+import org.junit.jupiter.api.Test;
 
 import edu.sc.seis.sod.mock.station.MockChannelId;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.util.time.ClockUtil;
 import junit.framework.TestCase;
 
-public class PercentCoverageTest extends TestCase {
+public class PercentCoverageTest  {
 
+	@Test
     public void testFullCoverage() {
         PercentCoverage pc = new PercentCoverage(100);
         Instant end = ClockUtil.now();
@@ -26,6 +32,7 @@ public class PercentCoverageTest extends TestCase {
         assertTrue(pc.accept(fullArr, new RequestFilter[] {biggerThanFull}));
     }
 
+	@Test
     public void testHalfCoverage() {
         PercentCoverage pc = new PercentCoverage(50);
         Instant end = ClockUtil.now();

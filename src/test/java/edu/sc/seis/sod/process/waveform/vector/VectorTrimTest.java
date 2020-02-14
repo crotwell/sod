@@ -1,11 +1,17 @@
 package edu.sc.seis.sod.process.waveform.vector;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import java.io.BufferedInputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.TimeZone;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.sod.bag.Cut;
@@ -17,10 +23,10 @@ import edu.sc.seis.sod.model.common.TimeRange;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.subsetter.SubsetterException;
 import edu.sc.seis.sod.util.convert.sac.SacToFissures;
-import junit.framework.TestCase;
 
-public class VectorTrimTest extends TestCase {
+public class VectorTrimTest  {
 
+	@BeforeEach
     public void setUp() {
         trimmer = new VectorTrim();
         //baseTime = ClockUtil.now();
@@ -28,6 +34,7 @@ public class VectorTrimTest extends TestCase {
         baseSeis = createSpike();
     }
 
+    @Test
     public void testOnThreeEqualSeismograms() throws FissuresException, SubsetterException {
         LocalSeismogramImpl[][] vector = new LocalSeismogramImpl[][] { {baseSeis},
                                                                       {baseSeis},
@@ -49,6 +56,7 @@ public class VectorTrimTest extends TestCase {
         assertEquals(end.plus((vector[0][0].getSampling().getPeriod().dividedBy(2))), cuts[0].getEnd());
     }
 
+    @Test
     public void testOnThreeSeismogramsWithIncreasingLength()
             throws FissuresException, SubsetterException {
         LocalSeismogramImpl[][] vector = new LocalSeismogramImpl[][] { {baseSeis},
@@ -65,15 +73,16 @@ public class VectorTrimTest extends TestCase {
     private void checkTrim(LocalSeismogramImpl[][] trimmed,
                            TimeRange cutTime) {
         for(int i = 0; i < trimmed.length; i++) {
-            assertEquals("length", trimmed[0].length, trimmed[i].length);
+            assertEquals( trimmed[0].length, trimmed[i].length);
             assertEquals(1, trimmed[i].length);
             for (int j = 0; j < trimmed[i].length; j++) {
-                assertEquals("num points", trimmed[0][j].num_points, trimmed[i][j].num_points);
-                assertEquals("begin time", trimmed[0][j].getBeginTime(), trimmed[i][j].getBeginTime());
+                assertEquals( trimmed[0][j].num_points, trimmed[i][j].num_points);
+                assertEquals( trimmed[0][j].getBeginTime(), trimmed[i][j].getBeginTime());
             }
         }
     }
 
+    @Test
     public void testOnThreeSeismogramsWithEqualLengthAndIncreasingStartTimes()
             throws FissuresException, SubsetterException {
         LocalSeismogramImpl[][] vector = new LocalSeismogramImpl[][] { {baseSeis},
@@ -92,6 +101,7 @@ public class VectorTrimTest extends TestCase {
         }
     }
 
+    @Test
     public void testOnThreeSeismogramsWithIncreasingStartTimesAndDecreasingLength()
             throws FissuresException, SubsetterException {
         LocalSeismogramImpl[][] vector = new LocalSeismogramImpl[][] { {createSpike(3,
@@ -104,6 +114,7 @@ public class VectorTrimTest extends TestCase {
         checkTrim(trimmer.trim(vector), new TimeRange(vector[2][0]));
     }
 
+    @Test
     public void testOnTwoEqualSeismogramsAndOneMissingSeismogram()
             throws FissuresException, SubsetterException {
         LocalSeismogramImpl[][] vector = new LocalSeismogramImpl[][] { {baseSeis},
@@ -112,6 +123,7 @@ public class VectorTrimTest extends TestCase {
         checkEmptyTrim(trimmer.trim(vector));
     }
 
+    @Test
     public void testOnSegmentedVectorPieces() throws FissuresException, SubsetterException {
         LocalSeismogramImpl[] segmented = new LocalSeismogramImpl[] {createSpike(),
                                                                      createSpike(1,
@@ -125,12 +137,13 @@ public class VectorTrimTest extends TestCase {
         for(int i = 0; i < result.length; i++) {
             assertEquals(2, result[i].length);
             for(int j = 0; j < result[i].length; j++) {
-                assertEquals(" "+i+" "+j, new TimeRange(vector[i][j]),
+                assertEquals( new TimeRange(vector[i][j]),
                              new TimeRange(result[i][j]));
             }
         }
     }
 
+    @Test
     public void testOnSegmentedUnequalButOverlappingVectorPieces()
             throws FissuresException, SubsetterException {
         LocalSeismogramImpl commonSeis = createSpike(2, 2);
@@ -152,6 +165,7 @@ public class VectorTrimTest extends TestCase {
         }
     }
 
+    @Test
     public void testOnSegmentedUnoverlappingVectorPieces()
             throws FissuresException, SubsetterException {
         LocalSeismogramImpl[][] vector = new LocalSeismogramImpl[][] { {createSpike(),
@@ -170,6 +184,7 @@ public class VectorTrimTest extends TestCase {
         }
     }
 
+    @Test
     public void testSamplingNormalization() {
         LocalSeismogramImpl seis = MockSeismogram.createSpike();
         LocalSeismogramImpl other = resample(seis, seis.getNumPoints() + 1);
@@ -187,6 +202,7 @@ public class VectorTrimTest extends TestCase {
         return other;
     }
 
+    @Test
     public void testOnSeismogramsWithVaryingSamplingALaPond()
             throws FissuresException, ParseException, SubsetterException {
         String[][] seisTimes = new String[][] { {"2003-01-06T23:50:07.483",
@@ -214,6 +230,7 @@ public class VectorTrimTest extends TestCase {
         checkTrim(trimmer.trim(vector), new TimeRange(cut.getBegin(), cut.getEnd()));
     }
 
+    @Test
     public void testOnSeismogramsWithSlightlyVaryingStart()
             throws FissuresException, ParseException, SubsetterException {
         String[] seisTimes = new String[] { "2003-01-06T23:50:07.481",
@@ -239,7 +256,8 @@ public class VectorTrimTest extends TestCase {
         Cut cut = trimmer.findSmallestCoveringCuts(vector)[0];
         checkTrim(trimmer.trim(vector), new TimeRange(cut.getBegin(), cut.getEnd()));
     }
-    
+
+    @Test
     public void testAmmonData() throws Exception {
         String ammomSacFileBase = "edu/sc/seis/sod/process/waveform/vector/vectorTrimTest/poha-iu-10.lh";
         BufferedInputStream in = new BufferedInputStream(getClass().getClassLoader().getResourceAsStream(ammomSacFileBase+"z"));

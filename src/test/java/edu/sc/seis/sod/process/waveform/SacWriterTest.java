@@ -1,11 +1,19 @@
 package edu.sc.seis.sod.process.waveform;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import edu.iris.dmc.seedcodec.CodecException;
 import edu.sc.seis.TauP.Arrival;
@@ -28,14 +36,15 @@ import edu.sc.seis.sod.model.station.ChannelIdUtil;
 import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.util.convert.sac.FissuresToSac;
 import edu.sc.seis.sod.util.display.EventUtil;
-import junit.framework.TestCase;
 
-public class SacWriterTest extends TestCase {
+public class SacWriterTest  {
 
+	@BeforeEach
     public void setUp() throws CodecException {
         sts = FissuresToSac.getSAC(seis, chan, EventUtil.extractOrigin(ev));
     }
 
+    @Test
     public void testGenerate() throws ConfigurationException {
         String[][] templateAndResult = new String[][] { {"${seismogram.name}.sac",
                                                          seis.getName() + ".sac"},
@@ -52,10 +61,12 @@ public class SacWriterTest extends TestCase {
                      new SacWriter("test", seis.getName()).generate(ev, chan, seis, 0, 1));
     }
 
+    @Test
     public void testApplyProcessorsWithNoProcessors() throws Exception {
         new SacWriter().applyProcessors(sts, ev, chan);
     }
 
+    @Test
     public void testApplyPhaseHeaderProcessor() throws Exception {
         ArrayList<SacProcess> processes = new ArrayList<SacProcess>();
         processes.add(new SacProcess() {
@@ -73,7 +84,8 @@ public class SacWriterTest extends TestCase {
         sw.applyProcessors(sts, ev, chan);
         assertEquals(sts.getHeader().getKt0(), "ttp");
     }
-    
+
+    @Test
     public void testSecondArrival() throws Exception {
         Location staLoc = Location.of(chan.getStation());
         Location evtLoc = ev.get_preferred_origin().getLocation();
@@ -96,12 +108,14 @@ public class SacWriterTest extends TestCase {
         assertEquals(sts.getHeader().getT1(), (float)arrivals.get(1).getTime());
     }
 
+    @Test
     public void testGenerateLocations() throws ConfigurationException {
         SacWriter sw = new SacWriter("${seismogram.name}.sac");
-        assertTrue(sw.generate(ev, chan, seis, 0, 2)+" endsWith 1.sac", sw.generate(ev, chan, seis, 0, 2).endsWith("1.sac"));
-        assertTrue(sw.generate(ev, chan, seis, 1, 2)+" ends with 2.sac", sw.generate(ev, chan, seis, 1, 2).endsWith("2.sac"));
+        assertTrue( sw.generate(ev, chan, seis, 0, 2).endsWith("1.sac"), sw.generate(ev, chan, seis, 0, 2)+" endsWith 1.sac");
+        assertTrue( sw.generate(ev, chan, seis, 1, 2).endsWith("2.sac"), sw.generate(ev, chan, seis, 1, 2)+" ends with 2.sac");
     }
 
+    @Test
     public void testRemoveExisting() throws FileNotFoundException, IOException,
             ConfigurationException {
         SacWriter sw = new SacWriter("", System.getProperty("java.io.tmpdir") + File.separator
@@ -118,6 +132,7 @@ public class SacWriterTest extends TestCase {
         }
     }
 
+    @Test
     public void testIndexAppending() throws FileNotFoundException, IOException,
             ConfigurationException {
         assertEquals("harar${index}", new SacWriter("", "harar").getTemplate());

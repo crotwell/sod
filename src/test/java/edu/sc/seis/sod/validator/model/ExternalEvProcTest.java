@@ -9,10 +9,14 @@ import java.io.IOException;
 
 import javax.xml.stream.XMLStreamException;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
+
 import edu.sc.seis.sod.validator.tour.FormPrinter;
 
-public class ExternalEvProcTest extends TestCase{
+
+public class ExternalEvProcTest {
+	
+	@Test
     public void testExternalRef() throws XMLStreamException, IOException{
         StAXModelBuilder modBuild = new StAXModelBuilder("jar:edu/sc/seis/sod/data/validator/externalEvProc.rng");
         modBuild.getRoot().accept(new FormPrinter(8));

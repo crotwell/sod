@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.log4j.BasicConfigurator;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
@@ -20,7 +19,6 @@ import edu.sc.seis.sod.model.station.ChannelGroup;
 
 public class ChannelGroupTest {
 
-    static {BasicConfigurator.configure();}
 
     @Test
     public void testGroupBandGain() throws ConfigurationException {

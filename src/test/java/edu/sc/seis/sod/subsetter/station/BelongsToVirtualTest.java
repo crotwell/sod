@@ -1,7 +1,13 @@
 package edu.sc.seis.sod.subsetter.station;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.time.Duration;
 import java.util.List;
+
+import org.junit.jupiter.api.Test;
 
 import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
@@ -9,9 +15,8 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.mock.MockNetworkSource;
 import edu.sc.seis.sod.mock.station.MockNetworkAttr;
 import edu.sc.seis.sod.mock.station.MockStation;
-import junit.framework.TestCase;
 
-public class BelongsToVirtualTest extends TestCase {
+public class BelongsToVirtualTest  {
  
     private final class CountRetrieveStations extends MockNetworkSource {
 
@@ -28,6 +33,7 @@ public class BelongsToVirtualTest extends TestCase {
     
     private static String mockNetName = MockNetworkAttr.createMultiSplendoredAttr().getNetworkId();
 
+    @Test
     public void testRefresh() throws Exception {
         CountRetrieveStations na = new CountRetrieveStations();
         BelongsToVirtual btv = new BelongsToVirtual(mockNetName, TimeUtils.ONE_FORTNIGHT);
@@ -37,6 +43,7 @@ public class BelongsToVirtualTest extends TestCase {
         assertEquals(1, na.callCount);
     }
 
+    @Test
     public void testZeroRefreshTime() throws InterruptedException, Exception {
         CountRetrieveStations na = new CountRetrieveStations();
         BelongsToVirtual btv = new BelongsToVirtual(mockNetName,
@@ -48,6 +55,7 @@ public class BelongsToVirtualTest extends TestCase {
         assertEquals(2, na.callCount);
     }
 
+    @Test
     public void testAcceptsAllStationsInAssignedNetwork() throws Exception {
         CountRetrieveStations na = new CountRetrieveStations();
         BelongsToVirtual btv = new BelongsToVirtual(mockNetName, TimeUtils.ONE_FORTNIGHT);
@@ -57,6 +65,7 @@ public class BelongsToVirtualTest extends TestCase {
         }
     }
 
+    @Test
     public void testStationsNotInNetwork() throws Exception {
         CountRetrieveStations na = new CountRetrieveStations();
         BelongsToVirtual btv = new BelongsToVirtual(mockNetName, TimeUtils.ONE_FORTNIGHT);

@@ -5,23 +5,26 @@
  */
 package edu.sc.seis.sod.status;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.mock.station.MockChannel;
 import edu.sc.seis.sod.mock.station.MockStation;
 import edu.sc.seis.sod.velocity.network.VelocityStation;
-import junit.framework.TestCase;
 
-public class FissuresFormatterTest extends TestCase {
+public class FissuresFormatterTest  {
 
-    public FissuresFormatterTest(String name) {
-        super(name);
-    }
 
+	@BeforeEach
     public void setUp() {
         chan = MockChannel.createChannel();
     }
 
+    @Test
     public void testFormatNetwork() {
         assertEquals("XX70",
                      FissuresFormatter.formatNetwork(chan.getNetwork()));
@@ -37,6 +40,7 @@ public class FissuresFormatterTest extends TestCase {
                      FissuresFormatter.filize("12442/ham/cheese/  .BHZ"));
     }
 
+    @Test
     public void testOneLineAndClean() {
         Station sta = MockStation.createStation();
         sta.setName("  Long name\nwith\r\nnewlines  ");

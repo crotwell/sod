@@ -5,14 +5,18 @@
  */
 
 package edu.sc.seis.sod.validator.model;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.IOException;
 
 import javax.xml.stream.XMLStreamException;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
-public class CardinalityTest extends TestCase{
+public class CardinalityTest {
 
+	@Test
     public void testCardinality() throws IOException, XMLStreamException{
         StAXModelBuilder modBuild = new StAXModelBuilder("jar:edu/sc/seis/sod/data/validator/cardinality.rng");
         //modBuild.getRoot().accept(new FormPrinter(8));

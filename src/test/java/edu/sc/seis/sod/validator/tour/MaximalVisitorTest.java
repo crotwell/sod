@@ -3,11 +3,14 @@
  */
 package edu.sc.seis.sod.validator.tour;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.IOException;
 
 import javax.xml.stream.XMLStreamException;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
+
 import edu.sc.seis.sod.validator.model.Attribute;
 import edu.sc.seis.sod.validator.model.Choice;
 import edu.sc.seis.sod.validator.model.Data;
@@ -23,8 +26,9 @@ import edu.sc.seis.sod.validator.model.Value;
 /**
  * @author Charlie Groves
  */
-public class MaximalVisitorTest extends TestCase {
+public class MaximalVisitorTest {
 
+	@Test
     public void testCardinalityVisitation() throws XMLStreamException,
             IOException {
         runVisitation("jar:edu/sc/seis/sod/data/validator/cardinality.rng",
@@ -33,12 +37,14 @@ public class MaximalVisitorTest extends TestCase {
                         "finallyThisOne" });
     }
 
+	@Test
     public void testMultiChoiceVisitation() throws XMLStreamException,
             IOException {
         runVisitation("jar:edu/sc/seis/sod/data/validator/choiceMulti.rng",
                 new String[] { "baseElement", "internalEl1", "internalEl2" });
     }
 
+	@Test
     public void testSelfRef() throws XMLStreamException,
             IOException {
         runVisitation("jar:edu/sc/seis/sod/data/validator/selfReferential.rng",

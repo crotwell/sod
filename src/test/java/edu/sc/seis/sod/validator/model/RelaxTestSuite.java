@@ -6,9 +6,13 @@
 
 package edu.sc.seis.sod.validator.model;
 
+import org.junit.jupiter.api.Test;
+
 import junit.framework.TestSuite;
 
-public class RelaxTestSuite extends TestSuite{
+public class RelaxTestSuite {
+	
+	@Test
     public static TestSuite suite(){
         TestSuite suite = new TestSuite();
         suite.addTest(new TestSuite(CardinalityTest.class));

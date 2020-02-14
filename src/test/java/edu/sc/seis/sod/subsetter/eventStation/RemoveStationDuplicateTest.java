@@ -1,8 +1,12 @@
 package edu.sc.seis.sod.subsetter.eventStation;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.StringReader;
 import java.util.Properties;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.InputSource;
 
@@ -24,10 +28,9 @@ import edu.sc.seis.sod.model.event.StatefulEvent;
 import edu.sc.seis.sod.model.status.Stage;
 import edu.sc.seis.sod.model.status.Standing;
 import edu.sc.seis.sod.model.status.Status;
-import junit.framework.TestCase;
 
 
-public class RemoveStationDuplicateTest extends TestCase {
+public class RemoveStationDuplicateTest  {
     
     Start start;
     
@@ -36,7 +39,7 @@ public class RemoveStationDuplicateTest extends TestCase {
     Station mockFar = MockStation.createOtherStation();
     StatefulEvent event;
     
-    @Override
+    @BeforeEach
     protected void setUp() throws Exception {
         Properties props = new Properties();
         props.put("fissuresUtil.database.url", "jdbc:hsqldb:mem:SodDB");
@@ -73,7 +76,7 @@ public class RemoveStationDuplicateTest extends TestCase {
     @Test
     public void testCloseStation() throws Exception {
         RemoveStationDuplicate rsd = new RemoveStationDuplicate(new QuantityImpl(1, UnitImpl.DEGREE));
-        assertTrue("far station", rsd.accept(event, mockFar, null).isSuccess());
-        assertFalse("close station", rsd.accept(event, mockClose, null).isSuccess());
+        assertTrue( rsd.accept(event, mockFar, null).isSuccess(), "far station");
+        assertFalse( rsd.accept(event, mockClose, null).isSuccess(), "close station");
     }
 }

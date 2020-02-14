@@ -10,9 +10,11 @@ import java.io.IOException;
 
 import javax.xml.stream.XMLStreamException;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
-public class CommentTest extends TestCase{
+public class CommentTest {
+	
+	@Test
     public void testCommentedDocument() throws XMLStreamException, IOException{
         StAXModelBuilder modBuild = new StAXModelBuilder("jar:edu/sc/seis/sod/data/validator/commented.rng");
         //modBuild.getRoot().accept(new FormPrinter(8));

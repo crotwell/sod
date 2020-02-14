@@ -5,13 +5,18 @@
  */
 
 package edu.sc.seis.sod.validator.model;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.IOException;
 
 import javax.xml.stream.XMLStreamException;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
-public class AnnotationTest extends TestCase{
+public class AnnotationTest {
+	
+	@Test
     public void testAnnotationAssignment() throws IOException, XMLStreamException{
         StAXModelBuilder modBuild = new StAXModelBuilder("jar:edu/sc/seis/sod/data/validator/annotation.rng");
         NamedElement base = (NamedElement)modBuild.getRoot();
@@ -34,10 +39,11 @@ public class AnnotationTest extends TestCase{
         }
     }
 
+    @Test
     public void testAnnotationOnCardinality() throws IOException, XMLStreamException{
         try{
             new StAXModelBuilder("jar:edu/sc/seis/sod/data/validator/wrongAnnotation.rng");
-            assertTrue("Should've thrown a runtime exception when it encountered an Annotation in a cardinality operator", false);
+            assertTrue(false, "Should've thrown a runtime exception when it encountered an Annotation in a cardinality operator");
         }catch(RuntimeException e){
             assertTrue(true);
         }

@@ -1,13 +1,18 @@
 package edu.sc.seis.sod.subsetter.channel;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
+
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.UserConfigurationException;
 import edu.sc.seis.sod.mock.station.MockChannel;
 import edu.sc.seis.sod.mock.station.MockStation;
-import junit.framework.TestCase;
 
-public class TestChannelCode extends TestCase {
+public class TestChannelCode  {
 
+	@Test
     public void testStraightUpBHZ() throws UserConfigurationException {
         cc = new ChannelCode("BHZ");
         assertAccepted(BHZ);
@@ -16,6 +21,7 @@ public class TestChannelCode extends TestCase {
         assertRejected(LLN);
     }
 
+	@Test
     public void testLowerCaseBHZ() throws UserConfigurationException {
         cc = new ChannelCode("bhz");
         assertAccepted(BHZ);
@@ -24,10 +30,12 @@ public class TestChannelCode extends TestCase {
         assertRejected(LLN);
     }
 
+	@Test
     public void testBHQuestion() throws UserConfigurationException {
         doBHWild("?");
     }
-    
+
+	@Test
     public void testBHStar() throws UserConfigurationException {
         doBHWild("*");
     }
@@ -40,6 +48,7 @@ public class TestChannelCode extends TestCase {
         assertRejected(LLN);
     }
 
+	@Test
     public void testStarhStar() throws UserConfigurationException {
         cc = new ChannelCode("*h*");
         assertAccepted(BHZ);
@@ -48,6 +57,7 @@ public class TestChannelCode extends TestCase {
         assertRejected(LLN);
     }
 
+	@Test
     public void testStar() throws UserConfigurationException {
         cc = new ChannelCode("*");
         assertAccepted(BHZ);
@@ -56,6 +66,7 @@ public class TestChannelCode extends TestCase {
         assertAccepted(LLN);
     }
 
+	@Test
     public void testBStar() throws UserConfigurationException {
         cc = new ChannelCode("B*");
         assertAccepted(BHZ);
@@ -64,6 +75,7 @@ public class TestChannelCode extends TestCase {
         assertRejected(LLN);
     }
 
+	@Test
     public void testStarLStar() throws UserConfigurationException {
         cc = new ChannelCode("*L*");
         assertRejected(BHZ);
@@ -72,10 +84,11 @@ public class TestChannelCode extends TestCase {
         assertAccepted(LLN);
     }
 
+	@Test
     public void testTooFewCharsNotEnoughStars() {
         try {
             cc = new ChannelCode("AB");
-            fail("'AB' doesn't completly specify a channel code so it should provke a UserConfigurationException");
+            assertTrue(false, "'AB' doesn't completly specify a channel code so it should provke a UserConfigurationException");
         } catch(UserConfigurationException uce) {}
     }
 
