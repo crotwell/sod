@@ -162,7 +162,7 @@ public class CommandLineTool extends AbstractClient {
             System.exit(0);
         }
         try {
-            Start s = new Start(new Args(new String[] {"-f", "<stream>"}),
+            Start s = new Start(new Args(new String[] {"-q", "-f", "<stream>"}),
                                 new Start.InputSourceCreator() {
 
                                     public InputSource create() {
