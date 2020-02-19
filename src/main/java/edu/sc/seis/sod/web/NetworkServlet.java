@@ -62,9 +62,11 @@ public class NetworkServlet extends HttpServlet {
                 } else {
                     matcher = stationListPattern.matcher(URL);
                     if (matcher.matches()) {
-                        // logger.debug("stationList");
+                         logger.debug("stationList "+matcher.group()+" net="+matcher.group(1)+" y="+matcher.group(2));
                         String netCode = matcher.group(1);
-                        List<Station> staList = netdb.getStationForNet(netdb.getNetworkByCode(netCode).get(0));
+                        String year = matcher.group(2);
+                        Network n = loadNet(netCode, year);
+                        List<Station> staList = netdb.getStationForNet(n);
                         JsonApi.encodeJson(out, StationJson.toJsonList(staList, baseUrl));
                     } else {
                         matcher = stationRelationshipPattern.matcher(URL);
@@ -123,7 +125,7 @@ public class NetworkServlet extends HttpServlet {
 
     Pattern allNetworkPattern = Pattern.compile(".*/networks");
 
-    public static String networkIdStr = "([A-Z0-9]+)([0-9]{4})?";
+    public static String networkIdStr = "([A-Z0-9]{1,2})([0-9]{4})?";
     public static String networkIdPatternStr = "/networks/"+networkIdStr;
     public static String stationIdPatternStr = "/stations/"+networkIdStr+"\\.([A-Z0-9]+)";
     public String networkPatternStr = ".*"+networkIdPatternStr;

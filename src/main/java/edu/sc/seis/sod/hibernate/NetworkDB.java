@@ -142,7 +142,7 @@ public class NetworkDB extends AbstractHibernateDB {
         Query query = getSession().createQuery("from "
                 + ChannelGroup.class.getName()
                 + " where channel1 = :chan or channel2 = :chan or channel3 = :chan");
-        query.setEntity("chan", chan);
+        query.setParameter("chan", chan);
         return query.list();
     }
 
@@ -158,9 +158,9 @@ public class NetworkDB extends AbstractHibernateDB {
                 + " or ( channel1 = :chanA and channel2 = :chanC and channel3 = :chanB )"
                 + " or ( channel1 = :chanB and channel2 = :chanC and channel3 = :chanA )"
                 + " or ( channel1 = :chanC and channel2 = :chanB and channel3 = :chanA )");
-        query.setEntity("chanA", chanA);
-        query.setEntity("chanB", chanB);
-        query.setEntity("chanC", chanC);
+        query.setParameter("chanA", chanA);
+        query.setParameter("chanB", chanB);
+        query.setParameter("chanC", chanC);
         query.setMaxResults(1);
         List<ChannelGroup> l = query.list();
         if(l.size() != 0) {
@@ -238,21 +238,21 @@ public class NetworkDB extends AbstractHibernateDB {
 
     public List<Station> getStationForNet(Network attr) {
         Query query = getSession().createQuery(getStationForNetwork);
-        query.setEntity("netAttr", attr);
+        query.setParameter("netAttr", attr);
         return query.list();
     }
 
     public List<Station> getStationForNet(Network attr,
                                               String staCode) {
         Query query = getSession().createQuery(getStationForNetworkStation);
-        query.setEntity("netAttr", attr);
+        query.setParameter("netAttr", attr);
         query.setString("staCode", staCode);
         return query.list();
     }
 
     public List<Channel> getChannelsForNet(Network attr) {
         Query query = getSession().createQuery(getChannelForNetwork);
-        query.setEntity("netAttr", attr);
+        query.setParameter("netAttr", attr);
         return query.list();
     }
 
@@ -272,7 +272,7 @@ public class NetworkDB extends AbstractHibernateDB {
 
     public List<Channel> getChannelsForStation(Station station) {
         Query query = getSession().createQuery(getChannelForStation);
-        query.setEntity("station", station);
+        query.setParameter("station", station);
         List<Channel> out = query.list();
         logger.debug("getChannelsForStation("+station.getDbid()+" found "+out.size()+"  query="+query);
         return out;
@@ -280,14 +280,14 @@ public class NetworkDB extends AbstractHibernateDB {
 
     public List<ChannelGroup> getChannelGroupsForStation(Station station) {
         Query query = getSession().createQuery(getChannelGroupForStation);
-        query.setEntity("station", station);
+        query.setParameter("station", station);
         return query.list();
     }
 
     public List<Channel> getChannelsForStation(Station station,
                                                Instant when) {
         Query query = getSession().createQuery(getChannelForStationAtTime);
-        query.setEntity("station", station);
+        query.setParameter("station", station);
         query.setParameter("when", when);
         return query.list();
     }
@@ -353,8 +353,10 @@ public class NetworkDB extends AbstractHibernateDB {
     }
 
     public InstrumentationBlob getInstrumentationBlob(Channel chan) throws ChannelNotFound {
-        Query query = getSession().createQuery("from "+InstrumentationBlob.class.getName()+" where channel = :chan");
-        query.setEntity("chan", chan);
+        String queryString = "FROM "+InstrumentationBlob.class.getName()+" WHERE channel = :chan";
+        System.err.println("NetworkDB.getInstrumentationBlob : "+queryString);
+        Query query = getSession().createQuery(queryString);
+        query.setParameter("chan", chan.getDbid());
         Iterator it = query.iterate();
         if (it.hasNext()) {
             InstrumentationBlob ib = (InstrumentationBlob)it.next();
@@ -375,8 +377,8 @@ public class NetworkDB extends AbstractHibernateDB {
     }
     
     public ChannelSensitivity getSensitivity(Channel chan) {
-        Query query = getSession().createQuery("from "+ChannelSensitivity.class.getName()+" where channel = :chan");
-        query.setEntity("chan", chan);
+        Query query = getSession().createQuery("FROM "+ChannelSensitivity.class.getName()+" WHERE channel = :chan");
+        query.setParameter("chan", chan);
         Iterator it = query.iterate();
         if (it.hasNext()) {
             ChannelSensitivity sense = (ChannelSensitivity)it.next();

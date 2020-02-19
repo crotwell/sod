@@ -8,12 +8,18 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.WaveformArm;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.StatefulEventDB;
+import edu.sc.seis.sod.hibernate.eventpair.EventChannelPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventNetworkPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventStationPair;
+import edu.sc.seis.sod.hibernate.eventpair.EventVectorPair;
 import edu.sc.seis.sod.model.event.StatefulEvent;
 import edu.sc.seis.sod.model.status.Stage;
 import edu.sc.seis.sod.model.status.Standing;
 import edu.sc.seis.sod.status.eventArm.EventMonitor;
+import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
 
 public class SuccessfulEventCache {
 
@@ -26,7 +32,7 @@ public class SuccessfulEventCache {
                 try {
                     updateSuccessfulEvents();
                 } catch(Throwable t) {
-                    logger.error("Trying to update seccessful events", t);
+                    logger.error("SuccessfulEventCache Trying to update seccessful events", t);
                 }
             }
         }, 0, 900 * 1000);
@@ -44,6 +50,47 @@ public class SuccessfulEventCache {
             }
             
         });
+            Start.getWaveformRecipe().addStatusMonitor(new WaveformMonitor() {
+                
+                @Override
+                public void update(EventVectorPair evp) {
+                    if (evp.getStatus().getStanding().equals(Standing.SUCCESS)) { 
+                        if ( ! eventInList(evp.getEvent())) {
+                            eventWithSuccessfulCache.add(evp.getEvent());
+                        } else {
+                            logger.info("SuccessfulEventCache Not adding as already added: "+evp);
+                        }
+                    } else {
+                     logger.info("SuccessfulEventCache Not adding as not SUCCESS: "+evp);   
+                    }
+                }
+                
+                @Override
+                public void update(EventChannelPair ecp) {
+                    if (ecp.getStatus().getStanding().equals(Standing.SUCCESS)) { 
+                        if ( ! eventInList(ecp.getEvent())) {
+                            eventWithSuccessfulCache.add(ecp.getEvent());
+                        } else {
+                            logger.info("SuccessfulEventCache Not adding as already added: "+ecp);
+                        }
+                    } else {
+                     logger.info("SuccessfulEventCache Not adding as not SUCCESS: "+ecp);   
+                    }
+                }
+                
+                @Override
+                public void update(EventStationPair ecp) {
+                    // TODO Auto-generated method stub
+                    
+                }
+                
+                @Override
+                public void update(EventNetworkPair ecp) {
+                    // TODO Auto-generated method stub
+                    
+                }
+            });
+        
     }
     
     public List<StatefulEvent> getEventWithSuccessful() {
@@ -55,6 +102,7 @@ public class SuccessfulEventCache {
     }
     
     void updateSuccessfulEvents() {
+        logger.info("SuccessfulEventCache.updateSuccessfulEvents()");
         StatefulEventDB db = StatefulEventDB.getSingleton();
         List<StatefulEvent> events = db.getAll();
         for (Iterator iterator = events.iterator(); iterator.hasNext();) {
@@ -70,10 +118,20 @@ public class SuccessfulEventCache {
     }
     
     void updateInCache(StatefulEvent statefulEvent) {
+        logger.info("SuccessfulEventCache.updateInCache("+statefulEvent);
         int numSuccess = SodDB.getSingleton().getNumSuccessful(statefulEvent);
         if (numSuccess > 0) {
             eventWithSuccessfulCache.add(statefulEvent);
         }
+    }
+    
+    boolean eventInList(StatefulEvent e) {
+        for (StatefulEvent statefulEvent : eventWithSuccessfulCache) {
+            if (statefulEvent.getDbid() == e.getDbid()) {
+                return true;
+            }
+        }
+        return false;
     }
     
     List<StatefulEvent> eventWithSuccessfulCache = new ArrayList<StatefulEvent>();

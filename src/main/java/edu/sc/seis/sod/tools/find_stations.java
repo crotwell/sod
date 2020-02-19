@@ -91,6 +91,10 @@ public class find_stations extends CommandLineTool {
                        JSAP.NO_SHORTFLAG,
                        "includeRestricted",
                        "Without this restricted stations and channels are rejected"));
+        add(new Switch("matchTimeseries",
+                       JSAP.NO_SHORTFLAG,
+                       "matchTimeseries",
+                       "Limit returned stations and channels with available data. May not work with all data sources."));
     }
 
     private void addStationParam(FlaggedOption option) throws JSAPException {

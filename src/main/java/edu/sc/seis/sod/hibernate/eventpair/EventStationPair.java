@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.hibernate.eventpair;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +21,7 @@ import edu.sc.seis.sod.model.station.StationIdUtil;
 import edu.sc.seis.sod.model.status.Stage;
 import edu.sc.seis.sod.model.status.Standing;
 import edu.sc.seis.sod.model.status.Status;
+import edu.sc.seis.sod.source.seismogram.SeismogramSourceException;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.EventEffectiveTimeOverlap;
@@ -58,9 +60,17 @@ public class EventStationPair extends CookieEventPair {
                     accepted = esSub.accept(getEvent(), getStation(), getMeasurements());
                 }
             } catch(Throwable e) {
-                
-            	update(e, Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.SYSTEM_FAILURE));
-            	failLogger.warn(this.toString(), e);
+                // this might not be right exception???
+                if(e instanceof IOException) {
+                    update(e, Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.CORBA_FAILURE));
+                    updateRetries();
+                    failLogger.info("Network or server problem, SOD will continue to retry this item periodically: ("
+                            + e.getClass().getName() + ") " + this);
+                    logger.debug(this.toString(), e);
+                } else {
+                    update(e, Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.SYSTEM_FAILURE));
+                    failLogger.warn(this.toString(), e);
+                }
                 SodDB.commit();
                 logger.debug("Finish (fail) EStaP: " + this);
                 return;

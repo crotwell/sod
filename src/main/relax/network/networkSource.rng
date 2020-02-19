@@ -268,6 +268,11 @@ CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
                             </element>
                         </optional>
                         <optional>
+                            <element name="matchTimeseries">
+                                <data type="boolean"/>
+                            </element>
+                        </optional>
+                        <optional>
                             <element name="validate">
                                 <data type="boolean"/>
                             </element>

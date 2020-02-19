@@ -1,5 +1,6 @@
 package edu.sc.seis.sod;
 
+import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.time.Duration;
 import java.time.Instant;
@@ -9,7 +10,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.hibernate.LazyInitializationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
@@ -487,7 +487,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                if (t.getCause() != null && t.getCause() instanceof MissingBlockette1000) {
                    
                } else if (t.getCause() != null && t.getCause() instanceof SocketTimeoutException) {
-                   // treat just like CORBA SystemException so it is retried later
+                   // it is retried later
                    // don't log exception here, let RetryStragtegy do it
                    ecp.update(Status.get(stage, Standing.CORBA_FAILURE));
                }
@@ -503,7 +503,7 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
                }
                try {
                    message += " " + ecp+"\n";
-               } catch (LazyInitializationException lazy) {
+               } catch (Throwable lazy) {
                    message += "LazyInitializationException after exception, so I can't print the evp\n";
                }
                message += "Source="+seismogramSource+"\n";

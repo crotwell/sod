@@ -3,11 +3,11 @@ package edu.sc.seis.sod.hibernate;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Properties;
-
-import javax.xml.stream.XMLEventReader;
+import java.util.function.Predicate;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
@@ -16,11 +16,7 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.SessionFactoryBuilder;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.boot.registry.selector.spi.StrategySelector;
-import org.hibernate.boot.spi.MetadataImplementor;
-import org.hibernate.cfg.Configuration;
 import org.hibernate.dialect.function.SQLFunctionTemplate;
-import org.hibernate.service.ServiceRegistry;
 import org.hibernate.tool.hbm2ddl.SchemaUpdate;
 import org.hibernate.tool.hbm2ddl.TargetTypeHelper;
 import org.hibernate.tool.schema.TargetType;
@@ -136,14 +132,35 @@ public class HibernateUtil {
         }
 
         if (haltOnError && exceptions.size() >0) {
-            Throwable first = exceptions.get(0);
-            if (first instanceof Exception) {
-                throw new RuntimeException("Problem updating schema", first);
-            } else {
-                throw (RuntimeException)first;
+            List<Throwable> filteredExceptions = new ArrayList<Throwable>();
+            filteredExceptions.addAll(exceptions);
+            filteredExceptions.removeIf(isSqlExceptionOK());
+            if (filteredExceptions.size() > 0) {
+                Throwable first = filteredExceptions.get(0);
+                if (first instanceof Exception) {
+                    throw new RuntimeException("Problem updating schema "+exceptions.size()+" exceptions, first is ", first);
+                } else {
+                    throw (RuntimeException)first;
+                }
             }
         }
     }
+    
+    private static Predicate<Throwable> isSqlExceptionOK() {
+        return new Predicate<Throwable>() {
+            @Override
+            public boolean test(Throwable t) {
+                Throwable rootCause = t;
+                while (rootCause.getCause() != null) {
+                    rootCause = rootCause.getCause();
+                }
+                return (rootCause instanceof org.hsqldb.HsqlException || 
+                        rootCause instanceof java.sql.SQLSyntaxErrorException ) 
+                        &&
+                        rootCause.getMessage().startsWith("a FOREIGN KEY constraint already exists");
+            }
+        };
+     }
     
     private static Metadata metadata;
     
