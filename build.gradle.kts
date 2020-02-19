@@ -1,4 +1,3 @@
-//import edu.sc.seis.tasks.XSLT
 
 plugins {
   "project-report"
@@ -36,7 +35,10 @@ sourceSets {
     }
 }
 
+val rng by configurations.creating
+
 dependencies {
+    rng("thaiopensource:jing:20091111")
     implementation("edu.sc.seis:seedCodec:1.0.11")
     implementation("edu.sc.seis:seisFile:1.8.0") {
       // we need seisFile for sac output, but not all the other functionality
@@ -305,6 +307,7 @@ tasks.register<JavaExec>("buildSchemaDocs") {
 tasks.register<JavaExec>("buildSchema") {
     dependsOn("transform")
     dependsOn("compileJava")
+    classpath(configurations.getByName("rng"))
     jvmArgs = listOf("-Xmx1512m")
     group = "build"
     val inFile = File(project.buildDir.path, "generated-src/relaxInclude/sod.rng")
@@ -312,8 +315,12 @@ tasks.register<JavaExec>("buildSchema") {
     val resourcesDir = File(project.buildDir, "generated-src/relax/resources")
     val outFile = File(resourcesDir, "edu/sc/seis/sod/data/sod.rng")
     outputs.files(outFile)
-    doFirst {outFile.getParentFile().mkdirs()}
-    args = listOf("-s ", inFile.path)
+    doFirst {
+      outFile.getParentFile().mkdirs()
+      val out = outFile.outputStream()
+      setStandardOutput(out)
+    }
+    args = listOf("-s", inFile.path)
     main = "com.thaiopensource.relaxng.util.Driver"
     workingDir = outFile.getParentFile()
 }
@@ -321,43 +328,60 @@ tasks.register<JavaExec>("buildSchema") {
 tasks.register<JavaExec>("buildGrouperSchema") {
     dependsOn("transformGrouper")
     dependsOn("compileJava")
+    classpath(configurations.getByName("rng"))
     group = "build"
     val inFile = File(project.buildDir.path, "generated-src/relaxInclude/grouper.rng")
     inputs.dir(inFile.getParentFile())
     val resourcesDir = File(project.buildDir, "generated-src/relax/resources")
     val outFile = File(resourcesDir, "edu/sc/seis/sod/data/grouper.rng")
     outputs.files(outFile)
-    doFirst {outFile.getParentFile().mkdirs()}
-    args = listOf("-s ", inFile.path)
+    doFirst {
+      outFile.getParentFile().mkdirs()
+      val out = outFile.outputStream()
+      setStandardOutput(out)
+    }
+    args = listOf("-s", inFile.path)
     jvmArgs = listOf("-Xmx1512m")
     main = "com.thaiopensource.relaxng.util.Driver"
     workingDir = outFile.getParentFile()
 }
-/*
-tasks.register<XSLT>("transform") {
+
+
+tasks.register<edu.sc.seis.tasks.XSLT>("transform") {
     destDir= File(project.buildDir, "generated-src/relaxInclude")
     stylesheetFile = File(project.projectDir, "src/main/xslt/simpleXInclude.xslt")
     val rngFile = File(project.projectDir, "src/main/relax/sod.rng")
-    source = rngFile
+    source(rngFile)
     inputs.dir(rngFile.getParentFile())
     outputs.dir(destDir)
 }
 
-tasks.register<XSLT>("transformGrouper") {
+tasks.register<edu.sc.seis.tasks.XSLT>("transformGrouper") {
     destDir= File(project.buildDir, "generated-src/relaxInclude")
-    stylesheetFile = File(project.projectDir, "src/main/xslt/simpleXInclude.xslt")
-    val rngFile = File(project.projectDir, "src/main/relax/grouper.rng")
+    stylesheetFile = project.file("src/main/xslt/simpleXInclude.xslt")
+    val rngFile = project.fileTree("src") {
+      include("main/relax/grouper.rng")
+    }
     source = rngFile
-    inputs.dir(rngFile.getParentFile())
+    inputs.file(stylesheetFile)
     outputs.dir(destDir)
 }
- */
+
 
 
 //doc.dependsOn(copySodSite)
 //assemble.dependsOn(tarDist)
 //assemble.dependsOn(zipDist)
-//processResources.dependsOn(buildSchema)
+tasks.processResources {
+    dependsOn("buildSchema")
+    dependsOn("buildGrouperSchema")
+    from(tasks.named<JavaExec>("buildSchema").get().outputs) {
+      into("edu/sc/seis/sod/data")
+    }
+    from(tasks.named<JavaExec>("buildGrouperSchema").get().outputs) {
+      into("edu/sc/seis/sod/data")
+    }
+}
 //processResources.dependsOn(buildGrouperSchema)
-//processResources{ from(project.sourceSets.main.resources)
-//                  from(buildSchema.resourcesDir)}
+//tasks.processResources{ from(project.sourceSets.main.resources)
+//                  from(tasks.get("buildSchema").resourcesDir)}
