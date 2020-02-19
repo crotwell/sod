@@ -92,6 +92,9 @@ public class FdsnStation extends AbstractNetworkSource {
                         queryParams.appendToChannel(SodUtil.getNestedText(element));
                     } else if (element.getTagName().equals("includeRestricted")) {
                         queryParams.setIncludeRestricted(true);
+                    } else if (element.getTagName().equals("matchTimeseries")) {
+                        logger.debug("Setting matchtimeseries");
+                        queryParams.setMatchTimeseries(true);
                     } else if (element.getTagName().equals("host")) {
                         String host = SodUtil.getNestedText(element);
                         queryParams.setHost(host);

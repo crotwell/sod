@@ -41,6 +41,9 @@ $additionalArms#end
 #if($includeRestricted)
             <includeRestricted/>
 #end
+#if($matchTimeseries)
+            <matchTimeseries>true</matchTimeseries>
+#end
         </fdsnStation>
 #if($server)
         <networkFinder>

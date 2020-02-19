@@ -13,6 +13,7 @@ import org.w3c.dom.Element;
 import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.DOMHelper;
+import edu.sc.seis.sod.bag.Cut;
 import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.common.TimeRange;
@@ -42,7 +43,7 @@ public class GapFill extends Merge {
                                               channel, 
                                               original, 
                                               available, 
-                                              ReduceTool.cutOverlap(seismograms), 
+                                              Cut.cutOverlap(seismograms), 
                                               cookieJar);
         List<LocalSeismogramImpl> sortedSeismograms = new ArrayList<LocalSeismogramImpl>();
         for (int i = 0; i < merged.getSeismograms().length; i++) {

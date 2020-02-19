@@ -45,6 +45,12 @@ public class StationDbTest {
     }
 
     @Test
+    public void testOpenSession() {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.close();
+    }
+
+    @Test
     public void test() {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Network net = new Network();
@@ -53,6 +59,7 @@ public class StationDbTest {
         net.setStartDate("19921201T00:00:00.000000Z");
         Transaction t = session.beginTransaction();
         session.persist(net);
+        t.commit();
         session.close();
         assertTrue( net.getDbid() > 0);
     }

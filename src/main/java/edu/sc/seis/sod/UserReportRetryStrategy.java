@@ -27,20 +27,20 @@ public class UserReportRetryStrategy extends ClassicRetryStrategy {
                                             int tryCount) {
         String serverId = makeServerId(server);
         if(!bustedServers.contains(serverId)) {
-        	if (Start.getArgs().isQuitOnError()) {
-        		print("The "
-        				+ serverId
-        				+ " server just produced an error ("+exc.getClass().getName()
-        				+").  SOD will quit due to the --"+Args.QUIT_ON_ERROR_SWITCH+" switch.  "
-        				+ addlInfo);
-        		System.exit(1);
-        	} else {
-        		print("The "
-        				+ serverId
-        				+ " server just produced an error ("+exc.getClass().getName()+" "+exc.getMessage()
-        				+").  SOD will continue trying it until it recovers at which point an all clear message will be issued.  If it never recovers, email sod@seis.sc.edu with this report and we can inform the server maintainer.  If you're tired of waiting, press Ctrl-C to quit.  "
-        				+ addlInfo);
-        	}
+                if (Start.getArgs().isQuitOnError()) {
+                    print("The "
+                          + serverId
+                          + " server just produced an error ("+exc.getClass().getName()
+                          +").  SOD will quit due to the --"+Args.QUIT_ON_ERROR_SWITCH+" switch.  "
+                          + addlInfo);
+                    System.exit(1);
+                } else {
+                    print("The "
+                          + serverId
+                          + " server just produced an error ("+exc.getClass().getName()+" "+exc.getMessage()
+                          +").  SOD will continue trying it until it recovers at which point an all clear message will be issued.  If it never recovers, email sod@seis.sc.edu with this report and we can inform the server maintainer.  If you're tired of waiting, press Ctrl-C to quit.  "
+                          + addlInfo);
+                }
             
             logger.info(serverId+" error ", exc);
             bustedServers.add(serverId);

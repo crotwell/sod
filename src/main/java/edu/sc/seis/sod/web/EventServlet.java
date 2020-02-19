@@ -78,10 +78,11 @@ public class EventServlet extends HttpServlet {
             } else {
                 matcher = allEvents.matcher(URL);
                 if (matcher.matches()) {
-                // logger.debug("doGet all");
+                 logger.debug("doGet all");
                 try {
                     SuccessfulEventCache cache = WebAdmin.getSuccessfulEventCache();
                     List<StatefulEvent> events = cache.getEventWithSuccessful();
+                    logger.info("EventServlet: found "+events.size()+" events");
                     List<JsonApiData> eventJsonList = new ArrayList<JsonApiData>();
                     for (StatefulEvent statefulEvent : events) {
                         EventJson eventJson = new EventJson(statefulEvent, WebAdmin.getApiBaseUrl());
