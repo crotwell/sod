@@ -497,10 +497,6 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
            } else {
                ecp.update(t, Status.get(stage, Standing.SYSTEM_FAILURE));
                String message = "";
-               if (t instanceof FissuresException) {
-                   FissuresException f = (FissuresException)t;
-                   message += f.the_error.error_code + " " + f.the_error.error_description ;
-               }
                try {
                    message += " " + ecp+"\n";
                } catch (Throwable lazy) {
