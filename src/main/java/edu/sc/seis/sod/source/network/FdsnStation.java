@@ -21,6 +21,7 @@ import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.TimeInterval;
+import edu.iris.Fissures.model.TimeUtils;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ChannelImpl;
@@ -58,7 +59,7 @@ public class FdsnStation extends AbstractNetworkSource {
     public FdsnStation() {
         super("defaultFDSNNetwork", -1);
     }
-    
+
     public FdsnStation(String name, int retries, FDSNStationQueryParams queryParams) {
         super(name, retries);
         this.queryParams = queryParams;
@@ -114,7 +115,7 @@ public class FdsnStation extends AbstractNetworkSource {
             }
         }
     }
-    
+
     public void includeRestricted(boolean val) {
         queryParams.setIncludeRestricted(val);
     }
@@ -128,7 +129,7 @@ public class FdsnStation extends AbstractNetworkSource {
     public List<? extends CacheNetworkAccess> getNetworkByName(String name) throws NetworkNotFound {
         throw new NetworkNotFound();
     }
-    
+
     @Override
     public List<? extends NetworkAttrImpl> getNetworks() throws SodSourceException {
         List<NetworkAttrImpl> out = new ArrayList<NetworkAttrImpl>();
@@ -137,7 +138,7 @@ public class FdsnStation extends AbstractNetworkSource {
             FDSNStationQueryParams staQP = setupQueryParams();
             staQP.setLevel(FDSNStationQueryParams.LEVEL_NETWORK);
             staQP.clearChannel(); // channel constraints make getting networks very slow
-            staQP.clearStartAfter().clearStartBefore().clearStartTime(); // start and end times also slow as 
+            staQP.clearStartAfter().clearStartBefore().clearStartTime(); // start and end times also slow as
             staQP.clearEndAfter().clearEndBefore().clearEndTime();       // applied to channel not network
             logger.debug("getNetworks "+staQP.formURI());
             staxml = internalGetStationXML(staQP);
@@ -329,15 +330,16 @@ public class FdsnStation extends AbstractNetworkSource {
                     edu.sc.seis.seisFile.fdsnws.stationxml.Station s = staIt.next();
                     StationImpl sImpl = StationXMLToFissures.convert(s, netAttr);
                     for (Channel c : s.getChannelList()) {
+                        MicroSecondDate endDate = c.getEndDate() != null ? new MicroSecondDate(c.getEndDate()) : TimeUtils.future;
                         MicroSecondTimeRange cTR = new MicroSecondTimeRange(new MicroSecondDate(c.getStartDate()),
-                                                                            new MicroSecondDate(c.getEndDate()));
+                                                                            endDate);
                         if (! cTR.equals(chanTR)) {
                             logger.info("Instrumentation channel time range not same as channel time range for "+ChannelIdUtil.toStringFormatDates(chan.getId())+": "+chanTR+" "+cTR);
                         } else {
                             ChannelSensitivityBundle csb = StationXMLToFissures.convert(c, sImpl);
                             chanSensitivityMap.put(ChannelIdUtil.toString(csb.getChan().get_id()), csb.getSensitivity());
                             // should be right channel, hopefully there was only one anyway
-                            InstrumentationImpl out = StationXMLToFissures.convertInstrumentation(c); 
+                            InstrumentationImpl out = StationXMLToFissures.convertInstrumentation(c);
                             if (staxml != null) {
                                 staxml.closeReader();
                                 staxml = null;
@@ -366,7 +368,7 @@ public class FdsnStation extends AbstractNetworkSource {
             }
         }
     }
-    
+
     public CoarseAvailableData getAvailableData() {
         return availableData;
     }
@@ -395,7 +397,7 @@ public class FdsnStation extends AbstractNetworkSource {
         }
         return cloneQP;
     }
-    
+
     FDSNStationQuerier setupQuerier(FDSNStationQueryParams queryParams) {
         FDSNStationQuerier querier = new FDSNStationQuerier(queryParams);
         if (validateXML) {
@@ -404,7 +406,7 @@ public class FdsnStation extends AbstractNetworkSource {
         querier.setUserAgent("SOD/"+BuildVersion.getVersion());
         return querier;
     }
-    
+
     FDSNStationXML internalGetStationXML(FDSNStationQueryParams staQP) {
         int count = 0;
         SeisFileException latest = null;
@@ -441,21 +443,21 @@ public class FdsnStation extends AbstractNetworkSource {
         }
         throw new RuntimeException(latest);
     }
-    
+
     public FDSNStationQueryParams getDefaultQueryParams() {
         return queryParams;
     }
 
     static void setTimeParamsToGetSingleChan(FDSNStationQueryParams staQP, Time startTime, Time endTime) {
         staQP.setStartBefore(new MicroSecondDate(startTime).add(ONE_SECOND));
-        MicroSecondDate end = new MicroSecondDate(endTime);
+        MicroSecondDate end = endTime != null ? new MicroSecondDate(endTime) : TimeUtils.future;
         if (end.before(ClockUtil.now())) {
             staQP.setEndAfter(end.subtract(ONE_SECOND));
         } else {
             staQP.setEndAfter(ClockUtil.now());
         }
     }
-    
+
     static void setTimeParams(FDSNStationQueryParams staQP, Time startTime, Time endTime, NetworkQueryConstraints constraints) {
         MicroSecondDate earliest = new MicroSecondDate(startTime).add(ONE_SECOND);
         MicroSecondDate latest = null;
@@ -464,12 +466,12 @@ public class FdsnStation extends AbstractNetworkSource {
         }
         if (constraints != null) {
             if (earliest == null || (
-                    constraints.getConstrainingBeginTime() != null 
+                    constraints.getConstrainingBeginTime() != null
                     && constraints.getConstrainingBeginTime().after(earliest))) {
                 earliest = constraints.getConstrainingBeginTime();
             }
             if (latest == null || (
-                    constraints.getConstrainingEndTime() != null 
+                    constraints.getConstrainingEndTime() != null
                     && constraints.getConstrainingEndTime().before(latest))) {
                 latest = constraints.getConstrainingEndTime();
             }
@@ -483,18 +485,18 @@ public class FdsnStation extends AbstractNetworkSource {
             staQP.clearEndAfter().clearStartBefore(); // geofon doesn't like starttime and startsbefore in same query
         }
     }
-    
+
     boolean includeAvailability = true;
-    
+
     boolean validateXML = false;
-    
+
     public static final TimeInterval ONE_SECOND = new TimeInterval(1, UnitImpl.SECOND);
-    
+
     CoarseAvailableData availableData = new CoarseAvailableData();
-    
+
     HashMap<String, QuantityImpl> chanSensitivityMap = new HashMap<String, QuantityImpl>();
 
     FDSNStationQueryParams queryParams = new FDSNStationQueryParams();
-    
+
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(FdsnStation.class);
 }
