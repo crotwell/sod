@@ -14,17 +14,17 @@ public class Version{
 
     /** for hibernate */
     protected Version() {}
-    
+
     public String getVersion() {
         return version;
     }
 
-    
+
     protected void setVersion(String version) {
         this.version = version;
     }
 
-    
+
     public boolean isSchemaChange() {
         return schemaChange;
     }
@@ -37,7 +37,7 @@ public class Version{
     public void setDbid(int dbid) {
         this.dbid = dbid;
     }
-    
+
     public Version(String version, boolean schemaChange) {
         this.version = version;
         this.schemaChange = schemaChange;
@@ -46,7 +46,7 @@ public class Version{
     public static Version current() {
         return versionsToDate[versionsToDate.length-1];
     }
-    
+
     public static boolean hasSchemaChangedSince(String version){
         if (!current().getVersion().equals(version)){
             boolean found = false;
@@ -88,8 +88,8 @@ public class Version{
       new Version("2.0beta5", false),  //small bugfixes
       new Version("2.0beta6", false),   //even smaller bugfixes
       new Version("2.0beta7", false),   //status table sorting, status beautification, editor load/save, legacy exec, PointLinearDistanceMagnitude
-      new Version("2.0beta8", false),   
-      new Version("2.0rc1", true),   
+      new Version("2.0beta8", false),
+      new Version("2.0rc1", true),
       new Version("2.0", false),
       new Version("2.1", false),
       new Version("2.1.1", false),
@@ -129,11 +129,9 @@ public class Version{
       new Version("3.2.8", false),
       new Version("3.2.9-SNAPSHOT", false),
       new Version("3.2.9-SNAPSHOT2", false),
-      new Version("3.2.9-SNAPSHOT3", false)
-//      new Version("3.2.9", false)
+      new Version("3.2.9-SNAPSHOT3", false),
+      new Version("3.2.9", false),
+      new Version("3.2.10-SNAPSHOT", false)
     };
 
 }
-
-
-
