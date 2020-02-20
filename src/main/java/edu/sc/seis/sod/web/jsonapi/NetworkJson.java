@@ -88,7 +88,7 @@ public class NetworkJson extends AbstractJsonApiData {
     }
 
     public static Object encodeEndTime(Instant endDate) {
-        if (endDate.isBefore(ClockUtil.now())) {
+        if (endDate != null && endDate.isBefore(ClockUtil.now())) {
             return TimeUtils.toISOString(endDate);
         } else {
             return null;
