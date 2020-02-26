@@ -37,6 +37,10 @@
         <property name="elevationFloat" type="float"/>
         -->
         
+        <component name="site" class="edu.sc.seis.seisFile.fdsnws.stationxml.Site">
+                <property name="name" column="site_name" type="text"  />
+                <property name="description" column="site_description" type="text"  />
+        </component>
 		<component name="latitude" class="edu.sc.seis.seisFile.fdsnws.stationxml.DegreeFloatType">
 				<property name="value" column="latitude_value" type="float"  />
 		</component>

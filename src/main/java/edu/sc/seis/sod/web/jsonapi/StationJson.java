@@ -38,13 +38,18 @@ public class StationJson extends AbstractJsonApiData {
     @Override
     public void encodeAttributes(JSONWriter out) throws JSONException {
         out.key("station-code").value(sta.getStationCode())
-        .key("name").value(sta.getName())
-        .key("start-time").value(TimeUtils.toISOString(sta.getStartDateTime()))
-        .key("end-time").value(NetworkJson.encodeEndTime(sta.getEndDateTime()))
-        .key("description").value(sta.getDescription())
-              .key("latitude").value(sta.getLatitude())
-              .key("longitude").value(sta.getLongitude())
-              .key("elevation").value(sta.getElevation().getValue());
+	        .key("name").value(sta.getName())
+	        .key("start-time").value(TimeUtils.toISOString(sta.getStartDateTime()))
+	        .key("end-time").value(NetworkJson.encodeEndTime(sta.getEndDateTime()))
+	    	.key("latitude").value(sta.getLatitude())
+	    	.key("longitude").value(sta.getLongitude())
+	    	.key("elevation").value(sta.getElevation().getValue());
+        if (sta.getSite() != null ) {
+            out.key("site").object()
+            	.key("name").value(sta.getSite().getName())
+            	.key("description").value(sta.getSite().getDescription())
+            	.endObject();
+        }
     }
 
     @Override
