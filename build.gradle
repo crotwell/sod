@@ -18,14 +18,9 @@ mainClassName = "edu.sc.seis.sod.Start"
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-task sourcesJar(type: Jar) {
-    archiveClassifier = 'sources'
-    from sourceSets.main.allJava
-}
-
-task javadocJar(type: Jar) {
-    archiveClassifier = 'javadoc'
-    from javadoc.destinationDir
+java {
+    withSourcesJar()
+    withJavadocJar()
 }
 
 publishing {
