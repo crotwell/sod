@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	#set($currentPageTitle = "Waveform Tutorial")
+	#tutorialPage()
+	#set($imageDir = "$!{relativePathToSodDir}images/documentation/tutorials/")
+	<head>
+		#sod_head()
+	</head>
+	<body>
+		#sod_header()
+		#sod_menu()
+		<div id="content">
+			<div class="section">
+				#sod_section_title("Waveform arm's structure")
+				<img class="right" src="$!{imageDir}waveform_arm.png"/>
+				<p class="short">
+					The waveform arm is the most complex of the arms. 
+					It takes the successful channels from the network arm
+					and the successful events from the event arm and runs them through a series of steps.  
+		</p>
+					<ol>
+						<li>
+							Event channel subsetters inspect the combination of a successful event from the event arm 
+							and a successful channel from the network arm. 
+						</li>
+						<li>
+							A request for data is generated based on phase arrival times or the 
+							earthquake's origin time.
+							</li>
+							<li>
+								A server is asked if it has data for the request's time.  
+						</li>
+						<li>
+							Availabe data subsetters inspect the response from the server.
+						</li>
+						<li>
+							Data is retrieved from the server.
+						</li>
+						<li>
+							Subsetting and processing are done on the data.  
+							</li>
+					</ol>
+                	
+</p>
+</div>
+			<div class="section">
+				#sod_section_title("Simple waveform arm")
+				<pre>$snippetizer.getResult("tutorial/incompleteWaveform.xml")</pre>
+				#linkToExample("tutorial/simpleWaveform.xml")
+				<img class="right" src="$!{imageDir}simplest_waveform.png"/>
+				<p class="short">This wavform arm contains no subsetters.  The <code>phaseRequest</code>
+					specifies that a request should be made for data from 
+					120 seconds before the P wave arrival to 3 minutes after the S wave arrival.  <code>fdsnDataSelect</code>
+					tells SOD to fetch
+					that data from IRIS's FDSN DataSelect web service.  The <code>printlineSeismogramProcess</code> prints
+					information about each seismogram it retrieves.  
+</p>
+</div>
+			<div class="section">
+				#sod_section_title("Event channel subsetters")
+				
+				<pre>$snippetizer.getElementResult("tutorial/subsettingWaveform.xml", "distanceRange")</pre>
+				#linkToExample("tutorial/subsettingWaveform.xml")
+				<img id="distrange" class="right" src="$!{imageDir}distance_range.png"/>
+				<p class="short">
+					The previous recipe gets data for every channel, for every earthquake that SOD finds.
+					Adding this subsetter to the waveform arm tells SOD 
+					to process only channels that are 30 to 90 degrees away from an earthquake.  In this image, the triangles
+					 are channels and the earthquake is at the center of the shadowed ring. 
+					SOD only processes those channels outlined in green.
+				</p>
+</div>
+			<div class="section">
+				#sod_section_title("Checking on data availability")
+				<pre>$snippetizer.getElementResult("tutorial/waveform.xml", "someCoverage")</pre>
+                <pre>$snippetizer.getElementResult("tutorial/waveform.xml", "someDataCoverage")</pre>
+				#linkToExample("tutorial/waveform.xml")
+				<img  class="right" src="$!{imageDir}available_data.png"/>
+				<p class="reallyshort">In nearly all cases you'll only want to process when the server has data.  When you insert a 
+					<code>someCoverage</code> tag after specifying the server, SOD asks the server if there is data
+					before making the request to retrieve it. Unfortunately sometimes servers
+					don't actually know what they have, and so it can be useful to use the 
+					<code>someDataCoverage</code> as well that checks after asking for the seismograms that they really
+					exist.
+					<pre>  
+				</p>
+</div>	
+
+			<div class="section">
+				#sod_section_title("Automated Processing Framework")
+				<img src="$!{imageDir}kitchen_sink.png"/>
+				<pre>$apfSnippet.getResult("tutorial/waveform.xml")</pre>
+				#linkToExample("tutorial/waveform.xml")
+				<p>In addition to the subsetting and data gathering steps of the waveform arm, SOD has a suite of 
+					data processing ingredients.  These ingredients go at the end of the waveform arm and operate on the
+					seismograms one after another.  </p>
+					<p>
+						The above snippet will:
+</p><ol>
+	<li>Print a line for each seismogram</li>
+	<li>Save the raw seismogram as SAC files</li>
+	<li>Apply a gain correction to the seismogram</li>
+	<li>Remove the mean from the seismogram</li>
+	<li>Remove the trend from the seismogram</li>
+	<li>Integrate the seismogram, ie changes velocity to displacement</li>
+	<li>Save the processed results as another set of SAC files in the processedSeismograms directory</li>
+	<li>Execute the echo command with the file names from the save</li>
+</ol>
+<p>You can include any number of these processing tasks in a recipe.  You can also add subsetters between processors 
+	if you wish to conditionally process seismograms.  In addition to processors in the snippet above, 
+	SOD contains processors 
+	to filter seismograms, produce images, and taper seismograms among others.
+	You can find the full list of processors in the 
+	<a href="$!{relativePathToSodDir}ingredients/waveform/waveformProcess/seismogramProcess.html">seismogramProcess</a> page in the
+	ingredient listing.
+</p>
+</div>
+        #sod_gettingstarted_navigation("Past getting started" "../../gettingstarted.html")
+		</div>
+		#sod_footer()
+	</body>
+</html>

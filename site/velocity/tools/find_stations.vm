@@ -1,0 +1,67 @@
+#toolsPage()
+#defaultHeader("find_stations")
+			<div class="section">
+				#sod_section_title("find_stations")
+				<p>find_stations produces a recipe containing a <a href="${relativePathToSodDir}ingredients/networkArm.html">networkArm</a>.
+					</p>
+					</div>
+				<div class="section">
+				#sod_section_title("Options")
+					<table summary="The format and meaning of all options accepted by find_events" class="options">
+						<tr>
+<td headers="format">-v/--version </td>
+<td headers="meaning">Print SOD's version and exit</td>
+<td headers="default"></td>
+</tr>
+<tr>
+<td headers="format">-r/--recipe </td>
+<td headers="meaning">Print the created recipe to stdout instead of running it</td>
+<td headers="default"></td>
+</tr>
+<tr>
+<td headers="format">-h/--help </td>
+<td headers="meaning">Print a brief help message and exit</td>
+<td headers="default"></td>
+</tr>
+<tr>
+<td headers="format">-p/--props &lt;props&gt;</td>
+<td headers="meaning">Add an additional props file to specify a different nameserver, database or other internal SOD options</td>
+<td headers="default"></td>
+</tr>
+<tr>
+<td headers="format">-S/--server &lt;server&gt;</td>
+<td headers="meaning">Set the network server to use for this search</td>
+<td headers="default">sevice.iris.edu</td>
+</tr>
+<tr>
+<td headers="format">-R/--box-area &lt;box&gt;</td>
+<td headers="meaning">Limit the stations to those in a box region. 
+	It's specified as west/east/south/north where west and east are longitudes from -180 to 180 and north and south are latitudes from -90 to 90</td>
+<td headers="default"></td>
+</tr>
+<tr>
+<td headers="format">-d/--donut &lt;donut&gt;</td>
+<td headers="meaning">Limits the stations to those in a donut region.  
+	It's specified as centerLat/centerLon/minRadiusDegrees/maxRadiusDegrees.  
+	As with --box-area, latitude goes from -90 to 90 and longitude goes from -180 to 180</td>
+<td headers="default"></td>
+</tr>
+<tr>
+<td headers="format">-s/--stations s1,s2,...,sN</td>
+<td headers="meaning">The codes of stations to retrieve like <code>ANMO</code> or <code>KONO</code>.  If unspecified, all stations for retrieved networks will be retrieved</td>
+<td headers="default"></td>
+</tr>
+<tr>
+<td headers="format">-n/--networks n1,n2,...,nN</td>
+<td headers="meaning">The codes of networks to retrieve like <code>IU</code> or <code>GT</code>.  If unspecified, all networks will be retrieved</td>
+<td headers="default"></td>
+</tr>
+<tr>
+<td headers="format">-o/--output &lt;output&gt;</td>
+<td headers="meaning">The format for output.  Can be none, xy, yx or a Velocity template as described in the 
+	<a href="${relativePathToSodDir}ingredients/printlineStationProcess.html">printline ingredient</a></td>
+<td headers="default">xy</td>
+</tr>
+</table>
+			</div>
+#defaultFooter()

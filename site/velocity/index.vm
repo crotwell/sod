@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	#set($currentPageTitle = "Home")
+	<head>
+		#sod_head()
+	</head>
+	<body>
+		#sod_header()
+		#sod_menu()
+		<div id="content">
+			<div class="section">
+				#sod_section_title('About SOD')
+				<p class="about">
+					<acronym title="Standing Order for Data">SOD</acronym> is a program that automates tedious data
+					selection, downloading, and routine processing tasks in seismology.
+					It allows you to define your desired data based on earthquakes,
+					recording stations, and the resulting combination of information.  SOD then retrieves the
+					data that matches the criteria and applies any number of processing steps using
+					processors included in SOD and ones you've written yourself.  All of this works for
+					historical data, but as the name says, you can specify a "standing order"
+					with SOD.  If your criteria stretch off into the future, SOD will run until that
+					day	gathering seismograms for earthquakes as they occur.
+				</p>
+				<p class="about">To get started, read  <a href="gettingstarted.html">Getting Started</a>,
+					which will walk you through downloading, installing, and using SOD.
+				</p>
+				<p class="about">We now have an <a href="http://groups.google.com/a/seis.sc.edu/group/sod">email list</a>
+                                        for annoucements, discussions and questions about using SOD. If you have questions, please <a #EnkodeAttributes("seis.sc.edu" "sod")>post</a>. If you want answers, please <a href="http://groups.google.com/a/seis.sc.edu/group/sod">sign up</a>.
+				</p>
+                                <p>The source code for SOD is now on <a href="https://github.com/crotwell/sod">Github</a>.</p>
+                                <p class="about">If you find SOD useful, please consider citing our SRL paper about SOD:<br/>T.&nbsp;J. Owens, H.&nbsp;P. Crotwell, C.&nbsp;Groves,
+  and P.&nbsp;Oliver-Paul.
+SOD: Standing Order for Data.
+<cite>Seismological Research Letters</cite>, 75:515&ndash;520, 2004.
+                                </p>
+			</div>
+			<div class="section">
+				#sod_section_title("News")
+                                <div class="section">
+                #sod_subsection_title('26 June 2019')
+                                <p>Version of SOD, <a href="http://www.seis.sc.edu/downloads/sod/3.2.9">SOD 3.2.9</a>
+                                 is available.
+Fix issue with restricted data.
+                                 Please post questions to the <a href="http://groups.google.com/a/seis.sc.edu/group/sod">SOD email list</a>.
+                                </p>
+                                </div>
+                                <div class="section">
+                #sod_subsection_title('30 November 2016')
+                                <p>Version of SOD, <a href="http://www.seis.sc.edu/downloads/sod/3.2.8">SOD 3.2.8</a>
+                                 is available.
+Fix issue with instrument response download when channel is active.
+                                 Please post questions to the <a href="http://groups.google.com/a/seis.sc.edu/group/sod">SOD email list</a>.
+                                </p>
+                                </div>
+                                <div class="section">
+                #sod_subsection_title('6 July 2016')
+                                <p>Version of SOD, <a href="http://www.seis.sc.edu/downloads/sod/3.2.7">SOD 3.2.7</a>
+                                 is available.
+                                 Numerous small bug fixes and stability improments.
+                                 Please post questions to the <a href="http://groups.google.com/a/seis.sc.edu/group/sod">SOD email list</a>.
+                                </p>
+                                </div>
+                                <div class="section">
+                #sod_subsection_title('22 May 2015')
+                                <p>Version of SOD, <a href="http://www.seis.sc.edu/downloads/sod/3.2.6">SOD 3.2.6</a>
+                                 is available.
+                                 Fixed an issue with SOD and instrument responses relating to the loc id change.
+                                 Please post questions to the <a href="http://groups.google.com/a/seis.sc.edu/group/sod">SOD email list</a>.
+                                </p>
+                                </div>
+                                <div class="section">
+                #sod_subsection_title('25 March 2015')
+                                <p>Version of SOD, <a href="http://www.seis.sc.edu/downloads/sod/3.2.5">SOD 3.2.5</a>
+                                 is available.
+                                 Fixed an issue with SOD and the way loc ids are done in the FDSN web services and use the USGS
+                                 FDSNEvent web service as the default instead of IRIS for event locations. Also now check for
+                                 catalogs and contributors that cannot work with the server. Lastly, SOD now batches requests
+                                 to the seismogram server if possible, resulting in a noticable speed improvement, 2x in some cases.
+                                 Please post questions to the <a href="http://groups.google.com/a/seis.sc.edu/group/sod">SOD email list</a>.
+                                </p>
+                                </div>
+                                <div class="section">
+                #sod_subsection_title('11 February 2015')
+                                <p>Fixing a few bugs discovered in version 3.2.3, <a href="http://www.seis.sc.edu/downloads/sod/3.2.4">SOD 3.2.4</a>
+                                 is available.
+                                 Mostly minor cleanup, fixed an issue with SOD quiting prematurely when only one network.
+                                 Please post questions to the <a href="http://groups.google.com/a/seis.sc.edu/group/sod">SOD email list</a>.
+                                </p>
+                                </div>
+                                <div class="section">
+                #sod_subsection_title('2 October 2013')
+                                <p>Fixing a few bugs discovered in version 3.2.2, <a href="http://www.seis.sc.edu/downloads/sod/3.2.3">SOD 3.2.3</a>
+                                 is available. This includes some work arounds for how the IRIS DMC event web service handles magType and catalog/contributor. There were valid SOD configurations that resulted in no events returned. Also, SOD has been tested with the USGS implementation of the FDSN Event services. You can access it by setting the &lt;host>comcat.cr.usgs.gov&lt;/host> within the &lt;fdsnEvent>. Lastly, if you are trying to get restricted data with a &lt;fdsnDataSelect> source, the &lt;fdsnStation> network source will automatically ask for restricted networks, which did not happen in the previous version.
+                                 Please post questions to the <a href="http://groups.google.com/a/seis.sc.edu/group/sod">SOD email list</a>.
+                                </p>
+                                </div>
+                                <div class="section">
+                #sod_subsection_title('25 July 2013')
+                                <p>Fixing a few bugs discovered in version 3.2.1, <a href="http://www.seis.sc.edu/downloads/sod/3.2.2">SOD 3.2.2</a>
+                                 is available. There was a serious bug with pulling the response from the new FDSN Station web service.
+                                 Any response or polezero files pulled from the FDSN Station web service with SOD 3.2.0 or 3.2.1 are wrong. Please download and enjoy.
+                                 Please post questions to the <a href="http://groups.google.com/a/seis.sc.edu/group/sod">SOD email list</a>.
+                                </p>
+                                </div>
+                                <div class="section">
+                #sod_subsection_title('11 July 2013')
+                                <p>Fixing a few bugs discovered in version 3.2.0, <a href="http://www.seis.sc.edu/downloads/sod/3.2.1">SOD 3.2.1</a>
+                                 is available. Please download and enjoy.
+                                 Please post questions to the <a href="http://groups.google.com/a/seis.sc.edu/group/sod">SOD email list</a>.
+                                </p>
+                                </div>
+                                <div class="section">
+                #sod_subsection_title('21 June 2013')
+                                <p>On the longest day of the year, <a href="http://www.seis.sc.edu/downloads/sod/3.2.0">SOD 3.2.0</a>
+                                 is finally available! A few more bugs found in beta3, largely with the timeout support. Please download and enjoy.
+                                 Please post questions to the <a href="http://groups.google.com/a/seis.sc.edu/group/sod">SOD email list</a>.
+                                 The old documentation for version 3.1 is <a href="/sod3.1">here</a>.
+                                </p>
+                                </div>
+                                <div class="section">
+                #sod_subsection_title('30 May 2013')
+                                <p><a href="http://www.seis.sc.edu/downloads/sod/3.2.0beta3">SOD 3.2.0beta3</a> is available! This is a beta release that fixes a few bugs found in beta2, in vectorTrim, restricted data and better timeout support. Please download and test and let <a href="https://github.com/crotwell/sod/issues">us know</a> if you find and bugs. Also feel free to post questions to the <a href="http://groups.google.com/a/seis.sc.edu/group/sod">SOD email list</a>. The new documentation (still in progress), is <a href="/sod3.2">here</a>.
+                                </p>
+                                </div>
+                                <div class="section">
+                #sod_subsection_title('21 May 2013')
+                                <p><a href="http://www.seis.sc.edu/downloads/sod/3.2.0beta2">SOD 3.2.0beta2</a> is available! This is a beta release that fixes a few bugs found in beta1, mainly related to space-space loc ids in the FDSNStation web service. Please download and test and let <a href="https://github.com/crotwell/sod/issues">us know</a> if you find and bugs. Also feel free to post questions to the <a href="http://groups.google.com/a/seis.sc.edu/group/sod">SOD email list</a>. The new documentation (still in progress), is <a href="/sod3.2">here</a>.
+                                </p>
+                                </div>
+                                <div class="section">
+                #sod_subsection_title('10 May 2013')
+                                <p><a href="http://www.seis.sc.edu/downloads/sod/3.2.0beta1">SOD 3.2.0beta1</a> is available! This is a beta release that fixes a few bugs and adds support for the new FDSN web services (Event, Station and DataSelect) now available from the IRIS DMC. Please download and test and let <a href="https://github.com/crotwell/sod/issues">us know</a> if you find and bugs. Also feel free to post questions to the <a href="http://groups.google.com/a/seis.sc.edu/group/sod">SOD email list</a>. The new documentation (still in progress), is <a href="/sod3.2">here</a>.
+                                </p>
+                                </div>
+                                <div class="section">
+                #sod_subsection_title('13 June 2012')
+                                <p><a href="http://www.seis.sc.edu/downloads/sod/3.1.0">SOD 3.1.0</a> is released! This release fixes a few bugs and adds a few processors, including a new idea for measurements such as rms, min and max. Also add iterative deconvolution receiver functions and filtering using the very nice OregonDSP package.
+                                </p>
+                                </div>
+                                <div class="section">
+                #sod_subsection_title('12 January 2012')
+                                <p><a href="http://www.seis.sc.edu/downloads/sod/3.0.0">SOD 3.0.0</a> is released! Whew!
+                                </p>
+                                </div>
+
+<a href="oldnews.html">Older News</a>
+			</div>
+		</div>
+		#sod_footer()
+	</body>
+</html>

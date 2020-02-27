@@ -1,0 +1,87 @@
+#toolsPage()
+#defaultHeader("Usage Examples")
+<div class="section">
+    #sod_section_title("How to Use The Command Line Tools")
+<p>
+OK, work with us here ... we going to go through a pretty simple,
+potentially meaningless, example of how to use the CLT utilities
+separately or together.  We assume that you have installed SOD and
+have the CLT commands somewhere in your search path.  If this
+assumption is true, you can sing along with these examples.  If not,
+consider humming.  Or, better yet, follow the instructions on the <a href="${relativePathToSodDir}/documentation/install.html">install page</a> to get SOD setup.
+</p>
+<p>
+Now, let's say you'd like to find all Mb=6.2 and above earthquakes in
+2006 within a 10 degree box of the M8-ish Kuril Island
+event on 13 Jan 2007.  The <code>find_events</code> command would be:
+</p>
+<pre>
+find_events -R 149/159/41/51 -b 2006 -e 2006 -m 6.2 -t MB
+</pre>
+<p>This command produces a line of output for each event it gathers:</p>
+<pre>
+153.1841 46.5550 10 2006_274_09_06_001 6.2MB
+153.2660 46.5920 10 2006_319_11_14_013 6.5MB
+154.4750 46.3710 10 2006_319_11_29_022 6.2MB
+155.3050 46.6520 10 2006_319_11_34_058 6.4MB
+154.7260 46.4830 10 2006_319_11_40_055 6.4MB
+154.3860 46.1530 16 2006_341_19_10_021 6.3MB
+</pre>
+<p>
+This takes about 32 seconds to execute on a Mac laptop.  Not a
+screamer, but try to get the same info faster elsewhere and it does
+directly access the IRIS DMC database by default.
+</p>
+<p>
+Now, many of you will realize that station MAJO is in that part of
+the world.  Those of you who do not know this could use <code>find_stations</code>
+to discover as much.  But, for brevity, lets say you just know it is
+there, not where it is or if it was operating during the time range
+of interest.  Just type:
+</p>
+<pre>
+find_events -o none -R 149./159/41/51 -b 2006 -e 2006 -m 6.2- -t MB -r |
+find_stations -s MAJO
+</pre>
+<p> which produces</p>
+<pre>
+ 138.2073  36.5425 405. MAJO
+</pre>
+<p>
+The output in this case is not particularly useful, but it does let
+you know that MAJO was operating during the time range of interest
+because a location is returned.  Notice the little "-r" that was
+added to the find_events command.  That just says pipe this request
+to the next command.  Think of it like that annoying -K in GMT!
+[ASIDE: In reality, what -r does is generate a SOD XML recipe file
+instead of actually running the command.  Using it without piping to
+another CLT utility is a good way to ease yourself into learning SOD
+XML recipes.]  Also, notice the "-o none" that was added to
+find_events as well.  That just says there is no need to print out
+the events anymore.  Use it when you are satisfied with your request
+and want to just use it or pipe it elsewhere.  OK, a minute or so is
+required for this.  Again, nothing to write home about, but you know
+a lot more than you did and it beats your other options.
+</p>
+<p>
+And [DRUM ROLL] ... you are poised to get seismograms!  Try this:
+</p>
+<pre>
+find_events -o none -R 149./159/41/51 -b 2006 -e 2006 -m 6.2- -t MB -r | 
+find_stations -s MAJO -n IU -o none -r | 
+find_seismograms
+</pre>
+<p>
+	Note, we added "-n IU -o none -r" to find_stations and piped the output to
+find_seismograms, which gets 'BH*' data for all
+these events at station MAJO.  That's it!  When the smoke clears, you
+will have a subdirectory called "seismograms" that in turn has one
+directory per event and SAC seismograms for that event at MAJO.  By adding "-n IU" to
+find_stations you tell SOD to restrict its station search to the IU network which greatly speeds up its work.
+The smoke takes less than 3 minutes to clear and in that time, you have
+directly accessed the IRIS DMC data archive and delivered seismograms
+to your machine, ready for analysis.  All from a single command line
+sequence!  Cool, eh?
+</p>
+</div>
+#defaultFooter()

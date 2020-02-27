@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+#set($currentPageTitle = "Documentation")
+#documentationPage()
+<head>
+#sod_head()
+</head>
+<body>
+#sod_header()
+#sod_menu()
+<div id="content">
+<div class="section">
+	#sod_section_title("SOD's Documentation")
+	<div class="section">
+		#sod_subsection_title("Install")
+		<p>The <a href="install.html">install</a> document explains how to get SOD installed and setup on your system</p>
+	</div>
+	<div class="section">
+		#sod_subsection_title("Demo")
+		<p>The <a href="demo.html">demo</a> document shows how to execute a simple SOD run and explains some of its 
+			output</p>
+	</div>
+	<div class="section">
+		#sod_subsection_title("Ingredients")
+		<p>The <a href="../ingredients/index.html">ingredients</a> list all the items that can appear in a SOD recipe.</p>
+	</div>
+	<div class="section">
+		#sod_subsection_title("Tutorials")
+		<p>The <a href="tutorials/index.html">tutorials</a> walk through several aspects of SOD's operation.
+This is a good place to start to get a better feel of the way to get SOD to do what you want.</p>
+	</div>
+	<div class="section">
+		#sod_subsection_title("Deeper Considerations")
+		<p>The <a href="realtime.html">realtime considerations</a> document explains what changes need to be made
+		to your recipe for it to be a standing order.</p>
+<p>
+	<a href="legacy.html">Legacy considerations</a> shows how SOD can execute arbitrary processes with the data it 
+	collects
+</p>
+<p>
+	<a href="restricted.html">Restricted Data</a> shows how SOD can access restricted data at the IRIS DMC.
+</p>
+<p>
+	An easy way to get at the information from your SOD run in the format you want is to use one of the printline processors.  Each
+	of the processors uses <a href="../ingredients/templates.html">Velocity templates</a> to determine what text to include and where to write 
+	files.  This means that you can output the specific information regarding an event, seismograms or channels that you're interested in.  
+	There are printline processors in the <a href="../ingredients/event/origin/printline.html">event</a>, 
+	<a href="../ingredients/network/channel/printline.html">network</a> and 
+	<a href="../ingredients/waveform/waveformProcess/printlineSeismogramProcess.html">waveform</a> arms.
+</p>
+<p>
+	If none of the existing ingredients meet your needs, it may be time to write your own <a href="scripting.html">inline script</a> or <a href="externals/index.html">external processor</a>.
+	These allow you to have your own code, either a script or in Java, called by SOD to do anything SOD itself can do and more.
+        It is probably simpler to start with a script.
+</p>
+	</div>
+	<div class="section">
+		#sod_subsection_title("Ingredients")
+		<p>The <a href="../ingredients/index.html">ingredient listing</a> contains all the tags that can go into
+			a SOD recipe.  It shows where each piece goes and what it means.  This is the place to look to find
+			if you want to see what a particular tag does, how tags should be laid out, and if you're experiencing
+			validation errors</p>
+	</div>
+</div>
+</div>
+#sod_footer()
+</body>
+</html>

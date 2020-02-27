@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+#set($currentPageTitle = "Realtime Run Considerations")
+#set($pathToTutorials = "tutorials/")
+#documentationPage()
+<head>
+#sod_head()
+</head>
+<body>
+#sod_header()
+#sod_menu()<div id="content">
+<div class="section">
+#sod_section_title("Realtime SOD")
+<p>
+Unlike a SOD run gathering historical data, a run that continues gathering data past its start date
+has a few extra things to take into consideration.  Mainly a real time run needs to ensure that 
+it gives the data enough time to trickle in from various stations after the event occurs before trying 
+to process the data.  If not, SOD will declare there is no data for a particular station for an event 
+even though there will be in a few hours.  Several ingredients in SOD work together to allow you to specify 
+how SOD should wait for data to arrive.
+        </p>
+<div class="section">
+#sod_subsection_title("Available Data Subsetters")
+<p>
+The first step in ensuring that the data you need for processing exists is to use SOD's available 
+data subsetters in the waveform arm.  The main subsetters are <code>&lt;someCoverage/&gt;</code>, 
+<code>&lt;fullCoverage&gt;</code>, and <code>&lt;noGaps&gt;</code>.  <code>&lt;someCoverage/&gt;</code>
+ensures that at least some data comes back.  Data that passes <code>&lt;fullCoverage&gt;</code> covers 
+everything specified by the original request.   <code>&lt;noGaps&gt;</code> may not cover all of the request time, 
+but it has no gaps internally.  
+        </p>
+<pre>$snippetizer.getElementResultWithoutIndentingFirstLine("tutorial/simpleWaveform.xml", "waveformArm")</pre>
+#linkToExample("tutorial/simpleWaveform.xml")
+<p>
+This waveform arm asks for sixty seconds before the p wave to 20 minutes after its
+arrival from IRIS's FDSN DataSelect web service.  It then prints out information about the waveforms it
+receives only after checking that the data it received at least covers part of the request.  
+If any of the available data subsetters reject some data, SOD periodically goes back to the
+server and checks for new data.  Through this mechanism it's possible to get an event 
+right as it pops into the event server and quickly grab data from stations that are reporting in real
+time and have data available for the new event.  Stations that take a little longer to
+get their data into the servers will get their data processed as the retries get back to it.  
+        </p>
+</div>
+<div class="section">
+#sod_subsection_title("Deciding when data will never arrive")
+<p>
+The retry system for available data subsetters is great for real time data,
+but at some point SOD needs to give up on a particular piece of data.  Not
+every station is going to have data for every event in a run.  To handle this contingency, 
+SOD uses the <code>&lt;seismogramLatency&gt;</code> in the properties section of its recipe.
+The value of this property determines how long SOD will check for available data for an
+event after it has occurred.  By default the value is 4 weeks.
+                        </p>
+<pre>$snippetizer.getElementResultWithoutIndentingFirstLine("realtime.xml", "properties")</pre>
+#linkToExample("realtime.xml")
+<p>
+The preceding snippet of a recipe defines a <code>&lt;seismogramLatency&gt;</code> of 5 days.
+So if an event occurs on Monday, SOD will immediately go out and try to get data for the event.  
+For stations without any data, SOD will keep trying periodically until Saturday.  At this point,
+the stations that didn't get any data will be moved from the retry bin into the reject bin.
+</p>
+</div>
+<div class="section">
+#sod_subsection_title("Salvaging the data that exists")
+<p>
+More complex situations can arise if you want full coverage if you can get it, but you'll take some coverage if 
+it's available.  Under the system as it is currently defined, it must be one or the other.  
+However, there are a couple other available data subsetters that can help in this circumstance.  
+First are the available data logicals.  Like most subsetters, available data has AND, OR, and NOT versions to allow 
+the combination of subsetter pieces.  The second piece that allows for greater specification of what coverage you 
+want is the <code>&lt;postEventWait&gt;</code> subsetter.  This is a subsetter that takes a time interval and when 
+that time interval (starting with the event) has passed, the subsetter will pass.  This is more easily explained 
+in an example:
+                        </p>
+
+<pre>$snippetizer.getElementResult("realtime.xml", "availableDataAND")</pre>
+#linkToExample("realtime.xml")
+<p>
+First, look at the section in the <code>&lt;availableDataOR&gt;</code>.  It specifies a 
+subsetter that will pass if there is full coverage <em>or</em> if 4 days have passed since the 
+event has occurred.  This is then combined with <code>&lt;someCoverage/&gt;</code> in the 
+<code>&lt;availableDataAND&gt;</code>.  This means that when the OR passes,
+there must also be some data.  Putting this all together means that SOD will wait 4 days for 
+full coverage of the data and after that point it'll be happy with just some.  
+Combined with the 5 day maximum retry wait from the previous section, SOD will give up completely 
+if no data shows up by the fifth day. This allows for a more fine-grained data request.
+</p>
+</div>
+</div>
+</div>
+#sod_footer()
+</body>
+</html>

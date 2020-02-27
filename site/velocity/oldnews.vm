@@ -1,0 +1,300 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	#set($currentPageTitle = "News")
+	<head>
+		#sod_head()
+	</head>
+	<body>
+		#sod_header()
+		#sod_menu()
+		<div id="content">
+			<div class="section">
+				#sod_section_title("Old News")
+				<div class="section">
+                #sod_subsection_title('22 September 2005')
+                <p>SOD 2.1.1 has been released.  2.1 would insist there was
+                an update to SOD even though nothing had been released.
+                If you're bothered by this message, go to our 
+                    <a href="download.html">
+                        download page
+                    </a> to get the new version.  Nothing besides the update
+                    checking has changed.
+                </p>
+            </div>
+                <div class="section">
+                                <div class="section">
+                #sod_subsection_title('21 November 2011')
+                                <p>A couple of more bugs and issues were found with the second release candidate and so we have put up a third <a href="/downloads/sod/3.0rc3">release candidate</a> for playing with. Please use it and give us feedback if you find any issues or have ideas for new features. 
+                                </p>
+                                </div>
+                                <div class="section">
+                #sod_subsection_title('1 November 2011')
+                                <p>A couple of bugs and issues were found with the first release candidate and so we have put up a second <a href="/downloads/sod/3.0rc2">release candidate</a> for playing with. Please use it and give us feedback if you find any issues or have ideas for new features. 
+                                </p>
+                                </div>
+                                <div class="section">
+                #sod_subsection_title('7 October 2011')
+                                <p>We have been hard at work on a new verson of SOD, 3.0, and have put up a <a href="/downloads/sod/3.0rc1">release candidate</a> for playing with. Please use it and give us feedback if you find any issues or have ideas for new features. The documentation for this version can be found <a href="/sod3beta/doc/ingredients/index.html">here</a>. Because this is a major version release, we have not maintained backwards compatibility for the recipe structure. So, you may find some previously valid recipes no longer work. Please email us if you have trouble migrating your recipes.
+                                </p>
+                                <h5>Changes and New Ingredients</h5>
+                                <ul>
+                                <li>New networkArm sources, including earthworm/winston and IRIS DMC ws/station stationXML </li>
+                                <li>New waveform sources, including earthworm/winston and IRIS DMC ws/dataselect</li>
+                                <li>New database system, based on hibernate</li>
+                                <li>Many internal reliability improvements</li>
+                                <li>Scriptable Ingredients</li>
+                                <li>SimilarEvent </li>
+                                <li>Site and Channel combined </li>
+                                <li>PeriodicFakeEventSource </li>
+                                <li>NowFakeEventSource </li>
+                                <li>RemoveStationDuplicate </li>
+                                <li>DelayedEventSource </li>
+                                <li>GapFill</li>
+                                <li>TryInOrderDataCenter</li>
+                                <li>ParticleMotionPlot</li>
+                                </ul>
+                                <p>...and many bug fixes and small improvements.</p>
+                                </div>
+				<div class="section">
+                #sod_subsection_title('18 May 2011')
+<p>We've released a maintaince version of SOD today, 2.2.3.  The only change is the addition of access to <a href="documentation/restricted.html">restricted data at the DMC.</a>
+				</p>
+                                </div>
+				<div class="section">
+                #sod_subsection_title('27 May 2007')
+				<p>We've released a maintaince version of SOD today, 2.2.2.  It adds a few new features and fixes several bugs.
+				</p>
+				<h5>New Ingredients</h5>
+				<ul>
+				<li><a href="ingredients/event/networkTimeRange/start.html">networkTimeRange</a>, 
+				<a href="ingredients/base/externalRef/originTimeRange/networkStartTime.html">networkStartTime</a> and
+				      <a href="ingredients/base/externalRef/originTimeRange/networkEndTime.html">networkEndTime</a> - 
+				      these can be used to specify that events must occur during the active time of channels retrieved by the networkArm.
+				      </li>
+				<li><a href="ingredients/base/include/area/pointDistance.html">pointDistance</a> - a point distance passed directly to the event server.</li>
+				</ul>
+				<h5>Bugs Fixed</h5>
+				<ul>
+				    <li>SOD will recover from the network being down at the start of a run instead of qutting immediately.</li>
+				    <li>Starting a SOD run with an existing database will print a warning rather than merrily tromping ahead.
+				    If you intend to do this, the warning can be turned off with --replace-recipe</li>
+				    <li><a href="ingredients/waveform/waveformProcess/collapseOverlaps.html">collapseOverlaps</a> no longer throws an Exception if a seismogram is completely contained in another</li>
+				    <li>Running SOD with GCJ now outputs a helpful message about how to upgrade to Sun's Java instead of throwing exceptions.</li>
+				</ul>
+				</div>
+				<div class="section">
+                #sod_subsection_title('14 February 2007')
+				<p>SOD 2.2.1 is out today.  This release contains the debut of the new SOD Command Line Tools(CLT).
+					They're a set of scripts that allow you to harness much of the power of SOD from the command line
+					without actually editing an XML recipe file. 
+					Check out the <a href="tools/index.html">Tools section</a> of this site for more information.
+				</p>
+				<p>
+					Beyond the addition of the tools, this release gives upgrades to several ingredients:
+				</p>
+					<ul>
+						<li>
+							<a href="ingredients/network/network/code.html">networkCode</a> - takes a two digit year in addition to a two character network code to fully specify temporary networks
+						</li>
+						<li>
+							<a href="ingredients/network/channel/channelCode.html">channelCode</a> - allows * to specify that any value is acceptable in a code</a>
+						</li>
+						<li>
+							<a href="ingredients/waveform/waveformProcess/sacWriter.html">sacWriter</a> - writes Intel byte order sac files if the &lt;littleEndian/&gt; tag is added</li>
+						</ul>
+						<p>
+					The SOD_HOME environmental variable required by SOD's scripts in previous versions has been removed.  Instead of using SOD_HOME to find the location of the SOD's library, the invoked script locates them relative to its location.  If SOD_HOME is still present, it will be ignored.
+					As always, many bugs have been fixed.  You can grab the new version on the <a href="download.html">download page</a>.
+				</p>
+				</div>
+				<div class="section">
+                #sod_subsection_title('27 November 2006')
+				<p>SOD 2.2.1beta1 is out today.  Many new features have been added:
+					<ul>
+						<li>Server errors are clearly deliniated from SOD errors.</li>
+						<li>Computationally intensive SOD processors will run in multiple threads simultaneously</li>
+						<li>Password protected DHI servers are accessible using darkMagic</li>
+						<li>New processors <a href="ingredients/waveform/waveformProcess/div.html">div</a>,
+							<a href="ingredients/waveform/waveformProcess/mul.html">mul</a>
+							<a href="ingredients/waveform/waveformProcess/decimate.html">decimate</a> and
+							<a href="ingredients/waveform/waveformProcess/invertFlippedChannels.html">invertFlippedChannel</a>.
+						</li>
+					</ul>
+					In addition, many bugs have been fixed.  You can grab the new version on the <a href="download.html">download page</a>.
+				</p>
+				</div>
+				<div class="section">
+                #sod_subsection_title('5 July 2006')
+				<p>After letting it age for a week, we're ready to release 2.2rc1 as SOD 2.2.  
+					No new bugs were discovered and no new features have been
+					added since 2.2rc1.  You can get this release on the <a href="download.html">download page</a>.
+				</p>
+				</div>
+				<div class="section">
+                #sod_subsection_title('27 June 2006')
+                <p>Based on feedback at the IRIS meeting, we've added a few new features and changed the structure of a
+					couple ingredient tags.  Since we've made some larger changes we've decided to skip the 2.1.2 release and
+					have released SOD 2.2rc1 today.
+					</p>
+					<p>It adds six new ingredients:
+						<ul>
+							<li><a href="ingredients/waveform/requestSubsetter/netDCRequest.html">netDCRequest</a> - generates NetDC files to be emailed</li>
+							<li><a href="ingredients/waveform/waveformProcess/differentiate.html">differentiate</a> - differentiates waveforms</li>
+							<li><a href="ingredients/waveform/waveformProcess/collapseOverlaps.html">collapseOverlaps</a> - merges overlapping seismograms(as returned by the POND)</li>
+							<li><a href="ingredients/waveform/availableData/percentCoverage.html">percentCoverage</a> - requires only a certain percent of the data request to be available</li>
+							<li><a href="ingredients/waveform/availableData/subrequestCoverage.html">subrequestCoverage</a> - checks that a particular subset of the original request is available</li>
+							<li><a href="ingredients/event/source/backwardsEventFinder.html">backwardsEventFinder</a> - processes events starting at the end time and going to the begin time</li>
+							</ul>
+							2.2rc1 also changes the file templating system in <a href="ingredients/waveform/requestSubsetter/breqFastRequest.html">breqFastRequest</a>, <a href="ingredients/network/channel/sacPoleZeroWriter.html">sacPoleZeroWriter</a> and
+							<a href="ingredients/network/channel/responseWriter.html">responseWriter</a> to be like those used in writing seismograms and printline processors.  
+							If you're using those ingredients with a customized
+							output location in an existing recipe look at the ingredient docs to see how to update them.</p>
+							<p>Finally we've documented the externals system in SOD that allows you to write custom Java code that 
+								hooks into your recipes.  Check out the <a href="documentation/externals/index.html">externals documentation</a>
+								if you need SOD to do something it doesn't do yet.
+							</p>
+							<p>Go to the 
+                    <a href="download.html">
+                        download page
+                    </a> to get the new version.  In the absence of any major new bugs, this will become SOD 2.2 in a week or so.
+                </p>
+				</div>
+				<div class="section">
+                #sod_subsection_title('2 June 2006')
+                <p>SOD 2.1.2rc2 is out.  It fixes several bugs and annoyances in the new sacWriter and mseedWriter from 2.1.2rc1
+					and that magnitudeType wasn't recognized by csvEventSource.  It also includes several documentation and tutorial
+					fixes.  Go to the 
+                    <a href="download.html">
+                        download page
+                    </a> to get the new version.
+                </p>
+				</div>
+				<div class="section">
+                #sod_subsection_title('10 May 2006')
+                <p>SOD 2.1.2rc1 has been released.  2.1.2rc1 adds the ability to subset by an area polygon, 
+					includes documentation on the CSV event system and
+					templating, and fixes a multitude of bugs and annoyances.  We're putting out this release 
+					candidate so that users that have reported issues can ensure they've been fixed.  However,
+					unless they uncover unforseen problems, this release candidate will become 2.1.2 within a couple
+					weeks. Go to the 
+                    <a href="download.html">
+                        download page
+                    </a> to get the new version.
+                </p>
+				</div>
+					#sod_subsection_title('9 August 2005')
+					<p>SOD 2.1 is out!  Since the 2.0 release, we've substantially improved
+						SOD's speed and reliability.  We've also added several new processors and 
+						subsetters.
+                        We recommend all users upgrade from 2.0 as several bugs have been fixed.  
+						Go to our 
+						<a href="download.html">
+							download page
+						</a> to get the new version.
+					</p>
+				</div>
+				<div class="section">
+					#sod_subsection_title('11 October 2004')
+					<p>SOD 2.0 is released! You can get it now from 
+						<a href="download.html">our
+							download page
+						</a>. Nothing has changed since RC1, so feel free to
+						continue using it.
+					</p>
+				</div>
+				<div class="section">
+					#sod_subsection_title('29 September 2004')
+							<p>We've just put the first release candidate for Sod 2.0 up on the site!
+								You can download it 
+								<a href="download.html">here
+								</a>. If we haven't
+								found any problems with it by this time next week, it'll become SOD 2.0.
+								In between this version and beta 8 we've added an ETOPO layer to the
+								maps, substantially fleshed out the strategy docs, fixed numerous bugs,
+								and added error handling for common misconfigurations. Enjoy!
+							</p>
+				</div>
+				<div class="section">
+					#sod_subsection_title('11 August 2004')
+							<p>The zip download from Sod 2.0 beta 8 had an error on extraction. The tar
+								was not affected and a new zip file is available in the download
+								section. 
+							</p>
+				</div>
+				<div class="section">
+					#sod_subsection_title('29 July 2004')
+							<p>Sod 2.0 beta 8 is out the door. You can download it 
+								<a href="download.html">here
+								</a>. We're getting pretty close to the actual
+								release of 2.0. This release adds connection stability enhancements for
+								the event and seismogram servers like the ones added for the network
+								server in the previous beta. It also marks the debut of the 
+								<a href="ingredients/">ingredient reference
+								</a>. There
+								will be some major tweaking to the format and content of these files,
+								but you can now use them as your one stop shop for information on the
+								contents of SOD strategy files.
+</p>
+</div>
+				<div class="section">
+					#sod_subsection_title('9 July 2004')
+					<p>We're releasing another beta along the road to Sod 2.0 today. It's
+						available 
+						<a href="download.html">here
+						</a>. This one adds a new
+						processor and a new subsetter in additional to the usual bug fixes.
+					</p>
+				</div>
+				<div class="section">
+					#sod_subsection_title('15 June 2004')
+					<p>SOD 2.0 Beta 6 has been released. It fixes some minor bugs in the scripts
+						on Solaris and editor behaviour. As always, it's available 
+						<a href="download.html">here.
+						</a>
+</p>
+</div>
+<div class="section">
+	#sod_subsection_title('10 June 2004')
+	<p>SOD 2.0 Beta 5 is now available. Get it 
+		<a href="download.html">here.
+		</a>
+	</p>
+</div>
+<div class="section">
+	#sod_subsection_title('09 June 2004')
+	<p>SOD 2.0 Beta 4 is now available. You can get it 
+		<a href="download.html">here.
+		</a>
+	</p>
+</div>
+<div class="section">
+	#sod_subsection_title('31 May 2004')
+	<p>The third beta of SOD 2.0. It's available 
+		<a href="download.html">here.
+		</a> To see a long running SOD run in action,
+		checkout the 
+		<a href="sodcam.html">live SOD-cam
+		</a>!
+					</p>
+				</div>
+				<div class="section">
+					#sod_subsection_title('24 May 2004')
+					<p>We've released a second beta of SOD 2.0. You can get it 
+						<a href="download.html">here.
+						</a> Tune in next week for another exciting
+						beta release!
+	</p>
+</div>
+<div class="section">
+	#sod_subsection_title('13 May 2004')
+	<p>The first beta of SOD 2.0 is available 
+		<a href="download.html">here.
+		</a>
+		More beta releases should follow in the coming weeks.
+	</p>
+</div>
+</div>
+</div>
+#sod_footer()
+</body>
+</html>

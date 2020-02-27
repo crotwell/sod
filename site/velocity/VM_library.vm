@@ -1,0 +1,341 @@
+#macro(htmlExample $location $linkText)
+	$htmlizer.transform($location)
+	<a href="$!{pathToTutorials}$htmlizer.getDestName($location)">$linkText</a>
+#end
+
+#macro(linkToExample $location)
+<p class="exampleLinks">
+	#htmlExample($location "HTML")
+	$htmlizer.copy($location)
+	<a href="$!{pathToTutorials}$htmlizer.getCopyName($location)">XML</a>
+</p>
+#end
+
+#macro(simpleExample $location)
+<pre>$snippetizer.getResult($location)</pre>
+#linkToExample($location)
+#end
+
+#macro(sodtar)
+<a href="http://www.seis.sc.edu/downloads/sod/#sodVersionNumber()/#sodVersion().tgz">tgz</a>
+#end
+
+#macro(sodzip)
+<a href="http://www.seis.sc.edu/downloads/sod/#sodVersionNumber()/#sodVersion().zip">zip</a>
+#end
+
+#macro(sodVersionNumber)3.2.9#end
+#macro(sodReleaseDate)26 June 2019#end
+
+#macro(sodVersion)sod-#sodVersionNumber()#end
+#macro(sod_header)
+<div id="header">
+	<a href="http://www.seis.sc.edu/SOD/">
+		<img class="left" src="$!{relativePathToSodDir}images/sod_logo.gif">
+	</a>
+	<a href="http://www.seis.sc.edu/">
+		<img class="right" src="$!{relativePathToSodDir}images/seislogo.gif">
+	</a>
+</div>
+#end
+
+#macro(documentationPage)
+	#set($inDocumentation = "true")
+	#set($relativePathToSodDir = "../")
+#end
+
+#macro(tutorialPage)
+	#documentationPage()
+	#set($inTutorials = "true")
+	#set($relativePathToSodDir = "../../")
+	#set($relativePathToDocDir = "../")
+#end
+
+#macro(externalsPage)
+	#documentationPage()
+	#set($inExternals = "true")
+	#set($relativePathToSodDir = "../../")
+	#set($relativePathToDocDir = "../")
+#end
+
+#macro(toolsPage)
+	#set($inTools = "true")
+	#set($relativePathToSodDir = "../")
+	#set($relativePathToDocDir = "../documentation/")
+#end
+
+#macro(ingredientPage)
+	#set($inIngredients = "true")
+	#set($relativePathToSodDir = "../")
+	#set($relativePathToIngredientDir = "")
+#end
+
+#macro(eventArmPage)
+	#ingredientPage()
+	#set($inEventArm = "true")
+#end
+
+#macro(networkArmPage)
+	#ingredientPage()
+	#set($inNetworkArm = "true")
+#end
+
+#macro(waveformArmPage)
+	#ingredientPage()
+	#set($inWaveformArm = "true")
+#end
+
+#macro(waveformVectorArmPage)
+	#ingredientPage()
+	#set($inWaveformVectorArm = "true")
+#end
+
+#macro(sod_footer)
+<div id="footer">
+	<div id="contact">
+        <a #EnkodeAttributes("seis.sc.edu" "sod")>
+			<img src="$!{relativePathToSodDir}images/contact.png"/>
+			Contact Us
+		</a>
+	</div>
+<img class="right" src="$!{relativePathToSodDir}images/dhi_logo.png"/>
+<p>SOD is made possible by the <a href="http://www.geol.sc.edu"> Department of Geological Sciences</a> at the <a href="http://www.sc.edu"><br />University of South Carolina</a> and the <a href="http://www.iris.edu">IRIS Consortium</a>.
+                   </p>
+
+</div>
+
+#end
+
+#macro(sod_section_title $sectionTitle)
+<h3>
+	<a name="$sectionTitle">$sectionTitle</a>
+</h3>
+#end
+
+#macro(sod_subsection_title $sectionTitle)
+<h4>
+	<a name="$sectionTitle">$sectionTitle</a>
+</h4>
+#end
+
+#macro(sod_gettingstarted_navigation $nextName $nextUrl)
+				<p id="get_start_nav">
+				<a href="$nextUrl"><img title="Go to the next step in getting started" alt="Next" src="$!{relativePathToSodDir}images/next.png">Next: $nextName</a>
+				</p>
+#end
+
+#macro(sod_head)
+<title>SOD - $currentPageTitle</title>
+<link type="text/css" rel="stylesheet" media="screen" href="$!{relativePathToSodDir}styles/main.css">
+<link type="text/css" rel="stylesheet" media="print" href="$!{relativePathToSodDir}styles/print.css">
+<script type="text/javascript">
+     function decode(domain, user){
+       return("mail"+"to:"+user.replace("*rem*","")+"@"+domain);
+     }
+</script>
+#end
+
+#macro(toggle_menu_item $page $title $toggleCondition)
+	<a href="$page">
+		<li#if($toggleCondition == "true") class="open"#else class="closed"#end>
+			$title
+    	</li>
+	</a>
+#end
+
+#macro(sod_menu_item $page $title)
+	<a href="$page">
+		<li#if($currentPageTitle == $title) id="selected"#end>
+			$title
+    	</li>
+	</a>
+#end
+
+#macro(eventArm_menu)
+#toggle_menu_item("$!{relativePathToIngredientDir}eventArm.html" "eventArm" $inEventArm)
+	   #if($inEventArm == "true")
+            <ul>
+                #sod_menu_item("$!{relativePathToIngredientDir}eventSource.html" "eventSource")
+                #sod_menu_item("$!{relativePathToIngredientDir}origin.html" "origin")
+            </ul>
+	  #end
+#end
+
+
+#macro(networkArm_menu)
+#toggle_menu_item("$!{relativePathToIngredientDir}networkArm.html" "networkArm" $inNetworkArm)
+	   #if($inNetworkArm == "true")
+            <ul>
+                #sod_menu_item("$!{relativePathToIngredientDir}networkSource.html" "networkSource")
+                #sod_menu_item("$!{relativePathToIngredientDir}network.html" "network")
+                #sod_menu_item("$!{relativePathToIngredientDir}station.html" "station")
+                #sod_menu_item("$!{relativePathToIngredientDir}channel.html" "channel")
+            </ul>
+	  #end
+#end
+
+
+#macro(waveformArm_menu)
+#toggle_menu_item("$!{relativePathToIngredientDir}waveformArm.html" "waveformArm" $inWaveformArm)
+	   #if($inWaveformArm == "true")
+            <ul> #sod_menu_item("$!{relativePathToIngredientDir}eventStation.html" "eventStation")
+                #sod_menu_item("$!{relativePathToIngredientDir}eventChannel.html" "eventChannel")
+                #sod_menu_item("$!{relativePathToIngredientDir}requestGenerator.html" "requestGenerator")
+                #sod_menu_item("$!{relativePathToIngredientDir}request.html" "request")
+                #sod_menu_item("$!{relativePathToIngredientDir}seismogramSource.html" "seismogramSource")
+                #sod_menu_item("$!{relativePathToIngredientDir}availableData.html" "availableData")
+                #sod_menu_item("$!{relativePathToIngredientDir}seismogramProcess.html" "seismogramProcess")
+            </ul>
+	  #end
+#end
+
+
+#macro(waveformVectorArm_menu)
+#toggle_menu_item("$!{relativePathToIngredientDir}waveformVectorArm.html" "waveform VectorArm" $inWaveformVectorArm)
+	   #if($inWaveformVectorArm == "true")
+            <ul>
+                #sod_menu_item("$!{relativePathToIngredientDir}eventStation.html" "eventStation")
+                #sod_menu_item("$!{relativePathToIngredientDir}eventVector.html" "eventVector")
+                #sod_menu_item("$!{relativePathToIngredientDir}requestGenerator.html" "requestGenerator")
+                #sod_menu_item("$!{relativePathToIngredientDir}vectorRequest.html" "vectorRequest")
+                #sod_menu_item("$!{relativePathToIngredientDir}seismogramSource.html" "seismogramSource")
+                #sod_menu_item("$!{relativePathToIngredientDir}vectorAvailableData.html" "vectorAvailableData")
+                #sod_menu_item("$!{relativePathToIngredientDir}waveformVectorProcess.html" "waveform VectorProcess")
+            </ul>
+	  #end
+#end
+
+#macro(ingredient_menu)
+#toggle_menu_item("$!{relativePathToSodDir}ingredients/index.html" "Ingredient Listing" $inIngredients)
+	#if($inIngredients == "true")
+		<ul id="ingred">
+            #sod_menu_item("$!{relativePathToIngredientDir}properties.html" "properties")
+#eventArm_menu()
+#networkArm_menu()
+#waveformArm_menu()
+#waveformVectorArm_menu()
+	</ul>
+	#end
+#end
+
+
+#macro(tutorial_menu)
+#toggle_menu_item("$!{relativePathToDocDir}tutorials/index.html" "Tutorials" $inTutorials)
+	#if($inTutorials == "true")
+		<ul>
+#sod_menu_item("networkTutorial.html" "Network Tutorial")
+#sod_menu_item("eventTutorial.html" "Event Tutorial")
+#sod_menu_item("waveformTutorial.html" "Waveform Tutorial")
+	</ul>
+	#end
+#end
+
+#macro(external_menu)
+#toggle_menu_item("$!{relativePathToDocDir}externals/index.html" "Externals" $inExternals)
+	#if($inExternals == "true")
+		<ul>
+#sod_menu_item("$!{relativePathToTutorialDir}tutorial.html" "Externals Tutorial")
+#sod_menu_item("$!{relativePathToTutorialDir}types.html" "Types of Externals")
+	</ul>
+	#end
+#end
+
+#macro(tools_menu)
+#toggle_menu_item("$!{relativePathToSodDir}tools/index.html" "Tools" $inTools)
+	#if($inTools == "true")
+		<ul>
+#sod_menu_item("usage.html" "Usage Examples")
+#sod_menu_item("find_events.html" "find_events")
+#sod_menu_item("find_seismograms.html" "find_seismograms")
+#sod_menu_item("find_stations.html" "find_stations")
+#sod_menu_item("find_channels.html" "find_channels")
+#sod_menu_item("find_responses.html" "find_responses")
+	</ul>
+	#end
+#end
+
+#macro(doc_menu)
+#toggle_menu_item("$!{relativePathToSodDir}documentation/index.html" "Documentation" $inDocumentation)
+	#if($inDocumentation == "true")
+		<ul>
+#sod_menu_item("$!{relativePathToDocDir}install.html" "Install")
+#sod_menu_item("$!{relativePathToDocDir}demo.html" "Demo")
+#tutorial_menu()
+#external_menu()
+#sod_menu_item("$!{relativePathToDocDir}scripting.html" "Inline Script Subsetters")
+#sod_menu_item("$!{relativePathToDocDir}restricted.html" "Restricted Data with SOD")
+#sod_menu_item("$!{relativePathToDocDir}realtime.html" "Realtime Run Considerations")
+#sod_menu_item("$!{relativePathToDocDir}legacy.html" "Legacy Code Considerations")
+#sod_menu_item("$!{relativePathToDocDir}javadoc/index.html" "Javadocs")
+	</ul>
+	#end
+#end
+
+#macro(sod_menu)
+<div id="menu">
+	<ul>
+#sod_menu_item("$!{relativePathToSodDir}index.html" "Home")
+#sod_menu_item("$!{relativePathToSodDir}gettingstarted.html" "Getting Started")
+#sod_menu_item("$!{relativePathToSodDir}download.html" "Download")
+#sod_menu_item("http://www.seis.sc.edu/wiki/doku.php?id=sod:start" "Wiki")
+#doc_menu()
+#tools_menu()
+#ingredient_menu()
+<li>
+<!-- Google CSE Search Box Begins -->
+<div>
+<script>
+  (function() {
+    var cx = '011831161591731826207:vosgevg88qu';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+<gcse:search></gcse:search>
+</div>
+<!-- Google CSE Search Box Ends -->
+</li>
+
+	</ul>
+</div>
+#end
+
+#macro(decodeJS $server $name)javascript:this.href=decode('$server', '*rem*${name}')#end
+
+#macro(EnkodeAttributes $server $username)
+	href="http://www.seis.sc.edu/mail.html"
+   onmouseover="#decodeJS($server $username )"
+   onfocus="#decodeJS($server $username)"
+#end
+
+#macro(EnkodeEmail $username $linkText)
+#EnkodeEmailToServer('seis.sc.edu' $username  $linkText)
+#end
+#macro(EnkodeEmailToServer $server $username  $linkText)
+<a title="$linkText" #EnkodeAttributes($server $username)>$linkText</a>
+#end
+
+#macro(defaultHeader $pageTitle)
+#set($currentPageTitle = $pageTitle)
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		#sod_head()
+	</head>
+	<body>
+		#sod_header()
+		#sod_menu()
+		<div id="content">
+#end
+
+#macro(defaultFooter)
+		</div>
+		#sod_footer()
+	</body>
+</html>
+#end

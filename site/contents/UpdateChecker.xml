@@ -1,0 +1,163 @@
+<UpdateChecker>
+    <Update Version="3.2.9" Date="26-06-2016">
+        <Features/>
+        <Reason>Fix issue with restricted data.</Reason>
+        <UpdateAction Description="Remote Installer">
+        <UpdateLocation>http://www.seis.sc.edu/SOD</UpdateLocation>
+        </UpdateAction>
+    </Update>
+    <Update Version="3.2.8" Date="11-30-2016">
+        <Features/>
+        <Reason>Fix issue with instrument response download when channel is active.</Reason>
+        <UpdateAction Description="Remote Installer">
+        <UpdateLocation>http://www.seis.sc.edu/SOD</UpdateLocation>
+        </UpdateAction>
+    </Update>
+    <Update Version="3.2.7" Date="7-6-2016">
+        <Features/>
+        <Reason>Numerous small bug fixes and stability improments.</Reason>
+        <UpdateAction Description="Remote Installer">
+        <UpdateLocation>http://www.seis.sc.edu/SOD</UpdateLocation>
+        </UpdateAction>
+    </Update>
+    <Update Version="3.2.6" Date="5-22-2015">
+        <Features/>
+        <Reason> Fixed an issue with SOD and instrument responses relating to the loc id change.</Reason>
+        <UpdateAction Description="Remote Installer">
+        <UpdateLocation>http://www.seis.sc.edu/SOD</UpdateLocation>
+        </UpdateAction>
+    </Update>
+    <Update Version="3.2.5" Date="3-25-2015">
+        <Features/>
+        <Reason>Bug fixes related to null locids in FDSN web services, USGS event web service is default, batching for speed.</Reason>
+        <UpdateAction Description="Remote Installer">
+        <UpdateLocation>http://www.seis.sc.edu/SOD</UpdateLocation>
+        </UpdateAction>
+    </Update>
+    <Update Version="3.2.4" Date="2-11-2015">
+        <Features/>
+        <Reason>Mostly minor cleanup, fixed an issue with SOD quiting prematurely when only one network.</Reason>
+        <UpdateAction Description="Remote Installer">
+        <UpdateLocation>http://www.seis.sc.edu/SOD</UpdateLocation>
+        </UpdateAction>
+    </Update>
+    <Update Version="3.2.3" Date="10-2-2013">
+        <Features/>
+        <Reason>Bug fixes related to FDSN web services.</Reason>
+        <UpdateAction Description="Remote Installer">
+        <UpdateLocation>http://www.seis.sc.edu/SOD</UpdateLocation>
+        </UpdateAction>
+    </Update>
+    <Update Version="3.2.2" Date="7-25-2013">
+        <Features/>
+        <Reason>FDSN web service response bug.</Reason>
+        <UpdateAction Description="Remote Installer">
+        <UpdateLocation>http://www.seis.sc.edu/SOD</UpdateLocation>
+        </UpdateAction>
+    </Update>
+    <Update Version="3.2.1" Date="7-11-2013">
+        <Features/>
+        <Reason>Bug fixes.</Reason>
+        <UpdateAction Description="Remote Installer">
+        <UpdateLocation>http://www.seis.sc.edu/SOD</UpdateLocation>
+        </UpdateAction>
+    </Update>
+    <Update Version="3.2.0" Date="6-21-2013">
+        <Features/>
+        <Reason>FDSN web service support.</Reason>
+        <UpdateAction Description="Remote Installer">
+        <UpdateLocation>http://www.seis.sc.edu/SOD</UpdateLocation>
+        </UpdateAction>
+    </Update>
+    <Update Version="3.1.0" Date="6-13-2012">
+        <Features/>
+        <Reason>Major revision.</Reason>
+        <UpdateAction Description="Remote Installer">
+        <UpdateLocation>http://www.seis.sc.edu/SOD</UpdateLocation>
+        </UpdateAction>
+    </Update>
+    <Update Version="3.0.0" Date="1-12-2012">
+  <Features/>
+  <Reason>Major revision.</Reason>
+  <UpdateAction Description="Remote Installer">
+<UpdateLocation>http://www.seis.sc.edu/SOD</UpdateLocation>
+</UpdateAction>
+</Update>
+    <Update Version="2.2.2" Date="5-27-2007">
+  <Features/>
+  <Reason>SOD Command Line Tools, bug fixes.</Reason>
+  <UpdateAction Description="Remote Installer">
+<UpdateLocation>http://www.seis.sc.edu/SOD</UpdateLocation>
+</UpdateAction>
+</Update>
+    <Update Version="2.1.1" Date="9-22-2005">
+  <Features/>
+  <Reason>Fixed version check.</Reason>
+  <UpdateAction Description="Remote Installer">
+<UpdateLocation>http://www.seis.sc.edu/SOD</UpdateLocation>
+</UpdateAction>
+</Update>
+
+<Update Version="2.1" Date="8-9-2005">
+      <Features/>
+      <Reason>Updated for new features from REV</Reason>
+  <UpdateAction Description="Remote Installer">
+    <UpdateLocation>http://www.seis.sc.edu/SOD</UpdateLocation>
+  </UpdateAction>
+</Update>
+
+<Update Version="2.0beta8" Date="7-29-2004">
+    <Features>
+    *  Safeguards for minor hiccups from the event server
+    * Safeguards for minor hiccups from the seismogram server
+    * New strategy file reference
+    </Features>
+    <Reason>final beta before release</Reason>
+    <UpdateAction Description="Remote Installer">
+      <UpdateLocation>http://www.seis.sc.edu/SOD</UpdateLocation>
+    </UpdateAction>
+  </Update>
+
+  <Update Version="2.0beta7" Date="7-9-2004">
+    <Features>
+adds a new processor and a new subsetter in additional to the usual bug fixes
+    </Features>
+    <Reason>New features, bugs fixed</Reason>
+    <UpdateAction Description="Remote Installer">
+      <UpdateLocation>http://www.seis.sc.edu/SOD</UpdateLocation>
+    </UpdateAction>
+  </Update>
+  <Update Version="2.0beta3" Date="5-31-2004">
+    <Features>    *  Vastly improved DSML file output. 10 times less memory and twice as fast!
+    * New postEventWait event subsetter. Check out these realtime considerations to see how it works.
+    * SOD will no longer retry event channel pairs until the end of time
+    * SOD will warn you if you're running a new version of SOD on an old database, and if you've changed config files between runs on a single database
+    * new removeEventDuplicate subsetter that will keep SOD from processing duplicate event entries.
+    * -demo flag starts SOD on tutorial.xml
+    </Features>
+    <Reason>New features, bugs fixed</Reason>
+    <UpdateAction Description="Remote Installer">
+      <UpdateLocation>http://www.seis.sc.edu/SOD</UpdateLocation>
+    </UpdateAction>
+  </Update>
+  <Update Version="2.0beta2" Date="5-24-2004">
+    <Features>This is the beta of the big jump to version 2.0</Features>
+    <Reason>
+    * HTML version of the config file is created by the status system
+    * HTML view of waveforms sorted by stations
+    * All columns in the tables can be sorted
+    * Can now query the DMC's archive
+</Reason>
+    <UpdateAction Description="Remote Installer">
+      <UpdateLocation>http://www.seis.sc.edu/SOD</UpdateLocation>
+    </UpdateAction>
+  </Update>
+  <Update Version="2.0beta1" Date="5-10-2003">
+    <Features>This is the beta of the big jump to version 2.0</Features>
+    <Reason>Too many to count</Reason>
+    <UpdateAction Description="Remote Installer">
+      <UpdateLocation>http://www.seis.sc.edu/SOD</UpdateLocation>
+    </UpdateAction>
+  </Update>
+
+</UpdateChecker>

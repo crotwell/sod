@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	#set($currentPageTitle = "Event Tutorial")
+	#tutorialPage()
+	#set($imageDir = "$!{relativePathToSodDir}images/documentation/tutorials/")
+	<head>
+		#sod_head()
+	</head>
+	<body>
+		#sod_header()
+		#sod_menu()
+		<div id="content">
+			<div class="section">
+				#sod_section_title("Event arm's structure")
+				<img class="right" src="$!{imageDir}event_arm.png"/>
+				<p class="reallyshort">The event arm is simpler than the network arm because it works on a single type of item, 
+					not three.  Its subsetter is one that checks on the qualities of earthquakes.
+                
+</p>
+</div>
+			<div class="section">
+				#sod_section_title("Simple event arm")
+				#simpleExample("tutorial/simpleEvent.xml")
+				<p>This recipe contains a simple event arm.  It gets all of the earthquakes from the WHDF
+					catalog for 10 days in January of 2003 from IRIS's FDSN event web service.  The <code>&lt;fdsnEvent></code>
+					used to specify a server here is much more complex than the <code>&lt;fdsnStation></code> used 
+					to specify the server to the networkArm.  This is because you often need a much more
+					fine-grained query to the event server than to the network server.   It's best to describe
+					your desired data precisely in the <code>fdsnEvent</code> tag, and therefore 
+					in the query to the server.  In
+					all of the arms of SOD, throwing away data you don't want as early as possible saves time.  
+</p>
+</div>
+			<div class="section">
+				#sod_section_title("Recipe structure")
+                <p>In addition to the restrictions of XML, the order and content of elements in a recipe 
+					are further restricted to a subset SOD understands.  When SOD reads a recipe, it 
+					checks that its structure is "valid".  If a recipe 
+					doesn't conform, you'll get an error message about an "invalid" recipe.  The
+					<a href="${relativePathToSodDir}ingredients/index.html">ingredient listing</a>
+					is the definitive source for information about the structure of a recipe, but there are a 
+					few general rules about recipe structure that will make comprehending them easier.
+				</p>
+				#sod_subsection_title("General recipe layout")
+				<pre>$snippetizer.getResult("tutorial/genericLayout.xml")</pre>
+				<div class="section">
+					<p>SOD always has <code>sod</code> as its root element. Each of the arms are 
+						children of this root element.  The <code>eventArm</code> always goes first, then
+						the <code>networkArm</code>, and then the <code>waveformArm</code>.  If a recipe has
+						a <code>waveformArm</code>, it must contain both an <code>eventArm</code> and a 
+						<code>networkArm</code>.  If there isn't a <code>waveformArm</code>, a recipe can 
+						have just an <code>eventArm</code>, a <code>networkArm</code>,
+						or both.
+						</p>
+				</div>
+				#sod_subsection_title("Arm layout")
+				<div class="section">
+					<p>The arms apply their elements in the order in which they appear.  
+						For the <code>eventArm</code>, the <code>fdsnEvent</code> element
+					comes first because
+					the first action is to get data.  As you'll see in the next tutorial, 
+					some subsetting can be done in the <code>waveformArm</code> before talking to the server, 
+					therefore the server element comes after some subsetting elements.</p>
+				<p>
+					The steps in the arms are broken up based on the amount of information known at each step.
+					As the arm progresses, the information cumulatively builds to the final item in the arm.
+					The <code>networkArm</code> progresses from having only information about a network at the 
+					<code>networkSubsetter</code>, adds 
+					stations at <code>stationSubsetter</code>, and adds channels
+					at the <code>channelSubsetter</code>. 
+					Therefore, you can embed 
+					a network subsetter	in a channel subsetter since a channel knows its network.  In general, it's
+					best to put as much restrictive subsetting as possible early in an arm.  This 
+					allows SOD to retrieve only things that match earlier subsetters.  If you 
+					restrict the network to II in a channel subsetter like #htmlExample("tutorial/badNetwork.xml" "here"),
+					SOD retrieves all of the channels from the
+					<code>fdsnStation</code> and checks if they are from network II.  If you restrict the 
+					network to II in a networkSubsetter like #htmlExample("tutorial/network.xml" "here"), SOD retrieves only network II channels.
+					These recipes retrieve identical sets of channels, but have a 
+					factor of 100 difference in the amount of work SOD
+					does in the network arm.
+				</p>
+				</div>
+</div>
+			<div class="section">
+				#sod_section_title("Boolean logic")
+				<img class="right" src="$!{imageDir}boolean_logic.png"/>
+				<p class="short">There are some cases where the more advanced event server query can't precisely specify the data you
+					want.  This is when the true power of SOD's subsetters come into play.  They can be combined 
+					through the ANDs and ORs of boolean logic to make a much more precise description of data than any 
+					of them could alone.
+				</p>
+				<pre>$booleanLogic.getResult("tutorial/event.xml")</pre>
+				#linkToExample("tutorial/event.xml")
+				<p>
+					These origin subsetters combine to accept earthquakes that fall under any of the colored areas
+					of the graph above.  
+					The <code>&lt;originAND></code> subsetter passes an earthquake if <b>all</b> subsetters inside 
+					pass for that earthquake.  The <code>&lt;originOR></code> tag passes if <b>any</b> of the subsetters
+					inside pass.  This <code>originAND</code> passes an earthquake with a magnitude of 5.1 and a depth of
+					at least 100 kilometers.  The <code>originAND</code> is inside an <code>originOR</code> with a 
+					<code>magnitudeRange</code> that requires magnitude 6 or above.  
+					This means any earthquake 
+					that matches the <code>originAND</code> or the <code>magnitudeRange</code> passes.  All of the
+					subsetters in SOD support combination with ANDs and ORs.
+				</p>
+				<p>To see how the boolean subsetters work, you can run this recipe.
+					Create a directory
+					<code>booleanLogic</code>, cd into it, and on Unix run 
+					</p>
+					<pre>sod -f &lt;path to your sod directory&gt;/recipes/tutorial/booleanPrinterEvent.xml</pre>
+					<p>
+					or on Windows run </p>
+					<pre>sod.bat -f &lt;path to your sod directory&gt;\recipes\tutorial\booleanPrinterEvent.xml</pre>
+					<p>
+						The recipe has two printline event processors in it.  One is immediately after the <code>fdsnEvent</code>
+						and one is immediately after the <code>originOR</code>.  All of the events retrieved by the server
+						are printed out with "From server:" before their description.  Events that then pass the boolean 
+						subsetter are printed with a "Passed boolean subsetter" before them.
+					</p>
+</div>
+			<div class="section">
+				#sod_section_title("More boolean logic")
+				<img src="$!{imageDir}bad_example_boolean.png"/>
+				<p>The boolean logic in SOD doesn't map directly to the way we speak.  If read aloud,
+					this example says "I want networks II and IU."  Instead, this is 
+					interpreted as "I want networks with <em>code</em> II and <em>code</em> IU," which is impossible. </p>
+				<img src="$!{imageDir}good_example_boolean.png"/>
+					<p>Instead, you should use constructions like the above, which says, "I want networks with code II or
+						code IU."</p>
+</div>	
+
+        #sod_gettingstarted_navigation("Waveform Tutorial" "waveformTutorial.html")
+		</div>
+		#sod_footer()
+	</body>
+</html>

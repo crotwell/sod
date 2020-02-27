@@ -1,0 +1,29 @@
+#toolsPage()
+#defaultHeader("Tools")
+<div class="section">
+    #sod_section_title("Command Line Tools")
+	<p>
+The SOD Command Line Toolkit (CLT) is the missing link for busy
+seismologists who need quick answers from seismic data
+centers.  The CLT replaces awkward web interfaces and/or complicated
+formatted request systems with simple utilities driven by Unix/GMT
+style option flags.  CLT utilities can be used on their own or piped
+together for more advanced queries.  Output can be in the form of GMT-
+ready files of station or event info, seismograms in SAC or MSEED,
+and instrument responses in polezero or resp formats.  In addition,
+you can save your specific queries in SOD recipe files for future reuse or
+inclusion in direct SOD data requests.
+	</p>
+	<p class="reallyshort">
+		The tools cover much of SOD's functionality: finding earthquakes, seismic networks, stations and seismograms.  To see
+		examples of the tools in action performing these tasks, check out the <a href="usage.html">usage document</a>.  For a 
+		detailed listing of each of the tools and its option, check out its individual man page: 
+        <a href="find_channels.html">find_channels</a>,
+        <a href="find_events.html">find_events</a>,
+		<a href="find_responses.html">find_responses</a>,
+		<a href="find_seismograms.html">find_seismograms</a> or
+		<a href="find_stations.html">find_stations</a>,
+		.
+	</p>
+</div>
+#defaultFooter()
