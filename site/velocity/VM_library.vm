@@ -277,7 +277,7 @@
 #sod_menu_item("$!{relativePathToSodDir}index.html" "Home")
 #sod_menu_item("$!{relativePathToSodDir}gettingstarted.html" "Getting Started")
 #sod_menu_item("$!{relativePathToSodDir}download.html" "Download")
-#sod_menu_item("http://www.seis.sc.edu/wiki/doku.php?id=sod:start" "Wiki")
+#sod_menu_item("https://github.com/crotwell/sod/wiki" "Wiki")
 #doc_menu()
 #tools_menu()
 #ingredient_menu()
