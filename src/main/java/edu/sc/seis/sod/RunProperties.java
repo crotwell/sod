@@ -1,6 +1,6 @@
 /**
  * RunProperties.java
- * 
+ *
  * @author Charles Groves
  */
 package edu.sc.seis.sod;
@@ -96,13 +96,25 @@ public class RunProperties {
 					.hasElement(el, "allowNetworksOutsideEventRequestTime")) {
 				allowDeadNets = true;
 			}
-            if (DOMHelper
-                    .hasElement(el, "skipAvailableData")) {
-                skipAvailableData = DOMHelper.extractBoolean(el, "skipAvailableData");
-            }
+      if (DOMHelper
+              .hasElement(el, "skipAvailableData")) {
+          skipAvailableData = DOMHelper.extractBoolean(el, "skipAvailableData");
+      }
 			Element hibernateExtraConfig = SodUtil.getElement(el, "hibernateConfig");
 			if (hibernateExtraConfig != null) {
 			    hibernateConfig.add(SodUtil.getText(hibernateExtraConfig));
+			}
+			Element proxyHostEl = SodUtil.getElement(el, "proxyHost");
+			if (proxyHostEl != null) {
+				proxyHost = SodUtil.getText(proxyHostEl);
+			}
+			Element proxyPortEl = SodUtil.getElement(el, "proxyPort");
+			if (proxyPortEl != null) {
+				proxyPort = SodUtil.loadInt(el, "proxyPort", -1);
+			}
+			Element proxySchemeEl = SodUtil.getElement(el, "proxyScheme");
+			if (proxySchemeEl != null) {
+				proxyScheme = SodUtil.getText(proxySchemeEl);
 			}
 		}
 	}
@@ -142,7 +154,7 @@ public class RunProperties {
 	public int getNumWaveformWorkerThreads() {
 		return numWorkers;
 	}
-	
+
     public void setNumWaveformWorkerThreads(int numWorkers) {
         this.numWorkers = numWorkers;
     }
@@ -186,7 +198,7 @@ public class RunProperties {
 	public boolean allowDeadNets() {
 		return allowDeadNets;
 	}
-	
+
     public boolean isSkipAvailableData() {
         return skipAvailableData;
     }
@@ -197,8 +209,8 @@ public class RunProperties {
 
     public List getHibernateConfig() {
 	    return hibernateConfig;
-	}
-	
+		}
+
     public String getChannelGroupingRules() {
         return channelGroupingRules;
     }
@@ -217,6 +229,36 @@ public class RunProperties {
 
     public void setStatusUnsecure(boolean b) {
         statusUnsecure = b;
+    }
+    
+    public void setProxyHost(String proxyHost) {
+        this.proxyHost = proxyHost;
+    }
+
+    public String getProxyHost() {
+        return proxyHost;
+    }
+
+    public void setProxyPort(int proxyPort) {
+        this.proxyPort = proxyPort;
+    }
+
+    public int getProxyPort() {
+        if (proxyPort <= 0) {
+          return 80;
+        }
+        return proxyPort;
+    }
+
+    public void setProxyScheme(String proxyScheme) {
+        this.proxyScheme = proxyScheme;
+    }
+
+    public String getProxyScheme() {
+        if (proxyScheme == null) {
+          return "http";
+        }
+        return proxyScheme;
     }
 
     public static final Duration NO_TIME = Duration.ofNanos(0);
@@ -244,13 +286,13 @@ public class RunProperties {
 	private String statusDir = "status";
 
 	public static final int DEFAULT_NUM_WORKER_THREADS = 1;
-	
+
 	private int numWorkers = DEFAULT_NUM_WORKER_THREADS;
 
 	private boolean reopenEvents = false;
 
     private boolean removeDatabase = false;
-    
+
     private boolean warnIfDatabaseExists = true;
 
 	private boolean statusPages = false;
@@ -268,9 +310,9 @@ public class RunProperties {
 	private boolean loserEventCleaner = false;
 
 	private boolean allowDeadNets;
-	
+
 	private String channelGroupingRules = null;
-	
+
 	private boolean skipAvailableData = true;
 	
 	private boolean statusWebKeepAlive = false;
@@ -278,5 +320,11 @@ public class RunProperties {
 	private boolean statusUnsecure = false;
 	
 	private List hibernateConfig = new ArrayList();
+
+	private String proxyHost = null;
+
+	private int proxyPort = -1;
+
+	private String proxyScheme = null;
 
 }

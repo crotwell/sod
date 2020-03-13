@@ -33,6 +33,7 @@ import edu.sc.seis.seisFile.fdsnws.quakeml.Origin;
 import edu.sc.seis.seisFile.fdsnws.quakeml.Quakeml;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventArm;
+import edu.sc.seis.sod.RunProperties;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.VersionHistory;
@@ -285,7 +286,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                         // also make the increaseThreashold smaller so we are
                         // not so aggressive
                         // about expanding the time window
-                        // but only do this if the query is for more than one day 
+                        // but only do this if the query is for more than one day
                         // to avoid many tiny requests
                         if (getIncrement().toNanos() > MIN_INCREMENT.toNanos()) {
                             decreaseQueryTimeWidth();
@@ -315,7 +316,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                         // also make the increaseThreashold smaller so we are
                         // not so aggressive
                         // about expanding the time window
-                        // but only do this if the query is for more than one day 
+                        // but only do this if the query is for more than one day
                         // to avoid many tiny requests
                         if (getIncrement().toNanos() > MIN_INCREMENT.toNanos()) {
                         decreaseQueryTimeWidth();
@@ -474,6 +475,12 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
     FDSNEventQuerier getQuakeMLQuerier(FDSNEventQueryParams timeWindowQueryParams) throws MalformedURLException, IOException,
             URISyntaxException, XMLStreamException, SeisFileException {
         FDSNEventQuerier querier = new FDSNEventQuerier(timeWindowQueryParams);
+        RunProperties runProps = Start.getRunProps();
+        if (runProps.getProxyHost() != null) {
+          querier.setProxyHost(runProps.getProxyHost());
+          querier.setProxyPort(runProps.getProxyPort());
+          querier.setProxyProtocol(runProps.getProxyScheme());
+        }
         querier.setUserAgent(getUserAgent());
         return querier;
     }
@@ -522,7 +529,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
     public static final String HOST_ELEMENT = "host";
 
     public static final String PORT_ELEMENT = "port";
-    
+
     public static final String BAD_PARAM_MESSAGE = "The remote web service just indicated that the query was badly formed. "
             +"This may be because it does not support all of the parameters that SOD uses or it could be a bug in SOD. "
             +"Check your recipe and "

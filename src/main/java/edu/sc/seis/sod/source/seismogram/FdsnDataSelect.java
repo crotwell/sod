@@ -19,13 +19,13 @@ import edu.sc.seis.seisFile.fdsnws.FDSNWSException;
 import edu.sc.seis.seisFile.mseed.DataRecord;
 import edu.sc.seis.seisFile.mseed.DataRecordIterator;
 import edu.sc.seis.sod.BuildVersion;
+import edu.sc.seis.sod.RunProperties;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.station.ChannelId;
-import edu.sc.seis.sod.model.station.ChannelIdUtil;
 import edu.sc.seis.sod.source.event.FdsnEvent;
 import edu.sc.seis.sod.source.network.FdsnStation;
 import edu.sc.seis.sod.source.network.NetworkSource;
@@ -45,13 +45,13 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
     private String username;
 
     private String password;
-    
+
     private String realm;
-    
+
     private int queryCount = 0;
-    
+
     private int authFailCount = 0;
-    
+
     public static final String IRIS_REALM = "IRIS";
 
     public static final String BAD_AUTH_MESSAGE = "The remote web service just indicated that the query was not authorized. "
@@ -95,7 +95,7 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
 
         checkFdsnStationLinkage();
     }
-    
+
     private void checkFdsnStationLinkage() {
         NetworkSource wrappedNetSource = ((WrappingNetworkSource)Start.getNetworkArm().getNetworkSource());
         while (wrappedNetSource instanceof WrappingNetworkSource) {
@@ -113,7 +113,6 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
             fdsnStation.includeRestricted(true);
         }
     }
-    
     public FdsnDataSelect(String host,int port) {
         super(host, 2);
         queryParams.setHost(host);
@@ -128,7 +127,7 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
             public List<LocalSeismogramImpl> retrieveData(List<RequestFilter> request) throws SeismogramSourceException {
                 int count = 0;
                 SeismogramSourceException latest = null;
-                
+
                 while (count == 0 || getRetryStrategy().shouldRetry(latest, this, count++)) {
                     try {
                         List<LocalSeismogramImpl> result = internalRetrieveData(request);
@@ -202,6 +201,12 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
                                                  int tryCount) throws SeismogramSourceException {
                 List<DataRecord> drList = new ArrayList<DataRecord>();
                 FDSNDataSelectQuerier querier = new FDSNDataSelectQuerier(queryParams, queryRequest);
+                RunProperties runProps = Start.getRunProps();
+                if (runProps.getProxyHost() != null) {
+                  querier.setProxyHost(runProps.getProxyHost());
+                  querier.setProxyPort(runProps.getProxyPort());
+                  querier.setProxyProtocol(runProps.getProxyScheme());
+                }
                 querier.setConnectTimeout(timeoutMillis);
                 querier.setReadTimeout(timeoutMillis);
                 String restrictedStr = "query: ";
@@ -224,11 +229,11 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
                 } catch(FDSNWSException e) {
                     if (querier.getResponseCode() == 401 || querier.getResponseCode() == 403) {
                         if (queryCount < 3 && authFailCount != 0) {
-                            // if we get an auth fail early on, but not very first, halt to warn the user they 
+                            // if we get an auth fail early on, but not very first, halt to warn the user they
                             // probably have entered a bad password. If later, try again
                             // as sometimes have seen auth fails with same pw even after
                             // dozens of successes
-                            Start.simpleArmFailure(Start.getWaveformArmArray()[0], 
+                            Start.simpleArmFailure(Start.getWaveformArmArray()[0],
                                                    BAD_AUTH_MESSAGE+" "+querier.getResponseCode()
                                                    +"     "+((FDSNWSException)e).getMessage()
                                                    +" on "+((FDSNWSException)e).getTargetURI());
@@ -246,7 +251,7 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
                         }
                     } else if (querier.getResponseCode() == 400) {
                         // badly formed query, cowardly quit
-                        Start.simpleArmFailure(Start.getWaveformArmArray()[0], 
+                        Start.simpleArmFailure(Start.getWaveformArmArray()[0],
                                                FdsnEvent.BAD_PARAM_MESSAGE+" "+((FDSNWSException)e).getMessage()+" on "+((FDSNWSException)e).getTargetURI());
                         throw new SeismogramSourceException(e);
                     } else {
@@ -272,6 +277,6 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
             }
         };
     }
-    
+
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(FdsnDataSelect.class);
 }
