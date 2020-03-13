@@ -185,13 +185,13 @@
                 <description>SOD can use multiple threads in the waveform arm to retrieve and
                     process data. This allows for SOD to stay busy on processing one event-channel
                     group while retrieving the data for another. Setting this to 2 can speed things
-                    up. The value defaults to 1. 
-                    
+                    up. The value defaults to 1.
+
                     For IRIS DMC usage, see http://ds.iris.edu/ds/nodes/dmc/services/usage/ for information
                 on resource limits. In particular for versions of SOD prior to 3.2.5 you should not
                 have more than 3 waveform worker threads or the rate limiter at the DMC may block
                 your requests, resulting in very slow performance. For later versions of SOD requests are
-                batched so more worker threads can be used. However, diminishing returns sets in very 
+                batched so more worker threads can be used. However, diminishing returns sets in very
                 quickly, and many threads may end up being slower than a few.</description>
             </xsd:annotation>
             <data type="nonNegativeInteger">
@@ -256,7 +256,7 @@
             <text/>
         </element>
     </define>
-    
+
     <define name="statusPages">
         <element name="statusPages">
             <xsd:annotation>
@@ -305,7 +305,7 @@
                 <summary>Instructs SOD to skip the check for a preexisting database.</summary>
                 <description>SOD will print a warning message if you start it with a pre-existing
                 database. This is intended to help those that are rerunning a similar SOD run repeatedly
-                in the same directory where they do not want old results to contaminate the next run. 
+                in the same directory where they do not want old results to contaminate the next run.
                 However, in cases of a Standing Order, the opposite is wanted. Setting this property
                 to FALSE will disable the warning and 10 second wait time.
                     </description>
@@ -342,6 +342,50 @@
             <text>
                 <xsd:annotation>
                     <example>tables.hbm.xml</example>
+                </xsd:annotation>
+            </text>
+        </element>
+    </define>
+    <define name="proxyHost">
+        <element name="proxyHost">
+            <xsd:annotation>
+                <summary>Proxy HTTP host.</summary>
+                <description>The HTTP proxy host needed to access external web services.</description>
+                <include/>
+            </xsd:annotation>
+            <text>
+                <xsd:annotation>
+                    <example>myproxy.example.com</example>
+                </xsd:annotation>
+            </text>
+        </element>
+    </define>
+    <define name="proxyPort">
+        <element name="proxyPort">
+            <xsd:annotation>
+                <summary>Port of the HTTP proxy host.</summary>
+                <description>The port on the HTTP proxy host.</description>
+            </xsd:annotation>
+            <data type="nonNegativeInteger">
+                <xsd:annotation>
+                    <example>8080</example>
+                </xsd:annotation>
+            </data>
+        </element>
+    </define>
+    <define name="proxyScheme">
+        <element name="proxyScheme">
+            <xsd:annotation>
+                <summary>Proxy HTTP scheme.</summary>
+                <description>The HTTP proxy scheme needed to access external
+                  web services, defaults to the same as the originating request.
+                Usually not needed to be set unless the proxy requires HTTPS
+                even for HTTP requests.</description>
+                <include/>
+            </xsd:annotation>
+            <text>
+                <xsd:annotation>
+                    <example>https</example>
                 </xsd:annotation>
             </text>
         </element>

@@ -48,6 +48,7 @@ import edu.sc.seis.seisFile.fdsnws.stationxml.FDSNStationXML;
 import edu.sc.seis.seisFile.fdsnws.stationxml.NetworkIterator;
 import edu.sc.seis.seisFile.fdsnws.stationxml.StationIterator;
 import edu.sc.seis.sod.BuildVersion;
+import edu.sc.seis.sod.RunProperties;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.source.SodSourceException;
@@ -67,6 +68,7 @@ public class FdsnStation extends AbstractNetworkSource {
 
     public FdsnStation(Element config) throws Exception {
         super(config);
+        // maybe change so can be null???
         queryParams.setIncludeRestricted(false);
         queryParams.setIncludeAvailability(false);
         includeAvailability = SodUtil.isTrue(config, "includeAvailability", true);
@@ -400,6 +402,12 @@ public class FdsnStation extends AbstractNetworkSource {
 
     FDSNStationQuerier setupQuerier(FDSNStationQueryParams queryParams) {
         FDSNStationQuerier querier = new FDSNStationQuerier(queryParams);
+        RunProperties runProps = Start.getRunProps();
+        if (runProps.getProxyHost() != null) {
+          querier.setProxyHost(runProps.getProxyHost());
+          querier.setProxyPort(runProps.getProxyPort());
+          querier.setProxyScheme(runProps.getProxyScheme());
+        }
         if (validateXML) {
             querier.setValidate(true);
         }
