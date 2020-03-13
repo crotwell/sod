@@ -68,9 +68,8 @@ public class FdsnStation extends AbstractNetworkSource {
 
     public FdsnStation(Element config) throws Exception {
         super(config);
-        // maybe change so can be null???
-        queryParams.setIncludeRestricted(false);
-        queryParams.setIncludeAvailability(false);
+        queryParams.clearIncludeRestricted();
+        queryParams.clearIncludeAvailability();
         includeAvailability = SodUtil.isTrue(config, "includeAvailability", true);
         validateXML = SodUtil.isTrue(config, "validate", false);
         if (config != null) {
