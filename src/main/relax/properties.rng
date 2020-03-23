@@ -71,6 +71,15 @@
                 <optional>
                     <ref name="skipAvailableData"/>
                 </optional>
+                <optional>
+                    <ref name="proxyHost"/>
+                </optional>
+                <optional>
+                    <ref name="proxyPort"/>
+                </optional>
+                <optional>
+                    <ref name="proxyScheme"/>
+                </optional>
             </interleave>
         </element>
     </define>
