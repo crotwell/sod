@@ -132,7 +132,10 @@ public class Version{
       new Version("3.2.9-SNAPSHOT3", false),
       new Version("3.2.9", false),
       new Version("3.2.10-SNAPSHOT", false),
-      new Version("3.2.10-SNAPSHOT2", false)
+      new Version("3.2.10-SNAPSHOT2", false),
+      new Version("3.2.10-SNAPSHOT3", false),
+      new Version("3.2.10-SNAPSHOT4", false),
+      new Version("3.2.10-SNAPSHOT5", false)
     };
 
 }
