@@ -205,11 +205,15 @@ public class MotionVectorArm extends AbstractWaveformRecipe implements Subsetter
     public void processRequestSubsetter(EventVectorPair ecp, RequestFilter[][] infilters) {
         StringTree passed;
         for (int i = 0; i < infilters.length; i++) {
-            // check channel overlaps request
-            RequestFilter coveringRequest = ReduceTool.cover(infilters[i]);
-            ChannelEffectiveTimeOverlap chanOverlap = new ChannelEffectiveTimeOverlap(coveringRequest.startTime,
-                                                                                      coveringRequest.endTime);
-            passed = chanOverlap.accept(ecp.getChannelGroup().getChannels()[i], null); // net source not needed by chanOverlap
+        	if (infilters[i].length > 0) {
+	            // check channel overlaps request
+	            RequestFilter coveringRequest = ReduceTool.cover(infilters[i]);
+	            ChannelEffectiveTimeOverlap chanOverlap = new ChannelEffectiveTimeOverlap(coveringRequest.startTime,
+	                                                                                      coveringRequest.endTime);
+	            passed = chanOverlap.accept(ecp.getChannelGroup().getChannels()[i], null); // net source not needed by chanOverlap
+        	} else {
+                passed = new Fail(request, "RequestFilter["+i+"] is empty");
+            }
             if ( ! passed.isSuccess()) {
                 ecp.update(Status.get(Stage.REQUEST_SUBSETTER, Standing.REJECT));
                 failLogger.info(ecp.toString()+" channel doesn't overlap request.");
