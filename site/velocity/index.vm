@@ -37,6 +37,14 @@ SOD: Standing Order for Data.
 			<div class="section">
 				#sod_section_title("News")
                                 <div class="section">
+                #sod_subsection_title('1 April 2020')
+                                <p>Version of SOD, <a href="http://www.seis.sc.edu/downloads/sod/3.2.10">SOD 3.2.10</a>
+                                 is available.
+New version of StationXML, 1.1, and HTTP proxy support.
+                                 Please post questions to the <a href="http://groups.google.com/a/seis.sc.edu/group/sod">SOD email list</a>.
+                                </p>
+                                </div>
+                                <div class="section">
                 #sod_subsection_title('26 June 2019')
                                 <p>Version of SOD, <a href="http://www.seis.sc.edu/downloads/sod/3.2.9">SOD 3.2.9</a>
                                  is available.
