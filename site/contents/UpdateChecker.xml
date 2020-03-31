@@ -1,4 +1,11 @@
 <UpdateChecker>
+    <Update Version="3.2.10" Date="1-04-2020">
+        <Features/>
+        <Reason>StationXML version 1.1 and HTTP proxy support.</Reason>
+        <UpdateAction Description="Remote Installer">
+        <UpdateLocation>http://www.seis.sc.edu/SOD</UpdateLocation>
+        </UpdateAction>
+    </Update>
     <Update Version="3.2.9" Date="26-06-2016">
         <Features/>
         <Reason>Fix issue with restricted data.</Reason>
