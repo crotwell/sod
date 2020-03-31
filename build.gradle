@@ -8,7 +8,7 @@ apply plugin: 'eclipse'
 apply plugin: 'project-report'
 
 group = 'edu.sc.seis'
-version = '3.2.10-SNAPSHOT5'
+version = '3.2.10'
 // also remember to change in sod.Version class
 
 apply plugin:'application'
@@ -66,7 +66,7 @@ configurations {
 }
 
 dependencies {
-    compile 'edu.sc.seis:bag:0.4.1-SNAPSHOT'
+    compile 'edu.sc.seis:bag:0.4.1'
 //    compile project(':cormorant')
 
     compile "jline:jline:0.9.94"
