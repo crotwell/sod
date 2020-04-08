@@ -30,7 +30,7 @@
                         tags. The NetworkFinder is acquired from the NetworkDC, and a query is sent
                         with the given arguments. The networks returned are then sent through the
                         NetworkArm for processing. An optional refresh interval can be given if sod
-                        should periodically check for new channels.  
+                        should periodically check for new channels.
                     </description>
                     <deprecated>This is deprecated in favor of the new fdsnStation source.</deprecated>
                     <velocity>#networkArmPage()</velocity>
@@ -54,7 +54,7 @@
 	      <element name="retries">
 		<xsd:annotation>
 		  <summary>Number of consecutive failures before quiting</summary>
-		  <description>In the event of server errors, SOD will retry 
+		  <description>In the event of server errors, SOD will retry
 		  the query to the server for retries times before failing.
 		  The default is -1 which means to try forever.</description>
             </xsd:annotation>
@@ -75,7 +75,7 @@
                         tags. The NetworkFinder is acquired from the NetworkDC, and a query is sent
                         with the given arguments. The networks returned are then sent through the
                         NetworkArm for processing. An optional refresh interval can be given if sod
-                        should periodically check for new channels.  
+                        should periodically check for new channels.
                     </description>
                     <velocity>#networkArmPage()</velocity>
                     <example>
@@ -103,7 +103,7 @@
 	      <element name="retries">
 		<xsd:annotation>
 		  <summary>Number of consecutive failures before quiting</summary>
-		  <description>In the event of server errors, SOD will retry 
+		  <description>In the event of server errors, SOD will retry
 		  the query to the server for retries times before failing.
 		  The default is -1 which means to try forever.</description>
             </xsd:annotation>
@@ -148,7 +148,7 @@
         <element name="combineNetworkSource">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary>combines the networks from several sources, allowing for example the DMC and a local 
+                    <summary>combines the networks from several sources, allowing for example the DMC and a local
                     winston wave server to both contribute to a SOD run.</summary>
                     <description>The combination is on a per network basis, so the first network source that contains
                     a given network is used.
@@ -222,7 +222,7 @@ CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
         <site code="00">
             <channel code="BHZ" samplingPeriod="0.01"/>
         </site>
-    </station> 
+    </station>
 </network>
                                     </example>
                                 </xsd:annotation>
@@ -313,7 +313,7 @@ CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
         <site code="00">
             <channel code="BHZ" samplingPeriod="0.01"/>
         </site>
-    </station> 
+    </station>
 </network>
                                     </example>
                                 </xsd:annotation>
@@ -338,11 +338,11 @@ CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
                     <description>A network source that makes the metadata loaded from a StationXML file available to
                     SOD. While a local file could be used, the more useful way is to access the ws-station web service
                     at the IRIS DMC, http://www.iris.edu/ws/ws-station. SOD can download the stationXML automaticially
-                    and reconnect to periodically get updates. For a full SOD run (that retrieves waveforms) 
+                    and reconnect to periodically get updates. For a full SOD run (that retrieves waveforms)
                     SOD will automatically set the level in the IRIS url as needed, but adding other qualifiers to
                     limit the request size will help speed the queries. You may need to escape the ampersand with
                     &amp;amp; due to the fact that a SOD recipe is XML and so the parser will signal an error for a
-                    unescaped ampersand.</description> 
+                    unescaped ampersand.</description>
                     <deprecated>This is deprecated in favor of the new fdsnStation source.</deprecated>
                     <velocity>#networkArmPage()</velocity>
                     <example>
@@ -371,16 +371,16 @@ CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
                     <summary>Loads network metadata from a FDSN Station web service.</summary>
                     <description>A network source that makes the metadata loaded from a FDNSStationXML file available to
                     SOD. While a local file could be used, the more useful way is to access the fdsnStation web service
-                    at a data center like the default IRIS DMC, http://service.iris.edu/fdsnws/station/1/. 
+                    at a data center like the default IRIS DMC, http://service.iris.edu/fdsnws/station/1/.
                     SOD can download the stationXML automaticially
-                    and reconnect to periodically get updates. For a full SOD run (that retrieves waveforms) 
+                    and reconnect to periodically get updates. For a full SOD run (that retrieves waveforms)
                     SOD will automatically set the level in the IRIS url as needed, but adding other qualifiers to
                     limit the request size will help speed the queries.  By default this does not get restricted channels unless
                     there is a corresponding fdsnDataSelect that has a username and password specified.
                     The default is to connect to the IRIS DMC FDSNStation web service. The host should be used
-                    to connecto to an alternative server. The baseurl and port parameters should only be
-                    used to connect to a server that does not follow the FDSN specification on how the
-                    url should be formed.</description>
+                    to connecto to an alternative server. The baseurl, fdsnwsPath and port
+                    parameters should only be used in the case of a server that does not follow the FDSN
+                    specification as to how the service URL should be formed.</description>
                     <velocity>#networkArmPage()</velocity>
                     <example>
                         <fdsnStation>
@@ -420,6 +420,11 @@ CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
                         </optional>
                         <optional>
                             <element name="fdsnwsPath">
+                                <xsd:annotation>
+                                    <summary>Initial path part of an FDSN Station web service URL</summary>
+                                    <description>The default is fdsnws. Should only be used in
+                                    the case of a service that doe not follow the FDSN specification.</description>
+                                </xsd:annotation>
                                 <data type="string"/>
                             </element>
                         </optional>
@@ -451,7 +456,7 @@ CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
                     </element>
                 </choice>
             </zeroOrMore>
-            
+
             <optional>
                     <element name="includeRestricted">
                         <data type="boolean"/>

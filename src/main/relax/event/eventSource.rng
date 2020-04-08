@@ -39,7 +39,7 @@
 	    			<element name="retries">
 						<xsd:annotation>
 						  <summary>Number of consecutive failures before quiting</summary>
-						  <description>In the event of server errors, SOD will retry 
+						  <description>In the event of server errors, SOD will retry
 						  the query to the server for retries times before failing.
 						  The default is -1 which means to try forever.</description>
    				         </xsd:annotation>
@@ -104,7 +104,7 @@
             </interleave>
         </element>
     </define>
-                
+
     <define name="fdsnEvent">
         <element name="fdsnEvent">
             <xsd:annotation>
@@ -112,7 +112,7 @@
                     <summary>Querys events from a FDSN Event web service or file.</summary>
                     <description>The default is to query the USGS FDSN Event web service at earthquake.usgs.gov,
                      the host
-                     parameter should only be needed to query a different server. The baseURL, fdsnPath and port
+                     parameter should only be needed to query a different server. The baseurl, fdsnwsPath and port
                      parameters should only be used in the case of a server that does not follow the FDSN
                      specification as to how the service URL should be formed. Most of the other parameters
                      map directly to the same parameter in the old eventFinder source. The main exception, at
@@ -172,7 +172,12 @@
                             </element>
                         </optional>
                         <optional>
-                            <element name="fdsnPath">
+                            <element name="fdsnwsPath">
+                                <xsd:annotation>
+                                    <summary>Initial path part of an FDSN Event web service URL</summary>
+                                    <description>The default is fdsnws. Should only be used in
+                                    the case of a service that doe not follow the FDSN specification.</description>
+                                </xsd:annotation>
                                 <data type="string"/>
                             </element>
                         </optional>
@@ -232,7 +237,7 @@
 	    			<element name="retries">
 						<xsd:annotation>
 						  <summary>Number of consecutive failures before quiting</summary>
-						  <description>In the event of server errors, SOD will retry 
+						  <description>In the event of server errors, SOD will retry
 						  the query to the server for retries times before failing.
 						  The default is -1 which means to try forever.</description>
    				         </xsd:annotation>
@@ -314,7 +319,7 @@
                         a comma. From the second line on, each line represents an event, and the values are filled in
                         the same order as the fields in the first line. For more information on how to use this, <a
                             href="csvEvents.html">look here</a>. The filename can also be a URL.</description>
-                            
+
                             <example>
                                 <CSVEventSource>
                                     <filename>csvEvents.txt</filename>
@@ -331,7 +336,7 @@ time, magnitude, latitude, longitude, depth
                                 </CSVEventSource>
                             </example>
                    </xsd:documentation>
-                
+
             </xsd:annotation>
             <choice>
                 <element name="filename">

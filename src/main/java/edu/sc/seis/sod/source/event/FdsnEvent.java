@@ -110,7 +110,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
             Node node = childNodes.item(counter);
             if (node instanceof Element) {
                 String tagName = ((Element)node).getTagName();
-                if (!tagName.equals(AbstractSource.RETRIES_ELEMENT) && !tagName.equals("fdsnPath")
+                if (!tagName.equals(AbstractSource.RETRIES_ELEMENT) && !tagName.equals("fdsnwsPath")
                         && !tagName.equals(AbstractNetworkSource.REFRESH_ELEMENT)
                         && !tagName.equals(AbstractEventSource.EVENT_QUERY_INCREMENT)
                         && !tagName.equals(AbstractEventSource.EVENT_LAG) && !tagName.equals(HOST_ELEMENT)

@@ -33,7 +33,7 @@
 	      <element name="retries">
 		<xsd:annotation>
 		  <summary>Number of consecutive failures before quiting</summary>
-		  <description>In the event of server errors, SOD will retry 
+		  <description>In the event of server errors, SOD will retry
 		  the query to the server for retries times before failing.
 		  The default is -1 which means to try forever.</description>
             </xsd:annotation>
@@ -69,7 +69,7 @@
         <element name="dns">
             <xsd:annotation>
                 <summary>DNS location of a server</summary>
-                <description>The server's dns is used in combination with a 
+                <description>The server's dns is used in combination with a
 		name value to locate a server. Names are unique with a dns.</description>
             </xsd:annotation>
             <choice>
@@ -187,19 +187,19 @@
             <xsd:annotation>
                 <summary>Pick a FDSN dataselect web service</summary>
                 <description>This specifies a FDSN dataselect web service. The default is the IRIS DMC. This can
-                do a data availability via a corresponding FDSN Station web service, 
+                do a data availability via a corresponding FDSN Station web service,
                 but because of the coarseness of the result, it is not as useful as
-                was in the older DHI servers, so the default is off, meaning SOD pretends 
+                was in the older DHI servers, so the default is off, meaning SOD pretends
                 the available data is always the same as the requested data.
-                The host parameter should be used to connect to another service. The baseurl and
+                The host parameter should be used to connect to another service. The baseurl, fdsnwsPath and
                 port parameters should only be used to connect to a service that does not follow the
                 FDSN specification on how the URL should be formed.
-                
+
                 For IRIS DMC usage, see http://ds.iris.edu/ds/nodes/dmc/services/usage/ for information
                 on resource limits. In particular for versions of SOD prior to 3.2.5 you should not
                 have more than 3 waveform worker threads or the rate limiter at the DMC may block
                 your requests, resulting in very slow performance. For later versions of SOD requests are
-                batched so more worker threads can be used. However, diminishing returns sets in very 
+                batched so more worker threads can be used. However, diminishing returns sets in very
                 quickly, and many threads may end up being slower than a few.
                     </description>
             </xsd:annotation>
@@ -251,7 +251,12 @@
                             </element>
                         </optional>
                         <optional>
-                            <element name="fdsnPath">
+                            <element name="fdsnwsPath">
+                                <xsd:annotation>
+                                    <summary>Initial path part of an FDSN DataSelect web service URL</summary>
+                                    <description>The default is fdsnws. Should only be used in
+                                    the case of a service that doe not follow the FDSN specification.</description>
+                                </xsd:annotation>
                                 <data type="string"/>
                             </element>
                         </optional>
