@@ -207,7 +207,7 @@ tasks.register<Tar>("tarDist") {
 }
 
 tasks.register<Sync>("explodeBin") {
-    dependsOn("makeScript")
+    dependsOn("createRunScripts")
     dependsOn("buildSchema")
     dependsOn("buildGrouperSchema")
     group = "dist"
