@@ -36,11 +36,11 @@ public class NetworkServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        PrintWriter writer = resp.getWriter();
         try {
             String URL = req.getRequestURL().toString();
             logger.info("GET: " + URL);
             WebAdmin.setJsonHeader(req, resp);
-            PrintWriter writer = resp.getWriter();
             JSONWriter out = new JSONWriter(writer);
             NetworkDB netdb = NetworkDB.getSingleton();
             Matcher matcher = allNetworkPattern.matcher(URL);
@@ -87,20 +87,20 @@ public class NetworkServlet extends HttpServlet {
                             } else {
                                 logger.warn("Bad URL for servlet: "+URL);
                                 JsonApi.encodeError(out, "bad url for servlet: " + URL);
-                                writer.close();
                                 resp.sendError(500);
                             }
                         }
                     }
                 }
             }
-            writer.close();
         } catch(JSONException e) {
             throw new ServletException(e);
         } catch(NumberFormatException e) {
             throw new ServletException(e);
         } finally {
+        	logger.info("Done.");
             NetworkDB.rollback();
+            writer.close();
         }
     }
     

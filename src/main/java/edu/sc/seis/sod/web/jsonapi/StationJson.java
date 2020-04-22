@@ -65,7 +65,7 @@ public class StationJson extends AbstractJsonApiData {
         out.key("type").value("network");
         out.endObject();// end data
         out.endObject();// net network
-        out.key("esps")
+        out.key("quake-station-pairs")
                 .object()
                 .key("links")
                 .object()

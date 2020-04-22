@@ -40,99 +40,97 @@ public class StationsServlet extends HttpServlet {
         WebAdmin.setJsonHeader(req, resp);
         PrintWriter writer = resp.getWriter();
         JSONWriter out = new JSONWriter(writer);
-        NetworkDB netdb = NetworkDB.getSingleton();
-        Matcher matcher = stationPattern.matcher(URL);
-        if (matcher.matches()) {
-            // logger.debug("station");
-            String netCode = matcher.group(1);
-            String year = matcher.group(2);
-            String staCode = matcher.group(3);
-            List<Station> staList = netdb.getStationByCodes(netCode, staCode);
-            if (staList.size() > 0) {
-            Station sta = staList.get(0);
-            JsonApi.encodeJson(out, new StationJson(sta, WebAdmin.getApiBaseUrl()));
-            resp.setStatus(HttpServletResponse.SC_OK);
-            writer.close();
-            } else {
-                resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                writer.println("No station with code "+netCode+"."+staCode+" found");
-                writer.close();
-            }
-        } else {
-            matcher = stationDbidPattern.matcher(URL);
-            if (matcher.matches()) {
-                String dbid = matcher.group(1);
-                Station sta = null;
-                try {
-                    sta = netdb.getStation(Integer.parseInt(dbid));
-                    List<Channel> chans = netdb.getChannelsForStation(sta);
-                    if (sta != null) {
-                        JsonApi.encodeJson(out, new StationJson(sta, chans, WebAdmin.getApiBaseUrl()));
-                        
-                        resp.setStatus(HttpServletResponse.SC_OK);
-                    } else {
-                        JsonApi.encodeError(out, "Station is null for dbid " + dbid);
-                    }
-                } catch(NumberFormatException e) {
-                    JsonApi.encodeError(out, "NumberFormatException " + e.getMessage());
-                } catch(NotFound e) {
-                    JsonApi.encodeError(out, "NotFound " + e.getMessage());
-                }
-                writer.close();
-            } else {
-                matcher = stationEventsPattern.matcher(URL);
-                if (matcher.matches()) {
-                    // logger.debug("station");
-                    String netCode = matcher.group(1);
-                    String year = matcher.group(2);
-                    String staCode = matcher.group(3);
-                    Station sta = netdb.getStationByCodes(netCode, staCode).get(0);
-
-                    // want only successful ESP that actually have successful ECP, otherwise even-station may pass 
-                    // but no even-channels or waveforms pass
-                    List<AbstractEventChannelPair> ecpList = SodDB.getSingleton().getSuccessful(sta);
-                    List<EventStationPair> eventList = new ArrayList<EventStationPair>();
-                    for (AbstractEventChannelPair ecp : ecpList) {
-                        if ( ! eventList.contains(ecp.getEsp())) {
-                            eventList.add(ecp.getEsp());
-                        }
-                    }
-                    List<JsonApiData> jsonData = new ArrayList<JsonApiData>(eventList.size());
-                    for (EventStationPair esp : eventList) {
-                        jsonData.add(new EventStationJson(esp, WebAdmin.getApiBaseUrl()));
-                    }
-                    JsonApi.encodeJson(out, jsonData);
-                    writer.close();
-                    resp.setStatus(HttpServletResponse.SC_OK);
-                    
-
-                } else {
-                    matcher = stationChannelsPattern.matcher(URL);
-                    if (matcher.matches()) {
-                        // logger.debug("station");
-                        String netCode = matcher.group(1);
-                        String year = matcher.group(2);
-                        String staCode = matcher.group(3);
-                        Station sta = netdb.getStationByCodes(netCode, staCode).get(0);
-                        List<Channel> chans = netdb.getChannelsForStation(sta);
-                        List<JsonApiData> jsonData = new ArrayList<JsonApiData>(chans.size());
-                        for (Channel channelImpl : chans) {
-                            jsonData.add(new ChannelJson(channelImpl, WebAdmin.getApiBaseUrl()));
-                        }
-                        JsonApi.encodeJson(out, jsonData);
-                        writer.close();
-                        resp.setStatus(HttpServletResponse.SC_OK);
-                    
-                    } else {
-                        logger.warn("bad url for servlet: regex=" + stationPattern.toString());
-                        JsonApi.encodeError(out, "bad url for servlet: regex=" + stationPattern.toString());
-                        writer.close();
-                        resp.sendError(500);
-                    }
-                }
-            }
+        try {
+	        NetworkDB netdb = NetworkDB.getSingleton();
+	        Matcher matcher = stationPattern.matcher(URL);
+	        if (matcher.matches()) {
+	            // logger.debug("station");
+	            String netCode = matcher.group(1);
+	            String year = matcher.group(2);
+	            String staCode = matcher.group(3);
+	            List<Station> staList = netdb.getStationByCodes(netCode, staCode);
+	            if (staList.size() > 0) {
+	            Station sta = staList.get(0);
+	            JsonApi.encodeJson(out, new StationJson(sta, WebAdmin.getApiBaseUrl()));
+	            resp.setStatus(HttpServletResponse.SC_OK);
+	            } else {
+	                resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+	                writer.println("No station with code "+netCode+"."+staCode+" found");
+	            }
+	        } else {
+	            matcher = stationDbidPattern.matcher(URL);
+	            if (matcher.matches()) {
+	                String dbid = matcher.group(1);
+	                Station sta = null;
+	                try {
+	                    sta = netdb.getStation(Integer.parseInt(dbid));
+	                    List<Channel> chans = netdb.getChannelsForStation(sta);
+	                    if (sta != null) {
+	                        JsonApi.encodeJson(out, new StationJson(sta, chans, WebAdmin.getApiBaseUrl()));
+	                        
+	                        resp.setStatus(HttpServletResponse.SC_OK);
+	                    } else {
+	                        JsonApi.encodeError(out, "Station is null for dbid " + dbid);
+	                    }
+	                } catch(NumberFormatException e) {
+	                    JsonApi.encodeError(out, "NumberFormatException " + e.getMessage());
+	                } catch(NotFound e) {
+	                    JsonApi.encodeError(out, "NotFound " + e.getMessage());
+	                }
+	            } else {
+	                matcher = stationEventsPattern.matcher(URL);
+	                if (matcher.matches()) {
+	                    // logger.debug("station");
+	                    String netCode = matcher.group(1);
+	                    String year = matcher.group(2);
+	                    String staCode = matcher.group(3);
+	                    Station sta = netdb.getStationByCodes(netCode, staCode).get(0);
+	
+	                    // want only successful ESP that actually have successful ECP, otherwise even-station may pass 
+	                    // but no even-channels or waveforms pass
+	                    List<AbstractEventChannelPair> ecpList = SodDB.getSingleton().getSuccessful(sta);
+	                    List<EventStationPair> eventList = new ArrayList<EventStationPair>();
+	                    for (AbstractEventChannelPair ecp : ecpList) {
+	                        if ( ! eventList.contains(ecp.getEsp())) {
+	                            eventList.add(ecp.getEsp());
+	                        }
+	                    }
+	                    List<JsonApiData> jsonData = new ArrayList<JsonApiData>(eventList.size());
+	                    for (EventStationPair esp : eventList) {
+	                        jsonData.add(new EventStationJson(esp, WebAdmin.getApiBaseUrl()));
+	                    }
+	                    JsonApi.encodeJson(out, jsonData);
+	                    resp.setStatus(HttpServletResponse.SC_OK);
+	                    
+	
+	                } else {
+	                    matcher = stationChannelsPattern.matcher(URL);
+	                    if (matcher.matches()) {
+	                        // logger.debug("station");
+	                        String netCode = matcher.group(1);
+	                        String year = matcher.group(2);
+	                        String staCode = matcher.group(3);
+	                        Station sta = netdb.getStationByCodes(netCode, staCode).get(0);
+	                        List<Channel> chans = netdb.getChannelsForStation(sta);
+	                        List<JsonApiData> jsonData = new ArrayList<JsonApiData>(chans.size());
+	                        for (Channel channelImpl : chans) {
+	                            jsonData.add(new ChannelJson(channelImpl, WebAdmin.getApiBaseUrl()));
+	                        }
+	                        JsonApi.encodeJson(out, jsonData);
+	                        resp.setStatus(HttpServletResponse.SC_OK);
+	                    
+	                    } else {
+	                        logger.warn("bad url for servlet: regex=" + stationPattern.toString());
+	                        JsonApi.encodeError(out, "bad url for servlet: regex=" + stationPattern.toString());
+	                        resp.sendError(500);
+	                    }
+	                }
+	            }
+	        }
+        } finally {
+        	NetworkDB.rollback();
+        	writer.close();
         }
-        NetworkDB.rollback();
     }
 
     Pattern stationDbidPattern = Pattern.compile(".*/stations/([0-9]+)");

@@ -28,7 +28,8 @@ public class EventJson extends AbstractJsonApiData {
 
     @Override
     public void encodeAttributes(JSONWriter out) throws JSONException {
-        out.key("name").value(event.get_attributes().name).key("sod-status").value(event.getStatus().toString());
+        out.key("name").value(event.get_attributes().name)
+           .key("sod-status").value(event.getStatus().toString());
         if (numSuccessfulStations != null) {
             out.key("num-successful-stations").value(numSuccessfulStations);
         }
@@ -61,7 +62,7 @@ public class EventJson extends AbstractJsonApiData {
                     .value("magnitude")
                     .endObject(); // end data
             out.endObject(); // end pref-magnitude
-            out.key("esps").object()
+            out.key("quake-station-pairs").object()
             .key("links").object()
             .key("related")
             .value(formStationRelationshipURL());

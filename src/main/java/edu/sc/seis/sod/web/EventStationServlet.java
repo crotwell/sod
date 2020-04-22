@@ -49,57 +49,61 @@ public class EventStationServlet extends HttpServlet {
         PrintWriter writer = resp.getWriter();
         JSONWriter out = new JSONWriter(writer);
         Matcher m = eventStationPattern.matcher(URL);
-        if (m.matches()) {
-            Query q = AbstractHibernateDB.getSession().createQuery("from " + EventStationPair.class.getName()
-                    + " where dbid = " + m.group(1));
-            EventStationPair esp = (EventStationPair)q.uniqueResult();
-            if (esp == null) {
-                JsonApi.encodeError(out, "esp not found " + m.group(1));
-                writer.close();
-                resp.sendError(500);
-            }
-            q = AbstractHibernateDB.getSession().createQuery("from " + SodDB.getSingleton().getEcpClass().getName()
-                    + " where esp = " + esp.getDbid() + "  and status.stageInt = " + Stage.PROCESSOR.getVal()
-                    + " and status.standingInt = " + Standing.SUCCESS.getVal());
-            List<AbstractEventChannelPair> ecpList = new ArrayList<AbstractEventChannelPair>();
-            List tmp = q.list();
-            for (Object obj : tmp) {
-                if (obj == null) {
-                    throw new RuntimeException("obj from hibernate is null");
-                }
-                ecpList.add((AbstractEventChannelPair)obj);
-            }
-            EventStationJson jsonData = new EventStationJson(esp, ecpList, WebAdmin.getApiBaseUrl());
-            JsonApi.encodeJson(out, jsonData);
-        } else {
-            m = eventVectorPattern.matcher(URL);
-            if (m.matches()) {
-                Query q = AbstractHibernateDB.getSession().createQuery("from " + SodDB.getSingleton().getEcpClass().getName()
-                        + " where esp = " + m.group(1) + "  and status.stageInt = " + Stage.PROCESSOR.getVal()
-                        + " and status.standingInt = " + Standing.SUCCESS.getVal());
-                List<JsonApiData> jsonData = new ArrayList<JsonApiData>();
-                List tmp = q.list();
-                for (Object obj : tmp) {
-                    if (obj == null) {
-                        throw new RuntimeException("obj from hibernate is null");
-                    }
-                    jsonData.add(new EventVectorJson((AbstractEventChannelPair)obj, WebAdmin.getApiBaseUrl()));
-                }
-                JsonApi.encodeJson(out, jsonData);
-            } else {
-                m = measurementsPattern.matcher(URL);
-                if (m.matches()) {
-                    measurementServlet.doGet(req, resp);
-                } else {
-                    logger.warn("url does not match " + eventStationPattern.pattern());
-                    JsonApi.encodeError(out, "url does not match " + eventStationPattern.pattern());
-                    writer.close();
-                    resp.sendError(500);
-                }
-            }
+        try {
+        	if (m.matches()) {
+        		Query q = AbstractHibernateDB.getSession().createQuery("from " + EventStationPair.class.getName()
+        				+ " where dbid = " + m.group(1));
+        		EventStationPair esp = (EventStationPair)q.uniqueResult();
+        		if (esp == null) {
+        			JsonApi.encodeError(out, "esp not found " + m.group(1));
+        			writer.close();
+        			resp.sendError(500);
+        		}
+        		q = AbstractHibernateDB.getSession().createQuery("from " + SodDB.getSingleton().getEcpClass().getName()
+        				+ " where esp = " + esp.getDbid() + "  and status.stageInt = " + Stage.PROCESSOR.getVal()
+        				+ " and status.standingInt = " + Standing.SUCCESS.getVal());
+        		List<AbstractEventChannelPair> ecpList = new ArrayList<AbstractEventChannelPair>();
+        		List tmp = q.list();
+        		for (Object obj : tmp) {
+        			if (obj == null) {
+        				throw new RuntimeException("obj from hibernate is null");
+        			}
+        			ecpList.add((AbstractEventChannelPair)obj);
+        		}
+        		EventStationJson jsonData = new EventStationJson(esp, ecpList, WebAdmin.getApiBaseUrl());
+        		JsonApi.encodeJson(out, jsonData);
+        	} else {
+        		m = eventVectorPattern.matcher(URL);
+        		if (m.matches()) {
+        			Query q = AbstractHibernateDB.getSession().createQuery("from " + SodDB.getSingleton().getEcpClass().getName()
+        					+ " where esp = " + m.group(1) + "  and status.stageInt = " + Stage.PROCESSOR.getVal()
+        					+ " and status.standingInt = " + Standing.SUCCESS.getVal());
+        			List<JsonApiData> jsonData = new ArrayList<JsonApiData>();
+        			List tmp = q.list();
+        			for (Object obj : tmp) {
+        				if (obj == null) {
+        					throw new RuntimeException("obj from hibernate is null");
+        				}
+        				jsonData.add(new EventVectorJson((AbstractEventChannelPair)obj, WebAdmin.getApiBaseUrl()));
+        			}
+        			JsonApi.encodeJson(out, jsonData);
+        		} else {
+        			m = measurementsPattern.matcher(URL);
+        			if (m.matches()) {
+        				measurementServlet.doGet(req, resp);
+        			} else {
+        				logger.warn("url does not match " + eventStationPattern.pattern());
+        				JsonApi.encodeError(out, "url does not match " + eventStationPattern.pattern());
+        				writer.close();
+        				resp.sendError(500);
+        			}
+        		}
+        	}
+        } finally {
+        	logger.info("Done.");
+        	writer.close();
+        	AbstractHibernateDB.rollback();
         }
-        writer.close();
-        AbstractHibernateDB.rollback();
     }
 
     @Override

@@ -43,6 +43,7 @@ public class SuccessfulEventCache {
             }
             @Override
             public void change(StatefulEvent event) {
+            	System.out.println("change: "+event);
                 if (event.getStatus().getStanding().equals(Standing.SUCCESS) 
                         && event.getStatus().getStage().equals(Stage.EVENT_CHANNEL_POPULATION)) {
                     updateInCache(event);

@@ -81,7 +81,7 @@ public class WebAdmin implements ArmListener{
                 
         // Add the ResourceHandler to the server.
         HandlerList handlers = new HandlerList();
-        handlers.setHandlers(new Handler[] { siteContext, servlets, new AlwaysEmberIndexHandler(), new DefaultHandler() {
+        handlers.setHandlers(new Handler[] { siteContext, servlets, new AlwaysEmberIndexHandler(), resource_handler, new DefaultHandler() {
 
             @Override
             public void handle(String target,
