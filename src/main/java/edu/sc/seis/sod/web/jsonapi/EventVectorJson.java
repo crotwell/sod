@@ -71,7 +71,7 @@ public class EventVectorJson extends AbstractJsonApiData {
             out.key("id").value(chanJson.getId());
             out.key("type").value(chanJson.getType());
             out.key("links").object();
-            out.key("self").value(baseUrl + "/channel/" + chanJson.getId());
+            out.key("self").value(baseUrl + "/channels/" + chanJson.getId());
             out.endObject(); // end links
             out.endObject();
         } else {
@@ -83,7 +83,7 @@ public class EventVectorJson extends AbstractJsonApiData {
                 out.key("id").value(chanJson.getId());
                 out.key("type").value(chanJson.getType());
                 out.key("links").object();
-                out.key("self").value(baseUrl + "/channel/" + chanJson.getId());
+                out.key("self").value(baseUrl + "/channels/" + chanJson.getId());
                 out.endObject(); // end links
                 out.endObject();
             }
