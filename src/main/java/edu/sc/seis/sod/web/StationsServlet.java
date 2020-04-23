@@ -128,6 +128,7 @@ public class StationsServlet extends HttpServlet {
 	            }
 	        }
         } finally {
+        	logger.info("Done.");
         	NetworkDB.rollback();
         	writer.close();
         }
