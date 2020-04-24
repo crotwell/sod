@@ -64,7 +64,10 @@
         <someCoverage/>
         <someDataCoverage/>
         <printlineSeismogramProcess/>
-        <sacWriter/>
+        <mseedWriter>
+            <workingDir>seismograms</workingDir>
+            <storeSeismogramsInDB/>
+        </mseedWriter>
         <responseGain/>
         <rMean/>
         <rTrend/>
