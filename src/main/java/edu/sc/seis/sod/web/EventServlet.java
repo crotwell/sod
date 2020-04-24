@@ -112,6 +112,7 @@ public class EventServlet extends HttpServlet {
         } finally {
         	logger.info("Done.");
         	writer.close();
+        	StatefulEventDB.getSingleton().rollback();
         }
     }
     
