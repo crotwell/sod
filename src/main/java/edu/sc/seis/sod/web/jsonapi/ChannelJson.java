@@ -3,6 +3,7 @@ package edu.sc.seis.sod.web.jsonapi;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
+import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.model.common.QuantityImpl;
 import edu.sc.seis.sod.model.common.SamplingImpl;
@@ -45,7 +46,9 @@ public class ChannelJson extends AbstractJsonApiData {
         .key("elevation")
         .value(chan.getElevation().getValue())
         .key("depth")
-        .value(chan.getDepth().getValue());
+        .value(chan.getDepth().getValue())
+        .key("start-time").value(TimeUtils.toISOString(chan.getStartDateTime()))
+        .key("end-time").value(NetworkJson.encodeEndTime(chan.getEndDateTime()));
     }
 
     @Override
