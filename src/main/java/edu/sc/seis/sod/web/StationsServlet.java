@@ -48,11 +48,14 @@ public class StationsServlet extends HttpServlet {
 	            String netCode = matcher.group(1);
 	            String year = matcher.group(2);
 	            String staCode = matcher.group(3);
+	            logger.info("before db get "+netCode+"."+staCode);
 	            List<Station> staList = netdb.getStationByCodes(netCode, staCode);
+
+	            logger.info("after db get "+netCode+"."+staCode);
 	            if (staList.size() > 0) {
-	            Station sta = staList.get(0);
-	            JsonApi.encodeJson(out, new StationJson(sta, WebAdmin.getApiBaseUrl()));
-	            resp.setStatus(HttpServletResponse.SC_OK);
+	            	Station sta = staList.get(0);
+	            	JsonApi.encodeJson(out, new StationJson(sta, WebAdmin.getApiBaseUrl()));
+	            	resp.setStatus(HttpServletResponse.SC_OK);
 	            } else {
 	                resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
 	                writer.println("No station with code "+netCode+"."+staCode+" found");
