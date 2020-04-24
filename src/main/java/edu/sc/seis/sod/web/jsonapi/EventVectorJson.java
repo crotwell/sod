@@ -89,17 +89,13 @@ public class EventVectorJson extends AbstractJsonApiData {
             }
         }
         out.endArray();
-        out.endObject();
+        out.endObject(); //channels
 
-        out.key("waveform").object();
-        out.key("data").object();
-        out.key("id").value(getId());
-        out.key("type").value("waveform");
+        out.key("waveforms").object();
         out.key("links").object();
-        out.key("self").value(baseUrl + "/waveforms/" + getId());
+        out.key("related").value(baseUrl + "/quake-vectors/"  + getId() + "/waveforms");
         out.endObject();// links
-        out.endObject();// data
-        out.endObject();// ecps
+        out.endObject();// waveforms
     }
 
     AbstractEventChannelPair ecp;

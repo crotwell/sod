@@ -29,6 +29,8 @@ import edu.sc.seis.sod.hibernate.eventpair.EventChannelPair;
 import edu.sc.seis.sod.hibernate.eventpair.EventVectorPair;
 import edu.sc.seis.sod.web.jsonapi.EventVectorJson;
 import edu.sc.seis.sod.web.jsonapi.JsonApi;
+import edu.sc.seis.sod.web.jsonapi.StationJson;
+import edu.sc.seis.sod.web.jsonapi.WaveformJson;
 
 public class EventVectorServlet extends HttpServlet {
 
@@ -36,10 +38,15 @@ public class EventVectorServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String URL = req.getRequestURL().toString();
         logger.info("GET: " + URL);
-        Matcher m = mseedPattern.matcher(URL);
-        if (m.matches()) {
-            // raw miniseed
-            AbstractEventChannelPair ecp = getECP(m.group(1));
+
+        PrintWriter writer = resp.getWriter();
+        JSONWriter out = new JSONWriter(writer);
+        Matcher m = eventStationPattern.matcher(URL);
+        Matcher waveformMatcher = waveformPattern.matcher(URL);
+        if (waveformMatcher.matches()) {
+
+            WebAdmin.setJsonHeader(req, resp);
+            AbstractEventChannelPair ecp = getECP(waveformMatcher.group(1));
             Channel[] chans;
             if (ecp instanceof EventVectorPair) {
                 chans = ((EventVectorPair)ecp).getChannelGroup().getChannels();
@@ -51,41 +58,20 @@ public class EventVectorServlet extends HttpServlet {
                 seisRefList.addAll(SeismogramFileRefDB.getSingleton()
                         .getSeismogramsForEventForChannel(ecp.getEvent(), chans[j]));
             }
-            resp.setContentType("application/vnd.fdsn.mseed");
-            OutputStream outBinary = resp.getOutputStream();
-            for (EventSeismogramFileReference ref : seisRefList) {
-                try {
-                    if (SeismogramFileTypes.fromInt(ref.getFileType()).equals(SeismogramFileTypes.MSEED)) {
-                        BufferedInputStream bufIn = new BufferedInputStream(ref.getFilePathAsURL().openStream());
-                        byte[] buf = new byte[1024];
-                        int bufNum = 0;
-                        while ((bufNum = bufIn.read(buf)) != -1) {
-                            outBinary.write(buf, 0, bufNum);
-                        }
-                        bufIn.close();
-                    }
-                } catch(UnsupportedFileTypeException e) {
-                    throw new RuntimeException("Should never happen", e);
-                }
-            }
-            outBinary.flush();
-        } else {
+            JsonApi.encodeJson(out, WaveformJson.toJsonList(seisRefList, WebAdmin.getApiBaseUrl()));
+
+        } else if (m.matches()) {
             WebAdmin.setJsonHeader(req, resp);
-            PrintWriter writer = resp.getWriter();
-            JSONWriter out = new JSONWriter(writer);
-            m = eventStationPattern.matcher(URL);
-            if (m.matches()) {
-                AbstractEventChannelPair ecp = getECP(m.group(1));
-                EventVectorJson jsonData = new EventVectorJson(ecp, WebAdmin.getApiBaseUrl());
-                JsonApi.encodeJson(out, jsonData);
-            } else {
-                logger.warn("Bad URL for servlet: "+URL);
-                JsonApi.encodeError(out, "bad url for servlet: " + URL);
-                writer.close();
-                resp.sendError(500);
-            }
-            writer.close();
+            AbstractEventChannelPair ecp = getECP(m.group(1));
+            EventVectorJson jsonData = new EventVectorJson(ecp, WebAdmin.getApiBaseUrl());
+            JsonApi.encodeJson(out, jsonData);
+
+        } else {
+        	logger.warn("Bad URL for servlet: "+URL);
+        	JsonApi.encodeError(out, "bad url for servlet: " + URL);
+        	resp.sendError(500);
         }
+    	writer.close();
         AbstractHibernateDB.rollback();
     }
 
@@ -98,7 +84,7 @@ public class EventVectorServlet extends HttpServlet {
 
     Pattern eventStationPattern = Pattern.compile(".*/quake-vectors/([0-9]+)");
 
-    Pattern mseedPattern = Pattern.compile(".*/quake-vectors/([0-9]+)/mseed");
+    Pattern waveformPattern = Pattern.compile(".*/quake-vectors/([0-9]+)/waveforms");
     
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(EventVectorServlet.class);
 }
