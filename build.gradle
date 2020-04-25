@@ -9,7 +9,9 @@ apply plugin: 'project-report'
 
 group = 'edu.sc.seis'
 version = '3.2.11-SNAPSHOT'
-// also remember to change in sod.Version class
+// also remember to change in sod.Version class and 
+// site/velocity/VM_library.vm
+// site/velocity/previousReleases.vm
 
 apply plugin:'application'
 mainClassName = "edu.sc.seis.sod.Start"
