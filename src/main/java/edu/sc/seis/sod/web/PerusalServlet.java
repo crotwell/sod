@@ -55,8 +55,11 @@ public class PerusalServlet  extends JsonToFileServlet {
     @Override
     protected void updateBeforeSave(JSONObject p) throws IOException {
         try {
-        updateNext(p);
-        updateMeasurementPerusalLink(p);
+        	if ( ! p.getJSONObject(JsonApi.DATA).has(JsonApi.RELATIONSHIPS)) {
+        		p.getJSONObject(JsonApi.DATA).put(JsonApi.RELATIONSHIPS, new JSONObject());
+        	}
+        	updateNext(p);
+        	updateMeasurementPerusalLink(p);
         } catch (JSONException e) {
             System.err.println(e);
             System.err.println(p.toString(2));
@@ -108,7 +111,7 @@ public class PerusalServlet  extends JsonToFileServlet {
         JSONObject curr = related.optJSONObject(CURR_ESP);
         JSONObject prev = related.optJSONObject(PREV_ESP);
         JSONObject next = related.optJSONObject(NEXT_ESP);
-        System.err.println("curr data: " + curr.optJSONObject(JsonApi.DATA));
+        System.err.println("curr data: " + (curr == null ? "null" : curr.optJSONObject(JsonApi.DATA)));
         int firstDbId = extractESP_dbid(first);
         int currDbId = extractESP_dbid(curr);
         int prevDbId = extractESP_dbid(prev);
