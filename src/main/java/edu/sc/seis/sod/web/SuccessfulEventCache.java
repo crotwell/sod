@@ -36,22 +36,26 @@ public class SuccessfulEventCache {
                 }
             }
         }, 0, 900 * 1000);
-        Start.getEventArm().add(new EventMonitor() {
-            @Override
-            public void setArmStatus(String status) throws Exception {
-                // TODO Auto-generated method stub
-            }
-            @Override
-            public void change(StatefulEvent event) {
-            	System.out.println("change: "+event);
-                if (event.getStatus().getStanding().equals(Standing.SUCCESS) 
-                        && event.getStatus().getStage().equals(Stage.EVENT_CHANNEL_POPULATION)) {
-                    updateInCache(event);
-                }
-            }
-            
-        });
-            Start.getWaveformRecipe().addStatusMonitor(new WaveformMonitor() {
+
+        if (Start.getEventArm() != null) {
+        	Start.getEventArm().add(new EventMonitor() {
+        		@Override
+        		public void setArmStatus(String status) throws Exception {
+        			// TODO Auto-generated method stub
+        		}
+        		@Override
+        		public void change(StatefulEvent event) {
+        			System.out.println("change: "+event);
+        			if (event.getStatus().getStanding().equals(Standing.SUCCESS) 
+        					&& event.getStatus().getStage().equals(Stage.EVENT_CHANNEL_POPULATION)) {
+        				updateInCache(event);
+        			}
+        		}
+
+        	});
+        }
+        if (Start.getWaveformRecipe() != null) {
+        	Start.getWaveformRecipe().addStatusMonitor(new WaveformMonitor() {
                 
                 @Override
                 public void update(EventVectorPair evp) {
@@ -91,6 +95,7 @@ public class SuccessfulEventCache {
                     
                 }
             });
+        }
         
     }
     
