@@ -82,9 +82,15 @@ public abstract class JsonToFileServlet extends HttpServlet {
                 matcher = idPattern.matcher(URL);
                 if (matcher.matches()) {
                     String pId = matcher.group(1);
-                    JSONObject p = load(pId);
-                    updateAfterLoad(p);
-                    writer.print(p.toString(2));
+                    try {
+						JSONObject p = load(pId);
+						updateAfterLoad(p);
+						writer.print(p.toString(2));
+					} catch (FileNotFoundException e) {
+						JsonApi.encodeError(out, "Not Found: type="+jsonType+" url:" + URL);
+						writer.close();
+						resp.sendError(204);
+					}
                 } else {
                     logger.warn("Bad URL for servlet: type="+jsonType+" url:" + URL);
                     JsonApi.encodeError(out, "bad url for servlet: type="+jsonType+" url:" + URL);
@@ -108,7 +114,6 @@ public abstract class JsonToFileServlet extends HttpServlet {
         WebAdmin.setJsonHeader(req, resp);
         String URL = req.getRequestURL().toString();
         JSONObject inJson = JsonApi.loadFromReader(req.getReader());
-        System.out.println("POST: " + URL + "  " + inJson.toString(2));
         logger.debug("POST: " + URL + "  " + inJson.toString(2));
         JSONObject dataObj = inJson.getJSONObject(JsonApi.DATA);
         if (dataObj != null) {
@@ -119,6 +124,7 @@ public abstract class JsonToFileServlet extends HttpServlet {
                     // empty id, so new, create
                     id = java.util.UUID.randomUUID().toString();
                     dataObj.put(JsonApi.ID, id);
+                    logger.debug("POST: update id " + URL + "  " + id);
                 }
                 // security, limit to simple filename
                 Matcher m = filenamePattern.matcher(id);
@@ -128,6 +134,7 @@ public abstract class JsonToFileServlet extends HttpServlet {
                 }
                 updateBeforeSave(inJson);
                 save(id, inJson);
+
                 PrintWriter w = resp.getWriter();
                 w.print(inJson.toString(2));
                 w.close();
