@@ -36,7 +36,7 @@ public class WaveformJson extends AbstractJsonApiData {
     	out.key("station-code").value(ref.getStationCode());
     	out.key("loc-code").value(ref.getLocCode());
     	out.key("channel-code").value(ref.getChannelCode());
-    	out.key("begin-time").value(TimeUtils.toISOString(ref.getBeginTime()));
+    	out.key("start-time").value(TimeUtils.toISOString(ref.getBeginTime()));
     	out.key("end-time").value(TimeUtils.toISOString(ref.getEndTime()));
     	out.key("file-path").value(ref.getFilePath());
     	out.key("data-url").value(formDataURL(ref));
