@@ -57,7 +57,7 @@
                     <summary>Querys events from a FDSN Event web service or file.</summary>
                     <description>The default is to query the USGS FDSN Event web service at earthquake.usgs.gov,
                      the host
-                     parameter should only be needed to query a different server. The baseURL, fdsnPath and port
+                     parameter should only be needed to query a different server. The baseURL, fdsnwsPath and port
                      parameters should only be used in the case of a server that does not follow the FDSN
                      specification as to how the service URL should be formed. Most of the other parameters
                      map directly to the same parameter in the old eventFinder source. The main exception, at
@@ -118,7 +118,12 @@
                             </element>
                         </optional>
                         <optional>
-                            <element name="fdsnPath">
+                            <element name="fdsnwsPath">
+                                <xsd:annotation>
+                                    <summary>Initial path part of an FDSN Event web service URL</summary>
+                                    <description>The default is fdsnws. Should only be used in
+                                    the case of a service that doe not follow the FDSN specification.</description>
+                                </xsd:annotation>
                                 <data type="string"/>
                             </element>
                         </optional>

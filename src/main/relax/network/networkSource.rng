@@ -217,7 +217,7 @@ CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
                     limit the request size will help speed the queries.  By default this does not get restricted channels unless
                     there is a corresponding fdsnDataSelect that has a username and password specified.
                     The default is to connect to the IRIS DMC FDSNStation web service. The host should be used
-                    to connecto to an alternative server. The baseurl and port parameters should only be
+                    to connecto to an alternative server. The baseurl, fdsnwsPath and port parameters should only be
                     used to connect to a server that does not follow the FDSN specification on how the
                     url should be formed.</description>
                     <velocity>#networkArmPage()</velocity>
@@ -259,6 +259,11 @@ CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
                         </optional>
                         <optional>
                             <element name="fdsnwsPath">
+                                <xsd:annotation>
+                                    <summary>Initial path part of an FDSN Station web service URL</summary>
+                                    <description>The default is fdsnws. Should only be used in
+                                    the case of a service that doe not follow the FDSN specification.</description>
+                                </xsd:annotation>
                                 <data type="string"/>
                             </element>
                         </optional>

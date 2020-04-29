@@ -127,7 +127,7 @@
                 but because of the coarseness of the result, it is not as useful as
                 was in the older DHI servers, so the default is off, meaning SOD pretends 
                 the available data is always the same as the requested data.
-                The host parameter should be used to connect to another service. The baseurl and
+                The host parameter should be used to connect to another service. The baseurl, fdsnwsPath and
                 port parameters should only be used to connect to a service that does not follow the
                 FDSN specification on how the URL should be formed.
                 
@@ -187,7 +187,12 @@
                             </element>
                         </optional>
                         <optional>
-                            <element name="fdsnPath">
+                            <element name="fdsnwsPath">
+                                <xsd:annotation>
+                                    <summary>Initial path part of an FDSN DataSelect web service URL</summary>
+                                    <description>The default is fdsnws. Should only be used in
+                                    the case of a service that doe not follow the FDSN specification.</description>
+                                </xsd:annotation>
                                 <data type="string"/>
                             </element>
                         </optional>
