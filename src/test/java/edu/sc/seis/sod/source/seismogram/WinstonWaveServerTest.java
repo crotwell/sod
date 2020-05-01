@@ -6,6 +6,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.junit.Test;
+import org.junit.Ignore;
 
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.NetworkId;
@@ -16,6 +17,7 @@ import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 
+@Ignore("eeyore not longer runs winston")
 public class WinstonWaveServerTest extends TestCase {
 
     @Test
