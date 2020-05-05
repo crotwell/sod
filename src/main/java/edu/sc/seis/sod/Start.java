@@ -380,14 +380,13 @@ public class Start {
             throws IOException {
         InputStream in = createInputStream(cl, loc);
         BufferedReader bufReader = new BufferedReader(new InputStreamReader(in));
-        // read in up to 4 chars looking for first '<' to eat any BOM chars
+        // read in up to 4 chars looking for first '<' =60 to eat any BOM chars
         // either FEFF for UTF-16 or EFBBBF for UTF-8
         int charsRead = 0;
         bufReader.mark(4);
         while (charsRead < 4) {
             charsRead++;
             int earlyChar = bufReader.read();
-            System.out.println(earlyChar);
             if (earlyChar == 60) {
                 bufReader.reset();
                 break;
