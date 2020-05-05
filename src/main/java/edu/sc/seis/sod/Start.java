@@ -378,8 +378,24 @@ public class Start {
 
     public static InputSource createInputSource(ClassLoader cl, String loc)
             throws IOException {
-        InputSource is = new InputSource(new InputStreamReader(createInputStream(cl, loc)));
-        is.setEncoding("UTF-8");
+        InputStream in = new InputStreamReader(createInputStream(cl, loc));
+        BufferedReader bufReader = new BufferedReader(new InputStreamReader(in));
+        // read in up to 4 chars looking for first '<' to eat any BOM chars
+        // either FEFF for UTF-16 or EFBBBF for UTF-8
+        int charsRead = 0;
+        test.mark(4);
+        while (charsRead < 4) {
+            charsRead++;
+            int earlyChar = test.read();
+            System.out.println(earlyChar);
+            if (earlyChar == 60) {
+                test.reset();
+                break;
+            } else {
+                test.mark(4);
+            }
+        }
+        InputSource is = new InputSource(bufReader);
         return is;
     }
 
