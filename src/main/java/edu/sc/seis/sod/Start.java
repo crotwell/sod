@@ -378,7 +378,7 @@ public class Start {
 
     public static InputSource createInputSource(ClassLoader cl, String loc)
             throws IOException {
-        InputStream in = new InputStreamReader(createInputStream(cl, loc));
+        InputStream in = createInputStream(cl, loc);
         BufferedReader bufReader = new BufferedReader(new InputStreamReader(in));
         // read in up to 4 chars looking for first '<' to eat any BOM chars
         // either FEFF for UTF-16 or EFBBBF for UTF-8
