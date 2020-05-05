@@ -294,12 +294,12 @@ public class Start {
     public void setupDatabaseForUnitTests() throws ConfigurationException {
         initDatabase();
     }
-    
+
     protected void initDatabase() throws ConfigurationException {
         ConnMgr.installDbProperties(props, args.getInitialArgs());
         warnIfDatabaseExists();
         synchronized(HibernateUtil.class) {
-            
+
             HibernateUtil.setUpFromConnMgr(props, getClass().getResource("/edu/sc/seis/sod/data/ehcache.xml"));
             SodDB.configHibernate(HibernateUtil.getConfiguration());
             Iterator it = getRunProps().getHibernateConfig().iterator();
@@ -318,9 +318,9 @@ public class Start {
         SodDB sodDb = SodDB.getSingleton();
         sodDb.commit();
     }
-    
+
     protected String HSQL_FILE_URL = "jdbc:hsqldb:file:";
-    
+
     protected void warnIfDatabaseExists() {
         if (getRunProps().warnIfDatabaseExists()) {
             // only matters if hsql???
@@ -343,7 +343,7 @@ public class Start {
         baseProps.load(propStream);
         propStream.close();
     }
-    
+
     private void loadProps() throws IOException {
         // get some defaults
         loadProps((Start.class).getClassLoader()
@@ -378,7 +378,9 @@ public class Start {
 
     public static InputSource createInputSource(ClassLoader cl, String loc)
             throws IOException {
-        return new InputSource(new InputStreamReader(createInputStream(cl, loc)));
+        InputSource is = new InputSource(new InputStreamReader(createInputStream(cl, loc)));
+        is.setEncoding("UTF-8");
+        return is;
     }
 
     public static InputStream createInputStream(String loc) throws IOException,
@@ -405,7 +407,7 @@ public class Start {
 
     public static RetryStrategy createRetryStrategy(int numRetries) {
         if(commandName.equals("sod")) {
-            return new UserReportRetryStrategy(numRetries, 
+            return new UserReportRetryStrategy(numRetries,
                                                "SOD will pick up where it left off when restarted.");
         } else {
             return new UserReportRetryStrategy(numRetries);
@@ -423,7 +425,7 @@ public class Start {
     public static AbstractWaveformRecipe getWaveformRecipe() {
         return waveformRecipe;
     }
-    
+
     public static EventArm getEventArm() {
         return event;
     }
@@ -544,7 +546,7 @@ public class Start {
         System.err.println();
         System.err.println(" ...a brave soul trudges on.");
     }
-    
+
     static void parseArms(NodeList armNodes) throws Exception {
         runProps = new RunProperties();
         waveforms = new WaveformArm[0]; // just in case a non-waveform run
@@ -584,7 +586,7 @@ public class Start {
                                                                               (waveformRecipe instanceof LocalSeismogramArm));
                         SodDB.commit();
                     }
-                    
+
                 };
                 Thread t = new Thread(reopenEvents, "Reopen Suspended ECPS");
                 t.start();
@@ -672,7 +674,7 @@ public class Start {
             }
         }
     }
-    
+
     private void handleStartupRunProperties() {
         if(runProps.reopenEvents()) {
             StatefulEventDB eventDb = StatefulEventDB.getSingleton();
@@ -743,7 +745,7 @@ public class Start {
     public static Args getArgs() {
         return args;
     }
-    
+
     public static Element getConfig() {
         return config;
     }
@@ -759,7 +761,7 @@ public class Start {
             System.exit(-1);
         }
     }
-    
+
     public static void main(String[] args) {
         try {
             checkGCJ();
@@ -791,7 +793,7 @@ public class Start {
     public static void add(Properties newProps) {
         props.putAll(newProps);
     }
-    
+
     public static void cataclysmicFailureOfUnbelievableProportions() {
         try {
             System.err.println("Oh boy, this is really bad. No, it is even worse then that.");
@@ -809,7 +811,7 @@ public class Start {
                      + " failure stack trace: "+reason, new Exception(reason));
         wakeUpAllArms();
     }
-    
+
     public static void armFailure(Arm arm, Throwable t) {
         armFailure = true;
         GlobalExceptionHandler.handle("Problem running "
@@ -821,7 +823,7 @@ public class Start {
                 + " failed. Sod is giving up and quiting", t);
         wakeUpAllArms();
     }
-     
+
     public static void wakeUpAllArms() {
         // wake up any sleeping arms
         Arm[] arms = new Arm[] {network, event};
@@ -855,9 +857,9 @@ public class Start {
     private static Element config;
 
     private static Logger logger = LoggerFactory.getLogger(Start.class);
-    
+
     private static WaveformArm[] waveforms;
-    
+
     private static AbstractWaveformRecipe waveformRecipe;
 
     private static Properties props = System.getProperties();
@@ -885,5 +887,5 @@ public class Start {
     public static final String TUTORIAL_LOC = "jar:edu/sc/seis/sod/data/configFiles/demo.xml";
 
     public static final String DEFAULT_PROPS = "edu/sc/seis/sod/data/sod.prop";
-    
+
 }// Start
