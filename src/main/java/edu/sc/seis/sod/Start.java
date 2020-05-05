@@ -383,16 +383,16 @@ public class Start {
         // read in up to 4 chars looking for first '<' to eat any BOM chars
         // either FEFF for UTF-16 or EFBBBF for UTF-8
         int charsRead = 0;
-        test.mark(4);
+        bufReader.mark(4);
         while (charsRead < 4) {
             charsRead++;
-            int earlyChar = test.read();
+            int earlyChar = bufReader.read();
             System.out.println(earlyChar);
             if (earlyChar == 60) {
-                test.reset();
+                bufReader.reset();
                 break;
             } else {
-                test.mark(4);
+                bufReader.mark(4);
             }
         }
         InputSource is = new InputSource(bufReader);
