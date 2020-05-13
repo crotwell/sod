@@ -121,13 +121,17 @@ repositories {
 val dirName = project.name+"-"+version
 
 val binDistFiles = copySpec {
-
-    from("build/output") {
-        fileMode=755
-        include("bin/**")
+    from(configurations.runtimeClasspath) {
+      include("*")
+      into("lib")
     }
-    from("build/output") {
-        include("lib/**")
+    from("build/scripts") {
+        include("**")
+        into("bin")
+    }
+    from("build/libs") {
+        include("**")
+        into("lib")
     }
     from("scripts") {
         include("cwg.prop")
@@ -212,6 +216,7 @@ tasks.register<Sync>("explodeBin") {
     dependsOn("createRunScripts")
     dependsOn("buildSchema")
     dependsOn("buildGrouperSchema")
+    dependsOn("jar")
     group = "dist"
     with(binDistFiles)
     into(file("$buildDir/explode"))
