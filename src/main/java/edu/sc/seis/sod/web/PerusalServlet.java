@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.regex.Pattern;
 
 import org.hibernate.query.Query;
@@ -19,6 +20,9 @@ import edu.sc.seis.sod.hibernate.eventpair.EventStationPair;
 import edu.sc.seis.sod.model.event.StatefulEvent;
 import edu.sc.seis.sod.web.jsonapi.EventStationJson;
 import edu.sc.seis.sod.web.jsonapi.JsonApi;
+import edu.sc.seis.sod.web.jsonapi.JsonApiDocument;
+import edu.sc.seis.sod.web.jsonapi.JsonApiException;
+import edu.sc.seis.sod.web.jsonapi.JsonApiResource;
 
 public class PerusalServlet  extends JsonToFileServlet {
 
@@ -35,29 +39,26 @@ public class PerusalServlet  extends JsonToFileServlet {
 
     public static final String NEXT_ESP = "next";
 
-    protected int extractESP_dbid(JSONObject curr) {
-        if (curr == null) {
+    protected int extractESP_dbid(JsonApiDocument jsonApiDocument) throws JsonApiException {
+        if (jsonApiDocument == null) {
             return -1;
         }
-        if (!curr.has(JsonApi.DATA)) {
+        if (!jsonApiDocument.hasData()) {
             return -1;
         }
-        JSONObject data = curr.optJSONObject(JsonApi.DATA);
+        JsonApiResource data = jsonApiDocument.getData();
         if (data == null) {
             return -1;
         }
-        if (!data.has(JsonApi.ID)) {
+        if (data.optId() == null) {
             return -1;
         }
-        return Integer.parseInt(data.optString(JsonApi.ID, "-4"));
+        return Integer.parseInt(data.getId());
     }
 
     @Override
-    protected void updateBeforeSave(JSONObject p) throws IOException {
+    protected void updateBeforeSave(JsonApiResource p) throws IOException, JsonApiException {
         try {
-        	if ( ! p.getJSONObject(JsonApi.DATA).has(JsonApi.RELATIONSHIPS)) {
-        		p.getJSONObject(JsonApi.DATA).put(JsonApi.RELATIONSHIPS, new JSONObject());
-        	}
         	updateNext(p);
         	updateMeasurementPerusalLink(p);
         } catch (JSONException e) {
@@ -65,60 +66,58 @@ public class PerusalServlet  extends JsonToFileServlet {
             System.err.println(p.toString(2));
             logger.error("Error in updateBeforeSave: ", e);
             throw e;
-        }
+		}
     }
     
     @Override
-    protected void updateAfterLoad(JSONObject p) throws IOException {
-        JSONObject related = p.getJSONObject(JsonApi.DATA).getJSONObject(JsonApi.RELATIONSHIPS);
-        JSONObject curr = related.optJSONObject(CURR_ESP);
+    protected void updateAfterLoad(JsonApiDocument p) throws IOException, JsonApiException {
+    	JsonApiResource res = p.getData();
+    	JsonApiDocument curr = res.getRelationship(CURR_ESP);
+        
         int currDbId = extractESP_dbid(curr);
         if (currDbId < 0 ) {
             // need curr, so updateNext
-            updateNext(p);
+            updateNext(res);
         }
     }
 
-    protected void updateMeasurementPerusalLink(JSONObject p) throws IOException {
-        String pId = p.getJSONObject(JsonApi.DATA).getString(JsonApi.ID);
-        JSONObject related = p.getJSONObject(JsonApi.DATA).getJSONObject(JsonApi.RELATIONSHIPS);
-        if (related.has("tools")) {
-            JSONArray tools = related.getJSONObject("tools").getJSONArray(JsonApi.DATA);
+    protected void updateMeasurementPerusalLink(JsonApiResource p) throws IOException, JSONException, JsonApiException {
+
+        logger.info("updateMeasurementPerusalLink "+p.toString(2));
+        String pId = p.getId();
+        if (p.hasRelationship("tools")) {
+            JsonApiDocument tools = p.getRelationship("tools");
 
             MeasurementToolServlet mtServlet = new MeasurementToolServlet();
-            for( int i=0; i<tools.length(); i++) {
-                JSONObject mt = tools.getJSONObject(i);
+            for (JsonApiResource mt : tools.getDataArray()) {
                 logger.debug("Try to update perusal on "+mt.toString(2));
-                String mId = mt.getString(JsonApi.ID);
+                String mId = mt.getId();
                 logger.debug("Got mId: "+mId);
-                JSONObject mObj = mtServlet.load(mId);
+                JsonApiResource mObj = mtServlet.load(mId);
                 logger.debug("Load MT "+mObj.toString(2));
-                JSONObject mObjPerusal = mObj.getJSONObject(JsonApi.DATA).getJSONObject(JsonApi.RELATIONSHIPS).getJSONObject("perusal").getJSONObject(JsonApi.DATA);
-                logger.debug("Got mObjPerusal");
-                if( mObjPerusal.isNull(JsonApi.ID) || ! pId.equals(mObjPerusal.getString(JsonApi.ID))) {
-                    mObjPerusal.put(JsonApi.ID, pId);
-                    mtServlet.save(mId, mObj);
-                }
+                
+                mObj.setRelationship("perusal", pId, "perusal");
+                mtServlet.save(mObj);
             }
         }
     }
 
-    protected void updateNext(JSONObject p) {
-        System.out.println("updateNext: " + p.toString(2));
-        JSONObject related = p.getJSONObject(JsonApi.DATA).getJSONObject(JsonApi.RELATIONSHIPS);
-        JSONObject attr = p.getJSONObject(JsonApi.DATA).getJSONObject(JsonApi.ATTRIBUTES);
-        JSONObject first = related.optJSONObject(FIRST_ESP);
-        JSONObject curr = related.optJSONObject(CURR_ESP);
-        JSONObject prev = related.optJSONObject(PREV_ESP);
-        JSONObject next = related.optJSONObject(NEXT_ESP);
-        System.err.println("curr data: " + (curr == null ? "null" : curr.optJSONObject(JsonApi.DATA)));
+    protected void updateNext(JsonApiResource res) throws JsonApiException {
+        System.out.println("updateNext: " + res.toString(2));
+        
+        
+        JsonApiDocument first = res.getRelationship(FIRST_ESP);
+        JsonApiDocument curr = res.getRelationship(CURR_ESP);
+        JsonApiDocument prev = res.getRelationship(PREV_ESP);
+        JsonApiDocument next = res.getRelationship(NEXT_ESP);
+        System.err.println("curr data: " + (curr == null ? "null" : curr.getData()));
         int firstDbId = extractESP_dbid(first);
         int currDbId = extractESP_dbid(curr);
         int prevDbId = extractESP_dbid(prev);
         int nextDbId = extractESP_dbid(next);
-        String primarySort = attr.optString(KEY_PRIMARY_SORT, KEY_SORT_BY_QUAKE);
-        String quakeSort = attr.optString(KEY_PRIMARY_SORT, KEY_SORT_BY_TIME);
-        String stationSort = attr.optString(KEY_PRIMARY_SORT, KEY_SORT_BY_DISTANCE);
+        String primarySort = res.getAttributeString(KEY_PRIMARY_SORT, KEY_SORT_BY_QUAKE);
+        String quakeSort = res.getAttributeString(KEY_EVENT_SORT, KEY_SORT_BY_TIME);
+        String stationSort = res.getAttributeString(KEY_STATION_SORT, KEY_SORT_BY_DISTANCE);
         if (firstDbId>0 && currDbId < 0 && prevDbId < 0 && nextDbId < 0) {
             // likely going back to beginning, set prevDbId to firstDbId so if below will pick up
             // at right place
@@ -131,31 +130,36 @@ public class PerusalServlet  extends JsonToFileServlet {
                 EventStationPair currESP = findNext(prevDbId, primarySort, quakeSort, stationSort);
                 if (currESP != null) {
                     EventStationJson esJson = new EventStationJson(currESP, baseUrl);
-                    related.put(CURR_ESP, formJsonRelatedFromESP(esJson));
+                    res.setRelationship(CURR_ESP, esJson.getId(), esJson.getType());
                     EventStationPair nextESP = findNext(currESP.getDbid(), primarySort, quakeSort, stationSort);
                     esJson = new EventStationJson(nextESP, baseUrl);
-                    related.put(NEXT_ESP, formJsonRelatedFromESP(esJson));
+                    res.setRelationship(NEXT_ESP, esJson.getId(), esJson.getType());
                 }
             } else if (nextDbId > 0) {
                 // have next but not prev, curr, so move next to curr and leave prev null
                 // this might not be right in case of client trying to do "double-previous" but...
-                curr = next;
-                currDbId = nextDbId;
-                related.put(CURR_ESP, curr);
-                EventStationPair nextESP = findNext(currDbId, primarySort, quakeSort, stationSort);
-                EventStationJson esJson = new EventStationJson(nextESP, baseUrl);
-                related.put(NEXT_ESP, formJsonRelatedFromESP(esJson));
+
+            	EventStationPair currESP = findPrev(nextDbId, primarySort, quakeSort, stationSort);
+            	if (currESP != null) {
+                    EventStationJson esJson = new EventStationJson(currESP, baseUrl);
+                    res.setRelationship(CURR_ESP, esJson.getId(), esJson.getType());
+                    EventStationPair prevESP = findPrev(currESP.getDbid(), primarySort, quakeSort, stationSort);
+                    esJson = new EventStationJson(prevESP, baseUrl);
+                    res.setRelationship(PREV_ESP, esJson.getId(), esJson.getType());
+            	}
                 
             } else {
                 // nothing, so start at beginning
                 EventStationPair currESP = findNext(-1, primarySort, quakeSort, stationSort);
                 if (currESP != null) {
                     EventStationJson esJson = new EventStationJson(currESP, baseUrl);
-                    related.put(CURR_ESP, formJsonRelatedFromESP(esJson));
-                    related.put(FIRST_ESP, formJsonRelatedFromESP(esJson)); // also set first
+                    res.setRelationship(CURR_ESP, esJson.getId(), esJson.getType());
+                    res.setRelationship(FIRST_ESP, esJson.getId(), esJson.getType()); // also set first
                     EventStationPair nextESP = findNext(currESP.getDbid(), primarySort, quakeSort, stationSort);
                     esJson = new EventStationJson(nextESP, baseUrl);
-                    related.put(NEXT_ESP, formJsonRelatedFromESP(esJson));
+                    res.setRelationship(NEXT_ESP, esJson.getId(), esJson.getType());
+                } else {
+                	logger.warn("Perusal is empty, can't find first "+res.getId());
                 }
             }
         } else {
@@ -163,11 +167,16 @@ public class PerusalServlet  extends JsonToFileServlet {
             EventStationPair nextESP = findNext(currDbId, primarySort, quakeSort, stationSort);
             if (nextESP != null) {
                 EventStationJson esJson = new EventStationJson(nextESP, baseUrl);
-                related.put(NEXT_ESP, formJsonRelatedFromESP(esJson));
+                res.setRelationship(NEXT_ESP, esJson.getId(), esJson.getType());
+            }
+            EventStationPair prevESP = findPrev(currDbId, primarySort, quakeSort, stationSort);
+            if (prevESP != null) {
+                EventStationJson esJson = new EventStationJson(prevESP, baseUrl);
+                res.setRelationship(PREV_ESP, esJson.getId(), esJson.getType());
             }
         }
         
-        System.out.println("Done updateNext: " + p.toString(2));
+        System.out.println("Done updateNext: " + res.toString(2));
     }
 
     private JSONObject formJsonRelatedFromESP(EventStationJson esJson) {
@@ -179,7 +188,116 @@ public class PerusalServlet  extends JsonToFileServlet {
         return currJSON;
     }
 
-    private EventStationPair findNext(long prevDbId, String primarySort, String quakeSort, String stationSort) {
+    private EventStationPair findPrev(long currDbId, String primarySort, String quakeSort, String stationSort) {
+        EventStationPair prev = null;
+        if (currDbId <= 0) {
+        	prev = null;
+        } else {
+            String q = "from EventStationPair where dbid = " + currDbId;
+            Query query = SodDB.getSession().createQuery(q);
+            EventStationPair esp = (EventStationPair)query.uniqueResult();
+            List<EventStationPair> prevESPList;
+            StatefulEvent currEvent = esp.getEvent();
+            Station currStation = esp.getStation();
+            if (primarySort.equalsIgnoreCase(KEY_SORT_BY_QUAKE)) {
+                // same quake, look for prev station
+                prevESPList = SodDB.getSingleton().getSuccessfulESPForEvent(currEvent);
+            } else {
+                // same stations, look for prev quake
+                prevESPList = SodDB.getSingleton().getSuccessfulESPForStation(currStation);
+            }
+            ListIterator<EventStationPair> iterator = prevESPList.listIterator(prevESPList.size());
+            EventStationPair eventStationPair = null;
+            while (iterator.hasPrevious()) {
+                eventStationPair = iterator.previous();
+                if (eventStationPair.getDbid() == currDbId) {
+                    // found it
+                    break;
+                }
+            }
+            while (iterator.hasPrevious()) {
+            	prev = iterator.previous();
+                if (SodDB.getSingleton().getNumSuccessful(prev.getEvent(), prev.getStation()) > 0) {
+                    return prev;
+                }
+            }
+            // no prev in sub-sort, go to prev in primary
+            if (primarySort.equalsIgnoreCase(KEY_SORT_BY_QUAKE)) {
+                prev = getPrevPrimaryEvent(currEvent, quakeSort);
+                // no more left
+            } else {
+                prev = getPrevPrimaryStation(currStation, stationSort);
+                // no more left
+            }
+        }
+        return prev;
+    }
+
+    private EventStationPair getPrevPrimaryEvent(StatefulEvent currEvent, String quakeSort) {
+        if (currEvent == null) {
+        	return null;
+        }
+        SuccessfulEventCache cache = WebAdmin.getSuccessfulEventCache();
+        List<StatefulEvent> events = cache.getEventWithSuccessful();
+        // should sort here...
+        // should sort here
+        ListIterator<StatefulEvent> staIt = events.listIterator(events.size());
+
+        // Iterate in reverse.
+        while(staIt.hasPrevious()) {
+        	StatefulEvent currS = null;
+            currS = staIt.previous();
+            if (currS.getDbid() == currEvent.getDbid()) {
+                // found it
+                break;
+            }
+        }
+        while (staIt.hasPrevious()) {
+        	StatefulEvent s = staIt.previous();
+            List<EventStationPair> prevESPList = SodDB.getSingleton().getSuccessfulESPForEvent(s);
+            ListIterator<EventStationPair> espIt = prevESPList.listIterator(prevESPList.size());
+            while (espIt.hasPrevious()) {
+                EventStationPair nEsp = espIt.previous();
+                if (SodDB.getSingleton().getNumSuccessful(nEsp.getEvent(), nEsp.getStation()) > 0) {
+                    return nEsp;
+                }
+            }
+        }
+        return null;
+	}
+
+    private EventStationPair getPrevPrimaryStation(Station currStation, String stationSort) {
+        List<Station> allStationList = Arrays.asList(NetworkDB.getSingleton().getAllStations());
+        if (currStation == null) {
+        	return null;
+        }
+        // should sort here
+        ListIterator<Station> staIt = allStationList.listIterator(allStationList.size());
+
+        // Iterate in reverse.
+        while(staIt.hasPrevious()) {
+        	Station currS = null;
+            currS = staIt.previous();
+            if (currS.getDbid() == currStation.getDbid()) {
+                // found it
+                break;
+            }
+        }
+        while (staIt.hasPrevious()) {
+            Station s = staIt.previous();
+            List<EventStationPair> prevESPList = SodDB.getSingleton().getSuccessfulESPForStation(s);
+            ListIterator<EventStationPair> espIt = prevESPList.listIterator(prevESPList.size());
+            while (espIt.hasPrevious()) {
+                EventStationPair nEsp = espIt.previous();
+                if (SodDB.getSingleton().getNumSuccessful(nEsp.getEvent(), nEsp.getStation()) > 0) {
+                    return nEsp;
+                }
+            }
+        }
+        return null;
+	}
+
+	private EventStationPair findNext(long prevDbId, String primarySort, String quakeSort, String stationSort) {
         EventStationPair next = null;
         if (prevDbId <= 0) {
             // no prev, so first time

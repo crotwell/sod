@@ -76,7 +76,7 @@ public class WebAdmin implements ArmListener{
         addServlets(servlets, SodConfigServlet.class, "sod-configs");
         addServlets(servlets, PerusalServlet.class, "perusals");
         addServlets(servlets, MeasurementToolServlet.class, "measurement-tools");
-        addServlets(servlets, MeasurementTextServlet.class, "measurement");
+        addServlets(servlets, MeasurementTextServlet.class, "measurements");
         addServlets(servlets, MeasurementTextServlet.class, "measurement-texts");
                 
         // Add the ResourceHandler to the server.

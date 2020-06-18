@@ -12,6 +12,7 @@ import edu.sc.seis.sod.hibernate.eventpair.EventChannelPair;
 import edu.sc.seis.sod.hibernate.eventpair.EventVectorPair;
 import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.measure.Measurement;
+import edu.sc.seis.sod.model.common.DistAz;
 import edu.sc.seis.sod.process.waveform.AbstractSeismogramWriter;
 
 public class EventVectorJson extends AbstractJsonApiData {
@@ -26,7 +27,7 @@ public class EventVectorJson extends AbstractJsonApiData {
 
     @Override
     public String getType() {
-        return "quake-vector";
+        return "quake-vectors";
     }
 
     @Override
@@ -46,6 +47,12 @@ public class EventVectorJson extends AbstractJsonApiData {
             String jsonFriendlyKey = key.replaceAll("\\W", "-");
             measurements.put(jsonFriendlyKey, ecp.getCookieJar().getRaw(key));
         }
+        out.key("measurements").value(measurements);
+
+        DistAz distaz = new DistAz(ecp.getEsp().getStation(), ecp.getEsp().getEvent());
+        out.key("distdeg").value(distaz.getDelta());
+        out.key("azimuth").value(distaz.getAz());
+        out.key("backazimuth").value(distaz.getBaz());
         super.encodeAttributes(out);
     }
 

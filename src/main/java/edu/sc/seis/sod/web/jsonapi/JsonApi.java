@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONWriter;
@@ -15,12 +16,14 @@ public class JsonApi {
     public static final String ERRORS = "errors";
     public static final String RELATIONSHIPS = "relationships";
     public static final String LINKS = "links";
+    public static final String META = "meta";
     public static final String ATTRIBUTES = "attributes";
     public static final String TYPE = "type";
     public static final String ID = "id";
     public static final String INCLUDED = "included";
     public static final String DATA = "data";
     public static final String SELF = "self";
+	public static final String RELATED = "related";
 
     public static void encodeJson(JSONWriter out, JsonApiData data) throws JSONException {
         out.object();
@@ -101,14 +104,34 @@ public class JsonApi {
         out.object().key(ERRORS).array().object().key(DETAIL).value(message).endObject().endArray().endObject();
     }
 
-    public static JSONObject loadFromReader(BufferedReader in) throws IOException {
+    public static String loadFromReader(BufferedReader in) throws IOException, JSONException, JsonApiException {
         StringBuffer json = new StringBuffer();
         char[] buf = new char[1024];
         int numRead = 0;
         while ((numRead = in.read(buf)) != -1) {
             json.append(String.valueOf(buf, 0, numRead));
         }
-        JSONObject out = new JSONObject(json.toString());
-        return out;
+        return json.toString();
+    }
+    
+    public static boolean hasData(JSONObject json) {
+    	return json.has(DATA);
+    }
+    
+    public static boolean hasRelationships(JSONObject json) {
+    	return json.has(RELATIONSHIPS);
+    }
+    
+    public static boolean hasLinks(JSONObject json) {
+    	return json.has(LINKS);
+    }
+    
+    public static boolean hasIncluded(JSONObject json) {
+    	return json.has(INCLUDED);
+    }
+    
+    public static JsonApiDocument decode(JSONObject json) throws JsonApiException {
+    	JsonApiDocument out = new JsonApiDocument(json);
+    	return out;
     }
 }

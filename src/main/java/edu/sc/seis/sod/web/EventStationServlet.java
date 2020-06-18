@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.query.Query;
-import org.json.JSONObject;
 import org.json.JSONWriter;
 
 import edu.sc.seis.sod.hibernate.AbstractHibernateDB;
@@ -26,6 +25,8 @@ import edu.sc.seis.sod.web.jsonapi.EventStationJson;
 import edu.sc.seis.sod.web.jsonapi.EventVectorJson;
 import edu.sc.seis.sod.web.jsonapi.JsonApi;
 import edu.sc.seis.sod.web.jsonapi.JsonApiData;
+import edu.sc.seis.sod.web.jsonapi.JsonApiDocument;
+import edu.sc.seis.sod.web.jsonapi.JsonApiException;
 
 public class EventStationServlet extends HttpServlet {
 
@@ -183,7 +184,7 @@ public class EventStationServlet extends HttpServlet {
                     resp.sendError(500);
                 }
 
-                JSONObject inJson = JsonApi.loadFromReader(req.getReader());
+                JsonApiDocument inJson = JsonApiDocument.parse(JsonApi.loadFromReader(req.getReader()));
                 writer.print(inJson.toString(2));
             } else {
                 matcher = measurementsPattern.matcher(URL);
@@ -197,6 +198,9 @@ public class EventStationServlet extends HttpServlet {
                     resp.sendError(500);
                 }
             }
+        } catch(JsonApiException e) {
+            logger.error("doPatch: ", e);
+            throw new ServletException(e);
         } catch(Throwable t) {
             logger.error("doPatch: ", t);
             throw t;

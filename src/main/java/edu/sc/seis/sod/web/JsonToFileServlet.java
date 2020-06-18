@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -22,12 +23,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONWriter;
 
 import edu.sc.seis.sod.hibernate.NetworkDB;
 import edu.sc.seis.sod.web.jsonapi.JsonApi;
+import edu.sc.seis.sod.web.jsonapi.JsonApiDocument;
+import edu.sc.seis.sod.web.jsonapi.JsonApiException;
+import edu.sc.seis.sod.web.jsonapi.JsonApiResource;
 
 public abstract class JsonToFileServlet extends HttpServlet {
 
@@ -42,6 +47,7 @@ public abstract class JsonToFileServlet extends HttpServlet {
             jsonDir.mkdirs();
             logger.info("Create json Dir: " + jsonDir.getAbsolutePath());
         }
+        this.isArrayType = false;
     }
 
     @Override
@@ -57,37 +63,47 @@ public abstract class JsonToFileServlet extends HttpServlet {
             if (matcher.matches()) {
                 // all json file ids
                 List<String> jsonlIds = getAllJsonIds();
-
-                out.object();
-                out.key(JsonApi.DATA).array();
-                for (String p : jsonlIds) {
-                    out.object();
-                    out.key(JsonApi.ID).value(p);
-                    out.key(JsonApi.TYPE).value(jsonType);
-                    out.endObject();
-                }
-                out.endArray();
-                out.key(JsonApi.INCLUDED).array();
-                String comma = "";
+                JsonApiDocument doc = JsonApiDocument.createEmptyArray();
                 for (String pId : jsonlIds) {
-                    JSONObject p = load(pId).getJSONObject(JsonApi.DATA);
-                    writer.println(comma);
-                    writer.println(p.toString(2));
-                    comma = ",";
+                    JsonApiResource res;
+					try {
+						res = new JsonApiResource(pId, jsonType);
+						//res.setLink("self", this.baseUrl+"/"+this.jsonType+"/"+pId );
+	                    doc.append(res);
+					} catch (JsonApiException e) {
+						JsonApi.encodeError(out, "Error in saved document: id="+pId+" type="+jsonType+" url:" + URL);
+						writer.close();
+						resp.sendError(204);
+					}
                 }
-                out.endArray();
-                out.endObject();
-               
+                writer.write(doc.toString(2));
             } else {
                 matcher = idPattern.matcher(URL);
                 if (matcher.matches()) {
                     String pId = matcher.group(1);
                     try {
-						JSONObject p = load(pId);
-						updateAfterLoad(p);
-						writer.print(p.toString(2));
+						if (this.isArrayType && ! exists(pId)) {
+							JsonApiDocument p = JsonApiDocument.createEmptyArray();
+							updateAfterLoad(p);
+							writer.print(p.toString(2));
+						} else if (this.isArrayType) {
+							JSONArray jsonArr = loadArray(pId);
+							JsonApiDocument p = JsonApiDocument.createForArray(jsonArr);
+							updateAfterLoad(p);
+							writer.print(p.toString(2));
+						} else {
+							JsonApiResource res = load(pId);
+							JsonApiDocument p = JsonApiDocument.createForResource(res);
+							updateAfterLoad(p);
+							writer.print(p.toString(2));
+						}
 					} catch (FileNotFoundException e) {
-						JsonApi.encodeError(out, "Not Found: type="+jsonType+" url:" + URL);
+						JsonApi.encodeError(out, "Not Found: id="+pId+" type="+jsonType+" url:" + URL);
+						writer.close();
+						resp.sendError(204);
+					} catch (JsonApiException e) {
+						logger.warn("Error in saved document: id="+pId+" type="+jsonType+" url:" + URL);
+						JsonApi.encodeError(out, "Error in saved document: id="+pId+" type="+jsonType+" url:" + URL);
 						writer.close();
 						resp.sendError(204);
 					}
@@ -110,49 +126,53 @@ public abstract class JsonToFileServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    	String rawJson = null;
         try {
         WebAdmin.setJsonHeader(req, resp);
         String URL = req.getRequestURL().toString();
-        JSONObject inJson = JsonApi.loadFromReader(req.getReader());
-        logger.debug("POST: " + URL + "  " + inJson.toString(2));
-        JSONObject dataObj = inJson.getJSONObject(JsonApi.DATA);
-        if (dataObj != null) {
-            String type = dataObj.getString(JsonApi.TYPE);
-            String id = dataObj.optString(JsonApi.ID);//missing id means newly created
-            if (type.equals(jsonType)) {
-                if (id.length() == 0) {
-                    // empty id, so new, create
-                    id = java.util.UUID.randomUUID().toString();
-                    dataObj.put(JsonApi.ID, id);
-                    logger.debug("POST: update id " + URL + "  " + id);
-                }
+        rawJson = JsonApi.loadFromReader(req.getReader());
+        JsonApiDocument jsonApiDoc = JsonApiDocument.parse(rawJson);
+        logger.debug("POST: " + URL + "  " + jsonApiDoc.toString(2));
+        if (jsonApiDoc.hasData()) {
+        	if (jsonApiDoc.isDataArray()) {
+        		logger.error("Not yet impl save jsonApiDoc dataArray: " +jsonApiDoc.toString(2) );
+                resp.sendError(400, "Not yet impl save jsonApiDoc dataArray: " );
+        	}
+        	JsonApiResource apiObj = jsonApiDoc.getData();
+            if (apiObj.getType().equals(jsonType)) {
+            	logger.debug("POST: " + URL + "  type: " + apiObj.getType()+ "  id: " + apiObj.optId());
                 // security, limit to simple filename
-                Matcher m = filenamePattern.matcher(id);
+                Matcher m = filenamePattern.matcher(apiObj.getId());
                 if (!m.matches()) {
-                    resp.sendError(400, "Bad id: " + id);
+                    resp.sendError(400, "Bad id: " + apiObj.getId());
                     return;
                 }
-                updateBeforeSave(inJson);
-                save(id, inJson);
+                updateBeforeSave(apiObj);
+                save(apiObj);
 
                 PrintWriter w = resp.getWriter();
-                w.print(inJson.toString(2));
+                w.print(jsonApiDoc.toString(2));
                 w.close();
                 logger.debug("POST: " + URL + "  Done");
             } else {
-                resp.sendError(400, "type  wrong/missing: " + type+" != "+jsonType);
+                resp.sendError(400, "type  wrong/missing: " + apiObj.getType()+" != "+jsonType);
                 return;
             }
         } else {
+        	logger.warn("Unable to parse JSON: "+rawJson);
             resp.sendError(400, "Unable to parse JSON");
             return;
         }
         } catch(JSONException e) {
+        	logger.warn("JSONException with: "+rawJson, e);
             throw new ServletException(e);
         } catch(RuntimeException e) {
             logger.error("doPost ", e);
             throw e;
-        }
+        } catch (JsonApiException e) {
+        	logger.warn("JsonApiException with: "+rawJson+" ", e);
+            throw new ServletException(e);
+		}
     }
 
     @Override
@@ -173,37 +193,47 @@ public abstract class JsonToFileServlet extends HttpServlet {
         try {
             if (matcher.matches()) {
                 String id = matcher.group(1);
-                JSONObject p = load(id);
-                JSONObject inJson = JsonApi.loadFromReader(req.getReader());
-                JSONObject pRelated = p.getJSONObject(JsonApi.DATA).getJSONObject(JsonApi.RELATIONSHIPS);
-                JSONObject pAttr = p.getJSONObject(JsonApi.DATA).getJSONObject(JsonApi.ATTRIBUTES);
-                JSONObject inRelated = inJson.getJSONObject(JsonApi.DATA).getJSONObject(JsonApi.RELATIONSHIPS);
-                JSONObject inAttr = inJson.getJSONObject(JsonApi.DATA).optJSONObject(JsonApi.ATTRIBUTES);
-                if (inAttr != null) {
-                    if (pAttr == null) {
-                        pAttr = new JSONObject();
-                        p.getJSONObject(JsonApi.DATA).put(JsonApi.ATTRIBUTES, pAttr);
-                    }
-                    Iterator<String> keyIt = inAttr.keys();
-                    while (keyIt.hasNext()) {
-                        String key = keyIt.next();
-                        pAttr.put(key, inAttr.get(key));
+
+				JsonApiResource res = load(id);
+                JsonApiDocument inJson = JsonApiDocument.parse(JsonApi.loadFromReader(req.getReader()));
+                logger.info("patch: "+inJson.toString(2));
+                if (inJson.isDataArray()) {
+                    JsonApi.encodeError(out, "can't PATCH data array: " + URL);
+                    writer.close();
+                    resp.sendError(500);
+                    return;
+                }
+                for (Iterator<String> iter = inJson.getData().attributeKeys(); iter.hasNext(); ) {
+                    String key = iter.next();
+                	res.setAttribute(key, inJson.getData().getAttribute(key));
+                }
+                for (Iterator<String> iter = inJson.getData().relationshipKeys(); iter.hasNext(); ) {
+                    String key = iter.next();
+                    JsonApiDocument rel = inJson.getData().getRelationship(key);
+                    logger.warn("doPatch Rel "+key+"  "+rel);
+                    if (rel == null) {
+                    	logger.info("doPatch rel is null");
+                    	res.setRelationshipNull(key);
+                    } else if (rel.isDataArray()) {
+                    	res.deleteRelationship(key);
+                    	for (JsonApiResource relRes: rel.getDataArray()) {
+                        	String relId = relRes.getId();
+                        	String relType = relRes.getType();
+                        	res.appendRelationship(key, relId, relType);
+                    	}
+                    } else if (rel.hasData()) {
+                    	String relId = rel.getData().getId();
+                    	String relType = rel.getData().getType();
+                    	res.setRelationship(key, relId, relType);
+                    } else {
+                    	throw new RuntimeException("Shouldn't happen but did...");
                     }
                 }
-                if (inRelated != null) {
-                    if (pRelated == null) {
-                        pRelated = new JSONObject();
-                        p.getJSONObject(JsonApi.DATA).put(JsonApi.RELATIONSHIPS, pRelated);
-                    }
-                    Iterator<String> keyIt = inRelated.keys();
-                    while (keyIt.hasNext()) {
-                        String key = keyIt.next();
-                        pRelated.put(key, inRelated.get(key));
-                    }
-                }
-                updateBeforeSave(p);
-                save(id, p);
-                writer.print(p.toString(2));
+                logger.info("doPath after Rel: "+res.toString(2));
+                updateBeforeSave(res);
+                logger.info("doPath after updateBeforeSave: "+res.toString(2));
+                save(res);
+                writer.print(JsonApiDocument.createForResource(res).toString(2));
             } else {
                 logger.warn("Bad URL for servlet: " + URL);
                 JsonApi.encodeError(out, "bad url for servlet: " + URL);
@@ -211,6 +241,8 @@ public abstract class JsonToFileServlet extends HttpServlet {
                 resp.sendError(500);
             }
         } catch(JSONException e) {
+            throw new ServletException(e);
+        } catch(JsonApiException e) {
             throw new ServletException(e);
         } finally {
             writer.close();
@@ -264,14 +296,34 @@ public abstract class JsonToFileServlet extends HttpServlet {
         }));
     }
 
-    protected void save(String id, JSONObject inJson) throws IOException {
+    protected void save(JsonApiResource inJson) throws IOException {
         BufferedWriter out = null;
         try {
-            File pFile = new File(jsonDir, id);
+            File pFile = new File(jsonDir, inJson.getId());
             logger.debug("Save to "+pFile.getAbsolutePath());
             if (pFile.getAbsolutePath().contains("quakeStationMeasurements")) {
                 logger.debug("json: "+inJson.toString(2));
             }
+            if (pFile.exists()) {
+                Files.move(pFile.toPath(),
+                           new File(jsonDir, inJson.getId() + ".old").toPath(),
+                           StandardCopyOption.REPLACE_EXISTING);
+            }
+            out = new BufferedWriter(new FileWriter(pFile));
+            out.write(inJson.toString(2));
+        } finally {
+            if (out != null) {
+                out.close();
+            }
+        }
+    }
+
+
+    protected void save(String id, JSONArray inJson) throws IOException {
+        BufferedWriter out = null;
+        try {
+            File pFile = new File(jsonDir, id);
+            logger.debug("Save to "+pFile.getAbsolutePath());
             if (pFile.exists()) {
                 Files.move(pFile.toPath(),
                            new File(jsonDir, id + ".old").toPath(),
@@ -285,8 +337,20 @@ public abstract class JsonToFileServlet extends HttpServlet {
             }
         }
     }
+    
+    protected boolean exists(String id) {
 
-    protected JSONObject load(String id) throws IOException {
+        // security, limit to simple filename
+        Matcher m = filenamePattern.matcher(id);
+        if (m.matches()) {
+        	File f = new File(jsonDir, id);
+        	return f.exists();
+        } else {
+        	throw new RuntimeException("json id does not match pattern: " + id);
+        }
+    }
+
+    protected JsonApiResource load(String id) throws IOException, JSONException, JsonApiException {
         // security, limit to simple filename
         Matcher m = filenamePattern.matcher(id);
         if (m.matches()) {
@@ -296,7 +360,7 @@ public abstract class JsonToFileServlet extends HttpServlet {
                 if (f.exists()) {
                     logger.debug("Load from "+f.getAbsolutePath());
                     in = new BufferedReader(new FileReader(f));
-                    return JsonApi.loadFromReader(in);
+                    return JsonApiResource.parse(JsonApi.loadFromReader(in));
                 } else {
                     logger.debug("no file, createEmpty");
                     return createEmpty(id);
@@ -315,16 +379,50 @@ public abstract class JsonToFileServlet extends HttpServlet {
         }
     }
 
-    protected JSONObject createEmpty(final String id) throws FileNotFoundException {
+    protected JSONArray loadArray(String id) throws IOException, JSONException, JsonApiException {
+        // security, limit to simple filename
+        Matcher m = filenamePattern.matcher(id);
+        if (m.matches()) {
+            BufferedReader in = null;
+            try {
+                File f = new File(jsonDir, id);
+                if (f.exists()) {
+                    logger.debug("Load from "+f.getAbsolutePath());
+                    in = new BufferedReader(new FileReader(f));
+                    JSONArray out = new JSONArray(JsonApi.loadFromReader(in));
+                    return out;
+                } else {
+                    logger.debug("no file, createEmpty");
+                    return new JSONArray();
+                }
+            } finally {
+                if (in != null) {
+                    try {
+                        in.close();
+                    } catch(IOException e) {
+                        // oh well
+                    }
+                }
+            }
+        } else {
+            throw new RuntimeException("json id does not match pattern: " + id);
+        }
+    }
+
+    protected JsonApiResource createEmpty(final String id) throws FileNotFoundException {
         // this is dumb...
         throw new FileNotFoundException("No data for id: "+id);
     }
+
+    protected List<JsonApiResource> createEmptyArray(String id) {
+        return new ArrayList<JsonApiResource>();
+    }
     
-    protected void updateBeforeSave(JSONObject p) throws IOException {
+    protected void updateBeforeSave(JsonApiResource jsonApiResource) throws IOException, JsonApiException {
         
     }
     
-    protected void updateAfterLoad(JSONObject p) throws IOException {
+    protected void updateAfterLoad(JsonApiDocument jsonApiDocument) throws IOException, JsonApiException {
         
     }
 
@@ -346,6 +444,8 @@ public abstract class JsonToFileServlet extends HttpServlet {
     private File baseDir; 
     
     private File jsonDir;
+    
+    boolean isArrayType;
 
     private static final JSONObject EMPTY_JSON = new JSONObject();
 

@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.web;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -48,6 +49,8 @@ public class WaveformServlet extends HttpServlet {
             logger.info("FileRef: "+ref.getFilePath());
             try {
             	if (SeismogramFileTypes.fromInt(ref.getFileType()).equals(SeismogramFileTypes.MSEED)) {
+            		File seisFile = new File(ref.getFilePath());
+            		resp.setHeader("content-disposition", seisFile.getName());
             		BufferedInputStream bufIn = new BufferedInputStream(ref.getFilePathAsURL().openStream());
             		byte[] buf = new byte[1024];
             		int bufNum = 0;
