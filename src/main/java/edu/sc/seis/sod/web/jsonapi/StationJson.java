@@ -27,7 +27,7 @@ public class StationJson extends AbstractJsonApiData {
     
     @Override
     public String getType() {
-        return "station";
+        return "stations";
     }
 
     @Override

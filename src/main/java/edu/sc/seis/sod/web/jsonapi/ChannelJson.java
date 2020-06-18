@@ -19,7 +19,7 @@ public class ChannelJson extends AbstractJsonApiData {
     
     @Override
     public String getType() {
-        return "channel";
+        return "channels";
     }
 
     @Override

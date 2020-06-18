@@ -15,7 +15,7 @@ public class SodConfigJson  extends AbstractJsonApiData {
 
     @Override
     public String getType() {
-        return "sodConfig";
+        return "sod-configs";
     }
 
     @Override

@@ -28,7 +28,7 @@ public class EventStationJson extends AbstractJsonApiData {
 
     @Override
     public String getType() {
-        return "quake-station";
+        return "quake-stations";
     }
 
     @Override

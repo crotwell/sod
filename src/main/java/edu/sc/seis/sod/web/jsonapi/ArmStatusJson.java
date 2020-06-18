@@ -15,7 +15,7 @@ public class ArmStatusJson extends AbstractJsonApiData {
 
     @Override
     public String getType() {
-        return "arm";
+        return "arms";
     }
 
     @Override

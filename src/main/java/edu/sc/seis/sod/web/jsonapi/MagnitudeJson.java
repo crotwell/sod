@@ -17,7 +17,7 @@ public class MagnitudeJson extends AbstractJsonApiData {
     
     @Override
     public String getType() {
-        return "magnitude";
+        return "magnitudes";
     }
 
     @Override

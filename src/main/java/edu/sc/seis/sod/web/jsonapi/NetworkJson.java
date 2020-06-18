@@ -19,7 +19,7 @@ public class NetworkJson extends AbstractJsonApiData {
 
     @Override
     public String getType() {
-        return "network";
+        return "networks";
     }
 
     @Override

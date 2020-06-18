@@ -1,6 +1,5 @@
 package edu.sc.seis.sod.web.jsonapi;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +7,6 @@ import org.json.JSONException;
 import org.json.JSONWriter;
 
 import edu.sc.seis.seisFile.TimeUtils;
-import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.hibernate.EventSeismogramFileReference;
 import edu.sc.seis.sod.hibernate.SeismogramFileTypes;
 import edu.sc.seis.sod.hibernate.UnsupportedFileTypeException;
@@ -22,7 +20,7 @@ public class WaveformJson extends AbstractJsonApiData {
 
     @Override
     public String getType() {
-        return "waveform";
+        return "waveforms";
     }
 
     @Override

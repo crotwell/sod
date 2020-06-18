@@ -20,7 +20,7 @@ public class TauPJson extends AbstractJsonApiData {
 
     @Override
     public String getType() {
-        return "arrival";
+        return "arrivals";
     }
 
     @Override

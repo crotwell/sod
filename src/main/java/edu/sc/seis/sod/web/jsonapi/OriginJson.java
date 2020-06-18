@@ -18,7 +18,7 @@ public class OriginJson extends AbstractJsonApiData {
     
     @Override
     public String getType() {
-        return "origin";
+        return "origins";
     }
 
     @Override
