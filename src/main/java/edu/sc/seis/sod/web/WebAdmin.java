@@ -47,8 +47,7 @@ public class WebAdmin implements ArmListener{
     
     public void start() throws Exception
     {
-        
-        
+
         // Create the ResourceHandler. It is the object that will actually handle the request for a given file. It is
         // a Jetty Handler object so it is suitable for chaining with other handlers as you will see in other examples.
         ResourceHandler resource_handler = new ResourceHandler();
@@ -57,8 +56,6 @@ public class WebAdmin implements ArmListener{
         resource_handler.setDirectoriesListed(true);
         resource_handler.setWelcomeFiles(new String[]{ "index.html" });
         resource_handler.setBaseResource(Resource.newResource(new File(SITE)));
-        ContextHandler siteContext = new ContextHandler("/");
-        siteContext.setHandler(resource_handler);
         
         ServletHandler servlets = new ServletHandler();
         servlets.setEnsureDefaultServlet(false);
@@ -81,7 +78,7 @@ public class WebAdmin implements ArmListener{
                 
         // Add the ResourceHandler to the server.
         HandlerList handlers = new HandlerList();
-        handlers.setHandlers(new Handler[] { siteContext, servlets, new AlwaysEmberIndexHandler(), resource_handler, new DefaultHandler() {
+        handlers.setHandlers(new Handler[] {  servlets, resource_handler, new AlwaysEmberIndexHandler(),  new DefaultHandler() {
 
             @Override
             public void handle(String target,
