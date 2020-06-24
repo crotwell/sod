@@ -50,7 +50,7 @@ public class WaveformServlet extends HttpServlet {
             try {
             	if (SeismogramFileTypes.fromInt(ref.getFileType()).equals(SeismogramFileTypes.MSEED)) {
             		File seisFile = new File(ref.getFilePath());
-            		resp.setHeader("content-disposition", seisFile.getName());
+            		resp.setHeader("content-disposition", "attachment; filename="+seisFile.getName());
             		BufferedInputStream bufIn = new BufferedInputStream(ref.getFilePathAsURL().openStream());
             		byte[] buf = new byte[1024];
             		int bufNum = 0;
