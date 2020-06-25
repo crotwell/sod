@@ -418,7 +418,7 @@ public class NetworkDB extends AbstractHibernateDB {
 
     @Deprecated
     public void internUnit(Station sta) {
-        System.err.println("Intern Units Station???");
+       // System.err.println("Intern Units Station???");
        // throw new RuntimeException("intern units!!!");
 //        internUnit(sta.getLocation());
     }
@@ -429,7 +429,7 @@ public class NetworkDB extends AbstractHibernateDB {
      */
     @Deprecated
     public void internUnit(Channel chan) {
-        System.err.println("Intern Units Channel???");
+      //  System.err.println("Intern Units Channel???");
       //  throw new RuntimeException("intern units!!!");
 //        internUnit(chan.getSite().getLocation());
 //        internUnit(chan.getSite().getStation());

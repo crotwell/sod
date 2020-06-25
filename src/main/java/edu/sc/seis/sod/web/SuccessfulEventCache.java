@@ -24,7 +24,7 @@ import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
 public class SuccessfulEventCache {
 
     public SuccessfulEventCache() {
-
+    	
         Timer t = new Timer("SuccessfulEventCache updater", true);
         t.schedule(new TimerTask() {
 
@@ -35,7 +35,7 @@ public class SuccessfulEventCache {
                     logger.error("SuccessfulEventCache Trying to update seccessful events", t);
                 }
             }
-        }, 0, 900 * 1000);
+        }, 1000, 90 * 1000);
 
         if (Start.getEventArm() != null) {
         	Start.getEventArm().add(new EventMonitor() {
@@ -45,7 +45,6 @@ public class SuccessfulEventCache {
         		}
         		@Override
         		public void change(StatefulEvent event) {
-        			System.out.println("change: "+event);
         			if (event.getStatus().getStanding().equals(Standing.SUCCESS) 
         					&& event.getStatus().getStage().equals(Stage.EVENT_CHANNEL_POPULATION)) {
         				updateInCache(event);
@@ -59,6 +58,7 @@ public class SuccessfulEventCache {
                 
                 @Override
                 public void update(EventVectorPair evp) {
+                    logger.info("SuccessfulEventCache update: "+evp.getStatus()+" ");
                     if (evp.getStatus().getStanding().equals(Standing.SUCCESS)) { 
                         if ( ! eventInList(evp.getEvent())) {
                             eventWithSuccessfulCache.add(evp.getEvent());
@@ -72,6 +72,8 @@ public class SuccessfulEventCache {
                 
                 @Override
                 public void update(EventChannelPair ecp) {
+
+                    logger.info("SuccessfulEventCache update: "+ecp.getStatus()+" ");
                     if (ecp.getStatus().getStanding().equals(Standing.SUCCESS)) { 
                         if ( ! eventInList(ecp.getEvent())) {
                             eventWithSuccessfulCache.add(ecp.getEvent());
@@ -85,13 +87,12 @@ public class SuccessfulEventCache {
                 
                 @Override
                 public void update(EventStationPair ecp) {
-                    // TODO Auto-generated method stub
-                    
+                	logger.info("SuccessfulEventCache EventStationPair update: "+ecp);  
                 }
                 
                 @Override
                 public void update(EventNetworkPair ecp) {
-                    // TODO Auto-generated method stub
+                	logger.info("SuccessfulEventCache EventNetworkPair update: "+ecp);  
                     
                 }
             });
@@ -104,7 +105,15 @@ public class SuccessfulEventCache {
     }
     
     public int getNumSuccessful(StatefulEvent statefulEvent) {
-        return numSuccessful.get(statefulEvent);
+    	if (statefulEvent == null) {
+    		throw new RuntimeException("statefulEvent should not be null");
+    	}
+        Integer out = this.numSuccessful.get(statefulEvent);
+        if (out == null) {
+        	return 0;
+        } else {
+        	return out;
+        }
     }
     
     void updateSuccessfulEvents() {
@@ -121,14 +130,20 @@ public class SuccessfulEventCache {
             }
         }
         eventWithSuccessfulCache = events;
+        
     }
     
     void updateInCache(StatefulEvent statefulEvent) {
         logger.info("SuccessfulEventCache.updateInCache("+statefulEvent);
         int numSuccess = SodDB.getSingleton().getNumSuccessful(statefulEvent);
         if (numSuccess > 0) {
+            logger.info("SuccessfulEventCache.updateInCache("+statefulEvent+" "+numSuccess+" successful");
             eventWithSuccessfulCache.add(statefulEvent);
+        } else {
+
+            logger.info("SuccessfulEventCache.updateInCache("+statefulEvent+" none successful");
         }
+        
     }
     
     boolean eventInList(StatefulEvent e) {

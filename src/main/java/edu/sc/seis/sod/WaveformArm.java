@@ -111,7 +111,6 @@ public class WaveformArm extends Thread implements Arm {
                     }
                 }
                 if(next != null) {
-                    next.addStatusNotify(recipe);
                     noWorkLoopCounter = 0;
                     processorStartWork();
                     try {

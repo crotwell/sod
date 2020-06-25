@@ -1,5 +1,7 @@
 package edu.sc.seis.sod.hibernate.eventpair;
 
+import edu.sc.seis.sod.LocalSeismogramArm;
+import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.model.event.StatefulEvent;
 import edu.sc.seis.sod.model.status.Stage;
 import edu.sc.seis.sod.model.status.Standing;
@@ -28,13 +30,10 @@ public abstract class AbstractEventChannelPair extends CookieEventPair {
         // this is weird, but calling the setter allows hibernate to autodetect a modified object
         setStatus(status);
         updateRetries();
-        for (StatusNotify statusNotify : statusNotifyList) {
-            statusNotify.setStatus(this);
+        if (Start.getWaveformRecipe() != null) {
+            // might be null if not a real SOD run, ie unit tests or using SOD from another app
+            Start.getWaveformRecipe().setStatus(this);
         }
-     //   if (Start.getWaveformRecipe() != null) {
-     //       // might be null if not a real SOD run, ie unit tests or using SOD from another app
-     //       Start.getWaveformRecipe().setStatus(this);
-     //   }
     }
 
     protected void setEsp(EventStationPair esp) {

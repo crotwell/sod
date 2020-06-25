@@ -1,8 +1,5 @@
 package edu.sc.seis.sod.hibernate.eventpair;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import edu.sc.seis.sod.model.event.StatefulEvent;
 import edu.sc.seis.sod.model.status.Status;
 import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
@@ -56,13 +53,6 @@ public abstract class AbstractEventPair extends WaveformWorkUnit {
         this.event = e;
     }
 
-
-    public void addStatusNotify(StatusNotify sn) {
-        statusNotifyList.add(sn);
-    }
-    
-    transient List<StatusNotify> statusNotifyList = new ArrayList<StatusNotify>();
-    
     private Status status;
     private StatefulEvent event;
 }

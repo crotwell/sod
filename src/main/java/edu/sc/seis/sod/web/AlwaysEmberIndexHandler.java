@@ -142,7 +142,6 @@ public class AlwaysEmberIndexHandler extends DefaultHandler {
     		int nb = 0;
     		long numTrans = reader.transferTo(out);
     		reader.close();
-    		System.err.println("asset "+asset+" wrote "+numTrans+" bytes");
     	} else {
     		OutputStreamWriter write = new OutputStreamWriter(out);
     		write.write(assetOut);

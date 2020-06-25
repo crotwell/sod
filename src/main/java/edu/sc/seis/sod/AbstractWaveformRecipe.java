@@ -84,6 +84,8 @@ public abstract class AbstractWaveformRecipe implements StatusNotify {
                         monitor.update((EventVectorPair)ecp);
                     } else if(ecp instanceof EventStationPair) {
                         monitor.update((EventStationPair)ecp);
+                    } else {
+                    	throw new RuntimeException("shouldn't happen: "+ecp.getClass());
                     }
                 } catch(Exception e) {
                     // oh well, log it and go to next status processor
