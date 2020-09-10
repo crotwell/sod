@@ -50,10 +50,7 @@ import edu.sc.seis.sod.retry.RetryStrategy;
 import edu.sc.seis.sod.status.OutputScheduler;
 import edu.sc.seis.sod.util.exceptionHandler.Extractor;
 import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.sod.util.exceptionHandler.MailExceptionReporter;
-import edu.sc.seis.sod.util.exceptionHandler.MissingPropertyException;
 import edu.sc.seis.sod.util.exceptionHandler.QuitOnExceptionPostProcess;
-import edu.sc.seis.sod.util.exceptionHandler.ResultMailer;
 import edu.sc.seis.sod.util.exceptionHandler.SystemOutReporter;
 import edu.sc.seis.sod.util.exceptionHandler.WindowConnectionInterceptor;
 import edu.sc.seis.sod.util.time.ClockUtil;
@@ -473,22 +470,6 @@ public class Start {
         return doc;
     }
 
-    public static ResultMailer getResultMailer() throws ConfigurationException {
-        if(mailer != null) {
-            return mailer;
-        }
-        throw new ConfigurationException("no mailer configured");
-    }
-
-    public static void addResultMailer(Properties mailProps)
-            throws MissingPropertyException {
-        if(mailer == null && mailProps.containsKey("mail.smtp.host")) {
-            mailer = new ResultMailer(mailProps);
-        }
-    }
-
-    private static ResultMailer mailer;
-
     public void start() throws Exception {
         // startTime = ClockUtil.now();
         startTime = Instant.now();
@@ -517,8 +498,6 @@ public class Start {
         
         startArms();
         if(!commandLineToolRun) {
-            MailExceptionReporter.addMailExceptionReporter(props);;
-            addResultMailer(props);
             if(runProps.checkpointPeriodically()) {
                 new PeriodicCheckpointer();
             }
