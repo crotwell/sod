@@ -503,7 +503,7 @@
     <define name="responseWriter">
         <element name="responseWriter">
             <xsd:annotation>
-                <summary>Prints channel responses to file</summary>
+                <summary>Prints channel responses to file, in RESP format.</summary>
             </xsd:annotation>
             <optional>
                 <element name="workingDir">
