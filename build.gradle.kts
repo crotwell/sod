@@ -249,8 +249,8 @@ val scriptNames = mapOf(
     "find_stations" to "edu.sc.seis.sod.tools.find_stations",
     "find_channels" to "edu.sc.seis.sod.tools.find_channels",
     "find_seismograms" to "edu.sc.seis.sod.tools.find_seismograms",
-    "find_responses" to "edu.sc.seis.sod.tools.find_responses"
-    //"sod" to  "edu.sc.seis.sod.Start"
+    "find_responses" to "edu.sc.seis.sod.tools.find_responses",
+    "sod" to  "edu.sc.seis.sod.Start"
 )
 for (key in scriptNames.keys) {
   tasks.register<CreateStartScripts>(key) {
