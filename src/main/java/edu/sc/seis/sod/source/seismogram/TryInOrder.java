@@ -62,12 +62,6 @@ class TryInOrderSource implements SeismogramSource {
 
     List<SeismogramSource> sources;
 
-    void checkBestSet() {
-        if(best == null) {
-            throw new RuntimeException("Cannot call method until availableData is called to pick the best DC");
-        }
-    }
-
     @Override
     public List<RequestFilter> availableData(List<RequestFilter> request) throws SeismogramSourceException  {
         Iterator<SeismogramSource> it = sources.iterator();
@@ -89,7 +83,10 @@ class TryInOrderSource implements SeismogramSource {
 
     @Override
     public List<LocalSeismogramImpl> retrieveData(List<RequestFilter> request) throws SeismogramSourceException {
-        checkBestSet();
+    	if(best == null) {
+    		// availData hasn't been called, so fake it
+    		List<RequestFilter> avail = availableData(request);
+    	}
         return best.retrieveData(request);
     }
 }
