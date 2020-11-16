@@ -24,8 +24,8 @@
 <a href="http://www.seis.sc.edu/downloads/sod/#sodVersionNumber()/#sodVersion().zip">zip</a>
 #end
 
-#macro(sodVersionNumber)3.2.11-SNAPSHOT3#end
-#macro(sodReleaseDate)1 May 2020#end
+#macro(sodVersionNumber)3.2.11-SNAPSHOT4#end
+#macro(sodReleaseDate)16 Nov 2020#end
 
 #macro(sodVersion)sod-#sodVersionNumber()#end
 #macro(sod_header)
