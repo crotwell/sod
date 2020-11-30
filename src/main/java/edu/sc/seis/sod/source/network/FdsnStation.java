@@ -415,7 +415,7 @@ public class FdsnStation extends AbstractNetworkSource {
                 latest = constraints.getConstrainingEndTime();
             }
         }
-        if (earliest == null) {
+        if (earliest != null) {
             staQP.setStartTime(earliest);
             staQP.clearEndAfter().clearStartBefore(); // geofon doesn't like starttime and startsbefore in same query
         }
