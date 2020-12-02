@@ -3,6 +3,7 @@ package edu.sc.seis.sod.subsetter.eventStation;
 import org.w3c.dom.Element;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.status.StringTree;
@@ -13,7 +14,7 @@ import edu.sc.seis.sod.velocity.network.VelocityStation;
 
 public class EventStationScript extends AbstractScriptSubsetter implements EventStationSubsetter {
 
-    public EventStationScript(Element config) {
+    public EventStationScript(Element config) throws ConfigurationException {
         super(config);
     }
 

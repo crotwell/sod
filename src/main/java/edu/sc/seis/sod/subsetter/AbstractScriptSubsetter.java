@@ -9,6 +9,7 @@ import javax.script.ScriptException;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.status.Pass;
@@ -17,10 +18,13 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
 
 public class AbstractScriptSubsetter implements Subsetter {
 
-    public AbstractScriptSubsetter(Element config) {
+    public AbstractScriptSubsetter(Element config) throws ConfigurationException {
         this.config = config;
         scriptType = config.getAttribute("type");
         engine = factory.getEngineByName(scriptType);
+        if (engine == null) {
+        	throw new ConfigurationException("Unable to load script engine for "+scriptType);
+        }
         script = cleanScript(SodUtil.getNestedText(config));
     }
 

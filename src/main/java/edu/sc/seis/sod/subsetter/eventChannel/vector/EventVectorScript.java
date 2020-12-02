@@ -2,6 +2,7 @@ package edu.sc.seis.sod.subsetter.eventChannel.vector;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.station.ChannelGroup;
@@ -13,7 +14,7 @@ import edu.sc.seis.sod.velocity.network.VelocityChannelGroup;
 
 public class EventVectorScript extends AbstractScriptSubsetter implements EventVectorSubsetter {
 
-    public EventVectorScript(Element config) {
+    public EventVectorScript(Element config) throws ConfigurationException {
         super(config);
     }
 

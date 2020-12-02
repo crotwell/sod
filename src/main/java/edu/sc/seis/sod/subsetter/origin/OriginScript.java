@@ -2,6 +2,7 @@ package edu.sc.seis.sod.subsetter.origin;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.event.EventAttrImpl;
 import edu.sc.seis.sod.model.event.OriginImpl;
@@ -12,7 +13,7 @@ import edu.sc.seis.sod.velocity.event.VelocityEvent;
 
 public class OriginScript extends AbstractScriptSubsetter implements OriginSubsetter {
 
-    public OriginScript(Element config) {
+    public OriginScript(Element config) throws ConfigurationException {
         super(config);
     }
 

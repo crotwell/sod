@@ -5,6 +5,7 @@ import java.util.List;
 import org.w3c.dom.Element;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
@@ -22,7 +23,7 @@ import edu.sc.seis.sod.velocity.seismogram.VelocitySeismogram;
 
 public class SeismogramScript extends AbstractScriptSubsetter implements WaveformProcess {
 
-    public SeismogramScript(Element config) {
+    public SeismogramScript(Element config) throws ConfigurationException {
         super(config);
     }
 

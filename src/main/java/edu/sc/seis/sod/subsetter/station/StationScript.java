@@ -3,6 +3,7 @@ package edu.sc.seis.sod.subsetter.station;
 import org.w3c.dom.Element;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.source.network.NetworkSource;
 import edu.sc.seis.sod.source.network.VelocityNetworkSource;
 import edu.sc.seis.sod.status.StringTree;
@@ -12,7 +13,7 @@ import edu.sc.seis.sod.velocity.network.VelocityStation;
 
 public class StationScript extends AbstractScriptSubsetter implements StationSubsetter {
 
-    public StationScript(Element config) {
+    public StationScript(Element config) throws ConfigurationException {
         super(config);
     }
 

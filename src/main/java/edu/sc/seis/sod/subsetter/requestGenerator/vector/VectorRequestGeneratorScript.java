@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
@@ -15,7 +16,7 @@ import edu.sc.seis.sod.velocity.network.VelocityChannelGroup;
 
 public class VectorRequestGeneratorScript extends AbstractScriptSubsetter implements VectorRequestGenerator {
 
-    public VectorRequestGeneratorScript(Element config) {
+    public VectorRequestGeneratorScript(Element config) throws ConfigurationException {
         super(config);
     }
     

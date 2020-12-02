@@ -5,6 +5,7 @@ import java.util.List;
 import org.w3c.dom.Element;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.model.event.CacheEvent;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
@@ -17,7 +18,7 @@ import edu.sc.seis.sod.velocity.seismogram.VelocityRequest;
 
 public class AvailableDataScript extends AbstractScriptSubsetter implements AvailableDataSubsetter {
 
-    public AvailableDataScript(Element config) {
+    public AvailableDataScript(Element config) throws ConfigurationException {
         super(config);
     }
 
