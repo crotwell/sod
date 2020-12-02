@@ -305,7 +305,13 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
                             // the DataRecords know nothing about channel or
                             // network
                             // begin times, so use the request
+                        	MicroSecondTimeRange seisMSTR = new MicroSecondTimeRange(seis);
                             for (RequestFilter rf : request) {
+                            	MicroSecondTimeRange reqMSTR = new MicroSecondTimeRange(rf);
+                            	if ( ! seisMSTR.intersects(reqMSTR)) {
+                            		// doesn't intersect, so keep looking
+                            		continue;
+                            	}
                                 // find matching chan id
                                 if (rf.channel_id.network_id.network_code.equals(seis.channel_id.network_id.network_code)) {
                                     seis.channel_id.network_id.begin_time = rf.channel_id.network_id.begin_time;
