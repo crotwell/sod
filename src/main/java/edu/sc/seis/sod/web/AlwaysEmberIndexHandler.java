@@ -96,6 +96,7 @@ public class AlwaysEmberIndexHandler extends DefaultHandler {
         	ClassLoader cl = this.getClass().getClassLoader();
         	URL htmlLocation = cl.getResource("META-INF/resources/webroot/index.html");
         	if (htmlLocation != null) {
+        		logger.info("Found webroot in META-INF, loading index.html");
         		InputStream input = htmlLocation.openStream();
 	            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 	            char[] cbuf = new char[4096];
