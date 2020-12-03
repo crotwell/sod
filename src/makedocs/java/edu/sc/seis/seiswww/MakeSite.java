@@ -180,12 +180,12 @@ public class MakeSite {
         defaultContext.put("htmlizer",
                            new Snippetizer("xslt/toHTML.xslt",
                                            sodScripts,
-                                           "contents/sod/documentation/tutorials/",
+                                           baseOutputDir+"/documentation/tutorials/",
                                            "html"));
         defaultContext.put("demoHtmlizer",
                            new Snippetizer("xslt/toHTML.xslt",
                                            demoSodScripts,
-                                           "contents/sod/documentation/tutorials/",
+                                           baseOutputDir+"/documentation/tutorials/",
                                            "html"));
         defaultContext.put("booleanLogic",
                            new Snippetizer("xslt/booleanLogic.xslt",

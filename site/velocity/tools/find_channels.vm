@@ -8,6 +8,11 @@
 				<div class="section">
 				#sod_section_title("Options")
 					<table summary="The format and meaning of all options accepted by find_channels" class="options">
+					<tr>
+							<th id="format">Format</th>
+							<th id="meaning">Meaning</th>
+							<th id="default">Default</th>
+						</tr>
 						<tr>
 <td headers="format">-v/--version </td>
 <td headers="meaning">Print SOD's version and exit</td>

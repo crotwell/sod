@@ -50,7 +50,7 @@
 				<img class="right" src="$!{imageDir}simplest_waveform.png"/>
 				<p class="short">This wavform arm contains no subsetters.  The <code>phaseRequest</code>
 					specifies that a request should be made for data from 
-					120 seconds before the P wave arrival to 3 minutes after the S wave arrival.  <code>fdsnDataSelect</code>
+					120 seconds before the P wave arrival to 6 minutes after the S wave arrival.  <code>fdsnDataSelect</code>
 					tells SOD to fetch
 					that data from IRIS's FDSN DataSelect web service.  The <code>printlineSeismogramProcess</code> prints
 					information about each seismogram it retrieves.  

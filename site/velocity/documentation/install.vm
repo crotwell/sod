@@ -19,16 +19,11 @@
                             </tt>
                             <ul>
                                 <li> <tt>bin</tt> - sh scripts for running SOD on *nix and bat scripts for windows </li>
-                                <li> <tt>build.gradle</tt> - script for recompiling SOD via gradle</li>
                                 <li> <tt>cwg.prop</tt> - example SOD prop file for configuring logging, database, etc.</li>
                                 <li> <tt>doc</tt> - documentation </li>
                                 <li> <tt>etc</tt> - helper files </li>
-                                <li> <tt>gradle</tt> - used for recompiling SOD via gradle</li>
-                                <li> <tt>gradlew</tt> - also for recompiling SOD via gradle</li>
-                                <li> <tt>gradlew.bat</tt> - also for recompiling SOD via gradle</li>
                                 <li> <tt>lib</tt> - SOD's libraries </li>
                                 <li> <tt>recipes</tt> - sample example recipes from the tutorial</li>
-                                <li> <tt>settings.gradle</tt> - also for recompiling SOD via gradle</li>
                                 <li> <tt>src</tt> - SOD's source code, if you are curious </li>
                             </ul>
                         </li>
@@ -37,8 +32,8 @@
             </div>
             <div class="section">
                 #sod_section_title("Installing Java")
-                <p>SOD uses Java 1.7 or later.  You can find out what version of Java you have on your system by running 'java -version' 
-                    at the command line.  If your version is less than 1.7 or is gcj, go to <a href="http://java.com/">Java's website</a> for a more recent version. 
+                <p>SOD uses Java 1.8 or later.  You can find out what version of Java you have on your system by running 'java -version' 
+                    at the command line.  If your version is less than 1.8 or is gcj, go to <a href="http://java.com/">Java's website</a> for a more recent version. 
 Unfortunately, gjc, which comes with many Linux distributions, is not quite Java and prevents SOD from running. Please use Java from OpenJDK or Sun/Oracle on Linux instead.
                 </p>
             </div>
