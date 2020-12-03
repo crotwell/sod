@@ -68,7 +68,7 @@ configurations {
 }
 
 dependencies {
-    compile 'edu.sc.seis:bag:0.4.3-SNAPSHOT'
+    compile 'edu.sc.seis:bag:0.4.3-SNAPSHOT2'
 //    compile project(':cormorant')
 
     compile "jline:jline:0.9.94"
@@ -108,6 +108,7 @@ task copySodVelocity(type: Sync, dependsOn: 'buildSchemaDocs') {
         println outDir.mkdirs()
     }
 }
+
 
 task makeSodSite(type: JavaExec, dependsOn: [ copySodVelocity, classes, compileMakedocsJava ] ) {
     jvmArgs  ['-Xmx512m']
@@ -149,17 +150,11 @@ def binDistFiles = copySpec {
 def distFiles = copySpec {
     with(binDistFiles)
     from('.') {
-        fileMode=0755
-        include('gradlew')
-        include('gradlew.bat')
-    }
-    from('.') {
         include('gpl-3.0.txt')
         include('defaultProps')
         include('externalExample/**')
         include('src/**')
         include('lib/**')
-        include('gradle/**')
         exclude('**/*.svn')
     }
     from('scripts') {
@@ -181,8 +176,6 @@ def distFiles = copySpec {
     }
     from('build') {
         include('doc/**')
-        include('build.gradle')
-        include('settings.gradle')
     }
     from('build/docs') {
         include('javadoc/**')
