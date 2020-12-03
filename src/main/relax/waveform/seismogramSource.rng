@@ -147,12 +147,15 @@
                     seismogram sources with the first one that has data for a given even-channel being used. It goes through
                     each of the choices in the order given, and uses the first one that gives any available data.
                     If no choice has data, then the result of the last datacenter is used (albeit the empty result). The
-                    example tries to get data from the BUD first and then POND if it isn't in the BUD.</description>
+                    example tries to get data from the NCEDC first and then IRIS if it isn't in the NCEDC.
+                    Note that channel metadata via the NetworkArm may also need to come from multiple
+                    data centers for this to work and so using a CombineNetworkSource may be needed.
+                    </description>
                 <example>
                     <tryInOrder>
                             <fdsnDataSelect>
-                                <name>Local Caching server</name>
-                                <host>myserver.myuniversity.edu</host>
+                                <name>NCEDC</name>
+                                <host>service.ncedc.org</host>
                             </fdsnDataSelect>
                             <fdsnDataSelect>
                                 <name>IRIS server</name>
@@ -240,6 +243,11 @@
                         </element>
                     </optional>
                     <interleave>
+                        <optional>
+                            <element name="name">
+                                <data type="string"/>
+                            </element>
+                        </optional>
                         <optional>
                             <element name="host">
                                 <data type="string"/>
