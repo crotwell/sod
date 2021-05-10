@@ -43,7 +43,6 @@ public class FissuresFormatterTest  {
     @Test
     public void testOneLineAndClean() {
         Station sta = MockStation.createStation();
-        sta.setName("  Long name\nwith\r\nnewlines  ");
         VelocityStation vsta = new VelocityStation(sta);
         assertEquals("Long name with newlines", vsta.getName());
     }

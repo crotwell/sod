@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.ParseException;
 
-import edu.sc.seis.seisFile.client.BoxAreaParser;
 
 public class BoxParserTest  {
 
