@@ -2,6 +2,7 @@ package edu.sc.seis.sod.subsetter.station;
 
 import org.w3c.dom.Element;
 
+import edu.sc.seis.seisFile.DonutArea;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.model.common.DistAz;
 import edu.sc.seis.sod.model.common.Location;
@@ -34,4 +35,13 @@ public class StationPointDistance extends AbstractOriginPoint implements
     }
 
     private double min, max;
+
+    public DonutArea asDonut() {
+        DonutArea d = new DonutArea();
+        d.latitude = (float) latitude;
+        d.longitude = (float) longitude;
+        d.minradius = (float) min;
+        d.maxradius = (float) max;
+        return d;
+    }
 }

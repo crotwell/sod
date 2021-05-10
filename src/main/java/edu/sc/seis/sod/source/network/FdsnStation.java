@@ -81,8 +81,7 @@ public class FdsnStation extends AbstractNetworkSource {
                         queryParams.area(a.min_latitude, a.max_latitude, a.min_longitude, a.max_longitude);
                     } else if (element.getTagName().equals("stationPointDistance")) {
                         StationPointDistance pd = (StationPointDistance)SodUtil.load(element, new String[] {"station"});
-                        queryParams.donut((float)pd.getLatitude(), (float)pd.getLongitude(), (float)pd.getMin()
-                                .getValue(UnitImpl.DEGREE), (float)pd.getMax().getValue(UnitImpl.DEGREE));
+                        queryParams.donut(pd.asDonut());
                     } else if (element.getTagName().equals("networkCode")) {
                         queryParams.appendToNetwork(SodUtil.getNestedText(element));
                     } else if (element.getTagName().equals("stationCode")) {

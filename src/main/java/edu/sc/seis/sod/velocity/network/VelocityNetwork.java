@@ -26,7 +26,7 @@ public class VelocityNetwork  {
     }
 
     public VelocityNetwork(List<VelocityStation> stations) {
-        this((Network)getFirstStation(stations).getWrapped().getNetworkAttr(),
+        this((Network)getFirstStation(stations).getWrapped().getNetwork(),
              stations);
     }
     

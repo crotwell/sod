@@ -421,7 +421,7 @@ public class NetworkArm implements Arm {
      */
     public List<Channel> getSuccessfulChannels(Station station) {
         synchronized(refresh) {
-            while(refresh.isNetworkBeingReloaded(((Network)station.getNetworkAttr()).getDbid())
+            while(refresh.isNetworkBeingReloaded(((Network)station.getNetwork()).getDbid())
                     || refresh.isStationBeingReloaded(station.getDbid())) {
                 try {
                     refresh.notifyAll();
@@ -532,12 +532,12 @@ public class NetworkArm implements Arm {
     }
 
     public List<ChannelGroup> getSuccessfulChannelGroups(Station station) {
-        if(! refresh.isNetworkBeingReloaded(((Network)station.getNetworkAttr()).getDbid())
+        if(! refresh.isNetworkBeingReloaded(((Network)station.getNetwork()).getDbid())
                 && allChannelGroupFailureStations.contains(StationIdUtil.toStringNoDates(station))) {
             return new ArrayList<ChannelGroup>(0);
         }
         synchronized(refresh) {
-            while(refresh.isNetworkBeingReloaded(((Network)station.getNetworkAttr()).getDbid())
+            while(refresh.isNetworkBeingReloaded(((Network)station.getNetwork()).getDbid())
                     && refresh.isStationBeingReloaded(station.getDbid())) {
                 try {
                     refresh.notifyAll();

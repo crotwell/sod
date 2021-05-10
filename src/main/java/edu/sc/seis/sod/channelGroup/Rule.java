@@ -53,7 +53,7 @@ public class Rule {
         List<Channel> possible = new ArrayList<Channel>();
         for (Channel chan : chanList) {
             try {
-                if (attrSubsetter.accept((Network)chan.getStation().getNetworkAttr()).isSuccess()) {
+                if (attrSubsetter.accept((Network)chan.getStation().getNetwork()).isSuccess()) {
                     if (stationSubsetter.accept(chan.getStation(), null).isSuccess()) {
                         if (chanSubsetter.accept(chan, null).isSuccess()) {
                             possible.add(chan);

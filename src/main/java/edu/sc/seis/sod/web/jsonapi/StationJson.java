@@ -38,7 +38,6 @@ public class StationJson extends AbstractJsonApiData {
     @Override
     public void encodeAttributes(JSONWriter out) throws JSONException {
         out.key("station-code").value(sta.getStationCode())
-	        .key("name").value(sta.getName())
 	        .key("start-time").value(TimeUtils.toISOString(sta.getStartDateTime()))
 	        .key("end-time").value(NetworkJson.encodeEndTime(sta.getEndDateTime()))
 	    	.key("latitude").value(sta.getLatitude())
@@ -100,7 +99,7 @@ public class StationJson extends AbstractJsonApiData {
     }
     
     public String formStationURL(Station sta) {
-        NetworkJson netJson = new NetworkJson(sta.getNetworkAttr(), baseUrl);
+        NetworkJson netJson = new NetworkJson(sta.getNetwork(), baseUrl);
         String out = baseUrl+"/networks/"+netJson.getId()+"/stations/"+getId();
         return out;
     }

@@ -21,15 +21,14 @@ import edu.sc.seis.sod.status.StringTree;
  *
  * @author Philip Crotwell
  */
-
+@Deprecated
 public class StationName implements StationSubsetter {
     public StationName (Element config) throws ConfigurationException {
         this.config = config;
     }
 
     public StringTree accept(Station e, NetworkSource network) {
-        if(e.getName().equals(SodUtil.getNestedText(config))) return new Pass(this);
-        else return new Fail(this);
+        return new Fail(this);
     }
 
     Element config;

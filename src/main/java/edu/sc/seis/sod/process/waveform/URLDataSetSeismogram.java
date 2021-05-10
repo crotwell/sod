@@ -56,11 +56,11 @@ public class URLDataSetSeismogram {
             }
             return FissuresConvert.toFissures(list.toArray(new DataRecord[0]), (byte)B1000Types.STEIM1, (byte)1);
         } else if(SeismogramFileTypes.SAC.equals(fileType)) {
-            SacTimeSeries sacTime = new SacTimeSeries();
+            SacTimeSeries sacTime;
             DataInputStream dis = null;
             try {
                 dis = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
-                sacTime.read(dis);
+                sacTime = SacTimeSeries.read(dis);
             } finally {
                 if(dis != null) {
                     dis.close();

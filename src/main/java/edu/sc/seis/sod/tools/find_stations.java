@@ -12,8 +12,6 @@ import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.Switch;
 
-import edu.sc.seis.seisFile.client.BoxAreaParser;
-import edu.sc.seis.seisFile.client.DonutParser;
 
 public class find_stations extends CommandLineTool {
 

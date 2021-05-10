@@ -148,7 +148,6 @@ public class CSVNetworkSource extends AbstractCSVSource implements NetworkSource
             station.setLongitude(longitude);
             station.setElevation((float) elevation);
             station.setStartDateTime(staBegin);
-            station.setName(loadString(headers, csvReader, NAME, ""));
             station.addOperator(new Operator(loadString(headers, csvReader, OPERATOR, "")));
             station.setSite(new Site("", loadString(headers, csvReader, DESCRIPTION, ""), "","", "", ""));
             station.addComment(new Comment(loadString(headers, csvReader, COMMENT, "")));

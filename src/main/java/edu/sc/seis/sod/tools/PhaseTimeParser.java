@@ -5,8 +5,6 @@ import java.util.Map;
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.ParseException;
 
-import edu.sc.seis.seisFile.client.BoxAreaParser;
-import edu.sc.seis.seisFile.client.PatternParser;
 
 
 public class PhaseTimeParser extends PatternParser {

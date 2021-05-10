@@ -10,7 +10,7 @@ import com.martiansoftware.jsap.ParseException;
 import com.martiansoftware.jsap.StringParser;
 
 import edu.sc.seis.seisFile.TimeUtils;
-import edu.sc.seis.seisFile.client.ISOTimeParser;
+import edu.sc.seis.seisFile.ISOTimeParser;
 import edu.sc.seis.sod.util.time.ClockUtil;
 
 public class TimeParser extends StringParser {

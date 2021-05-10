@@ -96,7 +96,7 @@ public class VelocityStation  {
     }
 
     public String getName() {
-        return FissuresFormatter.oneLineAndClean(sta.getName());
+        return FissuresFormatter.oneLineAndClean(sta.getDescription());
     }
 
     public String getCSVName() {

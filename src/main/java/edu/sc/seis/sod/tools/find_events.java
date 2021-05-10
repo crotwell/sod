@@ -6,9 +6,6 @@ import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.Switch;
 
-import edu.sc.seis.seisFile.client.BoxAreaParser;
-import edu.sc.seis.seisFile.client.DonutParser;
-import edu.sc.seis.seisFile.client.RangeParser;
 
 public class find_events extends CommandLineTool {
 
