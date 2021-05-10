@@ -6,7 +6,7 @@ plugins {
   "java"
   eclipse
   "project-report"
-  "maven-publish"
+  `maven-publish`
   application
 }
 
@@ -21,6 +21,14 @@ version = "4.0.0-SNAPSHOT-WEBSTATUS"
 // site/velocity/VM_library.vm
 // site/velocity/previousReleases.vm
 
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+        }
+    }
+}
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -40,25 +48,16 @@ sourceSets {
 val rng by configurations.creating
 
 dependencies {
-    rng("thaiopensource:jing:20091111")
+    rng("org.relaxng:jing:20181222")
     implementation("edu.sc.seis:seedCodec:1.0.11")
-    implementation("edu.sc.seis:seisFile:1.8.0") {
-      // we need seisFile for sac output, but not all the other functionality
-      exclude("com.martiansoftware:jsap")
-      exclude("org.rxtx:rxtx")
-      exclude("org.codehaus.woodstox:woodstox-core-lgpl")
-      exclude("net.java.dev.msv:msv-core")
-      exclude("org.apache.httpcomponents:httpclient")
-      exclude("mysql:mysql-connector-java")
-    }
-    implementation("edu.sc.seis:sod-mock:4.0.0-SNAPSHOT")
-    implementation("edu.sc.seis:sod-model:4.0.0-SNAPSHOT")
-    implementation("edu.sc.seis:sod-util:4.0.0-SNAPSHOT")
+    implementation("edu.sc.seis:seisFile:2.0.0")
+    implementation("info.picocli:picocli:4.6.1")
     implementation("edu.sc.seis:sod-bag:4.0.0-SNAPSHOT")
-    implementation("edu.sc.seis:TauP:2.4.4")
-    implementation("com.oregondsp.signalprocessing:oregondsp:2011")
+    implementation("edu.sc.seis:TauP:2.5.0")
+    implementation("com.oregondsp.signalprocessing:oregondsp:1.0.1-alpha")
 
 
+    implementation("org.slf4j:slf4j-api:1.7.30")
     implementation("org.hsqldb:hsqldb:2.4.0")
     implementation("jline:jline:0.9.94")
     implementation("com.martiansoftware:jsap:2.1")
@@ -71,9 +70,9 @@ dependencies {
 
     implementation("org.json:json:20170516")
 
-    implementation("org.hibernate:hibernate-ehcache:5.4.11.Final")
-    implementation( "org.hibernate:hibernate-core:5.4.11.Final")
-    implementation( "org.hibernate:hibernate-c3p0:5.4.11.Final")
+    implementation("org.hibernate:hibernate-ehcache:5.4.25.Final")
+    implementation( "org.hibernate:hibernate-core:5.4.25.Final")
+    implementation( "org.hibernate:hibernate-c3p0:5.4.25.Final")
 
     implementation("org.apache.velocity:velocity-tools:2.0") {
         exclude("xml-apis:xml-apis")
@@ -89,8 +88,6 @@ dependencies {
 
     implementation("edu.sc.seis.mapData:dcwpo_browse:1.0")
     implementation("net.sourceforge.javacsv:javacsv:2.0")
-//    runtime "org.codehaus.groovy:groovy-all:2.2.2"
-//    runtime "org.jruby:jruby:1.7.3"
 //
     // Use JUnit Jupiter API for testing.
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.5.1")
@@ -101,10 +98,7 @@ dependencies {
 
 configurations.all {
     resolutionStrategy.dependencySubstitution {
-        substitute(module("edu.sc.seis:sod-mock")).with(project(":sod-mock"))
-        substitute(module("edu.sc.seis:sod-model")).with(project(":sod-model"))
         substitute(module("edu.sc.seis:sod-bag")).with(project(":sod-bag"))
-        substitute(module("edu.sc.seis:sod-util")).with(project(":sod-util"))
         substitute(module("edu.sc.seis:seisFile")).with(project(":seisFile"))
         substitute(module("edu.sc.seis:seedCodec")).with(project(":seedCodec"))
         substitute(module("edu.sc.seis:TauP")).with(project(":TauP"))
@@ -114,8 +108,9 @@ configurations.all {
 repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
-    jcenter()
-    maven(url = "http://www.seis.sc.edu/software/maven2")
+    mavenCentral()
+    maven(url = "https://www.seis.sc.edu/software/maven2")
+    mavenLocal()
 }
 
 val dirName = project.name+"-"+version
