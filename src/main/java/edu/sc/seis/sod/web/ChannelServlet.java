@@ -15,8 +15,8 @@ import org.json.JSONWriter;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.sod.hibernate.NetworkDB;
 import edu.sc.seis.sod.hibernate.NotFound;
-import edu.sc.seis.sod.web.jsonapi.ChannelJson;
 import edu.sc.seis.sod.web.jsonapi.JsonApi;
+import edu.sc.seis.sod.web.jsonapi.stationxml.ChannelJson;
 
 public class ChannelServlet extends HttpServlet {
 

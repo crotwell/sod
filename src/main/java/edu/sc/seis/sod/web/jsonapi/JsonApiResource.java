@@ -115,6 +115,15 @@ public class JsonApiResource {
 		Double out = getAttributeDouble(key);
 		return out != null ? out : defaultValue;
 	}
+    
+    public JSONObject getAttributeJsonObject(String key) {
+        JSONObject attr = rawAttributeObject();
+        JSONObject out = null;
+        if (attr != null) {
+            out = attr.optJSONObject(key);
+        }
+        return out;
+    }
 	
 	public JSONArray getAttributeArray(String key) {
 		JSONObject attr = rawAttributeObject();

@@ -8,6 +8,7 @@ import org.json.JSONWriter;
 import edu.sc.seis.sod.hibernate.eventpair.AbstractEventChannelPair;
 import edu.sc.seis.sod.hibernate.eventpair.EventStationPair;
 import edu.sc.seis.sod.model.common.DistAz;
+import edu.sc.seis.sod.web.jsonapi.stationxml.StationJson;
 
 public class EventStationJson extends AbstractJsonApiData {
 

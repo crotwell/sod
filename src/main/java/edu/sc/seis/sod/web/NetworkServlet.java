@@ -21,8 +21,8 @@ import edu.sc.seis.sod.hibernate.NetworkDB;
 import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.web.jsonapi.JsonApi;
 import edu.sc.seis.sod.web.jsonapi.JsonApiData;
-import edu.sc.seis.sod.web.jsonapi.NetworkJson;
-import edu.sc.seis.sod.web.jsonapi.StationJson;
+import edu.sc.seis.sod.web.jsonapi.stationxml.NetworkJson;
+import edu.sc.seis.sod.web.jsonapi.stationxml.StationJson;
 
 public class NetworkServlet extends HttpServlet {
 

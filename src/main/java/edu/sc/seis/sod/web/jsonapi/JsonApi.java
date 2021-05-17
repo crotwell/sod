@@ -4,8 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONWriter;
@@ -104,7 +105,7 @@ public class JsonApi {
         out.object().key(ERRORS).array().object().key(DETAIL).value(message).endObject().endArray().endObject();
     }
 
-    public static String loadFromReader(BufferedReader in) throws IOException, JSONException, JsonApiException {
+    public static String loadFromReader(BufferedReader in) throws IOException {
         StringBuffer json = new StringBuffer();
         char[] buf = new char[1024];
         int numRead = 0;
@@ -134,4 +135,16 @@ public class JsonApi {
     	JsonApiDocument out = new JsonApiDocument(json);
     	return out;
     }
+
+    public static void doKeyValue(JSONWriter out, String key, Object value) {
+        Matcher m = JsonApi.camelCasePattern.matcher(key);
+        if (m.matches()) {
+            throw new RuntimeException("Key looks like camelcase: "+key+" maybe you meant "+m.group(1)+"-"+m.group(2).toLowerCase()+m.group(3));
+        }
+        if (value != null) {
+            out.key(key).value(value);
+        }
+    }
+
+    static Pattern camelCasePattern = Pattern.compile("([a-z]+)([A-Z])(.*)");
 }

@@ -21,11 +21,11 @@ import edu.sc.seis.sod.hibernate.NotFound;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.eventpair.AbstractEventChannelPair;
 import edu.sc.seis.sod.hibernate.eventpair.EventStationPair;
-import edu.sc.seis.sod.web.jsonapi.ChannelJson;
 import edu.sc.seis.sod.web.jsonapi.EventStationJson;
 import edu.sc.seis.sod.web.jsonapi.JsonApi;
 import edu.sc.seis.sod.web.jsonapi.JsonApiData;
-import edu.sc.seis.sod.web.jsonapi.StationJson;
+import edu.sc.seis.sod.web.jsonapi.stationxml.ChannelJson;
+import edu.sc.seis.sod.web.jsonapi.stationxml.StationJson;
 
 public class StationsServlet extends HttpServlet {
 

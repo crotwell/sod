@@ -14,6 +14,7 @@ import edu.sc.seis.sod.hibernate.eventpair.MeasurementStorage;
 import edu.sc.seis.sod.measure.Measurement;
 import edu.sc.seis.sod.model.common.DistAz;
 import edu.sc.seis.sod.process.waveform.AbstractSeismogramWriter;
+import edu.sc.seis.sod.web.jsonapi.stationxml.ChannelJson;
 
 public class EventVectorJson extends AbstractJsonApiData {
 

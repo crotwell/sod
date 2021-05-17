@@ -29,8 +29,8 @@ import edu.sc.seis.sod.hibernate.eventpair.EventChannelPair;
 import edu.sc.seis.sod.hibernate.eventpair.EventVectorPair;
 import edu.sc.seis.sod.web.jsonapi.EventVectorJson;
 import edu.sc.seis.sod.web.jsonapi.JsonApi;
-import edu.sc.seis.sod.web.jsonapi.StationJson;
 import edu.sc.seis.sod.web.jsonapi.WaveformJson;
+import edu.sc.seis.sod.web.jsonapi.stationxml.StationJson;
 
 public class EventVectorServlet extends HttpServlet {
 
