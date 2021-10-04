@@ -450,6 +450,19 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                         + " long:" + o.getLongitude() + " time:" + o.getTime() + ", skipping.");
             }
         }
+        for (String oid : magsByOriginId.keySet()) {
+            boolean found = false;
+            for (Origin o : e.getOriginList()) {
+                if (o.getPublicId().equals(oid)) {
+                    found = true;
+                    break;
+                }
+            }
+            if ( ! found && pref != null) {
+                // did not find origin for mag, so add to pref origin???
+                pref.getMagnitudeList().addAll(magsByOriginId.get(oid));
+            }
+        }
         // for convenience add the preferred magnitude as the first magnitude in
         // the preferred origin
         if (prefMag != null && !e.getPreferredMagnitudeID().equals(e.getPreferredOriginID())) {
