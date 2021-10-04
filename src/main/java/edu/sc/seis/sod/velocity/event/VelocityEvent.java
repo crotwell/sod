@@ -78,13 +78,15 @@ public class VelocityEvent extends ProxyEventAccessOperations {
 
     public String getAllMagnitudes(String seperator) {
         String s = "";
+        for(int i = 0; i < origin.getMagnitudes().length; i++) {
+            if (s.length() != 0) {s += seperator;}
+            s += FissuresFormatter.formatMagnitude(origin.getMagnitudes()[i]);
+        }
         for (int j = 0; j < getOrigins().length; j++) {
             OriginImpl o = (OriginImpl)event.get_origins()[j];
             for(int i = 0; i < o.getMagnitudes().length; i++) {
+                if (s.length() != 0) {s += seperator;}
                 s += FissuresFormatter.formatMagnitude(o.getMagnitudes()[i]);
-                if(i != o.getMagnitudes().length - 1) {
-                    s += seperator;
-                }
             }
         }
         return s;
