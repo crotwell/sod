@@ -450,6 +450,28 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                         + " long:" + o.getLongitude() + " time:" + o.getTime() + ", skipping.");
             }
         }
+        List<edu.iris.Fissures.IfEvent.Magnitude> prefMagList = new ArrayList<edu.iris.Fissures.IfEvent.Magnitude>();
+        // for convenience add the preferred magnitude as the first magnitude in
+        // the preferred origin
+        if (prefMag != null && !e.getPreferredMagnitudeID().equals(e.getPreferredOriginID())) {
+            edu.iris.Fissures.IfEvent.Magnitude pm = toFissuresMagnitude(prefMag);
+            prefMagList.add(pm);
+            for (edu.iris.Fissures.IfEvent.Magnitude m : pref.getMagnitudes()) {
+                prefMagList.add(m);
+            }
+            Iterator<edu.iris.Fissures.IfEvent.Magnitude> it = prefMagList.iterator();
+            it.next(); // skip first as it is the preferred
+            while (it.hasNext()) {
+                edu.iris.Fissures.IfEvent.Magnitude fm = it.next();
+                if (fm.type.equals(pm.type) && fm.value == pm.value && fm.contributor.equals(pm.contributor)) {
+                    it.remove(); // duplicate of preferred
+                }
+            }
+        } else {
+            for (edu.iris.Fissures.IfEvent.Magnitude m : pref.getMagnitudes()) {
+                prefMagList.add(m);
+            }
+        }
         for (String oid : magsByOriginId.keySet()) {
             boolean found = false;
             for (Origin o : e.getOriginList()) {
@@ -460,31 +482,19 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
             }
             if ( ! found && pref != null) {
                 // did not find origin for mag, so add to pref origin???
-                pref.getMagnitudeList().addAll(magsByOriginId.get(oid));
-            }
-        }
-        // for convenience add the preferred magnitude as the first magnitude in
-        // the preferred origin
-        if (prefMag != null && !e.getPreferredMagnitudeID().equals(e.getPreferredOriginID())) {
-            edu.iris.Fissures.IfEvent.Magnitude pm = toFissuresMagnitude(prefMag);
-            List<edu.iris.Fissures.IfEvent.Magnitude> newMags = new ArrayList<edu.iris.Fissures.IfEvent.Magnitude>();
-            newMags.add(pm);
-            newMags.addAll(pref.getMagnitudeList());
-            Iterator<edu.iris.Fissures.IfEvent.Magnitude> it = newMags.iterator();
-            it.next(); // skip first as it is the preferred
-            while (it.hasNext()) {
-                edu.iris.Fissures.IfEvent.Magnitude fm = it.next();
-                if (fm.type.equals(pm.type) && fm.value == pm.value && fm.contributor.equals(pm.contributor)) {
-                    it.remove(); // duplicate of preferred
+                for(Magnitude m : magsByOriginId.get(oid)) {
+                    prefMagList.add(toFissuresMagnitude(m));
                 }
             }
+        }
+        if (pref != null) {
             pref = new OriginImpl(pref.get_id(),
-                                  pref.getCatalog(),
-                                  pref.getContributor(),
-                                  pref.getOriginTime(),
-                                  pref.getLocation(),
-                                  newMags.toArray(new edu.iris.Fissures.IfEvent.Magnitude[0]),
-                                  pref.getParmIds());
+                    pref.getCatalog(),
+                    pref.getContributor(),
+                    pref.getOriginTime(),
+                    pref.getLocation(),
+                    prefMagList.toArray(new edu.iris.Fissures.IfEvent.Magnitude[0]),
+                    pref.getParmIds());
         }
         CacheEvent ce = new CacheEvent(new EventAttrImpl(desc, fe), out.toArray(new OriginImpl[0]), pref);
         return ce;
