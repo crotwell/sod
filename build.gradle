@@ -8,7 +8,7 @@ apply plugin: 'eclipse'
 apply plugin: 'project-report'
 
 group = 'edu.sc.seis'
-version = '3.2.11-SNAPSHOT4'
+version = '3.2.11-SNAPSHOT5'
 // also remember to change in sod.Version class and
 // site/velocity/VM_library.vm
 // site/velocity/previousReleases.vm
