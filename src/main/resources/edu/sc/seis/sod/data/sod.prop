@@ -56,7 +56,7 @@ fissuresUtil.database.url=jdbc:hsqldb:file:SodDb/SodDb
 # hibernate create cached tables by default
 hibernate.connection.hsqldb.default_table_type=cached
 
-hibernate.cache.use_second_level_cache=true
+hibernate.cache.use_second_level_cache=false
 hibernate.cache.provider_class=org.hibernate.cache.EhCacheProvider
 ehcache.disk.store.dir=SodDb/ehcache
 
