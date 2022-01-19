@@ -403,13 +403,18 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         HashMap<String, List<Magnitude>> magsByOriginId = new HashMap<String, List<Magnitude>>();
         List<Magnitude> mList = e.getMagnitudeList();
         Magnitude prefMag = null; // event should always have a prefMag
+        List<edu.iris.Fissures.IfEvent.Magnitude> noOriginMagList = new ArrayList<edu.iris.Fissures.IfEvent.Magnitude>();
         for (Magnitude m : mList) {
-            if (!magsByOriginId.containsKey(m.getOriginId())) {
-                magsByOriginId.put(m.getOriginId(), new ArrayList<Magnitude>());
-            }
-            magsByOriginId.get(m.getOriginId()).add(m);
-            if (m.getPublicId().equals(e.getPreferredMagnitudeID())) {
-                prefMag = m;
+            if (m.getOriginId() != null) {
+                if (!magsByOriginId.containsKey(m.getOriginId())) {
+                    magsByOriginId.put(m.getOriginId(), new ArrayList<Magnitude>());
+                }
+                magsByOriginId.get(m.getOriginId()).add(m);
+                if (m.getPublicId().equals(e.getPreferredMagnitudeID())) {
+                    prefMag = m;
+                }
+            } else {
+                noOriginMagList.add(toFissuresMagnitude(m));
             }
         }
         OriginImpl pref = null;
@@ -450,9 +455,9 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                         + " long:" + o.getLongitude() + " time:" + o.getTime() + ", skipping.");
             }
         }
-        List<edu.iris.Fissures.IfEvent.Magnitude> prefMagList = new ArrayList<edu.iris.Fissures.IfEvent.Magnitude>();
         // for convenience add the preferred magnitude as the first magnitude in
         // the preferred origin
+        List<edu.iris.Fissures.IfEvent.Magnitude> prefMagList = new ArrayList<edu.iris.Fissures.IfEvent.Magnitude>();
         if (prefMag != null && !e.getPreferredMagnitudeID().equals(e.getPreferredOriginID())) {
             edu.iris.Fissures.IfEvent.Magnitude pm = toFissuresMagnitude(prefMag);
             prefMagList.add(pm);
@@ -487,6 +492,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                 }
             }
         }
+        prefMagList.addAll(noOriginMagList);
         if (pref != null) {
             pref = new OriginImpl(pref.get_id(),
                     pref.getCatalog(),
