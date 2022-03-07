@@ -588,6 +588,9 @@ public class Start {
                 }
             }
         }
+        if (waveformRecipe != null && (event == null || network == null)) {
+            throw new ConfigurationException("recipe has waveform arm, but missing event and/or network arm");
+        }
     }
 
     private void startArms() throws Exception {
