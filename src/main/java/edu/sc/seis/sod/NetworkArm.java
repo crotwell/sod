@@ -68,11 +68,11 @@ public class NetworkArm implements Arm {
             
             // only do timer if positive interval and waveform arm exists, otherwise run in thread
             if (getRefreshInterval().value > 0 && Start.getWaveformRecipe() != null) {
-                Timer timer = new Timer("Refresh NetworkArm", true);
+                refreshTimer = new Timer("Refresh NetworkArm", true);
                 long period = (long)getInternalNetworkSource().getRefreshInterval().getValue(UnitImpl.MILLISECOND);
                 long firstDelay = lastQueryTime==null ? 0 : lastQueryTime.delayUntilNextRefresh(getRefreshInterval());
                 logger.debug("Refresh timer startup: period: "+period+"  firstDelay: "+firstDelay+"  last query: "+(lastQueryTime==null ? "null" : lastQueryTime.getTime()));
-                timer.schedule(refresh, firstDelay, period);
+                refreshTimer.schedule(refresh, firstDelay, period);
                 if (period == 0) {
                     try { Thread.sleep(10);  } catch(InterruptedException e) { } // give refresh time to start up
                 }
@@ -738,6 +738,11 @@ public class NetworkArm implements Arm {
     public boolean isInitialStartupFinished() {
         return initialStartupFinished;
     }
+    
+    public Timer getRefreshTimer() {
+    	return refreshTimer;
+    }
+    Timer refreshTimer = null;
 
     RefreshNetworkArm refresh;
     

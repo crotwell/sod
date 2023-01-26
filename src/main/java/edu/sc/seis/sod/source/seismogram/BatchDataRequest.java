@@ -42,7 +42,10 @@ public class BatchDataRequest implements SeismogramSourceLocator, Runnable {
     }
 
     public void run() {
-        while (!Start.isArmFailure()) {
+        while ( !Start.isArmFailure() ) {
+        	if ( threadShouldExit ) {
+        		return;
+        	}
             if (nextBatch.isEmpty()) {
                 try {
                     synchronized(this) {
@@ -78,6 +81,14 @@ public class BatchDataRequest implements SeismogramSourceLocator, Runnable {
             }
         }
     }
+    
+    public void shutdown() {
+    	threadShouldExit = true;
+    	synchronized(this) {
+    		notifyAll();
+    	}
+    	
+    }
 
     @Override
     public SeismogramSource getSeismogramSource(CacheEvent event,
@@ -99,6 +110,8 @@ public class BatchDataRequest implements SeismogramSourceLocator, Runnable {
         nextBatch = new ArrayList<PromiseSeismogramList>();
         return out;
     }
+    
+    public boolean threadShouldExit = false;
 
     List<PromiseSeismogramList> nextBatch = new ArrayList<PromiseSeismogramList>();
 

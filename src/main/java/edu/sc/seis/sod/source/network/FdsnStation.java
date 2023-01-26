@@ -78,6 +78,21 @@ public class FdsnStation extends AbstractNetworkSource {
             if (port > 0) {
                 queryParams.setPort(port);
             }
+            String scheme = SodUtil.loadText(config, "scheme", null);
+            if (scheme != null && scheme.length() != 0) {
+                queryParams.setScheme(scheme);
+                // also update port for 80,443 if needed
+                if (port == -1) {
+                    // port not set in config, so set default for scheme
+                    if (scheme.equalsIgnoreCase("http") ) {
+                        queryParams.setPort(80);
+                    }
+                    if (scheme.equalsIgnoreCase("https") ) {
+                        queryParams.setPort(443);
+                    }
+                }
+            }
+
             NodeList childNodes = config.getChildNodes();
             for (int counter = 0; counter < childNodes.getLength(); counter++) {
                 Node node = childNodes.item(counter);
@@ -162,8 +177,12 @@ public class FdsnStation extends AbstractNetworkSource {
         } catch(XMLStreamException e) {
             throw new SodSourceException(e);
         } finally {
-            if (staxml != null) {
-                staxml.closeReader();
+            try {
+                if (staxml != null) {
+                    staxml.closeReader();
+                }
+            } catch(IOException e) {
+                // oh well
             }
         }
     }

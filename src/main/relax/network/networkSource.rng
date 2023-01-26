@@ -409,6 +409,11 @@ CO, HAW, 2009-04-13T00:00:00.000Z, 33.3600, -81.61, 112, 100
                     </optional>
                     <interleave>
                         <optional>
+                            <element name="scheme">
+                                <data type="string"/>
+                            </element>
+                        </optional>
+                        <optional>
                             <element name="host">
                                 <data type="string"/>
                             </element>

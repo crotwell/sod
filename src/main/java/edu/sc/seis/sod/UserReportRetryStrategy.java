@@ -10,6 +10,7 @@ import edu.sc.seis.fissuresUtil.cache.BulletproofVestFactory;
 import edu.sc.seis.fissuresUtil.cache.ClassicRetryStrategy;
 import edu.sc.seis.fissuresUtil.cache.CorbaServerWrapper;
 import edu.sc.seis.sod.source.AbstractSource;
+import edu.sc.seis.seisFile.fdsnws.FDSNWSException;
 
 public class UserReportRetryStrategy extends ClassicRetryStrategy {
 
@@ -48,10 +49,14 @@ public class UserReportRetryStrategy extends ClassicRetryStrategy {
                           + addlInfo);
                     System.exit(1);
                 } else {
+		    String url = "";
+		    if (exc instanceof FDSNWSException) {
+			    url = ((FDSNWSException)exc).getTargetURI().toString();
+		    }
                     print("The "
                           + serverId
                           + " server just produced an error ("+exc.getClass().getName()+" "+exc.getMessage()
-                          +").  SOD will continue trying it until it recovers at which point an all clear message will be issued.  If it never recovers, email sod@seis.sc.edu with this report and we can inform the server maintainer.  If you're tired of waiting, press Ctrl-C to quit.  "
+                          +").  SOD will continue trying it until it recovers at which point an all clear message will be issued.  If it never recovers, email sod@seis.sc.edu with this report and we can inform the server maintainer.  If you're tired of waiting, press Ctrl-C to quit.  "+url
                           + addlInfo);
                 }
             }
