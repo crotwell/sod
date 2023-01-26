@@ -30,7 +30,7 @@ public class WaveformArm extends Thread implements Arm {
 
 
     boolean possibleToContinue() {
-        return Start.getEventArm().isActive() && ! Start.isArmFailure();
+        return (Start.getEventArm() == null || Start.getEventArm().isActive())&& ! Start.isArmFailure();
     }
     
     public void run() {
@@ -45,7 +45,7 @@ public class WaveformArm extends Thread implements Arm {
             SodDB.getSingleton().populateECPToDo();
             SodDB.getSingleton().populateESPToDo();
             SodDB.getSingleton().populateENPToDo();
-            while(true) {
+            while( ! threadShouldExit) {
                 AbstractEventPair next = getNext();
                 while(next == null
                         && (possibleToContinue() || SodDB.getSingleton().isENPTodo() || SodDB.getSingleton().isESPTodo()
@@ -67,9 +67,10 @@ public class WaveformArm extends Thread implements Arm {
                     try {
                         // sleep, but wake up if eventArm does notifyAll()
                         //logger.debug("waiting on event arm");
-                        synchronized(Start.getEventArm()) {
-                            Start.getEventArm().notifyAll();
-                        }
+                        if (Start.getEventArm() != null) {
+                            synchronized (Start.getEventArm()) {
+                                Start.getEventArm().notifyAll();
+                            }
                             if(possibleToContinue()) {
                                 synchronized(Start.getEventArm().getWaveformArmSync()) {
                                     // close db connection as we don't need it for next 2 minutes
@@ -78,6 +79,7 @@ public class WaveformArm extends Thread implements Arm {
                                     Start.getEventArm().getWaveformArmSync().wait(2*60*1000);
                                 }
                             }
+                        }
                     } catch(InterruptedException e) {}
                     //logger.debug("done waiting on event arm");
                     next = getNext();
@@ -344,6 +346,8 @@ public class WaveformArm extends Thread implements Arm {
     private static double getRetryPercentage() {
         return retryPercentage;
     }
+    
+    public boolean threadShouldExit = false;
     
     /** percent of the pool that will be retries */
     private static double retryPercentage = .01; 

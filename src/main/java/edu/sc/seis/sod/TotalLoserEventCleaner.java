@@ -116,4 +116,5 @@ public class TotalLoserEventCleaner extends TimerTask {
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(TotalLoserEventCleaner.class);
 
     private static final long ONE_WEEK = 7 * 24 * 60 * 60 * 1000;
+    
 }

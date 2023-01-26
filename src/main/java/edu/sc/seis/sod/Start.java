@@ -36,6 +36,7 @@ import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.sc.seis.fissuresUtil.Dissendium;
 import edu.sc.seis.fissuresUtil.cache.RetryStrategy;
+import edu.sc.seis.fissuresUtil.cache.WorkerThreadPool;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.exceptionHandler.Extractor;
@@ -51,6 +52,7 @@ import edu.sc.seis.seisFile.fdsnws.FDSNWSException;
 import edu.sc.seis.sod.hibernate.SodDB;
 import edu.sc.seis.sod.hibernate.StatefulEvent;
 import edu.sc.seis.sod.hibernate.StatefulEventDB;
+import edu.sc.seis.sod.source.seismogram.BatchDataRequest;
 import edu.sc.seis.sod.status.IndexTemplate;
 import edu.sc.seis.sod.status.OutputScheduler;
 import edu.sc.seis.sod.status.TemplateFileLoader;
@@ -523,8 +525,8 @@ public class Start {
             }
             if(runProps.loserEventCleaner()) {
                 TotalLoserEventCleaner loserCleaner = new TotalLoserEventCleaner(getRunProps().getEventLag());
-                Timer t = new Timer("TotalLoserCleaner", true);
-                t.schedule(loserCleaner, 0, 7*24*60*60*1000);
+                totalLoserTimer = new Timer("TotalLoserCleaner", true);
+                totalLoserTimer.schedule(loserCleaner, 0, 7*24*60*60*1000);
             }
         }
     }
@@ -621,7 +623,7 @@ public class Start {
             for (int j = 0; j < waveforms.length; j++) {
                 waveforms[j] = new WaveformArm(j, waveformRecipe);
             }
-            Timer retryTimer = new Timer("retry loader", true);
+            retryTimer = new Timer("retry loader", true);
             retryTimer.schedule(new TimerTask() {
 
                 public void run() {
@@ -666,6 +668,26 @@ public class Start {
         } else {
             logger.debug(name + " doesn't exist");
         }
+    }
+    
+    static Timer retryTimer;
+    static Timer totalLoserTimer;
+    public static void shutdown() {
+    	if (getNetworkArm() != null && getNetworkArm().getRefreshTimer() != null) {
+    		getNetworkArm().getRefreshTimer().cancel();
+    	}
+    	if (retryTimer != null) { retryTimer.cancel(); }
+    	if (totalLoserTimer != null) { totalLoserTimer.cancel(); }
+    	for (WaveformArm waveArm: getWaveformArmArray()) {
+    		waveArm.threadShouldExit = true;
+    	}
+    	if (getWaveformRecipe() != null && getWaveformRecipe().dcLocator instanceof BatchDataRequest) {
+    		logger.info("DCLocator is Batch, shutdown... ");
+    		BatchDataRequest bdr = (BatchDataRequest)getWaveformRecipe().dcLocator;
+    		bdr.shutdown();
+    	}
+    	HibernateUtil.shutdown();
+    	WorkerThreadPool.getDefaultPool().shutdown();
     }
 
     void cleanHSQLDatabase() {
