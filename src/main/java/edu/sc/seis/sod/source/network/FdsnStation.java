@@ -177,12 +177,8 @@ public class FdsnStation extends AbstractNetworkSource {
         } catch(XMLStreamException e) {
             throw new SodSourceException(e);
         } finally {
-            try {
-                if (staxml != null) {
-                    staxml.closeReader();
-                }
-            } catch(IOException e) {
-                // oh well
+            if (staxml != null) {
+                staxml.closeReader();
             }
         }
     }

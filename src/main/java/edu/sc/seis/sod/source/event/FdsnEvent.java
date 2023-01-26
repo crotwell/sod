@@ -370,11 +370,7 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                 Event e = it.next();
                 out.add(toCacheEvent(e));
             }
-            try {
-                qml.close();
-            } catch(IOException e) {
-                // oh well
-            }
+            qml.close();
             if (!caughtUpWithRealtime()) {
                 if (out.size() < increaseThreashold) {
                     increaseQueryTimeWidth();
