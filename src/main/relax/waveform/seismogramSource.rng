@@ -249,6 +249,11 @@
                             </element>
                         </optional>
                         <optional>
+                            <element name="scheme">
+                                <data type="string"/>
+                            </element>
+                        </optional>
+                        <optional>
                             <element name="host">
                                 <data type="string"/>
                             </element>
