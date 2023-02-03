@@ -1,7 +1,6 @@
 
 plugins {
   id "edu.sc.seis.version-class" version "1.1.1"
-  id "java-library"
   id 'maven-publish'
 }
 apply plugin: 'eclipse'
@@ -68,7 +67,12 @@ configurations {
 }
 
 dependencies {
-    implementation 'edu.sc.seis:bag:0.4.3-SNAPSHOT2'
+    implementation 'edu.sc.seis:bag:0.4.3-SNAPSHOT3'
+    implementation "edu.sc.seis:fissuresUtil:1.1.15-SNAPSHOT"
+    implementation "com.fasterxml.woodstox:woodstox-core:5.2.1"
+
+    implementation "com.martiansoftware:jsap:2.1"
+    implementation 'org.python:jython-standalone:2.7.2'
 //    compile project(':cormorant')
 
     implementation "jline:jline:0.9.94"
@@ -76,6 +80,8 @@ dependencies {
     implementation "rngconvUSC:rngconv:20030225"
     implementation "de.erichseifert.gral:VectorGraphics2D:0.9"
     implementation "de.erichseifert.gral:gral-core:0.9"
+    implementation "org.slf4j:slf4j-api:1.7.30"
+    implementation group: "org.slf4j", name: "slf4j-log4j12", version: "1.7.30"
 
     implementation ("org.apache.velocity:velocity-tools:2.0") {
         exclude group: 'xml-apis',  module: 'xml-apis'
