@@ -83,6 +83,20 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
         if (host != null && host.length() != 0) {
             queryParams.setHost(host);
         }
+        String scheme = SodUtil.loadText(config, "scheme", null);
+        if (scheme != null && scheme.length() != 0) {
+            queryParams.setScheme(scheme);
+            // also update port for 80,443 if needed
+            if (port == -1) {
+                // port not set in config, so set default for scheme
+                if (scheme.equalsIgnoreCase("http") ) {
+                    queryParams.setPort(80);
+                }
+                if (scheme.equalsIgnoreCase("https") ) {
+                    queryParams.setPort(443);
+                }
+            }
+        }
         // mainly for beta testing
         String fdsnwsPath = SodUtil.loadText(config, "fdsnwsPath", null);
         if (fdsnwsPath != null && fdsnwsPath.length() != 0) {

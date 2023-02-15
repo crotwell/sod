@@ -92,6 +92,20 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         if (host != null && host.length() != 0) {
             queryParams.setHost(host);
         }
+        String scheme = SodUtil.loadText(config, "scheme", null);
+        if (scheme != null && scheme.length() != 0) {
+            queryParams.setScheme(scheme);
+            // also update port for 80,443 if needed
+            if (port == -1) {
+                // port not set in config, so set default for scheme
+                if (scheme.equalsIgnoreCase("http") ) {
+                    queryParams.setPort(80);
+                }
+                if (scheme.equalsIgnoreCase("https") ) {
+                    queryParams.setPort(443);
+                }
+            }
+        }
         // mainly for beta testing
         String fdsnwsPath = SodUtil.loadText(config, "fdsnwsPath", null);
         if (fdsnwsPath != null && fdsnwsPath.length() != 0) {
@@ -107,8 +121,11 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
                 if (!tagName.equals(AbstractSource.RETRIES_ELEMENT) && !tagName.equals("fdsnwsPath")
                         && !tagName.equals(AbstractNetworkSource.REFRESH_ELEMENT)
                         && !tagName.equals(AbstractEventSource.EVENT_QUERY_INCREMENT)
-                        && !tagName.equals(AbstractEventSource.EVENT_LAG) && !tagName.equals(HOST_ELEMENT)
-                        && !tagName.equals(PORT_ELEMENT) && !tagName.equals(AbstractSource.NAME_ELEMENT)) {
+                        && !tagName.equals(AbstractEventSource.EVENT_LAG)
+                        && !tagName.equals(HOST_ELEMENT)
+                        && !tagName.equals(PORT_ELEMENT)
+                        && !tagName.equals(SCHEME_ELEMENT)
+                        && !tagName.equals(AbstractSource.NAME_ELEMENT)) {
                     Object object = SodUtil.load((Element)node, new String[] {"eventArm", "origin"});
                     if (tagName.equals("originTimeRange")) {
                         eventTimeRangeSupplier = ((MicroSecondTimeRangeSupplier)SodUtil.load((Element)node,
@@ -526,6 +543,8 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
     public static final String HOST_ELEMENT = "host";
 
     public static final String PORT_ELEMENT = "port";
+
+    public static final String SCHEME_ELEMENT = "scheme";
 
     public static final String BAD_PARAM_MESSAGE = "The remote web service just indicated that the query was badly formed. "
             +"This may be because it does not support all of the parameters that SOD uses or it could be a bug in SOD. "
