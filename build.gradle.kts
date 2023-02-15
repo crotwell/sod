@@ -10,9 +10,12 @@ plugins {
   application
 }
 
+// dumb to keep intellij from crashing...
+tasks.register("prepareKotlinBuildScriptModel"){}
+
 application {
-  mainClassName = "edu.sc.seis.sod.Start"
-  applicationName = "sod"
+  mainClass.set("edu.sc.seis.sod.Start")
+  //applicationName = "sod"
 }
 
 group = "edu.sc.seis"
@@ -50,15 +53,15 @@ val rng by configurations.creating
 dependencies {
     rng("org.relaxng:jing:20181222")
     implementation("edu.sc.seis:seedCodec:1.0.11")
-    implementation("edu.sc.seis:seisFile:2.0.0")
+    implementation("edu.sc.seis:seisFile:2.0.6-SNAPSHOT")
     implementation("info.picocli:picocli:4.6.1")
-    implementation("edu.sc.seis:sod-bag:4.0.0-SNAPSHOT")
-    implementation("edu.sc.seis:TauP:2.5.0")
+    implementation("edu.sc.seis:TauP:2.6.4")
+    implementation("com.isti:isti.util:20120201")
     implementation("com.oregondsp.signalprocessing:oregondsp:1.0.1-alpha")
 
 
     implementation("org.slf4j:slf4j-api:1.7.30")
-    implementation("org.hsqldb:hsqldb:2.4.0")
+    implementation("org.hsqldb:hsqldb:2.7.1")
     implementation("jline:jline:0.9.94")
     implementation("com.martiansoftware:jsap:2.1")
     implementation("thaiopensource:jing:20091111")
