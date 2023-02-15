@@ -101,7 +101,6 @@ dependencies {
 
 configurations.all {
     resolutionStrategy.dependencySubstitution {
-        substitute(module("edu.sc.seis:sod-bag")).with(project(":sod-bag"))
         substitute(module("edu.sc.seis:seisFile")).with(project(":seisFile"))
         substitute(module("edu.sc.seis:seedCodec")).with(project(":seedCodec"))
         substitute(module("edu.sc.seis:TauP")).with(project(":TauP"))
