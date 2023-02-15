@@ -50,6 +50,7 @@ public class BatchDataRequest implements SeismogramSourceLocator, Runnable {
                 } catch(InterruptedException e) {}
             } else {
                 List<PromiseSeismogramList> reqList = popNextBatch();
+                if (reqList.size() == 0) {continue;}
                 List<RequestFilter> rfList = new ArrayList<RequestFilter>();
                 for (PromiseSeismogramList batchProxy : reqList) {
                     rfList.addAll(batchProxy.getRequest());
