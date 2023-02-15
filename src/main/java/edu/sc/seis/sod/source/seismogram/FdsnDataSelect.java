@@ -229,7 +229,7 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
                     restrictedStr = "restricted "+restrictedStr;
                 }
                 try {
-                    logger.info(restrictedStr+queryParams.formURI());
+                    logger.info(restrictedStr+querier.formURIForPost());
                 } catch(URISyntaxException e) {
                     throw new SeismogramSourceException("Error with URL syntax", e);
                 }
