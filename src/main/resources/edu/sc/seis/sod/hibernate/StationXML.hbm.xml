@@ -25,7 +25,6 @@
         <property name="stationCode" index="station_code_idx" />
         <many-to-one name="network" class="edu.sc.seis.seisFile.fdsnws.stationxml.Network"
         foreign-key="FK_STATION_NETWORK" cascade="save-update"  lazy="false" />
-        <property name="networkCode" />
         <property name="startDateTime" type="Instant" />
         <property name="endDateTime" type="Instant" />
         <property name="restrictedStatus" />
@@ -61,8 +60,6 @@
         <property name="locCode" />
         <many-to-one name="station" class="edu.sc.seis.seisFile.fdsnws.stationxml.Station"
         foreign-key="FK_CHANNEL_STATION" cascade="save-update" lazy="false" />
-        <property name="stationCode" />
-        <property name="networkCode" />
         <property name="startDateTime" type="Instant" />
         <property name="endDateTime" type="Instant" />
         <property name="restrictedStatus" />
