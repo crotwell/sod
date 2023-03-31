@@ -189,6 +189,12 @@ public class FdsnStation extends AbstractNetworkSource {
             staQP.setLevel(FDSNStationQueryParams.LEVEL_STATION);
             // now append the real network code
             staQP.appendToNetwork(net.getNetworkCode());
+            if ( ! checkTimeParamsOk(net.getStartDateTime(), net.getEndDateTime(), constraints)) {
+                // station does not overlap time window
+                logger.info("time window for "+net+" "+net.getStartDateTime()+" "+net.getEndDateTime()+
+                        " does not overlap sod constraints: "+constraints.getConstrainingBeginTime()+" "+constraints.getConstrainingEndTime()+", skipping.");
+                return out;
+            }
             setTimeParams(staQP, net.getStartDateTime(), net.getEndDateTime(), constraints);
             logger.debug("getStations "+staQP.formURI());
             staxml = internalGetStationXML(staQP);
@@ -233,7 +239,13 @@ public class FdsnStation extends AbstractNetworkSource {
                     .appendToNetwork(station.getNetworkCode())
                     .clearStation()
                     .appendToStation(station.getStationCode());
-            setTimeParams(staQP, station.getStartDateTime(), station.getEndDateTime(), constraints);
+            if ( ! checkTimeParamsOk(station.getStartDateTime(), station.getEndDateTime(), constraints)) {
+                // station does not overlap time window
+                logger.info("time window for "+station+" "+station.getStartDateTime()+" "+station.getEndDateTime()+
+                        " does not overlap sod constraints: "+constraints.getConstrainingBeginTime()+" "+constraints.getConstrainingEndTime()+", skipping.");
+
+                return out;
+            }setTimeParams(staQP, station.getStartDateTime(), station.getEndDateTime(), constraints);
             logger.info("getChannels "+staQP.formURI());
             staxml = internalGetStationXML(staQP);
             NetworkIterator netIt = staxml.getNetworks();
@@ -409,32 +421,57 @@ public class FdsnStation extends AbstractNetworkSource {
             staQP.setEndAfter(end.minus(TimeUtils.ONE_SECOND));
         }
     }
-    
-    static void setTimeParams(FDSNStationQueryParams staQP, Instant startTime, Instant endTime, NetworkQueryConstraints constraints) {
-        Instant earliest = startTime.plus(TimeUtils.ONE_SECOND);
-        Instant latest = null;
-        if (endTime != null) {
-            latest = endTime.minus(TimeUtils.ONE_SECOND);
+
+    /**
+     * Checks if the given start and end times (maybe null) overlap the constraints (maybe null)
+     * to avoid sending a query to the server that cannot possibly pass in the sod run.
+     *
+     * @param startTime
+     * @param endTime
+     * @param constraints
+     * @return true if times overlap at all
+     */
+    static boolean checkTimeParamsOk(Instant startTime, Instant endTime, NetworkQueryConstraints constraints) {
+        if (startTime.equals(endTime)) {
+            // think this is ok, just ask for point in time
+            //throw new SodSourceException("Station start and end times are equal!!! " + station);
         }
+        if (endTime != null && startTime.isAfter(endTime)) {
+            return false;
+        }
+        if (constraints.getConstrainingEndTime() != null &&
+                constraints.getConstrainingEndTime().isBefore(startTime)) {
+            return false;
+        }
+        if (constraints.getConstrainingBeginTime() != null && (
+                endTime != null &&
+                        constraints.getConstrainingBeginTime().isAfter(endTime))) {
+            return false;
+        }
+        return true;
+    }
+
+    static void setTimeParams(FDSNStationQueryParams staQP, Instant startTime, Instant endTime, NetworkQueryConstraints constraints) {
+        Instant earliest = startTime;
+        Instant latest = endTime;
+
         if (constraints != null) {
             if (earliest == null || (
-                    constraints.getConstrainingBeginTime() != null 
-                    && constraints.getConstrainingBeginTime().isAfter(earliest))) {
+                    constraints.getConstrainingBeginTime() != null
+                            && constraints.getConstrainingBeginTime().isAfter(earliest))) {
                 earliest = constraints.getConstrainingBeginTime();
             }
             if (latest == null || (
-                    constraints.getConstrainingEndTime() != null 
-                    && constraints.getConstrainingEndTime().isBefore(latest))) {
+                    constraints.getConstrainingEndTime() != null
+                            && constraints.getConstrainingEndTime().isBefore(latest))) {
                 latest = constraints.getConstrainingEndTime();
             }
         }
         if (earliest != null) {
-            staQP.setStartTime(earliest);
-            staQP.clearEndAfter().clearStartBefore(); // geofon doesn't like starttime and startsbefore in same query
+            staQP.setEndAfter(earliest);
         }
         if (latest != null && latest.isBefore(ClockUtil.now())) {
-            staQP.setEndTime(latest);
-            staQP.clearEndAfter().clearStartBefore(); // geofon doesn't like starttime and startsbefore in same query
+            staQP.setStartBefore(latest);
         }
     }
     
