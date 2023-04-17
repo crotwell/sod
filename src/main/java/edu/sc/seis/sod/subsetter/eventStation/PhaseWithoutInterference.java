@@ -3,14 +3,11 @@ package edu.sc.seis.sod.subsetter.eventStation;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.sc.seis.TauP.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-import edu.sc.seis.TauP.Arrival;
-import edu.sc.seis.TauP.SeismicPhase;
-import edu.sc.seis.TauP.TauModelException;
-import edu.sc.seis.TauP.TauP_Time;
 import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
@@ -33,9 +30,10 @@ public class PhaseWithoutInterference extends PhaseExists implements EventStatio
     public PhaseWithoutInterference(Element config) throws ConfigurationException, TauModelException {
         super(config);
         List<Element> phElements = SodUtil.getAllElements(config, "interferingPhase");
-        mainPhase = new SeismicPhase(phaseName,
-                                     modelName,
-                                     0.0);
+        tMod = TauModelLoader.load(modelName);
+        mainPhase = SeismicPhaseFactory.createPhase(phaseName,
+                tMod,
+                0.0);
         beginOffset = TimeUtils.durationToDoubleSeconds(SodUtil.loadTimeInterval(DOMHelper.extractElement(config, "beginOffset")));
         endOffset = TimeUtils.durationToDoubleSeconds(SodUtil.loadTimeInterval(DOMHelper.extractElement(config, "endOffset")));
         for (Element element : phElements) {
@@ -92,14 +90,10 @@ public class PhaseWithoutInterference extends PhaseExists implements EventStatio
      * @throws TauModelException */
     protected synchronized List<List<Arrival>> calcArrivals(double depth, double degrees) throws TauModelException {
         if (mainPhase.getTauModel().getSourceDepth() != depth) {
-            mainPhase = new SeismicPhase(phaseName,
-                                         modelName,
-                                         depth);
+            mainPhase = SeismicPhaseFactory.createPhase(phaseName, tMod, depth);
             phases.clear();
             for (String phaseName : interferingPhaseNames) {
-                phases.add(new SeismicPhase(phaseName,
-                                              modelName,
-                                              depth));
+                phases.add(SeismicPhaseFactory.createPhase(phaseName, tMod, depth));
             }
         }
         List<List<Arrival>> out = new ArrayList<List<Arrival>>();
@@ -114,6 +108,7 @@ public class PhaseWithoutInterference extends PhaseExists implements EventStatio
     double beginOffset, endOffset;
     
     SeismicPhase mainPhase;
+    TauModel tMod;
     int arrivalIndex = 0;
     List<SeismicPhase> phases = new ArrayList<SeismicPhase>(); // main phase is index 0, interferring phases are 1 to end
     List<String> interferingPhaseNames = new ArrayList<String>();
