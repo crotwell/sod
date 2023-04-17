@@ -334,7 +334,7 @@ tasks.register<JavaExec>("buildGrouperSchema") {
     dependsOn("compileJava")
     classpath(configurations.getByName("rng"))
     group = "build"
-    val inFile = File(project.buildDir.path, "generated-src/relaxInclude/grouper.rng")
+    val inFile = File(project.buildDir.path, "generated-src/grouperRelaxInclude/grouper.rng")
     inputs.dir(inFile.getParentFile())
     val resourcesDir = File(project.buildDir, "generated-src/relax/resources")
     val outFile = File(resourcesDir, "edu/sc/seis/sod/data/grouper.rng")
@@ -361,7 +361,7 @@ tasks.register<edu.sc.seis.tasks.XSLT>("transform") {
 }
 
 tasks.register<edu.sc.seis.tasks.XSLT>("transformGrouper") {
-    destDir= File(project.buildDir, "generated-src/relaxInclude")
+    destDir= File(project.buildDir, "generated-src/grouperRelaxInclude")
     stylesheetFile = project.file("src/main/xslt/simpleXInclude.xslt")
     val rngFile = project.fileTree("src") {
       include("main/relax/grouper.rng")
