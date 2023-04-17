@@ -95,7 +95,8 @@ public class VersionHistory {
       new Version ("3.2.6", false),
       new Version ("3.2.7", false),
       new Version ("4.0.0-SNAPSHOT", true),
-      new Version ("4.0.0-SNAPSHOT2", false)
+      new Version ("4.0.0-SNAPSHOT2", false),
+      new Version ("4.0.0-SNAPSHOT3", false)
     };
 
 }
