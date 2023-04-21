@@ -98,6 +98,10 @@ public class ChannelId {
         this.startTime = startTime;
     }
 
+    public String toString() {
+        return getNetworkCode()+"_"+getStationCode()+"_"+getLocCode()+"_"+getChannelCode();
+    }
+
     private String networkId;
     private String stationCode;
     private String locCode;

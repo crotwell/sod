@@ -44,10 +44,13 @@ public class PromiseSeismogramList {
 			            TimeRange seisRange = new TimeRange(seis);
 			            if (rfRange.intersects(seisRange)) {
 			                Cut c = new Cut(rf);
-			                matching.add(c.applyEncoded(seis));
+			                LocalSeismogramImpl cutSeis = c.applyEncoded(seis);
+			                // temp networks year is often wrong from miniseed, replace with rf
+			                cutSeis.channel_id = rf.getChannelId();
+			                matching.add(cutSeis);
 			                break;
 			            }
-			        }
+                    }
 			    }
 			}
 			notifyAll();
@@ -63,5 +66,6 @@ public class PromiseSeismogramList {
     SeismogramSourceException seismogramSourceException;
     List<LocalSeismogramImpl> matching;
     List<RequestFilter> request;
-    
+
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(PromiseSeismogramList.class);
 }

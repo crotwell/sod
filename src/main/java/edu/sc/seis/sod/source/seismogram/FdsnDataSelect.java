@@ -287,6 +287,9 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
                 } finally {
                     querier.close();
                 }
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Found " + drList.size() + " data records.");
+                }
                 return drList;
             }
         };

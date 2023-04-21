@@ -37,9 +37,9 @@ public class ChannelIdUtil {
     
     public static boolean areEqualExceptForBeginTime(ChannelId a, ChannelId b) {
         return a.getStationCode().equals(b.getStationCode())
-        && a.getLocCode().equals(b.getLocCode())
+        && a.getLocCode().trim().equals(b.getLocCode().trim())
         && a.getChannelCode().equals(b.getChannelCode())
-        && a.getNetworkId().equals(b.getNetworkId());
+        && a.getNetworkCode().equals(b.getNetworkCode());
     }
     
     public static boolean areEqual(Channel a, Channel b) {
@@ -212,4 +212,7 @@ public class ChannelIdUtil {
     public static int hashCode(ChannelId id) {
         return 12 + toString(id).hashCode();
     }
+
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(ChannelIdUtil.class);
+
 } // ChannelIdUtil
