@@ -1,7 +1,7 @@
 
 plugins {
   "project-report"
-  kotlin("jvm") version "1.3.61"
+  kotlin("jvm") version "1.9.0"
   id("edu.sc.seis.version-class") version "1.1.1"
   "java"
   eclipse
@@ -101,9 +101,9 @@ dependencies {
 
 configurations.all {
     resolutionStrategy.dependencySubstitution {
-        substitute(module("edu.sc.seis:seisFile")).with(project(":seisFile"))
-        substitute(module("edu.sc.seis:seedCodec")).with(project(":seedCodec"))
-        substitute(module("edu.sc.seis:TauP")).with(project(":TauP"))
+        substitute(module("edu.sc.seis:seisFile")).using(project(":seisFile"))
+        substitute(module("edu.sc.seis:seedCodec")).using(project(":seedCodec"))
+        substitute(module("edu.sc.seis:TauP")).using(project(":TauP"))
     }
 }
 
@@ -252,7 +252,7 @@ val scriptNames = mapOf(
 for (key in scriptNames.keys) {
   tasks.register<CreateStartScripts>(key) {
     outputDir = file("build/scripts")
-    mainClassName = scriptNames[key]
+      getMainClass().set(scriptNames[key])
     applicationName = key
     classpath = sourceSets["main"].runtimeClasspath + project.tasks[JavaPlugin.JAR_TASK_NAME].outputs.files
   }
@@ -298,9 +298,9 @@ tasks.register<JavaExec>("buildSchemaDocs") {
     outputs.dir(outDir)
     workingDir = outDir
     args = listOf(inRNGFile.path, project.projectDir.path, outDir.path)
-    classpath(configurations.runtime)
+    classpath(sourceSets.getByName("main").runtimeClasspath)
     classpath(project.file("build/classes/main"))
-    main="edu.sc.seis.sod.validator.documenter.SchemaDocumenter"
+    getMainClass().set("edu.sc.seis.sod.validator.documenter.SchemaDocumenter")
     doFirst {
         if (!outDir.exists() ) {
             outDir.mkdirs()
@@ -325,7 +325,7 @@ tasks.register<JavaExec>("buildSchema") {
       setStandardOutput(out)
     }
     args = listOf("-s", inFile.path)
-    main = "com.thaiopensource.relaxng.util.Driver"
+    getMainClass().set("com.thaiopensource.relaxng.util.Driver")
     workingDir = outFile.getParentFile()
 }
 
@@ -346,7 +346,7 @@ tasks.register<JavaExec>("buildGrouperSchema") {
     }
     args = listOf("-s", inFile.path)
     jvmArgs = listOf("-Xmx1512m")
-    main = "com.thaiopensource.relaxng.util.Driver"
+    getMainClass().set("com.thaiopensource.relaxng.util.Driver")
     workingDir = outFile.getParentFile()
 }
 
