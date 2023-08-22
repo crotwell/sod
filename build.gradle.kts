@@ -2,19 +2,20 @@
 plugins {
   "project-report"
   kotlin("jvm") version "1.9.0"
-  id("edu.sc.seis.version-class") version "1.1.1"
+  id("edu.sc.seis.version-class") version "1.2.2"
   "java"
   eclipse
   "project-report"
   `maven-publish`
   application
+  id("com.github.ben-manes.versions") version "0.47.0"
 }
 
 // dumb to keep intellij from crashing...
 tasks.register("prepareKotlinBuildScriptModel"){}
 
 application {
-  mainClass.set("edu.sc.seis.sod.Start")
+    mainClass.set("edu.sc.seis.sod.Start")
   //applicationName = "sod"
 }
 
@@ -54,7 +55,7 @@ dependencies {
     rng("org.relaxng:jing:20181222")
     implementation("edu.sc.seis:seedCodec:1.0.11")
     implementation("edu.sc.seis:seisFile:2.0.6-SNAPSHOT")
-    implementation("info.picocli:picocli:4.6.1")
+    implementation("info.picocli:picocli:4.7.4")
     implementation("edu.sc.seis:TauP:2.6.4")
     implementation("com.isti:isti.util:20120201")
     implementation("com.oregondsp.signalprocessing:oregondsp:1.0.1-alpha")
@@ -66,12 +67,12 @@ dependencies {
     implementation("com.martiansoftware:jsap:2.1")
     implementation("thaiopensource:jing:20091111")
     implementation("rngconvUSC:rngconv:20030225")
-    implementation( "com.fasterxml.woodstox:woodstox-core:6.0.3")
+    implementation( "com.fasterxml.woodstox:woodstox-core:6.5.1")
     implementation("org.eclipse.jetty:jetty-servlet:9.4.5+")
-    implementation("org.msgpack:msgpack-core:0.8.13+")
+    implementation("org.msgpack:msgpack-core:0.9.5")
     //implementation("javax.xml:jaxp-api:1.4.2")
 
-    implementation("org.json:json:20170516")
+    implementation("org.json:json:20230618")
 
     implementation("org.hibernate:hibernate-ehcache:5.4.25.Final")
     implementation( "org.hibernate:hibernate-core:5.4.25.Final")
@@ -93,10 +94,10 @@ dependencies {
     implementation("net.sourceforge.javacsv:javacsv:2.0")
 //
     // Use JUnit Jupiter API for testing.
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.5.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
 
     // Use JUnit Jupiter Engine for testing.
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.5.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
 }
 
 configurations.all {
