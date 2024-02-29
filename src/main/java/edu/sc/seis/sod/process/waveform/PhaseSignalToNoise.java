@@ -11,6 +11,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.sc.seis.TauP.TauPException;
 import org.json.JSONObject;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -127,7 +128,7 @@ public class PhaseSignalToNoise  implements WaveformProcess, Threadable {
      * cookieJar. */
     public LongShortTrigger calcTrigger(CacheEvent event,
                                         Channel channel,
-                                        LocalSeismogramImpl[] seismograms) throws NoPreferredOrigin, FissuresException, PhaseNonExistent, TauModelException {
+                                        LocalSeismogramImpl[] seismograms) throws NoPreferredOrigin, FissuresException, PhaseNonExistent, TauPException {
         // find the first seismogram with a non-null trigger, probably the first
         // that overlaps the timewindow, and return it.
         for (int i = 0; i < seismograms.length; i++) {

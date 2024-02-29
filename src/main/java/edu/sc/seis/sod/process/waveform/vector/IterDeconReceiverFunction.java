@@ -157,7 +157,7 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
     public IterDeconResult[] process(CacheEvent event,
                                      ChannelGroup channelGroup,
                                      LocalSeismogramImpl[] localSeis) throws NoPreferredOrigin, FissuresException,
-            IncompatibleSeismograms, TauModelException, ZeroPowerException {
+            IncompatibleSeismograms, TauPException, ZeroPowerException {
         Channel[] xyChan = channelGroup.getHorizontalXY();
         if (xyChan.length < 2) {
             throw new IncompatibleSeismograms("Unable to find horizontal channels: "+channelGroup.getChannel1().getCode()
