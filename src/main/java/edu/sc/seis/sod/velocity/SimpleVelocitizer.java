@@ -32,6 +32,9 @@ import edu.sc.seis.sod.util.exceptionHandler.GlobalExceptionHandler;
 public class SimpleVelocitizer {
 
     public static String format(Instant date, String format) {
+        if (date == null) {
+            return "";
+        }
         DateTimeFormatter formatter = TimeUtils.createFormatter(format).withZone(ZoneOffset.UTC);
         return ZonedDateTime.ofInstant(date, TimeUtils.TZ_UTC).format(formatter);
     }

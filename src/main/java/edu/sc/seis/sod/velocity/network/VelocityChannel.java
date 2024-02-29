@@ -135,6 +135,9 @@ public class VelocityChannel  {
     }
 
     public String getEnd(String format) {
+        if (getEndDateTime() == null) {
+            return "";
+        }
         return SimpleVelocitizer.format(getEndDateTime(), format);
     }
 

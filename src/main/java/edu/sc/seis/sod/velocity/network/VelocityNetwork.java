@@ -90,6 +90,9 @@ public class VelocityNetwork  {
     }
     
     public String getEnd(String format){
+        if (net.getEndDateTime() == null) {
+            return "";
+        }
         return SimpleVelocitizer.format(net.getEndDateTime(), format);
     }
 

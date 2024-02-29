@@ -88,6 +88,9 @@ public class VelocityStation  {
     }
 
     public String getEnd(String dateFormat) {
+        if (getEndDateTime() == null) {
+            return "";
+        }
         if(dateFormat.equals("longfile")) {
             return FissuresFormatter.formatDateForFile(getEndDateTime());
         }
