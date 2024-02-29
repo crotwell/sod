@@ -71,7 +71,7 @@ public class RemoveEventDuplicate implements OriginSubsetter {
         Iterator matchingEvents = getEventsNearTimeAndDepth(preferred_origin).iterator();
         while( matchingEvents.hasNext()) {
         	StatefulEvent e = (StatefulEvent)matchingEvents.next();
-            if (!e.equals(eventAccess)){
+            if (!e.getOrigin().equals(preferred_origin) ){
                 if (isDistanceClose(e, preferred_origin)){
                     return new StringTreeLeaf(this, false);
                 }
@@ -91,7 +91,7 @@ public class RemoveEventDuplicate implements OriginSubsetter {
         }
     }
     
-    public List getEventsNearTimeAndDepth(OriginImpl preferred_origin) throws SQLException {
+    public List<CacheEvent> getEventsNearTimeAndDepth(OriginImpl preferred_origin) throws SQLException {
         Instant originTime = preferred_origin.getOriginTime();
         Instant minTime = originTime.minus(timeVariance);
         Instant maxTime = originTime.plus(timeVariance);
@@ -100,11 +100,11 @@ public class RemoveEventDuplicate implements OriginSubsetter {
         QuantityImpl depthRangeImpl = QuantityImpl.createQuantityImpl(depthVariance);
         QuantityImpl minDepth = originDepth.subtract(depthRangeImpl);
         QuantityImpl maxDepth = originDepth.add(depthRangeImpl);
-        List timeEvents = 
+        List<StatefulEvent> timeEvents =
             getEventStatusTable().getEventInTimeRangeRegardlessOfStatus(new TimeRange(minTime,
                                                                 maxTime));
-        List out = new ArrayList();
-        Iterator it = timeEvents.iterator();
+        List<CacheEvent> out = new ArrayList();
+        Iterator<StatefulEvent> it = timeEvents.iterator();
         while(it.hasNext()) {
             StatefulEvent e = (StatefulEvent)it.next();
             if (e.getStatus().getStanding().equals(Standing.INIT) ||
