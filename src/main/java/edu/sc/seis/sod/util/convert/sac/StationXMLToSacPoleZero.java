@@ -20,7 +20,7 @@ public class StationXMLToSacPoleZero {
      * */
     public static SacPoleZero convert(Response response) throws UnknownUnit {
         ResponseStage first = response.getFirstStage();
-        if (first.getResponseItem() instanceof PolesZeros) {
+        if ( ! (first.getResponseItem() instanceof PolesZeros)) {
             throw new IllegalArgumentException("First Stage is not PolesZeros: "+first.getResponseItem().getClass().getSimpleName());
         }
         PolesZeros polesZeros = (PolesZeros)first.getResponseItem();

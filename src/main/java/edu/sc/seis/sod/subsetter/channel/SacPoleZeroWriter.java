@@ -46,7 +46,7 @@ public class SacPoleZeroWriter implements ChannelSubsetter {
             return new Fail(this, "Invalid instrumentation: "+e.getMessage());
         }
         ResponseStage first = response.getFirstStage();
-        if (first.getResponseItem() instanceof PolesZeros) {
+        if ( ! (first.getResponseItem() instanceof PolesZeros)) {
             return new Fail(this, "first (sensor) stage is not a PoleZero: "+first.getResponseItem().getClass().getSimpleName());
         }
         String responseOut = StationXMLToSacPoleZero.convert(response)
