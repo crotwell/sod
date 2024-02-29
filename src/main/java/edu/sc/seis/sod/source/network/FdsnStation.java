@@ -417,7 +417,7 @@ public class FdsnStation extends AbstractNetworkSource {
     static void setTimeParamsToGetSingleChan(FDSNStationQueryParams staQP, Instant startTime, Instant endTime) {
         staQP.setStartBefore(startTime.plus(TimeUtils.ONE_SECOND));
         Instant end = endTime;
-        if (end.isBefore(ClockUtil.now())) {
+        if (end != null && end.isBefore(ClockUtil.now())) {
             staQP.setEndAfter(end.minus(TimeUtils.ONE_SECOND));
         }
     }
