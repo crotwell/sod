@@ -328,7 +328,7 @@ public class ResponsePrint {
                 } else {
                     s.append("\nB055F07-11     " + k);
                 }
-                s.append("  " + f.format(rle.getFrequency()));
+                s.append("  " + f.format(rle.getFrequency().getValue()));
                 s.append("  " + f.format(rle.getAmplitude().getValue()));
                 s.append("  " + f.format(rle.getAmplitude().getPlusError()));
                 s.append("  " + f.format(rle.getPhase().getValue()));
@@ -370,9 +370,9 @@ public class ResponsePrint {
         s.append("\nB057F06     Decimation offset:                 "
                 + stage.getDecimation().getOffset());
         s.append("\nB057F07     Estimated delay (seconds):         "
-                + f.format(stage.getDecimation().getDelay()));
+                + f.format(stage.getDecimation().getDelay().getValue()));
         s.append("\nB057F08     Correction applied (seconds):      "
-                + f.format(stage.getDecimation().getCorrection()));
+                + f.format(stage.getDecimation().getCorrection().getValue()));
         s.append("\n#");
         return s.toString();
     }
