@@ -18,6 +18,8 @@ import edu.sc.seis.seisFile.fdsnws.quakeml.Origin;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 
+import java.util.Objects;
+
 //
 // IDL:iris.edu/Fissures/Location:1.0
 //
@@ -85,6 +87,23 @@ public class Location
         this.elevation = elevation;
         this.depth = depth;
         this.type = type;
+    }
+
+    public String toString() {
+        return "("+latitude+", "+longitude+") "+depth;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Location)) return false;
+        Location location = (Location) o;
+        return Float.compare(latitude, location.latitude) == 0 && Float.compare(longitude, location.longitude) == 0 && Objects.equals(elevation, location.elevation) && Objects.equals(depth, location.depth) && Objects.equals(type, location.type);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(latitude, longitude, elevation, depth, type);
     }
 
     public float latitude;
