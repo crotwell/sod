@@ -27,7 +27,11 @@ public class CacheEvent  {
         if(origins == null) { throw new IllegalArgumentException("origins cannot be null"); }
         this.attr = attr;
         this.origins = origins;
-        this.preferred = preferred;
+        if (preferred != null) {
+            this.preferred = preferred;
+        } else {
+            this.preferred = origins[0];
+        }
     }
 
     protected CacheEvent event;
@@ -170,4 +174,6 @@ public class CacheEvent  {
             return "Event "+getAttributes().getName()+" no pref origin";
         }
     }
+
+
 } // CacheEvent

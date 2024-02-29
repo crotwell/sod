@@ -24,6 +24,8 @@ public class StatefulEvent extends CacheEvent{
     
     private Status status;
 
-
+    public String toString() {
+        return super.toString()+" "+status;
+    }
 }
 

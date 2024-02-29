@@ -246,5 +246,9 @@ public class OriginImpl  {
         return parm_ids;
     }
     
+    public String toString() {
+        return getOriginTime()+" "+getMagnitudeList().get(0)+" "+getLocation();
+    }
+    
     protected List<Magnitude> hibernateMagList = null;
 }
