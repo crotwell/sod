@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.sc.seis.TauP.TauPException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
@@ -236,7 +237,7 @@ public class IterDeconReceiverFunction extends AbstractWaveformVectorMeasure {
                                             float[] zdata,
                                             float period,
                                             Location staLoc,
-                                            OriginImpl origin) throws TauModelException, ZeroPowerException {
+                                            OriginImpl origin) throws TauPException, ZeroPowerException {
         if (component.length == 0) {
             throw new ArrayIndexOutOfBoundsException("Component length is " + component.length);
         }

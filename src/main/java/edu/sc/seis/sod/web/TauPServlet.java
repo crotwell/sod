@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.sc.seis.TauP.TauPException;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
@@ -109,7 +110,7 @@ public class TauPServlet  extends HttpServlet {
                 resp.sendError(500);
             }
             writer.close();
-        } catch(TauModelException e) {
+        } catch(TauPException e) {
             throw new ServletException(e);
         } catch(JSONException e) {
             throw new ServletException(e);

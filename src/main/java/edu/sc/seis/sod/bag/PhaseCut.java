@@ -10,6 +10,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 
+import edu.sc.seis.TauP.TauPException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +46,7 @@ public class PhaseCut {
     public LocalSeismogramImpl cut(Location stationLoc,
                                    OriginImpl origin,
                                    LocalSeismogramImpl seis)
-        throws TauModelException, PhaseNonExistent, FissuresException  {
+        throws TauPException, PhaseNonExistent, FissuresException  {
         List<Arrival> beginArrivals = timeCalc.calcTravelTimes(stationLoc, origin, new String[] {beginPhase});
         List<Arrival> endArrivals = timeCalc.calcTravelTimes(stationLoc, origin, new String[] {endPhase});
 

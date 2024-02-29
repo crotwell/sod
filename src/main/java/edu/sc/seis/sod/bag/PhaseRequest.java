@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 
+import edu.sc.seis.TauP.TauPException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -165,7 +166,7 @@ public class PhaseRequest  {
     }
 
     private double getArrivalTime(String phase, Channel chan, OriginImpl origin)
-            throws TauModelException {
+            throws TauPException {
         if(phase.equals(ORIGIN)) {
             return 0;
         }

@@ -10,10 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import edu.sc.seis.TauP.Arrival;
-import edu.sc.seis.TauP.TauModel;
-import edu.sc.seis.TauP.TauModelException;
-import edu.sc.seis.TauP.TauP_Time;
+import edu.sc.seis.TauP.*;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.model.common.DistAz;
@@ -28,18 +25,18 @@ public class TauPUtil {
         taup_time = new TauP_Time(modelName);
     }
 
-    public List<Arrival> calcTravelTimes(Station station, OriginImpl origin, String[] phaseNames) throws TauModelException {
+    public List<Arrival> calcTravelTimes(Station station, OriginImpl origin, String[] phaseNames) throws TauPException {
         return calcTravelTimes(Location.of(station),
                                origin,
                                phaseNames);
     }
 
-    public List<Arrival> calcTravelTimes(Channel channel, OriginImpl origin, String[] phaseNames) throws TauModelException {
+    public List<Arrival> calcTravelTimes(Channel channel, OriginImpl origin, String[] phaseNames) throws TauPException {
         return calcTravelTimes(Location.of(channel), origin, phaseNames);
     }
 
 
-    public synchronized List<Arrival> calcTravelTimes(Location stationLoc, OriginImpl origin, String[] phaseNames) throws TauModelException {
+    public synchronized List<Arrival> calcTravelTimes(Location stationLoc, OriginImpl origin, String[] phaseNames) throws TauPException {
         QuantityImpl depth = (QuantityImpl)origin.getLocation().depth;
         depth = depth.convertTo(UnitImpl.KILOMETER);
         double depthVal = depth.getValue();
@@ -52,7 +49,7 @@ public class TauPUtil {
         return calcTravelTimes(distAz.getDelta(), depthVal, phaseNames);
     }
 
-    public synchronized List<Arrival> calcTravelTimes(double distDeg, double depthKm, String[] phaseNames) throws TauModelException {
+    public synchronized List<Arrival> calcTravelTimes(double distDeg, double depthKm, String[] phaseNames) throws TauPException {
         taup_time.setSourceDepth(depthKm);
         taup_time.clearPhaseNames();
         for (int i = 0; i < phaseNames.length; i++) {

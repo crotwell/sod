@@ -2,6 +2,7 @@ package edu.sc.seis.sod.process.waveform;
 
 import java.util.List;
 
+import edu.sc.seis.TauP.TauPException;
 import org.w3c.dom.Element;
 
 import edu.sc.seis.TauP.Arrival;
@@ -59,7 +60,7 @@ public class PhaseHeaderProcess implements SacProcess {
             } else if ( arrivalIndex < 0 && arrivals.size() > -1*arrivalIndex) {
                 TauP_SetSac.setSacTHeader(sac, tHeader, arrivals.get(arrivals.size()+arrivalIndex));
             }
-        } catch(TauModelException e) {
+        } catch(TauPException e) {
             logger.warn("Problem setting travel times for " + phaseName
                     + " in " + model, e);
         }

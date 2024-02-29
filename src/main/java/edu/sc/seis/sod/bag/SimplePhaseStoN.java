@@ -12,6 +12,7 @@ import java.util.List;
 
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
+import edu.sc.seis.TauP.TauPException;
 import edu.sc.seis.seisFile.TimeUtils;
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.common.Location;
@@ -116,7 +117,7 @@ public class SimplePhaseStoN {
      * either of the windows have no data in them. */
     public LongShortTrigger process(Location stationLoc,
                                     OriginImpl origin,
-                                    LocalSeismogramImpl seis) throws FissuresException, TauModelException, PhaseNonExistent {
+                                    LocalSeismogramImpl seis) throws FissuresException, TauPException, PhaseNonExistent {
         LocalSeismogramImpl shortSeis = shortCut.cut(stationLoc, origin, seis);
         LocalSeismogramImpl longSeis = longCut.cut(stationLoc, origin, seis);
         if (shortSeis == null || longSeis == null || shortSeis.getNumPoints() <= 1 || longSeis.getNumPoints() <= 1) { return null; }

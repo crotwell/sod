@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.sc.seis.TauP.SeismicPhaseFactory;
+import edu.sc.seis.TauP.TauModelLoader;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -90,7 +92,7 @@ public class SacWriterTest  {
         Location staLoc = Location.of(chan.getStation());
         Location evtLoc = ev.get_preferred_origin().getLocation();
         float evDepth = (float)((QuantityImpl)evtLoc.depth).getValue(UnitImpl.KILOMETER);
-        SeismicPhase sp = new SeismicPhase("P", "prem", evDepth);
+        SeismicPhase sp = SeismicPhaseFactory.createPhase("P", TauModelLoader.load("prem"), evDepth);
         DistAz distAz = new DistAz(staLoc, evtLoc);
         double distDeg = distAz.getDelta();
         List<Arrival> arrivals = sp.calcTime(distDeg);
