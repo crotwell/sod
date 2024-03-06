@@ -116,6 +116,18 @@ repositories {
     mavenLocal()
 }
 
+
+tasks.named<Test>("test") {
+    useJUnitPlatform()
+
+    maxHeapSize = "1G"
+
+    testLogging {
+        events("passed")
+    }
+}
+
+
 val dirName = project.name+"-"+version
 
 val binDistFiles = copySpec {
