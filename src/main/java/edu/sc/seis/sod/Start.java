@@ -23,6 +23,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import edu.sc.seis.sod.hibernate.*;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
@@ -34,12 +35,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import edu.sc.seis.seisFile.fdsnws.FDSNWSException;
-import edu.sc.seis.sod.hibernate.AbstractHibernateDB;
-import edu.sc.seis.sod.hibernate.ConnMgr;
-import edu.sc.seis.sod.hibernate.HibernateUtil;
-import edu.sc.seis.sod.hibernate.NetworkNotFound;
-import edu.sc.seis.sod.hibernate.SodDB;
-import edu.sc.seis.sod.hibernate.StatefulEventDB;
 import edu.sc.seis.sod.hibernate.eventpair.EventChannelPair;
 import edu.sc.seis.sod.hibernate.eventpair.EventVectorPair;
 import edu.sc.seis.sod.model.common.ToDoException;
@@ -228,6 +223,8 @@ public class Start {
                 } else {
                     logger.info("Database file does not exist, clean start.");
                 }
+                // for saving responses as file per channel epoch
+                NetworkDB.instrumentationDB = new InstrumentationDB(new File(dbFile.getParentFile(), "Response"));
             }
         
         parseArms(config.getChildNodes());

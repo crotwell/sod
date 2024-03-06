@@ -367,13 +367,11 @@ public class NetworkDB extends AbstractHibernateDB {
 
     
     public Response getResponse(Channel chan) throws ChannelNotFound {
-        InstrumentationBlob ib = getInstrumentationBlob(chan);
-        if (ib != null) {
-            Response resp =  ib.getResponse(); // might be null, meaning no inst exists, but blob in DB so we tried before
-            if (resp == null) { throw new ChannelNotFound(chan); }
-            return resp;
+        try {
+            return instrumentationDB.load(chan);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        return null; // instBlob null, so never seen this channel before
     }
     
     public ChannelSensitivity getSensitivity(Channel chan) {
@@ -399,21 +397,11 @@ public class NetworkDB extends AbstractHibernateDB {
 
     public void putResponse(Channel chan, Response inst) {
         logger.debug("Put response: "+ChannelIdUtil.toStringNoDates(chan));
-        InstrumentationBlob ib = null;
         try {
-            ib = getInstrumentationBlob(chan);
-        } catch(ChannelNotFound e) {
-            // must be new
+            instrumentationDB.save(chan, inst);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        if (ib == null) {
-            ib = new InstrumentationBlob(chan, inst);
-        } else {
-            int dbid = ib.getDbid();
-            getSession().evict(ib);
-            ib = new InstrumentationBlob(chan, inst);
-            ib.setDbid(dbid);
-        }
-        getSession().saveOrUpdate(ib);
     }
 
     @Deprecated
@@ -444,6 +432,8 @@ public class NetworkDB extends AbstractHibernateDB {
         }
         return singleton;
     }
+
+    public static InstrumentationDB instrumentationDB;
 
     static String getStationByCodes = "SELECT s From "
             + Station.class.getName()
