@@ -61,21 +61,25 @@ public class InstrumentationBlob {
         }
         if (response.getInstrumentSensitivity() != null) {
             packer.packString(StationXMLTagNames.INSTRUMENT_SENSITIVITY);
+            packGainSensitivity(packer, response.getInstrumentSensitivity());
         }
         packer.close();
         return packer.toByteArray();
     }
 
     protected static MessageBufferPacker packStage(MessageBufferPacker packer, ResponseStage stage) throws IOException {
-        int objSize = 2;// required: number, gain
+        int objSize = 1;// required: number
         if (stage.getResponseItem() != null) {
             objSize++;
         }
         if (stage.getDecimation() != null) {
             objSize++;
         }
+        if (stage.getStageSensitivity() != null) {
+            objSize++;
+        }
         packer.packMapHeader(objSize);
-        packer.packString(StationXMLTagNames.NUMBER).packFloat(stage.getNumber());
+        packer.packString(StationXMLTagNames.NUMBER).packInt(stage.getNumber());
         BaseFilterType respItem = stage.getResponseItem();
         if (respItem instanceof PolesZeros) {
             packer.packString(StationXMLTagNames.POLESZEROS);
@@ -94,7 +98,7 @@ public class InstrumentationBlob {
             packPolynomial(packer, (Polynomial)respItem);
         }
         if (stage.getStageSensitivity() != null) {
-            packer.packString(StationXMLTagNames.STAGESENSITIVITY);
+            packer.packString(StationXMLTagNames.STAGEGAIN);
             packGainSensitivity(packer, stage.getStageSensitivity());
         }
         if (stage.getDecimation() != null) {
@@ -145,11 +149,17 @@ public class InstrumentationBlob {
 
     protected static MessageBufferPacker packPolesZeros(MessageBufferPacker packer, PolesZeros polesZeros)
             throws IOException {
-        int objSize = 9;// required: all but description
+        int objSize = 7;// required: all but description, resourceid, name
         if (polesZeros.getDescription() != null) {objSize++;}
+        if (polesZeros.getResourceId() != null) {objSize++;}
+        if (polesZeros.getName() != null) {objSize++;}
         packer.packMapHeader(objSize);
-        packer.packString(StationXMLTagNames.RESOURCEID).packString(polesZeros.getResourceId());
-        packer.packString(StationXMLTagNames.NAME).packString(polesZeros.getName());
+        if (polesZeros.getResourceId() != null) {
+            packer.packString(StationXMLTagNames.RESOURCEID).packString(polesZeros.getResourceId());
+        }
+        if (polesZeros.getName() != null ) {
+            packer.packString(StationXMLTagNames.NAME).packString(polesZeros.getName());
+        }
         if (polesZeros.getDescription() != null) {
             packer.packString(StationXMLTagNames.DESCRIPTION).packString(polesZeros.getDescription());
         }
@@ -195,6 +205,8 @@ public class InstrumentationBlob {
                 inputUnits = unpackUnit(unpacker);
             } else if (StationXMLTagNames.OUTPUTUNITS.equals(key)) {
                 outputUnits = unpackUnit(unpacker);
+            } else if (StationXMLTagNames.PZTRANSFERTYPE.equals(key)) {
+                pzTransferFunctionType = unpacker.unpackString();
             } else if (StationXMLTagNames.NORMALIZATIONFACTOR.equals(key)) {
                 normalizationFactor = unpacker.unpackFloat();
             } else if (StationXMLTagNames.NORMALIZATIONFREQ.equals(key)) {
@@ -260,11 +272,17 @@ public class InstrumentationBlob {
 
     protected static MessageBufferPacker packCoefficients(MessageBufferPacker packer, Coefficients coefficients)
             throws IOException {
-        int objSize = 6;// required: all but description
+        int objSize = 5;// required: all but description, resid, name
         if (coefficients.getDescription() != null) {objSize++;}
+        if (coefficients.getResourceId() != null) {objSize++;}
+        if (coefficients.getName() != null) {objSize++;}
         packer.packMapHeader(objSize);
-        packer.packString(StationXMLTagNames.RESOURCEID).packString(coefficients.getResourceId());
-        packer.packString(StationXMLTagNames.NAME).packString(coefficients.getName());
+        if (coefficients.getResourceId() != null) {
+            packer.packString(StationXMLTagNames.RESOURCEID).packString(coefficients.getResourceId());
+        }
+        if (coefficients.getName() != null) {
+            packer.packString(StationXMLTagNames.NAME).packString(coefficients.getName());
+        }
         if (coefficients.getDescription() != null) {
             packer.packString(StationXMLTagNames.DESCRIPTION).packString(coefficients.getDescription());
         }
@@ -334,11 +352,17 @@ public class InstrumentationBlob {
 
     protected static MessageBufferPacker packResponseList(MessageBufferPacker packer, ResponseList responseList)
             throws IOException {
-        int objSize = 5;// required: all but description
+        int objSize = 3;// required: all but description
         if (responseList.getDescription() != null) {objSize++;}
+        if (responseList.getResourceId() != null) {objSize++;}
+        if (responseList.getName() != null) {objSize++;}
         packer.packMapHeader(objSize);
-        packer.packString(StationXMLTagNames.RESOURCEID).packString(responseList.getResourceId());
-        packer.packString(StationXMLTagNames.NAME).packString(responseList.getName());
+        if (responseList.getResourceId() != null) {
+            packer.packString(StationXMLTagNames.RESOURCEID).packString(responseList.getResourceId());
+        }
+        if (responseList.getName() != null ) {
+            packer.packString(StationXMLTagNames.NAME).packString(responseList.getName());
+        }
         if (responseList.getDescription() != null) {
             packer.packString(StationXMLTagNames.DESCRIPTION).packString(responseList.getDescription());
         }
@@ -424,11 +448,17 @@ public class InstrumentationBlob {
 
     protected static MessageBufferPacker packPolynomial(MessageBufferPacker packer, Polynomial polynomial)
             throws IOException {
-        int objSize = 11;// required: all but description
+        int objSize = 9;// required: all but description
         if (polynomial.getDescription() != null) {objSize++;}
+        if (polynomial.getResourceId() != null) {objSize++;}
+        if (polynomial.getName() != null) {objSize++;}
         packer.packMapHeader(objSize);
-        packer.packString(StationXMLTagNames.RESOURCEID).packString(polynomial.getResourceId());
-        packer.packString(StationXMLTagNames.NAME).packString(polynomial.getName());
+        if (polynomial.getResourceId()!= null) {
+            packer.packString(StationXMLTagNames.RESOURCEID).packString(polynomial.getResourceId());
+        }
+        if (polynomial.getName() != null) {
+            packer.packString(StationXMLTagNames.NAME).packString(polynomial.getName());
+        }
         if (polynomial.getDescription() != null) {
             packer.packString(StationXMLTagNames.DESCRIPTION).packString(polynomial.getDescription());
         }
@@ -514,11 +544,17 @@ public class InstrumentationBlob {
         }
 
     protected static MessageBufferPacker packFIR(MessageBufferPacker packer, FIR fir) throws IOException {
-        int objSize = 6;// required: all but description
+        int objSize = 4;// required: all but description
         if (fir.getDescription() != null) {objSize++;}
+        if (fir.getResourceId() != null) {objSize++;}
+        if (fir.getName() != null) {objSize++;}
         packer.packMapHeader(objSize);
-        packer.packString(StationXMLTagNames.RESOURCEID).packString(fir.getResourceId());
-        packer.packString(StationXMLTagNames.NAME).packString(fir.getName());
+        if (fir.getResourceId() != null ) {
+            packer.packString(StationXMLTagNames.RESOURCEID).packString(fir.getResourceId());
+        }
+        if (fir.getName() != null) {
+            packer.packString(StationXMLTagNames.NAME).packString(fir.getName());
+        }
         if (fir.getDescription() != null) {
             packer.packString(StationXMLTagNames.DESCRIPTION).packString(fir.getDescription());
         }
@@ -572,8 +608,8 @@ public class InstrumentationBlob {
         int objSize = 5;// required: value, frequency
         packer.packMapHeader(objSize);
         packer.packString(StationXMLTagNames.INPUTSAMPLERATE).packFloat(decimation.getInputSampleRate());
-        packer.packString(StationXMLTagNames.FACTOR).packFloat(decimation.getFactor());
-        packer.packString(StationXMLTagNames.OFFSET).packFloat(decimation.getOffset());
+        packer.packString(StationXMLTagNames.FACTOR).packInt(decimation.getFactor());
+        packer.packString(StationXMLTagNames.OFFSET).packInt(decimation.getOffset());
         packer.packString(StationXMLTagNames.DELAY);
         packFloatType(packer, decimation.getDelay());
         packer.packString(StationXMLTagNames.CORRECTION);
@@ -835,7 +871,7 @@ public class InstrumentationBlob {
         return new Response(stageList, sensitivity, polynomial);
     }
 
-    protected Response getResponseFromBlob(byte[] byteArray) throws IOException {
+    public static Response getResponseFromBlob(byte[] byteArray) throws IOException {
         if (byteArray.length > 0) {
             MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(byteArray);
             return unpackResponse(unpacker);
