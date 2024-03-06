@@ -262,6 +262,21 @@ public class ConnMgr {
         }
         return conn;
     }
+    public static void doShutdown() throws SQLException {
+        try {
+            checkDriver();
+        } catch (Exception e) {
+            SQLException sql = new SQLException("Cannot create driver: " + getDriver());
+            sql.initCause(e);
+            throw sql;
+        }
+        Connection conn = DriverManager.getConnection(getURL(),
+                getUser(),
+                getPass());
+        conn.createStatement().execute("shutdown");
+        conn.close();
+    }
+
 
     private static boolean firstConnection = true;
 

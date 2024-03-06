@@ -81,13 +81,12 @@ public class OutputScheduler extends Thread implements ArmListener {
                 logger.info("Lo!  I am weary of my wisdom, like the bee that hath gathered too much\n"
                             + "honey; I need hands outstretched to take it.");
                 String lcOSName = System.getProperty("os.name").toLowerCase();
+                logger.info("OS is: "+lcOSName);
                 boolean MAC_OS_X = lcOSName.startsWith("mac os x");
                 if(MAC_OS_X && ! Start.getRunProps().isStatusWebKeepAlive()) {
                     // hopefully everything is done!
                     try {
-                        Connection conn = ConnMgr.createConnection();
-                        conn.createStatement().execute("shutdown");
-                        conn.close();
+                        ConnMgr.doShutdown();
                     } catch(SQLException e) {
                         GlobalExceptionHandler.handle(e);
                     }
