@@ -20,7 +20,7 @@ application {
 }
 
 group = "edu.sc.seis"
-version = "4.0.0-SNAPSHOT4"
+version = "4.0.0-SNAPSHOT5"
 // also remember to change in sod.Version class
 // site/velocity/VM_library.vm
 // site/velocity/previousReleases.vm

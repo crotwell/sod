@@ -25,7 +25,7 @@
 #end
 
 #macro(sodVersionNumber)4.0.0-SNAP#end
-#macro(sodReleaseDate)17 Apr 2023#end
+#macro(sodReleaseDate)6 Mar 2024#end
 
 #macro(sodVersion)sod-#sodVersionNumber()#end
 #macro(sod_header)

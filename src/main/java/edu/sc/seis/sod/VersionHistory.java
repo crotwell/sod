@@ -14,7 +14,7 @@ public class VersionHistory {
     public static Version  current() {
         return versionsToDate[versionsToDate.length-1];
     }
-    
+
     public static boolean hasSchemaChangedSince(String version){
         if (!current().getVersion().equals(version)){
             boolean found = false;
@@ -56,8 +56,8 @@ public class VersionHistory {
       new Version ("2.0beta5", false),  //small bugfixes
       new Version ("2.0beta6", false),   //even smaller bugfixes
       new Version ("2.0beta7", false),   //status table sorting, status beautification, editor load/save, legacy exec, PointLinearDistanceMagnitude
-      new Version ("2.0beta8", false),   
-      new Version ("2.0rc1", true),   
+      new Version ("2.0beta8", false),
+      new Version ("2.0rc1", true),
       new Version ("2.0", false),
       new Version ("2.1", false),
       new Version ("2.1.1", false),
@@ -96,10 +96,9 @@ public class VersionHistory {
       new Version ("3.2.7", false),
       new Version ("4.0.0-SNAPSHOT", true),
       new Version ("4.0.0-SNAPSHOT2", false),
-      new Version ("4.0.0-SNAPSHOT3", false)
+      new Version ("4.0.0-SNAPSHOT3", false),
+      new Version ("4.0.0-SNAPSHOT4", false),
+      new Version ("4.0.0-SNAPSHOT5", false)
     };
 
 }
-
-
-
