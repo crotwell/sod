@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.hibernate;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.Iterator;
 import java.util.List;
@@ -279,9 +280,21 @@ public class NetworkDB extends AbstractHibernateDB {
     }
 
     public List<ChannelGroup> getChannelGroupsForStation(Station station) {
+        if (! getSession().contains(station) ) {
+            getSession().saveOrUpdate(station);
+        }
         Query query = getSession().createQuery(getChannelGroupForStation);
         query.setParameter("station", station);
-        return query.list();
+        List<ChannelGroup> out =  query.list();
+        // because station is in each of 3 channels but only queried on station in first channel,
+        // hibernate may not set station so do it manually, this might be bad, but   :(
+logger.info("NetworkDB replace station to avoid null "+station);
+        for (ChannelGroup cg: out) {
+            for (Channel c: cg.getChannels()) {
+                c.setStation(station);
+            }
+        }
+        return out;
     }
 
     public List<Channel> getChannelsForStation(Station station,
@@ -352,11 +365,12 @@ public class NetworkDB extends AbstractHibernateDB {
         return (Channel)result.get(0);
     }
 
+
     public InstrumentationBlob getInstrumentationBlob(Channel chan) throws ChannelNotFound {
-        String queryString = "FROM "+InstrumentationBlob.class.getName()+" WHERE channel = :chan";
-        System.err.println("NetworkDB.getInstrumentationBlob : "+queryString);
-        Query query = getSession().createQuery(queryString);
-        query.setParameter("chan", chan.getDbid());
+        String queryString = "WHERE channel = :chan";
+        logger.warn("NetworkDB.getInstrumentationBlob : "+queryString);
+        Query query = getSession().createQuery(queryString, InstrumentationBlob.class);
+        query.setParameter("chan", chan);
         Iterator it = query.iterate();
         if (it.hasNext()) {
             InstrumentationBlob ib = (InstrumentationBlob)it.next();
