@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
-    
+
     <start>
         <ref name="waveformVectorProcess"/>
     </start>
@@ -107,7 +107,7 @@
                         <rMean/>
                         <sacWriter>
                             <workingDir>rTrendData</workingDir>
-                            <location>${network.code}.${station.code}/${event.filizedTime}/${site.code}.${channel.code}.sac</location>
+                            <location>${network.code}.${station.code}/${event.filizedTime}/${channel.locCode}.${channel.code}.sac</location>
                         </sacWriter>
                     </waveformVectorFork>
                 </example>
@@ -132,7 +132,7 @@
                         </waveformVectorNOT>
                         <sacWriter>
                             <workingDir>rTrendData</workingDir>
-                            <location>${network.code}.${station.code}/${event.filizedTime}/${site.code}.${channel.code}.sac</location>
+                            <location>${network.code}.${station.code}/${event.filizedTime}/${channel.locCode}.${channel.code}.sac</location>
                         </sacWriter>
                     </waveformVectorAND>
                 </example>
@@ -157,7 +157,7 @@
                         </waveformVectorNOT>
                         <sacWriter>
                             <workingDir>rTrendData</workingDir>
-                            <location>${network.code}.${station.code}/${event.filizedTime}/${site.code}.${channel.code}.sac</location>
+                            <location>${network.code}.${station.code}/${event.filizedTime}/${channel.locCode}.${channel.code}.sac</location>
                         </sacWriter>
                     </waveformVectorOR>
                 </example>
@@ -196,7 +196,7 @@
                             <rMean/>
                             <sacWriter>
                             <workingDir>rTrendData</workingDir>
-                            <location>${network.code}.${station.code}/${event.filizedTime}/${site.code}.${channel.code}.sac</location>
+                            <location>${network.code}.${station.code}/${event.filizedTime}/${channel.locCode}.${channel.code}.sac</location>
                         </sacWriter>
                         </waveformVectorFork>
                     </waveformVectorAlwaysSuccess>
@@ -224,8 +224,8 @@
             <xsd:annotation>
                 <summary>Rotate the seismograms to Great Circle Path</summary>
                 <description>The horizontal seismograms are rotated to the great circle path. The channel codes are
-                    changed to end in R for radial or T for transverse, so BHN and BHE would become BHR and BHT. 
-                    Because the seismograms to be rotated must be aligned and corresponding in number, this 
+                    changed to end in R for radial or T for transverse, so BHN and BHE would become BHR and BHT.
+                    Because the seismograms to be rotated must be aligned and corresponding in number, this
                     applies a <a href="collapseOverlaps.html">collapseOverlaps</a> to remove duplications,
                     applies a <a href="merge.html">merge</a> to join adjacent segments and
                     a <a href="vectorTrim.html">vectorTrim</a> to align
@@ -256,7 +256,7 @@
                     </element>
                 </optional>
             </interleave>
-            
+
         </element>
     </define>
     <define name="sampleSynchronize">
@@ -264,8 +264,8 @@
             <xsd:annotation>
                 <summary>Shifts seismograms in the vector so samples are aligned.</summary>
                 <description>Time shifts the seismograms of the vector so that the samples
-                    align in time with integer multiples of the sample period, 
-                    based on the first seismogram in the first component. 
+                    align in time with integer multiples of the sample period,
+                    based on the first seismogram in the first component.
                     This does not modify the data, only moves the begin times by up
                     to one half a sample period to synchronize the components. This is useful for processors
                     like vectorTrim and rotateGCP which expect seismograms to be of the same length and/or time.
@@ -300,7 +300,7 @@
         from jarray import array
         from bag import rmean, taper, rtrend, stat
         from edu.iris.Fissures.seismogramDC import LocalSeismogramImpl
-        
+
         print "Hello Sod "
         out = []
         for perChanSeis in seismograms:
