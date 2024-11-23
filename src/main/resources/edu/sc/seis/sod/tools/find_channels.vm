@@ -45,12 +45,6 @@ $additionalArms#end
             <matchTimeseries>true</matchTimeseries>
 #end
         </fdsnStation>
-#if($server)
-        <networkFinder>
-            <name>$server.name</name>
-            <dns>$server.dns</dns>
-        </networkFinder>
-#end
 #if($networks)
         <networkOR>
 #foreach($code in $networks)
