@@ -20,7 +20,7 @@ application {
 }
 
 group = "edu.sc.seis"
-version = "4.0.0-SNAPSHOT6"
+version = "4.0.0-SNAPSHOT7"
 // also remember to change in sod.Version class
 // site/velocity/VM_library.vm
 // site/velocity/previousReleases.vm
@@ -54,7 +54,7 @@ val rng by configurations.creating
 dependencies {
     rng("org.relaxng:jing:20181222")
     implementation("edu.sc.seis:seedCodec:1.0.11")
-    implementation("edu.sc.seis:seisFile:2.0.6-SNAPSHOT")
+    implementation("edu.sc.seis:seisFile:2.2.1")
     implementation("info.picocli:picocli:4.7.4")
     implementation("edu.sc.seis:TauP:2.6.4")
     implementation("com.isti:isti.util:20120201")
