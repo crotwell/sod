@@ -295,7 +295,9 @@ public class SodDB extends AbstractHibernateDB {
         query.setInteger("standing", Standing.INIT.getVal());
         query.setMaxResults(1000);
         List<AbstractEventChannelPair> result = query.list();
-        logger.info("populate ECP/EVP ToDo: "+result.size());
+        if (result.size() > 0) {
+                logger.info("populate ECP/EVP ToDo: "+result.size());
+        }
         for (AbstractEventChannelPair ecp : result) {
             synchronized(ecpToDo) {
                 ecpToDo.offer(ecp);
