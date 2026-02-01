@@ -73,7 +73,11 @@ public class TimeParser extends StringParser {
             return ClockUtil.now();
         }
         // was YYYY[[[[[-MM]-DD]-hh]-mm]-ss], but now use YYYY[[[[[-MM]-DD]Thh]:mm]:ss]
-        return new ISOTimeParser(ceiling).getDate(arg);
+        try {
+            return new ISOTimeParser(ceiling).getDate(arg);
+        } catch (IllegalArgumentException e) {
+            throw new ParseException(e);
+        }
     }
 
     private Pattern relativeTimePattern = Pattern.compile("-(\\d+)([hdmy])");
