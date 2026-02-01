@@ -6,11 +6,14 @@
 
 package edu.sc.seis.sod.bag;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import edu.sc.seis.TauP.*;
+import edu.sc.seis.TauP.cmdline.TauP_Time;
+import edu.sc.seis.TauP.cmdline.args.PhaseArgs;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.model.common.DistAz;
@@ -22,7 +25,7 @@ import edu.sc.seis.sod.model.event.OriginImpl;
 public class TauPUtil {
 
     private TauPUtil(String modelName) throws TauModelException {
-        taup_time = new TauP_Time(modelName);
+        tMod = TauModelLoader.load(modelName);
     }
 
     public List<Arrival> calcTravelTimes(Station station, OriginImpl origin, String[] phaseNames) throws TauPException {
@@ -50,18 +53,23 @@ public class TauPUtil {
     }
 
     public synchronized List<Arrival> calcTravelTimes(double distDeg, double depthKm, String[] phaseNames) throws TauPException {
-        taup_time.setSourceDepth(depthKm);
-        taup_time.clearPhaseNames();
-        for (int i = 0; i < phaseNames.length; i++) {
-            taup_time.appendPhaseName(phaseNames[i]);
+        double receiverDepth = 0;
+        List<Arrival> arrivals = new ArrayList<>();
+        TauModel tModDepth = tMod.depthCorrect(depthKm);
+        List<String> parsedNames = new ArrayList<>();
+        for (String pn : phaseNames) {
+            parsedNames.addAll(PhaseArgs.extractPhaseNames(pn));
         }
-        taup_time.calculate(distDeg);
-        List<Arrival> arrivals = taup_time.getArrivals();
+        for (String phaseName : parsedNames) {
+            SimpleSeismicPhase phase = SeismicPhaseFactory.createPhase(phaseName, tModDepth, tModDepth.getSourceDepth(), receiverDepth);
+            List<Arrival> arrivalList = DistanceRay.ofDegrees(distDeg).calculate(phase);
+            arrivals.addAll(arrivalList);
+        }
         return arrivals;
     }
 
     public TauModel getTauModel() {
-        return taup_time.getTauModel();
+        return tMod;
     }
 
     public synchronized static TauPUtil getTauPUtil() {
@@ -81,7 +89,7 @@ public class TauPUtil {
 
     static Map<String, TauPUtil> taupUtilMap = new HashMap<String, TauPUtil>();
 
-    TauP_Time taup_time;
+    TauModel tMod;
     
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(TauPUtil.class);
 }

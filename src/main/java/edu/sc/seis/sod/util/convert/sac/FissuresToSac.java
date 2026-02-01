@@ -57,7 +57,7 @@ public class FissuresToSac {
 			if (e.getCause() instanceof CodecException) {
 				throw (CodecException) e.getCause();
 			} else {
-				throw new CodecException(e);
+				throw new CodecException(e.getMessage());
 			}
 		}
 		SacHeader header = SacHeader.createEmptyEvenSampledTimeSeriesHeader();

@@ -11,15 +11,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.sc.seis.TauP.SeismicPhaseFactory;
-import edu.sc.seis.TauP.TauModelLoader;
+import edu.sc.seis.TauP.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import edu.iris.dmc.seedcodec.CodecException;
-import edu.sc.seis.TauP.Arrival;
-import edu.sc.seis.TauP.SeismicPhase;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
 import edu.sc.seis.seisFile.sac.SacTimeSeries;
 import edu.sc.seis.sod.ConfigurationException;
@@ -95,7 +92,7 @@ public class SacWriterTest  {
         SeismicPhase sp = SeismicPhaseFactory.createPhase("P", TauModelLoader.load("prem"), evDepth);
         DistAz distAz = new DistAz(staLoc, evtLoc);
         double distDeg = distAz.getDelta();
-        List<Arrival> arrivals = sp.calcTime(distDeg);
+        List<Arrival> arrivals = DistanceRay.ofDegrees(distDeg).calculate(sp);
         assertTrue(2 <= arrivals.size());
 
         ArrayList<SacProcess> processes = new ArrayList<SacProcess>();

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.sc.seis.TauP.*;
+import edu.sc.seis.TauP.cmdline.TauP_Time;
+import edu.sc.seis.TauP.cmdline.args.PhaseArgs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
@@ -37,7 +39,7 @@ public class PhaseWithoutInterference extends PhaseExists implements EventStatio
         beginOffset = TimeUtils.durationToDoubleSeconds(SodUtil.loadTimeInterval(DOMHelper.extractElement(config, "beginOffset")));
         endOffset = TimeUtils.durationToDoubleSeconds(SodUtil.loadTimeInterval(DOMHelper.extractElement(config, "endOffset")));
         for (Element element : phElements) {
-            List<String> newPhases = TauP_Time.getPhaseNames(SodUtil.getNestedText(element));
+            List<String> newPhases = PhaseArgs.extractPhaseNames(SodUtil.getNestedText(element));
             for (String s : newPhases) {
                 if ( ! s.equals(phaseName)) {
                     interferingPhaseNames.add(s);
@@ -97,9 +99,10 @@ public class PhaseWithoutInterference extends PhaseExists implements EventStatio
             }
         }
         List<List<Arrival>> out = new ArrayList<List<Arrival>>();
-        out.add(mainPhase.calcTime(degrees));
+        List<Arrival> mainArrivalList = DistanceRay.ofDegrees(degrees).calculate(mainPhase);
+        out.add(mainArrivalList);
         for (SeismicPhase phase : phases) {
-            out.add(phase.calcTime(degrees));
+            out.add(DistanceRay.ofDegrees(degrees).calculate(phase));
         }
         return out;
     }

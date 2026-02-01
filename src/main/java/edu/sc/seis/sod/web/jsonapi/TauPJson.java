@@ -37,8 +37,8 @@ public class TauPJson extends AbstractJsonApiData {
         out.key("distdeg").value(arrival.getDistDeg());
         out.key("distrad").value(arrival.getDist());
         out.key("sourcedepth").value(arrival.getSourceDepth());
-        out.key("incidentangle").value(arrival.getIncidentAngle());
-        out.key("takeoffangle").value(arrival.getTakeoffAngle());
+        out.key("incidentangle").value(arrival.getIncidentAngleDegree());
+        out.key("takeoffangle").value(arrival.getTakeoffAngleDegree());
         out.key("rayparamrad").value(arrival.getRayParam());
         out.key("rayparamdeg").value(arrival.getRayParamDeg());
         out.key("model").value(arrival.getPhase().getTauModel().getModelName());
@@ -55,8 +55,8 @@ public class TauPJson extends AbstractJsonApiData {
             out.key("distdeg").value(arrival.getDistDeg());
             out.key("distrad").value(arrival.getDist());
             out.key("sourcedepth").value(arrival.getSourceDepth());
-            out.key("incidentangle").value(arrival.getIncidentAngle());
-            out.key("takeoffangle").value(arrival.getTakeoffAngle());
+            out.key("incidentangle").value(arrival.getIncidentAngleDegree());
+            out.key("takeoffangle").value(arrival.getTakeoffAngleDegree());
             out.key("rayparamrad").value(arrival.getRayParam());
             out.key("rayparamdeg").value(arrival.getRayParamDeg());
             out.key("model").value(arrival.getPhase().getTauModel().getModelName());

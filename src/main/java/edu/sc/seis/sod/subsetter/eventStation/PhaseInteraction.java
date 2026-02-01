@@ -3,13 +3,12 @@ package edu.sc.seis.sod.subsetter.eventStation;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.sc.seis.sod.bag.TauPUtil;
 import org.w3c.dom.Element;
 
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.SphericalCoords;
 import edu.sc.seis.TauP.TauModelException;
-import edu.sc.seis.TauP.TauP_Path;
-import edu.sc.seis.TauP.TauP_Pierce;
 import edu.sc.seis.TauP.TimeDist;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Station;
 import edu.sc.seis.sod.ConfigurationException;
@@ -42,16 +41,7 @@ public class PhaseInteraction implements EventStationSubsetter {
         element = SodUtil.getElement(config, "absolute");
         if(element != null) phaseInteractionType = (PhaseInteractionType)SodUtil.load(element,
                                                                                       "eventStation");
-        try {
-            tauPPierce = new TauP_Pierce(modelName);
-            tauPPierce.clearPhaseNames();
-            tauPPierce.parsePhaseList(phaseName);
-            tauPPath = new TauP_Path(tauPPierce.getTauModel());
-            tauPPath.clearPhaseNames();
-            tauPPath.parsePhaseList(phaseName);
-        } catch(TauModelException e) {
-            throw new ConfigurationException("Can't load TauP_Pierce", e);
-        }
+
     }
 
     public StringTree accept(CacheEvent event,
@@ -71,7 +61,7 @@ public class PhaseInteraction implements EventStationSubsetter {
         double originDepth;
         double eventStationDistance;
         originDepth = ((QuantityImpl)origin.getLocation().depth).convertTo(UnitImpl.KILOMETER).getValue();
-        tauPPath.setSourceDepth(originDepth);
+        List<Arrival> arrivals = TauPUtil.getTauPUtil(modelName).calcTravelTimes(station, origin, new String[] {phaseName});
         eventStationDistance = SphericalCoords.distance(origin.getLocation().latitude,
                                                         origin.getLocation().longitude,
                                                         station.getLatitude().getValue(),
@@ -80,8 +70,6 @@ public class PhaseInteraction implements EventStationSubsetter {
                                                  origin.getLocation().longitude,
                                                  station.getLatitude().getValue(),
                                                  station.getLongitude().getValue());
-        tauPPath.calculate(eventStationDistance);
-        List<Arrival> arrivals = tauPPath.getArrivals();
         List<Arrival> requiredArrivals = getRequiredArrival(arrivals);
         if(requiredArrivals.size() == 0) return false;
         if(phaseInteractionType instanceof Relative) {
@@ -101,7 +89,6 @@ public class PhaseInteraction implements EventStationSubsetter {
         double eventStationDistance;
         OriginImpl origin = event.getOrigin();
         originDepth = ((QuantityImpl)origin.getLocation().depth).convertTo(UnitImpl.KILOMETER).getValue();
-        tauPPierce.setSourceDepth(originDepth);
         eventStationDistance = SphericalCoords.distance(origin.getLocation().latitude,
                                                         origin.getLocation().longitude,
                                                         station.getLatitude().getValue(),
@@ -110,8 +97,7 @@ public class PhaseInteraction implements EventStationSubsetter {
                                                  origin.getLocation().longitude,
                                                  station.getLatitude().getValue(),
                                                  station.getLongitude().getValue());
-        tauPPierce.calculate(eventStationDistance);
-        List<Arrival> arrivals = tauPPierce.getArrivals();
+        List<Arrival> arrivals = TauPUtil.getTauPUtil(modelName).calcTravelTimes(station, origin, new String[] {phaseName});
         List<Arrival> requiredArrivals = getRequiredArrival(arrivals);
         if(requiredArrivals.size() != 0) {
             if(phaseInteractionType instanceof Relative) {
@@ -373,7 +359,4 @@ public class PhaseInteraction implements EventStationSubsetter {
 
     private PhaseInteractionType phaseInteractionType = null;
 
-    private TauP_Pierce tauPPierce;
-
-    private TauP_Path tauPPath;
 }// PhaseInteraction
