@@ -1,14 +1,14 @@
 
 plugins {
   "project-report"
-  kotlin("jvm") version "1.9.0"
+ // kotlin("jvm") version "1.9.0"
   id("edu.sc.seis.version-class") version "1.2.2"
   "java"
   eclipse
   "project-report"
   `maven-publish`
   application
-  id("com.github.ben-manes.versions") version "0.47.0"
+  id("com.github.ben-manes.versions") version "0.53.0"
 }
 
 // dumb to keep intellij from crashing...
@@ -20,7 +20,7 @@ application {
 }
 
 group = "edu.sc.seis"
-version = "4.0.0-SNAPSHOT7"
+version = "4.0.0-SNAPSHOT9"
 // also remember to change in sod.Version class
 // site/velocity/VM_library.vm
 // site/velocity/previousReleases.vm
@@ -54,9 +54,9 @@ val rng by configurations.creating
 dependencies {
     rng("org.relaxng:jing:20181222")
     implementation("edu.sc.seis:seedCodec:1.0.11")
-    implementation("edu.sc.seis:seisFile:2.2.1")
-    implementation("info.picocli:picocli:4.7.4")
-    implementation("edu.sc.seis:TauP:2.6.4")
+    implementation("edu.sc.seis:seisFile:2.3.2")
+    implementation("info.picocli:picocli:4.7.6")
+    implementation("edu.sc.seis:TauP:3.1.0")
     implementation("com.isti:isti.util:20120201")
     implementation("com.oregondsp.signalprocessing:oregondsp:1.0.1-alpha")
 
@@ -102,9 +102,9 @@ dependencies {
 
 configurations.all {
     resolutionStrategy.dependencySubstitution {
-        substitute(module("edu.sc.seis:seisFile")).using(project(":seisFile"))
-        substitute(module("edu.sc.seis:seedCodec")).using(project(":seedCodec"))
-        substitute(module("edu.sc.seis:TauP")).using(project(":TauP"))
+//        substitute(module("edu.sc.seis:seisFile")).using(project(":seisFile"))
+//        substitute(module("edu.sc.seis:seedCodec")).using(project(":seedCodec"))
+//        substitute(module("edu.sc.seis:TauP")).using(project(":TauP"))
     }
 }
 
@@ -223,6 +223,7 @@ tasks.register<Tar>("tarDist") {
 }
 
 tasks.register<Sync>("explodeBin") {
+    dependsOn("startScripts")
     dependsOn("createRunScripts")
     dependsOn("buildSchema")
     dependsOn("buildGrouperSchema")
