@@ -56,7 +56,7 @@ public class PrintlineVelocitizer {
         List<LocalSeismogramImpl> seisList = new ArrayList<LocalSeismogramImpl>();
         seisList.add(new VelocitySeismogram(MockSeismogram.createSpike(ChannelId.of(chan)), vchan));
         mockContext.put("seismograms", seisList);
-        mockContext.put("index", new Integer(1));
+        mockContext.put("index", Integer.valueOf(1));
     }
     
     /**

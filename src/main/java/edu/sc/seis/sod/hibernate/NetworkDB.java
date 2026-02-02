@@ -210,7 +210,7 @@ public class NetworkDB extends AbstractHibernateDB {
 
     public Network getNetwork(int dbid) throws NotFound {
         Network out = (Network)getSession().get(Network.class,
-                                                                new Integer(dbid));
+                Integer.valueOf(dbid));
         if(out == null) {
             throw new NotFound();
         }
