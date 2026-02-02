@@ -1,6 +1,5 @@
 
 plugins {
-  "project-report"
  // kotlin("jvm") version "1.9.0"
   id("edu.sc.seis.version-class") version "1.2.2"
   "java"
@@ -53,15 +52,16 @@ val rng by configurations.creating
 
 dependencies {
     rng("org.relaxng:jing:20181222")
-    implementation("edu.sc.seis:seedCodec:1.0.11")
-    implementation("edu.sc.seis:seisFile:2.3.2")
+    implementation("edu.sc.seis:seedCodec:1.2.0")
+    implementation("edu.sc.seis:seisFile:2.3.3")
     implementation("info.picocli:picocli:4.7.6")
     implementation("edu.sc.seis:TauP:3.1.0")
     implementation("com.isti:isti.util:20120201")
     implementation("com.oregondsp.signalprocessing:oregondsp:1.0.1-alpha")
 
 
-    implementation("org.slf4j:slf4j-api:1.7.30")
+    implementation("org.slf4j:slf4j-api:1.7.36")
+    implementation("org.slf4j:slf4j-reload4j:1.7.36")
     implementation("org.hsqldb:hsqldb:2.7.1")
     implementation("jline:jline:0.9.94")
     implementation("com.martiansoftware:jsap:2.1")
