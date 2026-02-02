@@ -81,7 +81,7 @@ public class BelongsToVirtual implements StationSubsetter {
         return refreshInterval;
     }
 
-    private String host = "http://service.iris.edu";
+    private String host = "service.iris.edu";
 
     private String path = "irisws/virtualnetwork/1/query";
 
