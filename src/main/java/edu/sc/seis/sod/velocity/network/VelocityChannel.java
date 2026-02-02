@@ -57,7 +57,7 @@ public class VelocityChannel  {
     }
 
     public String getCodes() {
-        return getNet().getCode() + "." + getStation().getCode() + "."
+        return getNet().getCodeWithYear() + "." + getStation().getCode() + "."
                 + getLocCode() + "." + getCode();
     }
 

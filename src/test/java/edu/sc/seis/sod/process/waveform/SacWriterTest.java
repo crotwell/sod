@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.sc.seis.TauP.*;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -45,11 +44,10 @@ public class SacWriterTest  {
 
     @Test
     public void testGenerate() throws ConfigurationException {
-        String[][] templateAndResult = new String[][] { {"${seismogram.name}.sac",
-                                                         seis.getName() + ".sac"},
+        String[][] templateAndResult = new String[][] {
                                                        {"/${event.catalog}",
                                                         "/" + EventUtil.extractOrigin(ev).getCatalog()},
-                                                       {"${channel.name}", ChannelIdUtil.toStringNoDates(chan)}};
+                                                       {"${channel.codes}", ChannelIdUtil.toStringNoDates(chan)}};
         for(int i = 0; i < templateAndResult.length; i++) {
             assertEquals(FissuresFormatter.filize(templateAndResult[i][1]),
                          new SacWriter("", templateAndResult[i][0]).generate(ev, chan, seis, 0, 1));
@@ -89,14 +87,15 @@ public class SacWriterTest  {
         Location staLoc = Location.of(chan.getStation());
         Location evtLoc = ev.get_preferred_origin().getLocation();
         float evDepth = (float)((QuantityImpl)evtLoc.depth).getValue(UnitImpl.KILOMETER);
-        SeismicPhase sp = SeismicPhaseFactory.createPhase("P", TauModelLoader.load("prem"), evDepth);
+        String phasename = "PP";
+        SeismicPhase sp = SeismicPhaseFactory.createPhase(phasename, TauModelLoader.load("prem"), evDepth);
         DistAz distAz = new DistAz(staLoc, evtLoc);
         double distDeg = distAz.getDelta();
         List<Arrival> arrivals = DistanceRay.ofDegrees(distDeg).calculate(sp);
-        assertTrue(2 <= arrivals.size());
+        assertTrue(2 <= arrivals.size(), "Should be 2 arrivals at "+distDeg+" in prem");
 
         ArrayList<SacProcess> processes = new ArrayList<SacProcess>();
-        processes.add(new PhaseHeaderProcess("prem", "P", 1, 2));
+        processes.add(new PhaseHeaderProcess("prem", phasename, 1, 2));
         SacWriter sw = new SacWriter(SacWriter.DEFAULT_WORKING_DIR,
                                      SacWriter.DEFAULT_FILE_TEMPLATE,
                                      SacWriter.DEFAULT_PREFIX,

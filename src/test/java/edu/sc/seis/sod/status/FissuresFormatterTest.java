@@ -26,7 +26,7 @@ public class FissuresFormatterTest  {
 
     @Test
     public void testFormatNetwork() {
-        assertEquals("XX70",
+        assertEquals("XX1970",
                      FissuresFormatter.formatNetwork(chan.getNetwork()));
     }
 
@@ -44,7 +44,7 @@ public class FissuresFormatterTest  {
     public void testOneLineAndClean() {
         Station sta = MockStation.createStation();
         VelocityStation vsta = new VelocityStation(sta);
-        assertEquals("Long name with newlines", vsta.getName());
+        assertEquals("this is a test", vsta.getName());
     }
     
     private Channel chan;

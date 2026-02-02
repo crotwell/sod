@@ -3,13 +3,16 @@ package edu.sc.seis.sod.process.waveform;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 /**
  * @author groves Created on Sep 8, 2004
  */
 public class FullDataCoverageTest  {
-    public void setUp(){
+
+    @BeforeAll
+    public static void setUp(){
         fc = new FullDataCoverage();
     }
 
@@ -49,5 +52,5 @@ public class FullDataCoverageTest  {
         assertFalse(fc.accept(null, null, ctd.request, null, ctd.seis, null).isSuccess());
     }
     
-    private FullDataCoverage fc;
+    private static FullDataCoverage fc;
 }

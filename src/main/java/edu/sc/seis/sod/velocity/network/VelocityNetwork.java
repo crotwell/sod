@@ -58,7 +58,7 @@ public class VelocityNetwork  {
     }
 
     public String getCodeWithYear() {
-        return net.toString();
+        return net.getNetworkId();
     }
     
     public String getName() {
