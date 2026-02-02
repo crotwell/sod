@@ -48,7 +48,7 @@ public class StationWaveformContext  extends AbstractContext {
         }
     }
 
-    public boolean internalContainsKey(Object key) {
+    public boolean internalContainsKey(String key) {
         if (key.equals(ALL_EVENTS)
             || key.equals(SUCCESS_EVENTS_KEY)
             || key.equals(SUCCESS_ECPS_KEY)
@@ -59,8 +59,14 @@ public class StationWaveformContext  extends AbstractContext {
         }
     }
 
-    public Object[] internalGetKeys() {
+    public String[] internalGetKeys() {
         return new String[] {ALL_EVENTS};
+    }
+
+    @Override
+    public Object internalRemove(String key) {
+        throw new RuntimeException("Read only context, operation remove not permitted: key="
+                + key);
     }
 
     public Object internalRemove(Object key) {

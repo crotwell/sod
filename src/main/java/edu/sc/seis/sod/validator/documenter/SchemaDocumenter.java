@@ -17,7 +17,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.BasicConfigurator;
+import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
 import org.apache.velocity.app.VelocityEngine;
 
 import edu.sc.seis.sod.SodUtil;
@@ -95,7 +97,8 @@ public class SchemaDocumenter {
         DepthAwareGuide guide = new DepthAwareGuide(def.getForm());
         guide.lead(tourist);
         c.put("contained", tourist.getResult());
-        ve.mergeTemplate("elementPage.vm", new VelocityContext(c), w);
+        Template template = Velocity.getTemplate("elementPage.vm");
+        template.merge( new VelocityContext(c), w);
         w.close();
     }
 

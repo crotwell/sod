@@ -78,7 +78,7 @@ dependencies {
     implementation( "org.hibernate:hibernate-core:5.4.25.Final")
     implementation( "org.hibernate:hibernate-c3p0:5.4.25.Final")
 
-    implementation("org.apache.velocity:velocity-tools:2.0") {
+    implementation("org.apache.velocity.tools:velocity-tools-generic:3.1") {
         exclude("xml-apis:xml-apis")
         exclude("org.apache.struts:struts-taglib")
         exclude("org.apache.struts:struts-tiles")

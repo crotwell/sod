@@ -51,7 +51,8 @@ public class NetworkArmContext extends AbstractContext {
         return null;
     }
 
-    public boolean internalContainsKey(Object key) {
+    @Override
+    public boolean internalContainsKey(String key) {
         if(key.equals(ALL_NETS_KEY)) {
             return true;
         } else {
@@ -59,8 +60,13 @@ public class NetworkArmContext extends AbstractContext {
         }
     }
 
-    public Object[] internalGetKeys() {
+    public String[] internalGetKeys() {
         return new String[] {ALL_NETS_KEY};
+    }
+
+    @Override
+    public Object internalRemove(String s) {
+        return null;
     }
 
     public Object internalRemove(Object key) {
