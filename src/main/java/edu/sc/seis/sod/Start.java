@@ -591,6 +591,11 @@ public class Start {
             }
             eventDb.commit();
             int poolSize = runProps.getNumWaveformWorkerThreads();
+            //
+            // multithread disabled
+            //
+            poolSize = 1;
+
             waveforms = new WaveformArm[poolSize];
             for (int j = 0; j < waveforms.length; j++) {
                 waveforms[j] = new WaveformArm(j, waveformRecipe);
