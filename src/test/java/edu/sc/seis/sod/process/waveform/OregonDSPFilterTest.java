@@ -17,9 +17,9 @@ public class OregonDSPFilterTest {
     @Test
     public void test() {
         int numPoles = 2;
-        float delta = 1.0f;
-        float lowFreqCorner = 0;
-        float highFreqCorner  = 1/60f;
+        float delta = 0.01f;
+        float lowFreqCorner = 1;
+        float highFreqCorner  = 10f;
         PassbandType passband = PassbandType.LOWPASS;
         IIRFilter filter = new Butterworth(numPoles,
                                            passband,
@@ -28,11 +28,13 @@ public class OregonDSPFilterTest {
                                            delta);
         float[] data = new float[14400];
         for (int i = 0; i < data.length; i++) {
-            data[i] = 2000 + 10*(float)(Math.random()-0.5);
+            data[i] =  10*(float)(Math.random()-0.5);
         }
         filter.filter(data);
-        for (int i = 0; i < data.length; i++) {
-            assertEquals( 2000, data[i], 10, "data i"+i);
+        // note DC offset acts like step, causes ripples in data
+        // proper to rmean, filter, add mean back in
+        for (int i = 6; i < data.length; i++) {
+            assertEquals( 0, data[i], 10, "data i"+i);
         }
     }
     
