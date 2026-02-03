@@ -310,8 +310,8 @@ tasks.register<JavaExec>("buildSchemaDocs") {
 //    outDir = project.file("build/velocity/sod/ingredients")
     val outDir = File(project.buildDir, "generated-src/velocity/sod/ingredients")
     outputs.dir(outDir)
-    workingDir = outDir
-    args = listOf(inRNGFile.path, project.projectDir.path, outDir.path)
+    workingDir = File(project.projectDir, "site")
+    args = listOf(inRNGFile.path, ".", outDir.path)
     classpath(sourceSets.getByName("main").runtimeClasspath)
     classpath(project.file("build/classes/main"))
     getMainClass().set("edu.sc.seis.sod.validator.documenter.SchemaDocumenter")

@@ -48,11 +48,14 @@ public class SchemaDocumenter {
         if (base.length() != 0 && ! base.endsWith("/")) { base += "/"; }
         outputdir = args[2];
         if (outputdir.length() != 0 && ! outputdir.endsWith("/")) { outputdir += "/"; }
+        logger.info("base: "+base);
+        logger.info("outputdir: "+outputdir);
+        logger.info("rng: "+sod_rng);
 
         StAXModelBuilder handler = new StAXModelBuilder(sod_rng);
         //Setup velocity
         VelocityEngine ve = new VelocityEngine();
-        ve.setProperty("file.resource.loader.path", base + "site");
+        //ve.setProperty("file.resource.loader.path", base + "site");
         ve.setProperty("runtime.log.logsystem.log4j.logger", "schemaDocumenter");
         ve.init();
         VelocityContext c = new VelocityContext();
@@ -128,4 +131,7 @@ public class SchemaDocumenter {
 
     static ModelWalker walker;
     static String base, outputdir;
+
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(SchemaDocumenter.class);
+
 }
