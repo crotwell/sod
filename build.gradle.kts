@@ -53,7 +53,7 @@ val rng by configurations.creating
 dependencies {
     rng("org.relaxng:jing:20181222")
     implementation("edu.sc.seis:seedCodec:1.2.0")
-    implementation("edu.sc.seis:seisFile:2.3.3")
+    implementation("edu.sc.seis:seisFile:2.3.4")
     implementation("info.picocli:picocli:4.7.6")
     implementation("edu.sc.seis:TauP:3.1.0")
     implementation("com.isti:isti.util:20120201")
