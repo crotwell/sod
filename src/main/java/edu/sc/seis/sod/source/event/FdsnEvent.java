@@ -88,8 +88,8 @@ public class FdsnEvent extends AbstractEventSource implements EventSource {
         if (port > 0) {
             queryParams.setPort(port);
         }
-        String host = SodUtil.loadText(config, "host", null);
-        if (host != null && host.length() != 0) {
+        String host = SodUtil.loadHost(config, "host", FDSNEventQueryParams.DEFAULT_HOST);
+        if (! FDSNEventQueryParams.DEFAULT_HOST.equals(host)) {
             queryParams.setHost(host);
         }
         String scheme = SodUtil.loadText(config, "scheme", null);

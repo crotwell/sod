@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
@@ -21,7 +20,6 @@ import edu.sc.seis.seisFile.fdsnws.FDSNStationQuerier;
 import edu.sc.seis.seisFile.fdsnws.FDSNStationQueryParams;
 import edu.sc.seis.seisFile.fdsnws.FDSNWSException;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
-import edu.sc.seis.seisFile.fdsnws.stationxml.DataAvailability;
 import edu.sc.seis.seisFile.fdsnws.stationxml.FDSNStationXML;
 import edu.sc.seis.seisFile.fdsnws.stationxml.InvalidResponse;
 import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
@@ -35,17 +33,11 @@ import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.hibernate.ChannelNotFound;
 import edu.sc.seis.sod.model.common.BoxAreaImpl;
-import edu.sc.seis.sod.model.common.QuantityImpl;
-import edu.sc.seis.sod.model.common.TimeRange;
-import edu.sc.seis.sod.model.common.UnitImpl;
 import edu.sc.seis.sod.model.station.ChannelIdUtil;
-import edu.sc.seis.sod.model.station.NetworkIdUtil;
 import edu.sc.seis.sod.model.station.StationIdUtil;
 import edu.sc.seis.sod.source.SodSourceException;
 import edu.sc.seis.sod.source.event.FdsnEvent;
 import edu.sc.seis.sod.subsetter.station.StationPointDistance;
-import edu.sc.seis.sod.util.convert.stationxml.ChannelSensitivityBundle;
-import edu.sc.seis.sod.util.convert.stationxml.StationXMLToFissures;
 import edu.sc.seis.sod.util.time.ClockUtil;
 
 public class FdsnStation extends AbstractNetworkSource {
@@ -67,6 +59,11 @@ public class FdsnStation extends AbstractNetworkSource {
         validateXML = SodUtil.isTrue(config, "validate", false);
         if (config != null) {
             // otherwise just use defaults
+            String host = SodUtil.loadHost(config, "host", FDSNStationQueryParams.DEFAULT_HOST);
+            if (! FDSNStationQueryParams.DEFAULT_HOST.equals(host)) {
+                queryParams.setHost(host);
+                this.name = host;
+            }
             int port = SodUtil.loadInt(config, "port", -1);
             if (port > 0) {
                 queryParams.setPort(port);
@@ -110,9 +107,7 @@ public class FdsnStation extends AbstractNetworkSource {
                         logger.debug("Setting matchtimeseries");
                         queryParams.setMatchTimeseries(true);
                     } else if (element.getTagName().equals("host")) {
-                        String host = SodUtil.getNestedText(element);
-                        queryParams.setHost(host);
-                        this.name = host;
+                        // above
                     } else if (element.getTagName().equals("fdsnwsPath")) {
                         // mainly for beta testing
                         String fdsnwsPath = SodUtil.getNestedText(element);

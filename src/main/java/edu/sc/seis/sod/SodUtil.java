@@ -12,6 +12,8 @@ import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.Duration;
 import java.time.Instant;
@@ -269,6 +271,26 @@ public class SodUtil {
         } catch(NoSuchFieldException e) {
             throw new ConfigurationException("Can't find unit " + unitName, e);
         } // end of try-catch
+    }
+
+    /**
+     * Load element for host, validate that is acceptable dns host name.
+     * @return host
+     */
+    public static String loadHost(Element el, String tagname, String defaultHost) throws ConfigurationException {
+        String host = loadText(el, tagname, defaultHost).trim();
+        if (host.contains("/")) {
+            throw new ConfigurationException("Host must not contain slash character, '/', in '"+host+"'");
+        }
+        try {
+            URI uri = new URI("http://fakeuser@" + host + ":80");
+            if ( ! host.equals(uri.getHost() )) {
+                throw new ConfigurationException("Host "+host+" does not seem to be a valid hostname "+uri.getHost());
+            }
+            return host;
+        } catch (URISyntaxException e) {
+            throw new ConfigurationException("Host "+host+" does not seem to be a valid hostname ", e);
+        }
     }
 
     public static MicroSecondDateSupplier loadTime(Element el) throws ConfigurationException {

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import edu.sc.seis.sod.*;
 import org.w3c.dom.Element;
 
 import edu.sc.seis.seisFile.ChannelTimeWindow;
@@ -18,10 +19,6 @@ import edu.sc.seis.seisFile.fdsnws.FDSNDataSelectQueryParams;
 import edu.sc.seis.seisFile.fdsnws.FDSNWSException;
 import edu.sc.seis.seisFile.mseed.DataRecord;
 import edu.sc.seis.seisFile.mseed.DataRecordIterator;
-import edu.sc.seis.sod.BuildVersion;
-import edu.sc.seis.sod.RunProperties;
-import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.model.common.FissuresException;
 import edu.sc.seis.sod.model.seismogram.LocalSeismogramImpl;
 import edu.sc.seis.sod.model.seismogram.RequestFilter;
@@ -68,19 +65,19 @@ public class FdsnDataSelect extends ConstantSeismogramSourceLocator implements S
         checkFdsnStationLinkage();
     }
 
-    public FdsnDataSelect(Element config) throws MalformedURLException, URISyntaxException {
-        this(config, FDSNDataSelectQueryParams.IRIS_HOST);
+    public FdsnDataSelect(Element config) throws MalformedURLException, URISyntaxException, ConfigurationException {
+        this(config, FDSNDataSelectQueryParams.DEFAULT_HOST);
     }
 
-    public FdsnDataSelect(Element config, String defaultHost) throws MalformedURLException, URISyntaxException {
+    public FdsnDataSelect(Element config, String defaultHost) throws MalformedURLException, URISyntaxException, ConfigurationException {
         super(config, "DefaultFDSNDataSelect", 2);
 
         int port = SodUtil.loadInt(config, "port", -1);
         if (port > 0) {
             queryParams.setPort(port);
         }
-        String host = SodUtil.loadText(config, "host", defaultHost);
-        if (host != null && host.length() != 0) {
+        String host = SodUtil.loadHost(config, "host", defaultHost);
+        if ( ! FDSNDataSelectQueryParams.DEFAULT_HOST.equals(host)) {
             queryParams.setHost(host);
         }
         String scheme = SodUtil.loadText(config, "scheme", null);

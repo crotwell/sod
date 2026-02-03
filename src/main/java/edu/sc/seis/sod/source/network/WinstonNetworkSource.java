@@ -26,7 +26,7 @@ public class WinstonNetworkSource extends CSVNetworkSource {
 
     @Override
     protected void initChannels(Element config) throws ConfigurationException {
-        host = SodUtil.loadText(config, "host", defaultHost);
+        host = SodUtil.loadHost(config, "host", defaultHost);
         port = SodUtil.loadInt(config, "port", 16022);
         try {
         List<MenuItem> winstonMenu = getWaveServer().getMenu();
