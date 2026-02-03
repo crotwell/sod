@@ -1,7 +1,7 @@
 
 plugins {
  // kotlin("jvm") version "1.9.0"
-  id("edu.sc.seis.version-class") version "1.2.2"
+  id("edu.sc.seis.version-class") version "1.4.1"
   "java"
   eclipse
   "project-report"
@@ -62,21 +62,21 @@ dependencies {
 
     implementation("org.slf4j:slf4j-api:1.7.36")
     implementation("org.slf4j:slf4j-reload4j:1.7.36")
-    implementation("org.hsqldb:hsqldb:2.7.1")
+    implementation("org.hsqldb:hsqldb:2.7.4")
     implementation("jline:jline:0.9.94")
     implementation("com.martiansoftware:jsap:2.1")
     implementation("thaiopensource:jing:20091111")
     implementation("rngconvUSC:rngconv:20030225")
     implementation( "com.fasterxml.woodstox:woodstox-core:6.5.1")
     implementation("org.eclipse.jetty:jetty-servlet:9.4.5+")
-    implementation("org.msgpack:msgpack-core:0.9.5")
+    implementation("org.msgpack:msgpack-core:0.9.11")
     //implementation("javax.xml:jaxp-api:1.4.2")
 
-    implementation("org.json:json:20230618")
+    implementation("org.json:json:20251224")
 
-    implementation("org.hibernate:hibernate-ehcache:5.4.25.Final")
-    implementation( "org.hibernate:hibernate-core:5.4.25.Final")
-    implementation( "org.hibernate:hibernate-c3p0:5.4.25.Final")
+    implementation("org.hibernate:hibernate-ehcache:5.6.15.Final")
+    implementation( "org.hibernate:hibernate-core:5.6.15.Final")
+    implementation( "org.hibernate:hibernate-c3p0:5.6.15.Final")
 
     implementation("org.apache.velocity.tools:velocity-tools-generic:3.1") {
         exclude("xml-apis:xml-apis")
