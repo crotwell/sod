@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.velocity;
 
+import edu.sc.seis.sod.velocity.network.*;
 import org.apache.velocity.VelocityContext;
 
 import edu.sc.seis.seisFile.fdsnws.stationxml.Channel;
@@ -12,10 +13,6 @@ import edu.sc.seis.sod.model.seismogram.RequestFilter;
 import edu.sc.seis.sod.model.station.ChannelGroup;
 import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.velocity.event.VelocityEvent;
-import edu.sc.seis.sod.velocity.network.VelocityChannel;
-import edu.sc.seis.sod.velocity.network.VelocityChannelGroup;
-import edu.sc.seis.sod.velocity.network.VelocityNetwork;
-import edu.sc.seis.sod.velocity.network.VelocityStation;
 import edu.sc.seis.sod.velocity.seismogram.VelocitySeismogram;
 
 /**
@@ -74,6 +71,8 @@ public class ContextWrangler {
                                                     VelocityContext ctx) {
         VelocityChannel velChan = VelocityChannel.wrap(chan);
         velChan.insertIntoContext(ctx);
+        VelocitySite velSite = VelocitySite.wrap(chan);
+        velSite.insertIntoContext(ctx);
         return velChan;
     }
 

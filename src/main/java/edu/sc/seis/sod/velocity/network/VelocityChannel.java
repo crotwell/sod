@@ -197,6 +197,8 @@ public class VelocityChannel  {
     public void insertIntoContext(VelocityContext ctx) {
         ctx.put("channel", this);
         ctx.put("chan", this);
+        VelocitySite velSite = new VelocitySite(this.chan);
+        velSite.insertIntoContext(ctx);
         getStation().insertIntoContext(ctx);
     }
 
