@@ -92,13 +92,12 @@ dependencies {
 
     implementation("edu.sc.seis.mapData:dcwpo_browse:1.0")
     implementation("net.sourceforge.javacsv:javacsv:2.0")
-//
+
     // Use JUnit Jupiter API for testing.
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
+        testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
 
     // Use JUnit Jupiter Engine for testing.
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
-}
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")}
 
 configurations.all {
     resolutionStrategy.dependencySubstitution {
@@ -383,6 +382,16 @@ tasks.register<edu.sc.seis.tasks.XSLT>("transformGrouper") {
     source = rngFile
     inputs.file(stylesheetFile)
     outputs.dir(destDir)
+}
+
+
+tasks.named("sourcesJar") {
+    dependsOn("makeVersionClass")
+}
+
+tasks.named("makeVersionClass") {
+  inputs.files("src/main/")
+  inputs.files("build.gradle.kts")
 }
 
 
