@@ -165,7 +165,6 @@ distributions {
           include("realtime.xml")
           include("sAndSKSInTanzania.xml")
           include("southAmericanSacFiles.xml")
-          include("recfunc_ears.xml")
           include("variableDataWindow.xml")
           include("vector.xml")
           include("weed.xml")

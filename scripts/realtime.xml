@@ -25,7 +25,6 @@
             <magnitudeRange>
                 <min>3</min>
             </magnitudeRange>
-            <catalog>NEIC PDE</catalog>
         </fdsnEvent>
         <printlineEventProcess/>
     </eventArm>
@@ -34,6 +33,7 @@
         </fdsnStation>
         <networkCode>II</networkCode>
         <bandCode>B</bandCode>
+        <gainCode>H</gainCode>
         <printlineChannelProcess/>
     </networkArm>
     <waveformArm>
