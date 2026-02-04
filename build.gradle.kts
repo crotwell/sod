@@ -129,6 +129,67 @@ tasks.named<Test>("test") {
 
 val dirName = project.name+"-"+version
 
+
+distributions {
+  main {
+    distributionBaseName = "SOD"
+    contents {
+      from("scripts") {
+          include("cwg.prop")
+      }
+      from(".") {
+          include("etc/**")
+          include("gpl-3.0.txt")
+          include("defaultProps")
+          //include("externalExample/**")
+          include("src/**")
+          include("lib/**")
+          include("gradle/**")
+          include("gradlew")
+          include("gradlew.bat")
+          exclude("**/*.svn")
+      }
+      from("scripts") {
+          include("tutorial/**")
+          include("CMTReadySeismograms.xml")
+          include("ammonChannels.xml")
+          include("breqfast.xml")
+          include("dmcWebService.xml")
+          include("preferBroadband.xml")
+          include("realtime.xml")
+          include("sAndSKSInTanzania.xml")
+          include("southAmericanSacFiles.xml")
+          include("recfunc_ears.xml")
+          include("variableDataWindow.xml")
+          include("vector.xml")
+          include("weed.xml")
+          include("winston.xml")
+          into("recipes")
+      }
+      from("build") {
+          //include("doc/**")
+          include("build.gradle")
+          include("settings.gradle")
+      }
+      //from("build/velocity/sod") {
+      //  include("ingredients")
+      //  into("doc")
+      //}
+      //from("build/docs") {
+      //    include("javadoc/**")
+      //    into("doc/documentation")
+      //}
+      from("site/doc") {
+        into("doc")
+      }
+      from("build/generated-src/modVersion") {
+        include("java/**")
+        into("src/main")
+      }
+    }
+  }
+}
+
 val binDistFiles = copySpec {
     from(configurations.runtimeClasspath) {
       include("*")
