@@ -6,6 +6,7 @@
 
 package edu.sc.seis.sod;
 
+import edu.sc.seis.sod.BuildVersion;
 import edu.sc.seis.sod.model.common.Version;
 
 public class VersionHistory {
@@ -100,7 +101,9 @@ public class VersionHistory {
       new Version ("4.0.0-SNAPSHOT4", false),
       new Version ("4.0.0-SNAPSHOT5", false),
       new Version ("4.0.0-SNAPSHOT6", false),
-      new Version ("4.0.0-SNAPSHOT7", false)
+      new Version ("4.0.0-SNAPSHOT7", false),
+            new Version ("4.0.0-SNAPSHOT8", false),
+            new Version (BuildVersion.getVersion(), false)
     };
 
 }
