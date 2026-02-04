@@ -86,6 +86,9 @@ public class WaveformArm extends Thread implements Arm {
                             }
                     } catch(InterruptedException e) {}
                     //logger.debug("done waiting on event arm");
+                    synchronized(Start.getEventArm()) {
+                        Start.getEventArm().notifyAll();
+                    }
                     next = getNext();
                     if (next == null && SodDB.getSingleton().getNumWorkUnits(Standing.INIT) > 0) {
                         logger.debug("next null, so try get from DB");
