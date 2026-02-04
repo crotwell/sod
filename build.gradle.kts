@@ -19,7 +19,7 @@ application {
 }
 
 group = "edu.sc.seis"
-version = "4.0.0-SNAPSHOT9"
+version = "4.0.0rc1"
 // also remember to change in sod.Version class
 // site/velocity/VM_library.vm
 // site/velocity/previousReleases.vm
@@ -321,6 +321,7 @@ val scriptNames = mapOf(
     "find_channels" to "edu.sc.seis.sod.tools.find_channels",
     "find_seismograms" to "edu.sc.seis.sod.tools.find_seismograms",
     "find_responses" to "edu.sc.seis.sod.tools.find_responses",
+    "schemadocs" to "edu.sc.seis.sod.validator.documenter.SchemaDocumenter",
     "sod" to  "edu.sc.seis.sod.Start"
 )
 for (key in scriptNames.keys) {
