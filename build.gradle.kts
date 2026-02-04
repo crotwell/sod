@@ -276,12 +276,37 @@ for (key in scriptNames.keys) {
 
 
 
+tasks.register<JavaExec>("makeSodSite") {
+    dependsOn("buildSchemaDocs")
+    dependsOn("compileJava")
+    val inVmFile = File(project.projectDir.path, "site/velocity/index.vm")
+    jvmArgs = listOf("-Xmx512m")
+    group = "dist"
+//   inputs.files "site/elementPage.vm", inRNGFile.getParentFile()
+    inputs.dir(inVmFile.getParentFile())
+//    outDir = project.file("build/velocity/sod/ingredients")
+    val outDir = File(project.buildDir, "generated-src/velocity/sod/site")
+    outputs.dir(outDir)
+    workingDir = File(project.projectDir, "site")
+    args = listOf(inVmFile.path, ".", outDir.path)
+    classpath(sourceSets.getByName("main").runtimeClasspath)
+    classpath(project.file("build/classes/main"))
+    getMainClass().set("edu.sc.seis.sod.validator.documenter.SchemaDocumenter")
+    doFirst {
+        if (!outDir.exists() ) {
+            outDir.mkdirs()
+        }
+    }
+}
 
 tasks.register<Sync>("copySodSite") {
     dependsOn("buildSchemaDocs")
-    dependsOn(":seiswww:makeSodSite")
+    //dependsOn("makeSodSite")
     group = "dist"
-    from(project.file("../seiswww/build/sod/"))
+    from(project.file("site/www/"))
+    from(tasks.get("buildSchemaDocs")) {
+      into("ingredients")
+    }
     into(project.file("build/doc/"))
 }
 
