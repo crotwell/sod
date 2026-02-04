@@ -5,6 +5,9 @@
  */
 package edu.sc.seis.sod.subsetter.eventChannel.vector;
 
+import edu.sc.seis.sod.subsetter.Subsetter;
+import edu.sc.seis.sod.subsetter.channel.ChannelSubsetter;
+import edu.sc.seis.sod.subsetter.eventChannel.EventChannelLogicalSubsetter;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -30,8 +33,11 @@ public class OREventChannelWrapper implements EventVectorSubsetter {
         for(int counter = 0; counter < childNodes.getLength(); counter++) {
             node = childNodes.item(counter);
             if(node instanceof Element) {
-                subsetter = (EventChannelSubsetter)SodUtil.load((Element)node,
-                                                                "eventChannel");
+                Subsetter obj = (Subsetter)SodUtil.load((Element)node,
+                        new String[] {"eventChannel", "channel", "origin"});
+
+                subsetter = EventChannelLogicalSubsetter.createSubsetter(obj);
+
                 break;
             }
         }
