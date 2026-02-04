@@ -1,0 +1,207 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+            <head>
+        <title>SOD - Install</title>
+<link type="text/css" rel="stylesheet" media="screen" href="../styles/main.css">
+<link type="text/css" rel="stylesheet" media="print" href="../styles/print.css">
+<script type="text/javascript">
+     function decode(domain, user){
+       return("mail"+"to:"+user.replace("*rem*","")+"@"+domain);
+     }
+</script>
+    </head>
+    <body>
+        <div id="header">
+	<a href="http://www.seis.sc.edu/SOD/">
+		<img class="left" src="../images/sod_logo.gif">
+	</a>
+	<a href="http://www.seis.sc.edu/">
+		<img class="right" src="../images/seislogo.gif">
+	</a>
+</div>
+        <div id="menu">
+	<ul>
+	<a href="../index.html">
+		<li>
+			Home
+    	</li>
+	</a>
+	<a href="../gettingstarted.html">
+		<li>
+			Getting Started
+    	</li>
+	</a>
+	<a href="../download.html">
+		<li>
+			Download
+    	</li>
+	</a>
+	<a href="https://github.com/crotwell/sod/wiki">
+		<li>
+			Wiki
+    	</li>
+	</a>
+	<a href="../documentation/index.html">
+		<li class="open">
+			Documentation
+    	</li>
+	</a>
+			<ul>
+	<a href="install.html">
+		<li id="selected">
+			Install
+    	</li>
+	</a>
+	<a href="demo.html">
+		<li>
+			Demo
+    	</li>
+	</a>
+	<a href="tutorials/index.html">
+		<li class="closed">
+			Tutorials
+    	</li>
+	</a>
+		<a href="externals/index.html">
+		<li class="closed">
+			Externals
+    	</li>
+	</a>
+		<a href="scripting.html">
+		<li>
+			Inline Script Subsetters
+    	</li>
+	</a>
+	<a href="restricted.html">
+		<li>
+			Restricted Data with SOD
+    	</li>
+	</a>
+	<a href="realtime.html">
+		<li>
+			Realtime Run Considerations
+    	</li>
+	</a>
+	<a href="legacy.html">
+		<li>
+			Legacy Code Considerations
+    	</li>
+	</a>
+	<a href="javadoc/index.html">
+		<li>
+			Javadocs
+    	</li>
+	</a>
+	</ul>
+		<a href="../tools/index.html">
+		<li class="closed">
+			Tools
+    	</li>
+	</a>
+		<a href="../ingredients/index.html">
+		<li class="closed">
+			Ingredient Listing
+    	</li>
+	</a>
+	<li>
+<!-- Google CSE Search Box Begins -->
+<div>
+<script>
+  (function() {
+    var cx = '011831161591731826207:vosgevg88qu';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+<gcse:search></gcse:search>
+</div>
+<!-- Google CSE Search Box Ends -->
+</li>
+
+	</ul>
+</div>
+        <div id="content">
+            <div class="section">
+                <h3>
+	<a name="Installing SOD">Installing SOD</a>
+</h3>
+                <p>Download the <a href="http://www.seis.sc.edu/downloads/sod/3.2.9/sod-3.2.9.tgz">tgz</a>
+ or <a href="http://www.seis.sc.edu/downloads/sod/3.2.9/sod-3.2.9.zip">zip</a>
+ of SOD, and unpack it. This 
+                    will result in a directory structure like the following: 
+                    <ul>
+                        <li>
+                            <tt>sod-3.2.9                            </tt>
+                            <ul>
+                                <li> <tt>bin</tt> - sh scripts for running SOD on *nix and bat scripts for windows </li>
+                                <li> <tt>build.gradle</tt> - script for recompiling SOD via gradle</li>
+                                <li> <tt>cwg.prop</tt> - example SOD prop file for configuring logging, database, etc.</li>
+                                <li> <tt>doc</tt> - documentation </li>
+                                <li> <tt>etc</tt> - helper files </li>
+                                <li> <tt>gradle</tt> - used for recompiling SOD via gradle</li>
+                                <li> <tt>gradlew</tt> - also for recompiling SOD via gradle</li>
+                                <li> <tt>gradlew.bat</tt> - also for recompiling SOD via gradle</li>
+                                <li> <tt>lib</tt> - SOD's libraries </li>
+                                <li> <tt>recipes</tt> - sample example recipes from the tutorial</li>
+                                <li> <tt>settings.gradle</tt> - also for recompiling SOD via gradle</li>
+                                <li> <tt>src</tt> - SOD's source code, if you are curious </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </p>
+            </div>
+            <div class="section">
+                <h3>
+	<a name="Installing Java">Installing Java</a>
+</h3>
+                <p>SOD uses Java 1.7 or later.  You can find out what version of Java you have on your system by running 'java -version' 
+                    at the command line.  If your version is less than 1.7 or is gcj, go to <a href="http://java.com/">Java's website</a> for a more recent version. 
+Unfortunately, gjc, which comes with many Linux distributions, is not quite Java and prevents SOD from running. Please use Java from OpenJDK or Sun/Oracle on Linux instead.
+                </p>
+            </div>
+            <div class="section">
+                <h3>
+	<a name="Setting PATH">Setting PATH</a>
+</h3>
+                <p>SOD is ready to run once it's unpacked and Java is installed; just invoke bin/sod or bin\sod.bat in the unpacked directory to run it. 
+                    However, for easy invocation, people usually add SOD's bin directory to their path.  
+                    This is somewhat system dependent on Unix like operating systems, but we have directions on how to do it under Windows below. 
+                    </p>
+            <div class="section">
+                <h4>
+	<a name="Windows">Windows</a>
+</h4>
+                    <p>To add SOD's <code>bin</code> directory to your system's path open <code>Control Panel -> System -> Advanced -> Environment Variables</code>.  
+                        If an entry with name <code>PATH</code> exists, append <code>;&lt;the full path to your SOD directory&gt;\bin</code> 
+                        to its value.
+                        Otherwise, create a new variable <code>PATH</code> and set it to <code>&lt;the full path to your SOD directory&gt;\bin</code>. 
+</p>
+            </div>
+</div>
+            				<p id="get_start_nav">
+				<a href="demo.html"><img title="Go to the next step in getting started" alt="Next" src="../images/next.png">Next: Demo</a>
+				</p>
+</div>
+<div id="footer">
+	<div id="contact">
+        <a 	href="http://www.seis.sc.edu/mail.html"
+   onmouseover="javascript:this.href=decode('seis.sc.edu', '*rem*sod')"
+   onfocus="javascript:this.href=decode('seis.sc.edu', '*rem*sod')"
+>
+			<img src="../images/contact.png"/>
+			Contact Us
+		</a>
+	</div>
+<img class="right" src="../images/dhi_logo.png"/>
+<p>SOD is made possible by the <a href="http://www.geol.sc.edu"> Department of Geological Sciences</a> at the <a href="http://www.sc.edu"><br />University of South Carolina</a> and the <a href="http://www.iris.edu">IRIS Consortium</a>.
+                   </p>
+
+</div>
+
+</body>
+</html>

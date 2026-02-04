@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+		<head>
+		<title>SOD - Getting Started</title>
+<link type="text/css" rel="stylesheet" media="screen" href="styles/main.css">
+<link type="text/css" rel="stylesheet" media="print" href="styles/print.css">
+<script type="text/javascript">
+     function decode(domain, user){
+       return("mail"+"to:"+user.replace("*rem*","")+"@"+domain);
+     }
+</script>
+	</head>
+	<body>
+		<div id="header">
+	<a href="http://www.seis.sc.edu/SOD/">
+		<img class="left" src="images/sod_logo.gif">
+	</a>
+	<a href="http://www.seis.sc.edu/">
+		<img class="right" src="images/seislogo.gif">
+	</a>
+</div>
+		<div id="menu">
+	<ul>
+	<a href="index.html">
+		<li>
+			Home
+    	</li>
+	</a>
+	<a href="gettingstarted.html">
+		<li id="selected">
+			Getting Started
+    	</li>
+	</a>
+	<a href="download.html">
+		<li>
+			Download
+    	</li>
+	</a>
+	<a href="https://github.com/crotwell/sod/wiki">
+		<li>
+			Wiki
+    	</li>
+	</a>
+	<a href="documentation/index.html">
+		<li class="closed">
+			Documentation
+    	</li>
+	</a>
+		<a href="tools/index.html">
+		<li class="closed">
+			Tools
+    	</li>
+	</a>
+		<a href="ingredients/index.html">
+		<li class="closed">
+			Ingredient Listing
+    	</li>
+	</a>
+	<li>
+<!-- Google CSE Search Box Begins -->
+<div>
+<script>
+  (function() {
+    var cx = '011831161591731826207:vosgevg88qu';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+<gcse:search></gcse:search>
+</div>
+<!-- Google CSE Search Box Ends -->
+</li>
+
+	</ul>
+</div>
+		<div id="content">
+			<div class="section">
+                <h3>
+	<a name="Getting started with SOD">Getting started with SOD</a>
+</h3>
+				<p>
+					Following these steps will install SOD on your system and aquaint you with the
+					basics of working with SOD.  It shouldn't take more than an hour, and you can
+					feel free to stop at any point and pick up from there later.
+				</p>
+				<ol>
+					<li><a href="documentation/install.html">Download and install SOD</a></li>
+					<li><a href="documentation/demo.html">Run a demo to see that SOD is working and what SOD produces</a></li>
+					<li><a href="tools/usage.html">Look at the Sod Tools, useful in their own right and an easy way to generate SOD recipies</a></li>
+					<li><a href="documentation/tutorials/networkTutorial.html">Learn how to specify the networks, stations and channels you want</a></li>
+					<li><a href="documentation/tutorials/eventTutorial.html">Write a recipe to get the earthquakes you want</a></li>
+					<li><a href="documentation/tutorials/waveformTutorial.html">Combine earthquakes and channels to gather seismograms</a></li>
+				</ol>
+				<div class="section">
+					<h3>
+	<a name="Where to go from here">Where to go from here</a>
+</h3>
+					<dl>
+					    <dt><a href="ingredients/index.html">Ingredient Listing</a></dt>
+                        <dd>The ingredient listing defines the structure of a SOD recipe, so they contain explanations of all the subsetters,
+                            processors and other ingredients that can go into SOD.  Go here to find ingredients to use in your SOD runs that weren't
+                            mentioned in the tutorials.</dd>
+						<dt><a href="documentation/legacy.html">Legacy Execute</a></dt>
+						<dd>Legacy execute allows you to have SOD execute commands on your system with the data it gathers.  Go here to find
+							out how to hook SOD into your existing processing.</dd>
+						<dt><a href="documentation/realtime.html">Realtime Processing</a></dt>
+						<dd>If the end time in the event arm extends past now, SOD will continue to run and process events as they happen.
+							This page explains various configuration choices you may want to make to support a standing order like this.</dd>
+						
+					</dl>
+				</div>
+			</div>
+		</div>
+		<div id="footer">
+	<div id="contact">
+        <a 	href="http://www.seis.sc.edu/mail.html"
+   onmouseover="javascript:this.href=decode('seis.sc.edu', '*rem*sod')"
+   onfocus="javascript:this.href=decode('seis.sc.edu', '*rem*sod')"
+>
+			<img src="images/contact.png"/>
+			Contact Us
+		</a>
+	</div>
+<img class="right" src="images/dhi_logo.png"/>
+<p>SOD is made possible by the <a href="http://www.geol.sc.edu"> Department of Geological Sciences</a> at the <a href="http://www.sc.edu"><br />University of South Carolina</a> and the <a href="http://www.iris.edu">IRIS Consortium</a>.
+                   </p>
+
+</div>
+
+	</body>
+</html>

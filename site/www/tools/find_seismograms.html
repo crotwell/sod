@@ -1,0 +1,215 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<title>SOD - find_seismograms</title>
+<link type="text/css" rel="stylesheet" media="screen" href="../styles/main.css">
+<link type="text/css" rel="stylesheet" media="print" href="../styles/print.css">
+<script type="text/javascript">
+     function decode(domain, user){
+       return("mail"+"to:"+user.replace("*rem*","")+"@"+domain);
+     }
+</script>
+	</head>
+	<body>
+		<div id="header">
+	<a href="http://www.seis.sc.edu/SOD/">
+		<img class="left" src="../images/sod_logo.gif">
+	</a>
+	<a href="http://www.seis.sc.edu/">
+		<img class="right" src="../images/seislogo.gif">
+	</a>
+</div>
+		<div id="menu">
+	<ul>
+	<a href="../index.html">
+		<li>
+			Home
+    	</li>
+	</a>
+	<a href="../gettingstarted.html">
+		<li>
+			Getting Started
+    	</li>
+	</a>
+	<a href="../download.html">
+		<li>
+			Download
+    	</li>
+	</a>
+	<a href="https://github.com/crotwell/sod/wiki">
+		<li>
+			Wiki
+    	</li>
+	</a>
+	<a href="../documentation/index.html">
+		<li class="closed">
+			Documentation
+    	</li>
+	</a>
+		<a href="../tools/index.html">
+		<li class="open">
+			Tools
+    	</li>
+	</a>
+			<ul>
+	<a href="usage.html">
+		<li>
+			Usage Examples
+    	</li>
+	</a>
+	<a href="find_events.html">
+		<li>
+			find_events
+    	</li>
+	</a>
+	<a href="find_seismograms.html">
+		<li id="selected">
+			find_seismograms
+    	</li>
+	</a>
+	<a href="find_stations.html">
+		<li>
+			find_stations
+    	</li>
+	</a>
+	<a href="find_channels.html">
+		<li>
+			find_channels
+    	</li>
+	</a>
+	<a href="find_responses.html">
+		<li>
+			find_responses
+    	</li>
+	</a>
+	</ul>
+		<a href="../ingredients/index.html">
+		<li class="closed">
+			Ingredient Listing
+    	</li>
+	</a>
+	<li>
+<!-- Google CSE Search Box Begins -->
+<div>
+<script>
+  (function() {
+    var cx = '011831161591731826207:vosgevg88qu';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+<gcse:search></gcse:search>
+</div>
+<!-- Google CSE Search Box Ends -->
+</li>
+
+	</ul>
+</div>
+		<div id="content">
+<div class="section">
+				<h3>
+	<a name="find_seismograms">find_seismograms</a>
+</h3>
+				<p>find_seismograms produces the part of the recipe corresponding to SOD's <a href="../ingredients/waveformArm.html">waveformArm</a>.  
+					It depends on the output of both find_events and find_stations being piped into it to function correctly.  See the <a href="usage.html">usage</a> document to see how that's done.
+				</p>
+					</div>
+				<div class="section">
+				<h3>
+	<a name="Options">Options</a>
+</h3>
+					<table summary="The format and meaning of all options accepted by find_events" class="options">
+						<tr>
+							<th id="format">Format</th>
+							<th id="meaning">Meaning</th>
+							<th id="default">Default</th>
+						</tr>
+<tr>
+<td headers="format">-v/--version </td>
+<td headers="meaning">Print SOD's version and exit</td>
+<td headers="default"></td>
+</tr>
+<tr>
+<td headers="format">-r/--recipe </td>
+<td headers="meaning">Print the created recipe to stdout instead of running it</td>
+<td headers="default"></td>
+</tr>
+<tr>
+<td headers="format">-h/--help </td>
+<td headers="meaning">Print a brief help message and exit</td>
+<td headers="default"></td>
+</tr>
+<tr>
+<td headers="format">-p/--props &lt;props&gt;</td>
+<td headers="meaning">Add an additional props file to specify a different nameserver, database or other internal SOD options</td>
+<td headers="default"></td>
+</tr>
+<tr>
+<td headers="format">-S/--server &lt;server&gt;</td>
+<td headers="meaning">Set the seismogram server to use for this search</td>
+<td headers="default">service.iris.edu</td>
+</tr>
+<tr>
+<td headers="format">-B/--begin &lt;beginPhase&gt;</td>
+<td headers="meaning">The begin time for seismograms specified as a phase name and an offset in minutes like 12.6ttp or -3s.
+	The phase names come from <a href="http://www.seis.sc.edu/TauP/">TauP</a>, so look through its PDF documentation to see what
+names are available.</td>
+<td headers="default">-2ttp</td>
+</tr>
+<tr>
+<td headers="format">-E/--end &lt;endPhase&gt;</td>
+<td headers="meaning">The end time for seismograms specified as a phase name and an offset in minutes like .4ttp or -20.01s.
+The phase names come from <a href="http://www.seis.sc.edu/TauP/">TauP</a>, so look through its PDF documentation to see what
+names are available.</td>
+<td headers="default">+5tts</td>
+</tr>
+<tr>
+<td headers="format">-c/--channels c1,c2,...,cN</td>
+<td headers="meaning">The codes of channels to retrieve like <code>BHZ</code> or <code>LH*</code>.  If unspecified, all channels for retrieved sites will be retrieved</td>
+<td headers="default">BH*</td>
+</tr>
+<tr>
+<td headers="format">-l/--sites l1,l2,...,lN</td>
+<td headers="meaning">The codes of sites(location codes) to retrieve such as <code>00</code> or <code>01</code>.  If unspecified, all sites for retrieved stations will be retrieved.  '__' can be used to retrieve '  ' sites</td>
+<td headers="default"></td>
+</tr>
+<tr>
+<td headers="format">--mark-phases 1,2,...,N</td>
+<td headers="meaning">Phase time to record in SAC file t0-t9 headers.  An individual item is given as a phase name, a dash and a t header, 0-9 or a, as in taup_setsac.  
+	For example S-9 puts the arrival time for S into the 9th t header.  
+	See the <a href="http://www.seis.sc.edu/TauP/">TauP</a> for more information about the argument format and phase naming</td>
+<td headers="default"></td>
+</tr>
+<tr>
+<td headers="format">-o/--output &lt;output&gt;</td>
+<td headers="meaning">The format for output.  Can be none, counter or a Velocity template as described in the 
+	<a href="../ingredients/printlineSeismogramProcess.html">printline ingredient</a>.  
+	'counter' outputs the number of seismograms retrieved for each channel for each earthquake</td>
+<td headers="default">counter</td>
+</tr>
+</table>
+			</div>
+		</div>
+		<div id="footer">
+	<div id="contact">
+        <a 	href="http://www.seis.sc.edu/mail.html"
+   onmouseover="javascript:this.href=decode('seis.sc.edu', '*rem*sod')"
+   onfocus="javascript:this.href=decode('seis.sc.edu', '*rem*sod')"
+>
+			<img src="../images/contact.png"/>
+			Contact Us
+		</a>
+	</div>
+<img class="right" src="../images/dhi_logo.png"/>
+<p>SOD is made possible by the <a href="http://www.geol.sc.edu"> Department of Geological Sciences</a> at the <a href="http://www.sc.edu"><br />University of South Carolina</a> and the <a href="http://www.iris.edu">IRIS Consortium</a>.
+                   </p>
+
+</div>
+
+	</body>
+</html>

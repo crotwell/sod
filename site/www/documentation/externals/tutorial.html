@@ -1,0 +1,320 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+				<head>
+		<title>SOD - Externals Tutorial</title>
+<link type="text/css" rel="stylesheet" media="screen" href="../../styles/main.css">
+<link type="text/css" rel="stylesheet" media="print" href="../../styles/print.css">
+<script type="text/javascript">
+     function decode(domain, user){
+       return("mail"+"to:"+user.replace("*rem*","")+"@"+domain);
+     }
+</script>
+	</head>
+	<body>
+		<div id="header">
+	<a href="http://www.seis.sc.edu/SOD/">
+		<img class="left" src="../../images/sod_logo.gif">
+	</a>
+	<a href="http://www.seis.sc.edu/">
+		<img class="right" src="../../images/seislogo.gif">
+	</a>
+</div>
+		<div id="menu">
+	<ul>
+	<a href="../../index.html">
+		<li>
+			Home
+    	</li>
+	</a>
+	<a href="../../gettingstarted.html">
+		<li>
+			Getting Started
+    	</li>
+	</a>
+	<a href="../../download.html">
+		<li>
+			Download
+    	</li>
+	</a>
+	<a href="https://github.com/crotwell/sod/wiki">
+		<li>
+			Wiki
+    	</li>
+	</a>
+	<a href="../../documentation/index.html">
+		<li class="open">
+			Documentation
+    	</li>
+	</a>
+			<ul>
+	<a href="../install.html">
+		<li>
+			Install
+    	</li>
+	</a>
+	<a href="../demo.html">
+		<li>
+			Demo
+    	</li>
+	</a>
+	<a href="../tutorials/index.html">
+		<li class="closed">
+			Tutorials
+    	</li>
+	</a>
+		<a href="../externals/index.html">
+		<li class="open">
+			Externals
+    	</li>
+	</a>
+			<ul>
+	<a href="tutorial.html">
+		<li id="selected">
+			Externals Tutorial
+    	</li>
+	</a>
+	<a href="types.html">
+		<li>
+			Types of Externals
+    	</li>
+	</a>
+	</ul>
+		<a href="../scripting.html">
+		<li>
+			Inline Script Subsetters
+    	</li>
+	</a>
+	<a href="../restricted.html">
+		<li>
+			Restricted Data with SOD
+    	</li>
+	</a>
+	<a href="../realtime.html">
+		<li>
+			Realtime Run Considerations
+    	</li>
+	</a>
+	<a href="../legacy.html">
+		<li>
+			Legacy Code Considerations
+    	</li>
+	</a>
+	<a href="../javadoc/index.html">
+		<li>
+			Javadocs
+    	</li>
+	</a>
+	</ul>
+		<a href="../../tools/index.html">
+		<li class="closed">
+			Tools
+    	</li>
+	</a>
+		<a href="../../ingredients/index.html">
+		<li class="closed">
+			Ingredient Listing
+    	</li>
+	</a>
+	<li>
+<!-- Google CSE Search Box Begins -->
+<div>
+<script>
+  (function() {
+    var cx = '011831161591731826207:vosgevg88qu';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+<gcse:search></gcse:search>
+</div>
+<!-- Google CSE Search Box Ends -->
+</li>
+
+	</ul>
+</div>
+		<div id="content">
+			<div class="section">
+                <h3>
+	<a name="Writing an External Processor">Writing an External Processor</a>
+</h3>
+				<p>
+					In this tutorial we build an external processor that only allows events through that are in the 
+					southern hemisphere.  Then we refine it so that the user can specify the latitude below which 
+					events are acceptable.  All of the code is in the <code>externalExample</code> directory in the SOD distribution
+					 and the recipe files are in <code>recipes</code>.
+				</p>
+				<div class="section">
+					<h4>
+	<a name="Writing the processor class">Writing the processor class</a>
+</h4>
+				<p>
+					The first step is to create a class that SOD will invoke to check for the proper latitude. 
+					Each subsetting or processing step in SOD has a corresponding Java interface that defines its operation.
+					Check the <a href="types.html">external types</a> document to see which step is appropriate for the operation you wish to perform.
+					Since we want to check on the properties of an earthquake(origin in DHI terms) our class should implement the interface 
+					<a href="http://www.seis.sc.edu/fisheye/browse/~raw,r=HEAD/seis/trunk/sod/src/edu/sc/seis/sod/subsetter/origin/OriginSubsetter.java">OriginSubsetter</a>.
+					The only requirement for an Origin subsetter is that it implement one method:
+<pre>public StringTree accept(EventAccessOperations eventAccess, 
+                         EventAttr eventAttr, 
+                         Origin preferred_origin) throws Exception;</pre>
+					<p>An implementation that checks for origins in the southern hemisphere is given below.</p>
+				<pre>
+package edu.sc.seis.sod.example;
+
+import edu.iris.Fissures.IfEvent.EventAttr;
+import edu.iris.Fissures.IfEvent.Origin;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
+import edu.sc.seis.sod.status.Fail;
+import edu.sc.seis.sod.status.Pass;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.subsetter.origin.OriginSubsetter;
+
+public class SouthOMatic implements OriginSubsetter {
+
+    public StringTree accept(CacheEvent eventAccess,
+                             EventAttr eventAttr,
+                             Origin preferred_origin) {
+        if(preferred_origin.getLocation().latitude > 0) {
+            return new Fail(this, "origin not in the southern hemisphere");
+        }
+        return new Pass(this);
+    }
+}				</pre>
+					If this SouthOMatic is listed in your recipe, SOD instantiates an instance of it and calls accept on it for every origin that passes through
+					with the arguments eventAccess, eventAttr and preferred_origin describing the origin.
+					Depending on the returned StringTree, SOD does further processing of the origin or stops at this point. 
+					StringTree is an abstract class that encapsulates a SOD processing result.  For a simple processing steps like ours, 
+					we can use the two simplest subclasses of StringTree, Pass and Fail.  Pass and Fail are both created with the subsetter as the first 
+					argument so SOD can log what subsetter performed the action.  If an optional String reason is given this is also logged. As you can 
+					see we check if the event's preferredOrigin has a latitude greater than 0.  If so, we return an instance of Fail and SOD will 
+					stop processing the origin.  Otherwise we return Pass and things continue from this point.
+				</p>
+				
+				</div>
+				<div class="section">
+					<h4>
+	<a name="Adding your external processor to a recipe">Adding your external processor to a recipe</a>
+</h4>
+				<p>
+					To get SOD to instantiate and use your new external processor you must add it to a recipe file.  
+					This is done with an externalOriginSubsetter ingredient for our reciple like so:
+				</p>
+				<pre>        &lt;<span class="elementName">externalOriginSubsetter</span>&gt;
+            &lt;<span class="elementName">classname</span>&gt;edu.sc.seis.sod.example.SouthOMatic&lt;/<span class="elementName">classname</span>&gt;
+        &lt;/<span class="elementName">externalOriginSubsetter</span>&gt;</pre>
+				<p class="exampleLinks">
+		
+	<a href="../tutorials/southOMatic.html">HTML</a>
+	
+	<a href="../tutorials/southOMatic.xml">XML</a>
+</p>
+				<p>
+					The name for any external processor ingredient is always external followed by the name of the interface you've implemented.  Then the first element inside the 
+					external element is a classname element with the fully qualified classname of the processor you've written.  SOD
+					uses reflection to find your class and instantiate it.  
+				</p>
+				</div>
+				<div class="section">
+					<h4>
+	<a name="Compiling your processor">Compiling your processor</a>
+</h4>
+				<p>
+					The final step to get the external processor to run is to compile the processor and add it to SOD's runtime
+					classpath.  To simplify this, we've included a 
+					 <a href="http://maven.apache.org/maven-1.x/">Maven 1</a> project that handles getting all of the dependencies together and compiling 
+					 any external processors located in <code>externalExample/src</code>.  So the first step is to 
+					 <a href="http://maven.apache.org/maven-1.x/start/download.html">download</a> and 
+					 <a href="http://maven.apache.org/maven-1.x/start/install.html">install</a> Maven 1.  Once you've got it setup, you can test the installation
+					 by going into <code>externalExample</code> and running <code>maven jar</code>.  This should produce lots of messages about downloading
+					 jars and compiling classes and will eventually make a jar file and place it at <code>externalExample/target/sodExternals-3.2.9.jar</code>
+					 .  This jar is already included in the classpath of the SOD scripts so you should be able to run <code>sod -f externalExample/recipes/southOMatic.xml</code>
+					 and see the origins south of the equator scroll by.  
+				</p>
+				</div>
+				<div class="section">
+					<h3>
+	<a name="Customizing the processor from the recipe">Customizing the processor from the recipe</a>
+</h3>
+				<p>
+					In addition to the accept method, you may also add a constructor that takes a DOM Element in any external processor. 
+					If SOD sees this on an external, it'll pass in an <code>org.w3c.dom.Element</code> representing the external element from the recipe.
+					This allows you to extract any extra
+					configuration information out of the recipe that you need. With this we can make the maximum latitude
+					configurable instead of always 0. Here is a variation of the SouthOMatic, LatOMatic, that does this. SOD
+					includes a helper class, DOMHelper, that makes it easy to pull values out of the XML Element. Here we us the extractFloat method. Notice that we
+					give a default value in case the recipe file does not contain a maxLat element. The default value is optional, but if it is not given and the 
+					recipe does not have that value then an exception will be thrown.
+				</p>
+				<pre>
+package edu.sc.seis.sod.example;
+
+import org.w3c.dom.Element;
+
+import edu.iris.Fissures.IfEvent.EventAttr;
+import edu.iris.Fissures.IfEvent.Origin;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
+import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
+import edu.sc.seis.sod.status.Fail;
+import edu.sc.seis.sod.status.Pass;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.subsetter.origin.OriginSubsetter;
+
+public class LatOMatic implements OriginSubsetter {
+
+    public LatOMatic(Element el) {
+        maxLat = DOMHelper.extractFloat(el, "maxLat", 0);
+    }
+
+    public StringTree accept(CacheEvent eventAccess,
+                             EventAttr eventAttr,
+                             Origin preferred_origin) throws Exception {
+        if(preferred_origin.getLocation().latitude > maxLat) {
+            return new Fail(this, "origin not below " + maxLat + " latitude");
+        }
+        return new Pass(this);
+    }
+
+    float maxLat;
+}				</pre>
+				<pre>        &lt;<span class="elementName">externalOriginSubsetter</span>&gt;
+            &lt;<span class="elementName">classname</span>&gt;edu.sc.seis.sod.example.LatOMatic&lt;/<span class="elementName">classname</span>&gt;
+            &lt;<span class="elementName">maxLat</span>&gt;45&lt;/<span class="elementName">maxLat</span>&gt;
+        &lt;/<span class="elementName">externalOriginSubsetter</span>&gt;</pre>
+				<p class="exampleLinks">
+		
+	<a href="../tutorials/latOMatic.html">HTML</a>
+	
+	<a href="../tutorials/latOMatic.xml">XML</a>
+</p>
+				<p>
+					The only changes needed from <code>southOMatic.xml</code> are the new classanme and the addition of the maxLat element.  
+					If you run <code>sod -f externalExamples/recipes/latOMatic.xml</code> you can see that the events printed out are 
+					now at latitude 45 or below.
+				</p>
+			</div>
+			</div>
+			
+		</div>
+		<div id="footer">
+	<div id="contact">
+        <a 	href="http://www.seis.sc.edu/mail.html"
+   onmouseover="javascript:this.href=decode('seis.sc.edu', '*rem*sod')"
+   onfocus="javascript:this.href=decode('seis.sc.edu', '*rem*sod')"
+>
+			<img src="../../images/contact.png"/>
+			Contact Us
+		</a>
+	</div>
+<img class="right" src="../../images/dhi_logo.png"/>
+<p>SOD is made possible by the <a href="http://www.geol.sc.edu"> Department of Geological Sciences</a> at the <a href="http://www.sc.edu"><br />University of South Carolina</a> and the <a href="http://www.iris.edu">IRIS Consortium</a>.
+                   </p>
+
+</div>
+
+	</body>
+</html>

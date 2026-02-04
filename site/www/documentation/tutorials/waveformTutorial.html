@@ -1,0 +1,340 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+				<head>
+		<title>SOD - Waveform Tutorial</title>
+<link type="text/css" rel="stylesheet" media="screen" href="../../styles/main.css">
+<link type="text/css" rel="stylesheet" media="print" href="../../styles/print.css">
+<script type="text/javascript">
+     function decode(domain, user){
+       return("mail"+"to:"+user.replace("*rem*","")+"@"+domain);
+     }
+</script>
+	</head>
+	<body>
+		<div id="header">
+	<a href="http://www.seis.sc.edu/SOD/">
+		<img class="left" src="../../images/sod_logo.gif">
+	</a>
+	<a href="http://www.seis.sc.edu/">
+		<img class="right" src="../../images/seislogo.gif">
+	</a>
+</div>
+		<div id="menu">
+	<ul>
+	<a href="../../index.html">
+		<li>
+			Home
+    	</li>
+	</a>
+	<a href="../../gettingstarted.html">
+		<li>
+			Getting Started
+    	</li>
+	</a>
+	<a href="../../download.html">
+		<li>
+			Download
+    	</li>
+	</a>
+	<a href="https://github.com/crotwell/sod/wiki">
+		<li>
+			Wiki
+    	</li>
+	</a>
+	<a href="../../documentation/index.html">
+		<li class="open">
+			Documentation
+    	</li>
+	</a>
+			<ul>
+	<a href="../install.html">
+		<li>
+			Install
+    	</li>
+	</a>
+	<a href="../demo.html">
+		<li>
+			Demo
+    	</li>
+	</a>
+	<a href="../tutorials/index.html">
+		<li class="open">
+			Tutorials
+    	</li>
+	</a>
+			<ul>
+	<a href="networkTutorial.html">
+		<li>
+			Network Tutorial
+    	</li>
+	</a>
+	<a href="eventTutorial.html">
+		<li>
+			Event Tutorial
+    	</li>
+	</a>
+	<a href="waveformTutorial.html">
+		<li id="selected">
+			Waveform Tutorial
+    	</li>
+	</a>
+	</ul>
+		<a href="../externals/index.html">
+		<li class="closed">
+			Externals
+    	</li>
+	</a>
+		<a href="../scripting.html">
+		<li>
+			Inline Script Subsetters
+    	</li>
+	</a>
+	<a href="../restricted.html">
+		<li>
+			Restricted Data with SOD
+    	</li>
+	</a>
+	<a href="../realtime.html">
+		<li>
+			Realtime Run Considerations
+    	</li>
+	</a>
+	<a href="../legacy.html">
+		<li>
+			Legacy Code Considerations
+    	</li>
+	</a>
+	<a href="../javadoc/index.html">
+		<li>
+			Javadocs
+    	</li>
+	</a>
+	</ul>
+		<a href="../../tools/index.html">
+		<li class="closed">
+			Tools
+    	</li>
+	</a>
+		<a href="../../ingredients/index.html">
+		<li class="closed">
+			Ingredient Listing
+    	</li>
+	</a>
+	<li>
+<!-- Google CSE Search Box Begins -->
+<div>
+<script>
+  (function() {
+    var cx = '011831161591731826207:vosgevg88qu';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+<gcse:search></gcse:search>
+</div>
+<!-- Google CSE Search Box Ends -->
+</li>
+
+	</ul>
+</div>
+		<div id="content">
+			<div class="section">
+				<h3>
+	<a name="Waveform arm's structure">Waveform arm's structure</a>
+</h3>
+				<img class="right" src="../../images/documentation/tutorials/waveform_arm.png"/>
+				<p class="short">
+					The waveform arm is the most complex of the arms. 
+					It takes the successful channels from the network arm
+					and the successful events from the event arm and runs them through a series of steps.  
+		</p>
+					<ol>
+						<li>
+							Event channel subsetters inspect the combination of a successful event from the event arm 
+							and a successful channel from the network arm. 
+						</li>
+						<li>
+							A request for data is generated based on phase arrival times or the 
+							earthquake's origin time.
+							</li>
+							<li>
+								A server is asked if it has data for the request's time.  
+						</li>
+						<li>
+							Availabe data subsetters inspect the response from the server.
+						</li>
+						<li>
+							Data is retrieved from the server.
+						</li>
+						<li>
+							Subsetting and processing are done on the data.  
+							</li>
+					</ol>
+                	
+</p>
+</div>
+			<div class="section">
+				<h3>
+	<a name="Simple waveform arm">Simple waveform arm</a>
+</h3>
+				<pre>&lt;?xml version="1.0"?&gt;
+&lt;<span class="elementName">sod</span>&gt;
+    &lt;<span class="elementName">eventArm</span>&gt;Same as event tutorial&lt;/<span class="elementName">eventArm</span>&gt;
+    &lt;<span class="elementName">networkArm</span>&gt;Same as network tutorial&lt;/<span class="elementName">networkArm</span>&gt;
+    &lt;<span class="elementName">waveformArm</span>&gt;
+        &lt;<span class="elementName">phaseRequest</span>&gt;
+            &lt;<span class="elementName">model</span>&gt;prem&lt;/<span class="elementName">model</span>&gt;
+            &lt;<span class="elementName">beginPhase</span>&gt;ttp&lt;/<span class="elementName">beginPhase</span>&gt;
+            &lt;<span class="elementName">beginOffset</span>&gt;
+                &lt;<span class="elementName">unit</span>&gt;SECOND&lt;/<span class="elementName">unit</span>&gt;
+                &lt;<span class="elementName">value</span>&gt;-120&lt;/<span class="elementName">value</span>&gt;
+            &lt;/<span class="elementName">beginOffset</span>&gt;
+            &lt;<span class="elementName">endPhase</span>&gt;tts&lt;/<span class="elementName">endPhase</span>&gt;
+            &lt;<span class="elementName">endOffset</span>&gt;
+                &lt;<span class="elementName">unit</span>&gt;SECOND&lt;/<span class="elementName">unit</span>&gt;
+                &lt;<span class="elementName">value</span>&gt;360&lt;/<span class="elementName">value</span>&gt;
+            &lt;/<span class="elementName">endOffset</span>&gt;
+        &lt;/<span class="elementName">phaseRequest</span>&gt;
+        &lt;<span class="elementName">fdsnDataSelect</span>/&gt;
+        &lt;<span class="elementName">printlineSeismogramProcess</span>/&gt;
+        &lt;<span class="elementName">sacWriter</span>/&gt;
+    &lt;/<span class="elementName">waveformArm</span>&gt;
+&lt;/<span class="elementName">sod</span>&gt;</pre>
+				<p class="exampleLinks">
+		
+	<a href="simpleWaveform.html">HTML</a>
+	
+	<a href="simpleWaveform.xml">XML</a>
+</p>
+				<img class="right" src="../../images/documentation/tutorials/simplest_waveform.png"/>
+				<p class="short">This wavform arm contains no subsetters.  The <code>phaseRequest</code>
+					specifies that a request should be made for data from 
+					120 seconds before the P wave arrival to 3 minutes after the S wave arrival.  <code>fdsnDataSelect</code>
+					tells SOD to fetch
+					that data from IRIS's FDSN DataSelect web service.  The <code>printlineSeismogramProcess</code> prints
+					information about each seismogram it retrieves.  
+</p>
+</div>
+			<div class="section">
+				<h3>
+	<a name="Event channel subsetters">Event channel subsetters</a>
+</h3>
+				
+				<pre>        &lt;<span class="elementName">distanceRange</span>&gt;
+            &lt;<span class="elementName">unit</span>&gt;DEGREE&lt;/<span class="elementName">unit</span>&gt;
+            &lt;<span class="elementName">min</span>&gt;30&lt;/<span class="elementName">min</span>&gt;
+            &lt;<span class="elementName">max</span>&gt;90&lt;/<span class="elementName">max</span>&gt;
+        &lt;/<span class="elementName">distanceRange</span>&gt;</pre>
+				<p class="exampleLinks">
+		
+	<a href="subsettingWaveform.html">HTML</a>
+	
+	<a href="subsettingWaveform.xml">XML</a>
+</p>
+				<img id="distrange" class="right" src="../../images/documentation/tutorials/distance_range.png"/>
+				<p class="short">
+					The previous recipe gets data for every channel, for every earthquake that SOD finds.
+					Adding this subsetter to the waveform arm tells SOD 
+					to process only channels that are 30 to 90 degrees away from an earthquake.  In this image, the triangles
+					 are channels and the earthquake is at the center of the shadowed ring. 
+					SOD only processes those channels outlined in green.
+				</p>
+</div>
+			<div class="section">
+				<h3>
+	<a name="Checking on data availability">Checking on data availability</a>
+</h3>
+				<pre>        &lt;<span class="elementName">someCoverage</span>/&gt;</pre>
+                <pre>        &lt;<span class="elementName">someDataCoverage</span>/&gt;</pre>
+				<p class="exampleLinks">
+		
+	<a href="waveform.html">HTML</a>
+	
+	<a href="waveform.xml">XML</a>
+</p>
+				<img  class="right" src="../../images/documentation/tutorials/available_data.png"/>
+				<p class="reallyshort">In nearly all cases you'll only want to process when the server has data.  When you insert a 
+					<code>someCoverage</code> tag after specifying the server, SOD asks the server if there is data
+					before making the request to retrieve it. Unfortunately sometimes servers
+					don't actually know what they have, and so it can be useful to use the 
+					<code>someDataCoverage</code> as well that checks after asking for the seismograms that they really
+					exist.
+					<pre>  
+				</p>
+</div>	
+
+			<div class="section">
+				<h3>
+	<a name="Automated Processing Framework">Automated Processing Framework</a>
+</h3>
+				<img src="../../images/documentation/tutorials/kitchen_sink.png"/>
+				<pre>        &lt;<span class="elementName">printlineSeismogramProcess</span>/&gt;
+        &lt;<span class="elementName">sacWriter</span>/&gt;
+        &lt;<span class="elementName">responseGain</span>/&gt;
+        &lt;<span class="elementName">rMean</span>/&gt;
+        &lt;<span class="elementName">rTrend</span>/&gt;
+        &lt;<span class="elementName">integrate</span>/&gt;
+        &lt;<span class="elementName">sacWriter</span>&gt;
+            &lt;<span class="elementName">workingDir</span>&gt;processedSeismograms&lt;/<span class="elementName">workingDir</span>&gt;
+        &lt;/<span class="elementName">sacWriter</span>&gt;
+        &lt;<span class="elementName">legacyExecute</span>&gt;
+            &lt;<span class="elementName">command</span>&gt;echo Sod saved this file&lt;/<span class="elementName">command</span>&gt;
+        &lt;/<span class="elementName">legacyExecute</span>&gt;
+</pre>
+				<p class="exampleLinks">
+		
+	<a href="waveform.html">HTML</a>
+	
+	<a href="waveform.xml">XML</a>
+</p>
+				<p>In addition to the subsetting and data gathering steps of the waveform arm, SOD has a suite of 
+					data processing ingredients.  These ingredients go at the end of the waveform arm and operate on the
+					seismograms one after another.  </p>
+					<p>
+						The above snippet will:
+</p><ol>
+	<li>Print a line for each seismogram</li>
+	<li>Save the raw seismogram as SAC files</li>
+	<li>Apply a gain correction to the seismogram</li>
+	<li>Remove the mean from the seismogram</li>
+	<li>Remove the trend from the seismogram</li>
+	<li>Integrate the seismogram, ie changes velocity to displacement</li>
+	<li>Save the processed results as another set of SAC files in the processedSeismograms directory</li>
+	<li>Execute the echo command with the file names from the save</li>
+</ol>
+<p>You can include any number of these processing tasks in a recipe.  You can also add subsetters between processors 
+	if you wish to conditionally process seismograms.  In addition to processors in the snippet above, 
+	SOD contains processors 
+	to filter seismograms, produce images, and taper seismograms among others.
+	You can find the full list of processors in the 
+	<a href="../../ingredients/waveform/waveformProcess/seismogramProcess.html">seismogramProcess</a> page in the
+	ingredient listing.
+</p>
+</div>
+        				<p id="get_start_nav">
+				<a href="../../gettingstarted.html"><img title="Go to the next step in getting started" alt="Next" src="../../images/next.png">Next: Past getting started</a>
+				</p>
+		</div>
+		<div id="footer">
+	<div id="contact">
+        <a 	href="http://www.seis.sc.edu/mail.html"
+   onmouseover="javascript:this.href=decode('seis.sc.edu', '*rem*sod')"
+   onfocus="javascript:this.href=decode('seis.sc.edu', '*rem*sod')"
+>
+			<img src="../../images/contact.png"/>
+			Contact Us
+		</a>
+	</div>
+<img class="right" src="../../images/dhi_logo.png"/>
+<p>SOD is made possible by the <a href="http://www.geol.sc.edu"> Department of Geological Sciences</a> at the <a href="http://www.sc.edu"><br />University of South Carolina</a> and the <a href="http://www.iris.edu">IRIS Consortium</a>.
+                   </p>
+
+</div>
+
+	</body>
+</html>

@@ -1,0 +1,410 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+			<head>
+		<title>SOD - Types of Externals</title>
+<link type="text/css" rel="stylesheet" media="screen" href="../../styles/main.css">
+<link type="text/css" rel="stylesheet" media="print" href="../../styles/print.css">
+<script type="text/javascript">
+     function decode(domain, user){
+       return("mail"+"to:"+user.replace("*rem*","")+"@"+domain);
+     }
+</script>
+	</head>
+	<body>
+		<div id="header">
+	<a href="http://www.seis.sc.edu/SOD/">
+		<img class="left" src="../../images/sod_logo.gif">
+	</a>
+	<a href="http://www.seis.sc.edu/">
+		<img class="right" src="../../images/seislogo.gif">
+	</a>
+</div>
+		<div id="menu">
+	<ul>
+	<a href="../../index.html">
+		<li>
+			Home
+    	</li>
+	</a>
+	<a href="../../gettingstarted.html">
+		<li>
+			Getting Started
+    	</li>
+	</a>
+	<a href="../../download.html">
+		<li>
+			Download
+    	</li>
+	</a>
+	<a href="https://github.com/crotwell/sod/wiki">
+		<li>
+			Wiki
+    	</li>
+	</a>
+	<a href="../../documentation/index.html">
+		<li class="open">
+			Documentation
+    	</li>
+	</a>
+			<ul>
+	<a href="../install.html">
+		<li>
+			Install
+    	</li>
+	</a>
+	<a href="../demo.html">
+		<li>
+			Demo
+    	</li>
+	</a>
+	<a href="../tutorials/index.html">
+		<li class="closed">
+			Tutorials
+    	</li>
+	</a>
+		<a href="../externals/index.html">
+		<li class="open">
+			Externals
+    	</li>
+	</a>
+			<ul>
+	<a href="tutorial.html">
+		<li>
+			Externals Tutorial
+    	</li>
+	</a>
+	<a href="types.html">
+		<li id="selected">
+			Types of Externals
+    	</li>
+	</a>
+	</ul>
+		<a href="../scripting.html">
+		<li>
+			Inline Script Subsetters
+    	</li>
+	</a>
+	<a href="../restricted.html">
+		<li>
+			Restricted Data with SOD
+    	</li>
+	</a>
+	<a href="../realtime.html">
+		<li>
+			Realtime Run Considerations
+    	</li>
+	</a>
+	<a href="../legacy.html">
+		<li>
+			Legacy Code Considerations
+    	</li>
+	</a>
+	<a href="../javadoc/index.html">
+		<li>
+			Javadocs
+    	</li>
+	</a>
+	</ul>
+		<a href="../../tools/index.html">
+		<li class="closed">
+			Tools
+    	</li>
+	</a>
+		<a href="../../ingredients/index.html">
+		<li class="closed">
+			Ingredient Listing
+    	</li>
+	</a>
+	<li>
+<!-- Google CSE Search Box Begins -->
+<div>
+<script>
+  (function() {
+    var cx = '011831161591731826207:vosgevg88qu';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+<gcse:search></gcse:search>
+</div>
+<!-- Google CSE Search Box Ends -->
+</li>
+
+	</ul>
+</div>
+		<div id="content">
+            <div class="section">
+				<h3>
+	<a name="Types of external processors">Types of external processors</a>
+</h3>
+				<p>
+					This document lists all of the external types available in SOD.  Each external type has a corresponding Java interface that must 
+					be implemented as part of its use.  You can also see a simple implementation of each interface linked from each type.  The 
+					simple implementations don't actually do any work, but they show the general structure an external of that type will need to take.
+					Finally, each type has a link to its entry in the ingredient listing.  This shows where you need to insert the external into 
+					your recipe.
+				</p>
+				<p>
+					To decide which external is right for your goals, go through the types listed here from the top.  They're
+					grouped by arm and then in their order inside of the arm.  This means that they're also listed in the order that SOD applies them,
+					so using one earlier in the list will allow SOD to do less work to get to it which means if it's rejecting things it'll save work
+					overall and if not, at least it'll get to its job earlier.
+				</p>
+				<p>
+					Each type has a short description of the data available at that point in SOD's processing structure.  If it includes the
+					data you need to do you work, then implement that external.
+				</p>
+			</div>
+            <div class="section">
+				<h3>
+	<a name="Event Arm">Event Arm</a>
+</h3>
+			    					<div class="section">
+				<h4>
+	<a name="OriginSubsetter">OriginSubsetter</a>
+</h4>
+				<dl>
+					<dt>Usage</dt>
+					<dd>Operates on a single earthquake.  This includes magnitude estimates, a location estimate, origin time and other basic information about an earthquake</dd>
+					<dt>Interface</dt>
+					<dd><a href="http://www.seis.sc.edu/viewvc/seis/trunk/sod/src/main/java/edu/sc/seis/sod/subsetter/origin/OriginSubsetter.java?view=markup">OriginSubsetter.java</a></dd>		
+					<dt>Example</dt>
+					<dd><a href="http://www.seis.sc.edu/viewvc/seis/trunk/sod/externalExample/src/edu/sc/seis/sod/example/OriginSubsetterExample.java?view=markup">OriginSubsetterExample.java</a></dd>			
+					<dt>Ingredient</dt>
+					<dd><a href="../../ingredients/event/origin/externalOriginSubsetter.html">externalOriginSubsetter</a></dd>
+				</dl>
+</div>
+							</div>
+            <div class="section">
+				<h3>
+	<a name="Network Arm">Network Arm</a>
+</h3>
+				<p>
+					Each successive item here has the information from the previous step.  A station knows about its network and a channel about its station and so forth.
+				</p>
+			    					<div class="section">
+				<h4>
+	<a name="NetworkSubsetter">NetworkSubsetter</a>
+</h4>
+				<dl>
+					<dt>Usage</dt>
+					<dd>Makes decisions and works on a seismic network.  That includes the time the network was active, its name, operator, code and description</dd>
+					<dt>Interface</dt>
+					<dd><a href="http://www.seis.sc.edu/viewvc/seis/trunk/sod/src/main/java/edu/sc/seis/sod/subsetter/network/NetworkSubsetter.java?view=markup">NetworkSubsetter.java</a></dd>		
+					<dt>Example</dt>
+					<dd><a href="http://www.seis.sc.edu/viewvc/seis/trunk/sod/externalExample/src/edu/sc/seis/sod/example/NetworkSubsetterExample.java?view=markup">NetworkSubsetterExample.java</a></dd>			
+					<dt>Ingredient</dt>
+					<dd><a href="../../ingredients/externalNetworkSubsetter.html">externalNetworkSubsetter</a></dd>
+				</dl>
+</div>
+									<div class="section">
+				<h4>
+	<a name="StationSubsetter">StationSubsetter</a>
+</h4>
+				<dl>
+					<dt>Usage</dt>
+					<dd>A station in a network.  A grouping of recording instruments.  It contains a location, the time the instruments were active, a code, name, comment and operator.</dd>
+					<dt>Interface</dt>
+					<dd><a href="http://www.seis.sc.edu/viewvc/seis/trunk/sod/src/main/java/edu/sc/seis/sod/subsetter/station/StationSubsetter.java?view=markup">StationSubsetter.java</a></dd>		
+					<dt>Example</dt>
+					<dd><a href="http://www.seis.sc.edu/viewvc/seis/trunk/sod/externalExample/src/edu/sc/seis/sod/example/StationSubsetterExample.java?view=markup">StationSubsetterExample.java</a></dd>			
+					<dt>Ingredient</dt>
+					<dd><a href="../../ingredients/externalStationSubsetter.html">externalStationSubsetter</a></dd>
+				</dl>
+</div>
+									<div class="section">
+				<h4>
+	<a name="ChannelSubsetter">ChannelSubsetter</a>
+</h4>
+				<dl>
+					<dt>Usage</dt>
+					<dd>All of the information in the network arm is available here.  The channel provides its effective time, code, orientation, nominal sampling and has all of the information from its site, station, and network.</dd>
+					<dt>Interface</dt>
+					<dd><a href="http://www.seis.sc.edu/viewvc/seis/trunk/sod/src/main/java/edu/sc/seis/sod/subsetter/channel/ChannelSubsetter.java?view=markup">ChannelSubsetter.java</a></dd>		
+					<dt>Example</dt>
+					<dd><a href="http://www.seis.sc.edu/viewvc/seis/trunk/sod/externalExample/src/edu/sc/seis/sod/example/ChannelSubsetterExample.java?view=markup">ChannelSubsetterExample.java</a></dd>			
+					<dt>Ingredient</dt>
+					<dd><a href="../../ingredients/externalChannelSubsetter.html">externalChannelSubsetter</a></dd>
+				</dl>
+</div>
+							</div>
+            <div class="section">
+				<h3>
+	<a name="Waveform Arm">Waveform Arm</a>
+</h3>
+				<p>
+					The waveform arm operates on the combination of the items coming out of the event and network arms.  Therefore
+					each item here has an event and a piece of network information.  As with the network arm each succesive
+					item has all of the information from its previous steps.  
+				</p>
+			    					<div class="section">
+				<h4>
+	<a name="EventStationSubsetter">EventStationSubsetter</a>
+</h4>
+				<dl>
+					<dt>Usage</dt>
+					<dd>Works on the combination of an event and station.  Existing subsetters check on things like the station's distance from the event and things like that.</dd>
+					<dt>Interface</dt>
+					<dd><a href="http://www.seis.sc.edu/viewvc/seis/trunk/sod/src/main/java/edu/sc/seis/sod/subsetter/eventStation/EventStationSubsetter.java?view=markup">EventStationSubsetter.java</a></dd>		
+					<dt>Example</dt>
+					<dd><a href="http://www.seis.sc.edu/viewvc/seis/trunk/sod/externalExample/src/edu/sc/seis/sod/example/EventStationSubsetterExample.java?view=markup">EventStationSubsetterExample.java</a></dd>			
+					<dt>Ingredient</dt>
+					<dd><a href="../../ingredients/externalEventStation.html">externalEventStationSubsetter</a></dd>
+				</dl>
+</div>
+										<div class="section">
+				<h4>
+	<a name="EventChannelSubsetter">EventChannelSubsetter</a>
+</h4>
+				<dl>
+					<dt>Usage</dt>
+					<dd>Works on the combination of event and channel.</dd>
+					<dt>Interface</dt>
+					<dd><a href="http://www.seis.sc.edu/viewvc/seis/trunk/sod/src/main/java/edu/sc/seis/sod/subsetter/eventChannel/EventChannelSubsetter.java?view=markup">EventChannelSubsetter.java</a></dd>		
+					<dt>Example</dt>
+					<dd><a href="http://www.seis.sc.edu/viewvc/seis/trunk/sod/externalExample/src/edu/sc/seis/sod/example/EventChannelSubsetterExample.java?view=markup">EventChannelSubsetterExample.java</a></dd>			
+					<dt>Ingredient</dt>
+					<dd><a href="../../ingredients/externalEventChannelSubsetter.html">externalEventChannelSubsetter</a></dd>
+				</dl>
+</div>
+										<div class="section">
+				<h4>
+	<a name="Request">Request</a>
+</h4>
+				<dl>
+					<dt>Usage</dt>
+					<dd>Checks on the properties of a given request.</dd>
+					<dt>Interface</dt>
+					<dd><a href="http://www.seis.sc.edu/viewvc/seis/trunk/sod/src/main/java/edu/sc/seis/sod/subsetter/request/Request.java?view=markup">Request.java</a></dd>		
+					<dt>Example</dt>
+					<dd><a href="http://www.seis.sc.edu/viewvc/seis/trunk/sod/externalExample/src/edu/sc/seis/sod/example/RequestExample.java?view=markup">RequestExample.java</a></dd>			
+					<dt>Ingredient</dt>
+					<dd><a href="../../ingredients/externalRequestSubsetter.html">externalRequest</a></dd>
+				</dl>
+</div>
+										<div class="section">
+				<h4>
+	<a name="AvailableDataSubsetter">AvailableDataSubsetter</a>
+</h4>
+				<dl>
+					<dt>Usage</dt>
+					<dd>Checks the results of asking the server what data it has available for the generated request for acceptability.</dd>
+					<dt>Interface</dt>
+					<dd><a href="http://www.seis.sc.edu/viewvc/seis/trunk/sod/src/main/java/edu/sc/seis/sod/subsetter/availableData/AvailableDataSubsetter.java?view=markup">AvailableDataSubsetter.java</a></dd>		
+					<dt>Example</dt>
+					<dd><a href="http://www.seis.sc.edu/viewvc/seis/trunk/sod/externalExample/src/edu/sc/seis/sod/example/AvailableDataSubsetterExample.java?view=markup">AvailableDataSubsetterExample.java</a></dd>			
+					<dt>Ingredient</dt>
+					<dd><a href="../../ingredients/externalAvailable.html">externalAvailableDataSubsetter</a></dd>
+				</dl>
+</div>
+										<div class="section">
+				<h4>
+	<a name="WaveformProcess">WaveformProcess</a>
+</h4>
+				<dl>
+					<dt>Usage</dt>
+					<dd>Operates on the returned seismograms.</dd>
+					<dt>Interface</dt>
+					<dd><a href="http://www.seis.sc.edu/viewvc/seis/trunk/sod/src/main/java/edu/sc/seis/sod/process/waveform/WaveformProcess.java?view=markup">WaveformProcess.java</a></dd>		
+					<dt>Example</dt>
+					<dd><a href="http://www.seis.sc.edu/viewvc/seis/trunk/sod/externalExample/src/edu/sc/seis/sod/example/WaveformProcessExample.java?view=markup">WaveformProcessExample.java</a></dd>			
+					<dt>Ingredient</dt>
+					<dd><a href="../../ingredients/externalWaveformProcess.html">externalWaveformProcess</a></dd>
+				</dl>
+</div>
+								</div>
+            <div class="section">
+				<h3>
+	<a name="Waveform Vector Arm">Waveform Vector Arm</a>
+</h3>
+				<p>
+					The waveform vector arm takes the place of the waveform arm and still operates on the combination of the items coming out of the event and network arms. 
+					However instead of operating on a single channel at a time, it operates on a vector of channels.  
+					Therefore if you want to check on some property between the channels in the vector, this would be the place to look.
+				</p>
+			    					<div class="section">
+				<h4>
+	<a name="EventVectorSubsetter">EventVectorSubsetter</a>
+</h4>
+				<dl>
+					<dt>Usage</dt>
+					<dd>Looks at the earthquake in combination with a vector of channels</dd>
+					<dt>Interface</dt>
+					<dd><a href="http://www.seis.sc.edu/viewvc/seis/trunk/sod/src/main/java/edu/sc/seis/sod/subsetter/eventChannel/vector/EventVectorSubsetter.java?view=markup">EventVectorSubsetter.java</a></dd>		
+					<dt>Example</dt>
+					<dd><a href="http://www.seis.sc.edu/viewvc/seis/trunk/sod/externalExample/src/edu/sc/seis/sod/example/EventVectorSubsetterExample.java?view=markup">EventVectorSubsetterExample.java</a></dd>			
+					<dt>Ingredient</dt>
+					<dd><a href="../../ingredients/waveform/eventVector/external.html">externalEventVectorSubsetter</a></dd>
+				</dl>
+</div>
+										<div class="section">
+				<h4>
+	<a name="VectorRequest">VectorRequest</a>
+</h4>
+				<dl>
+					<dt>Usage</dt>
+					<dd>Checks on the requests for all channels in the vector</dd>
+					<dt>Interface</dt>
+					<dd><a href="http://www.seis.sc.edu/viewvc/seis/trunk/sod/src/main/java/edu/sc/seis/sod/subsetter/request/vector/VectorRequest.java?view=markup">VectorRequest.java</a></dd>		
+					<dt>Example</dt>
+					<dd><a href="http://www.seis.sc.edu/viewvc/seis/trunk/sod/externalExample/src/edu/sc/seis/sod/example/VectorRequestExample.java?view=markup">VectorRequestExample.java</a></dd>			
+					<dt>Ingredient</dt>
+					<dd><a href="../../ingredients/waveform/vectorRequestSubsetter/external.html">externalVectorRequest</a></dd>
+				</dl>
+</div>
+										<div class="section">
+				<h4>
+	<a name="VectorAvailableDataSubsetter">VectorAvailableDataSubsetter</a>
+</h4>
+				<dl>
+					<dt>Usage</dt>
+					<dd>Checks the available data for the entire vector</dd>
+					<dt>Interface</dt>
+					<dd><a href="http://www.seis.sc.edu/viewvc/seis/trunk/sod/src/main/java/edu/sc/seis/sod/subsetter/availableData/vector/VectorAvailableDataSubsetter.java?view=markup">VectorAvailableDataSubsetter.java</a></dd>		
+					<dt>Example</dt>
+					<dd><a href="http://www.seis.sc.edu/viewvc/seis/trunk/sod/externalExample/src/edu/sc/seis/sod/example/VectorAvailableDataSubsetterExample.java?view=markup">VectorAvailableDataSubsetterExample.java</a></dd>			
+					<dt>Ingredient</dt>
+					<dd><a href="../../ingredients/waveform/vectorAvailableData/external.html">externalVectorAvailableDataSubsetter</a></dd>
+				</dl>
+</div>
+										<div class="section">
+				<h4>
+	<a name="WaveformVectorProcess">WaveformVectorProcess</a>
+</h4>
+				<dl>
+					<dt>Usage</dt>
+					<dd>Works on all seismograms in the vector at once</dd>
+					<dt>Interface</dt>
+					<dd><a href="http://www.seis.sc.edu/viewvc/seis/trunk/sod/src/main/java/edu/sc/seis/sod/process/waveform/vector/WaveformVectorProcess.java?view=markup">WaveformVectorProcess.java</a></dd>		
+					<dt>Example</dt>
+					<dd><a href="http://www.seis.sc.edu/viewvc/seis/trunk/sod/externalExample/src/edu/sc/seis/sod/example/WaveformVectorProcessExample.java?view=markup">WaveformVectorProcessExample.java</a></dd>			
+					<dt>Ingredient</dt>
+					<dd><a href="../../ingredients/waveform/waveformVectorProcess/external.html">externalWaveformVectorProcess</a></dd>
+				</dl>
+</div>
+								</div>
+			</div>
+		</div>
+		<div id="footer">
+	<div id="contact">
+        <a 	href="http://www.seis.sc.edu/mail.html"
+   onmouseover="javascript:this.href=decode('seis.sc.edu', '*rem*sod')"
+   onfocus="javascript:this.href=decode('seis.sc.edu', '*rem*sod')"
+>
+			<img src="../../images/contact.png"/>
+			Contact Us
+		</a>
+	</div>
+<img class="right" src="../../images/dhi_logo.png"/>
+<p>SOD is made possible by the <a href="http://www.geol.sc.edu"> Department of Geological Sciences</a> at the <a href="http://www.sc.edu"><br />University of South Carolina</a> and the <a href="http://www.iris.edu">IRIS Consortium</a>.
+                   </p>
+
+</div>
+
+	</body>
+</html>

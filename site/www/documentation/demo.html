@@ -1,0 +1,239 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+			<head>
+		<title>SOD - Demo</title>
+<link type="text/css" rel="stylesheet" media="screen" href="../styles/main.css">
+<link type="text/css" rel="stylesheet" media="print" href="../styles/print.css">
+<script type="text/javascript">
+     function decode(domain, user){
+       return("mail"+"to:"+user.replace("*rem*","")+"@"+domain);
+     }
+</script>
+	</head>
+	<body>
+		<div id="header">
+	<a href="http://www.seis.sc.edu/SOD/">
+		<img class="left" src="../images/sod_logo.gif">
+	</a>
+	<a href="http://www.seis.sc.edu/">
+		<img class="right" src="../images/seislogo.gif">
+	</a>
+</div>
+		<div id="menu">
+	<ul>
+	<a href="../index.html">
+		<li>
+			Home
+    	</li>
+	</a>
+	<a href="../gettingstarted.html">
+		<li>
+			Getting Started
+    	</li>
+	</a>
+	<a href="../download.html">
+		<li>
+			Download
+    	</li>
+	</a>
+	<a href="https://github.com/crotwell/sod/wiki">
+		<li>
+			Wiki
+    	</li>
+	</a>
+	<a href="../documentation/index.html">
+		<li class="open">
+			Documentation
+    	</li>
+	</a>
+			<ul>
+	<a href="install.html">
+		<li>
+			Install
+    	</li>
+	</a>
+	<a href="demo.html">
+		<li id="selected">
+			Demo
+    	</li>
+	</a>
+	<a href="tutorials/index.html">
+		<li class="closed">
+			Tutorials
+    	</li>
+	</a>
+		<a href="externals/index.html">
+		<li class="closed">
+			Externals
+    	</li>
+	</a>
+		<a href="scripting.html">
+		<li>
+			Inline Script Subsetters
+    	</li>
+	</a>
+	<a href="restricted.html">
+		<li>
+			Restricted Data with SOD
+    	</li>
+	</a>
+	<a href="realtime.html">
+		<li>
+			Realtime Run Considerations
+    	</li>
+	</a>
+	<a href="legacy.html">
+		<li>
+			Legacy Code Considerations
+    	</li>
+	</a>
+	<a href="javadoc/index.html">
+		<li>
+			Javadocs
+    	</li>
+	</a>
+	</ul>
+		<a href="../tools/index.html">
+		<li class="closed">
+			Tools
+    	</li>
+	</a>
+		<a href="../ingredients/index.html">
+		<li class="closed">
+			Ingredient Listing
+    	</li>
+	</a>
+	<li>
+<!-- Google CSE Search Box Begins -->
+<div>
+<script>
+  (function() {
+    var cx = '011831161591731826207:vosgevg88qu';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+<gcse:search></gcse:search>
+</div>
+<!-- Google CSE Search Box Ends -->
+</li>
+
+	</ul>
+</div>
+		<div id="content">
+			<div class="section">
+				<h3>
+	<a name="The SOD demo">The SOD demo</a>
+</h3>
+				<p>Files that configure SOD's operation are called recipes.
+					The <code>--demo</code> flag tells SOD to run the 
+					
+	<a href="tutorials/demo.html">demo recipe</a>
+	included in SOD.  This recipe gathers seismograms for channels in the
+					II network for earthquakes with a magnitude of 6 or greater in January of 2003. 
+	In order to see the recipe that SOD uses for the demo, invoke the command <code>sod --demo -r</code> on Unix systems and <code>sod.bat --demo -r</code> on Windows. The <code>-r</code> tells SOD to print the recipe instead of running it.
+</p>
+</div>
+<div class="section">
+	<h3>
+	<a name="Creating directories for SOD runs">Creating directories for SOD runs</a>
+</h3>
+	<p>SOD uses a database to keep track of its actions.  Every time it runs, a directory SodDb is created to store it.
+		This database needs to be isolated between runs of SOD.
+		If a recipe is run in a directory where it ran previously, SOD will exit immediately, thinking all work is done.
+		Therefore, we run SOD in a new directory for each invocation of each recipe.  Start the command prompt, create a directory "demo",
+		and cd into it.
+				</p>
+			</div>
+<div class="section">
+	<h3>
+	<a name="Running the demo">Running the demo</a>
+</h3>
+	<p>From the demo directory, invoke the command <code>sod --demo</code> on Unix systems and <code>sod.bat --demo</code> on Windows.
+		If the <a href="install.html">Install</a> went well, you should see some output like the following: 
+	</p>
+									    <pre>Congratulations, valid recipe.
+Fiji Islands Region (-20.6, -177.7) 378000 m 2003/01/04 05:15:03 GMT 6.5 MW
+Luzon, Philippines (15.7, 119.7) 10000 m 2003/01/06 23:43:50 GMT 6.0 MW
+Chile-Argentina Border Region (-33.8, -70.1) 110800 m 2003/01/07 00:54:51 GMT 6.0 MB
+Fiji Islands Region (-19.7, -176.3) 10000 m 2003/01/09 02:50:45 GMT 6.0 MW
+New Ireland Region, P.N.G. (-5.3, 153.7) 71900 m 2003/01/10 13:11:56 GMT 6.7 MW
+Channel: II.AAK.00.BHE
+Channel: II.AAK.00.BHN
+Channel: II.AAK.00.BHZ
+Channel: II.ABKT.00.BHE
+Channel: II.ABKT.00.BHN
+Channel: II.ABKT.00.BHZ
+Channel: II.ALE.00.BHE
+Channel: II.ALE.00.BHN
+Channel: II.ALE.00.BHZ
+Channel: II.ARU.00.BHE
+Channel: II.ARU.00.BHN
+Channel: II.ARU.00.BHZ
+...
+</pre>
+	<p>The first messages like <pre>Fiji Islands Region (-20.6, -177.7) 378000 m 2003/01/04 05:15:03 GMT 6.5 MW</pre>
+		are printed every time SOD retrieves an event that matches demo recipe's criteria.  
+		The ones that follow like <pre>Channel: II.AAK.00.BHE</pre> 
+		are printed for every matching channel.
+		Finally, messages like <pre>Got 1 seismograms for II.COCO.00.BH1 for eq on 2003/01/04 05:15:03 GMT
+</pre> 
+		are printed every time SOD gets a seismogram. 
+		You can watch for these to get a rough feel for what SOD is doing.
+	</p>
+	<p>
+		In addition to the database files mentioned earlier, this SOD recipe will
+		store all the seismograms it retrieves as sac files.  These are put in the <code>seismograms</code> directory
+		where SOD was started.  If the run has been going for a while or is finished,
+		you'll see directories in <code>seismograms</code> for every earthquake SOD has processed and inside of each of these is a data directory containing
+		sac files for every channel retrieved for the earthquake.
+    </p>
+    <p>
+        SOD is very configurable, so all of this printing and saving is how the demo is configured. 
+        How your own SOD runs work depends on what you tell SOD to do in the recipe. In general, printing
+        a line per event, channel and seismogram is very helpful for small recipes where you are watching
+        the output, or when you are creating a new recipe and are not sure you have things quite right
+        yet. 
+    </p>
+    <p>
+        There are three command line flags that can be very helpful when creating a new recipe or debugging 
+        an existing recipe.  
+	</p>
+	<ul>
+	<li><code>-q</code> Quick mode, SOD uses an entirely in memory database, so the SodDb directory is not created
+	and the run goes a tiny bit faster. Mostly useful because you can try a recipe over and over without
+	having to remember to delete the SodDb directory.</li>
+	<li><code>-n</code> Network only mode. SOD will only run the network arm, ignoring the event and waveform 
+	arms. Very helpful when you are trying to get the network arm just right and don't need to waste time
+	on the events or seismograms.</li>
+	<li><code>-e</code> Event only mode. Like the <code>-n</code> except only runs the event arm. Useful for
+	debugging just the event arm.</li>
+	</ul>
+			</div>
+					<p id="get_start_nav">
+				<a href="tutorials/networkTutorial.html"><img title="Go to the next step in getting started" alt="Next" src="../images/next.png">Next: Network Tutorial</a>
+				</p>
+		</div>
+		<div id="footer">
+	<div id="contact">
+        <a 	href="http://www.seis.sc.edu/mail.html"
+   onmouseover="javascript:this.href=decode('seis.sc.edu', '*rem*sod')"
+   onfocus="javascript:this.href=decode('seis.sc.edu', '*rem*sod')"
+>
+			<img src="../images/contact.png"/>
+			Contact Us
+		</a>
+	</div>
+<img class="right" src="../images/dhi_logo.png"/>
+<p>SOD is made possible by the <a href="http://www.geol.sc.edu"> Department of Geological Sciences</a> at the <a href="http://www.sc.edu"><br />University of South Carolina</a> and the <a href="http://www.iris.edu">IRIS Consortium</a>.
+                   </p>
+
+</div>
+
+	</body>
+</html>

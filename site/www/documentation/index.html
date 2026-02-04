@@ -1,0 +1,214 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>SOD - Documentation</title>
+<link type="text/css" rel="stylesheet" media="screen" href="../styles/main.css">
+<link type="text/css" rel="stylesheet" media="print" href="../styles/print.css">
+<script type="text/javascript">
+     function decode(domain, user){
+       return("mail"+"to:"+user.replace("*rem*","")+"@"+domain);
+     }
+</script>
+</head>
+<body>
+<div id="header">
+	<a href="http://www.seis.sc.edu/SOD/">
+		<img class="left" src="../images/sod_logo.gif">
+	</a>
+	<a href="http://www.seis.sc.edu/">
+		<img class="right" src="../images/seislogo.gif">
+	</a>
+</div>
+<div id="menu">
+	<ul>
+	<a href="../index.html">
+		<li>
+			Home
+    	</li>
+	</a>
+	<a href="../gettingstarted.html">
+		<li>
+			Getting Started
+    	</li>
+	</a>
+	<a href="../download.html">
+		<li>
+			Download
+    	</li>
+	</a>
+	<a href="https://github.com/crotwell/sod/wiki">
+		<li>
+			Wiki
+    	</li>
+	</a>
+	<a href="../documentation/index.html">
+		<li class="open">
+			Documentation
+    	</li>
+	</a>
+			<ul>
+	<a href="install.html">
+		<li>
+			Install
+    	</li>
+	</a>
+	<a href="demo.html">
+		<li>
+			Demo
+    	</li>
+	</a>
+	<a href="tutorials/index.html">
+		<li class="closed">
+			Tutorials
+    	</li>
+	</a>
+		<a href="externals/index.html">
+		<li class="closed">
+			Externals
+    	</li>
+	</a>
+		<a href="scripting.html">
+		<li>
+			Inline Script Subsetters
+    	</li>
+	</a>
+	<a href="restricted.html">
+		<li>
+			Restricted Data with SOD
+    	</li>
+	</a>
+	<a href="realtime.html">
+		<li>
+			Realtime Run Considerations
+    	</li>
+	</a>
+	<a href="legacy.html">
+		<li>
+			Legacy Code Considerations
+    	</li>
+	</a>
+	<a href="javadoc/index.html">
+		<li>
+			Javadocs
+    	</li>
+	</a>
+	</ul>
+		<a href="../tools/index.html">
+		<li class="closed">
+			Tools
+    	</li>
+	</a>
+		<a href="../ingredients/index.html">
+		<li class="closed">
+			Ingredient Listing
+    	</li>
+	</a>
+	<li>
+<!-- Google CSE Search Box Begins -->
+<div>
+<script>
+  (function() {
+    var cx = '011831161591731826207:vosgevg88qu';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+<gcse:search></gcse:search>
+</div>
+<!-- Google CSE Search Box Ends -->
+</li>
+
+	</ul>
+</div>
+<div id="content">
+<div class="section">
+	<h3>
+	<a name="SOD's Documentation">SOD's Documentation</a>
+</h3>
+	<div class="section">
+		<h4>
+	<a name="Install">Install</a>
+</h4>
+		<p>The <a href="install.html">install</a> document explains how to get SOD installed and setup on your system</p>
+	</div>
+	<div class="section">
+		<h4>
+	<a name="Demo">Demo</a>
+</h4>
+		<p>The <a href="demo.html">demo</a> document shows how to execute a simple SOD run and explains some of its 
+			output</p>
+	</div>
+	<div class="section">
+		<h4>
+	<a name="Ingredients">Ingredients</a>
+</h4>
+		<p>The <a href="../ingredients/index.html">ingredients</a> list all the items that can appear in a SOD recipe.</p>
+	</div>
+	<div class="section">
+		<h4>
+	<a name="Tutorials">Tutorials</a>
+</h4>
+		<p>The <a href="tutorials/index.html">tutorials</a> walk through several aspects of SOD's operation.
+This is a good place to start to get a better feel of the way to get SOD to do what you want.</p>
+	</div>
+	<div class="section">
+		<h4>
+	<a name="Deeper Considerations">Deeper Considerations</a>
+</h4>
+		<p>The <a href="realtime.html">realtime considerations</a> document explains what changes need to be made
+		to your recipe for it to be a standing order.</p>
+<p>
+	<a href="legacy.html">Legacy considerations</a> shows how SOD can execute arbitrary processes with the data it 
+	collects
+</p>
+<p>
+	<a href="restricted.html">Restricted Data</a> shows how SOD can access restricted data at the IRIS DMC.
+</p>
+<p>
+	An easy way to get at the information from your SOD run in the format you want is to use one of the printline processors.  Each
+	of the processors uses <a href="../ingredients/templates.html">Velocity templates</a> to determine what text to include and where to write 
+	files.  This means that you can output the specific information regarding an event, seismograms or channels that you're interested in.  
+	There are printline processors in the <a href="../ingredients/event/origin/printline.html">event</a>, 
+	<a href="../ingredients/network/channel/printline.html">network</a> and 
+	<a href="../ingredients/waveform/waveformProcess/printlineSeismogramProcess.html">waveform</a> arms.
+</p>
+<p>
+	If none of the existing ingredients meet your needs, it may be time to write your own <a href="scripting.html">inline script</a> or <a href="externals/index.html">external processor</a>.
+	These allow you to have your own code, either a script or in Java, called by SOD to do anything SOD itself can do and more.
+        It is probably simpler to start with a script.
+</p>
+	</div>
+	<div class="section">
+		<h4>
+	<a name="Ingredients">Ingredients</a>
+</h4>
+		<p>The <a href="../ingredients/index.html">ingredient listing</a> contains all the tags that can go into
+			a SOD recipe.  It shows where each piece goes and what it means.  This is the place to look to find
+			if you want to see what a particular tag does, how tags should be laid out, and if you're experiencing
+			validation errors</p>
+	</div>
+</div>
+</div>
+<div id="footer">
+	<div id="contact">
+        <a 	href="http://www.seis.sc.edu/mail.html"
+   onmouseover="javascript:this.href=decode('seis.sc.edu', '*rem*sod')"
+   onfocus="javascript:this.href=decode('seis.sc.edu', '*rem*sod')"
+>
+			<img src="../images/contact.png"/>
+			Contact Us
+		</a>
+	</div>
+<img class="right" src="../images/dhi_logo.png"/>
+<p>SOD is made possible by the <a href="http://www.geol.sc.edu"> Department of Geological Sciences</a> at the <a href="http://www.sc.edu"><br />University of South Carolina</a> and the <a href="http://www.iris.edu">IRIS Consortium</a>.
+                   </p>
+
+</div>
+
+</body>
+</html>

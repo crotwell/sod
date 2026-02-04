@@ -1,0 +1,187 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+				<head>
+		<title>SOD - Externals</title>
+<link type="text/css" rel="stylesheet" media="screen" href="../../styles/main.css">
+<link type="text/css" rel="stylesheet" media="print" href="../../styles/print.css">
+<script type="text/javascript">
+     function decode(domain, user){
+       return("mail"+"to:"+user.replace("*rem*","")+"@"+domain);
+     }
+</script>
+	</head>
+	<body>
+		<div id="header">
+	<a href="http://www.seis.sc.edu/SOD/">
+		<img class="left" src="../../images/sod_logo.gif">
+	</a>
+	<a href="http://www.seis.sc.edu/">
+		<img class="right" src="../../images/seislogo.gif">
+	</a>
+</div>
+		<div id="menu">
+	<ul>
+	<a href="../../index.html">
+		<li>
+			Home
+    	</li>
+	</a>
+	<a href="../../gettingstarted.html">
+		<li>
+			Getting Started
+    	</li>
+	</a>
+	<a href="../../download.html">
+		<li>
+			Download
+    	</li>
+	</a>
+	<a href="https://github.com/crotwell/sod/wiki">
+		<li>
+			Wiki
+    	</li>
+	</a>
+	<a href="../../documentation/index.html">
+		<li class="open">
+			Documentation
+    	</li>
+	</a>
+			<ul>
+	<a href="../install.html">
+		<li>
+			Install
+    	</li>
+	</a>
+	<a href="../demo.html">
+		<li>
+			Demo
+    	</li>
+	</a>
+	<a href="../tutorials/index.html">
+		<li class="closed">
+			Tutorials
+    	</li>
+	</a>
+		<a href="../externals/index.html">
+		<li class="open">
+			Externals
+    	</li>
+	</a>
+			<ul>
+	<a href="tutorial.html">
+		<li>
+			Externals Tutorial
+    	</li>
+	</a>
+	<a href="types.html">
+		<li>
+			Types of Externals
+    	</li>
+	</a>
+	</ul>
+		<a href="../scripting.html">
+		<li>
+			Inline Script Subsetters
+    	</li>
+	</a>
+	<a href="../restricted.html">
+		<li>
+			Restricted Data with SOD
+    	</li>
+	</a>
+	<a href="../realtime.html">
+		<li>
+			Realtime Run Considerations
+    	</li>
+	</a>
+	<a href="../legacy.html">
+		<li>
+			Legacy Code Considerations
+    	</li>
+	</a>
+	<a href="../javadoc/index.html">
+		<li>
+			Javadocs
+    	</li>
+	</a>
+	</ul>
+		<a href="../../tools/index.html">
+		<li class="closed">
+			Tools
+    	</li>
+	</a>
+		<a href="../../ingredients/index.html">
+		<li class="closed">
+			Ingredient Listing
+    	</li>
+	</a>
+	<li>
+<!-- Google CSE Search Box Begins -->
+<div>
+<script>
+  (function() {
+    var cx = '011831161591731826207:vosgevg88qu';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+<gcse:search></gcse:search>
+</div>
+<!-- Google CSE Search Box Ends -->
+</li>
+
+	</ul>
+</div>
+		<div id="content">
+			<div class="section">
+                <h3>
+	<a name="External Processing">External Processing</a>
+</h3>
+				<p>
+					If the built-in subsetters and processors in SOD don't meet your particular needs, external processors
+					may be the answer.  They allow you to write Java code that hooks into a SOD recipe at any 
+					step with the same information and ability of the built-in code.  Writing an external processor
+					requires some additional skills beyond those needed by a regular SOD user.  Your life will be much easier 
+					if you've written and compiled Java code before.  
+					</p>
+					<p>
+					The <a href="tutorial.html">externals tutorial</a>
+					covers creating a simple external origin subsetter
+					from soup to nuts.  You should start there to get an idea of how a processor is constructed.
+					
+					After going through the tutorial, check the various <a href="types.html">types of externals</a> to
+					see which one fits the bill for your needs. 
+					</p>
+					<p class="reallyshort">
+					If you run into some snags or need a starting direction for your own external processor
+                   please contact the <a title="SOD Mailing List" 	href="http://www.seis.sc.edu/mail.html"
+   onmouseover="javascript:this.href=decode('seis.sc.edu', '*rem*sod')"
+   onfocus="javascript:this.href=decode('seis.sc.edu', '*rem*sod')"
+>SOD Mailing List</a>
+ for help.  
+				</p>
+			</div>
+		</div>
+		<div id="footer">
+	<div id="contact">
+        <a 	href="http://www.seis.sc.edu/mail.html"
+   onmouseover="javascript:this.href=decode('seis.sc.edu', '*rem*sod')"
+   onfocus="javascript:this.href=decode('seis.sc.edu', '*rem*sod')"
+>
+			<img src="../../images/contact.png"/>
+			Contact Us
+		</a>
+	</div>
+<img class="right" src="../../images/dhi_logo.png"/>
+<p>SOD is made possible by the <a href="http://www.geol.sc.edu"> Department of Geological Sciences</a> at the <a href="http://www.sc.edu"><br />University of South Carolina</a> and the <a href="http://www.iris.edu">IRIS Consortium</a>.
+                   </p>
+
+</div>
+
+	</body>
+</html>

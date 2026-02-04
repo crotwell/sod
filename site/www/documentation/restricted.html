@@ -1,0 +1,189 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>SOD - Restricted Data with SOD</title>
+<link type="text/css" rel="stylesheet" media="screen" href="../styles/main.css">
+<link type="text/css" rel="stylesheet" media="print" href="../styles/print.css">
+<script type="text/javascript">
+     function decode(domain, user){
+       return("mail"+"to:"+user.replace("*rem*","")+"@"+domain);
+     }
+</script>
+</head>
+<body>
+<div id="header">
+	<a href="http://www.seis.sc.edu/SOD/">
+		<img class="left" src="../images/sod_logo.gif">
+	</a>
+	<a href="http://www.seis.sc.edu/">
+		<img class="right" src="../images/seislogo.gif">
+	</a>
+</div>
+<div id="menu">
+	<ul>
+	<a href="../index.html">
+		<li>
+			Home
+    	</li>
+	</a>
+	<a href="../gettingstarted.html">
+		<li>
+			Getting Started
+    	</li>
+	</a>
+	<a href="../download.html">
+		<li>
+			Download
+    	</li>
+	</a>
+	<a href="https://github.com/crotwell/sod/wiki">
+		<li>
+			Wiki
+    	</li>
+	</a>
+	<a href="../documentation/index.html">
+		<li class="open">
+			Documentation
+    	</li>
+	</a>
+			<ul>
+	<a href="install.html">
+		<li>
+			Install
+    	</li>
+	</a>
+	<a href="demo.html">
+		<li>
+			Demo
+    	</li>
+	</a>
+	<a href="tutorials/index.html">
+		<li class="closed">
+			Tutorials
+    	</li>
+	</a>
+		<a href="externals/index.html">
+		<li class="closed">
+			Externals
+    	</li>
+	</a>
+		<a href="scripting.html">
+		<li>
+			Inline Script Subsetters
+    	</li>
+	</a>
+	<a href="restricted.html">
+		<li id="selected">
+			Restricted Data with SOD
+    	</li>
+	</a>
+	<a href="realtime.html">
+		<li>
+			Realtime Run Considerations
+    	</li>
+	</a>
+	<a href="legacy.html">
+		<li>
+			Legacy Code Considerations
+    	</li>
+	</a>
+	<a href="javadoc/index.html">
+		<li>
+			Javadocs
+    	</li>
+	</a>
+	</ul>
+		<a href="../tools/index.html">
+		<li class="closed">
+			Tools
+    	</li>
+	</a>
+		<a href="../ingredients/index.html">
+		<li class="closed">
+			Ingredient Listing
+    	</li>
+	</a>
+	<li>
+<!-- Google CSE Search Box Begins -->
+<div>
+<script>
+  (function() {
+    var cx = '011831161591731826207:vosgevg88qu';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+<gcse:search></gcse:search>
+</div>
+<!-- Google CSE Search Box Ends -->
+</li>
+
+	</ul>
+</div>
+<div id="content">
+<div class="section">
+<h3>
+	<a name="Restricted Data with SOD">Restricted Data with SOD</a>
+</h3>
+<p><b class="red">Note:</b> This information applies only to access to restricted data via the older DHI seismogram
+source. Because of internal changes to the restricted data system at the IRIS DMC and the switch to
+the <a href="http://service.iris.edu/fdsnws/dataselect/1/">FDSN DataSelect</a> web services, access to
+restricted data has changed. If you are using the &lt;fdsnDataSelect&gt; seismogram source, which is the default, you need only
+add the username and password directly into the recipe as shown <a href="../ingredients/fdsnDataSelect.html">here.</a>
+</p>
+<div class="section">
+<h3>
+<b>WARNING:</b>The following is kept for historical reference only.
+</h3>
+<p> Access to restricted data at the DMC is done using code from the DMC embedded within SOD 2.2.3 and later. Earlier versions of SOD could not access restriected data at the DMC, although they could access restricted data at other servers. The only action that needs to be taken by a user that wishes to access restricted data with SOD is to specify the passwords that will be sent to the DMC. There are two ways of specifying passwords, in a props file or in a separate password file that is specified in the props file. More information about restricted data at IRIS can be found here: <a href="http://www.iris.edu/data/restricted.htm">http://www.iris.edu/data/restricted.htm</a>.
+        </p>
+<div class="section">
+<h4>
+        <a name="Specifying Passwords">Specifying Passwords</a>
+</h4>
+<p>
+Passwords for the DMC seismogram server are of the form:</p>
+<pre>
+irisDmc.&lt;Net&gt;.&lt;StartYr&gt;.&lt;EndYr&gt;=&lt;password&gt;:&lt;email_addr&gt;
+</pre>
+<p>The password is a short secret string and the email address identifies an authorized user. This information would normally be issued by the DMC for a given network to the PIs for that network. For example:  </p>
+<pre>irisDmc.XX.2002.2005=myPasswd:me@myaccount.isp.com
+</pre>
+<p>These password properties would be placed in a file, one per line, and the filename passed to SOD using the -p option. Other properties, such as log4j logging are set via the same method. For example, if myPasswords.prop contained the above password line, then you would run SOD with:</p>
+<pre>sod -p myPasswords.prop -f myRecipe.xml</pre>
+<p>The alternative is to place the passwords into a text file similar to those used by other DMC client applications such as Vase and JWeed. Each line of the external authentication file looks like the following:</p>
+<pre>
+XX 2002 2005 myPasswd me@myaccount.isp.com
+</pre>
+<p>The name of this file is added to the same prop file above with a line like:</p>
+<pre>
+irisDmc.passwordFile=my_iris_pass.txt
+</pre>
+<p>This format may be easier if you make use of these other DMC clients and only want to have a single password file.</p>
+<p>Note that one source of confusion is that SOD does not generate an error if you try to access restricted data without a password, or with an incorrect password. This is because the server responds with "sorry I don't have any data" in both the case of there really not being any data and in the case of data existing, but being restricted. Given that restricted data is something of a special case, this seems the proper response to avoid useless error messages to the vast number of users who are not trying to access restricted data, but inadvertently request data from a restricted network.</p>
+</div>
+</div>
+</div>
+<div id="footer">
+	<div id="contact">
+        <a 	href="http://www.seis.sc.edu/mail.html"
+   onmouseover="javascript:this.href=decode('seis.sc.edu', '*rem*sod')"
+   onfocus="javascript:this.href=decode('seis.sc.edu', '*rem*sod')"
+>
+			<img src="../images/contact.png"/>
+			Contact Us
+		</a>
+	</div>
+<img class="right" src="../images/dhi_logo.png"/>
+<p>SOD is made possible by the <a href="http://www.geol.sc.edu"> Department of Geological Sciences</a> at the <a href="http://www.sc.edu"><br />University of South Carolina</a> and the <a href="http://www.iris.edu">IRIS Consortium</a>.
+                   </p>
+
+</div>
+
+</body>
+</html>

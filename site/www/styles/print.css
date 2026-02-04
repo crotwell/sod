@@ -1,0 +1,12 @@
+body  { 
+	font-family:helvetica, sans-serif; 
+	font-size: 12pt;
+}
+
+#menu, #footer, #header{
+                         display: none;
+}   
+
+p.exampleLinks {
+               display: none;
+}                    

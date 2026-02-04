@@ -1,0 +1,247 @@
+
+body  { 
+	background-color:#eee;
+	font-family:helvetica, sans-serif; margin:0px;
+	line-height: 1.2;
+	font-size: 16px;
+} 
+
+
+#header, #menu, #footer { 
+	background-color:#fff
+} 
+
+#header, #footer  { text-indent:5px } 
+
+#header  { 
+	margin: 10px 0 20px 0;
+	width:100%; border-bottom:1px solid #A6A6A6;
+	border-top:1px solid #A6A6A6;
+	height: 125px;
+} 
+
+#footer  { 
+	padding: 0px 0 10px 0;
+	border-top:1px solid #A6A6A6; border-bottom:1px solid black #474747;
+	text-align: center;
+	height: 110px;
+	background: white url(grass.png) repeat-x bottom;
+	margin-bottom: 10px;
+}
+
+#footer p {
+           padding-top:10px;
+}
+
+#contact {border: 1px solid  #A6A6A6;
+          padding: 5px;
+          margin: 10px 0 0 10px;
+          float: left;
+          width: 85px;
+} 
+
+#contact a {
+            text-decoration: none;
+}
+
+
+#content  { 
+	margin: 0 20px 20px 220px;
+	width: 700px;
+	padding-left: 10px;
+} 
+
+#content ul {
+             padding-left: 25px;
+}
+
+a { color:#050 } 
+
+
+#menu a { text-decoration:none } 
+
+a:hover { text-decoration: none;
+} 
+
+
+
+#menu li:hover { text-decoration: none;
+          background: white; } 
+
+.left { float:left;
+        padding: 5px 0 0 20px; } 
+
+.right { float:right ;
+        padding: 10px; } 
+        
+.river { float:right ;
+         clear: both;
+        padding: 0 10px 0 10px; } 
+        
+.short {
+        padding-bottom: 150px;
+}
+
+.notsoshort {
+             padding-bottom: 75px;
+}
+
+.reallyshort {
+        padding-bottom: 200px;
+}
+
+.p_one {
+        padding-bottom: 50px;
+}
+
+#menu  { 
+	
+	font-family:verdana, arial, helvetica, sans-serif;
+	float: left;
+	margin-left: 15px;
+	font-size:14px;
+
+	width:170px; padding:5px; border:1px solid;
+} 
+
+#menu li.closed {
+                 background: url(arrow_closed.png) no-repeat;
+                 padding-left: 25px;
+}
+
+#menu li.closed:hover {
+                 background:  white url(arrow_closed.png) no-repeat;
+                 padding-left: 25px;
+}
+
+#menu li.open{
+   background:  url(arrow_open.png) no-repeat;
+   padding-left: 25px;
+   font-weight: bold;
+   color: #A51C23;
+}
+
+
+#menu li.open:hover {
+                 background:  white url(arrow_open.png) no-repeat;
+                 padding-left: 25px;
+}
+
+#menu li { 
+    padding: 0 2px 0 2px;
+    line-height: 1.8; 
+    border-bottom: 1px solid #A6A6A6;
+}
+#menu ul  { 
+	list-style-type:none; margin:0; padding: 0px;
+	background: #eee;
+} 
+
+#menu #selected {
+    font-weight:bold;
+    color: #A51C23;
+} 
+
+#menu ul ul li {
+       margin-left: 15px;
+       font-size: 12px;
+}
+
+#menu ul ul ul li {
+              margin-left: 30px;
+              font-size: 10px;
+              line-height: 1.6;
+              background: #eee;
+}
+
+th  { text-align:left } 
+
+a.download  { font-size:smaller } 
+
+.caption { width:100px } 
+
+
+.section pre, .section ul, .section h4, .section h3{ 
+	border: 1px solid #A6A6A6; 
+	padding: 2px;
+	background:white;
+} 
+
+.section pre {
+              font-size: 14px;
+              line-height: 1.4;
+}
+
+.section h4 { font-size:14px} 
+
+.section h4, .section h3 { 
+	padding-left:5px
+} 
+
+.section ul { margin:4px 4px 4px 15px; 
+              font-size: 16px;} 
+
+.currentNode a { 
+	color:#A44441; font-weight:600
+} 
+
+#contained div { 
+	margin-left:20px; padding:2px;
+	margin-bottom:5px
+} 
+
+div #group { 
+	border-left:1px solid black; margin-left:5px
+} 
+
+div #choice { 
+	border-left:1px dashed black; margin-left:5px
+	padding: 2px;
+	background:white;
+} 
+
+div #inter { 
+	border-left:1px dotted black; margin-left:5px;
+	background:white;
+} 
+
+a img { border:none }
+
+.required{
+    font-weight:bold;
+}
+
+.red{
+    color:red;
+}
+
+.blue{
+    color:blue;
+}
+
+#get_start_nav {
+                border: 1px solid #A6A6A6;
+                background: white;
+}
+
+.elementName{
+    color:#3100D1;
+}
+
+.red .elementName{
+    color:red;
+}
+
+table.options{
+	border-collapse: collapse;
+}
+
+.options th, .options td{
+    padding: 5px;
+	border: 1px solid #A6A6A6;
+}
+
+.options th{
+	background:white;
+	color:#050; 
+}
