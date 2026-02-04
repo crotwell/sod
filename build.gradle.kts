@@ -40,6 +40,12 @@ java {
     withSourcesJar()
 }
 
+tasks.register("versionToVersionFile") {
+  inputs.files("build.gradle.kts")
+  outputs.files("VERSION")
+  File("VERSION").writeText(""+version)
+}
+
 sourceSets {
   create("relax") {
         resources {
