@@ -17,7 +17,6 @@
             <magnitudeRange>
                 <min>5</min>
             </magnitudeRange>
-            <catalog>NEIC PDE</catalog>
         </fdsnEvent>
         <originOR>
             <originAND>

@@ -30,7 +30,6 @@
             <magnitudeRange>
                 <min>5.0</min>
             </magnitudeRange>
-            <catalog>NEIC PDE</catalog>
         </fdsnEvent>
         <printlineEventProcess/>
     </eventArm>

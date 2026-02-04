@@ -8,18 +8,19 @@
             </originDepthRange>
             <originTimeRange>
                 <startTime>
-                    <year>1990</year>
-                    <month>1</month>
+                    <year>1994</year>
+                    <month>6</month>
                     <day>1</day>
                 </startTime>
                 <endTime>
-                    <now/>
+                    <year>1995</year>
+                    <month>9</month>
+                    <day>1</day>
                 </endTime>
             </originTimeRange>
             <magnitudeRange>
-                <min>5.5</min>
+                <min>5.9</min>
             </magnitudeRange>
-            <catalog>NEIC PDE</catalog>
         </fdsnEvent>
         <originPointDistance>
             <latitude>-5</latitude>
@@ -32,6 +33,7 @@
     </eventArm>
     <networkArm>
         <fdsnStation>
+          <networkCode>XD</networkCode>
             <stationBoxArea>
                 <latitudeRange>
                     <min>-15</min>
@@ -63,12 +65,12 @@
         </eventStationOR>
         <phaseRequest>
             <model>prem</model>
-            <beginPhase>sks</beginPhase>
+            <beginPhase>S</beginPhase>
             <beginOffset>
                 <unit>MINUTE</unit>
                 <value>-2</value>
             </beginOffset>
-            <endPhase>sks</endPhase>
+            <endPhase>SKS</endPhase>
             <endOffset>
                 <unit>MINUTE</unit>
                 <value>2</value>
@@ -81,7 +83,8 @@
         <integrate/>
         <rMean/>
         <rTrend/>
-        <filter>
+        <oregonDSPFilter>
+            <bandpass/>
             <lowFreqCorner>
                 <unit>SECOND</unit>
                 <value>10</value>
@@ -91,8 +94,7 @@
                 <value>10</value>
             </highFreqCorner>
             <numPoles>2</numPoles>
-            <filterType>NONCAUSAL</filterType>
-        </filter>
+        </oregonDSPFilter>
         <forkProcess>
             <phaseCut>
                 <model>prem</model>
@@ -113,12 +115,12 @@
         </forkProcess>
         <phaseCut>
             <model>prem</model>
-            <beginPhase>sks</beginPhase>
+            <beginPhase>SKS</beginPhase>
             <beginOffset>
                 <unit>SECOND</unit>
                 <value>-75</value>
             </beginOffset>
-            <endPhase>sks</endPhase>
+            <endPhase>SKS</endPhase>
             <endOffset>
                 <unit>SECOND</unit>
                 <value>75</value>
