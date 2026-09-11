@@ -1,3 +1,4 @@
+import java.nio.file.Paths
 
 plugins {
  // kotlin("jvm") version "1.9.0"
@@ -49,7 +50,7 @@ tasks.register("versionToVersionFile") {
 sourceSets {
   create("relax") {
         resources {
-            srcDir(File(project.buildDir, "generated-src/relax/resources"))
+            srcDir(layout.buildDirectory.dir("generated-src/relax/resources"))
         }
     }
 }
@@ -117,7 +118,10 @@ repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
     mavenCentral()
-    maven(url = "https://www.seis.sc.edu/software/maven2")
+    maven {
+	    url = uri("https://www.seis.sc.edu/software/maven2/")
+	    isAllowInsecureProtocol = true
+    }
     mavenLocal()
 }
 
@@ -219,7 +223,6 @@ val binDistFiles = copySpec {
 val distFiles = copySpec {
     with(binDistFiles)
     from(".") {
-        fileMode=755
         include("gradlew")
         include("gradlew.bat")
     }
@@ -295,7 +298,7 @@ tasks.register<Sync>("explodeBin") {
     dependsOn("jar")
     group = "dist"
     with(binDistFiles)
-    into(file("$buildDir/explode"))
+    into(layout.buildDirectory.dir("explode"))
 }
 //explodeBin.doLast({ ant.chmod(dir: "$buildDir/explode/bin", perm: "755", includes: "*") })
 
@@ -304,7 +307,7 @@ tasks.register<Sync>("explodeDist") {
   dependsOn("buildSchemaDocs")
     group = "dist"
     with(distFiles)
-    into(file("$buildDir/explode"))
+    into(layout.buildDirectory.dir("explode"))
 }
 /*
 // not needed any more???
@@ -352,17 +355,18 @@ tasks.register<JavaExec>("makeSodSite") {
 //   inputs.files "site/elementPage.vm", inRNGFile.getParentFile()
     inputs.dir(inVmFile.getParentFile())
 //    outDir = project.file("build/velocity/sod/ingredients")
-    val outDir = File(project.buildDir, "generated-src/velocity/sod/site")
+    val outDir = layout.buildDirectory.dir("generated-src/velocity/sod/site")
     outputs.dir(outDir)
     workingDir = File(project.projectDir, "site")
-    args = listOf(inVmFile.path, ".", outDir.path)
     classpath(sourceSets.getByName("main").runtimeClasspath)
     classpath(project.file("build/classes/main"))
     getMainClass().set("edu.sc.seis.sod.validator.documenter.SchemaDocumenter")
     doFirst {
-        if (!outDir.exists() ) {
-            outDir.mkdirs()
+        val myoutDir = file(layout.buildDirectory.dir("generated-src/velocity/sod/site"))
+        if (!myoutDir.exists() ) {
+            myoutDir.mkdirs()
         }
+        args = listOf(inVmFile.path, ".", myoutDir.path)
     }
 }
 
@@ -391,25 +395,25 @@ tasks.register<JavaExec>("buildSchemaDocs") {
     dependsOn("staticSchemaDocs")
     dependsOn("buildSchema")
     dependsOn("compileJava")
-    val inRNGFile = File(project.buildDir.path, "generated-src/relaxInclude/sod.rng")
+    val inRNGFile = layout.buildDirectory.dir("generated-src/relaxInclude/sod.rng")
 //    inRNGFile = new File(project.buildDir, "generated-src/relax/resources/edu/sc/seis/sod/data/sod.rng")
 //    jvmArgs = ["-agentlib:yjpagent", "-XX:+HeapDumpOnOutOfMemoryError", "-Xmx512m"]
     jvmArgs = listOf("-Xmx512m")
     group = "dist"
 //   inputs.files "site/elementPage.vm", inRNGFile.getParentFile()
-    inputs.dir(inRNGFile.getParentFile())
+    inputs.dir(file(inRNGFile).getParentFile())
 //    outDir = project.file("build/velocity/sod/ingredients")
-    val outDir = File(project.buildDir, "generated-src/velocity/sod/ingredients")
+    val outDir = layout.buildDirectory.dir("generated-src/velocity/sod/ingredients")
     outputs.dir(outDir)
     workingDir = File(project.projectDir, "site")
-    args = listOf(inRNGFile.path, ".", outDir.path)
     classpath(sourceSets.getByName("main").runtimeClasspath)
     classpath(project.file("build/classes/main"))
     getMainClass().set("edu.sc.seis.sod.validator.documenter.SchemaDocumenter")
     doFirst {
-        if (!outDir.exists() ) {
-            outDir.mkdirs()
+        if (!file(outDir).exists() ) {
+            file(outDir).mkdirs()
         }
+        args = listOf(file(inRNGFile).path, ".", file(outDir).path)
     }
 }
 
@@ -419,19 +423,29 @@ tasks.register<JavaExec>("buildSchema") {
     classpath(configurations.getByName("rng"))
     jvmArgs = listOf("-Xmx1512m")
     group = "build"
-    val inFile = File(project.buildDir.path, "generated-src/relaxInclude/sod.rng")
+    val inFile = file(layout.buildDirectory.dir("generated-src/relaxInclude/sod.rng"))
     inputs.dir(inFile.getParentFile())
-    val resourcesDir = File(project.buildDir, "generated-src/relax/resources")
-    val outFile = File(resourcesDir, "edu/sc/seis/sod/data/sod.rng")
+    val resourcesDir = layout.buildDirectory.dir("generated-src/relax/resources")
+    val outFile =  layout.buildDirectory.dir("generated-src/relax/resources/edu/sc/seis/sod/data/sod.rng")
     outputs.files(outFile)
+
+
+    val rngOutput = StringBuilder()
+    logging.addStandardOutputListener { rngOutput.append(it) }
+    doLast {
+	var rngOutText = rngOutput.toString()
+	if (rngOutText.startsWith(":sod:buildSchema", ignoreCase=false)) {
+		rngOutText= rngOutText.substring(17)
+	}
+        file(outFile).writeText(rngOutText.toString())
+    }
+
     doFirst {
-      outFile.getParentFile().mkdirs()
-      val out = outFile.outputStream()
-      setStandardOutput(out)
+      file(outFile).getParentFile().mkdirs()
     }
     args = listOf("-s", inFile.path)
     getMainClass().set("com.thaiopensource.relaxng.util.Driver")
-    workingDir = outFile.getParentFile()
+    workingDir = file(outFile).getParentFile()
 }
 
 tasks.register<JavaExec>("buildGrouperSchema") {
@@ -439,25 +453,35 @@ tasks.register<JavaExec>("buildGrouperSchema") {
     dependsOn("compileJava")
     classpath(configurations.getByName("rng"))
     group = "build"
-    val inFile = File(project.buildDir.path, "generated-src/grouperRelaxInclude/grouper.rng")
+    val inFile = file(layout.buildDirectory.dir("generated-src/grouperRelaxInclude/grouper.rng"))
     inputs.dir(inFile.getParentFile())
-    val resourcesDir = File(project.buildDir, "generated-src/relax/resources")
-    val outFile = File(resourcesDir, "edu/sc/seis/sod/data/grouper.rng")
+    val resourcesDir = layout.buildDirectory.dir("generated-src/relax/resources")
+    val outFile = layout.buildDirectory.dir("generated-src/relax/resources/edu/sc/seis/sod/data/grouper.rng")
     outputs.files(outFile)
     doFirst {
-      outFile.getParentFile().mkdirs()
-      val out = outFile.outputStream()
-      setStandardOutput(out)
+      file(outFile).getParentFile().mkdirs()
     }
+
+    val rngOutput = StringBuilder()
+    logging.addStandardOutputListener { rngOutput.append(it) }
+    doLast {
+        file(outFile).writeText(rngOutput.toString())
+	var rngOutText = rngOutput.toString()
+	if (rngOutText.startsWith(":sod:buildGrouperSchema")) {
+		rngOutText= rngOutText.substring(24)
+	}
+        file(outFile).writeText(rngOutText.toString())
+    }
+
     args = listOf("-s", inFile.path)
     jvmArgs = listOf("-Xmx1512m")
     getMainClass().set("com.thaiopensource.relaxng.util.Driver")
-    workingDir = outFile.getParentFile()
+    workingDir = file(outFile).getParentFile()
 }
 
 
 tasks.register<edu.sc.seis.tasks.XSLT>("transform") {
-    destDir= File(project.buildDir, "generated-src/relaxInclude")
+    destDir= file(layout.buildDirectory.dir("generated-src/relaxInclude"))
     stylesheetFile = File(project.projectDir, "src/main/xslt/simpleXInclude.xslt")
     val rngFile = File(project.projectDir, "src/main/relax/sod.rng")
     source(rngFile)
@@ -466,7 +490,7 @@ tasks.register<edu.sc.seis.tasks.XSLT>("transform") {
 }
 
 tasks.register<edu.sc.seis.tasks.XSLT>("transformGrouper") {
-    destDir= File(project.buildDir, "generated-src/grouperRelaxInclude")
+    destDir= file(layout.buildDirectory.dir("generated-src/grouperRelaxInclude"))
     stylesheetFile = project.file("src/main/xslt/simpleXInclude.xslt")
     val rngFile = project.fileTree("src") {
       include("main/relax/grouper.rng")
