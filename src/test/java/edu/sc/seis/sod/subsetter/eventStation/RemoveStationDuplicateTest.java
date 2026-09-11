@@ -4,8 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.StringReader;
+import java.util.List;
 import java.util.Properties;
 
+import edu.sc.seis.seisFile.fdsnws.stationxml.Network;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.InputSource;
@@ -55,6 +57,12 @@ public class RemoveStationDuplicateTest  {
 
         s.setupDatabaseForUnitTests();
         NetworkDB netdb = NetworkDB.getSingleton();
+        List<Network> nets = netdb.getNetworkByCode(mockOne.getNetworkCode());
+        if (nets.size()>0) {
+            mockOne.setNetwork(nets.get(0));
+        } else {
+            netdb.put(mockOne.getNetwork());
+        }
         netdb.put(mockOne);
         netdb.put(mockClose);
         netdb.put(mockFar);

@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
 
+import edu.sc.seis.sod.source.event.MicroSecondTimeRangeSupplier;
 import org.codehaus.stax2.validation.XMLValidationException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -55,7 +56,7 @@ public class FdsnStation extends AbstractNetworkSource {
         super(config);
         queryParams.clearIncludeRestricted();
         queryParams.clearIncludeAvailability();
-        includeAvailability = SodUtil.isTrue(config, "includeAvailability", true);
+        includeAvailability = SodUtil.isTrue(config, "includeAvailability", false);
         validateXML = SodUtil.isTrue(config, "validate", false);
         if (config != null) {
             // otherwise just use defaults
@@ -87,7 +88,11 @@ public class FdsnStation extends AbstractNetworkSource {
                 Node node = childNodes.item(counter);
                 if (node instanceof Element) {
                     Element element = (Element)node;
-                    if (element.getTagName().equals("stationBoxArea")) {
+                    if (element.getTagName().equals("timeRange")) {
+                        timeRangeSupplier = ((MicroSecondTimeRangeSupplier)SodUtil.load((Element)node,
+                                new String[] {"networkArm",
+                                        "network"}));
+                    } else if (element.getTagName().equals("stationBoxArea")) {
                         BoxAreaImpl a = SodUtil.loadBoxArea(element);
                         queryParams.area(a.min_latitude, a.max_latitude, a.min_longitude, a.max_longitude);
                     } else if (element.getTagName().equals("stationPointDistance")) {
@@ -469,7 +474,9 @@ public class FdsnStation extends AbstractNetworkSource {
             staQP.setStartBefore(latest);
         }
     }
-    
+
+    MicroSecondTimeRangeSupplier timeRangeSupplier;
+
     boolean includeAvailability = true;
     
     boolean validateXML = false;

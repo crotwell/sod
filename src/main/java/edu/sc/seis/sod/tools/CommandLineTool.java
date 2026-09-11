@@ -43,7 +43,7 @@ public class CommandLineTool extends AbstractClient {
                               false,
                               'S',
                               "server",
-                              "The server to use, default is 'service.iris.edu'"));
+                              "The server to use, default is 'service.earthscope.org'"));
     }
 
     public VelocityContext getContext() {

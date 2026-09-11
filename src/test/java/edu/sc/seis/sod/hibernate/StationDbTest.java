@@ -67,7 +67,7 @@ public class StationDbTest {
     @Test
     public void testPutNet() {
         NetworkDB ndb = NetworkDB.getSingleton();
-        ndb.put(MockNetworkAttr.createNetworkAttr());
+        ndb.put(MockNetworkAttr.createNetworkAttr("CO"));
         ndb.commit();
         List<Network> netList = ndb.getAllNetworks();
         assertTrue( netList.size() > 0);
